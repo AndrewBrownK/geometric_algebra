@@ -12,44 +12,56 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
+///
 /// Square Root
+///
 pub trait Sqrt {
     type Output;
     fn sqrt(self) -> Self::Output;
 }
 
+///
 /// Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+///
 pub trait Grade {
     type Output;
     fn grade() -> Self::Output;
 }
 
+///
 /// Anti-Grade
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Grade_and_antigrade
+///
 pub trait AntiGrade {
     type Output;
     fn anti_grade() -> Self::Output;
 }
 
+///
 /// Attitude
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
+///
 pub trait Attitude {
     type Output;
     fn attitude(self) -> Self::Output;
 }
 
+///
 /// Inverse, as in `x^-1` (with respect to geometric product).
 /// Useful to define the geometric quotient.
 /// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+///
 pub trait Inverse {
     type Output;
     fn inverse(self) -> Self::Output;
 }
 
+///
 /// Inverse, as in `x^-1` (with respect to geometric anti-product).
 /// Useful to define the geometric anti-quotient.
 /// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+///
 pub trait AntiInverse {
     type Output;
     fn anti_inverse(self) -> Self::Output;
@@ -335,7 +347,7 @@ impl Attitude for Rotor {
     }
 }
 
-impl Attitude for TransFlector {
+impl Attitude for Transflector {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
@@ -475,10 +487,10 @@ impl AntiInverse for Rotor {
     }
 }
 
-impl AntiInverse for TransFlector {
-    type Output = TransFlector;
+impl AntiInverse for Transflector {
+    type Output = Transflector;
 
-    fn anti_inverse(self) -> TransFlector {
+    fn anti_inverse(self) -> Transflector {
         self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
     }
 }
@@ -595,10 +607,10 @@ impl Inverse for Scalar {
     }
 }
 
-impl Inverse for TransFlector {
-    type Output = TransFlector;
+impl Inverse for Transflector {
+    type Output = Transflector;
 
-    fn inverse(self) -> TransFlector {
+    fn inverse(self) -> Transflector {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

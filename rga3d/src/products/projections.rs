@@ -5,41 +5,49 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
-use crate::aspect_duals::*;
+use crate::involutions::*;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
 use crate::products::exterior::AntiWedge;
 use crate::products::exterior::Wedge;
 use crate::*;
 
+///
 /// Orthogonal Projection
 /// Typically involves bringing a lower dimensional object to a higher dimensional object
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait ProjectOrthogonallyOnto<T> {
     type Output;
     fn project_orthogonally_onto(self, other: T) -> Self::Output;
 }
 
+///
 /// Orthogonal AntiProjection
 /// Typically involves bringing a higher dimensional object to a lower dimensional object.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait AntiProjectOrthogonallyOnto<T> {
     type Output;
     fn anti_project_orthogonally_onto(self, other: T) -> Self::Output;
 }
 
+///
 /// Central (to origin) Projection
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait ProjectViaOriginOnto<T> {
     type Output;
     fn project_via_origin_onto(self, other: T) -> Self::Output;
 }
 
+///
 /// Outward (to horizon) AntiProjection
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
+///
 pub trait AntiProjectViaHorizonOnto<T> {
     type Output;
     fn anti_project_via_horizon_onto(self, other: T) -> Self::Output;
@@ -133,10 +141,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Flector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Flector {
+impl AntiProjectViaHorizonOnto<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -237,10 +245,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for FlectorAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for FlectorAtInfinity {
+impl AntiProjectViaHorizonOnto<Transflector> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -341,10 +349,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Horizon {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Horizon {
+impl AntiProjectViaHorizonOnto<Transflector> for Horizon {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -429,10 +437,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Line {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Line {
+impl AntiProjectViaHorizonOnto<Transflector> for Line {
     type Output = Motor;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -517,10 +525,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for LineAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<Transflector> for LineAtInfinity {
     type Output = Translator;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> Translator {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Translator {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -581,10 +589,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for LineAtOrigin {
+impl AntiProjectViaHorizonOnto<Transflector> for LineAtOrigin {
     type Output = Motor;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -677,10 +685,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Motor {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Motor {
+impl AntiProjectViaHorizonOnto<Transflector> for Motor {
     type Output = Motor;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -781,10 +789,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for MultiVector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for MultiVector {
+impl AntiProjectViaHorizonOnto<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -885,10 +893,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for MultiVectorAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for MultiVectorAtInfinity {
+impl AntiProjectViaHorizonOnto<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -989,10 +997,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for MultiVectorAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for MultiVectorAtOrigin {
+impl AntiProjectViaHorizonOnto<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1037,10 +1045,10 @@ impl AntiProjectViaHorizonOnto<MultiVectorAtInfinity> for Origin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Origin {
-    type Output = TransFlector;
+impl AntiProjectViaHorizonOnto<Transflector> for Origin {
+    type Output = Transflector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> TransFlector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Transflector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1133,10 +1141,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Plane {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Plane {
+impl AntiProjectViaHorizonOnto<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1221,10 +1229,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1285,10 +1293,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Point {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Point {
-    type Output = TransFlector;
+impl AntiProjectViaHorizonOnto<Transflector> for Point {
+    type Output = Transflector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> TransFlector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Transflector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1341,10 +1349,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for PointAtInfinity {
-    type Output = TransFlector;
+impl AntiProjectViaHorizonOnto<Transflector> for PointAtInfinity {
+    type Output = Transflector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> TransFlector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Transflector {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1437,10 +1445,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Rotor {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Rotor {
+impl AntiProjectViaHorizonOnto<Transflector> for Rotor {
     type Output = Motor;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1453,7 +1461,7 @@ impl AntiProjectViaHorizonOnto<Translator> for Rotor {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Flector> for TransFlector {
+impl AntiProjectViaHorizonOnto<Flector> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
@@ -1461,7 +1469,7 @@ impl AntiProjectViaHorizonOnto<Flector> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for TransFlector {
+impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: FlectorAtInfinity) -> MultiVector {
@@ -1469,7 +1477,7 @@ impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Horizon> for TransFlector {
+impl AntiProjectViaHorizonOnto<Horizon> for Transflector {
     type Output = Horizon;
 
     fn anti_project_via_horizon_onto(self, other: Horizon) -> Horizon {
@@ -1477,7 +1485,7 @@ impl AntiProjectViaHorizonOnto<Horizon> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Line> for TransFlector {
+impl AntiProjectViaHorizonOnto<Line> for Transflector {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
@@ -1485,7 +1493,7 @@ impl AntiProjectViaHorizonOnto<Line> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<LineAtInfinity> for TransFlector {
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Transflector {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Plane {
@@ -1493,7 +1501,7 @@ impl AntiProjectViaHorizonOnto<LineAtInfinity> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Motor> for TransFlector {
+impl AntiProjectViaHorizonOnto<Motor> for Transflector {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: Motor) -> Plane {
@@ -1501,7 +1509,7 @@ impl AntiProjectViaHorizonOnto<Motor> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<MultiVector> for TransFlector {
+impl AntiProjectViaHorizonOnto<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
@@ -1509,7 +1517,7 @@ impl AntiProjectViaHorizonOnto<MultiVector> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<MultiVectorAtInfinity> for TransFlector {
+impl AntiProjectViaHorizonOnto<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: MultiVectorAtInfinity) -> MultiVector {
@@ -1517,7 +1525,7 @@ impl AntiProjectViaHorizonOnto<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Plane> for TransFlector {
+impl AntiProjectViaHorizonOnto<Plane> for Transflector {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
@@ -1525,7 +1533,7 @@ impl AntiProjectViaHorizonOnto<Plane> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Point> for TransFlector {
+impl AntiProjectViaHorizonOnto<Point> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Point) -> MultiVector {
@@ -1533,7 +1541,7 @@ impl AntiProjectViaHorizonOnto<Point> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<PointAtInfinity> for TransFlector {
+impl AntiProjectViaHorizonOnto<PointAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: PointAtInfinity) -> MultiVector {
@@ -1541,15 +1549,15 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for TransFlector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for TransFlector {
+impl AntiProjectViaHorizonOnto<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
         other.wedge(self.bulk_contraction(other))
     }
 }
 
-impl AntiProjectViaHorizonOnto<Translator> for TransFlector {
+impl AntiProjectViaHorizonOnto<Translator> for Transflector {
     type Output = Plane;
 
     fn anti_project_via_horizon_onto(self, other: Translator) -> Plane {
@@ -1645,10 +1653,10 @@ impl AntiProjectViaHorizonOnto<PointAtInfinity> for Translator {
     }
 }
 
-impl AntiProjectViaHorizonOnto<TransFlector> for Translator {
+impl AntiProjectViaHorizonOnto<Transflector> for Translator {
     type Output = Motor;
 
-    fn anti_project_via_horizon_onto(self, other: TransFlector) -> Motor {
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> Motor {
         other.wedge(self.bulk_contraction(other))
     }
 }
@@ -1749,26 +1757,18 @@ impl ProjectOrthogonallyOnto<Rotor> for Flector {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Flector {
+impl ProjectOrthogonallyOnto<Transflector> for Flector {
     type Output = Flector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> Flector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Flector {
-    type Output = Flector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Flector {
+    fn project_orthogonally_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
 impl ProjectOrthogonallyOnto<Flector> for FlectorAtInfinity {
-    type Output = Flector;
+    type Output = PointAtInfinity;
 
-    fn project_orthogonally_onto(self, other: Flector) -> Flector {
+    fn project_orthogonally_onto(self, other: Flector) -> PointAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1837,26 +1837,10 @@ impl ProjectOrthogonallyOnto<Rotor> for FlectorAtInfinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for FlectorAtInfinity {
+impl ProjectOrthogonallyOnto<Transflector> for FlectorAtInfinity {
     type Output = PointAtInfinity;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> PointAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for FlectorAtInfinity {
-    type Output = FlectorAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Translator) -> FlectorAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for Horizon {
-    type Output = Flector;
-
-    fn project_orthogonally_onto(self, other: Flector) -> Flector {
+    fn project_orthogonally_onto(self, other: Transflector) -> PointAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1889,14 +1873,6 @@ impl ProjectOrthogonallyOnto<Rotor> for Horizon {
     type Output = FlectorAtInfinity;
 
     fn project_orthogonally_onto(self, other: Rotor) -> FlectorAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Horizon {
-    type Output = Horizon;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Horizon {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -1973,26 +1949,18 @@ impl ProjectOrthogonallyOnto<Rotor> for Line {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Line {
+impl ProjectOrthogonallyOnto<Transflector> for Line {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Line {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
 impl ProjectOrthogonallyOnto<Flector> for LineAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVectorAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2045,18 +2013,10 @@ impl ProjectOrthogonallyOnto<Rotor> for LineAtInfinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for LineAtInfinity {
+impl ProjectOrthogonallyOnto<Transflector> for LineAtInfinity {
     type Output = LineAtInfinity;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> LineAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Translator) -> LineAtInfinity {
+    fn project_orthogonally_onto(self, other: Transflector) -> LineAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2133,18 +2093,10 @@ impl ProjectOrthogonallyOnto<Rotor> for LineAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for LineAtOrigin {
+impl ProjectOrthogonallyOnto<Transflector> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for LineAtOrigin {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2221,18 +2173,10 @@ impl ProjectOrthogonallyOnto<Rotor> for Motor {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Motor {
+impl ProjectOrthogonallyOnto<Transflector> for Motor {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2325,26 +2269,18 @@ impl ProjectOrthogonallyOnto<Rotor> for MultiVector {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for MultiVector {
+impl ProjectOrthogonallyOnto<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
 impl ProjectOrthogonallyOnto<Flector> for MultiVectorAtInfinity {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVectorAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2429,18 +2365,10 @@ impl ProjectOrthogonallyOnto<Rotor> for MultiVectorAtInfinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for MultiVectorAtInfinity {
+impl ProjectOrthogonallyOnto<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVectorAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for MultiVectorAtInfinity {
-    type Output = MultiVectorAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVectorAtInfinity {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVectorAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2533,18 +2461,10 @@ impl ProjectOrthogonallyOnto<Rotor> for MultiVectorAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for MultiVectorAtOrigin {
+impl ProjectOrthogonallyOnto<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for MultiVectorAtOrigin {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2637,18 +2557,10 @@ impl ProjectOrthogonallyOnto<Rotor> for Origin {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Origin {
+impl ProjectOrthogonallyOnto<Transflector> for Origin {
     type Output = Point;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> Point {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Origin {
-    type Output = Origin;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Origin {
+    fn project_orthogonally_onto(self, other: Transflector) -> Point {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2709,18 +2621,10 @@ impl ProjectOrthogonallyOnto<Rotor> for Plane {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Plane {
-    type Output = TransFlector;
+impl ProjectOrthogonallyOnto<Transflector> for Plane {
+    type Output = Transflector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> TransFlector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Plane {
-    type Output = TransFlector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> TransFlector {
+    fn project_orthogonally_onto(self, other: Transflector) -> Transflector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2781,18 +2685,10 @@ impl ProjectOrthogonallyOnto<Rotor> for PlaneAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for PlaneAtOrigin {
-    type Output = TransFlector;
+impl ProjectOrthogonallyOnto<Transflector> for PlaneAtOrigin {
+    type Output = Transflector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> TransFlector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> TransFlector {
+    fn project_orthogonally_onto(self, other: Transflector) -> Transflector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2885,26 +2781,18 @@ impl ProjectOrthogonallyOnto<Rotor> for Point {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Point {
+impl ProjectOrthogonallyOnto<Transflector> for Point {
     type Output = Point;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> Point {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Point {
-    type Output = Point;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Point {
+    fn project_orthogonally_onto(self, other: Transflector) -> Point {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
 impl ProjectOrthogonallyOnto<Flector> for PointAtInfinity {
-    type Output = Flector;
+    type Output = PointAtInfinity;
 
-    fn project_orthogonally_onto(self, other: Flector) -> Flector {
+    fn project_orthogonally_onto(self, other: Flector) -> PointAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -2973,18 +2861,10 @@ impl ProjectOrthogonallyOnto<Rotor> for PointAtInfinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for PointAtInfinity {
+impl ProjectOrthogonallyOnto<Transflector> for PointAtInfinity {
     type Output = PointAtInfinity;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> PointAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn project_orthogonally_onto(self, other: Translator) -> PointAtInfinity {
+    fn project_orthogonally_onto(self, other: Transflector) -> PointAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -3061,23 +2941,15 @@ impl ProjectOrthogonallyOnto<Rotor> for Rotor {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Rotor {
+impl ProjectOrthogonallyOnto<Transflector> for Rotor {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
-impl ProjectOrthogonallyOnto<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for TransFlector {
+impl ProjectOrthogonallyOnto<Flector> for Transflector {
     type Output = Flector;
 
     fn project_orthogonally_onto(self, other: Flector) -> Flector {
@@ -3085,7 +2957,7 @@ impl ProjectOrthogonallyOnto<Flector> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<Line> for TransFlector {
+impl ProjectOrthogonallyOnto<Line> for Transflector {
     type Output = PointAtInfinity;
 
     fn project_orthogonally_onto(self, other: Line) -> PointAtInfinity {
@@ -3093,7 +2965,7 @@ impl ProjectOrthogonallyOnto<Line> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<LineAtOrigin> for TransFlector {
+impl ProjectOrthogonallyOnto<LineAtOrigin> for Transflector {
     type Output = PointAtInfinity;
 
     fn project_orthogonally_onto(self, other: LineAtOrigin) -> PointAtInfinity {
@@ -3101,7 +2973,7 @@ impl ProjectOrthogonallyOnto<LineAtOrigin> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<Motor> for TransFlector {
+impl ProjectOrthogonallyOnto<Motor> for Transflector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
@@ -3109,7 +2981,7 @@ impl ProjectOrthogonallyOnto<Motor> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<MultiVector> for TransFlector {
+impl ProjectOrthogonallyOnto<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
@@ -3117,7 +2989,7 @@ impl ProjectOrthogonallyOnto<MultiVector> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<MultiVectorAtOrigin> for TransFlector {
+impl ProjectOrthogonallyOnto<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVectorAtOrigin) -> MultiVector {
@@ -3125,23 +2997,23 @@ impl ProjectOrthogonallyOnto<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<Plane> for TransFlector {
-    type Output = TransFlector;
+impl ProjectOrthogonallyOnto<Plane> for Transflector {
+    type Output = Transflector;
 
-    fn project_orthogonally_onto(self, other: Plane) -> TransFlector {
+    fn project_orthogonally_onto(self, other: Plane) -> Transflector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
-impl ProjectOrthogonallyOnto<PlaneAtOrigin> for TransFlector {
-    type Output = TransFlector;
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Transflector {
+    type Output = Transflector;
 
-    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> TransFlector {
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> Transflector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for TransFlector {
+impl ProjectOrthogonallyOnto<Rotor> for Transflector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
@@ -3149,26 +3021,18 @@ impl ProjectOrthogonallyOnto<Rotor> for TransFlector {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for TransFlector {
-    type Output = TransFlector;
+impl ProjectOrthogonallyOnto<Transflector> for Transflector {
+    type Output = Transflector;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> TransFlector {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for TransFlector {
-    type Output = TransFlector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> TransFlector {
+    fn project_orthogonally_onto(self, other: Transflector) -> Transflector {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
 
 impl ProjectOrthogonallyOnto<Flector> for Translator {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVectorAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -3221,18 +3085,10 @@ impl ProjectOrthogonallyOnto<Rotor> for Translator {
     }
 }
 
-impl ProjectOrthogonallyOnto<TransFlector> for Translator {
+impl ProjectOrthogonallyOnto<Transflector> for Translator {
     type Output = LineAtInfinity;
 
-    fn project_orthogonally_onto(self, other: TransFlector) -> LineAtInfinity {
-        other.anti_wedge(self.weight_expansion(other))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Translator {
-    type Output = Translator;
-
-    fn project_orthogonally_onto(self, other: Translator) -> Translator {
+    fn project_orthogonally_onto(self, other: Transflector) -> LineAtInfinity {
         other.anti_wedge(self.weight_expansion(other))
     }
 }
@@ -3325,18 +3181,18 @@ impl ProjectViaOriginOnto<PointAtInfinity> for Flector {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Flector {
+impl ProjectViaOriginOnto<Transflector> for Flector {
     type Output = Flector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> Flector {
+    fn project_via_origin_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
 impl ProjectViaOriginOnto<Translator> for Flector {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: Translator) -> TransFlector {
+    fn project_via_origin_onto(self, other: Translator) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3429,18 +3285,18 @@ impl ProjectViaOriginOnto<PointAtInfinity> for FlectorAtInfinity {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for FlectorAtInfinity {
+impl ProjectViaOriginOnto<Transflector> for FlectorAtInfinity {
     type Output = Flector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> Flector {
+    fn project_via_origin_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
 impl ProjectViaOriginOnto<Translator> for FlectorAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: Translator) -> TransFlector {
+    fn project_via_origin_onto(self, other: Translator) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3493,10 +3349,10 @@ impl ProjectViaOriginOnto<Plane> for Horizon {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Horizon {
-    type Output = TransFlector;
+impl ProjectViaOriginOnto<Transflector> for Horizon {
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> TransFlector {
+    fn project_via_origin_onto(self, other: Transflector) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3573,10 +3429,10 @@ impl ProjectViaOriginOnto<Plane> for Line {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Line {
+impl ProjectViaOriginOnto<Transflector> for Line {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3661,10 +3517,10 @@ impl ProjectViaOriginOnto<Plane> for LineAtInfinity {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for LineAtInfinity {
+impl ProjectViaOriginOnto<Transflector> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3693,10 +3549,10 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for LineAtOrigin {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for LineAtOrigin {
+impl ProjectViaOriginOnto<Transflector> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3773,10 +3629,10 @@ impl ProjectViaOriginOnto<Plane> for Motor {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Motor {
+impl ProjectViaOriginOnto<Transflector> for Motor {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3877,10 +3733,10 @@ impl ProjectViaOriginOnto<PointAtInfinity> for MultiVector {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for MultiVector {
+impl ProjectViaOriginOnto<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -3981,10 +3837,10 @@ impl ProjectViaOriginOnto<PointAtInfinity> for MultiVectorAtInfinity {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for MultiVectorAtInfinity {
+impl ProjectViaOriginOnto<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4013,10 +3869,10 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for MultiVectorAtOrigin {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for MultiVectorAtOrigin {
+impl ProjectViaOriginOnto<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4037,10 +3893,10 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for Origin {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Origin {
+impl ProjectViaOriginOnto<Transflector> for Origin {
     type Output = Flector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> Flector {
+    fn project_via_origin_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4093,10 +3949,10 @@ impl ProjectViaOriginOnto<Plane> for Plane {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Plane {
-    type Output = TransFlector;
+impl ProjectViaOriginOnto<Transflector> for Plane {
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> TransFlector {
+    fn project_via_origin_onto(self, other: Transflector) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4117,10 +3973,10 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for PlaneAtOrigin {
-    type Output = TransFlector;
+impl ProjectViaOriginOnto<Transflector> for PlaneAtOrigin {
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> TransFlector {
+    fn project_via_origin_onto(self, other: Transflector) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4213,18 +4069,18 @@ impl ProjectViaOriginOnto<PointAtInfinity> for Point {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Point {
+impl ProjectViaOriginOnto<Transflector> for Point {
     type Output = Flector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> Flector {
+    fn project_via_origin_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
 impl ProjectViaOriginOnto<Translator> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: Translator) -> TransFlector {
+    fn project_via_origin_onto(self, other: Translator) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4317,18 +4173,18 @@ impl ProjectViaOriginOnto<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for PointAtInfinity {
+impl ProjectViaOriginOnto<Transflector> for PointAtInfinity {
     type Output = Flector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> Flector {
+    fn project_via_origin_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
 impl ProjectViaOriginOnto<Translator> for PointAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: Translator) -> TransFlector {
+    fn project_via_origin_onto(self, other: Translator) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4349,15 +4205,15 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for Rotor {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Rotor {
+impl ProjectViaOriginOnto<Transflector> for Rotor {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectViaOriginOnto<Flector> for TransFlector {
+impl ProjectViaOriginOnto<Flector> for Transflector {
     type Output = Flector;
 
     fn project_via_origin_onto(self, other: Flector) -> Flector {
@@ -4365,7 +4221,7 @@ impl ProjectViaOriginOnto<Flector> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<FlectorAtInfinity> for TransFlector {
+impl ProjectViaOriginOnto<FlectorAtInfinity> for Transflector {
     type Output = FlectorAtInfinity;
 
     fn project_via_origin_onto(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -4373,7 +4229,7 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<Horizon> for TransFlector {
+impl ProjectViaOriginOnto<Horizon> for Transflector {
     type Output = FlectorAtInfinity;
 
     fn project_via_origin_onto(self, other: Horizon) -> FlectorAtInfinity {
@@ -4381,7 +4237,7 @@ impl ProjectViaOriginOnto<Horizon> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<Line> for TransFlector {
+impl ProjectViaOriginOnto<Line> for Transflector {
     type Output = Point;
 
     fn project_via_origin_onto(self, other: Line) -> Point {
@@ -4389,7 +4245,7 @@ impl ProjectViaOriginOnto<Line> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<LineAtInfinity> for TransFlector {
+impl ProjectViaOriginOnto<LineAtInfinity> for Transflector {
     type Output = PointAtInfinity;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -4397,7 +4253,7 @@ impl ProjectViaOriginOnto<LineAtInfinity> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<Motor> for TransFlector {
+impl ProjectViaOriginOnto<Motor> for Transflector {
     type Output = Flector;
 
     fn project_via_origin_onto(self, other: Motor) -> Flector {
@@ -4405,7 +4261,7 @@ impl ProjectViaOriginOnto<Motor> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<MultiVector> for TransFlector {
+impl ProjectViaOriginOnto<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
@@ -4413,7 +4269,7 @@ impl ProjectViaOriginOnto<MultiVector> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<MultiVectorAtInfinity> for TransFlector {
+impl ProjectViaOriginOnto<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn project_via_origin_onto(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -4421,7 +4277,7 @@ impl ProjectViaOriginOnto<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<Plane> for TransFlector {
+impl ProjectViaOriginOnto<Plane> for Transflector {
     type Output = Flector;
 
     fn project_via_origin_onto(self, other: Plane) -> Flector {
@@ -4429,7 +4285,7 @@ impl ProjectViaOriginOnto<Plane> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<Point> for TransFlector {
+impl ProjectViaOriginOnto<Point> for Transflector {
     type Output = Point;
 
     fn project_via_origin_onto(self, other: Point) -> Point {
@@ -4437,7 +4293,7 @@ impl ProjectViaOriginOnto<Point> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<PointAtInfinity> for TransFlector {
+impl ProjectViaOriginOnto<PointAtInfinity> for Transflector {
     type Output = PointAtInfinity;
 
     fn project_via_origin_onto(self, other: PointAtInfinity) -> PointAtInfinity {
@@ -4445,18 +4301,18 @@ impl ProjectViaOriginOnto<PointAtInfinity> for TransFlector {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for TransFlector {
+impl ProjectViaOriginOnto<Transflector> for Transflector {
     type Output = Flector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> Flector {
+    fn project_via_origin_onto(self, other: Transflector) -> Flector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
 
-impl ProjectViaOriginOnto<Translator> for TransFlector {
-    type Output = TransFlector;
+impl ProjectViaOriginOnto<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn project_via_origin_onto(self, other: Translator) -> TransFlector {
+    fn project_via_origin_onto(self, other: Translator) -> Transflector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }
@@ -4533,10 +4389,10 @@ impl ProjectViaOriginOnto<Plane> for Translator {
     }
 }
 
-impl ProjectViaOriginOnto<TransFlector> for Translator {
+impl ProjectViaOriginOnto<Transflector> for Translator {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: TransFlector) -> MultiVector {
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
         other.anti_wedge(self.bulk_expansion(other))
     }
 }

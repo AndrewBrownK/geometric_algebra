@@ -10,6 +10,13 @@ pub struct BasisElement {
 }
 
 impl BasisElement {
+    pub fn zero() -> Self {
+        Self {
+            coefficient: 0,
+            index: 0,
+        }
+    }
+
     pub fn from_index(index: BasisElementIndex) -> Self {
         Self { coefficient: 1, index }
     }

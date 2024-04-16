@@ -9,50 +9,64 @@ use crate::characteristics::Sqrt;
 use crate::products::dot::{AntiDot, Dot};
 use crate::*;
 
+///
 /// BulkNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait BulkNorm {
     type Output;
     fn bulk_norm(self) -> Self::Output;
 }
 
+///
 /// BulkNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait BulkNormSquared {
     type Output;
     fn bulk_norm_squared(self) -> Self::Output;
 }
 
+///
 /// GeometricNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait GeometricNorm {
     type Output;
     fn geometric_norm(self) -> Self::Output;
 }
 
+///
 /// UnitizedNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait UnitizedNorm {
     type Output;
     fn unitized_norm(self) -> Self::Output;
 }
 
+///
 /// UnitizedNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait UnitizedNormSquared {
     type Output;
     fn unitized_norm_squared(self) -> Self::Output;
 }
 
+///
 /// WeightNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait WeightNorm {
     type Output;
     fn weight_norm(self) -> Self::Output;
 }
 
+///
 /// WeightNormSquared
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+///
 pub trait WeightNormSquared {
     type Output;
     fn weight_norm_squared(self) -> Self::Output;
@@ -162,7 +176,7 @@ impl BulkNormSquared for Scalar {
     }
 }
 
-impl BulkNormSquared for TransFlector {
+impl BulkNormSquared for Transflector {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -282,7 +296,7 @@ impl BulkNorm for Scalar {
     }
 }
 
-impl BulkNorm for TransFlector {
+impl BulkNorm for Transflector {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -402,7 +416,7 @@ impl WeightNormSquared for Rotor {
     }
 }
 
-impl WeightNormSquared for TransFlector {
+impl WeightNormSquared for Transflector {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -522,7 +536,7 @@ impl WeightNorm for Rotor {
     }
 }
 
-impl WeightNorm for TransFlector {
+impl WeightNorm for Transflector {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -594,7 +608,7 @@ impl GeometricNorm for Point {
     }
 }
 
-impl GeometricNorm for TransFlector {
+impl GeometricNorm for Transflector {
     type Output = Magnitude;
 
     fn geometric_norm(self) -> Magnitude {
@@ -666,7 +680,7 @@ impl UnitizedNormSquared for Point {
     }
 }
 
-impl UnitizedNormSquared for TransFlector {
+impl UnitizedNormSquared for Transflector {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -738,7 +752,7 @@ impl UnitizedNorm for Point {
     }
 }
 
-impl UnitizedNorm for TransFlector {
+impl UnitizedNorm for Transflector {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {

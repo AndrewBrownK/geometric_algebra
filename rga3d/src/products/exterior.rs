@@ -7,33 +7,41 @@
 
 use crate::*;
 
+///
 /// Exterior Product
 /// Synonyms included: Wedge, Join
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait Wedge<T> {
     type Output;
     fn wedge(self, other: T) -> Self::Output;
 }
 
+///
 /// Exterior Product
 /// Synonyms included: Wedge, Join
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait Join<T> {
     type Output;
     fn join(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Anti-Product
 /// Synonyms included: AntiWedge, Meet
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait AntiWedge<T> {
     type Output;
     fn anti_wedge(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Anti-Product
 /// Synonyms included: AntiWedge, Meet
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait Meet<T> {
     type Output;
     fn meet(self, other: T) -> Self::Output;
@@ -278,12 +286,12 @@ impl AntiWedge<Scalar> for AntiScalar {
     }
 }
 
-impl AntiWedge<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl AntiWedge<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -613,10 +621,10 @@ impl AntiWedge<Rotor> for Flector {
     }
 }
 
-impl AntiWedge<TransFlector> for Flector {
+impl AntiWedge<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -835,10 +843,10 @@ impl AntiWedge<Rotor> for FlectorAtInfinity {
     }
 }
 
-impl AntiWedge<TransFlector> for FlectorAtInfinity {
+impl AntiWedge<Transflector> for FlectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn anti_wedge(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -1025,10 +1033,10 @@ impl AntiWedge<Rotor> for Horizon {
     }
 }
 
-impl AntiWedge<TransFlector> for Horizon {
+impl AntiWedge<Transflector> for Horizon {
     type Output = LineAtInfinity;
 
-    fn anti_wedge(self, other: TransFlector) -> LineAtInfinity {
+    fn anti_wedge(self, other: Transflector) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -1296,10 +1304,10 @@ impl AntiWedge<Rotor> for Line {
     }
 }
 
-impl AntiWedge<TransFlector> for Line {
+impl AntiWedge<Transflector> for Line {
     type Output = Point;
 
-    fn anti_wedge(self, other: TransFlector) -> Point {
+    fn anti_wedge(self, other: Transflector) -> Point {
         Point {
             groups: PointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -1489,10 +1497,10 @@ impl AntiWedge<Rotor> for LineAtInfinity {
     }
 }
 
-impl AntiWedge<TransFlector> for LineAtInfinity {
+impl AntiWedge<Transflector> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn anti_wedge(self, other: TransFlector) -> PointAtInfinity {
+    fn anti_wedge(self, other: Transflector) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
@@ -1709,10 +1717,10 @@ impl AntiWedge<Rotor> for LineAtOrigin {
     }
 }
 
-impl AntiWedge<TransFlector> for LineAtOrigin {
+impl AntiWedge<Transflector> for LineAtOrigin {
     type Output = Point;
 
-    fn anti_wedge(self, other: TransFlector) -> Point {
+    fn anti_wedge(self, other: Transflector) -> Point {
         Point {
             groups: PointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -1989,12 +1997,12 @@ impl AntiWedge<Scalar> for Magnitude {
     }
 }
 
-impl AntiWedge<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl AntiWedge<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * other.group1(),
             },
@@ -2342,10 +2350,10 @@ impl AntiWedge<Scalar> for Motor {
     }
 }
 
-impl AntiWedge<TransFlector> for Motor {
+impl AntiWedge<Transflector> for Motor {
     type Output = Flector;
 
-    fn anti_wedge(self, other: TransFlector) -> Flector {
+    fn anti_wedge(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -2815,10 +2823,10 @@ impl AntiWedge<Scalar> for MultiVector {
     }
 }
 
-impl AntiWedge<TransFlector> for MultiVector {
+impl AntiWedge<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -3095,10 +3103,10 @@ impl AntiWedge<Rotor> for MultiVectorAtInfinity {
     }
 }
 
-impl AntiWedge<TransFlector> for MultiVectorAtInfinity {
+impl AntiWedge<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn anti_wedge(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -3492,10 +3500,10 @@ impl AntiWedge<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl AntiWedge<TransFlector> for MultiVectorAtOrigin {
+impl AntiWedge<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[3], 0.0])
@@ -3675,10 +3683,10 @@ impl AntiWedge<Rotor> for Origin {
     }
 }
 
-impl AntiWedge<TransFlector> for Origin {
+impl AntiWedge<Transflector> for Origin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[3],
@@ -3977,10 +3985,10 @@ impl AntiWedge<Rotor> for Plane {
     }
 }
 
-impl AntiWedge<TransFlector> for Plane {
+impl AntiWedge<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -3999,11 +4007,11 @@ impl AntiWedge<TransFlector> for Plane {
 }
 
 impl AntiWedge<Translator> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -4269,10 +4277,10 @@ impl AntiWedge<Rotor> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<TransFlector> for PlaneAtOrigin {
+impl AntiWedge<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -4290,11 +4298,11 @@ impl AntiWedge<TransFlector> for PlaneAtOrigin {
 }
 
 impl AntiWedge<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -4462,10 +4470,10 @@ impl AntiWedge<Rotor> for Point {
     }
 }
 
-impl AntiWedge<TransFlector> for Point {
+impl AntiWedge<Transflector> for Point {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] - self.group0()[3] * other.group1()[3],
@@ -4602,10 +4610,10 @@ impl AntiWedge<Rotor> for PointAtInfinity {
     }
 }
 
-impl AntiWedge<TransFlector> for PointAtInfinity {
+impl AntiWedge<Transflector> for PointAtInfinity {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
@@ -4907,10 +4915,10 @@ impl AntiWedge<Scalar> for Rotor {
     }
 }
 
-impl AntiWedge<TransFlector> for Rotor {
+impl AntiWedge<Transflector> for Rotor {
     type Output = Flector;
 
-    fn anti_wedge(self, other: TransFlector) -> Flector {
+    fn anti_wedge(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -5025,12 +5033,12 @@ impl AntiWedge<Translator> for Scalar {
     }
 }
 
-impl AntiWedge<AntiScalar> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedge<AntiScalar> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: AntiScalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: AntiScalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -5038,7 +5046,7 @@ impl AntiWedge<AntiScalar> for TransFlector {
     }
 }
 
-impl AntiWedge<Flector> for TransFlector {
+impl AntiWedge<Flector> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Flector) -> MultiVector {
@@ -5063,7 +5071,7 @@ impl AntiWedge<Flector> for TransFlector {
     }
 }
 
-impl AntiWedge<FlectorAtInfinity> for TransFlector {
+impl AntiWedge<FlectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn anti_wedge(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
@@ -5079,7 +5087,7 @@ impl AntiWedge<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<Horizon> for TransFlector {
+impl AntiWedge<Horizon> for Transflector {
     type Output = LineAtInfinity;
 
     fn anti_wedge(self, other: Horizon) -> LineAtInfinity {
@@ -5091,7 +5099,7 @@ impl AntiWedge<Horizon> for TransFlector {
     }
 }
 
-impl AntiWedge<Line> for TransFlector {
+impl AntiWedge<Line> for Transflector {
     type Output = Point;
 
     fn anti_wedge(self, other: Line) -> Point {
@@ -5106,7 +5114,7 @@ impl AntiWedge<Line> for TransFlector {
     }
 }
 
-impl AntiWedge<LineAtInfinity> for TransFlector {
+impl AntiWedge<LineAtInfinity> for Transflector {
     type Output = PointAtInfinity;
 
     fn anti_wedge(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -5120,7 +5128,7 @@ impl AntiWedge<LineAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<LineAtOrigin> for TransFlector {
+impl AntiWedge<LineAtOrigin> for Transflector {
     type Output = Point;
 
     fn anti_wedge(self, other: LineAtOrigin) -> Point {
@@ -5134,12 +5142,12 @@ impl AntiWedge<LineAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedge<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
                 g1: self.group1() * Simd32x4::from(other.group0()[1]),
             },
@@ -5147,7 +5155,7 @@ impl AntiWedge<Magnitude> for TransFlector {
     }
 }
 
-impl AntiWedge<Motor> for TransFlector {
+impl AntiWedge<Motor> for Transflector {
     type Output = Flector;
 
     fn anti_wedge(self, other: Motor) -> Flector {
@@ -5165,7 +5173,7 @@ impl AntiWedge<Motor> for TransFlector {
     }
 }
 
-impl AntiWedge<MultiVector> for TransFlector {
+impl AntiWedge<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -5195,7 +5203,7 @@ impl AntiWedge<MultiVector> for TransFlector {
     }
 }
 
-impl AntiWedge<MultiVectorAtInfinity> for TransFlector {
+impl AntiWedge<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn anti_wedge(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -5213,7 +5221,7 @@ impl AntiWedge<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<MultiVectorAtOrigin> for TransFlector {
+impl AntiWedge<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVectorAtOrigin) -> MultiVector {
@@ -5238,7 +5246,7 @@ impl AntiWedge<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<Origin> for TransFlector {
+impl AntiWedge<Origin> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Origin) -> Scalar {
@@ -5250,7 +5258,7 @@ impl AntiWedge<Origin> for TransFlector {
     }
 }
 
-impl AntiWedge<Plane> for TransFlector {
+impl AntiWedge<Plane> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Plane) -> MultiVector {
@@ -5271,7 +5279,7 @@ impl AntiWedge<Plane> for TransFlector {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for TransFlector {
+impl AntiWedge<PlaneAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: PlaneAtOrigin) -> MultiVector {
@@ -5291,7 +5299,7 @@ impl AntiWedge<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<Point> for TransFlector {
+impl AntiWedge<Point> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Point) -> Scalar {
@@ -5303,7 +5311,7 @@ impl AntiWedge<Point> for TransFlector {
     }
 }
 
-impl AntiWedge<PointAtInfinity> for TransFlector {
+impl AntiWedge<PointAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: PointAtInfinity) -> Scalar {
@@ -5315,7 +5323,7 @@ impl AntiWedge<PointAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<Rotor> for TransFlector {
+impl AntiWedge<Rotor> for Transflector {
     type Output = Flector;
 
     fn anti_wedge(self, other: Rotor) -> Flector {
@@ -5332,10 +5340,10 @@ impl AntiWedge<Rotor> for TransFlector {
     }
 }
 
-impl AntiWedge<TransFlector> for TransFlector {
+impl AntiWedge<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -5356,12 +5364,12 @@ impl AntiWedge<TransFlector> for TransFlector {
     }
 }
 
-impl AntiWedge<Translator> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedge<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3])
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
@@ -5575,11 +5583,11 @@ impl AntiWedge<Origin> for Translator {
 }
 
 impl AntiWedge<Plane> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -5590,11 +5598,11 @@ impl AntiWedge<Plane> for Translator {
 }
 
 impl AntiWedge<PlaneAtOrigin> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -5658,12 +5666,12 @@ impl AntiWedge<Scalar> for Translator {
     }
 }
 
-impl AntiWedge<TransFlector> for Translator {
-    type Output = TransFlector;
+impl AntiWedge<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0])
@@ -6033,10 +6041,10 @@ impl Join<Scalar> for Flector {
     }
 }
 
-impl Join<TransFlector> for Flector {
+impl Join<Transflector> for Flector {
     type Output = Motor;
 
-    fn join(self, other: TransFlector) -> Motor {
+    fn join(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -6319,10 +6327,10 @@ impl Join<Scalar> for FlectorAtInfinity {
     }
 }
 
-impl Join<TransFlector> for FlectorAtInfinity {
+impl Join<Transflector> for FlectorAtInfinity {
     type Output = Translator;
 
-    fn join(self, other: TransFlector) -> Translator {
+    fn join(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -6688,10 +6696,10 @@ impl Join<Scalar> for Line {
     }
 }
 
-impl Join<TransFlector> for Line {
+impl Join<Transflector> for Line {
     type Output = Plane;
 
-    fn join(self, other: TransFlector) -> Plane {
+    fn join(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -6905,10 +6913,10 @@ impl Join<Scalar> for LineAtInfinity {
     }
 }
 
-impl Join<TransFlector> for LineAtInfinity {
+impl Join<Transflector> for LineAtInfinity {
     type Output = Horizon;
 
-    fn join(self, other: TransFlector) -> Horizon {
+    fn join(self, other: Transflector) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -7069,10 +7077,10 @@ impl Join<Scalar> for LineAtOrigin {
     }
 }
 
-impl Join<TransFlector> for LineAtOrigin {
+impl Join<Transflector> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: TransFlector) -> PlaneAtOrigin {
+    fn join(self, other: Transflector) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -7336,12 +7344,12 @@ impl Join<Scalar> for Magnitude {
     }
 }
 
-impl Join<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Join<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn join(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[0]) * other.group1(),
             },
@@ -7606,10 +7614,10 @@ impl Join<Scalar> for Motor {
     }
 }
 
-impl Join<TransFlector> for Motor {
+impl Join<Transflector> for Motor {
     type Output = Plane;
 
-    fn join(self, other: TransFlector) -> Plane {
+    fn join(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -8072,10 +8080,10 @@ impl Join<Scalar> for MultiVector {
     }
 }
 
-impl Join<TransFlector> for MultiVector {
+impl Join<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: TransFlector) -> MultiVector {
+    fn join(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group1()[0]])
@@ -8487,10 +8495,10 @@ impl Join<Scalar> for MultiVectorAtInfinity {
     }
 }
 
-impl Join<TransFlector> for MultiVectorAtInfinity {
+impl Join<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn join(self, other: TransFlector) -> MultiVector {
+    fn join(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group1()[0]])
@@ -8753,10 +8761,10 @@ impl Join<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl Join<TransFlector> for MultiVectorAtOrigin {
+impl Join<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
-    fn join(self, other: TransFlector) -> MultiVectorAtOrigin {
+    fn join(self, other: Transflector) -> MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[3]])
@@ -8948,10 +8956,10 @@ impl Join<Scalar> for Origin {
     }
 }
 
-impl Join<TransFlector> for Origin {
+impl Join<Transflector> for Origin {
     type Output = Rotor;
 
-    fn join(self, other: TransFlector) -> Rotor {
+    fn join(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -9105,10 +9113,10 @@ impl Join<Scalar> for Plane {
     }
 }
 
-impl Join<TransFlector> for Plane {
+impl Join<Transflector> for Plane {
     type Output = AntiScalar;
 
-    fn join(self, other: TransFlector) -> AntiScalar {
+    fn join(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -9221,10 +9229,10 @@ impl Join<Scalar> for PlaneAtOrigin {
     }
 }
 
-impl Join<TransFlector> for PlaneAtOrigin {
+impl Join<Transflector> for PlaneAtOrigin {
     type Output = AntiScalar;
 
-    fn join(self, other: TransFlector) -> AntiScalar {
+    fn join(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -9504,10 +9512,10 @@ impl Join<Scalar> for Point {
     }
 }
 
-impl Join<TransFlector> for Point {
+impl Join<Transflector> for Point {
     type Output = Motor;
 
-    fn join(self, other: TransFlector) -> Motor {
+    fn join(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -9783,10 +9791,10 @@ impl Join<Scalar> for PointAtInfinity {
     }
 }
 
-impl Join<TransFlector> for PointAtInfinity {
+impl Join<Transflector> for PointAtInfinity {
     type Output = Translator;
 
-    fn join(self, other: TransFlector) -> Translator {
+    fn join(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -9963,10 +9971,10 @@ impl Join<Scalar> for Rotor {
     }
 }
 
-impl Join<TransFlector> for Rotor {
+impl Join<Transflector> for Rotor {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: TransFlector) -> PlaneAtOrigin {
+    fn join(self, other: Transflector) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -10228,12 +10236,12 @@ impl Join<Scalar> for Scalar {
     }
 }
 
-impl Join<TransFlector> for Scalar {
-    type Output = TransFlector;
+impl Join<Transflector> for Scalar {
+    type Output = Transflector;
 
-    fn join(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -10253,7 +10261,7 @@ impl Join<Translator> for Scalar {
     }
 }
 
-impl Join<Flector> for TransFlector {
+impl Join<Flector> for Transflector {
     type Output = Motor;
 
     fn join(self, other: Flector) -> Motor {
@@ -10274,7 +10282,7 @@ impl Join<Flector> for TransFlector {
     }
 }
 
-impl Join<FlectorAtInfinity> for TransFlector {
+impl Join<FlectorAtInfinity> for Transflector {
     type Output = Translator;
 
     fn join(self, other: FlectorAtInfinity) -> Translator {
@@ -10291,7 +10299,7 @@ impl Join<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Join<Line> for TransFlector {
+impl Join<Line> for Transflector {
     type Output = Plane;
 
     fn join(self, other: Line) -> Plane {
@@ -10305,7 +10313,7 @@ impl Join<Line> for TransFlector {
     }
 }
 
-impl Join<LineAtInfinity> for TransFlector {
+impl Join<LineAtInfinity> for Transflector {
     type Output = Horizon;
 
     fn join(self, other: LineAtInfinity) -> Horizon {
@@ -10317,7 +10325,7 @@ impl Join<LineAtInfinity> for TransFlector {
     }
 }
 
-impl Join<LineAtOrigin> for TransFlector {
+impl Join<LineAtOrigin> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: LineAtOrigin) -> PlaneAtOrigin {
@@ -10331,12 +10339,12 @@ impl Join<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Join<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl Join<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn join(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: self.group1() * Simd32x4::from(other.group0()[0]),
             },
@@ -10344,7 +10352,7 @@ impl Join<Magnitude> for TransFlector {
     }
 }
 
-impl Join<Motor> for TransFlector {
+impl Join<Motor> for Transflector {
     type Output = Plane;
 
     fn join(self, other: Motor) -> Plane {
@@ -10358,7 +10366,7 @@ impl Join<Motor> for TransFlector {
     }
 }
 
-impl Join<MultiVector> for TransFlector {
+impl Join<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -10386,7 +10394,7 @@ impl Join<MultiVector> for TransFlector {
     }
 }
 
-impl Join<MultiVectorAtInfinity> for TransFlector {
+impl Join<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn join(self, other: MultiVectorAtInfinity) -> MultiVector {
@@ -10410,7 +10418,7 @@ impl Join<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl Join<MultiVectorAtOrigin> for TransFlector {
+impl Join<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVectorAtOrigin;
 
     fn join(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -10429,7 +10437,7 @@ impl Join<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl Join<Origin> for TransFlector {
+impl Join<Origin> for Transflector {
     type Output = Rotor;
 
     fn join(self, other: Origin) -> Rotor {
@@ -10443,7 +10451,7 @@ impl Join<Origin> for TransFlector {
     }
 }
 
-impl Join<Plane> for TransFlector {
+impl Join<Plane> for Transflector {
     type Output = AntiScalar;
 
     fn join(self, other: Plane) -> AntiScalar {
@@ -10455,7 +10463,7 @@ impl Join<Plane> for TransFlector {
     }
 }
 
-impl Join<PlaneAtOrigin> for TransFlector {
+impl Join<PlaneAtOrigin> for Transflector {
     type Output = AntiScalar;
 
     fn join(self, other: PlaneAtOrigin) -> AntiScalar {
@@ -10467,7 +10475,7 @@ impl Join<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl Join<Point> for TransFlector {
+impl Join<Point> for Transflector {
     type Output = Motor;
 
     fn join(self, other: Point) -> Motor {
@@ -10487,7 +10495,7 @@ impl Join<Point> for TransFlector {
     }
 }
 
-impl Join<PointAtInfinity> for TransFlector {
+impl Join<PointAtInfinity> for Transflector {
     type Output = Translator;
 
     fn join(self, other: PointAtInfinity) -> Translator {
@@ -10504,7 +10512,7 @@ impl Join<PointAtInfinity> for TransFlector {
     }
 }
 
-impl Join<Rotor> for TransFlector {
+impl Join<Rotor> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: Rotor) -> PlaneAtOrigin {
@@ -10518,12 +10526,12 @@ impl Join<Rotor> for TransFlector {
     }
 }
 
-impl Join<Scalar> for TransFlector {
-    type Output = TransFlector;
+impl Join<Scalar> for Transflector {
+    type Output = Transflector;
 
-    fn join(self, other: Scalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Scalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -10531,10 +10539,10 @@ impl Join<Scalar> for TransFlector {
     }
 }
 
-impl Join<TransFlector> for TransFlector {
+impl Join<Transflector> for Transflector {
     type Output = Translator;
 
-    fn join(self, other: TransFlector) -> Translator {
+    fn join(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -10548,7 +10556,7 @@ impl Join<TransFlector> for TransFlector {
     }
 }
 
-impl Join<Translator> for TransFlector {
+impl Join<Translator> for Transflector {
     type Output = Horizon;
 
     fn join(self, other: Translator) -> Horizon {
@@ -10751,10 +10759,10 @@ impl Join<Scalar> for Translator {
     }
 }
 
-impl Join<TransFlector> for Translator {
+impl Join<Transflector> for Translator {
     type Output = Horizon;
 
-    fn join(self, other: TransFlector) -> Horizon {
+    fn join(self, other: Transflector) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -11002,12 +11010,12 @@ impl Meet<Scalar> for AntiScalar {
     }
 }
 
-impl Meet<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl Meet<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn meet(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -11337,10 +11345,10 @@ impl Meet<Rotor> for Flector {
     }
 }
 
-impl Meet<TransFlector> for Flector {
+impl Meet<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -11559,10 +11567,10 @@ impl Meet<Rotor> for FlectorAtInfinity {
     }
 }
 
-impl Meet<TransFlector> for FlectorAtInfinity {
+impl Meet<Transflector> for FlectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn meet(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn meet(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -11749,10 +11757,10 @@ impl Meet<Rotor> for Horizon {
     }
 }
 
-impl Meet<TransFlector> for Horizon {
+impl Meet<Transflector> for Horizon {
     type Output = LineAtInfinity;
 
-    fn meet(self, other: TransFlector) -> LineAtInfinity {
+    fn meet(self, other: Transflector) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -12020,10 +12028,10 @@ impl Meet<Rotor> for Line {
     }
 }
 
-impl Meet<TransFlector> for Line {
+impl Meet<Transflector> for Line {
     type Output = Point;
 
-    fn meet(self, other: TransFlector) -> Point {
+    fn meet(self, other: Transflector) -> Point {
         Point {
             groups: PointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -12213,10 +12221,10 @@ impl Meet<Rotor> for LineAtInfinity {
     }
 }
 
-impl Meet<TransFlector> for LineAtInfinity {
+impl Meet<Transflector> for LineAtInfinity {
     type Output = PointAtInfinity;
 
-    fn meet(self, other: TransFlector) -> PointAtInfinity {
+    fn meet(self, other: Transflector) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
@@ -12433,10 +12441,10 @@ impl Meet<Rotor> for LineAtOrigin {
     }
 }
 
-impl Meet<TransFlector> for LineAtOrigin {
+impl Meet<Transflector> for LineAtOrigin {
     type Output = Point;
 
-    fn meet(self, other: TransFlector) -> Point {
+    fn meet(self, other: Transflector) -> Point {
         Point {
             groups: PointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -12713,12 +12721,12 @@ impl Meet<Scalar> for Magnitude {
     }
 }
 
-impl Meet<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Meet<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn meet(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * other.group1(),
             },
@@ -13066,10 +13074,10 @@ impl Meet<Scalar> for Motor {
     }
 }
 
-impl Meet<TransFlector> for Motor {
+impl Meet<Transflector> for Motor {
     type Output = Flector;
 
-    fn meet(self, other: TransFlector) -> Flector {
+    fn meet(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -13539,10 +13547,10 @@ impl Meet<Scalar> for MultiVector {
     }
 }
 
-impl Meet<TransFlector> for MultiVector {
+impl Meet<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -13819,10 +13827,10 @@ impl Meet<Rotor> for MultiVectorAtInfinity {
     }
 }
 
-impl Meet<TransFlector> for MultiVectorAtInfinity {
+impl Meet<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn meet(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn meet(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -14216,10 +14224,10 @@ impl Meet<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl Meet<TransFlector> for MultiVectorAtOrigin {
+impl Meet<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[3], 0.0])
@@ -14399,10 +14407,10 @@ impl Meet<Rotor> for Origin {
     }
 }
 
-impl Meet<TransFlector> for Origin {
+impl Meet<Transflector> for Origin {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[3],
@@ -14701,10 +14709,10 @@ impl Meet<Rotor> for Plane {
     }
 }
 
-impl Meet<TransFlector> for Plane {
+impl Meet<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -14723,11 +14731,11 @@ impl Meet<TransFlector> for Plane {
 }
 
 impl Meet<Translator> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -14993,10 +15001,10 @@ impl Meet<Rotor> for PlaneAtOrigin {
     }
 }
 
-impl Meet<TransFlector> for PlaneAtOrigin {
+impl Meet<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -15014,11 +15022,11 @@ impl Meet<TransFlector> for PlaneAtOrigin {
 }
 
 impl Meet<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -15186,10 +15194,10 @@ impl Meet<Rotor> for Point {
     }
 }
 
-impl Meet<TransFlector> for Point {
+impl Meet<Transflector> for Point {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] - self.group0()[3] * other.group1()[3],
@@ -15326,10 +15334,10 @@ impl Meet<Rotor> for PointAtInfinity {
     }
 }
 
-impl Meet<TransFlector> for PointAtInfinity {
+impl Meet<Transflector> for PointAtInfinity {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
@@ -15631,10 +15639,10 @@ impl Meet<Scalar> for Rotor {
     }
 }
 
-impl Meet<TransFlector> for Rotor {
+impl Meet<Transflector> for Rotor {
     type Output = Flector;
 
-    fn meet(self, other: TransFlector) -> Flector {
+    fn meet(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -15749,12 +15757,12 @@ impl Meet<Translator> for Scalar {
     }
 }
 
-impl Meet<AntiScalar> for TransFlector {
-    type Output = TransFlector;
+impl Meet<AntiScalar> for Transflector {
+    type Output = Transflector;
 
-    fn meet(self, other: AntiScalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: AntiScalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -15762,7 +15770,7 @@ impl Meet<AntiScalar> for TransFlector {
     }
 }
 
-impl Meet<Flector> for TransFlector {
+impl Meet<Flector> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: Flector) -> MultiVector {
@@ -15787,7 +15795,7 @@ impl Meet<Flector> for TransFlector {
     }
 }
 
-impl Meet<FlectorAtInfinity> for TransFlector {
+impl Meet<FlectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn meet(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
@@ -15803,7 +15811,7 @@ impl Meet<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<Horizon> for TransFlector {
+impl Meet<Horizon> for Transflector {
     type Output = LineAtInfinity;
 
     fn meet(self, other: Horizon) -> LineAtInfinity {
@@ -15815,7 +15823,7 @@ impl Meet<Horizon> for TransFlector {
     }
 }
 
-impl Meet<Line> for TransFlector {
+impl Meet<Line> for Transflector {
     type Output = Point;
 
     fn meet(self, other: Line) -> Point {
@@ -15830,7 +15838,7 @@ impl Meet<Line> for TransFlector {
     }
 }
 
-impl Meet<LineAtInfinity> for TransFlector {
+impl Meet<LineAtInfinity> for Transflector {
     type Output = PointAtInfinity;
 
     fn meet(self, other: LineAtInfinity) -> PointAtInfinity {
@@ -15844,7 +15852,7 @@ impl Meet<LineAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<LineAtOrigin> for TransFlector {
+impl Meet<LineAtOrigin> for Transflector {
     type Output = Point;
 
     fn meet(self, other: LineAtOrigin) -> Point {
@@ -15858,12 +15866,12 @@ impl Meet<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl Meet<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn meet(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
                 g1: self.group1() * Simd32x4::from(other.group0()[1]),
             },
@@ -15871,7 +15879,7 @@ impl Meet<Magnitude> for TransFlector {
     }
 }
 
-impl Meet<Motor> for TransFlector {
+impl Meet<Motor> for Transflector {
     type Output = Flector;
 
     fn meet(self, other: Motor) -> Flector {
@@ -15889,7 +15897,7 @@ impl Meet<Motor> for TransFlector {
     }
 }
 
-impl Meet<MultiVector> for TransFlector {
+impl Meet<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -15919,7 +15927,7 @@ impl Meet<MultiVector> for TransFlector {
     }
 }
 
-impl Meet<MultiVectorAtInfinity> for TransFlector {
+impl Meet<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn meet(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -15937,7 +15945,7 @@ impl Meet<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<MultiVectorAtOrigin> for TransFlector {
+impl Meet<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVectorAtOrigin) -> MultiVector {
@@ -15962,7 +15970,7 @@ impl Meet<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<Origin> for TransFlector {
+impl Meet<Origin> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: Origin) -> Scalar {
@@ -15974,7 +15982,7 @@ impl Meet<Origin> for TransFlector {
     }
 }
 
-impl Meet<Plane> for TransFlector {
+impl Meet<Plane> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: Plane) -> MultiVector {
@@ -15995,7 +16003,7 @@ impl Meet<Plane> for TransFlector {
     }
 }
 
-impl Meet<PlaneAtOrigin> for TransFlector {
+impl Meet<PlaneAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: PlaneAtOrigin) -> MultiVector {
@@ -16015,7 +16023,7 @@ impl Meet<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<Point> for TransFlector {
+impl Meet<Point> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: Point) -> Scalar {
@@ -16027,7 +16035,7 @@ impl Meet<Point> for TransFlector {
     }
 }
 
-impl Meet<PointAtInfinity> for TransFlector {
+impl Meet<PointAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: PointAtInfinity) -> Scalar {
@@ -16039,7 +16047,7 @@ impl Meet<PointAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<Rotor> for TransFlector {
+impl Meet<Rotor> for Transflector {
     type Output = Flector;
 
     fn meet(self, other: Rotor) -> Flector {
@@ -16056,10 +16064,10 @@ impl Meet<Rotor> for TransFlector {
     }
 }
 
-impl Meet<TransFlector> for TransFlector {
+impl Meet<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -16080,12 +16088,12 @@ impl Meet<TransFlector> for TransFlector {
     }
 }
 
-impl Meet<Translator> for TransFlector {
-    type Output = TransFlector;
+impl Meet<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn meet(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3])
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
@@ -16299,11 +16307,11 @@ impl Meet<Origin> for Translator {
 }
 
 impl Meet<Plane> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -16314,11 +16322,11 @@ impl Meet<Plane> for Translator {
 }
 
 impl Meet<PlaneAtOrigin> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -16382,12 +16390,12 @@ impl Meet<Scalar> for Translator {
     }
 }
 
-impl Meet<TransFlector> for Translator {
-    type Output = TransFlector;
+impl Meet<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn meet(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0])
@@ -16757,10 +16765,10 @@ impl Wedge<Scalar> for Flector {
     }
 }
 
-impl Wedge<TransFlector> for Flector {
+impl Wedge<Transflector> for Flector {
     type Output = Motor;
 
-    fn wedge(self, other: TransFlector) -> Motor {
+    fn wedge(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -17043,10 +17051,10 @@ impl Wedge<Scalar> for FlectorAtInfinity {
     }
 }
 
-impl Wedge<TransFlector> for FlectorAtInfinity {
+impl Wedge<Transflector> for FlectorAtInfinity {
     type Output = Translator;
 
-    fn wedge(self, other: TransFlector) -> Translator {
+    fn wedge(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -17412,10 +17420,10 @@ impl Wedge<Scalar> for Line {
     }
 }
 
-impl Wedge<TransFlector> for Line {
+impl Wedge<Transflector> for Line {
     type Output = Plane;
 
-    fn wedge(self, other: TransFlector) -> Plane {
+    fn wedge(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -17629,10 +17637,10 @@ impl Wedge<Scalar> for LineAtInfinity {
     }
 }
 
-impl Wedge<TransFlector> for LineAtInfinity {
+impl Wedge<Transflector> for LineAtInfinity {
     type Output = Horizon;
 
-    fn wedge(self, other: TransFlector) -> Horizon {
+    fn wedge(self, other: Transflector) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -17793,10 +17801,10 @@ impl Wedge<Scalar> for LineAtOrigin {
     }
 }
 
-impl Wedge<TransFlector> for LineAtOrigin {
+impl Wedge<Transflector> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: TransFlector) -> PlaneAtOrigin {
+    fn wedge(self, other: Transflector) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -18060,12 +18068,12 @@ impl Wedge<Scalar> for Magnitude {
     }
 }
 
-impl Wedge<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Wedge<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[0]) * other.group1(),
             },
@@ -18330,10 +18338,10 @@ impl Wedge<Scalar> for Motor {
     }
 }
 
-impl Wedge<TransFlector> for Motor {
+impl Wedge<Transflector> for Motor {
     type Output = Plane;
 
-    fn wedge(self, other: TransFlector) -> Plane {
+    fn wedge(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -18796,10 +18804,10 @@ impl Wedge<Scalar> for MultiVector {
     }
 }
 
-impl Wedge<TransFlector> for MultiVector {
+impl Wedge<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: TransFlector) -> MultiVector {
+    fn wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group1()[0]])
@@ -19211,10 +19219,10 @@ impl Wedge<Scalar> for MultiVectorAtInfinity {
     }
 }
 
-impl Wedge<TransFlector> for MultiVectorAtInfinity {
+impl Wedge<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn wedge(self, other: TransFlector) -> MultiVector {
+    fn wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group1()[0]])
@@ -19477,10 +19485,10 @@ impl Wedge<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl Wedge<TransFlector> for MultiVectorAtOrigin {
+impl Wedge<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
-    fn wedge(self, other: TransFlector) -> MultiVectorAtOrigin {
+    fn wedge(self, other: Transflector) -> MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, other.group1()[3]])
@@ -19672,10 +19680,10 @@ impl Wedge<Scalar> for Origin {
     }
 }
 
-impl Wedge<TransFlector> for Origin {
+impl Wedge<Transflector> for Origin {
     type Output = Rotor;
 
-    fn wedge(self, other: TransFlector) -> Rotor {
+    fn wedge(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -19829,10 +19837,10 @@ impl Wedge<Scalar> for Plane {
     }
 }
 
-impl Wedge<TransFlector> for Plane {
+impl Wedge<Transflector> for Plane {
     type Output = AntiScalar;
 
-    fn wedge(self, other: TransFlector) -> AntiScalar {
+    fn wedge(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -19945,10 +19953,10 @@ impl Wedge<Scalar> for PlaneAtOrigin {
     }
 }
 
-impl Wedge<TransFlector> for PlaneAtOrigin {
+impl Wedge<Transflector> for PlaneAtOrigin {
     type Output = AntiScalar;
 
-    fn wedge(self, other: TransFlector) -> AntiScalar {
+    fn wedge(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -20228,10 +20236,10 @@ impl Wedge<Scalar> for Point {
     }
 }
 
-impl Wedge<TransFlector> for Point {
+impl Wedge<Transflector> for Point {
     type Output = Motor;
 
-    fn wedge(self, other: TransFlector) -> Motor {
+    fn wedge(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -20507,10 +20515,10 @@ impl Wedge<Scalar> for PointAtInfinity {
     }
 }
 
-impl Wedge<TransFlector> for PointAtInfinity {
+impl Wedge<Transflector> for PointAtInfinity {
     type Output = Translator;
 
-    fn wedge(self, other: TransFlector) -> Translator {
+    fn wedge(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -20687,10 +20695,10 @@ impl Wedge<Scalar> for Rotor {
     }
 }
 
-impl Wedge<TransFlector> for Rotor {
+impl Wedge<Transflector> for Rotor {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: TransFlector) -> PlaneAtOrigin {
+    fn wedge(self, other: Transflector) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -20952,12 +20960,12 @@ impl Wedge<Scalar> for Scalar {
     }
 }
 
-impl Wedge<TransFlector> for Scalar {
-    type Output = TransFlector;
+impl Wedge<Transflector> for Scalar {
+    type Output = Transflector;
 
-    fn wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -20977,7 +20985,7 @@ impl Wedge<Translator> for Scalar {
     }
 }
 
-impl Wedge<Flector> for TransFlector {
+impl Wedge<Flector> for Transflector {
     type Output = Motor;
 
     fn wedge(self, other: Flector) -> Motor {
@@ -20998,7 +21006,7 @@ impl Wedge<Flector> for TransFlector {
     }
 }
 
-impl Wedge<FlectorAtInfinity> for TransFlector {
+impl Wedge<FlectorAtInfinity> for Transflector {
     type Output = Translator;
 
     fn wedge(self, other: FlectorAtInfinity) -> Translator {
@@ -21015,7 +21023,7 @@ impl Wedge<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Wedge<Line> for TransFlector {
+impl Wedge<Line> for Transflector {
     type Output = Plane;
 
     fn wedge(self, other: Line) -> Plane {
@@ -21029,7 +21037,7 @@ impl Wedge<Line> for TransFlector {
     }
 }
 
-impl Wedge<LineAtInfinity> for TransFlector {
+impl Wedge<LineAtInfinity> for Transflector {
     type Output = Horizon;
 
     fn wedge(self, other: LineAtInfinity) -> Horizon {
@@ -21041,7 +21049,7 @@ impl Wedge<LineAtInfinity> for TransFlector {
     }
 }
 
-impl Wedge<LineAtOrigin> for TransFlector {
+impl Wedge<LineAtOrigin> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: LineAtOrigin) -> PlaneAtOrigin {
@@ -21055,12 +21063,12 @@ impl Wedge<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Wedge<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl Wedge<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn wedge(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: self.group1() * Simd32x4::from(other.group0()[0]),
             },
@@ -21068,7 +21076,7 @@ impl Wedge<Magnitude> for TransFlector {
     }
 }
 
-impl Wedge<Motor> for TransFlector {
+impl Wedge<Motor> for Transflector {
     type Output = Plane;
 
     fn wedge(self, other: Motor) -> Plane {
@@ -21082,7 +21090,7 @@ impl Wedge<Motor> for TransFlector {
     }
 }
 
-impl Wedge<MultiVector> for TransFlector {
+impl Wedge<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -21110,7 +21118,7 @@ impl Wedge<MultiVector> for TransFlector {
     }
 }
 
-impl Wedge<MultiVectorAtInfinity> for TransFlector {
+impl Wedge<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVectorAtInfinity) -> MultiVector {
@@ -21134,7 +21142,7 @@ impl Wedge<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl Wedge<MultiVectorAtOrigin> for TransFlector {
+impl Wedge<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVectorAtOrigin;
 
     fn wedge(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -21153,7 +21161,7 @@ impl Wedge<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl Wedge<Origin> for TransFlector {
+impl Wedge<Origin> for Transflector {
     type Output = Rotor;
 
     fn wedge(self, other: Origin) -> Rotor {
@@ -21167,7 +21175,7 @@ impl Wedge<Origin> for TransFlector {
     }
 }
 
-impl Wedge<Plane> for TransFlector {
+impl Wedge<Plane> for Transflector {
     type Output = AntiScalar;
 
     fn wedge(self, other: Plane) -> AntiScalar {
@@ -21179,7 +21187,7 @@ impl Wedge<Plane> for TransFlector {
     }
 }
 
-impl Wedge<PlaneAtOrigin> for TransFlector {
+impl Wedge<PlaneAtOrigin> for Transflector {
     type Output = AntiScalar;
 
     fn wedge(self, other: PlaneAtOrigin) -> AntiScalar {
@@ -21191,7 +21199,7 @@ impl Wedge<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl Wedge<Point> for TransFlector {
+impl Wedge<Point> for Transflector {
     type Output = Motor;
 
     fn wedge(self, other: Point) -> Motor {
@@ -21211,7 +21219,7 @@ impl Wedge<Point> for TransFlector {
     }
 }
 
-impl Wedge<PointAtInfinity> for TransFlector {
+impl Wedge<PointAtInfinity> for Transflector {
     type Output = Translator;
 
     fn wedge(self, other: PointAtInfinity) -> Translator {
@@ -21228,7 +21236,7 @@ impl Wedge<PointAtInfinity> for TransFlector {
     }
 }
 
-impl Wedge<Rotor> for TransFlector {
+impl Wedge<Rotor> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: Rotor) -> PlaneAtOrigin {
@@ -21242,12 +21250,12 @@ impl Wedge<Rotor> for TransFlector {
     }
 }
 
-impl Wedge<Scalar> for TransFlector {
-    type Output = TransFlector;
+impl Wedge<Scalar> for Transflector {
+    type Output = Transflector;
 
-    fn wedge(self, other: Scalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Scalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -21255,10 +21263,10 @@ impl Wedge<Scalar> for TransFlector {
     }
 }
 
-impl Wedge<TransFlector> for TransFlector {
+impl Wedge<Transflector> for Transflector {
     type Output = Translator;
 
-    fn wedge(self, other: TransFlector) -> Translator {
+    fn wedge(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -21272,7 +21280,7 @@ impl Wedge<TransFlector> for TransFlector {
     }
 }
 
-impl Wedge<Translator> for TransFlector {
+impl Wedge<Translator> for Transflector {
     type Output = Horizon;
 
     fn wedge(self, other: Translator) -> Horizon {
@@ -21475,10 +21483,10 @@ impl Wedge<Scalar> for Translator {
     }
 }
 
-impl Wedge<TransFlector> for Translator {
+impl Wedge<Transflector> for Translator {
     type Output = Horizon;
 
-    fn wedge(self, other: TransFlector) -> Horizon {
+    fn wedge(self, other: Transflector) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],

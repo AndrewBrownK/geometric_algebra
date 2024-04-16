@@ -39,7 +39,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Rotor:e41,e42,e43,e1234",
         "Translator:e23,e31,e12,e1234",
         "Flector:e1,e2,e3,e4|e423,e431,e412,e321",
-        "TransFlector:e1,e2,e3|e423,e431,e412,e321",
+        "Transflector:e1,e2,e3|e423,e431,e412,e321",
         "FlectorAtInfinity:e1,e2,e3,e321",
         "MultiVector:\
             1,e1234|\
@@ -98,11 +98,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();
 
-    let rga3d = RigidGeometricAlgebra {
-        generator_squares: &[1, 1, 1, 0],
-        name: RGA3D,
-        dialect,
-    };
+    let rga3d = RigidGeometricAlgebra::new(RGA3D, 3, dialect);
 
     let mut registry = MultiVectorClassRegistry::default();
     for multi_vector_descriptor in mv_iter {
@@ -253,7 +249,7 @@ use crate::products::geometric::GeometricProduct;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::aspect_duals::*;
+use crate::involutions::*;
 use crate::products::exterior::AntiWedge;",
     )?;
     code_gen.emit_contractions(&mut emitter)?;
@@ -262,7 +258,7 @@ use crate::products::exterior::AntiWedge;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::aspect_duals::*;
+use crate::involutions::*;
 use crate::products::exterior::Wedge;",
     )?;
     code_gen.emit_expansions(&mut emitter)?;
@@ -275,7 +271,7 @@ use crate::products::exterior::Wedge;
 use crate::products::exterior::AntiWedge;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
-use crate::aspect_duals::*;",
+use crate::involutions::*;",
     )?;
     code_gen.emit_projections_and_stuff(&mut emitter)?;
 

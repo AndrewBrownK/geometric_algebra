@@ -94,6 +94,14 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         v
     }
 
+    fn is_degenerate(&self) -> bool {
+        return false
+    }
+
+    fn has_multiple_complements(&self) -> bool {
+        return self.surface_generator_squares.len() % 2 == 0;
+    }
+
     fn right_complement(&self, a: &BasisElement) -> BasisElement {
         let mut result = BasisElement {
             coefficient: a.coefficient,

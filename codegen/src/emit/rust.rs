@@ -219,6 +219,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 for line in docs.split("\n") {
                     let line = line.trim();
                     if line.is_empty() {
+                        collector.write_all(b"///\n")?;
                         continue;
                     }
                     collector.write_fmt(format_args!("/// {}\n", line))?;

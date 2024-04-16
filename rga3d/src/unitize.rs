@@ -9,8 +9,10 @@ use crate::norms::WeightNorm;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
+///
 /// Unitization
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
+///
 pub trait Unitize {
     type Output;
     fn unitize(self) -> Self::Output;
@@ -172,10 +174,10 @@ impl Unitize for Rotor {
     }
 }
 
-impl Unitize for TransFlector {
-    type Output = TransFlector;
+impl Unitize for Transflector {
+    type Output = Transflector;
 
-    fn unitize(self) -> TransFlector {
+    fn unitize(self) -> Transflector {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

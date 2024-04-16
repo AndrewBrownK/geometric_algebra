@@ -11,28 +11,46 @@ use crate::*;
 use projective_ga::{simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-/// Right Bulk Dual
+/// RightBulkDual
+/// Get the complement of an aspect of an object.
+///
+/// The metric of this algebra is degenerate. One of the side effects of this is that
+/// invoking the `Dual` operation erases the Weight (prior to invoking `RightComplement`), and
+/// invoking the `AntiDual` operation erases the Bulk (prior to invoking `RightComplement`). It is for
+/// this reason that (in this algebra) `RightBulkDual` = `Dual` and `RightWeightDual` = `AntiDual`.
+///
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait RightBulkDual {
     type Output;
     fn right_bulk_dual(self) -> Self::Output;
 }
 
-/// Right Weight Dual
+/// RightWeightDual
+/// Get the complement of an aspect of an object.
+///
+/// The metric of this algebra is degenerate. One of the side effects of this is that
+/// invoking the `Dual` operation erases the Weight (prior to invoking `RightComplement`), and
+/// invoking the `AntiDual` operation erases the Bulk (prior to invoking `RightComplement`). It is for
+/// this reason that (in this algebra) `RightBulkDual` = `Dual` and `RightWeightDual` = `AntiDual`.
+///
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait RightWeightDual {
     type Output;
     fn right_weight_dual(self) -> Self::Output;
 }
 
-/// Left Bulk Dual
+/// LeftBulkDual
+/// Get the complement of an aspect of an object.
+///
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait LeftBulkDual {
     type Output;
     fn left_bulk_dual(self) -> Self::Output;
 }
 
-/// Left Weight Dual
+/// LeftWeightDual
+/// Get the complement of an aspect of an object.
+///
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
 pub trait LeftWeightDual {
     type Output;
@@ -143,7 +161,7 @@ impl LeftBulkDual for Scalar {
     }
 }
 
-impl LeftBulkDual for TransFlector {
+impl LeftBulkDual for Transflector {
     type Output = Flector;
 
     fn left_bulk_dual(self) -> Flector {
@@ -263,7 +281,7 @@ impl LeftWeightDual for Rotor {
     }
 }
 
-impl LeftWeightDual for TransFlector {
+impl LeftWeightDual for Transflector {
     type Output = PointAtInfinity;
 
     fn left_weight_dual(self) -> PointAtInfinity {
@@ -383,7 +401,7 @@ impl RightBulkDual for Scalar {
     }
 }
 
-impl RightBulkDual for TransFlector {
+impl RightBulkDual for Transflector {
     type Output = Flector;
 
     fn right_bulk_dual(self) -> Flector {
@@ -503,7 +521,7 @@ impl RightWeightDual for Rotor {
     }
 }
 
-impl RightWeightDual for TransFlector {
+impl RightWeightDual for Transflector {
     type Output = PointAtInfinity;
 
     fn right_weight_dual(self) -> PointAtInfinity {

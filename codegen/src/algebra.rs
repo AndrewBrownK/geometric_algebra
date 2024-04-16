@@ -20,9 +20,12 @@ pub trait GeometricAlgebraTrait {
         let mut v = vec![];
         for index in 0..self.basis_size() as BasisElementIndex {
             let mut element = BasisElement::from_index(index);
-            let dual = self.dual(&element);
+            let mut dual = self.dual(&element);
+            if dual.coefficient == 0 {
+                dual = self.right_complement(&element);
+            }
             if dual.cmp(&element) == std::cmp::Ordering::Less {
-                element.coefficient = self.dual(&element).coefficient;
+                element.coefficient = dual.coefficient;
             }
             v.push(element);
         }
@@ -36,6 +39,12 @@ pub trait GeometricAlgebraTrait {
         BasisElement::from_index(self.basis_size() as BasisElementIndex - 1)
     }
 
+    // Does applying the metric erase information?
+    fn is_degenerate(&self) -> bool;
+
+    // Even number of dimensions = yes
+    // Odd number of dimensions = no
+    fn has_multiple_complements(&self) -> bool;
     fn right_complement(&self, a: &BasisElement) -> BasisElement;
     fn left_complement(&self, a: &BasisElement) -> BasisElement;
     fn dual(&self, a: &BasisElement) -> BasisElement;
@@ -116,7 +125,7 @@ impl Involution {
     pub fn involutions<GA: GeometricAlgebraTrait>(algebra: &GA) -> Vec<(&'static str, Self, &'static str)> {
         let involution = Self::identity(algebra);
         let dimensions = algebra.anti_scalar_element().grade();
-        vec![
+        let mut result = vec![
             ("Neg", involution.negated(|_grade| true), ""),
             (
                 "Automorphism",
@@ -148,21 +157,32 @@ impl Involution {
                 "\nAntiDuals are a special kind a Dual.\nhttps://conformalgeometricalgebra.org/wiki/index.php?title=Duals\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
             ),
             (
-                "RightComplement",
-                involution.right_complement(algebra),
-                "\nRight Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
-            ),
-            (
-                "LeftComplement",
-                involution.left_complement(algebra),
-                "\nLeft Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
-            ),
-            (
                 "DoubleComplement",
                 involution.double_complement(algebra),
                 "\nDouble Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
             ),
-        ]
+        ];
+
+        if algebra.has_multiple_complements() {
+            result.push((
+                "RightComplement",
+                involution.right_complement(algebra),
+                "\nRight Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ));
+            result.push((
+                "LeftComplement",
+                involution.left_complement(algebra),
+                "\nLeft Complement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ));
+        } else {
+            result.push((
+                "Complement",
+                involution.right_complement(algebra),
+                "\nComplement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ));
+        }
+
+        return result;
     }
 }
 

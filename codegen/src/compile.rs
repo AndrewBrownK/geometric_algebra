@@ -305,7 +305,10 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
     let mut result_signature = Vec::new();
     for a_element in a_flat_basis.iter() {
         for (in_element, out_element) in involution.terms.iter() {
-            if in_element.index == a_element.index {
+            let indexes_match = in_element.index == a_element.index;
+            let in_is_nonzero = in_element.coefficient != 0;
+            let out_is_nonzero = out_element.coefficient != 0;
+            if indexes_match && in_is_nonzero && out_is_nonzero {
                 result_signature.push(out_element.index);
                 break;
             }
@@ -319,19 +322,15 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
         }
     }
     result_signature.sort_unstable();
-    let mut result_candidates: Vec<_> = registry.classes.iter().filter_map(|it| {
-        let rc_fb: Vec<_> = it.flat_basis().iter().map(|it| it.index).collect();
-        if result_signature.iter().all(|it| rc_fb.contains(&it)) { Some(it) } else { None }
-    }).collect();
-    result_candidates.sort_by(|a, b| a.flat_basis().len().cmp(&b.flat_basis().len()));
 
-    let result_class = match result_candidates.first() {
+    let result_class = match registry.get_at_least(result_signature.as_slice()) {
         None => return AstNode::None,
-        Some(rc) => *rc,
+        Some(rc) => rc,
     };
     let result_flat_basis = result_class.flat_basis();
     let mut body = Vec::new();
     let mut base_index = 0;
+    let mut all_zeroes = true;
     for result_group in result_class.grouped_basis.iter() {
         let size = result_group.len();
         let mut a_group_index = None;
@@ -339,7 +338,15 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
         let mut a_indices = vec![];
         'for_index_in_group: for index_in_group in 0..size {
             let result_element = &result_flat_basis[base_index + index_in_group];
-            let (in_element, out_element) = involution.terms.iter().find(|(_in, out)| out.index == result_element.index).unwrap();
+            let (in_element, out_element) = match involution.terms.iter().find(|(_in, out)| out.index == result_element.index) {
+                Some((_in, out)) => (_in.clone(), out.clone()),
+                None => (BasisElement::zero(), BasisElement::zero())
+            };
+            if in_element.coefficient == 0 || out_element.coefficient == 0 {
+                factors.push(0);
+                a_indices.push(GatherData::RawZero);
+                continue 'for_index_in_group;
+            }
 
             let index_in_a = a_flat_basis.iter().position(|a_element| a_element.index == in_element.index);
             let index_in_a = match index_in_a {
@@ -350,6 +357,7 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
                 },
                 Some(index_in_a) => index_in_a,
             };
+            all_zeroes = false;
             let coefficient = out_element.coefficient * result_element.coefficient * in_element.coefficient * a_flat_basis[index_in_a].coefficient;
             let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
             let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
@@ -390,6 +398,9 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
         };
         body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
         base_index += size;
+    }
+    if all_zeroes {
+        return AstNode::None;
     }
     AstNode::TraitImplementation {
         result: Parameter {
@@ -1965,7 +1976,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             // Transflection
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
-            if param_a.multi_vector_class().class_name != "TransFlector" {
+            if param_a.multi_vector_class().class_name != "Transflector" {
                 continue;
             }
             let name = "Transflect";
@@ -2039,27 +2050,44 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
         }
 
-        // TODO here
-        // TODO get rid of left/right distinction in GA's that only have one complement
-        // TODO reflect the insights in this thread: https://twitter.com/EricLengyel/status/1775663934424654262
-        let aspect_duals = [
-            ("RightBulkDual", "Bulk", "RightComplement"),
-            ("RightWeightDual", "Weight", "RightComplement"),
-            ("LeftBulkDual", "Bulk", "LeftComplement"),
-            ("LeftWeightDual", "Weight", "LeftComplement"),
-            ("RightRoundBulkDual", "RoundBulk", "RightComplement"),
-            ("RightRoundWeightDual", "RoundWeight", "RightComplement"),
-            ("LeftRoundBulkDual", "RoundBulk", "LeftComplement"),
-            ("LeftRoundWeightDual", "RoundWeight", "LeftComplement"),
+        // This has an almost annoying amount of nuance, but it really helps cut down on junk
+        // trait definitions. See thread: https://twitter.com/EricLengyel/status/1775663934424654262
+        let is_cga = self.algebra.algebra_name().contains("cga");
+        let multiple_complements = self.algebra.has_multiple_complements();
+        let aspects = ["Bulk", "Weight"];
+        let complements = if multiple_complements { vec!["Right", "Left"] } else { vec![""] };
+        let round_aspects = if is_cga { vec!["", "Round"] } else { vec![""] };
+        let static_names = [
+            "BulkDual",
+            "RightBulkDual",
+            "LeftBulkDual",
+            "RoundBulkDual",
+            "RightRoundBulkDual",
+            "LeftRoundBulkDual",
+            "WeightDual",
+            "RightWeightDual",
+            "LeftWeightDual",
+            "RoundWeightDual",
+            "RightRoundWeightDual",
+            "LeftRoundWeightDual",
         ];
-        for (name, bulkOrWeight, complement) in aspect_duals.into_iter() {
-            for param_a in registry.single_parameters() {
-                let _: Option<()> = try {
-                    let aspect = self.trait_impls.get_single_invocation(bulkOrWeight, variable(&param_a))?;
-                    let comp = self.trait_impls.get_single_invocation(complement, aspect)?;
-                    let the_impl = single_expression_single_trait_impl(name, &param_a, comp);
-                    self.trait_impls.add_single_impl(name, param_a, the_impl);
-                };
+
+        for round_aspect in round_aspects {
+            for leftOrRight in complements.iter() {
+                for bulkOrWeight in aspects.iter() {
+                    let name = format!("{leftOrRight}{round_aspect}{bulkOrWeight}Dual");
+                    let static_name = static_names.iter().find(|it| **it == name.as_str())
+                        .expect("You need to manually write out static names for this, it's not worth over-engineering the lifetimes here");
+                    let complement = format!("{leftOrRight}Complement");
+                    for param_a in registry.single_parameters() {
+                        let _: Option<()> = try {
+                            let aspect = self.trait_impls.get_single_invocation(bulkOrWeight, variable(&param_a))?;
+                            let comp = self.trait_impls.get_single_invocation(complement.as_str(), aspect)?;
+                            let the_impl = single_expression_single_trait_impl(static_name, &param_a, comp);
+                            self.trait_impls.add_single_impl(static_name, param_a, the_impl);
+                        };
+                    }
+                }
             }
         }
 
@@ -2088,10 +2116,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // TODO check CGA against expansions from page 217 onward
         let contraction_expansion_stuff = [
-            ("BulkContraction", "RightBulkDual", "AntiWedge"),
-            ("WeightContraction", "RightWeightDual", "AntiWedge"),
-            ("BulkExpansion", "RightBulkDual", "Wedge"),
-            ("WeightExpansion", "RightWeightDual", "Wedge"),
+            ("BulkContraction", "Dual", "AntiWedge"),
+            ("WeightContraction", "AntiDual", "AntiWedge"),
+            ("BulkExpansion", "Dual", "Wedge"),
+            ("WeightExpansion", "AntiDual", "Wedge"),
         ];
         for (name, dual, product) in contraction_expansion_stuff {
             for (param_a, param_b) in registry.pair_parameters() {
@@ -2459,8 +2487,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let anti_wedge_name = self.algebra.dialect().exterior_anti_product.first()?;
                 let car = self.trait_impls.get_single_invocation("Carrier", variable(&param_a))?;
-                let bulk_dual = self.trait_impls.get_single_invocation("RightBulkDual", variable(&param_a))?;
-                let container = self.trait_impls.get_single_invocation("Container", bulk_dual)?;
+                let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_a))?;
+                let container = self.trait_impls.get_single_invocation("Container", dual)?;
                 let neg = self.trait_impls.get_single_invocation("Neg", container)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge_name, neg, car)?;
                 let partner = single_expression_single_trait_impl(name, &param_a, anti_wedge);
@@ -2740,89 +2768,57 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_aspect_duals(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let mut trait_names = BTreeSet::new();
-        trait_names.insert("RightBulkDual".to_string());
-        trait_names.insert("RightWeightDual".to_string());
-        trait_names.insert("LeftBulkDual".to_string());
-        trait_names.insert("LeftWeightDual".to_string());
+        // This has an almost annoying amount of nuance, but it really helps cut down on junk
+        // trait definitions. See thread: https://twitter.com/EricLengyel/status/1775663934424654262
+        let is_degenerate = self.algebra.is_degenerate();
         let is_cga = self.algebra.algebra_name().contains("cga");
-        if is_cga {
-            trait_names.insert("RightRoundBulkDual".to_string());
-            trait_names.insert("RightRoundWeightDual".to_string());
-            trait_names.insert("LeftRoundBulkDual".to_string());
-            trait_names.insert("LeftRoundWeightDual".to_string());
-        }
+        let multiple_complements = self.algebra.has_multiple_complements();
+        let aspects = ["Bulk", "Weight"];
+        let complements = if multiple_complements { vec!["Right", "Left"] } else { vec![""] };
+        let round_aspects = if is_cga { vec!["", "Round"] } else { vec![""] };
 
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "RightBulkDual".to_string(),
-            params: 1,
-            docs: "
-            Right Bulk Dual
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-            ".to_string(),
-        })?;
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "RightWeightDual".to_string(),
-            params: 1,
-            docs: "
-            Right Weight Dual
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-            ".to_string(),
-        })?;
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "LeftBulkDual".to_string(),
-            params: 1,
-            docs: "
-            Left Bulk Dual
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-            ".to_string(),
-        })?;
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "LeftWeightDual".to_string(),
-            params: 1,
-            docs: "
-            Left Weight Dual
-            https://projectivegeometricalgebra.org/projgeomalg.pdf
-            ".to_string(),
-        })?;
+        let mut trait_names = BTreeSet::new();
+        for round_aspect in round_aspects {
+            for leftOrRight in complements.iter() {
+                for bulkOrWeight in aspects.iter() {
+                    let name = format!("{leftOrRight}{round_aspect}{bulkOrWeight}Dual");
+                    let explain = "Get the complement of an aspect of an object.";
+                    let pro_tip = if is_degenerate && round_aspect.is_empty() {
+                        let (rbd, rwd, comp) = match *leftOrRight {
+                            "Right" => ("RightBulkDual", "RightWeightDual", "RightComplement"),
+                            "" => ("BulkDual", "WeightDual", "Complement"),
+                            _ => ("", "", ""),
+                        };
+                        if rbd.is_empty() {
+                            "".to_string()
+                        } else {
+                            format!("The metric of this algebra is degenerate. One of the side \
+                                effects of this is that \n invoking the `Dual` operation erases the \
+                                Weight (prior to invoking `{comp}`), and \n invoking the `AntiDual` \
+                                operation erases the Bulk (prior to invoking `{comp}`). It is for \n\
+                                this reason that (in this algebra) `{rbd}` = `Dual` and `{rwd}` = \
+                                `AntiDual`.\n\n")
+                        }
+                    } else {
+                        "".to_string()
+                    };
+                    let links = if is_cga {
+                        "https://projectivegeometricalgebra.org/projgeomalg.pdf
+                        https://projectivegeometricalgebra.org/confgeomalg.pdf"
+                    } else {
+                        "https://projectivegeometricalgebra.org/projgeomalg.pdf"
+                    };
 
-        if is_cga {
-            emitter.emit(&AstNode::TraitDefinition {
-                name: "RightRoundBulkDual".to_string(),
-                params: 1,
-                docs: "
-                Right Round Bulk Dual
-                https://projectivegeometricalgebra.org/projgeomalg.pdf
-                https://projectivegeometricalgebra.org/confgeomalg.pdf
-                ".to_string(),
-            })?;
-            emitter.emit(&AstNode::TraitDefinition {
-                name: "RightRoundWeightDual".to_string(),
-                params: 1,
-                docs: "
-                Right Round Weight Dual. Needed to implement CoCarriers.
-                https://projectivegeometricalgebra.org/projgeomalg.pdf
-                https://projectivegeometricalgebra.org/confgeomalg.pdf
-                ".to_string(),
-            })?;
-            emitter.emit(&AstNode::TraitDefinition {
-                name: "LeftRoundBulkDual".to_string(),
-                params: 1,
-                docs: "
-                Left Round Bulk Dual
-                https://projectivegeometricalgebra.org/projgeomalg.pdf
-                https://projectivegeometricalgebra.org/confgeomalg.pdf
-                ".to_string(),
-            })?;
-            emitter.emit(&AstNode::TraitDefinition {
-                name: "LeftRoundWeightDual".to_string(),
-                params: 1,
-                docs: "
-                Left Round Weight Dual
-                https://projectivegeometricalgebra.org/projgeomalg.pdf
-                https://projectivegeometricalgebra.org/confgeomalg.pdf
-                ".to_string(),
-            })?;
+                    let docs = format!("{name}\n{explain}\n\n{pro_tip}{links}");
+
+                    trait_names.insert(name.clone());
+                    emitter.emit(&AstNode::TraitDefinition {
+                        name,
+                        params: 1,
+                        docs,
+                    })?;
+                }
+            }
         }
 
         let trait_names: Vec<_> = trait_names.iter().map(|it| it.as_str()).collect();

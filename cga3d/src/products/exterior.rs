@@ -7,33 +7,41 @@
 
 use crate::*;
 
+///
 /// Exterior Product
 /// Synonyms included: Wedge, Join
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait Wedge<T> {
     type Output;
     fn wedge(self, other: T) -> Self::Output;
 }
 
+///
 /// Exterior Product
 /// Synonyms included: Wedge, Join
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait Join<T> {
     type Output;
     fn join(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Anti-Product
 /// Synonyms included: AntiWedge, Meet
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait AntiWedge<T> {
     type Output;
     fn anti_wedge(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Anti-Product
 /// Synonyms included: AntiWedge, Meet
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Exterior_products
+///
 pub trait Meet<T> {
     type Output;
     fn meet(self, other: T) -> Self::Output;
@@ -65,12 +73,12 @@ impl AntiWedge<Circle> for AntiScalar {
     }
 }
 
-impl AntiWedge<CircleBulk> for AntiScalar {
-    type Output = CircleBulk;
+impl AntiWedge<CircleBulkAspect> for AntiScalar {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -89,12 +97,12 @@ impl AntiWedge<CircleCarrierAspect> for AntiScalar {
     }
 }
 
-impl AntiWedge<CircleWeight> for AntiScalar {
-    type Output = CircleWeight;
+impl AntiWedge<CircleWeightAspect> for AntiScalar {
+    type Output = CircleWeightAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn anti_wedge(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -115,12 +123,12 @@ impl AntiWedge<Dipole> for AntiScalar {
     }
 }
 
-impl AntiWedge<DipoleBulk> for AntiScalar {
-    type Output = DipoleBulk;
+impl AntiWedge<DipoleBulkAspect> for AntiScalar {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -140,12 +148,12 @@ impl AntiWedge<DipoleCarrierAspect> for AntiScalar {
     }
 }
 
-impl AntiWedge<DipoleWeight> for AntiScalar {
-    type Output = DipoleWeight;
+impl AntiWedge<DipoleWeightAspect> for AntiScalar {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -406,12 +414,12 @@ impl AntiWedge<RoundPointAtOrigin> for AntiScalar {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for AntiScalar {
-    type Output = RoundPointBulk;
+impl AntiWedge<RoundPointBulkAspect> for AntiScalar {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -455,24 +463,24 @@ impl AntiWedge<Sphere> for AntiScalar {
     }
 }
 
-impl AntiWedge<SphereWeight> for AntiScalar {
-    type Output = SphereWeight;
+impl AntiWedge<SphereWeightAspect> for AntiScalar {
+    type Output = SphereWeightAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl AntiWedge<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -534,12 +542,12 @@ impl AntiWedge<Circle> for Circle {
     }
 }
 
-impl AntiWedge<CircleBulk> for Circle {
-    type Output = RoundPointBulk;
+impl AntiWedge<CircleBulkAspect> for Circle {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
             },
         }
@@ -563,10 +571,10 @@ impl AntiWedge<CircleCarrierAspect> for Circle {
     }
 }
 
-impl AntiWedge<CircleWeight> for Circle {
+impl AntiWedge<CircleWeightAspect> for Circle {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: CircleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -602,10 +610,10 @@ impl AntiWedge<Dipole> for Circle {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Circle {
+impl AntiWedge<DipoleBulkAspect> for Circle {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: DipoleBulk) -> Scalar {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -632,10 +640,10 @@ impl AntiWedge<DipoleCarrierAspect> for Circle {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Circle {
+impl AntiWedge<DipoleWeightAspect> for Circle {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: DipoleWeight) -> Scalar {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -1007,10 +1015,10 @@ impl AntiWedge<Sphere> for Circle {
     }
 }
 
-impl AntiWedge<SphereWeight> for Circle {
+impl AntiWedge<SphereWeightAspect> for Circle {
     type Output = DipoleCarrierAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> DipoleCarrierAspect {
+    fn anti_wedge(self, other: SphereWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
@@ -1020,10 +1028,10 @@ impl AntiWedge<SphereWeight> for Circle {
     }
 }
 
-impl AntiWedge<TransFlector> for Circle {
+impl AntiWedge<Transflector> for Circle {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -1078,31 +1086,31 @@ impl AntiWedge<Translator> for Circle {
     }
 }
 
-impl AntiWedge<AntiScalar> for CircleBulk {
-    type Output = CircleBulk;
+impl AntiWedge<AntiScalar> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: AntiScalar) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: AntiScalar) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Circle> for CircleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Circle> for CircleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Circle) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Circle) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
             },
         }
     }
 }
 
-impl AntiWedge<Dipole> for CircleBulk {
+impl AntiWedge<Dipole> for CircleBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Dipole) -> Scalar {
@@ -1114,7 +1122,7 @@ impl AntiWedge<Dipole> for CircleBulk {
     }
 }
 
-impl AntiWedge<FlatPoint> for CircleBulk {
+impl AntiWedge<FlatPoint> for CircleBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: FlatPoint) -> Scalar {
@@ -1126,7 +1134,7 @@ impl AntiWedge<FlatPoint> for CircleBulk {
     }
 }
 
-impl AntiWedge<FlatPointAtOrigin> for CircleBulk {
+impl AntiWedge<FlatPointAtOrigin> for CircleBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: FlatPointAtOrigin) -> Scalar {
@@ -1138,7 +1146,7 @@ impl AntiWedge<FlatPointAtOrigin> for CircleBulk {
     }
 }
 
-impl AntiWedge<Flector> for CircleBulk {
+impl AntiWedge<Flector> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Flector) -> MultiVector {
@@ -1160,43 +1168,43 @@ impl AntiWedge<Flector> for CircleBulk {
     }
 }
 
-impl AntiWedge<Line> for CircleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Line> for CircleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Line) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Line) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<LineAtOrigin> for CircleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<LineAtOrigin> for CircleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: LineAtOrigin) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: LineAtOrigin) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Magnitude> for CircleBulk {
-    type Output = CircleBulk;
+impl AntiWedge<Magnitude> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: Magnitude) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: Magnitude) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0()[1],
             },
         }
     }
 }
 
-impl AntiWedge<Motor> for CircleBulk {
+impl AntiWedge<Motor> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Motor) -> MultiVector {
@@ -1218,7 +1226,7 @@ impl AntiWedge<Motor> for CircleBulk {
     }
 }
 
-impl AntiWedge<MultiVector> for CircleBulk {
+impl AntiWedge<MultiVector> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -1240,31 +1248,31 @@ impl AntiWedge<MultiVector> for CircleBulk {
     }
 }
 
-impl AntiWedge<Plane> for CircleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<Plane> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: Plane) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Plane) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for CircleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<PlaneAtOrigin> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: PlaneAtOrigin) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: PlaneAtOrigin) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Rotor> for CircleBulk {
+impl AntiWedge<Rotor> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Rotor) -> MultiVector {
@@ -1286,36 +1294,36 @@ impl AntiWedge<Rotor> for CircleBulk {
     }
 }
 
-impl AntiWedge<Sphere> for CircleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<Sphere> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: Sphere) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Sphere) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for CircleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<Transflector> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: TransFlector) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Transflector) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
             },
         }
     }
 }
 
-impl AntiWedge<Translator> for CircleBulk {
-    type Output = CircleBulk;
+impl AntiWedge<Translator> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: Translator) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: Translator) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0()[3],
             },
         }
@@ -1450,11 +1458,11 @@ impl AntiWedge<FlectorAtInfinity> for CircleCarrierAspect {
 }
 
 impl AntiWedge<Horizon> for CircleCarrierAspect {
-    type Output = DipoleBulk;
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: Horizon) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Horizon) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -1477,11 +1485,11 @@ impl AntiWedge<Line> for CircleCarrierAspect {
 }
 
 impl AntiWedge<LineAtInfinity> for CircleCarrierAspect {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: LineAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: LineAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -1645,10 +1653,10 @@ impl AntiWedge<Sphere> for CircleCarrierAspect {
     }
 }
 
-impl AntiWedge<TransFlector> for CircleCarrierAspect {
+impl AntiWedge<Transflector> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -1696,19 +1704,19 @@ impl AntiWedge<Translator> for CircleCarrierAspect {
     }
 }
 
-impl AntiWedge<AntiScalar> for CircleWeight {
-    type Output = CircleWeight;
+impl AntiWedge<AntiScalar> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn anti_wedge(self, other: AntiScalar) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn anti_wedge(self, other: AntiScalar) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<Circle> for CircleWeight {
+impl AntiWedge<Circle> for CircleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: Circle) -> RoundPointCarrierAspect {
@@ -1722,7 +1730,7 @@ impl AntiWedge<Circle> for CircleWeight {
     }
 }
 
-impl AntiWedge<Dipole> for CircleWeight {
+impl AntiWedge<Dipole> for CircleWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Dipole) -> Scalar {
@@ -1734,7 +1742,7 @@ impl AntiWedge<Dipole> for CircleWeight {
     }
 }
 
-impl AntiWedge<FlatPoint> for CircleWeight {
+impl AntiWedge<FlatPoint> for CircleWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: FlatPoint) -> Scalar {
@@ -1746,7 +1754,7 @@ impl AntiWedge<FlatPoint> for CircleWeight {
     }
 }
 
-impl AntiWedge<FlatPointAtInfinity> for CircleWeight {
+impl AntiWedge<FlatPointAtInfinity> for CircleWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Scalar {
@@ -1758,7 +1766,7 @@ impl AntiWedge<FlatPointAtInfinity> for CircleWeight {
     }
 }
 
-impl AntiWedge<Flector> for CircleWeight {
+impl AntiWedge<Flector> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Flector) -> MultiVector {
@@ -1784,7 +1792,7 @@ impl AntiWedge<Flector> for CircleWeight {
     }
 }
 
-impl AntiWedge<FlectorAtInfinity> for CircleWeight {
+impl AntiWedge<FlectorAtInfinity> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: FlectorAtInfinity) -> MultiVector {
@@ -1808,19 +1816,19 @@ impl AntiWedge<FlectorAtInfinity> for CircleWeight {
     }
 }
 
-impl AntiWedge<Horizon> for CircleWeight {
-    type Output = DipoleBulk;
+impl AntiWedge<Horizon> for CircleWeightAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: Horizon) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Horizon) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<Line> for CircleWeight {
+impl AntiWedge<Line> for CircleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: Line) -> RoundPointCarrierAspect {
@@ -1834,12 +1842,12 @@ impl AntiWedge<Line> for CircleWeight {
     }
 }
 
-impl AntiWedge<LineAtInfinity> for CircleWeight {
-    type Output = RoundPointBulk;
+impl AntiWedge<LineAtInfinity> for CircleWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: LineAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: LineAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -1848,7 +1856,7 @@ impl AntiWedge<LineAtInfinity> for CircleWeight {
     }
 }
 
-impl AntiWedge<LineAtOrigin> for CircleWeight {
+impl AntiWedge<LineAtOrigin> for CircleWeightAspect {
     type Output = Origin;
 
     fn anti_wedge(self, other: LineAtOrigin) -> Origin {
@@ -1860,19 +1868,19 @@ impl AntiWedge<LineAtOrigin> for CircleWeight {
     }
 }
 
-impl AntiWedge<Magnitude> for CircleWeight {
-    type Output = CircleWeight;
+impl AntiWedge<Magnitude> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn anti_wedge(self, other: Magnitude) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn anti_wedge(self, other: Magnitude) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl AntiWedge<Motor> for CircleWeight {
+impl AntiWedge<Motor> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Motor) -> MultiVector {
@@ -1899,7 +1907,7 @@ impl AntiWedge<Motor> for CircleWeight {
     }
 }
 
-impl AntiWedge<MultiVector> for CircleWeight {
+impl AntiWedge<MultiVector> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -1930,7 +1938,7 @@ impl AntiWedge<MultiVector> for CircleWeight {
     }
 }
 
-impl AntiWedge<Plane> for CircleWeight {
+impl AntiWedge<Plane> for CircleWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn anti_wedge(self, other: Plane) -> DipoleCarrierAspect {
@@ -1945,12 +1953,12 @@ impl AntiWedge<Plane> for CircleWeight {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for CircleWeight {
-    type Output = DipoleWeight;
+impl AntiWedge<PlaneAtOrigin> for CircleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: PlaneAtOrigin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: PlaneAtOrigin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -1959,7 +1967,7 @@ impl AntiWedge<PlaneAtOrigin> for CircleWeight {
     }
 }
 
-impl AntiWedge<Rotor> for CircleWeight {
+impl AntiWedge<Rotor> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Rotor) -> MultiVector {
@@ -1984,7 +1992,7 @@ impl AntiWedge<Rotor> for CircleWeight {
     }
 }
 
-impl AntiWedge<Sphere> for CircleWeight {
+impl AntiWedge<Sphere> for CircleWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn anti_wedge(self, other: Sphere) -> DipoleCarrierAspect {
@@ -1999,10 +2007,10 @@ impl AntiWedge<Sphere> for CircleWeight {
     }
 }
 
-impl AntiWedge<TransFlector> for CircleWeight {
+impl AntiWedge<Transflector> for CircleWeightAspect {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -2025,7 +2033,7 @@ impl AntiWedge<TransFlector> for CircleWeight {
     }
 }
 
-impl AntiWedge<Translator> for CircleWeight {
+impl AntiWedge<Translator> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Translator) -> MultiVector {
@@ -2086,10 +2094,10 @@ impl AntiWedge<Circle> for Dipole {
     }
 }
 
-impl AntiWedge<CircleBulk> for Dipole {
+impl AntiWedge<CircleBulkAspect> for Dipole {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: CircleBulk) -> Scalar {
+    fn anti_wedge(self, other: CircleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group2()[3] * other.group0(),
@@ -2110,10 +2118,10 @@ impl AntiWedge<CircleCarrierAspect> for Dipole {
     }
 }
 
-impl AntiWedge<CircleWeight> for Dipole {
+impl AntiWedge<CircleWeightAspect> for Dipole {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: CircleWeight) -> Scalar {
+    fn anti_wedge(self, other: CircleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -2385,10 +2393,10 @@ impl AntiWedge<Sphere> for Dipole {
     }
 }
 
-impl AntiWedge<SphereWeight> for Dipole {
+impl AntiWedge<SphereWeightAspect> for Dipole {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: SphereWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(0.0) - self.group2() * Simd32x4::from(other.group0()),
@@ -2397,10 +2405,10 @@ impl AntiWedge<SphereWeight> for Dipole {
     }
 }
 
-impl AntiWedge<TransFlector> for Dipole {
+impl AntiWedge<Transflector> for Dipole {
     type Output = RoundPoint;
 
-    fn anti_wedge(self, other: TransFlector) -> RoundPoint {
+    fn anti_wedge(self, other: Transflector) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group1()[3])
@@ -2443,19 +2451,19 @@ impl AntiWedge<Translator> for Dipole {
     }
 }
 
-impl AntiWedge<AntiScalar> for DipoleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<AntiScalar> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: AntiScalar) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: AntiScalar) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<Circle> for DipoleBulk {
+impl AntiWedge<Circle> for DipoleBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Circle) -> Scalar {
@@ -2467,12 +2475,12 @@ impl AntiWedge<Circle> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Flector> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Flector> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Flector) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Flector) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0]),
@@ -2481,7 +2489,7 @@ impl AntiWedge<Flector> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Line> for DipoleBulk {
+impl AntiWedge<Line> for DipoleBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Line) -> Scalar {
@@ -2493,7 +2501,7 @@ impl AntiWedge<Line> for DipoleBulk {
     }
 }
 
-impl AntiWedge<LineAtOrigin> for DipoleBulk {
+impl AntiWedge<LineAtOrigin> for DipoleBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: LineAtOrigin) -> Scalar {
@@ -2505,19 +2513,19 @@ impl AntiWedge<LineAtOrigin> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Magnitude> for DipoleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<Magnitude> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: Magnitude) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Magnitude) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl AntiWedge<Motor> for DipoleBulk {
+impl AntiWedge<Motor> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Motor) -> MultiVector {
@@ -2541,7 +2549,7 @@ impl AntiWedge<Motor> for DipoleBulk {
     }
 }
 
-impl AntiWedge<MultiVector> for DipoleBulk {
+impl AntiWedge<MultiVector> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -2567,12 +2575,12 @@ impl AntiWedge<MultiVector> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Plane> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Plane> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Plane) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Plane) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -2581,12 +2589,12 @@ impl AntiWedge<Plane> for DipoleBulk {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<PlaneAtOrigin> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: PlaneAtOrigin) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: PlaneAtOrigin) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -2595,7 +2603,7 @@ impl AntiWedge<PlaneAtOrigin> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Rotor> for DipoleBulk {
+impl AntiWedge<Rotor> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Rotor) -> MultiVector {
@@ -2619,12 +2627,12 @@ impl AntiWedge<Rotor> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Sphere> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Sphere> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Sphere) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Sphere) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -2633,12 +2641,12 @@ impl AntiWedge<Sphere> for DipoleBulk {
     }
 }
 
-impl AntiWedge<TransFlector> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Transflector> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: TransFlector) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Transflector) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0]),
@@ -2647,12 +2655,12 @@ impl AntiWedge<TransFlector> for DipoleBulk {
     }
 }
 
-impl AntiWedge<Translator> for DipoleBulk {
-    type Output = DipoleBulk;
+impl AntiWedge<Translator> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: Translator) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: Translator) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
@@ -2708,11 +2716,11 @@ impl AntiWedge<Flector> for DipoleCarrierAspect {
 }
 
 impl AntiWedge<FlectorAtInfinity> for DipoleCarrierAspect {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: FlectorAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: FlectorAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
@@ -2720,11 +2728,11 @@ impl AntiWedge<FlectorAtInfinity> for DipoleCarrierAspect {
 }
 
 impl AntiWedge<Horizon> for DipoleCarrierAspect {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Horizon) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Horizon) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -2920,10 +2928,10 @@ impl AntiWedge<Sphere> for DipoleCarrierAspect {
     }
 }
 
-impl AntiWedge<TransFlector> for DipoleCarrierAspect {
+impl AntiWedge<Transflector> for DipoleCarrierAspect {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: TransFlector) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: Transflector) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -2961,19 +2969,19 @@ impl AntiWedge<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl AntiWedge<AntiScalar> for DipoleWeight {
-    type Output = DipoleWeight;
+impl AntiWedge<AntiScalar> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: AntiScalar) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: AntiScalar) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<Circle> for DipoleWeight {
+impl AntiWedge<Circle> for DipoleWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Circle) -> Scalar {
@@ -2985,7 +2993,7 @@ impl AntiWedge<Circle> for DipoleWeight {
     }
 }
 
-impl AntiWedge<Flector> for DipoleWeight {
+impl AntiWedge<Flector> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: Flector) -> RoundPointCarrierAspect {
@@ -2999,31 +3007,31 @@ impl AntiWedge<Flector> for DipoleWeight {
     }
 }
 
-impl AntiWedge<FlectorAtInfinity> for DipoleWeight {
-    type Output = RoundPointBulk;
+impl AntiWedge<FlectorAtInfinity> for DipoleWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: FlectorAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: FlectorAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl AntiWedge<Horizon> for DipoleWeight {
-    type Output = RoundPointBulk;
+impl AntiWedge<Horizon> for DipoleWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Horizon) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Horizon) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<Line> for DipoleWeight {
+impl AntiWedge<Line> for DipoleWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Line) -> Scalar {
@@ -3035,7 +3043,7 @@ impl AntiWedge<Line> for DipoleWeight {
     }
 }
 
-impl AntiWedge<LineAtInfinity> for DipoleWeight {
+impl AntiWedge<LineAtInfinity> for DipoleWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: LineAtInfinity) -> Scalar {
@@ -3047,19 +3055,19 @@ impl AntiWedge<LineAtInfinity> for DipoleWeight {
     }
 }
 
-impl AntiWedge<Magnitude> for DipoleWeight {
-    type Output = DipoleWeight;
+impl AntiWedge<Magnitude> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: Magnitude) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: Magnitude) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl AntiWedge<Motor> for DipoleWeight {
+impl AntiWedge<Motor> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Motor) -> MultiVector {
@@ -3083,7 +3091,7 @@ impl AntiWedge<Motor> for DipoleWeight {
     }
 }
 
-impl AntiWedge<MultiVector> for DipoleWeight {
+impl AntiWedge<MultiVector> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -3109,7 +3117,7 @@ impl AntiWedge<MultiVector> for DipoleWeight {
     }
 }
 
-impl AntiWedge<Plane> for DipoleWeight {
+impl AntiWedge<Plane> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: Plane) -> RoundPointCarrierAspect {
@@ -3123,7 +3131,7 @@ impl AntiWedge<Plane> for DipoleWeight {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for DipoleWeight {
+impl AntiWedge<PlaneAtOrigin> for DipoleWeightAspect {
     type Output = Origin;
 
     fn anti_wedge(self, other: PlaneAtOrigin) -> Origin {
@@ -3135,19 +3143,19 @@ impl AntiWedge<PlaneAtOrigin> for DipoleWeight {
     }
 }
 
-impl AntiWedge<Rotor> for DipoleWeight {
-    type Output = DipoleWeight;
+impl AntiWedge<Rotor> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: Rotor) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: Rotor) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl AntiWedge<Sphere> for DipoleWeight {
+impl AntiWedge<Sphere> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: Sphere) -> RoundPointCarrierAspect {
@@ -3161,10 +3169,10 @@ impl AntiWedge<Sphere> for DipoleWeight {
     }
 }
 
-impl AntiWedge<TransFlector> for DipoleWeight {
+impl AntiWedge<Transflector> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: TransFlector) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: Transflector) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -3175,7 +3183,7 @@ impl AntiWedge<TransFlector> for DipoleWeight {
     }
 }
 
-impl AntiWedge<Translator> for DipoleWeight {
+impl AntiWedge<Translator> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Translator) -> MultiVector {
@@ -3223,10 +3231,10 @@ impl AntiWedge<Circle> for FlatPoint {
     }
 }
 
-impl AntiWedge<CircleBulk> for FlatPoint {
+impl AntiWedge<CircleBulkAspect> for FlatPoint {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: CircleBulk) -> Scalar {
+    fn anti_wedge(self, other: CircleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -3247,10 +3255,10 @@ impl AntiWedge<CircleCarrierAspect> for FlatPoint {
     }
 }
 
-impl AntiWedge<CircleWeight> for FlatPoint {
+impl AntiWedge<CircleWeightAspect> for FlatPoint {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: CircleWeight) -> Scalar {
+    fn anti_wedge(self, other: CircleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -3399,10 +3407,10 @@ impl AntiWedge<Sphere> for FlatPoint {
     }
 }
 
-impl AntiWedge<SphereWeight> for FlatPoint {
+impl AntiWedge<SphereWeightAspect> for FlatPoint {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: SphereWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
@@ -3411,10 +3419,10 @@ impl AntiWedge<SphereWeight> for FlatPoint {
     }
 }
 
-impl AntiWedge<TransFlector> for FlatPoint {
+impl AntiWedge<Transflector> for FlatPoint {
     type Output = Infinity;
 
-    fn anti_wedge(self, other: TransFlector) -> Infinity {
+    fn anti_wedge(self, other: Transflector) -> Infinity {
         Infinity {
             groups: InfinityGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3],
@@ -3471,10 +3479,10 @@ impl AntiWedge<CircleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl AntiWedge<CircleWeight> for FlatPointAtInfinity {
+impl AntiWedge<CircleWeightAspect> for FlatPointAtInfinity {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: CircleWeight) -> Scalar {
+    fn anti_wedge(self, other: CircleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -3596,22 +3604,22 @@ impl AntiWedge<Sphere> for FlatPointAtInfinity {
     }
 }
 
-impl AntiWedge<SphereWeight> for FlatPointAtInfinity {
-    type Output = RoundPointBulk;
+impl AntiWedge<SphereWeightAspect> for FlatPointAtInfinity {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for FlatPointAtInfinity {
+impl AntiWedge<Transflector> for FlatPointAtInfinity {
     type Output = Infinity;
 
-    fn anti_wedge(self, other: TransFlector) -> Infinity {
+    fn anti_wedge(self, other: Transflector) -> Infinity {
         Infinity {
             groups: InfinityGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -3656,10 +3664,10 @@ impl AntiWedge<Circle> for FlatPointAtOrigin {
     }
 }
 
-impl AntiWedge<CircleBulk> for FlatPointAtOrigin {
+impl AntiWedge<CircleBulkAspect> for FlatPointAtOrigin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: CircleBulk) -> Scalar {
+    fn anti_wedge(self, other: CircleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -3798,10 +3806,10 @@ impl AntiWedge<Sphere> for FlatPointAtOrigin {
     }
 }
 
-impl AntiWedge<SphereWeight> for FlatPointAtOrigin {
+impl AntiWedge<SphereWeightAspect> for FlatPointAtOrigin {
     type Output = Origin;
 
-    fn anti_wedge(self, other: SphereWeight) -> Origin {
+    fn anti_wedge(self, other: SphereWeightAspect) -> Origin {
         Origin {
             groups: OriginGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -3810,10 +3818,10 @@ impl AntiWedge<SphereWeight> for FlatPointAtOrigin {
     }
 }
 
-impl AntiWedge<TransFlector> for FlatPointAtOrigin {
+impl AntiWedge<Transflector> for FlatPointAtOrigin {
     type Output = Infinity;
 
-    fn anti_wedge(self, other: TransFlector) -> Infinity {
+    fn anti_wedge(self, other: Transflector) -> Infinity {
         Infinity {
             groups: InfinityGroups {
                 g0: self.group0() * other.group1()[3],
@@ -3878,10 +3886,10 @@ impl AntiWedge<Circle> for Flector {
     }
 }
 
-impl AntiWedge<CircleBulk> for Flector {
+impl AntiWedge<CircleBulkAspect> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleBulk) -> MultiVector {
+    fn anti_wedge(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
@@ -3928,10 +3936,10 @@ impl AntiWedge<CircleCarrierAspect> for Flector {
     }
 }
 
-impl AntiWedge<CircleWeight> for Flector {
+impl AntiWedge<CircleWeightAspect> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -3973,12 +3981,12 @@ impl AntiWedge<Dipole> for Flector {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Flector {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleBulkAspect> for Flector {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -4002,10 +4010,10 @@ impl AntiWedge<DipoleCarrierAspect> for Flector {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Flector {
+impl AntiWedge<DipoleWeightAspect> for Flector {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -4371,10 +4379,10 @@ impl AntiWedge<RoundPointAtOrigin> for Flector {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Flector {
+impl AntiWedge<RoundPointBulkAspect> for Flector {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> Scalar {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
@@ -4422,10 +4430,10 @@ impl AntiWedge<Sphere> for Flector {
     }
 }
 
-impl AntiWedge<SphereWeight> for Flector {
+impl AntiWedge<SphereWeightAspect> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -4444,10 +4452,10 @@ impl AntiWedge<SphereWeight> for Flector {
     }
 }
 
-impl AntiWedge<TransFlector> for Flector {
+impl AntiWedge<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -4551,10 +4559,10 @@ impl AntiWedge<CircleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl AntiWedge<CircleWeight> for FlectorAtInfinity {
+impl AntiWedge<CircleWeightAspect> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -4588,23 +4596,23 @@ impl AntiWedge<Dipole> for FlectorAtInfinity {
 }
 
 impl AntiWedge<DipoleCarrierAspect> for FlectorAtInfinity {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleCarrierAspect) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleCarrierAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<DipoleWeight> for FlectorAtInfinity {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleWeightAspect> for FlectorAtInfinity {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -4873,10 +4881,10 @@ impl AntiWedge<Sphere> for FlectorAtInfinity {
     }
 }
 
-impl AntiWedge<SphereWeight> for FlectorAtInfinity {
+impl AntiWedge<SphereWeightAspect> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -4895,10 +4903,10 @@ impl AntiWedge<SphereWeight> for FlectorAtInfinity {
     }
 }
 
-impl AntiWedge<TransFlector> for FlectorAtInfinity {
+impl AntiWedge<Transflector> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -4958,23 +4966,23 @@ impl AntiWedge<Circle> for Horizon {
 }
 
 impl AntiWedge<CircleCarrierAspect> for Horizon {
-    type Output = DipoleBulk;
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: CircleCarrierAspect) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: CircleCarrierAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
 }
 
-impl AntiWedge<CircleWeight> for Horizon {
-    type Output = DipoleBulk;
+impl AntiWedge<CircleWeightAspect> for Horizon {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: CircleWeightAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -4994,23 +5002,23 @@ impl AntiWedge<Dipole> for Horizon {
 }
 
 impl AntiWedge<DipoleCarrierAspect> for Horizon {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleCarrierAspect) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleCarrierAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<DipoleWeight> for Horizon {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleWeightAspect> for Horizon {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -5231,22 +5239,22 @@ impl AntiWedge<Sphere> for Horizon {
     }
 }
 
-impl AntiWedge<SphereWeight> for Horizon {
-    type Output = CircleBulk;
+impl AntiWedge<SphereWeightAspect> for Horizon {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for Horizon {
+impl AntiWedge<Transflector> for Horizon {
     type Output = LineAtInfinity;
 
-    fn anti_wedge(self, other: TransFlector) -> LineAtInfinity {
+    fn anti_wedge(self, other: Transflector) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -5349,10 +5357,10 @@ impl AntiWedge<Sphere> for Infinity {
     }
 }
 
-impl AntiWedge<SphereWeight> for Infinity {
+impl AntiWedge<SphereWeightAspect> for Infinity {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: SphereWeight) -> Scalar {
+    fn anti_wedge(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group0(),
@@ -5408,12 +5416,12 @@ impl AntiWedge<Circle> for Line {
     }
 }
 
-impl AntiWedge<CircleBulk> for Line {
-    type Output = RoundPointBulk;
+impl AntiWedge<CircleBulkAspect> for Line {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -5437,10 +5445,10 @@ impl AntiWedge<CircleCarrierAspect> for Line {
     }
 }
 
-impl AntiWedge<CircleWeight> for Line {
+impl AntiWedge<CircleWeightAspect> for Line {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: CircleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -5472,10 +5480,10 @@ impl AntiWedge<Dipole> for Line {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Line {
+impl AntiWedge<DipoleBulkAspect> for Line {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: DipoleBulk) -> Scalar {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -5502,10 +5510,10 @@ impl AntiWedge<DipoleCarrierAspect> for Line {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Line {
+impl AntiWedge<DipoleWeightAspect> for Line {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: DipoleWeight) -> Scalar {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -5755,10 +5763,10 @@ impl AntiWedge<Sphere> for Line {
     }
 }
 
-impl AntiWedge<SphereWeight> for Line {
+impl AntiWedge<SphereWeightAspect> for Line {
     type Output = DipoleCarrierAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> DipoleCarrierAspect {
+    fn anti_wedge(self, other: SphereWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
@@ -5768,10 +5776,10 @@ impl AntiWedge<SphereWeight> for Line {
     }
 }
 
-impl AntiWedge<TransFlector> for Line {
+impl AntiWedge<Transflector> for Line {
     type Output = FlatPoint;
 
-    fn anti_wedge(self, other: TransFlector) -> FlatPoint {
+    fn anti_wedge(self, other: Transflector) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -5836,11 +5844,11 @@ impl AntiWedge<Circle> for LineAtInfinity {
 }
 
 impl AntiWedge<CircleCarrierAspect> for LineAtInfinity {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: CircleCarrierAspect) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: CircleCarrierAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -5849,12 +5857,12 @@ impl AntiWedge<CircleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl AntiWedge<CircleWeight> for LineAtInfinity {
-    type Output = RoundPointBulk;
+impl AntiWedge<CircleWeightAspect> for LineAtInfinity {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: CircleWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -5887,10 +5895,10 @@ impl AntiWedge<DipoleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl AntiWedge<DipoleWeight> for LineAtInfinity {
+impl AntiWedge<DipoleWeightAspect> for LineAtInfinity {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: DipoleWeight) -> Scalar {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -6071,22 +6079,22 @@ impl AntiWedge<Sphere> for LineAtInfinity {
     }
 }
 
-impl AntiWedge<SphereWeight> for LineAtInfinity {
-    type Output = DipoleBulk;
+impl AntiWedge<SphereWeightAspect> for LineAtInfinity {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for LineAtInfinity {
+impl AntiWedge<Transflector> for LineAtInfinity {
     type Output = FlatPointAtInfinity;
 
-    fn anti_wedge(self, other: TransFlector) -> FlatPointAtInfinity {
+    fn anti_wedge(self, other: Transflector) -> FlatPointAtInfinity {
         FlatPointAtInfinity {
             groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
@@ -6137,12 +6145,12 @@ impl AntiWedge<Circle> for LineAtOrigin {
     }
 }
 
-impl AntiWedge<CircleBulk> for LineAtOrigin {
-    type Output = RoundPointBulk;
+impl AntiWedge<CircleBulkAspect> for LineAtOrigin {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -6163,10 +6171,10 @@ impl AntiWedge<CircleCarrierAspect> for LineAtOrigin {
     }
 }
 
-impl AntiWedge<CircleWeight> for LineAtOrigin {
+impl AntiWedge<CircleWeightAspect> for LineAtOrigin {
     type Output = Origin;
 
-    fn anti_wedge(self, other: CircleWeight) -> Origin {
+    fn anti_wedge(self, other: CircleWeightAspect) -> Origin {
         Origin {
             groups: OriginGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -6187,10 +6195,10 @@ impl AntiWedge<Dipole> for LineAtOrigin {
     }
 }
 
-impl AntiWedge<DipoleBulk> for LineAtOrigin {
+impl AntiWedge<DipoleBulkAspect> for LineAtOrigin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: DipoleBulk) -> Scalar {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -6392,22 +6400,22 @@ impl AntiWedge<Sphere> for LineAtOrigin {
     }
 }
 
-impl AntiWedge<SphereWeight> for LineAtOrigin {
-    type Output = DipoleWeight;
+impl AntiWedge<SphereWeightAspect> for LineAtOrigin {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for LineAtOrigin {
+impl AntiWedge<Transflector> for LineAtOrigin {
     type Output = FlatPoint;
 
-    fn anti_wedge(self, other: TransFlector) -> FlatPoint {
+    fn anti_wedge(self, other: Transflector) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -6468,12 +6476,12 @@ impl AntiWedge<Circle> for Magnitude {
     }
 }
 
-impl AntiWedge<CircleBulk> for Magnitude {
-    type Output = CircleBulk;
+impl AntiWedge<CircleBulkAspect> for Magnitude {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0()[1] * other.group0(),
             },
         }
@@ -6492,12 +6500,12 @@ impl AntiWedge<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl AntiWedge<CircleWeight> for Magnitude {
-    type Output = CircleWeight;
+impl AntiWedge<CircleWeightAspect> for Magnitude {
+    type Output = CircleWeightAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn anti_wedge(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -6518,12 +6526,12 @@ impl AntiWedge<Dipole> for Magnitude {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Magnitude {
-    type Output = DipoleBulk;
+impl AntiWedge<DipoleBulkAspect> for Magnitude {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -6543,12 +6551,12 @@ impl AntiWedge<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Magnitude {
-    type Output = DipoleWeight;
+impl AntiWedge<DipoleWeightAspect> for Magnitude {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -6828,12 +6836,12 @@ impl AntiWedge<RoundPointAtOrigin> for Magnitude {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Magnitude {
-    type Output = RoundPointBulk;
+impl AntiWedge<RoundPointBulkAspect> for Magnitude {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -6877,24 +6885,24 @@ impl AntiWedge<Sphere> for Magnitude {
     }
 }
 
-impl AntiWedge<SphereWeight> for Magnitude {
-    type Output = SphereWeight;
+impl AntiWedge<SphereWeightAspect> for Magnitude {
+    type Output = SphereWeightAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[1] * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl AntiWedge<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * other.group1(),
             },
@@ -6968,10 +6976,10 @@ impl AntiWedge<Circle> for Motor {
     }
 }
 
-impl AntiWedge<CircleBulk> for Motor {
+impl AntiWedge<CircleBulkAspect> for Motor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleBulk) -> MultiVector {
+    fn anti_wedge(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7017,10 +7025,10 @@ impl AntiWedge<CircleCarrierAspect> for Motor {
     }
 }
 
-impl AntiWedge<CircleWeight> for Motor {
+impl AntiWedge<CircleWeightAspect> for Motor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7070,10 +7078,10 @@ impl AntiWedge<Dipole> for Motor {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Motor {
+impl AntiWedge<DipoleBulkAspect> for Motor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: DipoleBulk) -> MultiVector {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -7121,10 +7129,10 @@ impl AntiWedge<DipoleCarrierAspect> for Motor {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Motor {
+impl AntiWedge<DipoleWeightAspect> for Motor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: DipoleWeight) -> MultiVector {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -7517,12 +7525,12 @@ impl AntiWedge<RoundPointAtOrigin> for Motor {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Motor {
-    type Output = RoundPointBulk;
+impl AntiWedge<RoundPointBulkAspect> for Motor {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -7580,10 +7588,10 @@ impl AntiWedge<Sphere> for Motor {
     }
 }
 
-impl AntiWedge<SphereWeight> for Motor {
+impl AntiWedge<SphereWeightAspect> for Motor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7602,10 +7610,10 @@ impl AntiWedge<SphereWeight> for Motor {
     }
 }
 
-impl AntiWedge<TransFlector> for Motor {
+impl AntiWedge<Transflector> for Motor {
     type Output = Flector;
 
-    fn anti_wedge(self, other: TransFlector) -> Flector {
+    fn anti_wedge(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -7722,10 +7730,10 @@ impl AntiWedge<Circle> for MultiVector {
     }
 }
 
-impl AntiWedge<CircleBulk> for MultiVector {
+impl AntiWedge<CircleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleBulk) -> MultiVector {
+    fn anti_wedge(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([-other.group0(), 0.0]),
@@ -7777,10 +7785,10 @@ impl AntiWedge<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl AntiWedge<CircleWeight> for MultiVector {
+impl AntiWedge<CircleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -7845,10 +7853,10 @@ impl AntiWedge<Dipole> for MultiVector {
     }
 }
 
-impl AntiWedge<DipoleBulk> for MultiVector {
+impl AntiWedge<DipoleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: DipoleBulk) -> MultiVector {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group7()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -7903,10 +7911,10 @@ impl AntiWedge<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl AntiWedge<DipoleWeight> for MultiVector {
+impl AntiWedge<DipoleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: DipoleWeight) -> MultiVector {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group8()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -8656,10 +8664,10 @@ impl AntiWedge<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for MultiVector {
+impl AntiWedge<RoundPointBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> MultiVector {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group9()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -8767,10 +8775,10 @@ impl AntiWedge<Sphere> for MultiVector {
     }
 }
 
-impl AntiWedge<SphereWeight> for MultiVector {
+impl AntiWedge<SphereWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([other.group0(), 0.0]),
@@ -8791,10 +8799,10 @@ impl AntiWedge<SphereWeight> for MultiVector {
     }
 }
 
-impl AntiWedge<TransFlector> for MultiVector {
+impl AntiWedge<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group1()[0], 0.0])
@@ -9010,10 +9018,10 @@ impl AntiWedge<Sphere> for Origin {
     }
 }
 
-impl AntiWedge<TransFlector> for Origin {
+impl AntiWedge<Transflector> for Origin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group1()[3],
@@ -9066,12 +9074,12 @@ impl AntiWedge<Circle> for Plane {
     }
 }
 
-impl AntiWedge<CircleBulk> for Plane {
-    type Output = DipoleBulk;
+impl AntiWedge<CircleBulkAspect> for Plane {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -9094,10 +9102,10 @@ impl AntiWedge<CircleCarrierAspect> for Plane {
     }
 }
 
-impl AntiWedge<CircleWeight> for Plane {
+impl AntiWedge<CircleWeightAspect> for Plane {
     type Output = DipoleCarrierAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> DipoleCarrierAspect {
+    fn anti_wedge(self, other: CircleWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -9128,12 +9136,12 @@ impl AntiWedge<Dipole> for Plane {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Plane {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleBulkAspect> for Plane {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -9157,10 +9165,10 @@ impl AntiWedge<DipoleCarrierAspect> for Plane {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Plane {
+impl AntiWedge<DipoleWeightAspect> for Plane {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -9475,10 +9483,10 @@ impl AntiWedge<RoundPointAtOrigin> for Plane {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Plane {
+impl AntiWedge<RoundPointBulkAspect> for Plane {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> Scalar {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -9515,10 +9523,10 @@ impl AntiWedge<Sphere> for Plane {
     }
 }
 
-impl AntiWedge<SphereWeight> for Plane {
+impl AntiWedge<SphereWeightAspect> for Plane {
     type Output = CircleCarrierAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> CircleCarrierAspect {
+    fn anti_wedge(self, other: SphereWeightAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
@@ -9527,10 +9535,10 @@ impl AntiWedge<SphereWeight> for Plane {
     }
 }
 
-impl AntiWedge<TransFlector> for Plane {
+impl AntiWedge<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9555,11 +9563,11 @@ impl AntiWedge<TransFlector> for Plane {
 }
 
 impl AntiWedge<Translator> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -9599,12 +9607,12 @@ impl AntiWedge<Circle> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<CircleBulk> for PlaneAtOrigin {
-    type Output = DipoleBulk;
+impl AntiWedge<CircleBulkAspect> for PlaneAtOrigin {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -9626,12 +9634,12 @@ impl AntiWedge<CircleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<CircleWeight> for PlaneAtOrigin {
-    type Output = DipoleWeight;
+impl AntiWedge<CircleWeightAspect> for PlaneAtOrigin {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: CircleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -9657,12 +9665,12 @@ impl AntiWedge<Dipole> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<DipoleBulk> for PlaneAtOrigin {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleBulkAspect> for PlaneAtOrigin {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -9685,10 +9693,10 @@ impl AntiWedge<DipoleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<DipoleWeight> for PlaneAtOrigin {
+impl AntiWedge<DipoleWeightAspect> for PlaneAtOrigin {
     type Output = Origin;
 
-    fn anti_wedge(self, other: DipoleWeight) -> Origin {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> Origin {
         Origin {
             groups: OriginGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -9955,10 +9963,10 @@ impl AntiWedge<RoundPointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for PlaneAtOrigin {
+impl AntiWedge<RoundPointBulkAspect> for PlaneAtOrigin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> Scalar {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -9996,22 +10004,22 @@ impl AntiWedge<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedge<SphereWeight> for PlaneAtOrigin {
-    type Output = CircleWeight;
+impl AntiWedge<SphereWeightAspect> for PlaneAtOrigin {
+    type Output = CircleWeightAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn anti_wedge(self, other: SphereWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<TransFlector> for PlaneAtOrigin {
+impl AntiWedge<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10035,11 +10043,11 @@ impl AntiWedge<TransFlector> for PlaneAtOrigin {
 }
 
 impl AntiWedge<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -10087,10 +10095,10 @@ impl AntiWedge<Circle> for Rotor {
     }
 }
 
-impl AntiWedge<CircleBulk> for Rotor {
+impl AntiWedge<CircleBulkAspect> for Rotor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleBulk) -> MultiVector {
+    fn anti_wedge(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10133,10 +10141,10 @@ impl AntiWedge<CircleCarrierAspect> for Rotor {
     }
 }
 
-impl AntiWedge<CircleWeight> for Rotor {
+impl AntiWedge<CircleWeightAspect> for Rotor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10181,10 +10189,10 @@ impl AntiWedge<Dipole> for Rotor {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Rotor {
+impl AntiWedge<DipoleBulkAspect> for Rotor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: DipoleBulk) -> MultiVector {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -10229,12 +10237,12 @@ impl AntiWedge<DipoleCarrierAspect> for Rotor {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Rotor {
-    type Output = DipoleWeight;
+impl AntiWedge<DipoleWeightAspect> for Rotor {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -10561,12 +10569,12 @@ impl AntiWedge<RoundPointAtOrigin> for Rotor {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Rotor {
-    type Output = RoundPointBulk;
+impl AntiWedge<RoundPointBulkAspect> for Rotor {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -10621,10 +10629,10 @@ impl AntiWedge<Sphere> for Rotor {
     }
 }
 
-impl AntiWedge<SphereWeight> for Rotor {
+impl AntiWedge<SphereWeightAspect> for Rotor {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10643,10 +10651,10 @@ impl AntiWedge<SphereWeight> for Rotor {
     }
 }
 
-impl AntiWedge<TransFlector> for Rotor {
+impl AntiWedge<Transflector> for Rotor {
     type Output = Flector;
 
-    fn anti_wedge(self, other: TransFlector) -> Flector {
+    fn anti_wedge(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -10837,10 +10845,10 @@ impl AntiWedge<Sphere> for RoundPoint {
     }
 }
 
-impl AntiWedge<SphereWeight> for RoundPoint {
+impl AntiWedge<SphereWeightAspect> for RoundPoint {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: SphereWeight) -> Scalar {
+    fn anti_wedge(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[1] * other.group0(),
@@ -10849,10 +10857,10 @@ impl AntiWedge<SphereWeight> for RoundPoint {
     }
 }
 
-impl AntiWedge<TransFlector> for RoundPoint {
+impl AntiWedge<Transflector> for RoundPoint {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group1()[0] * other.group1()[3],
@@ -10995,10 +11003,10 @@ impl AntiWedge<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl AntiWedge<SphereWeight> for RoundPointAtInfinity {
+impl AntiWedge<SphereWeightAspect> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: SphereWeight) -> Scalar {
+    fn anti_wedge(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[3] * other.group0(),
@@ -11007,10 +11015,10 @@ impl AntiWedge<SphereWeight> for RoundPointAtInfinity {
     }
 }
 
-impl AntiWedge<TransFlector> for RoundPointAtInfinity {
+impl AntiWedge<Transflector> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -11161,10 +11169,10 @@ impl AntiWedge<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl AntiWedge<SphereWeight> for RoundPointAtOrigin {
+impl AntiWedge<SphereWeightAspect> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: SphereWeight) -> Scalar {
+    fn anti_wedge(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[1] * other.group0(),
@@ -11173,10 +11181,10 @@ impl AntiWedge<SphereWeight> for RoundPointAtOrigin {
     }
 }
 
-impl AntiWedge<TransFlector> for RoundPointAtOrigin {
+impl AntiWedge<Transflector> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[3],
@@ -11197,19 +11205,19 @@ impl AntiWedge<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl AntiWedge<AntiScalar> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<AntiScalar> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: AntiScalar) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: AntiScalar) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<Flector> for RoundPointBulk {
+impl AntiWedge<Flector> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Flector) -> Scalar {
@@ -11221,31 +11229,31 @@ impl AntiWedge<Flector> for RoundPointBulk {
     }
 }
 
-impl AntiWedge<Magnitude> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Magnitude> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Magnitude) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Magnitude) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl AntiWedge<Motor> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Motor> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Motor) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Motor) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl AntiWedge<MultiVector> for RoundPointBulk {
+impl AntiWedge<MultiVector> for RoundPointBulkAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -11269,7 +11277,7 @@ impl AntiWedge<MultiVector> for RoundPointBulk {
     }
 }
 
-impl AntiWedge<Plane> for RoundPointBulk {
+impl AntiWedge<Plane> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Plane) -> Scalar {
@@ -11281,7 +11289,7 @@ impl AntiWedge<Plane> for RoundPointBulk {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for RoundPointBulk {
+impl AntiWedge<PlaneAtOrigin> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: PlaneAtOrigin) -> Scalar {
@@ -11293,19 +11301,19 @@ impl AntiWedge<PlaneAtOrigin> for RoundPointBulk {
     }
 }
 
-impl AntiWedge<Rotor> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Rotor> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Rotor) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Rotor) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl AntiWedge<Sphere> for RoundPointBulk {
+impl AntiWedge<Sphere> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Sphere) -> Scalar {
@@ -11317,10 +11325,10 @@ impl AntiWedge<Sphere> for RoundPointBulk {
     }
 }
 
-impl AntiWedge<TransFlector> for RoundPointBulk {
+impl AntiWedge<Transflector> for RoundPointBulkAspect {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -11329,12 +11337,12 @@ impl AntiWedge<TransFlector> for RoundPointBulk {
     }
 }
 
-impl AntiWedge<Translator> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl AntiWedge<Translator> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: Translator) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: Translator) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
@@ -11486,10 +11494,10 @@ impl AntiWedge<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiWedge<TransFlector> for RoundPointCarrierAspect {
+impl AntiWedge<Transflector> for RoundPointCarrierAspect {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: TransFlector) -> Scalar {
+    fn anti_wedge(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3],
@@ -11617,12 +11625,12 @@ impl AntiWedge<Circle> for Sphere {
     }
 }
 
-impl AntiWedge<CircleBulk> for Sphere {
-    type Output = DipoleBulk;
+impl AntiWedge<CircleBulkAspect> for Sphere {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -11645,10 +11653,10 @@ impl AntiWedge<CircleCarrierAspect> for Sphere {
     }
 }
 
-impl AntiWedge<CircleWeight> for Sphere {
+impl AntiWedge<CircleWeightAspect> for Sphere {
     type Output = DipoleCarrierAspect;
 
-    fn anti_wedge(self, other: CircleWeight) -> DipoleCarrierAspect {
+    fn anti_wedge(self, other: CircleWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -11680,12 +11688,12 @@ impl AntiWedge<Dipole> for Sphere {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Sphere {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleBulkAspect> for Sphere {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -11709,10 +11717,10 @@ impl AntiWedge<DipoleCarrierAspect> for Sphere {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Sphere {
+impl AntiWedge<DipoleWeightAspect> for Sphere {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -12089,10 +12097,10 @@ impl AntiWedge<RoundPointAtOrigin> for Sphere {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Sphere {
+impl AntiWedge<RoundPointBulkAspect> for Sphere {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> Scalar {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -12132,10 +12140,10 @@ impl AntiWedge<Sphere> for Sphere {
     }
 }
 
-impl AntiWedge<SphereWeight> for Sphere {
+impl AntiWedge<SphereWeightAspect> for Sphere {
     type Output = CircleCarrierAspect;
 
-    fn anti_wedge(self, other: SphereWeight) -> CircleCarrierAspect {
+    fn anti_wedge(self, other: SphereWeightAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
@@ -12146,10 +12154,10 @@ impl AntiWedge<SphereWeight> for Sphere {
     }
 }
 
-impl AntiWedge<TransFlector> for Sphere {
+impl AntiWedge<Transflector> for Sphere {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12197,19 +12205,19 @@ impl AntiWedge<Translator> for Sphere {
     }
 }
 
-impl AntiWedge<AntiScalar> for SphereWeight {
-    type Output = SphereWeight;
+impl AntiWedge<AntiScalar> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn anti_wedge(self, other: AntiScalar) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn anti_wedge(self, other: AntiScalar) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Circle> for SphereWeight {
+impl AntiWedge<Circle> for SphereWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn anti_wedge(self, other: Circle) -> DipoleCarrierAspect {
@@ -12222,7 +12230,7 @@ impl AntiWedge<Circle> for SphereWeight {
     }
 }
 
-impl AntiWedge<Dipole> for SphereWeight {
+impl AntiWedge<Dipole> for SphereWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: Dipole) -> RoundPointCarrierAspect {
@@ -12234,7 +12242,7 @@ impl AntiWedge<Dipole> for SphereWeight {
     }
 }
 
-impl AntiWedge<FlatPoint> for SphereWeight {
+impl AntiWedge<FlatPoint> for SphereWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: FlatPoint) -> RoundPointCarrierAspect {
@@ -12246,19 +12254,19 @@ impl AntiWedge<FlatPoint> for SphereWeight {
     }
 }
 
-impl AntiWedge<FlatPointAtInfinity> for SphereWeight {
-    type Output = RoundPointBulk;
+impl AntiWedge<FlatPointAtInfinity> for SphereWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: FlatPointAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: FlatPointAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<FlatPointAtOrigin> for SphereWeight {
+impl AntiWedge<FlatPointAtOrigin> for SphereWeightAspect {
     type Output = Origin;
 
     fn anti_wedge(self, other: FlatPointAtOrigin) -> Origin {
@@ -12270,7 +12278,7 @@ impl AntiWedge<FlatPointAtOrigin> for SphereWeight {
     }
 }
 
-impl AntiWedge<Flector> for SphereWeight {
+impl AntiWedge<Flector> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Flector) -> MultiVector {
@@ -12292,7 +12300,7 @@ impl AntiWedge<Flector> for SphereWeight {
     }
 }
 
-impl AntiWedge<FlectorAtInfinity> for SphereWeight {
+impl AntiWedge<FlectorAtInfinity> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: FlectorAtInfinity) -> MultiVector {
@@ -12314,19 +12322,19 @@ impl AntiWedge<FlectorAtInfinity> for SphereWeight {
     }
 }
 
-impl AntiWedge<Horizon> for SphereWeight {
-    type Output = CircleBulk;
+impl AntiWedge<Horizon> for SphereWeightAspect {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: Horizon) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: Horizon) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Infinity> for SphereWeight {
+impl AntiWedge<Infinity> for SphereWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Infinity) -> Scalar {
@@ -12338,7 +12346,7 @@ impl AntiWedge<Infinity> for SphereWeight {
     }
 }
 
-impl AntiWedge<Line> for SphereWeight {
+impl AntiWedge<Line> for SphereWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn anti_wedge(self, other: Line) -> DipoleCarrierAspect {
@@ -12351,43 +12359,43 @@ impl AntiWedge<Line> for SphereWeight {
     }
 }
 
-impl AntiWedge<LineAtInfinity> for SphereWeight {
-    type Output = DipoleBulk;
+impl AntiWedge<LineAtInfinity> for SphereWeightAspect {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: LineAtInfinity) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: LineAtInfinity) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<LineAtOrigin> for SphereWeight {
-    type Output = DipoleWeight;
+impl AntiWedge<LineAtOrigin> for SphereWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn anti_wedge(self, other: LineAtOrigin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_wedge(self, other: LineAtOrigin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Magnitude> for SphereWeight {
-    type Output = SphereWeight;
+impl AntiWedge<Magnitude> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn anti_wedge(self, other: Magnitude) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn anti_wedge(self, other: Magnitude) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0()[1],
             },
         }
     }
 }
 
-impl AntiWedge<Motor> for SphereWeight {
+impl AntiWedge<Motor> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Motor) -> MultiVector {
@@ -12409,7 +12417,7 @@ impl AntiWedge<Motor> for SphereWeight {
     }
 }
 
-impl AntiWedge<MultiVector> for SphereWeight {
+impl AntiWedge<MultiVector> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -12431,7 +12439,7 @@ impl AntiWedge<MultiVector> for SphereWeight {
     }
 }
 
-impl AntiWedge<Plane> for SphereWeight {
+impl AntiWedge<Plane> for SphereWeightAspect {
     type Output = CircleCarrierAspect;
 
     fn anti_wedge(self, other: Plane) -> CircleCarrierAspect {
@@ -12443,19 +12451,19 @@ impl AntiWedge<Plane> for SphereWeight {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for SphereWeight {
-    type Output = CircleWeight;
+impl AntiWedge<PlaneAtOrigin> for SphereWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn anti_wedge(self, other: PlaneAtOrigin) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn anti_wedge(self, other: PlaneAtOrigin) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl AntiWedge<Rotor> for SphereWeight {
+impl AntiWedge<Rotor> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Rotor) -> MultiVector {
@@ -12477,7 +12485,7 @@ impl AntiWedge<Rotor> for SphereWeight {
     }
 }
 
-impl AntiWedge<RoundPoint> for SphereWeight {
+impl AntiWedge<RoundPoint> for SphereWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPoint) -> Scalar {
@@ -12489,7 +12497,7 @@ impl AntiWedge<RoundPoint> for SphereWeight {
     }
 }
 
-impl AntiWedge<RoundPointAtInfinity> for SphereWeight {
+impl AntiWedge<RoundPointAtInfinity> for SphereWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPointAtInfinity) -> Scalar {
@@ -12501,7 +12509,7 @@ impl AntiWedge<RoundPointAtInfinity> for SphereWeight {
     }
 }
 
-impl AntiWedge<RoundPointAtOrigin> for SphereWeight {
+impl AntiWedge<RoundPointAtOrigin> for SphereWeightAspect {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Scalar {
@@ -12513,7 +12521,7 @@ impl AntiWedge<RoundPointAtOrigin> for SphereWeight {
     }
 }
 
-impl AntiWedge<Sphere> for SphereWeight {
+impl AntiWedge<Sphere> for SphereWeightAspect {
     type Output = CircleCarrierAspect;
 
     fn anti_wedge(self, other: Sphere) -> CircleCarrierAspect {
@@ -12525,10 +12533,10 @@ impl AntiWedge<Sphere> for SphereWeight {
     }
 }
 
-impl AntiWedge<TransFlector> for SphereWeight {
+impl AntiWedge<Transflector> for SphereWeightAspect {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12547,7 +12555,7 @@ impl AntiWedge<TransFlector> for SphereWeight {
     }
 }
 
-impl AntiWedge<Translator> for SphereWeight {
+impl AntiWedge<Translator> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Translator) -> MultiVector {
@@ -12569,12 +12577,12 @@ impl AntiWedge<Translator> for SphereWeight {
     }
 }
 
-impl AntiWedge<AntiScalar> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedge<AntiScalar> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: AntiScalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: AntiScalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -12582,7 +12590,7 @@ impl AntiWedge<AntiScalar> for TransFlector {
     }
 }
 
-impl AntiWedge<Circle> for TransFlector {
+impl AntiWedge<Circle> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Circle) -> MultiVector {
@@ -12612,19 +12620,19 @@ impl AntiWedge<Circle> for TransFlector {
     }
 }
 
-impl AntiWedge<CircleBulk> for TransFlector {
-    type Output = DipoleBulk;
+impl AntiWedge<CircleBulkAspect> for Transflector {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl AntiWedge<CircleCarrierAspect> for TransFlector {
+impl AntiWedge<CircleCarrierAspect> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: CircleCarrierAspect) -> MultiVector {
@@ -12651,10 +12659,10 @@ impl AntiWedge<CircleCarrierAspect> for TransFlector {
     }
 }
 
-impl AntiWedge<CircleWeight> for TransFlector {
+impl AntiWedge<CircleWeightAspect> for Transflector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -12677,7 +12685,7 @@ impl AntiWedge<CircleWeight> for TransFlector {
     }
 }
 
-impl AntiWedge<Dipole> for TransFlector {
+impl AntiWedge<Dipole> for Transflector {
     type Output = RoundPoint;
 
     fn anti_wedge(self, other: Dipole) -> RoundPoint {
@@ -12696,12 +12704,12 @@ impl AntiWedge<Dipole> for TransFlector {
     }
 }
 
-impl AntiWedge<DipoleBulk> for TransFlector {
-    type Output = RoundPointBulk;
+impl AntiWedge<DipoleBulkAspect> for Transflector {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -12710,7 +12718,7 @@ impl AntiWedge<DipoleBulk> for TransFlector {
     }
 }
 
-impl AntiWedge<DipoleCarrierAspect> for TransFlector {
+impl AntiWedge<DipoleCarrierAspect> for Transflector {
     type Output = RoundPointCarrierAspect;
 
     fn anti_wedge(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
@@ -12725,10 +12733,10 @@ impl AntiWedge<DipoleCarrierAspect> for TransFlector {
     }
 }
 
-impl AntiWedge<DipoleWeight> for TransFlector {
+impl AntiWedge<DipoleWeightAspect> for Transflector {
     type Output = RoundPointCarrierAspect;
 
-    fn anti_wedge(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -12739,7 +12747,7 @@ impl AntiWedge<DipoleWeight> for TransFlector {
     }
 }
 
-impl AntiWedge<FlatPoint> for TransFlector {
+impl AntiWedge<FlatPoint> for Transflector {
     type Output = Infinity;
 
     fn anti_wedge(self, other: FlatPoint) -> Infinity {
@@ -12751,7 +12759,7 @@ impl AntiWedge<FlatPoint> for TransFlector {
     }
 }
 
-impl AntiWedge<FlatPointAtInfinity> for TransFlector {
+impl AntiWedge<FlatPointAtInfinity> for Transflector {
     type Output = Infinity;
 
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Infinity {
@@ -12763,7 +12771,7 @@ impl AntiWedge<FlatPointAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<FlatPointAtOrigin> for TransFlector {
+impl AntiWedge<FlatPointAtOrigin> for Transflector {
     type Output = Infinity;
 
     fn anti_wedge(self, other: FlatPointAtOrigin) -> Infinity {
@@ -12775,7 +12783,7 @@ impl AntiWedge<FlatPointAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<Flector> for TransFlector {
+impl AntiWedge<Flector> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Flector) -> MultiVector {
@@ -12806,7 +12814,7 @@ impl AntiWedge<Flector> for TransFlector {
     }
 }
 
-impl AntiWedge<FlectorAtInfinity> for TransFlector {
+impl AntiWedge<FlectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: FlectorAtInfinity) -> MultiVector {
@@ -12830,7 +12838,7 @@ impl AntiWedge<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<Horizon> for TransFlector {
+impl AntiWedge<Horizon> for Transflector {
     type Output = LineAtInfinity;
 
     fn anti_wedge(self, other: Horizon) -> LineAtInfinity {
@@ -12842,7 +12850,7 @@ impl AntiWedge<Horizon> for TransFlector {
     }
 }
 
-impl AntiWedge<Line> for TransFlector {
+impl AntiWedge<Line> for Transflector {
     type Output = FlatPoint;
 
     fn anti_wedge(self, other: Line) -> FlatPoint {
@@ -12857,7 +12865,7 @@ impl AntiWedge<Line> for TransFlector {
     }
 }
 
-impl AntiWedge<LineAtInfinity> for TransFlector {
+impl AntiWedge<LineAtInfinity> for Transflector {
     type Output = FlatPointAtInfinity;
 
     fn anti_wedge(self, other: LineAtInfinity) -> FlatPointAtInfinity {
@@ -12871,7 +12879,7 @@ impl AntiWedge<LineAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<LineAtOrigin> for TransFlector {
+impl AntiWedge<LineAtOrigin> for Transflector {
     type Output = FlatPoint;
 
     fn anti_wedge(self, other: LineAtOrigin) -> FlatPoint {
@@ -12885,12 +12893,12 @@ impl AntiWedge<LineAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedge<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
                 g1: self.group1() * Simd32x4::from(other.group0()[1]),
             },
@@ -12898,7 +12906,7 @@ impl AntiWedge<Magnitude> for TransFlector {
     }
 }
 
-impl AntiWedge<Motor> for TransFlector {
+impl AntiWedge<Motor> for Transflector {
     type Output = Flector;
 
     fn anti_wedge(self, other: Motor) -> Flector {
@@ -12916,7 +12924,7 @@ impl AntiWedge<Motor> for TransFlector {
     }
 }
 
-impl AntiWedge<MultiVector> for TransFlector {
+impl AntiWedge<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: MultiVector) -> MultiVector {
@@ -12964,7 +12972,7 @@ impl AntiWedge<MultiVector> for TransFlector {
     }
 }
 
-impl AntiWedge<Origin> for TransFlector {
+impl AntiWedge<Origin> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: Origin) -> Scalar {
@@ -12976,7 +12984,7 @@ impl AntiWedge<Origin> for TransFlector {
     }
 }
 
-impl AntiWedge<Plane> for TransFlector {
+impl AntiWedge<Plane> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Plane) -> MultiVector {
@@ -13003,7 +13011,7 @@ impl AntiWedge<Plane> for TransFlector {
     }
 }
 
-impl AntiWedge<PlaneAtOrigin> for TransFlector {
+impl AntiWedge<PlaneAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: PlaneAtOrigin) -> MultiVector {
@@ -13029,7 +13037,7 @@ impl AntiWedge<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<Rotor> for TransFlector {
+impl AntiWedge<Rotor> for Transflector {
     type Output = Flector;
 
     fn anti_wedge(self, other: Rotor) -> Flector {
@@ -13046,7 +13054,7 @@ impl AntiWedge<Rotor> for TransFlector {
     }
 }
 
-impl AntiWedge<RoundPoint> for TransFlector {
+impl AntiWedge<RoundPoint> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPoint) -> Scalar {
@@ -13058,7 +13066,7 @@ impl AntiWedge<RoundPoint> for TransFlector {
     }
 }
 
-impl AntiWedge<RoundPointAtInfinity> for TransFlector {
+impl AntiWedge<RoundPointAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPointAtInfinity) -> Scalar {
@@ -13070,7 +13078,7 @@ impl AntiWedge<RoundPointAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedge<RoundPointAtOrigin> for TransFlector {
+impl AntiWedge<RoundPointAtOrigin> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Scalar {
@@ -13082,10 +13090,10 @@ impl AntiWedge<RoundPointAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for TransFlector {
+impl AntiWedge<RoundPointBulkAspect> for Transflector {
     type Output = Scalar;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> Scalar {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
@@ -13094,7 +13102,7 @@ impl AntiWedge<RoundPointBulk> for TransFlector {
     }
 }
 
-impl AntiWedge<RoundPointCarrierAspect> for TransFlector {
+impl AntiWedge<RoundPointCarrierAspect> for Transflector {
     type Output = Scalar;
 
     fn anti_wedge(self, other: RoundPointCarrierAspect) -> Scalar {
@@ -13106,7 +13114,7 @@ impl AntiWedge<RoundPointCarrierAspect> for TransFlector {
     }
 }
 
-impl AntiWedge<Sphere> for TransFlector {
+impl AntiWedge<Sphere> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge(self, other: Sphere) -> MultiVector {
@@ -13132,10 +13140,10 @@ impl AntiWedge<Sphere> for TransFlector {
     }
 }
 
-impl AntiWedge<SphereWeight> for TransFlector {
+impl AntiWedge<SphereWeightAspect> for Transflector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13154,10 +13162,10 @@ impl AntiWedge<SphereWeight> for TransFlector {
     }
 }
 
-impl AntiWedge<TransFlector> for TransFlector {
+impl AntiWedge<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13184,12 +13192,12 @@ impl AntiWedge<TransFlector> for TransFlector {
     }
 }
 
-impl AntiWedge<Translator> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedge<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3])
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
@@ -13238,12 +13246,12 @@ impl AntiWedge<Circle> for Translator {
     }
 }
 
-impl AntiWedge<CircleBulk> for Translator {
-    type Output = CircleBulk;
+impl AntiWedge<CircleBulkAspect> for Translator {
+    type Output = CircleBulkAspect;
 
-    fn anti_wedge(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn anti_wedge(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0()[3] * other.group0(),
             },
         }
@@ -13274,10 +13282,10 @@ impl AntiWedge<CircleCarrierAspect> for Translator {
     }
 }
 
-impl AntiWedge<CircleWeight> for Translator {
+impl AntiWedge<CircleWeightAspect> for Translator {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: CircleWeight) -> MultiVector {
+    fn anti_wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13322,12 +13330,12 @@ impl AntiWedge<Dipole> for Translator {
     }
 }
 
-impl AntiWedge<DipoleBulk> for Translator {
-    type Output = DipoleBulk;
+impl AntiWedge<DipoleBulkAspect> for Translator {
+    type Output = DipoleBulkAspect;
 
-    fn anti_wedge(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_wedge(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -13358,10 +13366,10 @@ impl AntiWedge<DipoleCarrierAspect> for Translator {
     }
 }
 
-impl AntiWedge<DipoleWeight> for Translator {
+impl AntiWedge<DipoleWeightAspect> for Translator {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: DipoleWeight) -> MultiVector {
+    fn anti_wedge(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -13623,11 +13631,11 @@ impl AntiWedge<Origin> for Translator {
 }
 
 impl AntiWedge<Plane> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -13638,11 +13646,11 @@ impl AntiWedge<Plane> for Translator {
 }
 
 impl AntiWedge<PlaneAtOrigin> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -13713,12 +13721,12 @@ impl AntiWedge<RoundPointAtOrigin> for Translator {
     }
 }
 
-impl AntiWedge<RoundPointBulk> for Translator {
-    type Output = RoundPointBulk;
+impl AntiWedge<RoundPointBulkAspect> for Translator {
+    type Output = RoundPointBulkAspect;
 
-    fn anti_wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn anti_wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -13773,10 +13781,10 @@ impl AntiWedge<Sphere> for Translator {
     }
 }
 
-impl AntiWedge<SphereWeight> for Translator {
+impl AntiWedge<SphereWeightAspect> for Translator {
     type Output = MultiVector;
 
-    fn anti_wedge(self, other: SphereWeight) -> MultiVector {
+    fn anti_wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13795,12 +13803,12 @@ impl AntiWedge<SphereWeight> for Translator {
     }
 }
 
-impl AntiWedge<TransFlector> for Translator {
-    type Output = TransFlector;
+impl AntiWedge<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn anti_wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0])
@@ -13882,10 +13890,10 @@ impl Join<Dipole> for Circle {
     }
 }
 
-impl Join<DipoleBulk> for Circle {
+impl Join<DipoleBulkAspect> for Circle {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleBulk) -> AntiScalar {
+    fn join(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -13912,10 +13920,10 @@ impl Join<DipoleCarrierAspect> for Circle {
     }
 }
 
-impl Join<DipoleWeight> for Circle {
+impl Join<DipoleWeightAspect> for Circle {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleWeight) -> AntiScalar {
+    fn join(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -14121,10 +14129,10 @@ impl Join<RoundPointAtOrigin> for Circle {
     }
 }
 
-impl Join<RoundPointBulk> for Circle {
+impl Join<RoundPointBulkAspect> for Circle {
     type Output = Sphere;
 
-    fn join(self, other: RoundPointBulk) -> Sphere {
+    fn join(self, other: RoundPointBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -14177,10 +14185,10 @@ impl Join<Scalar> for Circle {
     }
 }
 
-impl Join<TransFlector> for Circle {
+impl Join<Transflector> for Circle {
     type Output = AntiScalar;
 
-    fn join(self, other: TransFlector) -> AntiScalar {
+    fn join(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -14189,7 +14197,7 @@ impl Join<TransFlector> for Circle {
     }
 }
 
-impl Join<Dipole> for CircleBulk {
+impl Join<Dipole> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Dipole) -> AntiScalar {
@@ -14201,7 +14209,7 @@ impl Join<Dipole> for CircleBulk {
     }
 }
 
-impl Join<FlatPoint> for CircleBulk {
+impl Join<FlatPoint> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: FlatPoint) -> AntiScalar {
@@ -14213,7 +14221,7 @@ impl Join<FlatPoint> for CircleBulk {
     }
 }
 
-impl Join<FlatPointAtOrigin> for CircleBulk {
+impl Join<FlatPointAtOrigin> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: FlatPointAtOrigin) -> AntiScalar {
@@ -14225,7 +14233,7 @@ impl Join<FlatPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Join<Flector> for CircleBulk {
+impl Join<Flector> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Flector) -> AntiScalar {
@@ -14237,7 +14245,7 @@ impl Join<Flector> for CircleBulk {
     }
 }
 
-impl Join<Infinity> for CircleBulk {
+impl Join<Infinity> for CircleBulkAspect {
     type Output = Horizon;
 
     fn join(self, other: Infinity) -> Horizon {
@@ -14249,19 +14257,19 @@ impl Join<Infinity> for CircleBulk {
     }
 }
 
-impl Join<Magnitude> for CircleBulk {
-    type Output = CircleBulk;
+impl Join<Magnitude> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn join(self, other: Magnitude) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn join(self, other: Magnitude) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0()[0],
             },
         }
     }
 }
 
-impl Join<MultiVector> for CircleBulk {
+impl Join<MultiVector> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -14283,19 +14291,19 @@ impl Join<MultiVector> for CircleBulk {
     }
 }
 
-impl Join<Origin> for CircleBulk {
-    type Output = SphereWeight;
+impl Join<Origin> for CircleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: Origin) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: Origin) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Join<RoundPoint> for CircleBulk {
+impl Join<RoundPoint> for CircleBulkAspect {
     type Output = Sphere;
 
     fn join(self, other: RoundPoint) -> Sphere {
@@ -14308,7 +14316,7 @@ impl Join<RoundPoint> for CircleBulk {
     }
 }
 
-impl Join<RoundPointAtInfinity> for CircleBulk {
+impl Join<RoundPointAtInfinity> for CircleBulkAspect {
     type Output = Horizon;
 
     fn join(self, other: RoundPointAtInfinity) -> Horizon {
@@ -14320,7 +14328,7 @@ impl Join<RoundPointAtInfinity> for CircleBulk {
     }
 }
 
-impl Join<RoundPointAtOrigin> for CircleBulk {
+impl Join<RoundPointAtOrigin> for CircleBulkAspect {
     type Output = Sphere;
 
     fn join(self, other: RoundPointAtOrigin) -> Sphere {
@@ -14333,24 +14341,24 @@ impl Join<RoundPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Join<RoundPointCarrierAspect> for CircleBulk {
-    type Output = SphereWeight;
+impl Join<RoundPointCarrierAspect> for CircleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: RoundPointCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: RoundPointCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
 }
 
-impl Join<Scalar> for CircleBulk {
-    type Output = CircleBulk;
+impl Join<Scalar> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn join(self, other: Scalar) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn join(self, other: Scalar) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -14482,11 +14490,11 @@ impl Join<MultiVector> for CircleCarrierAspect {
 }
 
 impl Join<Origin> for CircleCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: Origin) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: Origin) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
             },
         }
@@ -14537,12 +14545,12 @@ impl Join<RoundPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Join<RoundPointBulk> for CircleCarrierAspect {
-    type Output = SphereWeight;
+impl Join<RoundPointBulkAspect> for CircleCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: RoundPointBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: RoundPointBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
@@ -14550,11 +14558,11 @@ impl Join<RoundPointBulk> for CircleCarrierAspect {
 }
 
 impl Join<RoundPointCarrierAspect> for CircleCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: RoundPointCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: RoundPointCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
             },
         }
@@ -14573,10 +14581,10 @@ impl Join<Scalar> for CircleCarrierAspect {
     }
 }
 
-impl Join<TransFlector> for CircleCarrierAspect {
+impl Join<Transflector> for CircleCarrierAspect {
     type Output = AntiScalar;
 
-    fn join(self, other: TransFlector) -> AntiScalar {
+    fn join(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -14585,7 +14593,7 @@ impl Join<TransFlector> for CircleCarrierAspect {
     }
 }
 
-impl Join<Dipole> for CircleWeight {
+impl Join<Dipole> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Dipole) -> AntiScalar {
@@ -14597,7 +14605,7 @@ impl Join<Dipole> for CircleWeight {
     }
 }
 
-impl Join<FlatPoint> for CircleWeight {
+impl Join<FlatPoint> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: FlatPoint) -> AntiScalar {
@@ -14609,7 +14617,7 @@ impl Join<FlatPoint> for CircleWeight {
     }
 }
 
-impl Join<FlatPointAtInfinity> for CircleWeight {
+impl Join<FlatPointAtInfinity> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: FlatPointAtInfinity) -> AntiScalar {
@@ -14621,7 +14629,7 @@ impl Join<FlatPointAtInfinity> for CircleWeight {
     }
 }
 
-impl Join<Flector> for CircleWeight {
+impl Join<Flector> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Flector) -> AntiScalar {
@@ -14633,7 +14641,7 @@ impl Join<Flector> for CircleWeight {
     }
 }
 
-impl Join<FlectorAtInfinity> for CircleWeight {
+impl Join<FlectorAtInfinity> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: FlectorAtInfinity) -> AntiScalar {
@@ -14645,7 +14653,7 @@ impl Join<FlectorAtInfinity> for CircleWeight {
     }
 }
 
-impl Join<Infinity> for CircleWeight {
+impl Join<Infinity> for CircleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: Infinity) -> PlaneAtOrigin {
@@ -14657,19 +14665,19 @@ impl Join<Infinity> for CircleWeight {
     }
 }
 
-impl Join<Magnitude> for CircleWeight {
-    type Output = CircleWeight;
+impl Join<Magnitude> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: Magnitude) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: Magnitude) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Join<MultiVector> for CircleWeight {
+impl Join<MultiVector> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -14696,7 +14704,7 @@ impl Join<MultiVector> for CircleWeight {
     }
 }
 
-impl Join<RoundPoint> for CircleWeight {
+impl Join<RoundPoint> for CircleWeightAspect {
     type Output = Sphere;
 
     fn join(self, other: RoundPoint) -> Sphere {
@@ -14711,7 +14719,7 @@ impl Join<RoundPoint> for CircleWeight {
     }
 }
 
-impl Join<RoundPointAtInfinity> for CircleWeight {
+impl Join<RoundPointAtInfinity> for CircleWeightAspect {
     type Output = Sphere;
 
     fn join(self, other: RoundPointAtInfinity) -> Sphere {
@@ -14726,7 +14734,7 @@ impl Join<RoundPointAtInfinity> for CircleWeight {
     }
 }
 
-impl Join<RoundPointAtOrigin> for CircleWeight {
+impl Join<RoundPointAtOrigin> for CircleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: RoundPointAtOrigin) -> PlaneAtOrigin {
@@ -14738,46 +14746,46 @@ impl Join<RoundPointAtOrigin> for CircleWeight {
     }
 }
 
-impl Join<RoundPointBulk> for CircleWeight {
-    type Output = SphereWeight;
+impl Join<RoundPointBulkAspect> for CircleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: RoundPointBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: RoundPointBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<RoundPointCarrierAspect> for CircleWeight {
-    type Output = SphereWeight;
+impl Join<RoundPointCarrierAspect> for CircleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: RoundPointCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: RoundPointCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<Scalar> for CircleWeight {
-    type Output = CircleWeight;
+impl Join<Scalar> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: Scalar) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: Scalar) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Join<TransFlector> for CircleWeight {
+impl Join<Transflector> for CircleWeightAspect {
     type Output = AntiScalar;
 
-    fn join(self, other: TransFlector) -> AntiScalar {
+    fn join(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -14808,10 +14816,10 @@ impl Join<Circle> for Dipole {
     }
 }
 
-impl Join<CircleBulk> for Dipole {
+impl Join<CircleBulkAspect> for Dipole {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleBulk) -> AntiScalar {
+    fn join(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group2()[3] * other.group0(),
@@ -14832,10 +14840,10 @@ impl Join<CircleCarrierAspect> for Dipole {
     }
 }
 
-impl Join<CircleWeight> for Dipole {
+impl Join<CircleWeightAspect> for Dipole {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleWeight) -> AntiScalar {
+    fn join(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -14872,10 +14880,10 @@ impl Join<Dipole> for Dipole {
     }
 }
 
-impl Join<DipoleBulk> for Dipole {
+impl Join<DipoleBulkAspect> for Dipole {
     type Output = Sphere;
 
-    fn join(self, other: DipoleBulk) -> Sphere {
+    fn join(self, other: DipoleBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group2()[3]) * other.group0(),
@@ -14914,10 +14922,10 @@ impl Join<DipoleCarrierAspect> for Dipole {
     }
 }
 
-impl Join<DipoleWeight> for Dipole {
+impl Join<DipoleWeightAspect> for Dipole {
     type Output = Sphere;
 
-    fn join(self, other: DipoleWeight) -> Sphere {
+    fn join(self, other: DipoleWeightAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group2()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -15241,10 +15249,10 @@ impl Join<RoundPointAtOrigin> for Dipole {
     }
 }
 
-impl Join<RoundPointBulk> for Dipole {
+impl Join<RoundPointBulkAspect> for Dipole {
     type Output = Circle;
 
-    fn join(self, other: RoundPointBulk) -> Circle {
+    fn join(self, other: RoundPointBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -15298,10 +15306,10 @@ impl Join<Scalar> for Dipole {
     }
 }
 
-impl Join<TransFlector> for Dipole {
+impl Join<Transflector> for Dipole {
     type Output = Plane;
 
-    fn join(self, other: TransFlector) -> Plane {
+    fn join(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -15327,7 +15335,7 @@ impl Join<Translator> for Dipole {
     }
 }
 
-impl Join<Circle> for DipoleBulk {
+impl Join<Circle> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Circle) -> AntiScalar {
@@ -15339,7 +15347,7 @@ impl Join<Circle> for DipoleBulk {
     }
 }
 
-impl Join<Dipole> for DipoleBulk {
+impl Join<Dipole> for DipoleBulkAspect {
     type Output = Sphere;
 
     fn join(self, other: Dipole) -> Sphere {
@@ -15355,31 +15363,31 @@ impl Join<Dipole> for DipoleBulk {
     }
 }
 
-impl Join<DipoleCarrierAspect> for DipoleBulk {
-    type Output = SphereWeight;
+impl Join<DipoleCarrierAspect> for DipoleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<DipoleWeight> for DipoleBulk {
-    type Output = SphereWeight;
+impl Join<DipoleWeightAspect> for DipoleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<FlatPoint> for DipoleBulk {
+impl Join<FlatPoint> for DipoleBulkAspect {
     type Output = Plane;
 
     fn join(self, other: FlatPoint) -> Plane {
@@ -15393,7 +15401,7 @@ impl Join<FlatPoint> for DipoleBulk {
     }
 }
 
-impl Join<FlatPointAtInfinity> for DipoleBulk {
+impl Join<FlatPointAtInfinity> for DipoleBulkAspect {
     type Output = Horizon;
 
     fn join(self, other: FlatPointAtInfinity) -> Horizon {
@@ -15405,7 +15413,7 @@ impl Join<FlatPointAtInfinity> for DipoleBulk {
     }
 }
 
-impl Join<FlatPointAtOrigin> for DipoleBulk {
+impl Join<FlatPointAtOrigin> for DipoleBulkAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: FlatPointAtOrigin) -> PlaneAtOrigin {
@@ -15417,7 +15425,7 @@ impl Join<FlatPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Join<Flector> for DipoleBulk {
+impl Join<Flector> for DipoleBulkAspect {
     type Output = Plane;
 
     fn join(self, other: Flector) -> Plane {
@@ -15431,7 +15439,7 @@ impl Join<Flector> for DipoleBulk {
     }
 }
 
-impl Join<FlectorAtInfinity> for DipoleBulk {
+impl Join<FlectorAtInfinity> for DipoleBulkAspect {
     type Output = Horizon;
 
     fn join(self, other: FlectorAtInfinity) -> Horizon {
@@ -15443,7 +15451,7 @@ impl Join<FlectorAtInfinity> for DipoleBulk {
     }
 }
 
-impl Join<Infinity> for DipoleBulk {
+impl Join<Infinity> for DipoleBulkAspect {
     type Output = LineAtInfinity;
 
     fn join(self, other: Infinity) -> LineAtInfinity {
@@ -15455,7 +15463,7 @@ impl Join<Infinity> for DipoleBulk {
     }
 }
 
-impl Join<Line> for DipoleBulk {
+impl Join<Line> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Line) -> AntiScalar {
@@ -15467,7 +15475,7 @@ impl Join<Line> for DipoleBulk {
     }
 }
 
-impl Join<LineAtOrigin> for DipoleBulk {
+impl Join<LineAtOrigin> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: LineAtOrigin) -> AntiScalar {
@@ -15479,19 +15487,19 @@ impl Join<LineAtOrigin> for DipoleBulk {
     }
 }
 
-impl Join<Magnitude> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Join<Magnitude> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn join(self, other: Magnitude) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn join(self, other: Magnitude) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Join<Motor> for DipoleBulk {
+impl Join<Motor> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Motor) -> AntiScalar {
@@ -15503,7 +15511,7 @@ impl Join<Motor> for DipoleBulk {
     }
 }
 
-impl Join<MultiVector> for DipoleBulk {
+impl Join<MultiVector> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -15532,19 +15540,19 @@ impl Join<MultiVector> for DipoleBulk {
     }
 }
 
-impl Join<Origin> for DipoleBulk {
-    type Output = CircleWeight;
+impl Join<Origin> for DipoleBulkAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: Origin) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: Origin) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Join<Rotor> for DipoleBulk {
+impl Join<Rotor> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Rotor) -> AntiScalar {
@@ -15556,7 +15564,7 @@ impl Join<Rotor> for DipoleBulk {
     }
 }
 
-impl Join<RoundPoint> for DipoleBulk {
+impl Join<RoundPoint> for DipoleBulkAspect {
     type Output = Circle;
 
     fn join(self, other: RoundPoint) -> Circle {
@@ -15572,7 +15580,7 @@ impl Join<RoundPoint> for DipoleBulk {
     }
 }
 
-impl Join<RoundPointAtInfinity> for DipoleBulk {
+impl Join<RoundPointAtInfinity> for DipoleBulkAspect {
     type Output = Circle;
 
     fn join(self, other: RoundPointAtInfinity) -> Circle {
@@ -15588,7 +15596,7 @@ impl Join<RoundPointAtInfinity> for DipoleBulk {
     }
 }
 
-impl Join<RoundPointAtOrigin> for DipoleBulk {
+impl Join<RoundPointAtOrigin> for DipoleBulkAspect {
     type Output = Circle;
 
     fn join(self, other: RoundPointAtOrigin) -> Circle {
@@ -15603,19 +15611,19 @@ impl Join<RoundPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Join<RoundPointBulk> for DipoleBulk {
-    type Output = CircleBulk;
+impl Join<RoundPointBulkAspect> for DipoleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn join(self, other: RoundPointBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn join(self, other: RoundPointBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<RoundPointCarrierAspect> for DipoleBulk {
+impl Join<RoundPointCarrierAspect> for DipoleBulkAspect {
     type Output = CircleCarrierAspect;
 
     fn join(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
@@ -15629,22 +15637,22 @@ impl Join<RoundPointCarrierAspect> for DipoleBulk {
     }
 }
 
-impl Join<Scalar> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Join<Scalar> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn join(self, other: Scalar) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn join(self, other: Scalar) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Join<TransFlector> for DipoleBulk {
+impl Join<Transflector> for DipoleBulkAspect {
     type Output = Horizon;
 
-    fn join(self, other: TransFlector) -> Horizon {
+    fn join(self, other: Transflector) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -15692,12 +15700,12 @@ impl Join<Dipole> for DipoleCarrierAspect {
     }
 }
 
-impl Join<DipoleBulk> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+impl Join<DipoleBulkAspect> for DipoleCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
@@ -15705,11 +15713,11 @@ impl Join<DipoleBulk> for DipoleCarrierAspect {
 }
 
 impl Join<DipoleCarrierAspect> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0
                     - self.group0()[0] * other.group1()[0]
                     - self.group0()[1] * other.group1()[1]
@@ -15722,12 +15730,12 @@ impl Join<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Join<DipoleWeight> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+impl Join<DipoleWeightAspect> for DipoleCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
@@ -15941,11 +15949,11 @@ impl Join<MultiVector> for DipoleCarrierAspect {
 }
 
 impl Join<Origin> for DipoleCarrierAspect {
-    type Output = CircleWeight;
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: Origin) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: Origin) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
             },
         }
@@ -16017,10 +16025,10 @@ impl Join<RoundPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Join<RoundPointBulk> for DipoleCarrierAspect {
+impl Join<RoundPointBulkAspect> for DipoleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn join(self, other: RoundPointBulk) -> CircleCarrierAspect {
+    fn join(self, other: RoundPointBulkAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -16064,10 +16072,10 @@ impl Join<Scalar> for DipoleCarrierAspect {
     }
 }
 
-impl Join<TransFlector> for DipoleCarrierAspect {
+impl Join<Transflector> for DipoleCarrierAspect {
     type Output = Plane;
 
-    fn join(self, other: TransFlector) -> Plane {
+    fn join(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -16093,7 +16101,7 @@ impl Join<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl Join<Circle> for DipoleWeight {
+impl Join<Circle> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Circle) -> AntiScalar {
@@ -16105,7 +16113,7 @@ impl Join<Circle> for DipoleWeight {
     }
 }
 
-impl Join<Dipole> for DipoleWeight {
+impl Join<Dipole> for DipoleWeightAspect {
     type Output = Sphere;
 
     fn join(self, other: Dipole) -> Sphere {
@@ -16122,31 +16130,31 @@ impl Join<Dipole> for DipoleWeight {
     }
 }
 
-impl Join<DipoleBulk> for DipoleWeight {
-    type Output = SphereWeight;
+impl Join<DipoleBulkAspect> for DipoleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<DipoleCarrierAspect> for DipoleWeight {
-    type Output = SphereWeight;
+impl Join<DipoleCarrierAspect> for DipoleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: DipoleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: DipoleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
 }
 
-impl Join<FlatPoint> for DipoleWeight {
+impl Join<FlatPoint> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: FlatPoint) -> PlaneAtOrigin {
@@ -16160,7 +16168,7 @@ impl Join<FlatPoint> for DipoleWeight {
     }
 }
 
-impl Join<FlatPointAtInfinity> for DipoleWeight {
+impl Join<FlatPointAtInfinity> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: FlatPointAtInfinity) -> PlaneAtOrigin {
@@ -16174,7 +16182,7 @@ impl Join<FlatPointAtInfinity> for DipoleWeight {
     }
 }
 
-impl Join<Flector> for DipoleWeight {
+impl Join<Flector> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: Flector) -> PlaneAtOrigin {
@@ -16188,7 +16196,7 @@ impl Join<Flector> for DipoleWeight {
     }
 }
 
-impl Join<FlectorAtInfinity> for DipoleWeight {
+impl Join<FlectorAtInfinity> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: FlectorAtInfinity) -> PlaneAtOrigin {
@@ -16202,7 +16210,7 @@ impl Join<FlectorAtInfinity> for DipoleWeight {
     }
 }
 
-impl Join<Infinity> for DipoleWeight {
+impl Join<Infinity> for DipoleWeightAspect {
     type Output = LineAtOrigin;
 
     fn join(self, other: Infinity) -> LineAtOrigin {
@@ -16214,7 +16222,7 @@ impl Join<Infinity> for DipoleWeight {
     }
 }
 
-impl Join<Line> for DipoleWeight {
+impl Join<Line> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Line) -> AntiScalar {
@@ -16226,7 +16234,7 @@ impl Join<Line> for DipoleWeight {
     }
 }
 
-impl Join<LineAtInfinity> for DipoleWeight {
+impl Join<LineAtInfinity> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: LineAtInfinity) -> AntiScalar {
@@ -16238,19 +16246,19 @@ impl Join<LineAtInfinity> for DipoleWeight {
     }
 }
 
-impl Join<Magnitude> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Join<Magnitude> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: Magnitude) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: Magnitude) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Join<Motor> for DipoleWeight {
+impl Join<Motor> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Motor) -> AntiScalar {
@@ -16262,7 +16270,7 @@ impl Join<Motor> for DipoleWeight {
     }
 }
 
-impl Join<MultiVector> for DipoleWeight {
+impl Join<MultiVector> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -16292,7 +16300,7 @@ impl Join<MultiVector> for DipoleWeight {
     }
 }
 
-impl Join<RoundPoint> for DipoleWeight {
+impl Join<RoundPoint> for DipoleWeightAspect {
     type Output = Circle;
 
     fn join(self, other: RoundPoint) -> Circle {
@@ -16308,7 +16316,7 @@ impl Join<RoundPoint> for DipoleWeight {
     }
 }
 
-impl Join<RoundPointAtInfinity> for DipoleWeight {
+impl Join<RoundPointAtInfinity> for DipoleWeightAspect {
     type Output = Circle;
 
     fn join(self, other: RoundPointAtInfinity) -> Circle {
@@ -16324,7 +16332,7 @@ impl Join<RoundPointAtInfinity> for DipoleWeight {
     }
 }
 
-impl Join<RoundPointAtOrigin> for DipoleWeight {
+impl Join<RoundPointAtOrigin> for DipoleWeightAspect {
     type Output = LineAtOrigin;
 
     fn join(self, other: RoundPointAtOrigin) -> LineAtOrigin {
@@ -16336,12 +16344,12 @@ impl Join<RoundPointAtOrigin> for DipoleWeight {
     }
 }
 
-impl Join<RoundPointBulk> for DipoleWeight {
-    type Output = CircleWeight;
+impl Join<RoundPointBulkAspect> for DipoleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: RoundPointBulk) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: RoundPointBulkAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -16350,12 +16358,12 @@ impl Join<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl Join<RoundPointCarrierAspect> for DipoleWeight {
-    type Output = CircleWeight;
+impl Join<RoundPointCarrierAspect> for DipoleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: RoundPointCarrierAspect) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: RoundPointCarrierAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -16364,22 +16372,22 @@ impl Join<RoundPointCarrierAspect> for DipoleWeight {
     }
 }
 
-impl Join<Scalar> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Join<Scalar> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: Scalar) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: Scalar) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Join<TransFlector> for DipoleWeight {
+impl Join<Transflector> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: TransFlector) -> PlaneAtOrigin {
+    fn join(self, other: Transflector) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -16390,7 +16398,7 @@ impl Join<TransFlector> for DipoleWeight {
     }
 }
 
-impl Join<Translator> for DipoleWeight {
+impl Join<Translator> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Translator) -> AntiScalar {
@@ -16414,10 +16422,10 @@ impl Join<Circle> for FlatPoint {
     }
 }
 
-impl Join<CircleBulk> for FlatPoint {
+impl Join<CircleBulkAspect> for FlatPoint {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleBulk) -> AntiScalar {
+    fn join(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -16438,10 +16446,10 @@ impl Join<CircleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Join<CircleWeight> for FlatPoint {
+impl Join<CircleWeightAspect> for FlatPoint {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleWeight) -> AntiScalar {
+    fn join(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -16465,10 +16473,10 @@ impl Join<Dipole> for FlatPoint {
     }
 }
 
-impl Join<DipoleBulk> for FlatPoint {
+impl Join<DipoleBulkAspect> for FlatPoint {
     type Output = Plane;
 
-    fn join(self, other: DipoleBulk) -> Plane {
+    fn join(self, other: DipoleBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -16494,10 +16502,10 @@ impl Join<DipoleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Join<DipoleWeight> for FlatPoint {
+impl Join<DipoleWeightAspect> for FlatPoint {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -16606,10 +16614,10 @@ impl Join<RoundPointAtOrigin> for FlatPoint {
     }
 }
 
-impl Join<RoundPointBulk> for FlatPoint {
+impl Join<RoundPointBulkAspect> for FlatPoint {
     type Output = Line;
 
-    fn join(self, other: RoundPointBulk) -> Line {
+    fn join(self, other: RoundPointBulkAspect) -> Line {
         Line {
             groups: LineGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
@@ -16673,10 +16681,10 @@ impl Join<CircleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Join<CircleWeight> for FlatPointAtInfinity {
+impl Join<CircleWeightAspect> for FlatPointAtInfinity {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleWeight) -> AntiScalar {
+    fn join(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -16699,10 +16707,10 @@ impl Join<Dipole> for FlatPointAtInfinity {
     }
 }
 
-impl Join<DipoleBulk> for FlatPointAtInfinity {
+impl Join<DipoleBulkAspect> for FlatPointAtInfinity {
     type Output = Horizon;
 
-    fn join(self, other: DipoleBulk) -> Horizon {
+    fn join(self, other: DipoleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -16725,10 +16733,10 @@ impl Join<DipoleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Join<DipoleWeight> for FlatPointAtInfinity {
+impl Join<DipoleWeightAspect> for FlatPointAtInfinity {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -16835,10 +16843,10 @@ impl Join<RoundPointAtOrigin> for FlatPointAtInfinity {
     }
 }
 
-impl Join<RoundPointBulk> for FlatPointAtInfinity {
+impl Join<RoundPointBulkAspect> for FlatPointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn join(self, other: RoundPointBulk) -> LineAtInfinity {
+    fn join(self, other: RoundPointBulkAspect) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -16888,10 +16896,10 @@ impl Join<Circle> for FlatPointAtOrigin {
     }
 }
 
-impl Join<CircleBulk> for FlatPointAtOrigin {
+impl Join<CircleBulkAspect> for FlatPointAtOrigin {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleBulk) -> AntiScalar {
+    fn join(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -16924,10 +16932,10 @@ impl Join<Dipole> for FlatPointAtOrigin {
     }
 }
 
-impl Join<DipoleBulk> for FlatPointAtOrigin {
+impl Join<DipoleBulkAspect> for FlatPointAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: DipoleBulk) -> PlaneAtOrigin {
+    fn join(self, other: DipoleBulkAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -17006,10 +17014,10 @@ impl Join<RoundPointAtInfinity> for FlatPointAtOrigin {
     }
 }
 
-impl Join<RoundPointBulk> for FlatPointAtOrigin {
+impl Join<RoundPointBulkAspect> for FlatPointAtOrigin {
     type Output = LineAtOrigin;
 
-    fn join(self, other: RoundPointBulk) -> LineAtOrigin {
+    fn join(self, other: RoundPointBulkAspect) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -17054,10 +17062,10 @@ impl Join<Circle> for Flector {
     }
 }
 
-impl Join<CircleBulk> for Flector {
+impl Join<CircleBulkAspect> for Flector {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleBulk) -> AntiScalar {
+    fn join(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -17078,10 +17086,10 @@ impl Join<CircleCarrierAspect> for Flector {
     }
 }
 
-impl Join<CircleWeight> for Flector {
+impl Join<CircleWeightAspect> for Flector {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleWeight) -> AntiScalar {
+    fn join(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -17105,10 +17113,10 @@ impl Join<Dipole> for Flector {
     }
 }
 
-impl Join<DipoleBulk> for Flector {
+impl Join<DipoleBulkAspect> for Flector {
     type Output = Plane;
 
-    fn join(self, other: DipoleBulk) -> Plane {
+    fn join(self, other: DipoleBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -17134,10 +17142,10 @@ impl Join<DipoleCarrierAspect> for Flector {
     }
 }
 
-impl Join<DipoleWeight> for Flector {
+impl Join<DipoleWeightAspect> for Flector {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -17263,10 +17271,10 @@ impl Join<RoundPointAtOrigin> for Flector {
     }
 }
 
-impl Join<RoundPointBulk> for Flector {
+impl Join<RoundPointBulkAspect> for Flector {
     type Output = Motor;
 
-    fn join(self, other: RoundPointBulk) -> Motor {
+    fn join(self, other: RoundPointBulkAspect) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0])
@@ -17338,10 +17346,10 @@ impl Join<CircleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Join<CircleWeight> for FlectorAtInfinity {
+impl Join<CircleWeightAspect> for FlectorAtInfinity {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleWeight) -> AntiScalar {
+    fn join(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -17364,10 +17372,10 @@ impl Join<Dipole> for FlectorAtInfinity {
     }
 }
 
-impl Join<DipoleBulk> for FlectorAtInfinity {
+impl Join<DipoleBulkAspect> for FlectorAtInfinity {
     type Output = Horizon;
 
-    fn join(self, other: DipoleBulk) -> Horizon {
+    fn join(self, other: DipoleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -17390,10 +17398,10 @@ impl Join<DipoleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Join<DipoleWeight> for FlectorAtInfinity {
+impl Join<DipoleWeightAspect> for FlectorAtInfinity {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -17501,10 +17509,10 @@ impl Join<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl Join<RoundPointBulk> for FlectorAtInfinity {
+impl Join<RoundPointBulkAspect> for FlectorAtInfinity {
     type Output = LineAtInfinity;
 
-    fn join(self, other: RoundPointBulk) -> LineAtInfinity {
+    fn join(self, other: RoundPointBulkAspect) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -17648,10 +17656,10 @@ impl Join<Circle> for Infinity {
     }
 }
 
-impl Join<CircleBulk> for Infinity {
+impl Join<CircleBulkAspect> for Infinity {
     type Output = Horizon;
 
-    fn join(self, other: CircleBulk) -> Horizon {
+    fn join(self, other: CircleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -17672,10 +17680,10 @@ impl Join<CircleCarrierAspect> for Infinity {
     }
 }
 
-impl Join<CircleWeight> for Infinity {
+impl Join<CircleWeightAspect> for Infinity {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: CircleWeight) -> PlaneAtOrigin {
+    fn join(self, other: CircleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -17697,10 +17705,10 @@ impl Join<Dipole> for Infinity {
     }
 }
 
-impl Join<DipoleBulk> for Infinity {
+impl Join<DipoleBulkAspect> for Infinity {
     type Output = LineAtInfinity;
 
-    fn join(self, other: DipoleBulk) -> LineAtInfinity {
+    fn join(self, other: DipoleBulkAspect) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -17722,10 +17730,10 @@ impl Join<DipoleCarrierAspect> for Infinity {
     }
 }
 
-impl Join<DipoleWeight> for Infinity {
+impl Join<DipoleWeightAspect> for Infinity {
     type Output = LineAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> LineAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -17816,10 +17824,10 @@ impl Join<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl Join<RoundPointBulk> for Infinity {
+impl Join<RoundPointBulkAspect> for Infinity {
     type Output = FlatPointAtInfinity;
 
-    fn join(self, other: RoundPointBulk) -> FlatPointAtInfinity {
+    fn join(self, other: RoundPointBulkAspect) -> FlatPointAtInfinity {
         FlatPointAtInfinity {
             groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -17864,10 +17872,10 @@ impl Join<Sphere> for Infinity {
     }
 }
 
-impl Join<SphereWeight> for Infinity {
+impl Join<SphereWeightAspect> for Infinity {
     type Output = AntiScalar;
 
-    fn join(self, other: SphereWeight) -> AntiScalar {
+    fn join(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group0(),
@@ -17894,10 +17902,10 @@ impl Join<Dipole> for Line {
     }
 }
 
-impl Join<DipoleBulk> for Line {
+impl Join<DipoleBulkAspect> for Line {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleBulk) -> AntiScalar {
+    fn join(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -17924,10 +17932,10 @@ impl Join<DipoleCarrierAspect> for Line {
     }
 }
 
-impl Join<DipoleWeight> for Line {
+impl Join<DipoleWeightAspect> for Line {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleWeight) -> AntiScalar {
+    fn join(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -18039,10 +18047,10 @@ impl Join<RoundPointAtOrigin> for Line {
     }
 }
 
-impl Join<RoundPointBulk> for Line {
+impl Join<RoundPointBulkAspect> for Line {
     type Output = Plane;
 
-    fn join(self, other: RoundPointBulk) -> Plane {
+    fn join(self, other: RoundPointBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -18110,10 +18118,10 @@ impl Join<DipoleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Join<DipoleWeight> for LineAtInfinity {
+impl Join<DipoleWeightAspect> for LineAtInfinity {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleWeight) -> AntiScalar {
+    fn join(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -18210,10 +18218,10 @@ impl Join<RoundPointAtOrigin> for LineAtInfinity {
     }
 }
 
-impl Join<RoundPointBulk> for LineAtInfinity {
+impl Join<RoundPointBulkAspect> for LineAtInfinity {
     type Output = Horizon;
 
-    fn join(self, other: RoundPointBulk) -> Horizon {
+    fn join(self, other: RoundPointBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -18260,10 +18268,10 @@ impl Join<Dipole> for LineAtOrigin {
     }
 }
 
-impl Join<DipoleBulk> for LineAtOrigin {
+impl Join<DipoleBulkAspect> for LineAtOrigin {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleBulk) -> AntiScalar {
+    fn join(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -18350,10 +18358,10 @@ impl Join<RoundPointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl Join<RoundPointBulk> for LineAtOrigin {
+impl Join<RoundPointBulkAspect> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: RoundPointBulk) -> PlaneAtOrigin {
+    fn join(self, other: RoundPointBulkAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -18416,12 +18424,12 @@ impl Join<Circle> for Magnitude {
     }
 }
 
-impl Join<CircleBulk> for Magnitude {
-    type Output = CircleBulk;
+impl Join<CircleBulkAspect> for Magnitude {
+    type Output = CircleBulkAspect;
 
-    fn join(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn join(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0()[0] * other.group0(),
             },
         }
@@ -18440,12 +18448,12 @@ impl Join<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl Join<CircleWeight> for Magnitude {
-    type Output = CircleWeight;
+impl Join<CircleWeightAspect> for Magnitude {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -18466,12 +18474,12 @@ impl Join<Dipole> for Magnitude {
     }
 }
 
-impl Join<DipoleBulk> for Magnitude {
-    type Output = DipoleBulk;
+impl Join<DipoleBulkAspect> for Magnitude {
+    type Output = DipoleBulkAspect;
 
-    fn join(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn join(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -18491,12 +18499,12 @@ impl Join<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl Join<DipoleWeight> for Magnitude {
-    type Output = DipoleWeight;
+impl Join<DipoleWeightAspect> for Magnitude {
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -18757,12 +18765,12 @@ impl Join<RoundPointAtOrigin> for Magnitude {
     }
 }
 
-impl Join<RoundPointBulk> for Magnitude {
-    type Output = RoundPointBulk;
+impl Join<RoundPointBulkAspect> for Magnitude {
+    type Output = RoundPointBulkAspect;
 
-    fn join(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn join(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -18806,24 +18814,24 @@ impl Join<Sphere> for Magnitude {
     }
 }
 
-impl Join<SphereWeight> for Magnitude {
-    type Output = SphereWeight;
+impl Join<SphereWeightAspect> for Magnitude {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0(),
             },
         }
     }
 }
 
-impl Join<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Join<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn join(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[0]) * other.group1(),
             },
@@ -18861,10 +18869,10 @@ impl Join<Dipole> for Motor {
     }
 }
 
-impl Join<DipoleBulk> for Motor {
+impl Join<DipoleBulkAspect> for Motor {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleBulk) -> AntiScalar {
+    fn join(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -18891,10 +18899,10 @@ impl Join<DipoleCarrierAspect> for Motor {
     }
 }
 
-impl Join<DipoleWeight> for Motor {
+impl Join<DipoleWeightAspect> for Motor {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleWeight) -> AntiScalar {
+    fn join(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -19007,10 +19015,10 @@ impl Join<RoundPointAtOrigin> for Motor {
     }
 }
 
-impl Join<RoundPointBulk> for Motor {
+impl Join<RoundPointBulkAspect> for Motor {
     type Output = Plane;
 
-    fn join(self, other: RoundPointBulk) -> Plane {
+    fn join(self, other: RoundPointBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -19104,10 +19112,10 @@ impl Join<Circle> for MultiVector {
     }
 }
 
-impl Join<CircleBulk> for MultiVector {
+impl Join<CircleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: CircleBulk) -> MultiVector {
+    fn join(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]),
@@ -19154,10 +19162,10 @@ impl Join<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Join<CircleWeight> for MultiVector {
+impl Join<CircleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: CircleWeight) -> MultiVector {
+    fn join(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -19234,10 +19242,10 @@ impl Join<Dipole> for MultiVector {
     }
 }
 
-impl Join<DipoleBulk> for MultiVector {
+impl Join<DipoleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: DipoleBulk) -> MultiVector {
+    fn join(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -19307,10 +19315,10 @@ impl Join<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Join<DipoleWeight> for MultiVector {
+impl Join<DipoleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: DipoleWeight) -> MultiVector {
+    fn join(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group8()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -20029,10 +20037,10 @@ impl Join<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Join<RoundPointBulk> for MultiVector {
+impl Join<RoundPointBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: RoundPointBulk) -> MultiVector {
+    fn join(self, other: RoundPointBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -20162,10 +20170,10 @@ impl Join<Sphere> for MultiVector {
     }
 }
 
-impl Join<SphereWeight> for MultiVector {
+impl Join<SphereWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: SphereWeight) -> MultiVector {
+    fn join(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, other.group0()]),
@@ -20184,10 +20192,10 @@ impl Join<SphereWeight> for MultiVector {
     }
 }
 
-impl Join<TransFlector> for MultiVector {
+impl Join<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn join(self, other: TransFlector) -> MultiVector {
+    fn join(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group1()[0]])
@@ -20260,12 +20268,12 @@ impl Join<Circle> for Origin {
     }
 }
 
-impl Join<CircleBulk> for Origin {
-    type Output = SphereWeight;
+impl Join<CircleBulkAspect> for Origin {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -20273,11 +20281,11 @@ impl Join<CircleBulk> for Origin {
 }
 
 impl Join<CircleCarrierAspect> for Origin {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0()[3],
             },
         }
@@ -20298,12 +20306,12 @@ impl Join<Dipole> for Origin {
     }
 }
 
-impl Join<DipoleBulk> for Origin {
-    type Output = CircleWeight;
+impl Join<DipoleBulkAspect> for Origin {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: DipoleBulk) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: DipoleBulkAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -20311,11 +20319,11 @@ impl Join<DipoleBulk> for Origin {
 }
 
 impl Join<DipoleCarrierAspect> for Origin {
-    type Output = CircleWeight;
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: DipoleCarrierAspect) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: DipoleCarrierAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
             },
         }
@@ -20516,12 +20524,12 @@ impl Join<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl Join<RoundPointBulk> for Origin {
-    type Output = DipoleWeight;
+impl Join<RoundPointBulkAspect> for Origin {
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: RoundPointBulk) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: RoundPointBulkAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -20529,11 +20537,11 @@ impl Join<RoundPointBulk> for Origin {
 }
 
 impl Join<RoundPointCarrierAspect> for Origin {
-    type Output = DipoleWeight;
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: RoundPointCarrierAspect) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: RoundPointCarrierAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
@@ -20564,10 +20572,10 @@ impl Join<Sphere> for Origin {
     }
 }
 
-impl Join<TransFlector> for Origin {
+impl Join<Transflector> for Origin {
     type Output = Rotor;
 
-    fn join(self, other: TransFlector) -> Rotor {
+    fn join(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -20673,10 +20681,10 @@ impl Join<RoundPointAtOrigin> for Plane {
     }
 }
 
-impl Join<RoundPointBulk> for Plane {
+impl Join<RoundPointBulkAspect> for Plane {
     type Output = AntiScalar;
 
-    fn join(self, other: RoundPointBulk) -> AntiScalar {
+    fn join(self, other: RoundPointBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -20769,10 +20777,10 @@ impl Join<RoundPointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl Join<RoundPointBulk> for PlaneAtOrigin {
+impl Join<RoundPointBulkAspect> for PlaneAtOrigin {
     type Output = AntiScalar;
 
-    fn join(self, other: RoundPointBulk) -> AntiScalar {
+    fn join(self, other: RoundPointBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -20817,10 +20825,10 @@ impl Join<Dipole> for Rotor {
     }
 }
 
-impl Join<DipoleBulk> for Rotor {
+impl Join<DipoleBulkAspect> for Rotor {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleBulk) -> AntiScalar {
+    fn join(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -20908,10 +20916,10 @@ impl Join<RoundPointAtInfinity> for Rotor {
     }
 }
 
-impl Join<RoundPointBulk> for Rotor {
+impl Join<RoundPointBulkAspect> for Rotor {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: RoundPointBulk) -> PlaneAtOrigin {
+    fn join(self, other: RoundPointBulkAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -20968,10 +20976,10 @@ impl Join<Circle> for RoundPoint {
     }
 }
 
-impl Join<CircleBulk> for RoundPoint {
+impl Join<CircleBulkAspect> for RoundPoint {
     type Output = Sphere;
 
-    fn join(self, other: CircleBulk) -> Sphere {
+    fn join(self, other: CircleBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0),
@@ -20997,10 +21005,10 @@ impl Join<CircleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Join<CircleWeight> for RoundPoint {
+impl Join<CircleWeightAspect> for RoundPoint {
     type Output = Sphere;
 
-    fn join(self, other: CircleWeight) -> Sphere {
+    fn join(self, other: CircleWeightAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group1()[1]) * other.group0(),
@@ -21034,10 +21042,10 @@ impl Join<Dipole> for RoundPoint {
     }
 }
 
-impl Join<DipoleBulk> for RoundPoint {
+impl Join<DipoleBulkAspect> for RoundPoint {
     type Output = Circle;
 
-    fn join(self, other: DipoleBulk) -> Circle {
+    fn join(self, other: DipoleBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -21068,10 +21076,10 @@ impl Join<DipoleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Join<DipoleWeight> for RoundPoint {
+impl Join<DipoleWeightAspect> for RoundPoint {
     type Output = Circle;
 
-    fn join(self, other: DipoleWeight) -> Circle {
+    fn join(self, other: DipoleWeightAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -21410,10 +21418,10 @@ impl Join<RoundPointAtOrigin> for RoundPoint {
     }
 }
 
-impl Join<RoundPointBulk> for RoundPoint {
+impl Join<RoundPointBulkAspect> for RoundPoint {
     type Output = Dipole;
 
-    fn join(self, other: RoundPointBulk) -> Dipole {
+    fn join(self, other: RoundPointBulkAspect) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(self.group1()[0]) * other.group0(),
@@ -21472,10 +21480,10 @@ impl Join<Sphere> for RoundPoint {
     }
 }
 
-impl Join<SphereWeight> for RoundPoint {
+impl Join<SphereWeightAspect> for RoundPoint {
     type Output = AntiScalar;
 
-    fn join(self, other: SphereWeight) -> AntiScalar {
+    fn join(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group1()[1] * other.group0(),
@@ -21484,10 +21492,10 @@ impl Join<SphereWeight> for RoundPoint {
     }
 }
 
-impl Join<TransFlector> for RoundPoint {
+impl Join<Transflector> for RoundPoint {
     type Output = Motor;
 
-    fn join(self, other: TransFlector) -> Motor {
+    fn join(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -21536,10 +21544,10 @@ impl Join<Circle> for RoundPointAtInfinity {
     }
 }
 
-impl Join<CircleBulk> for RoundPointAtInfinity {
+impl Join<CircleBulkAspect> for RoundPointAtInfinity {
     type Output = Horizon;
 
-    fn join(self, other: CircleBulk) -> Horizon {
+    fn join(self, other: CircleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -21563,10 +21571,10 @@ impl Join<CircleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Join<CircleWeight> for RoundPointAtInfinity {
+impl Join<CircleWeightAspect> for RoundPointAtInfinity {
     type Output = Sphere;
 
-    fn join(self, other: CircleWeight) -> Sphere {
+    fn join(self, other: CircleWeightAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
@@ -21598,10 +21606,10 @@ impl Join<Dipole> for RoundPointAtInfinity {
     }
 }
 
-impl Join<DipoleBulk> for RoundPointAtInfinity {
+impl Join<DipoleBulkAspect> for RoundPointAtInfinity {
     type Output = Circle;
 
-    fn join(self, other: DipoleBulk) -> Circle {
+    fn join(self, other: DipoleBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -21630,10 +21638,10 @@ impl Join<DipoleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Join<DipoleWeight> for RoundPointAtInfinity {
+impl Join<DipoleWeightAspect> for RoundPointAtInfinity {
     type Output = Circle;
 
-    fn join(self, other: DipoleWeight) -> Circle {
+    fn join(self, other: DipoleWeightAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -21936,10 +21944,10 @@ impl Join<RoundPointAtOrigin> for RoundPointAtInfinity {
     }
 }
 
-impl Join<RoundPointBulk> for RoundPointAtInfinity {
+impl Join<RoundPointBulkAspect> for RoundPointAtInfinity {
     type Output = Dipole;
 
-    fn join(self, other: RoundPointBulk) -> Dipole {
+    fn join(self, other: RoundPointBulkAspect) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -21992,10 +22000,10 @@ impl Join<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl Join<SphereWeight> for RoundPointAtInfinity {
+impl Join<SphereWeightAspect> for RoundPointAtInfinity {
     type Output = AntiScalar;
 
-    fn join(self, other: SphereWeight) -> AntiScalar {
+    fn join(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[3] * other.group0(),
@@ -22004,10 +22012,10 @@ impl Join<SphereWeight> for RoundPointAtInfinity {
     }
 }
 
-impl Join<TransFlector> for RoundPointAtInfinity {
+impl Join<Transflector> for RoundPointAtInfinity {
     type Output = Translator;
 
-    fn join(self, other: TransFlector) -> Translator {
+    fn join(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -22044,10 +22052,10 @@ impl Join<Circle> for RoundPointAtOrigin {
     }
 }
 
-impl Join<CircleBulk> for RoundPointAtOrigin {
+impl Join<CircleBulkAspect> for RoundPointAtOrigin {
     type Output = Sphere;
 
-    fn join(self, other: CircleBulk) -> Sphere {
+    fn join(self, other: CircleBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0),
@@ -22070,10 +22078,10 @@ impl Join<CircleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Join<CircleWeight> for RoundPointAtOrigin {
+impl Join<CircleWeightAspect> for RoundPointAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: CircleWeight) -> PlaneAtOrigin {
+    fn join(self, other: CircleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[1]) * other.group0(),
@@ -22097,10 +22105,10 @@ impl Join<Dipole> for RoundPointAtOrigin {
     }
 }
 
-impl Join<DipoleBulk> for RoundPointAtOrigin {
+impl Join<DipoleBulkAspect> for RoundPointAtOrigin {
     type Output = Circle;
 
-    fn join(self, other: DipoleBulk) -> Circle {
+    fn join(self, other: DipoleBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -22125,10 +22133,10 @@ impl Join<DipoleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Join<DipoleWeight> for RoundPointAtOrigin {
+impl Join<DipoleWeightAspect> for RoundPointAtOrigin {
     type Output = LineAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> LineAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
@@ -22347,10 +22355,10 @@ impl Join<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Join<RoundPointBulk> for RoundPointAtOrigin {
+impl Join<RoundPointBulkAspect> for RoundPointAtOrigin {
     type Output = Dipole;
 
-    fn join(self, other: RoundPointBulk) -> Dipole {
+    fn join(self, other: RoundPointBulkAspect) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
@@ -22399,10 +22407,10 @@ impl Join<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl Join<SphereWeight> for RoundPointAtOrigin {
+impl Join<SphereWeightAspect> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
-    fn join(self, other: SphereWeight) -> AntiScalar {
+    fn join(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[1] * other.group0(),
@@ -22411,10 +22419,10 @@ impl Join<SphereWeight> for RoundPointAtOrigin {
     }
 }
 
-impl Join<TransFlector> for RoundPointAtOrigin {
+impl Join<Transflector> for RoundPointAtOrigin {
     type Output = Rotor;
 
-    fn join(self, other: TransFlector) -> Rotor {
+    fn join(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -22435,7 +22443,7 @@ impl Join<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl Join<Circle> for RoundPointBulk {
+impl Join<Circle> for RoundPointBulkAspect {
     type Output = Sphere;
 
     fn join(self, other: Circle) -> Sphere {
@@ -22452,31 +22460,31 @@ impl Join<Circle> for RoundPointBulk {
     }
 }
 
-impl Join<CircleCarrierAspect> for RoundPointBulk {
-    type Output = SphereWeight;
+impl Join<CircleCarrierAspect> for RoundPointBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<CircleWeight> for RoundPointBulk {
-    type Output = SphereWeight;
+impl Join<CircleWeightAspect> for RoundPointBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<Dipole> for RoundPointBulk {
+impl Join<Dipole> for RoundPointBulkAspect {
     type Output = Circle;
 
     fn join(self, other: Dipole) -> Circle {
@@ -22494,19 +22502,19 @@ impl Join<Dipole> for RoundPointBulk {
     }
 }
 
-impl Join<DipoleBulk> for RoundPointBulk {
-    type Output = CircleBulk;
+impl Join<DipoleBulkAspect> for RoundPointBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn join(self, other: DipoleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn join(self, other: DipoleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Join<DipoleCarrierAspect> for RoundPointBulk {
+impl Join<DipoleCarrierAspect> for RoundPointBulkAspect {
     type Output = CircleCarrierAspect;
 
     fn join(self, other: DipoleCarrierAspect) -> CircleCarrierAspect {
@@ -22520,12 +22528,12 @@ impl Join<DipoleCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Join<DipoleWeight> for RoundPointBulk {
-    type Output = CircleWeight;
+impl Join<DipoleWeightAspect> for RoundPointBulkAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: DipoleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: DipoleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -22534,7 +22542,7 @@ impl Join<DipoleWeight> for RoundPointBulk {
     }
 }
 
-impl Join<FlatPoint> for RoundPointBulk {
+impl Join<FlatPoint> for RoundPointBulkAspect {
     type Output = Line;
 
     fn join(self, other: FlatPoint) -> Line {
@@ -22549,7 +22557,7 @@ impl Join<FlatPoint> for RoundPointBulk {
     }
 }
 
-impl Join<FlatPointAtInfinity> for RoundPointBulk {
+impl Join<FlatPointAtInfinity> for RoundPointBulkAspect {
     type Output = LineAtInfinity;
 
     fn join(self, other: FlatPointAtInfinity) -> LineAtInfinity {
@@ -22563,7 +22571,7 @@ impl Join<FlatPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Join<FlatPointAtOrigin> for RoundPointBulk {
+impl Join<FlatPointAtOrigin> for RoundPointBulkAspect {
     type Output = LineAtOrigin;
 
     fn join(self, other: FlatPointAtOrigin) -> LineAtOrigin {
@@ -22575,7 +22583,7 @@ impl Join<FlatPointAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Join<Flector> for RoundPointBulk {
+impl Join<Flector> for RoundPointBulkAspect {
     type Output = Motor;
 
     fn join(self, other: Flector) -> Motor {
@@ -22592,7 +22600,7 @@ impl Join<Flector> for RoundPointBulk {
     }
 }
 
-impl Join<FlectorAtInfinity> for RoundPointBulk {
+impl Join<FlectorAtInfinity> for RoundPointBulkAspect {
     type Output = LineAtInfinity;
 
     fn join(self, other: FlectorAtInfinity) -> LineAtInfinity {
@@ -22606,7 +22614,7 @@ impl Join<FlectorAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Join<Infinity> for RoundPointBulk {
+impl Join<Infinity> for RoundPointBulkAspect {
     type Output = FlatPointAtInfinity;
 
     fn join(self, other: Infinity) -> FlatPointAtInfinity {
@@ -22618,7 +22626,7 @@ impl Join<Infinity> for RoundPointBulk {
     }
 }
 
-impl Join<Line> for RoundPointBulk {
+impl Join<Line> for RoundPointBulkAspect {
     type Output = Plane;
 
     fn join(self, other: Line) -> Plane {
@@ -22632,7 +22640,7 @@ impl Join<Line> for RoundPointBulk {
     }
 }
 
-impl Join<LineAtInfinity> for RoundPointBulk {
+impl Join<LineAtInfinity> for RoundPointBulkAspect {
     type Output = Horizon;
 
     fn join(self, other: LineAtInfinity) -> Horizon {
@@ -22644,7 +22652,7 @@ impl Join<LineAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Join<LineAtOrigin> for RoundPointBulk {
+impl Join<LineAtOrigin> for RoundPointBulkAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: LineAtOrigin) -> PlaneAtOrigin {
@@ -22658,19 +22666,19 @@ impl Join<LineAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Join<Magnitude> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Join<Magnitude> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn join(self, other: Magnitude) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn join(self, other: Magnitude) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Join<Motor> for RoundPointBulk {
+impl Join<Motor> for RoundPointBulkAspect {
     type Output = Plane;
 
     fn join(self, other: Motor) -> Plane {
@@ -22684,7 +22692,7 @@ impl Join<Motor> for RoundPointBulk {
     }
 }
 
-impl Join<MultiVector> for RoundPointBulk {
+impl Join<MultiVector> for RoundPointBulkAspect {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -22719,19 +22727,19 @@ impl Join<MultiVector> for RoundPointBulk {
     }
 }
 
-impl Join<Origin> for RoundPointBulk {
-    type Output = DipoleWeight;
+impl Join<Origin> for RoundPointBulkAspect {
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: Origin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: Origin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Join<Plane> for RoundPointBulk {
+impl Join<Plane> for RoundPointBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Plane) -> AntiScalar {
@@ -22743,7 +22751,7 @@ impl Join<Plane> for RoundPointBulk {
     }
 }
 
-impl Join<PlaneAtOrigin> for RoundPointBulk {
+impl Join<PlaneAtOrigin> for RoundPointBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: PlaneAtOrigin) -> AntiScalar {
@@ -22755,7 +22763,7 @@ impl Join<PlaneAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Join<Rotor> for RoundPointBulk {
+impl Join<Rotor> for RoundPointBulkAspect {
     type Output = PlaneAtOrigin;
 
     fn join(self, other: Rotor) -> PlaneAtOrigin {
@@ -22769,7 +22777,7 @@ impl Join<Rotor> for RoundPointBulk {
     }
 }
 
-impl Join<RoundPoint> for RoundPointBulk {
+impl Join<RoundPoint> for RoundPointBulkAspect {
     type Output = Dipole;
 
     fn join(self, other: RoundPoint) -> Dipole {
@@ -22786,7 +22794,7 @@ impl Join<RoundPoint> for RoundPointBulk {
     }
 }
 
-impl Join<RoundPointAtInfinity> for RoundPointBulk {
+impl Join<RoundPointAtInfinity> for RoundPointBulkAspect {
     type Output = Dipole;
 
     fn join(self, other: RoundPointAtInfinity) -> Dipole {
@@ -22803,7 +22811,7 @@ impl Join<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Join<RoundPointAtOrigin> for RoundPointBulk {
+impl Join<RoundPointAtOrigin> for RoundPointBulkAspect {
     type Output = Dipole;
 
     fn join(self, other: RoundPointAtOrigin) -> Dipole {
@@ -22818,12 +22826,12 @@ impl Join<RoundPointAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Join<RoundPointBulk> for RoundPointBulk {
-    type Output = DipoleBulk;
+impl Join<RoundPointBulkAspect> for RoundPointBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn join(self, other: RoundPointBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn join(self, other: RoundPointBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -22832,7 +22840,7 @@ impl Join<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Join<RoundPointCarrierAspect> for RoundPointBulk {
+impl Join<RoundPointCarrierAspect> for RoundPointBulkAspect {
     type Output = DipoleCarrierAspect;
 
     fn join(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
@@ -22847,19 +22855,19 @@ impl Join<RoundPointCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Join<Scalar> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Join<Scalar> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn join(self, other: Scalar) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn join(self, other: Scalar) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Join<Sphere> for RoundPointBulk {
+impl Join<Sphere> for RoundPointBulkAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Sphere) -> AntiScalar {
@@ -22871,10 +22879,10 @@ impl Join<Sphere> for RoundPointBulk {
     }
 }
 
-impl Join<TransFlector> for RoundPointBulk {
+impl Join<Transflector> for RoundPointBulkAspect {
     type Output = Translator;
 
-    fn join(self, other: TransFlector) -> Translator {
+    fn join(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -22885,7 +22893,7 @@ impl Join<TransFlector> for RoundPointBulk {
     }
 }
 
-impl Join<Translator> for RoundPointBulk {
+impl Join<Translator> for RoundPointBulkAspect {
     type Output = Horizon;
 
     fn join(self, other: Translator) -> Horizon {
@@ -22916,12 +22924,12 @@ impl Join<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Join<CircleBulk> for RoundPointCarrierAspect {
-    type Output = SphereWeight;
+impl Join<CircleBulkAspect> for RoundPointCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[3] * other.group0(),
             },
         }
@@ -22929,23 +22937,23 @@ impl Join<CircleBulk> for RoundPointCarrierAspect {
 }
 
 impl Join<CircleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
             },
         }
     }
 }
 
-impl Join<CircleWeight> for RoundPointCarrierAspect {
-    type Output = SphereWeight;
+impl Join<CircleWeightAspect> for RoundPointCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: CircleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: CircleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
@@ -22972,10 +22980,10 @@ impl Join<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Join<DipoleBulk> for RoundPointCarrierAspect {
+impl Join<DipoleBulkAspect> for RoundPointCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn join(self, other: DipoleBulk) -> CircleCarrierAspect {
+    fn join(self, other: DipoleBulkAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -23001,12 +23009,12 @@ impl Join<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Join<DipoleWeight> for RoundPointCarrierAspect {
-    type Output = CircleWeight;
+impl Join<DipoleWeightAspect> for RoundPointCarrierAspect {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: DipoleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: DipoleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -23226,11 +23234,11 @@ impl Join<MultiVector> for RoundPointCarrierAspect {
 }
 
 impl Join<Origin> for RoundPointCarrierAspect {
-    type Output = DipoleWeight;
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: Origin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: Origin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -23322,10 +23330,10 @@ impl Join<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Join<RoundPointBulk> for RoundPointCarrierAspect {
+impl Join<RoundPointBulkAspect> for RoundPointCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn join(self, other: RoundPointBulk) -> DipoleCarrierAspect {
+    fn join(self, other: RoundPointBulkAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
@@ -23377,10 +23385,10 @@ impl Join<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Join<TransFlector> for RoundPointCarrierAspect {
+impl Join<Transflector> for RoundPointCarrierAspect {
     type Output = Motor;
 
-    fn join(self, other: TransFlector) -> Motor {
+    fn join(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -23435,12 +23443,12 @@ impl Join<Circle> for Scalar {
     }
 }
 
-impl Join<CircleBulk> for Scalar {
-    type Output = CircleBulk;
+impl Join<CircleBulkAspect> for Scalar {
+    type Output = CircleBulkAspect;
 
-    fn join(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn join(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -23459,12 +23467,12 @@ impl Join<CircleCarrierAspect> for Scalar {
     }
 }
 
-impl Join<CircleWeight> for Scalar {
-    type Output = CircleWeight;
+impl Join<CircleWeightAspect> for Scalar {
+    type Output = CircleWeightAspect;
 
-    fn join(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn join(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -23485,12 +23493,12 @@ impl Join<Dipole> for Scalar {
     }
 }
 
-impl Join<DipoleBulk> for Scalar {
-    type Output = DipoleBulk;
+impl Join<DipoleBulkAspect> for Scalar {
+    type Output = DipoleBulkAspect;
 
-    fn join(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn join(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -23510,12 +23518,12 @@ impl Join<DipoleCarrierAspect> for Scalar {
     }
 }
 
-impl Join<DipoleWeight> for Scalar {
-    type Output = DipoleWeight;
+impl Join<DipoleWeightAspect> for Scalar {
+    type Output = DipoleWeightAspect;
 
-    fn join(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn join(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -23776,12 +23784,12 @@ impl Join<RoundPointAtOrigin> for Scalar {
     }
 }
 
-impl Join<RoundPointBulk> for Scalar {
-    type Output = RoundPointBulk;
+impl Join<RoundPointBulkAspect> for Scalar {
+    type Output = RoundPointBulkAspect;
 
-    fn join(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn join(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -23825,24 +23833,24 @@ impl Join<Sphere> for Scalar {
     }
 }
 
-impl Join<SphereWeight> for Scalar {
-    type Output = SphereWeight;
+impl Join<SphereWeightAspect> for Scalar {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Join<TransFlector> for Scalar {
-    type Output = TransFlector;
+impl Join<Transflector> for Scalar {
+    type Output = Transflector;
 
-    fn join(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -23965,10 +23973,10 @@ impl Join<RoundPointAtOrigin> for Sphere {
     }
 }
 
-impl Join<RoundPointBulk> for Sphere {
+impl Join<RoundPointBulkAspect> for Sphere {
     type Output = AntiScalar;
 
-    fn join(self, other: RoundPointBulk) -> AntiScalar {
+    fn join(self, other: RoundPointBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -24002,7 +24010,7 @@ impl Join<Scalar> for Sphere {
     }
 }
 
-impl Join<Infinity> for SphereWeight {
+impl Join<Infinity> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: Infinity) -> AntiScalar {
@@ -24014,19 +24022,19 @@ impl Join<Infinity> for SphereWeight {
     }
 }
 
-impl Join<Magnitude> for SphereWeight {
-    type Output = SphereWeight;
+impl Join<Magnitude> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: Magnitude) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: Magnitude) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0()[0],
             },
         }
     }
 }
 
-impl Join<MultiVector> for SphereWeight {
+impl Join<MultiVector> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -24048,7 +24056,7 @@ impl Join<MultiVector> for SphereWeight {
     }
 }
 
-impl Join<RoundPoint> for SphereWeight {
+impl Join<RoundPoint> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: RoundPoint) -> AntiScalar {
@@ -24060,7 +24068,7 @@ impl Join<RoundPoint> for SphereWeight {
     }
 }
 
-impl Join<RoundPointAtInfinity> for SphereWeight {
+impl Join<RoundPointAtInfinity> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: RoundPointAtInfinity) -> AntiScalar {
@@ -24072,7 +24080,7 @@ impl Join<RoundPointAtInfinity> for SphereWeight {
     }
 }
 
-impl Join<RoundPointAtOrigin> for SphereWeight {
+impl Join<RoundPointAtOrigin> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn join(self, other: RoundPointAtOrigin) -> AntiScalar {
@@ -24084,19 +24092,19 @@ impl Join<RoundPointAtOrigin> for SphereWeight {
     }
 }
 
-impl Join<Scalar> for SphereWeight {
-    type Output = SphereWeight;
+impl Join<Scalar> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn join(self, other: Scalar) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn join(self, other: Scalar) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Join<Circle> for TransFlector {
+impl Join<Circle> for Transflector {
     type Output = AntiScalar;
 
     fn join(self, other: Circle) -> AntiScalar {
@@ -24108,7 +24116,7 @@ impl Join<Circle> for TransFlector {
     }
 }
 
-impl Join<CircleCarrierAspect> for TransFlector {
+impl Join<CircleCarrierAspect> for Transflector {
     type Output = AntiScalar;
 
     fn join(self, other: CircleCarrierAspect) -> AntiScalar {
@@ -24120,10 +24128,10 @@ impl Join<CircleCarrierAspect> for TransFlector {
     }
 }
 
-impl Join<CircleWeight> for TransFlector {
+impl Join<CircleWeightAspect> for Transflector {
     type Output = AntiScalar;
 
-    fn join(self, other: CircleWeight) -> AntiScalar {
+    fn join(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -24132,7 +24140,7 @@ impl Join<CircleWeight> for TransFlector {
     }
 }
 
-impl Join<Dipole> for TransFlector {
+impl Join<Dipole> for Transflector {
     type Output = Plane;
 
     fn join(self, other: Dipole) -> Plane {
@@ -24146,10 +24154,10 @@ impl Join<Dipole> for TransFlector {
     }
 }
 
-impl Join<DipoleBulk> for TransFlector {
+impl Join<DipoleBulkAspect> for Transflector {
     type Output = Horizon;
 
-    fn join(self, other: DipoleBulk) -> Horizon {
+    fn join(self, other: DipoleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -24158,7 +24166,7 @@ impl Join<DipoleBulk> for TransFlector {
     }
 }
 
-impl Join<DipoleCarrierAspect> for TransFlector {
+impl Join<DipoleCarrierAspect> for Transflector {
     type Output = Plane;
 
     fn join(self, other: DipoleCarrierAspect) -> Plane {
@@ -24172,10 +24180,10 @@ impl Join<DipoleCarrierAspect> for TransFlector {
     }
 }
 
-impl Join<DipoleWeight> for TransFlector {
+impl Join<DipoleWeightAspect> for Transflector {
     type Output = PlaneAtOrigin;
 
-    fn join(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn join(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -24186,12 +24194,12 @@ impl Join<DipoleWeight> for TransFlector {
     }
 }
 
-impl Join<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl Join<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn join(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: self.group1() * Simd32x4::from(other.group0()[0]),
             },
@@ -24199,7 +24207,7 @@ impl Join<Magnitude> for TransFlector {
     }
 }
 
-impl Join<MultiVector> for TransFlector {
+impl Join<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn join(self, other: MultiVector) -> MultiVector {
@@ -24236,7 +24244,7 @@ impl Join<MultiVector> for TransFlector {
     }
 }
 
-impl Join<Origin> for TransFlector {
+impl Join<Origin> for Transflector {
     type Output = Rotor;
 
     fn join(self, other: Origin) -> Rotor {
@@ -24250,7 +24258,7 @@ impl Join<Origin> for TransFlector {
     }
 }
 
-impl Join<RoundPoint> for TransFlector {
+impl Join<RoundPoint> for Transflector {
     type Output = Motor;
 
     fn join(self, other: RoundPoint) -> Motor {
@@ -24270,7 +24278,7 @@ impl Join<RoundPoint> for TransFlector {
     }
 }
 
-impl Join<RoundPointAtInfinity> for TransFlector {
+impl Join<RoundPointAtInfinity> for Transflector {
     type Output = Translator;
 
     fn join(self, other: RoundPointAtInfinity) -> Translator {
@@ -24287,7 +24295,7 @@ impl Join<RoundPointAtInfinity> for TransFlector {
     }
 }
 
-impl Join<RoundPointAtOrigin> for TransFlector {
+impl Join<RoundPointAtOrigin> for Transflector {
     type Output = Rotor;
 
     fn join(self, other: RoundPointAtOrigin) -> Rotor {
@@ -24301,10 +24309,10 @@ impl Join<RoundPointAtOrigin> for TransFlector {
     }
 }
 
-impl Join<RoundPointBulk> for TransFlector {
+impl Join<RoundPointBulkAspect> for Transflector {
     type Output = Translator;
 
-    fn join(self, other: RoundPointBulk) -> Translator {
+    fn join(self, other: RoundPointBulkAspect) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -24318,7 +24326,7 @@ impl Join<RoundPointBulk> for TransFlector {
     }
 }
 
-impl Join<RoundPointCarrierAspect> for TransFlector {
+impl Join<RoundPointCarrierAspect> for Transflector {
     type Output = Motor;
 
     fn join(self, other: RoundPointCarrierAspect) -> Motor {
@@ -24338,12 +24346,12 @@ impl Join<RoundPointCarrierAspect> for TransFlector {
     }
 }
 
-impl Join<Scalar> for TransFlector {
-    type Output = TransFlector;
+impl Join<Scalar> for Transflector {
+    type Output = Transflector;
 
-    fn join(self, other: Scalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn join(self, other: Scalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -24375,10 +24383,10 @@ impl Join<DipoleCarrierAspect> for Translator {
     }
 }
 
-impl Join<DipoleWeight> for Translator {
+impl Join<DipoleWeightAspect> for Translator {
     type Output = AntiScalar;
 
-    fn join(self, other: DipoleWeight) -> AntiScalar {
+    fn join(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -24476,10 +24484,10 @@ impl Join<RoundPointAtOrigin> for Translator {
     }
 }
 
-impl Join<RoundPointBulk> for Translator {
+impl Join<RoundPointBulkAspect> for Translator {
     type Output = Horizon;
 
-    fn join(self, other: RoundPointBulk) -> Horizon {
+    fn join(self, other: RoundPointBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -24540,12 +24548,12 @@ impl Meet<Circle> for AntiScalar {
     }
 }
 
-impl Meet<CircleBulk> for AntiScalar {
-    type Output = CircleBulk;
+impl Meet<CircleBulkAspect> for AntiScalar {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -24564,12 +24572,12 @@ impl Meet<CircleCarrierAspect> for AntiScalar {
     }
 }
 
-impl Meet<CircleWeight> for AntiScalar {
-    type Output = CircleWeight;
+impl Meet<CircleWeightAspect> for AntiScalar {
+    type Output = CircleWeightAspect;
 
-    fn meet(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn meet(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -24590,12 +24598,12 @@ impl Meet<Dipole> for AntiScalar {
     }
 }
 
-impl Meet<DipoleBulk> for AntiScalar {
-    type Output = DipoleBulk;
+impl Meet<DipoleBulkAspect> for AntiScalar {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -24615,12 +24623,12 @@ impl Meet<DipoleCarrierAspect> for AntiScalar {
     }
 }
 
-impl Meet<DipoleWeight> for AntiScalar {
-    type Output = DipoleWeight;
+impl Meet<DipoleWeightAspect> for AntiScalar {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -24881,12 +24889,12 @@ impl Meet<RoundPointAtOrigin> for AntiScalar {
     }
 }
 
-impl Meet<RoundPointBulk> for AntiScalar {
-    type Output = RoundPointBulk;
+impl Meet<RoundPointBulkAspect> for AntiScalar {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -24930,24 +24938,24 @@ impl Meet<Sphere> for AntiScalar {
     }
 }
 
-impl Meet<SphereWeight> for AntiScalar {
-    type Output = SphereWeight;
+impl Meet<SphereWeightAspect> for AntiScalar {
+    type Output = SphereWeightAspect;
 
-    fn meet(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn meet(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl Meet<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn meet(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -25009,12 +25017,12 @@ impl Meet<Circle> for Circle {
     }
 }
 
-impl Meet<CircleBulk> for Circle {
-    type Output = RoundPointBulk;
+impl Meet<CircleBulkAspect> for Circle {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
             },
         }
@@ -25038,10 +25046,10 @@ impl Meet<CircleCarrierAspect> for Circle {
     }
 }
 
-impl Meet<CircleWeight> for Circle {
+impl Meet<CircleWeightAspect> for Circle {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: CircleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -25077,10 +25085,10 @@ impl Meet<Dipole> for Circle {
     }
 }
 
-impl Meet<DipoleBulk> for Circle {
+impl Meet<DipoleBulkAspect> for Circle {
     type Output = Scalar;
 
-    fn meet(self, other: DipoleBulk) -> Scalar {
+    fn meet(self, other: DipoleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -25107,10 +25115,10 @@ impl Meet<DipoleCarrierAspect> for Circle {
     }
 }
 
-impl Meet<DipoleWeight> for Circle {
+impl Meet<DipoleWeightAspect> for Circle {
     type Output = Scalar;
 
-    fn meet(self, other: DipoleWeight) -> Scalar {
+    fn meet(self, other: DipoleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -25482,10 +25490,10 @@ impl Meet<Sphere> for Circle {
     }
 }
 
-impl Meet<SphereWeight> for Circle {
+impl Meet<SphereWeightAspect> for Circle {
     type Output = DipoleCarrierAspect;
 
-    fn meet(self, other: SphereWeight) -> DipoleCarrierAspect {
+    fn meet(self, other: SphereWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
@@ -25495,10 +25503,10 @@ impl Meet<SphereWeight> for Circle {
     }
 }
 
-impl Meet<TransFlector> for Circle {
+impl Meet<Transflector> for Circle {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -25553,31 +25561,31 @@ impl Meet<Translator> for Circle {
     }
 }
 
-impl Meet<AntiScalar> for CircleBulk {
-    type Output = CircleBulk;
+impl Meet<AntiScalar> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: AntiScalar) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: AntiScalar) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Circle> for CircleBulk {
-    type Output = RoundPointBulk;
+impl Meet<Circle> for CircleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Circle) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Circle) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
             },
         }
     }
 }
 
-impl Meet<Dipole> for CircleBulk {
+impl Meet<Dipole> for CircleBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: Dipole) -> Scalar {
@@ -25589,7 +25597,7 @@ impl Meet<Dipole> for CircleBulk {
     }
 }
 
-impl Meet<FlatPoint> for CircleBulk {
+impl Meet<FlatPoint> for CircleBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: FlatPoint) -> Scalar {
@@ -25601,7 +25609,7 @@ impl Meet<FlatPoint> for CircleBulk {
     }
 }
 
-impl Meet<FlatPointAtOrigin> for CircleBulk {
+impl Meet<FlatPointAtOrigin> for CircleBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: FlatPointAtOrigin) -> Scalar {
@@ -25613,7 +25621,7 @@ impl Meet<FlatPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Meet<Flector> for CircleBulk {
+impl Meet<Flector> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Flector) -> MultiVector {
@@ -25635,43 +25643,43 @@ impl Meet<Flector> for CircleBulk {
     }
 }
 
-impl Meet<Line> for CircleBulk {
-    type Output = RoundPointBulk;
+impl Meet<Line> for CircleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Line) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Line) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<LineAtOrigin> for CircleBulk {
-    type Output = RoundPointBulk;
+impl Meet<LineAtOrigin> for CircleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: LineAtOrigin) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: LineAtOrigin) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Magnitude> for CircleBulk {
-    type Output = CircleBulk;
+impl Meet<Magnitude> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: Magnitude) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: Magnitude) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0()[1],
             },
         }
     }
 }
 
-impl Meet<Motor> for CircleBulk {
+impl Meet<Motor> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Motor) -> MultiVector {
@@ -25693,7 +25701,7 @@ impl Meet<Motor> for CircleBulk {
     }
 }
 
-impl Meet<MultiVector> for CircleBulk {
+impl Meet<MultiVector> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -25715,31 +25723,31 @@ impl Meet<MultiVector> for CircleBulk {
     }
 }
 
-impl Meet<Plane> for CircleBulk {
-    type Output = DipoleBulk;
+impl Meet<Plane> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: Plane) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Plane) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
 }
 
-impl Meet<PlaneAtOrigin> for CircleBulk {
-    type Output = DipoleBulk;
+impl Meet<PlaneAtOrigin> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: PlaneAtOrigin) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: PlaneAtOrigin) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Rotor> for CircleBulk {
+impl Meet<Rotor> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Rotor) -> MultiVector {
@@ -25761,36 +25769,36 @@ impl Meet<Rotor> for CircleBulk {
     }
 }
 
-impl Meet<Sphere> for CircleBulk {
-    type Output = DipoleBulk;
+impl Meet<Sphere> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: Sphere) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Sphere) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for CircleBulk {
-    type Output = DipoleBulk;
+impl Meet<Transflector> for CircleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: TransFlector) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Transflector) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
             },
         }
     }
 }
 
-impl Meet<Translator> for CircleBulk {
-    type Output = CircleBulk;
+impl Meet<Translator> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: Translator) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: Translator) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0()[3],
             },
         }
@@ -25925,11 +25933,11 @@ impl Meet<FlectorAtInfinity> for CircleCarrierAspect {
 }
 
 impl Meet<Horizon> for CircleCarrierAspect {
-    type Output = DipoleBulk;
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: Horizon) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Horizon) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -25952,11 +25960,11 @@ impl Meet<Line> for CircleCarrierAspect {
 }
 
 impl Meet<LineAtInfinity> for CircleCarrierAspect {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: LineAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: LineAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -26120,10 +26128,10 @@ impl Meet<Sphere> for CircleCarrierAspect {
     }
 }
 
-impl Meet<TransFlector> for CircleCarrierAspect {
+impl Meet<Transflector> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -26171,19 +26179,19 @@ impl Meet<Translator> for CircleCarrierAspect {
     }
 }
 
-impl Meet<AntiScalar> for CircleWeight {
-    type Output = CircleWeight;
+impl Meet<AntiScalar> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn meet(self, other: AntiScalar) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn meet(self, other: AntiScalar) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<Circle> for CircleWeight {
+impl Meet<Circle> for CircleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: Circle) -> RoundPointCarrierAspect {
@@ -26197,7 +26205,7 @@ impl Meet<Circle> for CircleWeight {
     }
 }
 
-impl Meet<Dipole> for CircleWeight {
+impl Meet<Dipole> for CircleWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: Dipole) -> Scalar {
@@ -26209,7 +26217,7 @@ impl Meet<Dipole> for CircleWeight {
     }
 }
 
-impl Meet<FlatPoint> for CircleWeight {
+impl Meet<FlatPoint> for CircleWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: FlatPoint) -> Scalar {
@@ -26221,7 +26229,7 @@ impl Meet<FlatPoint> for CircleWeight {
     }
 }
 
-impl Meet<FlatPointAtInfinity> for CircleWeight {
+impl Meet<FlatPointAtInfinity> for CircleWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: FlatPointAtInfinity) -> Scalar {
@@ -26233,7 +26241,7 @@ impl Meet<FlatPointAtInfinity> for CircleWeight {
     }
 }
 
-impl Meet<Flector> for CircleWeight {
+impl Meet<Flector> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Flector) -> MultiVector {
@@ -26259,7 +26267,7 @@ impl Meet<Flector> for CircleWeight {
     }
 }
 
-impl Meet<FlectorAtInfinity> for CircleWeight {
+impl Meet<FlectorAtInfinity> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: FlectorAtInfinity) -> MultiVector {
@@ -26283,19 +26291,19 @@ impl Meet<FlectorAtInfinity> for CircleWeight {
     }
 }
 
-impl Meet<Horizon> for CircleWeight {
-    type Output = DipoleBulk;
+impl Meet<Horizon> for CircleWeightAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: Horizon) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Horizon) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<Line> for CircleWeight {
+impl Meet<Line> for CircleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: Line) -> RoundPointCarrierAspect {
@@ -26309,12 +26317,12 @@ impl Meet<Line> for CircleWeight {
     }
 }
 
-impl Meet<LineAtInfinity> for CircleWeight {
-    type Output = RoundPointBulk;
+impl Meet<LineAtInfinity> for CircleWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: LineAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: LineAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -26323,7 +26331,7 @@ impl Meet<LineAtInfinity> for CircleWeight {
     }
 }
 
-impl Meet<LineAtOrigin> for CircleWeight {
+impl Meet<LineAtOrigin> for CircleWeightAspect {
     type Output = Origin;
 
     fn meet(self, other: LineAtOrigin) -> Origin {
@@ -26335,19 +26343,19 @@ impl Meet<LineAtOrigin> for CircleWeight {
     }
 }
 
-impl Meet<Magnitude> for CircleWeight {
-    type Output = CircleWeight;
+impl Meet<Magnitude> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn meet(self, other: Magnitude) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn meet(self, other: Magnitude) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl Meet<Motor> for CircleWeight {
+impl Meet<Motor> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Motor) -> MultiVector {
@@ -26374,7 +26382,7 @@ impl Meet<Motor> for CircleWeight {
     }
 }
 
-impl Meet<MultiVector> for CircleWeight {
+impl Meet<MultiVector> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -26405,7 +26413,7 @@ impl Meet<MultiVector> for CircleWeight {
     }
 }
 
-impl Meet<Plane> for CircleWeight {
+impl Meet<Plane> for CircleWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn meet(self, other: Plane) -> DipoleCarrierAspect {
@@ -26420,12 +26428,12 @@ impl Meet<Plane> for CircleWeight {
     }
 }
 
-impl Meet<PlaneAtOrigin> for CircleWeight {
-    type Output = DipoleWeight;
+impl Meet<PlaneAtOrigin> for CircleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: PlaneAtOrigin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: PlaneAtOrigin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -26434,7 +26442,7 @@ impl Meet<PlaneAtOrigin> for CircleWeight {
     }
 }
 
-impl Meet<Rotor> for CircleWeight {
+impl Meet<Rotor> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Rotor) -> MultiVector {
@@ -26459,7 +26467,7 @@ impl Meet<Rotor> for CircleWeight {
     }
 }
 
-impl Meet<Sphere> for CircleWeight {
+impl Meet<Sphere> for CircleWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn meet(self, other: Sphere) -> DipoleCarrierAspect {
@@ -26474,10 +26482,10 @@ impl Meet<Sphere> for CircleWeight {
     }
 }
 
-impl Meet<TransFlector> for CircleWeight {
+impl Meet<Transflector> for CircleWeightAspect {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -26500,7 +26508,7 @@ impl Meet<TransFlector> for CircleWeight {
     }
 }
 
-impl Meet<Translator> for CircleWeight {
+impl Meet<Translator> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Translator) -> MultiVector {
@@ -26561,10 +26569,10 @@ impl Meet<Circle> for Dipole {
     }
 }
 
-impl Meet<CircleBulk> for Dipole {
+impl Meet<CircleBulkAspect> for Dipole {
     type Output = Scalar;
 
-    fn meet(self, other: CircleBulk) -> Scalar {
+    fn meet(self, other: CircleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group2()[3] * other.group0(),
@@ -26585,10 +26593,10 @@ impl Meet<CircleCarrierAspect> for Dipole {
     }
 }
 
-impl Meet<CircleWeight> for Dipole {
+impl Meet<CircleWeightAspect> for Dipole {
     type Output = Scalar;
 
-    fn meet(self, other: CircleWeight) -> Scalar {
+    fn meet(self, other: CircleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -26860,10 +26868,10 @@ impl Meet<Sphere> for Dipole {
     }
 }
 
-impl Meet<SphereWeight> for Dipole {
+impl Meet<SphereWeightAspect> for Dipole {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: SphereWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(0.0) - self.group2() * Simd32x4::from(other.group0()),
@@ -26872,10 +26880,10 @@ impl Meet<SphereWeight> for Dipole {
     }
 }
 
-impl Meet<TransFlector> for Dipole {
+impl Meet<Transflector> for Dipole {
     type Output = RoundPoint;
 
-    fn meet(self, other: TransFlector) -> RoundPoint {
+    fn meet(self, other: Transflector) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(other.group1()[3])
@@ -26918,19 +26926,19 @@ impl Meet<Translator> for Dipole {
     }
 }
 
-impl Meet<AntiScalar> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Meet<AntiScalar> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: AntiScalar) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: AntiScalar) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<Circle> for DipoleBulk {
+impl Meet<Circle> for DipoleBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: Circle) -> Scalar {
@@ -26942,12 +26950,12 @@ impl Meet<Circle> for DipoleBulk {
     }
 }
 
-impl Meet<Flector> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl Meet<Flector> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Flector) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Flector) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0]),
@@ -26956,7 +26964,7 @@ impl Meet<Flector> for DipoleBulk {
     }
 }
 
-impl Meet<Line> for DipoleBulk {
+impl Meet<Line> for DipoleBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: Line) -> Scalar {
@@ -26968,7 +26976,7 @@ impl Meet<Line> for DipoleBulk {
     }
 }
 
-impl Meet<LineAtOrigin> for DipoleBulk {
+impl Meet<LineAtOrigin> for DipoleBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: LineAtOrigin) -> Scalar {
@@ -26980,19 +26988,19 @@ impl Meet<LineAtOrigin> for DipoleBulk {
     }
 }
 
-impl Meet<Magnitude> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Meet<Magnitude> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: Magnitude) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Magnitude) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl Meet<Motor> for DipoleBulk {
+impl Meet<Motor> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Motor) -> MultiVector {
@@ -27016,7 +27024,7 @@ impl Meet<Motor> for DipoleBulk {
     }
 }
 
-impl Meet<MultiVector> for DipoleBulk {
+impl Meet<MultiVector> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -27042,12 +27050,12 @@ impl Meet<MultiVector> for DipoleBulk {
     }
 }
 
-impl Meet<Plane> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl Meet<Plane> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Plane) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Plane) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -27056,12 +27064,12 @@ impl Meet<Plane> for DipoleBulk {
     }
 }
 
-impl Meet<PlaneAtOrigin> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl Meet<PlaneAtOrigin> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: PlaneAtOrigin) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: PlaneAtOrigin) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -27070,7 +27078,7 @@ impl Meet<PlaneAtOrigin> for DipoleBulk {
     }
 }
 
-impl Meet<Rotor> for DipoleBulk {
+impl Meet<Rotor> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Rotor) -> MultiVector {
@@ -27094,12 +27102,12 @@ impl Meet<Rotor> for DipoleBulk {
     }
 }
 
-impl Meet<Sphere> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl Meet<Sphere> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Sphere) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Sphere) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -27108,12 +27116,12 @@ impl Meet<Sphere> for DipoleBulk {
     }
 }
 
-impl Meet<TransFlector> for DipoleBulk {
-    type Output = RoundPointBulk;
+impl Meet<Transflector> for DipoleBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: TransFlector) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Transflector) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0]),
@@ -27122,12 +27130,12 @@ impl Meet<TransFlector> for DipoleBulk {
     }
 }
 
-impl Meet<Translator> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Meet<Translator> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: Translator) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: Translator) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
@@ -27183,11 +27191,11 @@ impl Meet<Flector> for DipoleCarrierAspect {
 }
 
 impl Meet<FlectorAtInfinity> for DipoleCarrierAspect {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: FlectorAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: FlectorAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
@@ -27195,11 +27203,11 @@ impl Meet<FlectorAtInfinity> for DipoleCarrierAspect {
 }
 
 impl Meet<Horizon> for DipoleCarrierAspect {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Horizon) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Horizon) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -27395,10 +27403,10 @@ impl Meet<Sphere> for DipoleCarrierAspect {
     }
 }
 
-impl Meet<TransFlector> for DipoleCarrierAspect {
+impl Meet<Transflector> for DipoleCarrierAspect {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: TransFlector) -> RoundPointCarrierAspect {
+    fn meet(self, other: Transflector) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -27436,19 +27444,19 @@ impl Meet<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl Meet<AntiScalar> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Meet<AntiScalar> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: AntiScalar) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: AntiScalar) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<Circle> for DipoleWeight {
+impl Meet<Circle> for DipoleWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: Circle) -> Scalar {
@@ -27460,7 +27468,7 @@ impl Meet<Circle> for DipoleWeight {
     }
 }
 
-impl Meet<Flector> for DipoleWeight {
+impl Meet<Flector> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: Flector) -> RoundPointCarrierAspect {
@@ -27474,31 +27482,31 @@ impl Meet<Flector> for DipoleWeight {
     }
 }
 
-impl Meet<FlectorAtInfinity> for DipoleWeight {
-    type Output = RoundPointBulk;
+impl Meet<FlectorAtInfinity> for DipoleWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: FlectorAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: FlectorAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl Meet<Horizon> for DipoleWeight {
-    type Output = RoundPointBulk;
+impl Meet<Horizon> for DipoleWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Horizon) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Horizon) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<Line> for DipoleWeight {
+impl Meet<Line> for DipoleWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: Line) -> Scalar {
@@ -27510,7 +27518,7 @@ impl Meet<Line> for DipoleWeight {
     }
 }
 
-impl Meet<LineAtInfinity> for DipoleWeight {
+impl Meet<LineAtInfinity> for DipoleWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: LineAtInfinity) -> Scalar {
@@ -27522,19 +27530,19 @@ impl Meet<LineAtInfinity> for DipoleWeight {
     }
 }
 
-impl Meet<Magnitude> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Meet<Magnitude> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: Magnitude) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: Magnitude) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl Meet<Motor> for DipoleWeight {
+impl Meet<Motor> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Motor) -> MultiVector {
@@ -27558,7 +27566,7 @@ impl Meet<Motor> for DipoleWeight {
     }
 }
 
-impl Meet<MultiVector> for DipoleWeight {
+impl Meet<MultiVector> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -27584,7 +27592,7 @@ impl Meet<MultiVector> for DipoleWeight {
     }
 }
 
-impl Meet<Plane> for DipoleWeight {
+impl Meet<Plane> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: Plane) -> RoundPointCarrierAspect {
@@ -27598,7 +27606,7 @@ impl Meet<Plane> for DipoleWeight {
     }
 }
 
-impl Meet<PlaneAtOrigin> for DipoleWeight {
+impl Meet<PlaneAtOrigin> for DipoleWeightAspect {
     type Output = Origin;
 
     fn meet(self, other: PlaneAtOrigin) -> Origin {
@@ -27610,19 +27618,19 @@ impl Meet<PlaneAtOrigin> for DipoleWeight {
     }
 }
 
-impl Meet<Rotor> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Meet<Rotor> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: Rotor) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: Rotor) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl Meet<Sphere> for DipoleWeight {
+impl Meet<Sphere> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: Sphere) -> RoundPointCarrierAspect {
@@ -27636,10 +27644,10 @@ impl Meet<Sphere> for DipoleWeight {
     }
 }
 
-impl Meet<TransFlector> for DipoleWeight {
+impl Meet<Transflector> for DipoleWeightAspect {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: TransFlector) -> RoundPointCarrierAspect {
+    fn meet(self, other: Transflector) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -27650,7 +27658,7 @@ impl Meet<TransFlector> for DipoleWeight {
     }
 }
 
-impl Meet<Translator> for DipoleWeight {
+impl Meet<Translator> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Translator) -> MultiVector {
@@ -27698,10 +27706,10 @@ impl Meet<Circle> for FlatPoint {
     }
 }
 
-impl Meet<CircleBulk> for FlatPoint {
+impl Meet<CircleBulkAspect> for FlatPoint {
     type Output = Scalar;
 
-    fn meet(self, other: CircleBulk) -> Scalar {
+    fn meet(self, other: CircleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -27722,10 +27730,10 @@ impl Meet<CircleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Meet<CircleWeight> for FlatPoint {
+impl Meet<CircleWeightAspect> for FlatPoint {
     type Output = Scalar;
 
-    fn meet(self, other: CircleWeight) -> Scalar {
+    fn meet(self, other: CircleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -27874,10 +27882,10 @@ impl Meet<Sphere> for FlatPoint {
     }
 }
 
-impl Meet<SphereWeight> for FlatPoint {
+impl Meet<SphereWeightAspect> for FlatPoint {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: SphereWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
@@ -27886,10 +27894,10 @@ impl Meet<SphereWeight> for FlatPoint {
     }
 }
 
-impl Meet<TransFlector> for FlatPoint {
+impl Meet<Transflector> for FlatPoint {
     type Output = Infinity;
 
-    fn meet(self, other: TransFlector) -> Infinity {
+    fn meet(self, other: Transflector) -> Infinity {
         Infinity {
             groups: InfinityGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3],
@@ -27946,10 +27954,10 @@ impl Meet<CircleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Meet<CircleWeight> for FlatPointAtInfinity {
+impl Meet<CircleWeightAspect> for FlatPointAtInfinity {
     type Output = Scalar;
 
-    fn meet(self, other: CircleWeight) -> Scalar {
+    fn meet(self, other: CircleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -28071,22 +28079,22 @@ impl Meet<Sphere> for FlatPointAtInfinity {
     }
 }
 
-impl Meet<SphereWeight> for FlatPointAtInfinity {
-    type Output = RoundPointBulk;
+impl Meet<SphereWeightAspect> for FlatPointAtInfinity {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: SphereWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: SphereWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for FlatPointAtInfinity {
+impl Meet<Transflector> for FlatPointAtInfinity {
     type Output = Infinity;
 
-    fn meet(self, other: TransFlector) -> Infinity {
+    fn meet(self, other: Transflector) -> Infinity {
         Infinity {
             groups: InfinityGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -28131,10 +28139,10 @@ impl Meet<Circle> for FlatPointAtOrigin {
     }
 }
 
-impl Meet<CircleBulk> for FlatPointAtOrigin {
+impl Meet<CircleBulkAspect> for FlatPointAtOrigin {
     type Output = Scalar;
 
-    fn meet(self, other: CircleBulk) -> Scalar {
+    fn meet(self, other: CircleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -28273,10 +28281,10 @@ impl Meet<Sphere> for FlatPointAtOrigin {
     }
 }
 
-impl Meet<SphereWeight> for FlatPointAtOrigin {
+impl Meet<SphereWeightAspect> for FlatPointAtOrigin {
     type Output = Origin;
 
-    fn meet(self, other: SphereWeight) -> Origin {
+    fn meet(self, other: SphereWeightAspect) -> Origin {
         Origin {
             groups: OriginGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -28285,10 +28293,10 @@ impl Meet<SphereWeight> for FlatPointAtOrigin {
     }
 }
 
-impl Meet<TransFlector> for FlatPointAtOrigin {
+impl Meet<Transflector> for FlatPointAtOrigin {
     type Output = Infinity;
 
-    fn meet(self, other: TransFlector) -> Infinity {
+    fn meet(self, other: Transflector) -> Infinity {
         Infinity {
             groups: InfinityGroups {
                 g0: self.group0() * other.group1()[3],
@@ -28353,10 +28361,10 @@ impl Meet<Circle> for Flector {
     }
 }
 
-impl Meet<CircleBulk> for Flector {
+impl Meet<CircleBulkAspect> for Flector {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleBulk) -> MultiVector {
+    fn meet(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[3]) * Simd32x2::from([-other.group0(), 0.0]),
@@ -28403,10 +28411,10 @@ impl Meet<CircleCarrierAspect> for Flector {
     }
 }
 
-impl Meet<CircleWeight> for Flector {
+impl Meet<CircleWeightAspect> for Flector {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -28448,12 +28456,12 @@ impl Meet<Dipole> for Flector {
     }
 }
 
-impl Meet<DipoleBulk> for Flector {
-    type Output = RoundPointBulk;
+impl Meet<DipoleBulkAspect> for Flector {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -28477,10 +28485,10 @@ impl Meet<DipoleCarrierAspect> for Flector {
     }
 }
 
-impl Meet<DipoleWeight> for Flector {
+impl Meet<DipoleWeightAspect> for Flector {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -28846,10 +28854,10 @@ impl Meet<RoundPointAtOrigin> for Flector {
     }
 }
 
-impl Meet<RoundPointBulk> for Flector {
+impl Meet<RoundPointBulkAspect> for Flector {
     type Output = Scalar;
 
-    fn meet(self, other: RoundPointBulk) -> Scalar {
+    fn meet(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
@@ -28897,10 +28905,10 @@ impl Meet<Sphere> for Flector {
     }
 }
 
-impl Meet<SphereWeight> for Flector {
+impl Meet<SphereWeightAspect> for Flector {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28919,10 +28927,10 @@ impl Meet<SphereWeight> for Flector {
     }
 }
 
-impl Meet<TransFlector> for Flector {
+impl Meet<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29026,10 +29034,10 @@ impl Meet<CircleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Meet<CircleWeight> for FlectorAtInfinity {
+impl Meet<CircleWeightAspect> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -29063,23 +29071,23 @@ impl Meet<Dipole> for FlectorAtInfinity {
 }
 
 impl Meet<DipoleCarrierAspect> for FlectorAtInfinity {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleCarrierAspect) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleCarrierAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<DipoleWeight> for FlectorAtInfinity {
-    type Output = RoundPointBulk;
+impl Meet<DipoleWeightAspect> for FlectorAtInfinity {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -29348,10 +29356,10 @@ impl Meet<Sphere> for FlectorAtInfinity {
     }
 }
 
-impl Meet<SphereWeight> for FlectorAtInfinity {
+impl Meet<SphereWeightAspect> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29370,10 +29378,10 @@ impl Meet<SphereWeight> for FlectorAtInfinity {
     }
 }
 
-impl Meet<TransFlector> for FlectorAtInfinity {
+impl Meet<Transflector> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29433,23 +29441,23 @@ impl Meet<Circle> for Horizon {
 }
 
 impl Meet<CircleCarrierAspect> for Horizon {
-    type Output = DipoleBulk;
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: CircleCarrierAspect) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: CircleCarrierAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
 }
 
-impl Meet<CircleWeight> for Horizon {
-    type Output = DipoleBulk;
+impl Meet<CircleWeightAspect> for Horizon {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: CircleWeight) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: CircleWeightAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -29469,23 +29477,23 @@ impl Meet<Dipole> for Horizon {
 }
 
 impl Meet<DipoleCarrierAspect> for Horizon {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleCarrierAspect) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleCarrierAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<DipoleWeight> for Horizon {
-    type Output = RoundPointBulk;
+impl Meet<DipoleWeightAspect> for Horizon {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -29706,22 +29714,22 @@ impl Meet<Sphere> for Horizon {
     }
 }
 
-impl Meet<SphereWeight> for Horizon {
-    type Output = CircleBulk;
+impl Meet<SphereWeightAspect> for Horizon {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: SphereWeight) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: SphereWeightAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for Horizon {
+impl Meet<Transflector> for Horizon {
     type Output = LineAtInfinity;
 
-    fn meet(self, other: TransFlector) -> LineAtInfinity {
+    fn meet(self, other: Transflector) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -29824,10 +29832,10 @@ impl Meet<Sphere> for Infinity {
     }
 }
 
-impl Meet<SphereWeight> for Infinity {
+impl Meet<SphereWeightAspect> for Infinity {
     type Output = Scalar;
 
-    fn meet(self, other: SphereWeight) -> Scalar {
+    fn meet(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group0(),
@@ -29883,12 +29891,12 @@ impl Meet<Circle> for Line {
     }
 }
 
-impl Meet<CircleBulk> for Line {
-    type Output = RoundPointBulk;
+impl Meet<CircleBulkAspect> for Line {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -29912,10 +29920,10 @@ impl Meet<CircleCarrierAspect> for Line {
     }
 }
 
-impl Meet<CircleWeight> for Line {
+impl Meet<CircleWeightAspect> for Line {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: CircleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -29947,10 +29955,10 @@ impl Meet<Dipole> for Line {
     }
 }
 
-impl Meet<DipoleBulk> for Line {
+impl Meet<DipoleBulkAspect> for Line {
     type Output = Scalar;
 
-    fn meet(self, other: DipoleBulk) -> Scalar {
+    fn meet(self, other: DipoleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -29977,10 +29985,10 @@ impl Meet<DipoleCarrierAspect> for Line {
     }
 }
 
-impl Meet<DipoleWeight> for Line {
+impl Meet<DipoleWeightAspect> for Line {
     type Output = Scalar;
 
-    fn meet(self, other: DipoleWeight) -> Scalar {
+    fn meet(self, other: DipoleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -30230,10 +30238,10 @@ impl Meet<Sphere> for Line {
     }
 }
 
-impl Meet<SphereWeight> for Line {
+impl Meet<SphereWeightAspect> for Line {
     type Output = DipoleCarrierAspect;
 
-    fn meet(self, other: SphereWeight) -> DipoleCarrierAspect {
+    fn meet(self, other: SphereWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
@@ -30243,10 +30251,10 @@ impl Meet<SphereWeight> for Line {
     }
 }
 
-impl Meet<TransFlector> for Line {
+impl Meet<Transflector> for Line {
     type Output = FlatPoint;
 
-    fn meet(self, other: TransFlector) -> FlatPoint {
+    fn meet(self, other: Transflector) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -30311,11 +30319,11 @@ impl Meet<Circle> for LineAtInfinity {
 }
 
 impl Meet<CircleCarrierAspect> for LineAtInfinity {
-    type Output = RoundPointBulk;
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: CircleCarrierAspect) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: CircleCarrierAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -30324,12 +30332,12 @@ impl Meet<CircleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Meet<CircleWeight> for LineAtInfinity {
-    type Output = RoundPointBulk;
+impl Meet<CircleWeightAspect> for LineAtInfinity {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: CircleWeight) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: CircleWeightAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -30362,10 +30370,10 @@ impl Meet<DipoleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Meet<DipoleWeight> for LineAtInfinity {
+impl Meet<DipoleWeightAspect> for LineAtInfinity {
     type Output = Scalar;
 
-    fn meet(self, other: DipoleWeight) -> Scalar {
+    fn meet(self, other: DipoleWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -30546,22 +30554,22 @@ impl Meet<Sphere> for LineAtInfinity {
     }
 }
 
-impl Meet<SphereWeight> for LineAtInfinity {
-    type Output = DipoleBulk;
+impl Meet<SphereWeightAspect> for LineAtInfinity {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: SphereWeight) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: SphereWeightAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for LineAtInfinity {
+impl Meet<Transflector> for LineAtInfinity {
     type Output = FlatPointAtInfinity;
 
-    fn meet(self, other: TransFlector) -> FlatPointAtInfinity {
+    fn meet(self, other: Transflector) -> FlatPointAtInfinity {
         FlatPointAtInfinity {
             groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
@@ -30612,12 +30620,12 @@ impl Meet<Circle> for LineAtOrigin {
     }
 }
 
-impl Meet<CircleBulk> for LineAtOrigin {
-    type Output = RoundPointBulk;
+impl Meet<CircleBulkAspect> for LineAtOrigin {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -30638,10 +30646,10 @@ impl Meet<CircleCarrierAspect> for LineAtOrigin {
     }
 }
 
-impl Meet<CircleWeight> for LineAtOrigin {
+impl Meet<CircleWeightAspect> for LineAtOrigin {
     type Output = Origin;
 
-    fn meet(self, other: CircleWeight) -> Origin {
+    fn meet(self, other: CircleWeightAspect) -> Origin {
         Origin {
             groups: OriginGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -30662,10 +30670,10 @@ impl Meet<Dipole> for LineAtOrigin {
     }
 }
 
-impl Meet<DipoleBulk> for LineAtOrigin {
+impl Meet<DipoleBulkAspect> for LineAtOrigin {
     type Output = Scalar;
 
-    fn meet(self, other: DipoleBulk) -> Scalar {
+    fn meet(self, other: DipoleBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -30867,22 +30875,22 @@ impl Meet<Sphere> for LineAtOrigin {
     }
 }
 
-impl Meet<SphereWeight> for LineAtOrigin {
-    type Output = DipoleWeight;
+impl Meet<SphereWeightAspect> for LineAtOrigin {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: SphereWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: SphereWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for LineAtOrigin {
+impl Meet<Transflector> for LineAtOrigin {
     type Output = FlatPoint;
 
-    fn meet(self, other: TransFlector) -> FlatPoint {
+    fn meet(self, other: Transflector) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -30943,12 +30951,12 @@ impl Meet<Circle> for Magnitude {
     }
 }
 
-impl Meet<CircleBulk> for Magnitude {
-    type Output = CircleBulk;
+impl Meet<CircleBulkAspect> for Magnitude {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0()[1] * other.group0(),
             },
         }
@@ -30967,12 +30975,12 @@ impl Meet<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl Meet<CircleWeight> for Magnitude {
-    type Output = CircleWeight;
+impl Meet<CircleWeightAspect> for Magnitude {
+    type Output = CircleWeightAspect;
 
-    fn meet(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn meet(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -30993,12 +31001,12 @@ impl Meet<Dipole> for Magnitude {
     }
 }
 
-impl Meet<DipoleBulk> for Magnitude {
-    type Output = DipoleBulk;
+impl Meet<DipoleBulkAspect> for Magnitude {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -31018,12 +31026,12 @@ impl Meet<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl Meet<DipoleWeight> for Magnitude {
-    type Output = DipoleWeight;
+impl Meet<DipoleWeightAspect> for Magnitude {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -31303,12 +31311,12 @@ impl Meet<RoundPointAtOrigin> for Magnitude {
     }
 }
 
-impl Meet<RoundPointBulk> for Magnitude {
-    type Output = RoundPointBulk;
+impl Meet<RoundPointBulkAspect> for Magnitude {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
             },
         }
@@ -31352,24 +31360,24 @@ impl Meet<Sphere> for Magnitude {
     }
 }
 
-impl Meet<SphereWeight> for Magnitude {
-    type Output = SphereWeight;
+impl Meet<SphereWeightAspect> for Magnitude {
+    type Output = SphereWeightAspect;
 
-    fn meet(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn meet(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[1] * other.group0(),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Meet<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn meet(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * other.group1(),
             },
@@ -31443,10 +31451,10 @@ impl Meet<Circle> for Motor {
     }
 }
 
-impl Meet<CircleBulk> for Motor {
+impl Meet<CircleBulkAspect> for Motor {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleBulk) -> MultiVector {
+    fn meet(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -31492,10 +31500,10 @@ impl Meet<CircleCarrierAspect> for Motor {
     }
 }
 
-impl Meet<CircleWeight> for Motor {
+impl Meet<CircleWeightAspect> for Motor {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -31545,10 +31553,10 @@ impl Meet<Dipole> for Motor {
     }
 }
 
-impl Meet<DipoleBulk> for Motor {
+impl Meet<DipoleBulkAspect> for Motor {
     type Output = MultiVector;
 
-    fn meet(self, other: DipoleBulk) -> MultiVector {
+    fn meet(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -31596,10 +31604,10 @@ impl Meet<DipoleCarrierAspect> for Motor {
     }
 }
 
-impl Meet<DipoleWeight> for Motor {
+impl Meet<DipoleWeightAspect> for Motor {
     type Output = MultiVector;
 
-    fn meet(self, other: DipoleWeight) -> MultiVector {
+    fn meet(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -31992,12 +32000,12 @@ impl Meet<RoundPointAtOrigin> for Motor {
     }
 }
 
-impl Meet<RoundPointBulk> for Motor {
-    type Output = RoundPointBulk;
+impl Meet<RoundPointBulkAspect> for Motor {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -32055,10 +32063,10 @@ impl Meet<Sphere> for Motor {
     }
 }
 
-impl Meet<SphereWeight> for Motor {
+impl Meet<SphereWeightAspect> for Motor {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -32077,10 +32085,10 @@ impl Meet<SphereWeight> for Motor {
     }
 }
 
-impl Meet<TransFlector> for Motor {
+impl Meet<Transflector> for Motor {
     type Output = Flector;
 
-    fn meet(self, other: TransFlector) -> Flector {
+    fn meet(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -32197,10 +32205,10 @@ impl Meet<Circle> for MultiVector {
     }
 }
 
-impl Meet<CircleBulk> for MultiVector {
+impl Meet<CircleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleBulk) -> MultiVector {
+    fn meet(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([-other.group0(), 0.0]),
@@ -32252,10 +32260,10 @@ impl Meet<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Meet<CircleWeight> for MultiVector {
+impl Meet<CircleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -32320,10 +32328,10 @@ impl Meet<Dipole> for MultiVector {
     }
 }
 
-impl Meet<DipoleBulk> for MultiVector {
+impl Meet<DipoleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: DipoleBulk) -> MultiVector {
+    fn meet(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group7()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -32378,10 +32386,10 @@ impl Meet<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Meet<DipoleWeight> for MultiVector {
+impl Meet<DipoleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: DipoleWeight) -> MultiVector {
+    fn meet(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group8()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -33131,10 +33139,10 @@ impl Meet<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Meet<RoundPointBulk> for MultiVector {
+impl Meet<RoundPointBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: RoundPointBulk) -> MultiVector {
+    fn meet(self, other: RoundPointBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group9()[0]) * Simd32x2::from([other.group0()[0], 0.0])
@@ -33242,10 +33250,10 @@ impl Meet<Sphere> for MultiVector {
     }
 }
 
-impl Meet<SphereWeight> for MultiVector {
+impl Meet<SphereWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([other.group0(), 0.0]),
@@ -33266,10 +33274,10 @@ impl Meet<SphereWeight> for MultiVector {
     }
 }
 
-impl Meet<TransFlector> for MultiVector {
+impl Meet<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group1()[0], 0.0])
@@ -33485,10 +33493,10 @@ impl Meet<Sphere> for Origin {
     }
 }
 
-impl Meet<TransFlector> for Origin {
+impl Meet<Transflector> for Origin {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group1()[3],
@@ -33541,12 +33549,12 @@ impl Meet<Circle> for Plane {
     }
 }
 
-impl Meet<CircleBulk> for Plane {
-    type Output = DipoleBulk;
+impl Meet<CircleBulkAspect> for Plane {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -33569,10 +33577,10 @@ impl Meet<CircleCarrierAspect> for Plane {
     }
 }
 
-impl Meet<CircleWeight> for Plane {
+impl Meet<CircleWeightAspect> for Plane {
     type Output = DipoleCarrierAspect;
 
-    fn meet(self, other: CircleWeight) -> DipoleCarrierAspect {
+    fn meet(self, other: CircleWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -33603,12 +33611,12 @@ impl Meet<Dipole> for Plane {
     }
 }
 
-impl Meet<DipoleBulk> for Plane {
-    type Output = RoundPointBulk;
+impl Meet<DipoleBulkAspect> for Plane {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -33632,10 +33640,10 @@ impl Meet<DipoleCarrierAspect> for Plane {
     }
 }
 
-impl Meet<DipoleWeight> for Plane {
+impl Meet<DipoleWeightAspect> for Plane {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -33950,10 +33958,10 @@ impl Meet<RoundPointAtOrigin> for Plane {
     }
 }
 
-impl Meet<RoundPointBulk> for Plane {
+impl Meet<RoundPointBulkAspect> for Plane {
     type Output = Scalar;
 
-    fn meet(self, other: RoundPointBulk) -> Scalar {
+    fn meet(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -33990,10 +33998,10 @@ impl Meet<Sphere> for Plane {
     }
 }
 
-impl Meet<SphereWeight> for Plane {
+impl Meet<SphereWeightAspect> for Plane {
     type Output = CircleCarrierAspect;
 
-    fn meet(self, other: SphereWeight) -> CircleCarrierAspect {
+    fn meet(self, other: SphereWeightAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from(0.0) - self.group0() * Simd32x4::from(other.group0()),
@@ -34002,10 +34010,10 @@ impl Meet<SphereWeight> for Plane {
     }
 }
 
-impl Meet<TransFlector> for Plane {
+impl Meet<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34030,11 +34038,11 @@ impl Meet<TransFlector> for Plane {
 }
 
 impl Meet<Translator> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -34074,12 +34082,12 @@ impl Meet<Circle> for PlaneAtOrigin {
     }
 }
 
-impl Meet<CircleBulk> for PlaneAtOrigin {
-    type Output = DipoleBulk;
+impl Meet<CircleBulkAspect> for PlaneAtOrigin {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -34101,12 +34109,12 @@ impl Meet<CircleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl Meet<CircleWeight> for PlaneAtOrigin {
-    type Output = DipoleWeight;
+impl Meet<CircleWeightAspect> for PlaneAtOrigin {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: CircleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: CircleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -34132,12 +34140,12 @@ impl Meet<Dipole> for PlaneAtOrigin {
     }
 }
 
-impl Meet<DipoleBulk> for PlaneAtOrigin {
-    type Output = RoundPointBulk;
+impl Meet<DipoleBulkAspect> for PlaneAtOrigin {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -34160,10 +34168,10 @@ impl Meet<DipoleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl Meet<DipoleWeight> for PlaneAtOrigin {
+impl Meet<DipoleWeightAspect> for PlaneAtOrigin {
     type Output = Origin;
 
-    fn meet(self, other: DipoleWeight) -> Origin {
+    fn meet(self, other: DipoleWeightAspect) -> Origin {
         Origin {
             groups: OriginGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -34430,10 +34438,10 @@ impl Meet<RoundPointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl Meet<RoundPointBulk> for PlaneAtOrigin {
+impl Meet<RoundPointBulkAspect> for PlaneAtOrigin {
     type Output = Scalar;
 
-    fn meet(self, other: RoundPointBulk) -> Scalar {
+    fn meet(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -34471,22 +34479,22 @@ impl Meet<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl Meet<SphereWeight> for PlaneAtOrigin {
-    type Output = CircleWeight;
+impl Meet<SphereWeightAspect> for PlaneAtOrigin {
+    type Output = CircleWeightAspect;
 
-    fn meet(self, other: SphereWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn meet(self, other: SphereWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<TransFlector> for PlaneAtOrigin {
+impl Meet<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34510,11 +34518,11 @@ impl Meet<TransFlector> for PlaneAtOrigin {
 }
 
 impl Meet<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -34562,10 +34570,10 @@ impl Meet<Circle> for Rotor {
     }
 }
 
-impl Meet<CircleBulk> for Rotor {
+impl Meet<CircleBulkAspect> for Rotor {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleBulk) -> MultiVector {
+    fn meet(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34608,10 +34616,10 @@ impl Meet<CircleCarrierAspect> for Rotor {
     }
 }
 
-impl Meet<CircleWeight> for Rotor {
+impl Meet<CircleWeightAspect> for Rotor {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34656,10 +34664,10 @@ impl Meet<Dipole> for Rotor {
     }
 }
 
-impl Meet<DipoleBulk> for Rotor {
+impl Meet<DipoleBulkAspect> for Rotor {
     type Output = MultiVector;
 
-    fn meet(self, other: DipoleBulk) -> MultiVector {
+    fn meet(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -34704,12 +34712,12 @@ impl Meet<DipoleCarrierAspect> for Rotor {
     }
 }
 
-impl Meet<DipoleWeight> for Rotor {
-    type Output = DipoleWeight;
+impl Meet<DipoleWeightAspect> for Rotor {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -35036,12 +35044,12 @@ impl Meet<RoundPointAtOrigin> for Rotor {
     }
 }
 
-impl Meet<RoundPointBulk> for Rotor {
-    type Output = RoundPointBulk;
+impl Meet<RoundPointBulkAspect> for Rotor {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -35096,10 +35104,10 @@ impl Meet<Sphere> for Rotor {
     }
 }
 
-impl Meet<SphereWeight> for Rotor {
+impl Meet<SphereWeightAspect> for Rotor {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -35118,10 +35126,10 @@ impl Meet<SphereWeight> for Rotor {
     }
 }
 
-impl Meet<TransFlector> for Rotor {
+impl Meet<Transflector> for Rotor {
     type Output = Flector;
 
-    fn meet(self, other: TransFlector) -> Flector {
+    fn meet(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], 0.0, 0.0, -other.group1()[0]])
@@ -35312,10 +35320,10 @@ impl Meet<Sphere> for RoundPoint {
     }
 }
 
-impl Meet<SphereWeight> for RoundPoint {
+impl Meet<SphereWeightAspect> for RoundPoint {
     type Output = Scalar;
 
-    fn meet(self, other: SphereWeight) -> Scalar {
+    fn meet(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[1] * other.group0(),
@@ -35324,10 +35332,10 @@ impl Meet<SphereWeight> for RoundPoint {
     }
 }
 
-impl Meet<TransFlector> for RoundPoint {
+impl Meet<Transflector> for RoundPoint {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group1()[0] * other.group1()[3],
@@ -35470,10 +35478,10 @@ impl Meet<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl Meet<SphereWeight> for RoundPointAtInfinity {
+impl Meet<SphereWeightAspect> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn meet(self, other: SphereWeight) -> Scalar {
+    fn meet(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[3] * other.group0(),
@@ -35482,10 +35490,10 @@ impl Meet<SphereWeight> for RoundPointAtInfinity {
     }
 }
 
-impl Meet<TransFlector> for RoundPointAtInfinity {
+impl Meet<Transflector> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -35636,10 +35644,10 @@ impl Meet<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl Meet<SphereWeight> for RoundPointAtOrigin {
+impl Meet<SphereWeightAspect> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn meet(self, other: SphereWeight) -> Scalar {
+    fn meet(self, other: SphereWeightAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[1] * other.group0(),
@@ -35648,10 +35656,10 @@ impl Meet<SphereWeight> for RoundPointAtOrigin {
     }
 }
 
-impl Meet<TransFlector> for RoundPointAtOrigin {
+impl Meet<Transflector> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[3],
@@ -35672,19 +35680,19 @@ impl Meet<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl Meet<AntiScalar> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Meet<AntiScalar> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: AntiScalar) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: AntiScalar) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<Flector> for RoundPointBulk {
+impl Meet<Flector> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: Flector) -> Scalar {
@@ -35696,31 +35704,31 @@ impl Meet<Flector> for RoundPointBulk {
     }
 }
 
-impl Meet<Magnitude> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Meet<Magnitude> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Magnitude) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Magnitude) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
             },
         }
     }
 }
 
-impl Meet<Motor> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Meet<Motor> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Motor) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Motor) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl Meet<MultiVector> for RoundPointBulk {
+impl Meet<MultiVector> for RoundPointBulkAspect {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -35744,7 +35752,7 @@ impl Meet<MultiVector> for RoundPointBulk {
     }
 }
 
-impl Meet<Plane> for RoundPointBulk {
+impl Meet<Plane> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: Plane) -> Scalar {
@@ -35756,7 +35764,7 @@ impl Meet<Plane> for RoundPointBulk {
     }
 }
 
-impl Meet<PlaneAtOrigin> for RoundPointBulk {
+impl Meet<PlaneAtOrigin> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: PlaneAtOrigin) -> Scalar {
@@ -35768,19 +35776,19 @@ impl Meet<PlaneAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Meet<Rotor> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Meet<Rotor> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Rotor) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Rotor) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
     }
 }
 
-impl Meet<Sphere> for RoundPointBulk {
+impl Meet<Sphere> for RoundPointBulkAspect {
     type Output = Scalar;
 
     fn meet(self, other: Sphere) -> Scalar {
@@ -35792,10 +35800,10 @@ impl Meet<Sphere> for RoundPointBulk {
     }
 }
 
-impl Meet<TransFlector> for RoundPointBulk {
+impl Meet<Transflector> for RoundPointBulkAspect {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -35804,12 +35812,12 @@ impl Meet<TransFlector> for RoundPointBulk {
     }
 }
 
-impl Meet<Translator> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Meet<Translator> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: Translator) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: Translator) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3]),
             },
         }
@@ -35961,10 +35969,10 @@ impl Meet<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Meet<TransFlector> for RoundPointCarrierAspect {
+impl Meet<Transflector> for RoundPointCarrierAspect {
     type Output = Scalar;
 
-    fn meet(self, other: TransFlector) -> Scalar {
+    fn meet(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group1()[3],
@@ -36092,12 +36100,12 @@ impl Meet<Circle> for Sphere {
     }
 }
 
-impl Meet<CircleBulk> for Sphere {
-    type Output = DipoleBulk;
+impl Meet<CircleBulkAspect> for Sphere {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
@@ -36120,10 +36128,10 @@ impl Meet<CircleCarrierAspect> for Sphere {
     }
 }
 
-impl Meet<CircleWeight> for Sphere {
+impl Meet<CircleWeightAspect> for Sphere {
     type Output = DipoleCarrierAspect;
 
-    fn meet(self, other: CircleWeight) -> DipoleCarrierAspect {
+    fn meet(self, other: CircleWeightAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -36155,12 +36163,12 @@ impl Meet<Dipole> for Sphere {
     }
 }
 
-impl Meet<DipoleBulk> for Sphere {
-    type Output = RoundPointBulk;
+impl Meet<DipoleBulkAspect> for Sphere {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -36184,10 +36192,10 @@ impl Meet<DipoleCarrierAspect> for Sphere {
     }
 }
 
-impl Meet<DipoleWeight> for Sphere {
+impl Meet<DipoleWeightAspect> for Sphere {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -36564,10 +36572,10 @@ impl Meet<RoundPointAtOrigin> for Sphere {
     }
 }
 
-impl Meet<RoundPointBulk> for Sphere {
+impl Meet<RoundPointBulkAspect> for Sphere {
     type Output = Scalar;
 
-    fn meet(self, other: RoundPointBulk) -> Scalar {
+    fn meet(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -36607,10 +36615,10 @@ impl Meet<Sphere> for Sphere {
     }
 }
 
-impl Meet<SphereWeight> for Sphere {
+impl Meet<SphereWeightAspect> for Sphere {
     type Output = CircleCarrierAspect;
 
-    fn meet(self, other: SphereWeight) -> CircleCarrierAspect {
+    fn meet(self, other: SphereWeightAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
@@ -36621,10 +36629,10 @@ impl Meet<SphereWeight> for Sphere {
     }
 }
 
-impl Meet<TransFlector> for Sphere {
+impl Meet<Transflector> for Sphere {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36672,19 +36680,19 @@ impl Meet<Translator> for Sphere {
     }
 }
 
-impl Meet<AntiScalar> for SphereWeight {
-    type Output = SphereWeight;
+impl Meet<AntiScalar> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn meet(self, other: AntiScalar) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn meet(self, other: AntiScalar) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Circle> for SphereWeight {
+impl Meet<Circle> for SphereWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn meet(self, other: Circle) -> DipoleCarrierAspect {
@@ -36697,7 +36705,7 @@ impl Meet<Circle> for SphereWeight {
     }
 }
 
-impl Meet<Dipole> for SphereWeight {
+impl Meet<Dipole> for SphereWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: Dipole) -> RoundPointCarrierAspect {
@@ -36709,7 +36717,7 @@ impl Meet<Dipole> for SphereWeight {
     }
 }
 
-impl Meet<FlatPoint> for SphereWeight {
+impl Meet<FlatPoint> for SphereWeightAspect {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: FlatPoint) -> RoundPointCarrierAspect {
@@ -36721,19 +36729,19 @@ impl Meet<FlatPoint> for SphereWeight {
     }
 }
 
-impl Meet<FlatPointAtInfinity> for SphereWeight {
-    type Output = RoundPointBulk;
+impl Meet<FlatPointAtInfinity> for SphereWeightAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: FlatPointAtInfinity) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: FlatPointAtInfinity) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<FlatPointAtOrigin> for SphereWeight {
+impl Meet<FlatPointAtOrigin> for SphereWeightAspect {
     type Output = Origin;
 
     fn meet(self, other: FlatPointAtOrigin) -> Origin {
@@ -36745,7 +36753,7 @@ impl Meet<FlatPointAtOrigin> for SphereWeight {
     }
 }
 
-impl Meet<Flector> for SphereWeight {
+impl Meet<Flector> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Flector) -> MultiVector {
@@ -36767,7 +36775,7 @@ impl Meet<Flector> for SphereWeight {
     }
 }
 
-impl Meet<FlectorAtInfinity> for SphereWeight {
+impl Meet<FlectorAtInfinity> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: FlectorAtInfinity) -> MultiVector {
@@ -36789,19 +36797,19 @@ impl Meet<FlectorAtInfinity> for SphereWeight {
     }
 }
 
-impl Meet<Horizon> for SphereWeight {
-    type Output = CircleBulk;
+impl Meet<Horizon> for SphereWeightAspect {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: Horizon) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: Horizon) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Infinity> for SphereWeight {
+impl Meet<Infinity> for SphereWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: Infinity) -> Scalar {
@@ -36813,7 +36821,7 @@ impl Meet<Infinity> for SphereWeight {
     }
 }
 
-impl Meet<Line> for SphereWeight {
+impl Meet<Line> for SphereWeightAspect {
     type Output = DipoleCarrierAspect;
 
     fn meet(self, other: Line) -> DipoleCarrierAspect {
@@ -36826,43 +36834,43 @@ impl Meet<Line> for SphereWeight {
     }
 }
 
-impl Meet<LineAtInfinity> for SphereWeight {
-    type Output = DipoleBulk;
+impl Meet<LineAtInfinity> for SphereWeightAspect {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: LineAtInfinity) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: LineAtInfinity) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<LineAtOrigin> for SphereWeight {
-    type Output = DipoleWeight;
+impl Meet<LineAtOrigin> for SphereWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn meet(self, other: LineAtOrigin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn meet(self, other: LineAtOrigin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Magnitude> for SphereWeight {
-    type Output = SphereWeight;
+impl Meet<Magnitude> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn meet(self, other: Magnitude) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn meet(self, other: Magnitude) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0()[1],
             },
         }
     }
 }
 
-impl Meet<Motor> for SphereWeight {
+impl Meet<Motor> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Motor) -> MultiVector {
@@ -36884,7 +36892,7 @@ impl Meet<Motor> for SphereWeight {
     }
 }
 
-impl Meet<MultiVector> for SphereWeight {
+impl Meet<MultiVector> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -36906,7 +36914,7 @@ impl Meet<MultiVector> for SphereWeight {
     }
 }
 
-impl Meet<Plane> for SphereWeight {
+impl Meet<Plane> for SphereWeightAspect {
     type Output = CircleCarrierAspect;
 
     fn meet(self, other: Plane) -> CircleCarrierAspect {
@@ -36918,19 +36926,19 @@ impl Meet<Plane> for SphereWeight {
     }
 }
 
-impl Meet<PlaneAtOrigin> for SphereWeight {
-    type Output = CircleWeight;
+impl Meet<PlaneAtOrigin> for SphereWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn meet(self, other: PlaneAtOrigin) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn meet(self, other: PlaneAtOrigin) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
     }
 }
 
-impl Meet<Rotor> for SphereWeight {
+impl Meet<Rotor> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Rotor) -> MultiVector {
@@ -36952,7 +36960,7 @@ impl Meet<Rotor> for SphereWeight {
     }
 }
 
-impl Meet<RoundPoint> for SphereWeight {
+impl Meet<RoundPoint> for SphereWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: RoundPoint) -> Scalar {
@@ -36964,7 +36972,7 @@ impl Meet<RoundPoint> for SphereWeight {
     }
 }
 
-impl Meet<RoundPointAtInfinity> for SphereWeight {
+impl Meet<RoundPointAtInfinity> for SphereWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: RoundPointAtInfinity) -> Scalar {
@@ -36976,7 +36984,7 @@ impl Meet<RoundPointAtInfinity> for SphereWeight {
     }
 }
 
-impl Meet<RoundPointAtOrigin> for SphereWeight {
+impl Meet<RoundPointAtOrigin> for SphereWeightAspect {
     type Output = Scalar;
 
     fn meet(self, other: RoundPointAtOrigin) -> Scalar {
@@ -36988,7 +36996,7 @@ impl Meet<RoundPointAtOrigin> for SphereWeight {
     }
 }
 
-impl Meet<Sphere> for SphereWeight {
+impl Meet<Sphere> for SphereWeightAspect {
     type Output = CircleCarrierAspect;
 
     fn meet(self, other: Sphere) -> CircleCarrierAspect {
@@ -37000,10 +37008,10 @@ impl Meet<Sphere> for SphereWeight {
     }
 }
 
-impl Meet<TransFlector> for SphereWeight {
+impl Meet<Transflector> for SphereWeightAspect {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37022,7 +37030,7 @@ impl Meet<TransFlector> for SphereWeight {
     }
 }
 
-impl Meet<Translator> for SphereWeight {
+impl Meet<Translator> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn meet(self, other: Translator) -> MultiVector {
@@ -37044,12 +37052,12 @@ impl Meet<Translator> for SphereWeight {
     }
 }
 
-impl Meet<AntiScalar> for TransFlector {
-    type Output = TransFlector;
+impl Meet<AntiScalar> for Transflector {
+    type Output = Transflector;
 
-    fn meet(self, other: AntiScalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: AntiScalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -37057,7 +37065,7 @@ impl Meet<AntiScalar> for TransFlector {
     }
 }
 
-impl Meet<Circle> for TransFlector {
+impl Meet<Circle> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: Circle) -> MultiVector {
@@ -37087,19 +37095,19 @@ impl Meet<Circle> for TransFlector {
     }
 }
 
-impl Meet<CircleBulk> for TransFlector {
-    type Output = DipoleBulk;
+impl Meet<CircleBulkAspect> for Transflector {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Meet<CircleCarrierAspect> for TransFlector {
+impl Meet<CircleCarrierAspect> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: CircleCarrierAspect) -> MultiVector {
@@ -37126,10 +37134,10 @@ impl Meet<CircleCarrierAspect> for TransFlector {
     }
 }
 
-impl Meet<CircleWeight> for TransFlector {
+impl Meet<CircleWeightAspect> for Transflector {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -37152,7 +37160,7 @@ impl Meet<CircleWeight> for TransFlector {
     }
 }
 
-impl Meet<Dipole> for TransFlector {
+impl Meet<Dipole> for Transflector {
     type Output = RoundPoint;
 
     fn meet(self, other: Dipole) -> RoundPoint {
@@ -37171,12 +37179,12 @@ impl Meet<Dipole> for TransFlector {
     }
 }
 
-impl Meet<DipoleBulk> for TransFlector {
-    type Output = RoundPointBulk;
+impl Meet<DipoleBulkAspect> for Transflector {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group1()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -37185,7 +37193,7 @@ impl Meet<DipoleBulk> for TransFlector {
     }
 }
 
-impl Meet<DipoleCarrierAspect> for TransFlector {
+impl Meet<DipoleCarrierAspect> for Transflector {
     type Output = RoundPointCarrierAspect;
 
     fn meet(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
@@ -37200,10 +37208,10 @@ impl Meet<DipoleCarrierAspect> for TransFlector {
     }
 }
 
-impl Meet<DipoleWeight> for TransFlector {
+impl Meet<DipoleWeightAspect> for Transflector {
     type Output = RoundPointCarrierAspect;
 
-    fn meet(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn meet(self, other: DipoleWeightAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from(self.group1()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -37214,7 +37222,7 @@ impl Meet<DipoleWeight> for TransFlector {
     }
 }
 
-impl Meet<FlatPoint> for TransFlector {
+impl Meet<FlatPoint> for Transflector {
     type Output = Infinity;
 
     fn meet(self, other: FlatPoint) -> Infinity {
@@ -37226,7 +37234,7 @@ impl Meet<FlatPoint> for TransFlector {
     }
 }
 
-impl Meet<FlatPointAtInfinity> for TransFlector {
+impl Meet<FlatPointAtInfinity> for Transflector {
     type Output = Infinity;
 
     fn meet(self, other: FlatPointAtInfinity) -> Infinity {
@@ -37238,7 +37246,7 @@ impl Meet<FlatPointAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<FlatPointAtOrigin> for TransFlector {
+impl Meet<FlatPointAtOrigin> for Transflector {
     type Output = Infinity;
 
     fn meet(self, other: FlatPointAtOrigin) -> Infinity {
@@ -37250,7 +37258,7 @@ impl Meet<FlatPointAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<Flector> for TransFlector {
+impl Meet<Flector> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: Flector) -> MultiVector {
@@ -37281,7 +37289,7 @@ impl Meet<Flector> for TransFlector {
     }
 }
 
-impl Meet<FlectorAtInfinity> for TransFlector {
+impl Meet<FlectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: FlectorAtInfinity) -> MultiVector {
@@ -37305,7 +37313,7 @@ impl Meet<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<Horizon> for TransFlector {
+impl Meet<Horizon> for Transflector {
     type Output = LineAtInfinity;
 
     fn meet(self, other: Horizon) -> LineAtInfinity {
@@ -37317,7 +37325,7 @@ impl Meet<Horizon> for TransFlector {
     }
 }
 
-impl Meet<Line> for TransFlector {
+impl Meet<Line> for Transflector {
     type Output = FlatPoint;
 
     fn meet(self, other: Line) -> FlatPoint {
@@ -37332,7 +37340,7 @@ impl Meet<Line> for TransFlector {
     }
 }
 
-impl Meet<LineAtInfinity> for TransFlector {
+impl Meet<LineAtInfinity> for Transflector {
     type Output = FlatPointAtInfinity;
 
     fn meet(self, other: LineAtInfinity) -> FlatPointAtInfinity {
@@ -37346,7 +37354,7 @@ impl Meet<LineAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<LineAtOrigin> for TransFlector {
+impl Meet<LineAtOrigin> for Transflector {
     type Output = FlatPoint;
 
     fn meet(self, other: LineAtOrigin) -> FlatPoint {
@@ -37360,12 +37368,12 @@ impl Meet<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl Meet<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn meet(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]),
                 g1: self.group1() * Simd32x4::from(other.group0()[1]),
             },
@@ -37373,7 +37381,7 @@ impl Meet<Magnitude> for TransFlector {
     }
 }
 
-impl Meet<Motor> for TransFlector {
+impl Meet<Motor> for Transflector {
     type Output = Flector;
 
     fn meet(self, other: Motor) -> Flector {
@@ -37391,7 +37399,7 @@ impl Meet<Motor> for TransFlector {
     }
 }
 
-impl Meet<MultiVector> for TransFlector {
+impl Meet<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: MultiVector) -> MultiVector {
@@ -37439,7 +37447,7 @@ impl Meet<MultiVector> for TransFlector {
     }
 }
 
-impl Meet<Origin> for TransFlector {
+impl Meet<Origin> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: Origin) -> Scalar {
@@ -37451,7 +37459,7 @@ impl Meet<Origin> for TransFlector {
     }
 }
 
-impl Meet<Plane> for TransFlector {
+impl Meet<Plane> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: Plane) -> MultiVector {
@@ -37478,7 +37486,7 @@ impl Meet<Plane> for TransFlector {
     }
 }
 
-impl Meet<PlaneAtOrigin> for TransFlector {
+impl Meet<PlaneAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: PlaneAtOrigin) -> MultiVector {
@@ -37504,7 +37512,7 @@ impl Meet<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<Rotor> for TransFlector {
+impl Meet<Rotor> for Transflector {
     type Output = Flector;
 
     fn meet(self, other: Rotor) -> Flector {
@@ -37521,7 +37529,7 @@ impl Meet<Rotor> for TransFlector {
     }
 }
 
-impl Meet<RoundPoint> for TransFlector {
+impl Meet<RoundPoint> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: RoundPoint) -> Scalar {
@@ -37533,7 +37541,7 @@ impl Meet<RoundPoint> for TransFlector {
     }
 }
 
-impl Meet<RoundPointAtInfinity> for TransFlector {
+impl Meet<RoundPointAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: RoundPointAtInfinity) -> Scalar {
@@ -37545,7 +37553,7 @@ impl Meet<RoundPointAtInfinity> for TransFlector {
     }
 }
 
-impl Meet<RoundPointAtOrigin> for TransFlector {
+impl Meet<RoundPointAtOrigin> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: RoundPointAtOrigin) -> Scalar {
@@ -37557,10 +37565,10 @@ impl Meet<RoundPointAtOrigin> for TransFlector {
     }
 }
 
-impl Meet<RoundPointBulk> for TransFlector {
+impl Meet<RoundPointBulkAspect> for Transflector {
     type Output = Scalar;
 
-    fn meet(self, other: RoundPointBulk) -> Scalar {
+    fn meet(self, other: RoundPointBulkAspect) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
@@ -37569,7 +37577,7 @@ impl Meet<RoundPointBulk> for TransFlector {
     }
 }
 
-impl Meet<RoundPointCarrierAspect> for TransFlector {
+impl Meet<RoundPointCarrierAspect> for Transflector {
     type Output = Scalar;
 
     fn meet(self, other: RoundPointCarrierAspect) -> Scalar {
@@ -37581,7 +37589,7 @@ impl Meet<RoundPointCarrierAspect> for TransFlector {
     }
 }
 
-impl Meet<Sphere> for TransFlector {
+impl Meet<Sphere> for Transflector {
     type Output = MultiVector;
 
     fn meet(self, other: Sphere) -> MultiVector {
@@ -37607,10 +37615,10 @@ impl Meet<Sphere> for TransFlector {
     }
 }
 
-impl Meet<SphereWeight> for TransFlector {
+impl Meet<SphereWeightAspect> for Transflector {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37629,10 +37637,10 @@ impl Meet<SphereWeight> for TransFlector {
     }
 }
 
-impl Meet<TransFlector> for TransFlector {
+impl Meet<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn meet(self, other: TransFlector) -> MultiVector {
+    fn meet(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37659,12 +37667,12 @@ impl Meet<TransFlector> for TransFlector {
     }
 }
 
-impl Meet<Translator> for TransFlector {
-    type Output = TransFlector;
+impl Meet<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn meet(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3])
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
@@ -37713,12 +37721,12 @@ impl Meet<Circle> for Translator {
     }
 }
 
-impl Meet<CircleBulk> for Translator {
-    type Output = CircleBulk;
+impl Meet<CircleBulkAspect> for Translator {
+    type Output = CircleBulkAspect;
 
-    fn meet(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn meet(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0()[3] * other.group0(),
             },
         }
@@ -37749,10 +37757,10 @@ impl Meet<CircleCarrierAspect> for Translator {
     }
 }
 
-impl Meet<CircleWeight> for Translator {
+impl Meet<CircleWeightAspect> for Translator {
     type Output = MultiVector;
 
-    fn meet(self, other: CircleWeight) -> MultiVector {
+    fn meet(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37797,12 +37805,12 @@ impl Meet<Dipole> for Translator {
     }
 }
 
-impl Meet<DipoleBulk> for Translator {
-    type Output = DipoleBulk;
+impl Meet<DipoleBulkAspect> for Translator {
+    type Output = DipoleBulkAspect;
 
-    fn meet(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn meet(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -37833,10 +37841,10 @@ impl Meet<DipoleCarrierAspect> for Translator {
     }
 }
 
-impl Meet<DipoleWeight> for Translator {
+impl Meet<DipoleWeightAspect> for Translator {
     type Output = MultiVector;
 
-    fn meet(self, other: DipoleWeight) -> MultiVector {
+    fn meet(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group0()[0], 0.0])
@@ -38098,11 +38106,11 @@ impl Meet<Origin> for Translator {
 }
 
 impl Meet<Plane> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -38113,11 +38121,11 @@ impl Meet<Plane> for Translator {
 }
 
 impl Meet<PlaneAtOrigin> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn meet(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -38188,12 +38196,12 @@ impl Meet<RoundPointAtOrigin> for Translator {
     }
 }
 
-impl Meet<RoundPointBulk> for Translator {
-    type Output = RoundPointBulk;
+impl Meet<RoundPointBulkAspect> for Translator {
+    type Output = RoundPointBulkAspect;
 
-    fn meet(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn meet(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
             },
         }
@@ -38248,10 +38256,10 @@ impl Meet<Sphere> for Translator {
     }
 }
 
-impl Meet<SphereWeight> for Translator {
+impl Meet<SphereWeightAspect> for Translator {
     type Output = MultiVector;
 
-    fn meet(self, other: SphereWeight) -> MultiVector {
+    fn meet(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -38270,12 +38278,12 @@ impl Meet<SphereWeight> for Translator {
     }
 }
 
-impl Meet<TransFlector> for Translator {
-    type Output = TransFlector;
+impl Meet<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn meet(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn meet(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0])
@@ -38357,10 +38365,10 @@ impl Wedge<Dipole> for Circle {
     }
 }
 
-impl Wedge<DipoleBulk> for Circle {
+impl Wedge<DipoleBulkAspect> for Circle {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleBulk) -> AntiScalar {
+    fn wedge(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -38387,10 +38395,10 @@ impl Wedge<DipoleCarrierAspect> for Circle {
     }
 }
 
-impl Wedge<DipoleWeight> for Circle {
+impl Wedge<DipoleWeightAspect> for Circle {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleWeight) -> AntiScalar {
+    fn wedge(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -38596,10 +38604,10 @@ impl Wedge<RoundPointAtOrigin> for Circle {
     }
 }
 
-impl Wedge<RoundPointBulk> for Circle {
+impl Wedge<RoundPointBulkAspect> for Circle {
     type Output = Sphere;
 
-    fn wedge(self, other: RoundPointBulk) -> Sphere {
+    fn wedge(self, other: RoundPointBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -38652,10 +38660,10 @@ impl Wedge<Scalar> for Circle {
     }
 }
 
-impl Wedge<TransFlector> for Circle {
+impl Wedge<Transflector> for Circle {
     type Output = AntiScalar;
 
-    fn wedge(self, other: TransFlector) -> AntiScalar {
+    fn wedge(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -38664,7 +38672,7 @@ impl Wedge<TransFlector> for Circle {
     }
 }
 
-impl Wedge<Dipole> for CircleBulk {
+impl Wedge<Dipole> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Dipole) -> AntiScalar {
@@ -38676,7 +38684,7 @@ impl Wedge<Dipole> for CircleBulk {
     }
 }
 
-impl Wedge<FlatPoint> for CircleBulk {
+impl Wedge<FlatPoint> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: FlatPoint) -> AntiScalar {
@@ -38688,7 +38696,7 @@ impl Wedge<FlatPoint> for CircleBulk {
     }
 }
 
-impl Wedge<FlatPointAtOrigin> for CircleBulk {
+impl Wedge<FlatPointAtOrigin> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: FlatPointAtOrigin) -> AntiScalar {
@@ -38700,7 +38708,7 @@ impl Wedge<FlatPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Wedge<Flector> for CircleBulk {
+impl Wedge<Flector> for CircleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Flector) -> AntiScalar {
@@ -38712,7 +38720,7 @@ impl Wedge<Flector> for CircleBulk {
     }
 }
 
-impl Wedge<Infinity> for CircleBulk {
+impl Wedge<Infinity> for CircleBulkAspect {
     type Output = Horizon;
 
     fn wedge(self, other: Infinity) -> Horizon {
@@ -38724,19 +38732,19 @@ impl Wedge<Infinity> for CircleBulk {
     }
 }
 
-impl Wedge<Magnitude> for CircleBulk {
-    type Output = CircleBulk;
+impl Wedge<Magnitude> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn wedge(self, other: Magnitude) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn wedge(self, other: Magnitude) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0()[0],
             },
         }
     }
 }
 
-impl Wedge<MultiVector> for CircleBulk {
+impl Wedge<MultiVector> for CircleBulkAspect {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -38758,19 +38766,19 @@ impl Wedge<MultiVector> for CircleBulk {
     }
 }
 
-impl Wedge<Origin> for CircleBulk {
-    type Output = SphereWeight;
+impl Wedge<Origin> for CircleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: Origin) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: Origin) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Wedge<RoundPoint> for CircleBulk {
+impl Wedge<RoundPoint> for CircleBulkAspect {
     type Output = Sphere;
 
     fn wedge(self, other: RoundPoint) -> Sphere {
@@ -38783,7 +38791,7 @@ impl Wedge<RoundPoint> for CircleBulk {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for CircleBulk {
+impl Wedge<RoundPointAtInfinity> for CircleBulkAspect {
     type Output = Horizon;
 
     fn wedge(self, other: RoundPointAtInfinity) -> Horizon {
@@ -38795,7 +38803,7 @@ impl Wedge<RoundPointAtInfinity> for CircleBulk {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for CircleBulk {
+impl Wedge<RoundPointAtOrigin> for CircleBulkAspect {
     type Output = Sphere;
 
     fn wedge(self, other: RoundPointAtOrigin) -> Sphere {
@@ -38808,24 +38816,24 @@ impl Wedge<RoundPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Wedge<RoundPointCarrierAspect> for CircleBulk {
-    type Output = SphereWeight;
+impl Wedge<RoundPointCarrierAspect> for CircleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: RoundPointCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: RoundPointCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
 }
 
-impl Wedge<Scalar> for CircleBulk {
-    type Output = CircleBulk;
+impl Wedge<Scalar> for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn wedge(self, other: Scalar) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn wedge(self, other: Scalar) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -38957,11 +38965,11 @@ impl Wedge<MultiVector> for CircleCarrierAspect {
 }
 
 impl Wedge<Origin> for CircleCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: Origin) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: Origin) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
             },
         }
@@ -39012,12 +39020,12 @@ impl Wedge<RoundPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Wedge<RoundPointBulk> for CircleCarrierAspect {
-    type Output = SphereWeight;
+impl Wedge<RoundPointBulkAspect> for CircleCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
@@ -39025,11 +39033,11 @@ impl Wedge<RoundPointBulk> for CircleCarrierAspect {
 }
 
 impl Wedge<RoundPointCarrierAspect> for CircleCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: RoundPointCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: RoundPointCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
             },
         }
@@ -39048,10 +39056,10 @@ impl Wedge<Scalar> for CircleCarrierAspect {
     }
 }
 
-impl Wedge<TransFlector> for CircleCarrierAspect {
+impl Wedge<Transflector> for CircleCarrierAspect {
     type Output = AntiScalar;
 
-    fn wedge(self, other: TransFlector) -> AntiScalar {
+    fn wedge(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -39060,7 +39068,7 @@ impl Wedge<TransFlector> for CircleCarrierAspect {
     }
 }
 
-impl Wedge<Dipole> for CircleWeight {
+impl Wedge<Dipole> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Dipole) -> AntiScalar {
@@ -39072,7 +39080,7 @@ impl Wedge<Dipole> for CircleWeight {
     }
 }
 
-impl Wedge<FlatPoint> for CircleWeight {
+impl Wedge<FlatPoint> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: FlatPoint) -> AntiScalar {
@@ -39084,7 +39092,7 @@ impl Wedge<FlatPoint> for CircleWeight {
     }
 }
 
-impl Wedge<FlatPointAtInfinity> for CircleWeight {
+impl Wedge<FlatPointAtInfinity> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: FlatPointAtInfinity) -> AntiScalar {
@@ -39096,7 +39104,7 @@ impl Wedge<FlatPointAtInfinity> for CircleWeight {
     }
 }
 
-impl Wedge<Flector> for CircleWeight {
+impl Wedge<Flector> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Flector) -> AntiScalar {
@@ -39108,7 +39116,7 @@ impl Wedge<Flector> for CircleWeight {
     }
 }
 
-impl Wedge<FlectorAtInfinity> for CircleWeight {
+impl Wedge<FlectorAtInfinity> for CircleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: FlectorAtInfinity) -> AntiScalar {
@@ -39120,7 +39128,7 @@ impl Wedge<FlectorAtInfinity> for CircleWeight {
     }
 }
 
-impl Wedge<Infinity> for CircleWeight {
+impl Wedge<Infinity> for CircleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: Infinity) -> PlaneAtOrigin {
@@ -39132,19 +39140,19 @@ impl Wedge<Infinity> for CircleWeight {
     }
 }
 
-impl Wedge<Magnitude> for CircleWeight {
-    type Output = CircleWeight;
+impl Wedge<Magnitude> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: Magnitude) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: Magnitude) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Wedge<MultiVector> for CircleWeight {
+impl Wedge<MultiVector> for CircleWeightAspect {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -39171,7 +39179,7 @@ impl Wedge<MultiVector> for CircleWeight {
     }
 }
 
-impl Wedge<RoundPoint> for CircleWeight {
+impl Wedge<RoundPoint> for CircleWeightAspect {
     type Output = Sphere;
 
     fn wedge(self, other: RoundPoint) -> Sphere {
@@ -39186,7 +39194,7 @@ impl Wedge<RoundPoint> for CircleWeight {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for CircleWeight {
+impl Wedge<RoundPointAtInfinity> for CircleWeightAspect {
     type Output = Sphere;
 
     fn wedge(self, other: RoundPointAtInfinity) -> Sphere {
@@ -39201,7 +39209,7 @@ impl Wedge<RoundPointAtInfinity> for CircleWeight {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for CircleWeight {
+impl Wedge<RoundPointAtOrigin> for CircleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: RoundPointAtOrigin) -> PlaneAtOrigin {
@@ -39213,46 +39221,46 @@ impl Wedge<RoundPointAtOrigin> for CircleWeight {
     }
 }
 
-impl Wedge<RoundPointBulk> for CircleWeight {
-    type Output = SphereWeight;
+impl Wedge<RoundPointBulkAspect> for CircleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<RoundPointCarrierAspect> for CircleWeight {
-    type Output = SphereWeight;
+impl Wedge<RoundPointCarrierAspect> for CircleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: RoundPointCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: RoundPointCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<Scalar> for CircleWeight {
-    type Output = CircleWeight;
+impl Wedge<Scalar> for CircleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: Scalar) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: Scalar) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Wedge<TransFlector> for CircleWeight {
+impl Wedge<Transflector> for CircleWeightAspect {
     type Output = AntiScalar;
 
-    fn wedge(self, other: TransFlector) -> AntiScalar {
+    fn wedge(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -39283,10 +39291,10 @@ impl Wedge<Circle> for Dipole {
     }
 }
 
-impl Wedge<CircleBulk> for Dipole {
+impl Wedge<CircleBulkAspect> for Dipole {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleBulk) -> AntiScalar {
+    fn wedge(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group2()[3] * other.group0(),
@@ -39307,10 +39315,10 @@ impl Wedge<CircleCarrierAspect> for Dipole {
     }
 }
 
-impl Wedge<CircleWeight> for Dipole {
+impl Wedge<CircleWeightAspect> for Dipole {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleWeight) -> AntiScalar {
+    fn wedge(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
@@ -39347,10 +39355,10 @@ impl Wedge<Dipole> for Dipole {
     }
 }
 
-impl Wedge<DipoleBulk> for Dipole {
+impl Wedge<DipoleBulkAspect> for Dipole {
     type Output = Sphere;
 
-    fn wedge(self, other: DipoleBulk) -> Sphere {
+    fn wedge(self, other: DipoleBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group2()[3]) * other.group0(),
@@ -39389,10 +39397,10 @@ impl Wedge<DipoleCarrierAspect> for Dipole {
     }
 }
 
-impl Wedge<DipoleWeight> for Dipole {
+impl Wedge<DipoleWeightAspect> for Dipole {
     type Output = Sphere;
 
-    fn wedge(self, other: DipoleWeight) -> Sphere {
+    fn wedge(self, other: DipoleWeightAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(self.group2()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -39716,10 +39724,10 @@ impl Wedge<RoundPointAtOrigin> for Dipole {
     }
 }
 
-impl Wedge<RoundPointBulk> for Dipole {
+impl Wedge<RoundPointBulkAspect> for Dipole {
     type Output = Circle;
 
-    fn wedge(self, other: RoundPointBulk) -> Circle {
+    fn wedge(self, other: RoundPointBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -39773,10 +39781,10 @@ impl Wedge<Scalar> for Dipole {
     }
 }
 
-impl Wedge<TransFlector> for Dipole {
+impl Wedge<Transflector> for Dipole {
     type Output = Plane;
 
-    fn wedge(self, other: TransFlector) -> Plane {
+    fn wedge(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -39802,7 +39810,7 @@ impl Wedge<Translator> for Dipole {
     }
 }
 
-impl Wedge<Circle> for DipoleBulk {
+impl Wedge<Circle> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Circle) -> AntiScalar {
@@ -39814,7 +39822,7 @@ impl Wedge<Circle> for DipoleBulk {
     }
 }
 
-impl Wedge<Dipole> for DipoleBulk {
+impl Wedge<Dipole> for DipoleBulkAspect {
     type Output = Sphere;
 
     fn wedge(self, other: Dipole) -> Sphere {
@@ -39830,31 +39838,31 @@ impl Wedge<Dipole> for DipoleBulk {
     }
 }
 
-impl Wedge<DipoleCarrierAspect> for DipoleBulk {
-    type Output = SphereWeight;
+impl Wedge<DipoleCarrierAspect> for DipoleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<DipoleWeight> for DipoleBulk {
-    type Output = SphereWeight;
+impl Wedge<DipoleWeightAspect> for DipoleBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<FlatPoint> for DipoleBulk {
+impl Wedge<FlatPoint> for DipoleBulkAspect {
     type Output = Plane;
 
     fn wedge(self, other: FlatPoint) -> Plane {
@@ -39868,7 +39876,7 @@ impl Wedge<FlatPoint> for DipoleBulk {
     }
 }
 
-impl Wedge<FlatPointAtInfinity> for DipoleBulk {
+impl Wedge<FlatPointAtInfinity> for DipoleBulkAspect {
     type Output = Horizon;
 
     fn wedge(self, other: FlatPointAtInfinity) -> Horizon {
@@ -39880,7 +39888,7 @@ impl Wedge<FlatPointAtInfinity> for DipoleBulk {
     }
 }
 
-impl Wedge<FlatPointAtOrigin> for DipoleBulk {
+impl Wedge<FlatPointAtOrigin> for DipoleBulkAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: FlatPointAtOrigin) -> PlaneAtOrigin {
@@ -39892,7 +39900,7 @@ impl Wedge<FlatPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Wedge<Flector> for DipoleBulk {
+impl Wedge<Flector> for DipoleBulkAspect {
     type Output = Plane;
 
     fn wedge(self, other: Flector) -> Plane {
@@ -39906,7 +39914,7 @@ impl Wedge<Flector> for DipoleBulk {
     }
 }
 
-impl Wedge<FlectorAtInfinity> for DipoleBulk {
+impl Wedge<FlectorAtInfinity> for DipoleBulkAspect {
     type Output = Horizon;
 
     fn wedge(self, other: FlectorAtInfinity) -> Horizon {
@@ -39918,7 +39926,7 @@ impl Wedge<FlectorAtInfinity> for DipoleBulk {
     }
 }
 
-impl Wedge<Infinity> for DipoleBulk {
+impl Wedge<Infinity> for DipoleBulkAspect {
     type Output = LineAtInfinity;
 
     fn wedge(self, other: Infinity) -> LineAtInfinity {
@@ -39930,7 +39938,7 @@ impl Wedge<Infinity> for DipoleBulk {
     }
 }
 
-impl Wedge<Line> for DipoleBulk {
+impl Wedge<Line> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Line) -> AntiScalar {
@@ -39942,7 +39950,7 @@ impl Wedge<Line> for DipoleBulk {
     }
 }
 
-impl Wedge<LineAtOrigin> for DipoleBulk {
+impl Wedge<LineAtOrigin> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: LineAtOrigin) -> AntiScalar {
@@ -39954,19 +39962,19 @@ impl Wedge<LineAtOrigin> for DipoleBulk {
     }
 }
 
-impl Wedge<Magnitude> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Wedge<Magnitude> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn wedge(self, other: Magnitude) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn wedge(self, other: Magnitude) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Wedge<Motor> for DipoleBulk {
+impl Wedge<Motor> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Motor) -> AntiScalar {
@@ -39978,7 +39986,7 @@ impl Wedge<Motor> for DipoleBulk {
     }
 }
 
-impl Wedge<MultiVector> for DipoleBulk {
+impl Wedge<MultiVector> for DipoleBulkAspect {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -40007,19 +40015,19 @@ impl Wedge<MultiVector> for DipoleBulk {
     }
 }
 
-impl Wedge<Origin> for DipoleBulk {
-    type Output = CircleWeight;
+impl Wedge<Origin> for DipoleBulkAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: Origin) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: Origin) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Wedge<Rotor> for DipoleBulk {
+impl Wedge<Rotor> for DipoleBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Rotor) -> AntiScalar {
@@ -40031,7 +40039,7 @@ impl Wedge<Rotor> for DipoleBulk {
     }
 }
 
-impl Wedge<RoundPoint> for DipoleBulk {
+impl Wedge<RoundPoint> for DipoleBulkAspect {
     type Output = Circle;
 
     fn wedge(self, other: RoundPoint) -> Circle {
@@ -40047,7 +40055,7 @@ impl Wedge<RoundPoint> for DipoleBulk {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for DipoleBulk {
+impl Wedge<RoundPointAtInfinity> for DipoleBulkAspect {
     type Output = Circle;
 
     fn wedge(self, other: RoundPointAtInfinity) -> Circle {
@@ -40063,7 +40071,7 @@ impl Wedge<RoundPointAtInfinity> for DipoleBulk {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for DipoleBulk {
+impl Wedge<RoundPointAtOrigin> for DipoleBulkAspect {
     type Output = Circle;
 
     fn wedge(self, other: RoundPointAtOrigin) -> Circle {
@@ -40078,19 +40086,19 @@ impl Wedge<RoundPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Wedge<RoundPointBulk> for DipoleBulk {
-    type Output = CircleBulk;
+impl Wedge<RoundPointBulkAspect> for DipoleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<RoundPointCarrierAspect> for DipoleBulk {
+impl Wedge<RoundPointCarrierAspect> for DipoleBulkAspect {
     type Output = CircleCarrierAspect;
 
     fn wedge(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
@@ -40104,22 +40112,22 @@ impl Wedge<RoundPointCarrierAspect> for DipoleBulk {
     }
 }
 
-impl Wedge<Scalar> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Wedge<Scalar> for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn wedge(self, other: Scalar) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn wedge(self, other: Scalar) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Wedge<TransFlector> for DipoleBulk {
+impl Wedge<Transflector> for DipoleBulkAspect {
     type Output = Horizon;
 
-    fn wedge(self, other: TransFlector) -> Horizon {
+    fn wedge(self, other: Transflector) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -40167,12 +40175,12 @@ impl Wedge<Dipole> for DipoleCarrierAspect {
     }
 }
 
-impl Wedge<DipoleBulk> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+impl Wedge<DipoleBulkAspect> for DipoleCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
@@ -40180,11 +40188,11 @@ impl Wedge<DipoleBulk> for DipoleCarrierAspect {
 }
 
 impl Wedge<DipoleCarrierAspect> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0
                     - self.group0()[0] * other.group1()[0]
                     - self.group0()[1] * other.group1()[1]
@@ -40197,12 +40205,12 @@ impl Wedge<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Wedge<DipoleWeight> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+impl Wedge<DipoleWeightAspect> for DipoleCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
@@ -40416,11 +40424,11 @@ impl Wedge<MultiVector> for DipoleCarrierAspect {
 }
 
 impl Wedge<Origin> for DipoleCarrierAspect {
-    type Output = CircleWeight;
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: Origin) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: Origin) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
             },
         }
@@ -40492,10 +40500,10 @@ impl Wedge<RoundPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Wedge<RoundPointBulk> for DipoleCarrierAspect {
+impl Wedge<RoundPointBulkAspect> for DipoleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> CircleCarrierAspect {
+    fn wedge(self, other: RoundPointBulkAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -40539,10 +40547,10 @@ impl Wedge<Scalar> for DipoleCarrierAspect {
     }
 }
 
-impl Wedge<TransFlector> for DipoleCarrierAspect {
+impl Wedge<Transflector> for DipoleCarrierAspect {
     type Output = Plane;
 
-    fn wedge(self, other: TransFlector) -> Plane {
+    fn wedge(self, other: Transflector) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], 0.0])
@@ -40568,7 +40576,7 @@ impl Wedge<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl Wedge<Circle> for DipoleWeight {
+impl Wedge<Circle> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Circle) -> AntiScalar {
@@ -40580,7 +40588,7 @@ impl Wedge<Circle> for DipoleWeight {
     }
 }
 
-impl Wedge<Dipole> for DipoleWeight {
+impl Wedge<Dipole> for DipoleWeightAspect {
     type Output = Sphere;
 
     fn wedge(self, other: Dipole) -> Sphere {
@@ -40597,31 +40605,31 @@ impl Wedge<Dipole> for DipoleWeight {
     }
 }
 
-impl Wedge<DipoleBulk> for DipoleWeight {
-    type Output = SphereWeight;
+impl Wedge<DipoleBulkAspect> for DipoleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<DipoleCarrierAspect> for DipoleWeight {
-    type Output = SphereWeight;
+impl Wedge<DipoleCarrierAspect> for DipoleWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: DipoleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: DipoleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
 }
 
-impl Wedge<FlatPoint> for DipoleWeight {
+impl Wedge<FlatPoint> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: FlatPoint) -> PlaneAtOrigin {
@@ -40635,7 +40643,7 @@ impl Wedge<FlatPoint> for DipoleWeight {
     }
 }
 
-impl Wedge<FlatPointAtInfinity> for DipoleWeight {
+impl Wedge<FlatPointAtInfinity> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: FlatPointAtInfinity) -> PlaneAtOrigin {
@@ -40649,7 +40657,7 @@ impl Wedge<FlatPointAtInfinity> for DipoleWeight {
     }
 }
 
-impl Wedge<Flector> for DipoleWeight {
+impl Wedge<Flector> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: Flector) -> PlaneAtOrigin {
@@ -40663,7 +40671,7 @@ impl Wedge<Flector> for DipoleWeight {
     }
 }
 
-impl Wedge<FlectorAtInfinity> for DipoleWeight {
+impl Wedge<FlectorAtInfinity> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: FlectorAtInfinity) -> PlaneAtOrigin {
@@ -40677,7 +40685,7 @@ impl Wedge<FlectorAtInfinity> for DipoleWeight {
     }
 }
 
-impl Wedge<Infinity> for DipoleWeight {
+impl Wedge<Infinity> for DipoleWeightAspect {
     type Output = LineAtOrigin;
 
     fn wedge(self, other: Infinity) -> LineAtOrigin {
@@ -40689,7 +40697,7 @@ impl Wedge<Infinity> for DipoleWeight {
     }
 }
 
-impl Wedge<Line> for DipoleWeight {
+impl Wedge<Line> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Line) -> AntiScalar {
@@ -40701,7 +40709,7 @@ impl Wedge<Line> for DipoleWeight {
     }
 }
 
-impl Wedge<LineAtInfinity> for DipoleWeight {
+impl Wedge<LineAtInfinity> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: LineAtInfinity) -> AntiScalar {
@@ -40713,19 +40721,19 @@ impl Wedge<LineAtInfinity> for DipoleWeight {
     }
 }
 
-impl Wedge<Magnitude> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Wedge<Magnitude> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: Magnitude) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: Magnitude) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Wedge<Motor> for DipoleWeight {
+impl Wedge<Motor> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Motor) -> AntiScalar {
@@ -40737,7 +40745,7 @@ impl Wedge<Motor> for DipoleWeight {
     }
 }
 
-impl Wedge<MultiVector> for DipoleWeight {
+impl Wedge<MultiVector> for DipoleWeightAspect {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -40767,7 +40775,7 @@ impl Wedge<MultiVector> for DipoleWeight {
     }
 }
 
-impl Wedge<RoundPoint> for DipoleWeight {
+impl Wedge<RoundPoint> for DipoleWeightAspect {
     type Output = Circle;
 
     fn wedge(self, other: RoundPoint) -> Circle {
@@ -40783,7 +40791,7 @@ impl Wedge<RoundPoint> for DipoleWeight {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for DipoleWeight {
+impl Wedge<RoundPointAtInfinity> for DipoleWeightAspect {
     type Output = Circle;
 
     fn wedge(self, other: RoundPointAtInfinity) -> Circle {
@@ -40799,7 +40807,7 @@ impl Wedge<RoundPointAtInfinity> for DipoleWeight {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for DipoleWeight {
+impl Wedge<RoundPointAtOrigin> for DipoleWeightAspect {
     type Output = LineAtOrigin;
 
     fn wedge(self, other: RoundPointAtOrigin) -> LineAtOrigin {
@@ -40811,12 +40819,12 @@ impl Wedge<RoundPointAtOrigin> for DipoleWeight {
     }
 }
 
-impl Wedge<RoundPointBulk> for DipoleWeight {
-    type Output = CircleWeight;
+impl Wedge<RoundPointBulkAspect> for DipoleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -40825,12 +40833,12 @@ impl Wedge<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl Wedge<RoundPointCarrierAspect> for DipoleWeight {
-    type Output = CircleWeight;
+impl Wedge<RoundPointCarrierAspect> for DipoleWeightAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: RoundPointCarrierAspect) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: RoundPointCarrierAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -40839,22 +40847,22 @@ impl Wedge<RoundPointCarrierAspect> for DipoleWeight {
     }
 }
 
-impl Wedge<Scalar> for DipoleWeight {
-    type Output = DipoleWeight;
+impl Wedge<Scalar> for DipoleWeightAspect {
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: Scalar) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: Scalar) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Wedge<TransFlector> for DipoleWeight {
+impl Wedge<Transflector> for DipoleWeightAspect {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: TransFlector) -> PlaneAtOrigin {
+    fn wedge(self, other: Transflector) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
@@ -40865,7 +40873,7 @@ impl Wedge<TransFlector> for DipoleWeight {
     }
 }
 
-impl Wedge<Translator> for DipoleWeight {
+impl Wedge<Translator> for DipoleWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Translator) -> AntiScalar {
@@ -40889,10 +40897,10 @@ impl Wedge<Circle> for FlatPoint {
     }
 }
 
-impl Wedge<CircleBulk> for FlatPoint {
+impl Wedge<CircleBulkAspect> for FlatPoint {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleBulk) -> AntiScalar {
+    fn wedge(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -40913,10 +40921,10 @@ impl Wedge<CircleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Wedge<CircleWeight> for FlatPoint {
+impl Wedge<CircleWeightAspect> for FlatPoint {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleWeight) -> AntiScalar {
+    fn wedge(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -40940,10 +40948,10 @@ impl Wedge<Dipole> for FlatPoint {
     }
 }
 
-impl Wedge<DipoleBulk> for FlatPoint {
+impl Wedge<DipoleBulkAspect> for FlatPoint {
     type Output = Plane;
 
-    fn wedge(self, other: DipoleBulk) -> Plane {
+    fn wedge(self, other: DipoleBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -40969,10 +40977,10 @@ impl Wedge<DipoleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Wedge<DipoleWeight> for FlatPoint {
+impl Wedge<DipoleWeightAspect> for FlatPoint {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -41081,10 +41089,10 @@ impl Wedge<RoundPointAtOrigin> for FlatPoint {
     }
 }
 
-impl Wedge<RoundPointBulk> for FlatPoint {
+impl Wedge<RoundPointBulkAspect> for FlatPoint {
     type Output = Line;
 
-    fn wedge(self, other: RoundPointBulk) -> Line {
+    fn wedge(self, other: RoundPointBulkAspect) -> Line {
         Line {
             groups: LineGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
@@ -41148,10 +41156,10 @@ impl Wedge<CircleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Wedge<CircleWeight> for FlatPointAtInfinity {
+impl Wedge<CircleWeightAspect> for FlatPointAtInfinity {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleWeight) -> AntiScalar {
+    fn wedge(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -41174,10 +41182,10 @@ impl Wedge<Dipole> for FlatPointAtInfinity {
     }
 }
 
-impl Wedge<DipoleBulk> for FlatPointAtInfinity {
+impl Wedge<DipoleBulkAspect> for FlatPointAtInfinity {
     type Output = Horizon;
 
-    fn wedge(self, other: DipoleBulk) -> Horizon {
+    fn wedge(self, other: DipoleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -41200,10 +41208,10 @@ impl Wedge<DipoleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Wedge<DipoleWeight> for FlatPointAtInfinity {
+impl Wedge<DipoleWeightAspect> for FlatPointAtInfinity {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -41310,10 +41318,10 @@ impl Wedge<RoundPointAtOrigin> for FlatPointAtInfinity {
     }
 }
 
-impl Wedge<RoundPointBulk> for FlatPointAtInfinity {
+impl Wedge<RoundPointBulkAspect> for FlatPointAtInfinity {
     type Output = LineAtInfinity;
 
-    fn wedge(self, other: RoundPointBulk) -> LineAtInfinity {
+    fn wedge(self, other: RoundPointBulkAspect) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -41363,10 +41371,10 @@ impl Wedge<Circle> for FlatPointAtOrigin {
     }
 }
 
-impl Wedge<CircleBulk> for FlatPointAtOrigin {
+impl Wedge<CircleBulkAspect> for FlatPointAtOrigin {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleBulk) -> AntiScalar {
+    fn wedge(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -41399,10 +41407,10 @@ impl Wedge<Dipole> for FlatPointAtOrigin {
     }
 }
 
-impl Wedge<DipoleBulk> for FlatPointAtOrigin {
+impl Wedge<DipoleBulkAspect> for FlatPointAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: DipoleBulk) -> PlaneAtOrigin {
+    fn wedge(self, other: DipoleBulkAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -41481,10 +41489,10 @@ impl Wedge<RoundPointAtInfinity> for FlatPointAtOrigin {
     }
 }
 
-impl Wedge<RoundPointBulk> for FlatPointAtOrigin {
+impl Wedge<RoundPointBulkAspect> for FlatPointAtOrigin {
     type Output = LineAtOrigin;
 
-    fn wedge(self, other: RoundPointBulk) -> LineAtOrigin {
+    fn wedge(self, other: RoundPointBulkAspect) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -41529,10 +41537,10 @@ impl Wedge<Circle> for Flector {
     }
 }
 
-impl Wedge<CircleBulk> for Flector {
+impl Wedge<CircleBulkAspect> for Flector {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleBulk) -> AntiScalar {
+    fn wedge(self, other: CircleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -41553,10 +41561,10 @@ impl Wedge<CircleCarrierAspect> for Flector {
     }
 }
 
-impl Wedge<CircleWeight> for Flector {
+impl Wedge<CircleWeightAspect> for Flector {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleWeight) -> AntiScalar {
+    fn wedge(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -41580,10 +41588,10 @@ impl Wedge<Dipole> for Flector {
     }
 }
 
-impl Wedge<DipoleBulk> for Flector {
+impl Wedge<DipoleBulkAspect> for Flector {
     type Output = Plane;
 
-    fn wedge(self, other: DipoleBulk) -> Plane {
+    fn wedge(self, other: DipoleBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -41609,10 +41617,10 @@ impl Wedge<DipoleCarrierAspect> for Flector {
     }
 }
 
-impl Wedge<DipoleWeight> for Flector {
+impl Wedge<DipoleWeightAspect> for Flector {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -41738,10 +41746,10 @@ impl Wedge<RoundPointAtOrigin> for Flector {
     }
 }
 
-impl Wedge<RoundPointBulk> for Flector {
+impl Wedge<RoundPointBulkAspect> for Flector {
     type Output = Motor;
 
-    fn wedge(self, other: RoundPointBulk) -> Motor {
+    fn wedge(self, other: RoundPointBulkAspect) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[3]) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0])
@@ -41813,10 +41821,10 @@ impl Wedge<CircleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Wedge<CircleWeight> for FlectorAtInfinity {
+impl Wedge<CircleWeightAspect> for FlectorAtInfinity {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleWeight) -> AntiScalar {
+    fn wedge(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -41839,10 +41847,10 @@ impl Wedge<Dipole> for FlectorAtInfinity {
     }
 }
 
-impl Wedge<DipoleBulk> for FlectorAtInfinity {
+impl Wedge<DipoleBulkAspect> for FlectorAtInfinity {
     type Output = Horizon;
 
-    fn wedge(self, other: DipoleBulk) -> Horizon {
+    fn wedge(self, other: DipoleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -41865,10 +41873,10 @@ impl Wedge<DipoleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Wedge<DipoleWeight> for FlectorAtInfinity {
+impl Wedge<DipoleWeightAspect> for FlectorAtInfinity {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -41976,10 +41984,10 @@ impl Wedge<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl Wedge<RoundPointBulk> for FlectorAtInfinity {
+impl Wedge<RoundPointBulkAspect> for FlectorAtInfinity {
     type Output = LineAtInfinity;
 
-    fn wedge(self, other: RoundPointBulk) -> LineAtInfinity {
+    fn wedge(self, other: RoundPointBulkAspect) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -42123,10 +42131,10 @@ impl Wedge<Circle> for Infinity {
     }
 }
 
-impl Wedge<CircleBulk> for Infinity {
+impl Wedge<CircleBulkAspect> for Infinity {
     type Output = Horizon;
 
-    fn wedge(self, other: CircleBulk) -> Horizon {
+    fn wedge(self, other: CircleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -42147,10 +42155,10 @@ impl Wedge<CircleCarrierAspect> for Infinity {
     }
 }
 
-impl Wedge<CircleWeight> for Infinity {
+impl Wedge<CircleWeightAspect> for Infinity {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: CircleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: CircleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -42172,10 +42180,10 @@ impl Wedge<Dipole> for Infinity {
     }
 }
 
-impl Wedge<DipoleBulk> for Infinity {
+impl Wedge<DipoleBulkAspect> for Infinity {
     type Output = LineAtInfinity;
 
-    fn wedge(self, other: DipoleBulk) -> LineAtInfinity {
+    fn wedge(self, other: DipoleBulkAspect) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -42197,10 +42205,10 @@ impl Wedge<DipoleCarrierAspect> for Infinity {
     }
 }
 
-impl Wedge<DipoleWeight> for Infinity {
+impl Wedge<DipoleWeightAspect> for Infinity {
     type Output = LineAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> LineAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
@@ -42291,10 +42299,10 @@ impl Wedge<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl Wedge<RoundPointBulk> for Infinity {
+impl Wedge<RoundPointBulkAspect> for Infinity {
     type Output = FlatPointAtInfinity;
 
-    fn wedge(self, other: RoundPointBulk) -> FlatPointAtInfinity {
+    fn wedge(self, other: RoundPointBulkAspect) -> FlatPointAtInfinity {
         FlatPointAtInfinity {
             groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * other.group0(),
@@ -42339,10 +42347,10 @@ impl Wedge<Sphere> for Infinity {
     }
 }
 
-impl Wedge<SphereWeight> for Infinity {
+impl Wedge<SphereWeightAspect> for Infinity {
     type Output = AntiScalar;
 
-    fn wedge(self, other: SphereWeight) -> AntiScalar {
+    fn wedge(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group0(),
@@ -42369,10 +42377,10 @@ impl Wedge<Dipole> for Line {
     }
 }
 
-impl Wedge<DipoleBulk> for Line {
+impl Wedge<DipoleBulkAspect> for Line {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleBulk) -> AntiScalar {
+    fn wedge(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -42399,10 +42407,10 @@ impl Wedge<DipoleCarrierAspect> for Line {
     }
 }
 
-impl Wedge<DipoleWeight> for Line {
+impl Wedge<DipoleWeightAspect> for Line {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleWeight) -> AntiScalar {
+    fn wedge(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -42514,10 +42522,10 @@ impl Wedge<RoundPointAtOrigin> for Line {
     }
 }
 
-impl Wedge<RoundPointBulk> for Line {
+impl Wedge<RoundPointBulkAspect> for Line {
     type Output = Plane;
 
-    fn wedge(self, other: RoundPointBulk) -> Plane {
+    fn wedge(self, other: RoundPointBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -42585,10 +42593,10 @@ impl Wedge<DipoleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Wedge<DipoleWeight> for LineAtInfinity {
+impl Wedge<DipoleWeightAspect> for LineAtInfinity {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleWeight) -> AntiScalar {
+    fn wedge(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -42685,10 +42693,10 @@ impl Wedge<RoundPointAtOrigin> for LineAtInfinity {
     }
 }
 
-impl Wedge<RoundPointBulk> for LineAtInfinity {
+impl Wedge<RoundPointBulkAspect> for LineAtInfinity {
     type Output = Horizon;
 
-    fn wedge(self, other: RoundPointBulk) -> Horizon {
+    fn wedge(self, other: RoundPointBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -42735,10 +42743,10 @@ impl Wedge<Dipole> for LineAtOrigin {
     }
 }
 
-impl Wedge<DipoleBulk> for LineAtOrigin {
+impl Wedge<DipoleBulkAspect> for LineAtOrigin {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleBulk) -> AntiScalar {
+    fn wedge(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -42825,10 +42833,10 @@ impl Wedge<RoundPointAtInfinity> for LineAtOrigin {
     }
 }
 
-impl Wedge<RoundPointBulk> for LineAtOrigin {
+impl Wedge<RoundPointBulkAspect> for LineAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: RoundPointBulk) -> PlaneAtOrigin {
+    fn wedge(self, other: RoundPointBulkAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -42891,12 +42899,12 @@ impl Wedge<Circle> for Magnitude {
     }
 }
 
-impl Wedge<CircleBulk> for Magnitude {
-    type Output = CircleBulk;
+impl Wedge<CircleBulkAspect> for Magnitude {
+    type Output = CircleBulkAspect;
 
-    fn wedge(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn wedge(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0()[0] * other.group0(),
             },
         }
@@ -42915,12 +42923,12 @@ impl Wedge<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl Wedge<CircleWeight> for Magnitude {
-    type Output = CircleWeight;
+impl Wedge<CircleWeightAspect> for Magnitude {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -42941,12 +42949,12 @@ impl Wedge<Dipole> for Magnitude {
     }
 }
 
-impl Wedge<DipoleBulk> for Magnitude {
-    type Output = DipoleBulk;
+impl Wedge<DipoleBulkAspect> for Magnitude {
+    type Output = DipoleBulkAspect;
 
-    fn wedge(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn wedge(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -42966,12 +42974,12 @@ impl Wedge<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl Wedge<DipoleWeight> for Magnitude {
-    type Output = DipoleWeight;
+impl Wedge<DipoleWeightAspect> for Magnitude {
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -43232,12 +43240,12 @@ impl Wedge<RoundPointAtOrigin> for Magnitude {
     }
 }
 
-impl Wedge<RoundPointBulk> for Magnitude {
-    type Output = RoundPointBulk;
+impl Wedge<RoundPointBulkAspect> for Magnitude {
+    type Output = RoundPointBulkAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
             },
         }
@@ -43281,24 +43289,24 @@ impl Wedge<Sphere> for Magnitude {
     }
 }
 
-impl Wedge<SphereWeight> for Magnitude {
-    type Output = SphereWeight;
+impl Wedge<SphereWeightAspect> for Magnitude {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0(),
             },
         }
     }
 }
 
-impl Wedge<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Wedge<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[0]) * other.group1(),
             },
@@ -43336,10 +43344,10 @@ impl Wedge<Dipole> for Motor {
     }
 }
 
-impl Wedge<DipoleBulk> for Motor {
+impl Wedge<DipoleBulkAspect> for Motor {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleBulk) -> AntiScalar {
+    fn wedge(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -43366,10 +43374,10 @@ impl Wedge<DipoleCarrierAspect> for Motor {
     }
 }
 
-impl Wedge<DipoleWeight> for Motor {
+impl Wedge<DipoleWeightAspect> for Motor {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleWeight) -> AntiScalar {
+    fn wedge(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
@@ -43482,10 +43490,10 @@ impl Wedge<RoundPointAtOrigin> for Motor {
     }
 }
 
-impl Wedge<RoundPointBulk> for Motor {
+impl Wedge<RoundPointBulkAspect> for Motor {
     type Output = Plane;
 
-    fn wedge(self, other: RoundPointBulk) -> Plane {
+    fn wedge(self, other: RoundPointBulkAspect) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -43579,10 +43587,10 @@ impl Wedge<Circle> for MultiVector {
     }
 }
 
-impl Wedge<CircleBulk> for MultiVector {
+impl Wedge<CircleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: CircleBulk) -> MultiVector {
+    fn wedge(self, other: CircleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[3]) * Simd32x2::from([0.0, -other.group0()]),
@@ -43629,10 +43637,10 @@ impl Wedge<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Wedge<CircleWeight> for MultiVector {
+impl Wedge<CircleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: CircleWeight) -> MultiVector {
+    fn wedge(self, other: CircleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group5()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -43709,10 +43717,10 @@ impl Wedge<Dipole> for MultiVector {
     }
 }
 
-impl Wedge<DipoleBulk> for MultiVector {
+impl Wedge<DipoleBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: DipoleBulk) -> MultiVector {
+    fn wedge(self, other: DipoleBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group7()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -43782,10 +43790,10 @@ impl Wedge<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Wedge<DipoleWeight> for MultiVector {
+impl Wedge<DipoleWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: DipoleWeight) -> MultiVector {
+    fn wedge(self, other: DipoleWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group8()[0]) * Simd32x2::from([0.0, -other.group0()[0]])
@@ -44504,10 +44512,10 @@ impl Wedge<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Wedge<RoundPointBulk> for MultiVector {
+impl Wedge<RoundPointBulkAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: RoundPointBulk) -> MultiVector {
+    fn wedge(self, other: RoundPointBulkAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group9()[0]) * Simd32x2::from([0.0, other.group0()[0]])
@@ -44637,10 +44645,10 @@ impl Wedge<Sphere> for MultiVector {
     }
 }
 
-impl Wedge<SphereWeight> for MultiVector {
+impl Wedge<SphereWeightAspect> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: SphereWeight) -> MultiVector {
+    fn wedge(self, other: SphereWeightAspect) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group2()[1]) * Simd32x2::from([0.0, other.group0()]),
@@ -44659,10 +44667,10 @@ impl Wedge<SphereWeight> for MultiVector {
     }
 }
 
-impl Wedge<TransFlector> for MultiVector {
+impl Wedge<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge(self, other: TransFlector) -> MultiVector {
+    fn wedge(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([0.0, other.group1()[0]])
@@ -44735,12 +44743,12 @@ impl Wedge<Circle> for Origin {
     }
 }
 
-impl Wedge<CircleBulk> for Origin {
-    type Output = SphereWeight;
+impl Wedge<CircleBulkAspect> for Origin {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -44748,11 +44756,11 @@ impl Wedge<CircleBulk> for Origin {
 }
 
 impl Wedge<CircleCarrierAspect> for Origin {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0()[3],
             },
         }
@@ -44773,12 +44781,12 @@ impl Wedge<Dipole> for Origin {
     }
 }
 
-impl Wedge<DipoleBulk> for Origin {
-    type Output = CircleWeight;
+impl Wedge<DipoleBulkAspect> for Origin {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: DipoleBulk) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: DipoleBulkAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -44786,11 +44794,11 @@ impl Wedge<DipoleBulk> for Origin {
 }
 
 impl Wedge<DipoleCarrierAspect> for Origin {
-    type Output = CircleWeight;
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: DipoleCarrierAspect) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: DipoleCarrierAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
             },
         }
@@ -44991,12 +44999,12 @@ impl Wedge<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl Wedge<RoundPointBulk> for Origin {
-    type Output = DipoleWeight;
+impl Wedge<RoundPointBulkAspect> for Origin {
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -45004,11 +45012,11 @@ impl Wedge<RoundPointBulk> for Origin {
 }
 
 impl Wedge<RoundPointCarrierAspect> for Origin {
-    type Output = DipoleWeight;
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: RoundPointCarrierAspect) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: RoundPointCarrierAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
@@ -45039,10 +45047,10 @@ impl Wedge<Sphere> for Origin {
     }
 }
 
-impl Wedge<TransFlector> for Origin {
+impl Wedge<Transflector> for Origin {
     type Output = Rotor;
 
-    fn wedge(self, other: TransFlector) -> Rotor {
+    fn wedge(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -45148,10 +45156,10 @@ impl Wedge<RoundPointAtOrigin> for Plane {
     }
 }
 
-impl Wedge<RoundPointBulk> for Plane {
+impl Wedge<RoundPointBulkAspect> for Plane {
     type Output = AntiScalar;
 
-    fn wedge(self, other: RoundPointBulk) -> AntiScalar {
+    fn wedge(self, other: RoundPointBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -45244,10 +45252,10 @@ impl Wedge<RoundPointAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl Wedge<RoundPointBulk> for PlaneAtOrigin {
+impl Wedge<RoundPointBulkAspect> for PlaneAtOrigin {
     type Output = AntiScalar;
 
-    fn wedge(self, other: RoundPointBulk) -> AntiScalar {
+    fn wedge(self, other: RoundPointBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -45292,10 +45300,10 @@ impl Wedge<Dipole> for Rotor {
     }
 }
 
-impl Wedge<DipoleBulk> for Rotor {
+impl Wedge<DipoleBulkAspect> for Rotor {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleBulk) -> AntiScalar {
+    fn wedge(self, other: DipoleBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -45383,10 +45391,10 @@ impl Wedge<RoundPointAtInfinity> for Rotor {
     }
 }
 
-impl Wedge<RoundPointBulk> for Rotor {
+impl Wedge<RoundPointBulkAspect> for Rotor {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: RoundPointBulk) -> PlaneAtOrigin {
+    fn wedge(self, other: RoundPointBulkAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -45443,10 +45451,10 @@ impl Wedge<Circle> for RoundPoint {
     }
 }
 
-impl Wedge<CircleBulk> for RoundPoint {
+impl Wedge<CircleBulkAspect> for RoundPoint {
     type Output = Sphere;
 
-    fn wedge(self, other: CircleBulk) -> Sphere {
+    fn wedge(self, other: CircleBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0),
@@ -45472,10 +45480,10 @@ impl Wedge<CircleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Wedge<CircleWeight> for RoundPoint {
+impl Wedge<CircleWeightAspect> for RoundPoint {
     type Output = Sphere;
 
-    fn wedge(self, other: CircleWeight) -> Sphere {
+    fn wedge(self, other: CircleWeightAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group1()[1]) * other.group0(),
@@ -45509,10 +45517,10 @@ impl Wedge<Dipole> for RoundPoint {
     }
 }
 
-impl Wedge<DipoleBulk> for RoundPoint {
+impl Wedge<DipoleBulkAspect> for RoundPoint {
     type Output = Circle;
 
-    fn wedge(self, other: DipoleBulk) -> Circle {
+    fn wedge(self, other: DipoleBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -45543,10 +45551,10 @@ impl Wedge<DipoleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Wedge<DipoleWeight> for RoundPoint {
+impl Wedge<DipoleWeightAspect> for RoundPoint {
     type Output = Circle;
 
-    fn wedge(self, other: DipoleWeight) -> Circle {
+    fn wedge(self, other: DipoleWeightAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -45885,10 +45893,10 @@ impl Wedge<RoundPointAtOrigin> for RoundPoint {
     }
 }
 
-impl Wedge<RoundPointBulk> for RoundPoint {
+impl Wedge<RoundPointBulkAspect> for RoundPoint {
     type Output = Dipole;
 
-    fn wedge(self, other: RoundPointBulk) -> Dipole {
+    fn wedge(self, other: RoundPointBulkAspect) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(self.group1()[0]) * other.group0(),
@@ -45947,10 +45955,10 @@ impl Wedge<Sphere> for RoundPoint {
     }
 }
 
-impl Wedge<SphereWeight> for RoundPoint {
+impl Wedge<SphereWeightAspect> for RoundPoint {
     type Output = AntiScalar;
 
-    fn wedge(self, other: SphereWeight) -> AntiScalar {
+    fn wedge(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group1()[1] * other.group0(),
@@ -45959,10 +45967,10 @@ impl Wedge<SphereWeight> for RoundPoint {
     }
 }
 
-impl Wedge<TransFlector> for RoundPoint {
+impl Wedge<Transflector> for RoundPoint {
     type Output = Motor;
 
-    fn wedge(self, other: TransFlector) -> Motor {
+    fn wedge(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -46011,10 +46019,10 @@ impl Wedge<Circle> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<CircleBulk> for RoundPointAtInfinity {
+impl Wedge<CircleBulkAspect> for RoundPointAtInfinity {
     type Output = Horizon;
 
-    fn wedge(self, other: CircleBulk) -> Horizon {
+    fn wedge(self, other: CircleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[3] * other.group0(),
@@ -46038,10 +46046,10 @@ impl Wedge<CircleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<CircleWeight> for RoundPointAtInfinity {
+impl Wedge<CircleWeightAspect> for RoundPointAtInfinity {
     type Output = Sphere;
 
-    fn wedge(self, other: CircleWeight) -> Sphere {
+    fn wedge(self, other: CircleWeightAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[3]) * other.group0(),
@@ -46073,10 +46081,10 @@ impl Wedge<Dipole> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<DipoleBulk> for RoundPointAtInfinity {
+impl Wedge<DipoleBulkAspect> for RoundPointAtInfinity {
     type Output = Circle;
 
-    fn wedge(self, other: DipoleBulk) -> Circle {
+    fn wedge(self, other: DipoleBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -46105,10 +46113,10 @@ impl Wedge<DipoleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<DipoleWeight> for RoundPointAtInfinity {
+impl Wedge<DipoleWeightAspect> for RoundPointAtInfinity {
     type Output = Circle;
 
-    fn wedge(self, other: DipoleWeight) -> Circle {
+    fn wedge(self, other: DipoleWeightAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -46411,10 +46419,10 @@ impl Wedge<RoundPointAtOrigin> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<RoundPointBulk> for RoundPointAtInfinity {
+impl Wedge<RoundPointBulkAspect> for RoundPointAtInfinity {
     type Output = Dipole;
 
-    fn wedge(self, other: RoundPointBulk) -> Dipole {
+    fn wedge(self, other: RoundPointBulkAspect) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -46467,10 +46475,10 @@ impl Wedge<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<SphereWeight> for RoundPointAtInfinity {
+impl Wedge<SphereWeightAspect> for RoundPointAtInfinity {
     type Output = AntiScalar;
 
-    fn wedge(self, other: SphereWeight) -> AntiScalar {
+    fn wedge(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[3] * other.group0(),
@@ -46479,10 +46487,10 @@ impl Wedge<SphereWeight> for RoundPointAtInfinity {
     }
 }
 
-impl Wedge<TransFlector> for RoundPointAtInfinity {
+impl Wedge<Transflector> for RoundPointAtInfinity {
     type Output = Translator;
 
-    fn wedge(self, other: TransFlector) -> Translator {
+    fn wedge(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -46519,10 +46527,10 @@ impl Wedge<Circle> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<CircleBulk> for RoundPointAtOrigin {
+impl Wedge<CircleBulkAspect> for RoundPointAtOrigin {
     type Output = Sphere;
 
-    fn wedge(self, other: CircleBulk) -> Sphere {
+    fn wedge(self, other: CircleBulkAspect) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0),
@@ -46545,10 +46553,10 @@ impl Wedge<CircleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<CircleWeight> for RoundPointAtOrigin {
+impl Wedge<CircleWeightAspect> for RoundPointAtOrigin {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: CircleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: CircleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[1]) * other.group0(),
@@ -46572,10 +46580,10 @@ impl Wedge<Dipole> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<DipoleBulk> for RoundPointAtOrigin {
+impl Wedge<DipoleBulkAspect> for RoundPointAtOrigin {
     type Output = Circle;
 
-    fn wedge(self, other: DipoleBulk) -> Circle {
+    fn wedge(self, other: DipoleBulkAspect) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -46600,10 +46608,10 @@ impl Wedge<DipoleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<DipoleWeight> for RoundPointAtOrigin {
+impl Wedge<DipoleWeightAspect> for RoundPointAtOrigin {
     type Output = LineAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> LineAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[1]) * other.group0(),
@@ -46822,10 +46830,10 @@ impl Wedge<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<RoundPointBulk> for RoundPointAtOrigin {
+impl Wedge<RoundPointBulkAspect> for RoundPointAtOrigin {
     type Output = Dipole;
 
-    fn wedge(self, other: RoundPointBulk) -> Dipole {
+    fn wedge(self, other: RoundPointBulkAspect) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
@@ -46874,10 +46882,10 @@ impl Wedge<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<SphereWeight> for RoundPointAtOrigin {
+impl Wedge<SphereWeightAspect> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
-    fn wedge(self, other: SphereWeight) -> AntiScalar {
+    fn wedge(self, other: SphereWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[1] * other.group0(),
@@ -46886,10 +46894,10 @@ impl Wedge<SphereWeight> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<TransFlector> for RoundPointAtOrigin {
+impl Wedge<Transflector> for RoundPointAtOrigin {
     type Output = Rotor;
 
-    fn wedge(self, other: TransFlector) -> Rotor {
+    fn wedge(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -46910,7 +46918,7 @@ impl Wedge<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl Wedge<Circle> for RoundPointBulk {
+impl Wedge<Circle> for RoundPointBulkAspect {
     type Output = Sphere;
 
     fn wedge(self, other: Circle) -> Sphere {
@@ -46927,31 +46935,31 @@ impl Wedge<Circle> for RoundPointBulk {
     }
 }
 
-impl Wedge<CircleCarrierAspect> for RoundPointBulk {
-    type Output = SphereWeight;
+impl Wedge<CircleCarrierAspect> for RoundPointBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<CircleWeight> for RoundPointBulk {
-    type Output = SphereWeight;
+impl Wedge<CircleWeightAspect> for RoundPointBulkAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<Dipole> for RoundPointBulk {
+impl Wedge<Dipole> for RoundPointBulkAspect {
     type Output = Circle;
 
     fn wedge(self, other: Dipole) -> Circle {
@@ -46969,19 +46977,19 @@ impl Wedge<Dipole> for RoundPointBulk {
     }
 }
 
-impl Wedge<DipoleBulk> for RoundPointBulk {
-    type Output = CircleBulk;
+impl Wedge<DipoleBulkAspect> for RoundPointBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn wedge(self, other: DipoleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn wedge(self, other: DipoleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
 }
 
-impl Wedge<DipoleCarrierAspect> for RoundPointBulk {
+impl Wedge<DipoleCarrierAspect> for RoundPointBulkAspect {
     type Output = CircleCarrierAspect;
 
     fn wedge(self, other: DipoleCarrierAspect) -> CircleCarrierAspect {
@@ -46995,12 +47003,12 @@ impl Wedge<DipoleCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Wedge<DipoleWeight> for RoundPointBulk {
-    type Output = CircleWeight;
+impl Wedge<DipoleWeightAspect> for RoundPointBulkAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: DipoleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: DipoleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -47009,7 +47017,7 @@ impl Wedge<DipoleWeight> for RoundPointBulk {
     }
 }
 
-impl Wedge<FlatPoint> for RoundPointBulk {
+impl Wedge<FlatPoint> for RoundPointBulkAspect {
     type Output = Line;
 
     fn wedge(self, other: FlatPoint) -> Line {
@@ -47024,7 +47032,7 @@ impl Wedge<FlatPoint> for RoundPointBulk {
     }
 }
 
-impl Wedge<FlatPointAtInfinity> for RoundPointBulk {
+impl Wedge<FlatPointAtInfinity> for RoundPointBulkAspect {
     type Output = LineAtInfinity;
 
     fn wedge(self, other: FlatPointAtInfinity) -> LineAtInfinity {
@@ -47038,7 +47046,7 @@ impl Wedge<FlatPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Wedge<FlatPointAtOrigin> for RoundPointBulk {
+impl Wedge<FlatPointAtOrigin> for RoundPointBulkAspect {
     type Output = LineAtOrigin;
 
     fn wedge(self, other: FlatPointAtOrigin) -> LineAtOrigin {
@@ -47050,7 +47058,7 @@ impl Wedge<FlatPointAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Wedge<Flector> for RoundPointBulk {
+impl Wedge<Flector> for RoundPointBulkAspect {
     type Output = Motor;
 
     fn wedge(self, other: Flector) -> Motor {
@@ -47067,7 +47075,7 @@ impl Wedge<Flector> for RoundPointBulk {
     }
 }
 
-impl Wedge<FlectorAtInfinity> for RoundPointBulk {
+impl Wedge<FlectorAtInfinity> for RoundPointBulkAspect {
     type Output = LineAtInfinity;
 
     fn wedge(self, other: FlectorAtInfinity) -> LineAtInfinity {
@@ -47081,7 +47089,7 @@ impl Wedge<FlectorAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Wedge<Infinity> for RoundPointBulk {
+impl Wedge<Infinity> for RoundPointBulkAspect {
     type Output = FlatPointAtInfinity;
 
     fn wedge(self, other: Infinity) -> FlatPointAtInfinity {
@@ -47093,7 +47101,7 @@ impl Wedge<Infinity> for RoundPointBulk {
     }
 }
 
-impl Wedge<Line> for RoundPointBulk {
+impl Wedge<Line> for RoundPointBulkAspect {
     type Output = Plane;
 
     fn wedge(self, other: Line) -> Plane {
@@ -47107,7 +47115,7 @@ impl Wedge<Line> for RoundPointBulk {
     }
 }
 
-impl Wedge<LineAtInfinity> for RoundPointBulk {
+impl Wedge<LineAtInfinity> for RoundPointBulkAspect {
     type Output = Horizon;
 
     fn wedge(self, other: LineAtInfinity) -> Horizon {
@@ -47119,7 +47127,7 @@ impl Wedge<LineAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Wedge<LineAtOrigin> for RoundPointBulk {
+impl Wedge<LineAtOrigin> for RoundPointBulkAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: LineAtOrigin) -> PlaneAtOrigin {
@@ -47133,19 +47141,19 @@ impl Wedge<LineAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Wedge<Magnitude> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Wedge<Magnitude> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn wedge(self, other: Magnitude) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn wedge(self, other: Magnitude) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
             },
         }
     }
 }
 
-impl Wedge<Motor> for RoundPointBulk {
+impl Wedge<Motor> for RoundPointBulkAspect {
     type Output = Plane;
 
     fn wedge(self, other: Motor) -> Plane {
@@ -47159,7 +47167,7 @@ impl Wedge<Motor> for RoundPointBulk {
     }
 }
 
-impl Wedge<MultiVector> for RoundPointBulk {
+impl Wedge<MultiVector> for RoundPointBulkAspect {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -47194,19 +47202,19 @@ impl Wedge<MultiVector> for RoundPointBulk {
     }
 }
 
-impl Wedge<Origin> for RoundPointBulk {
-    type Output = DipoleWeight;
+impl Wedge<Origin> for RoundPointBulkAspect {
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: Origin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: Origin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(0.0) - self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Wedge<Plane> for RoundPointBulk {
+impl Wedge<Plane> for RoundPointBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Plane) -> AntiScalar {
@@ -47218,7 +47226,7 @@ impl Wedge<Plane> for RoundPointBulk {
     }
 }
 
-impl Wedge<PlaneAtOrigin> for RoundPointBulk {
+impl Wedge<PlaneAtOrigin> for RoundPointBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: PlaneAtOrigin) -> AntiScalar {
@@ -47230,7 +47238,7 @@ impl Wedge<PlaneAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Wedge<Rotor> for RoundPointBulk {
+impl Wedge<Rotor> for RoundPointBulkAspect {
     type Output = PlaneAtOrigin;
 
     fn wedge(self, other: Rotor) -> PlaneAtOrigin {
@@ -47244,7 +47252,7 @@ impl Wedge<Rotor> for RoundPointBulk {
     }
 }
 
-impl Wedge<RoundPoint> for RoundPointBulk {
+impl Wedge<RoundPoint> for RoundPointBulkAspect {
     type Output = Dipole;
 
     fn wedge(self, other: RoundPoint) -> Dipole {
@@ -47261,7 +47269,7 @@ impl Wedge<RoundPoint> for RoundPointBulk {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for RoundPointBulk {
+impl Wedge<RoundPointAtInfinity> for RoundPointBulkAspect {
     type Output = Dipole;
 
     fn wedge(self, other: RoundPointAtInfinity) -> Dipole {
@@ -47278,7 +47286,7 @@ impl Wedge<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for RoundPointBulk {
+impl Wedge<RoundPointAtOrigin> for RoundPointBulkAspect {
     type Output = Dipole;
 
     fn wedge(self, other: RoundPointAtOrigin) -> Dipole {
@@ -47293,12 +47301,12 @@ impl Wedge<RoundPointAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Wedge<RoundPointBulk> for RoundPointBulk {
-    type Output = DipoleBulk;
+impl Wedge<RoundPointBulkAspect> for RoundPointBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -47307,7 +47315,7 @@ impl Wedge<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Wedge<RoundPointCarrierAspect> for RoundPointBulk {
+impl Wedge<RoundPointCarrierAspect> for RoundPointBulkAspect {
     type Output = DipoleCarrierAspect;
 
     fn wedge(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
@@ -47322,19 +47330,19 @@ impl Wedge<RoundPointCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Wedge<Scalar> for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Wedge<Scalar> for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn wedge(self, other: Scalar) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn wedge(self, other: Scalar) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
             },
         }
     }
 }
 
-impl Wedge<Sphere> for RoundPointBulk {
+impl Wedge<Sphere> for RoundPointBulkAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Sphere) -> AntiScalar {
@@ -47346,10 +47354,10 @@ impl Wedge<Sphere> for RoundPointBulk {
     }
 }
 
-impl Wedge<TransFlector> for RoundPointBulk {
+impl Wedge<Transflector> for RoundPointBulkAspect {
     type Output = Translator;
 
-    fn wedge(self, other: TransFlector) -> Translator {
+    fn wedge(self, other: Transflector) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group0()[2], other.group0()[1], other.group1()[0]])
@@ -47360,7 +47368,7 @@ impl Wedge<TransFlector> for RoundPointBulk {
     }
 }
 
-impl Wedge<Translator> for RoundPointBulk {
+impl Wedge<Translator> for RoundPointBulkAspect {
     type Output = Horizon;
 
     fn wedge(self, other: Translator) -> Horizon {
@@ -47391,12 +47399,12 @@ impl Wedge<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Wedge<CircleBulk> for RoundPointCarrierAspect {
-    type Output = SphereWeight;
+impl Wedge<CircleBulkAspect> for RoundPointCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleBulk) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleBulkAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[3] * other.group0(),
             },
         }
@@ -47404,23 +47412,23 @@ impl Wedge<CircleBulk> for RoundPointCarrierAspect {
 }
 
 impl Wedge<CircleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = SphereWeight;
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleCarrierAspect) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleCarrierAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
             },
         }
     }
 }
 
-impl Wedge<CircleWeight> for RoundPointCarrierAspect {
-    type Output = SphereWeight;
+impl Wedge<CircleWeightAspect> for RoundPointCarrierAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: CircleWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: CircleWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
@@ -47447,10 +47455,10 @@ impl Wedge<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Wedge<DipoleBulk> for RoundPointCarrierAspect {
+impl Wedge<DipoleBulkAspect> for RoundPointCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn wedge(self, other: DipoleBulk) -> CircleCarrierAspect {
+    fn wedge(self, other: DipoleBulkAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, -other.group0()[0]])
@@ -47476,12 +47484,12 @@ impl Wedge<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Wedge<DipoleWeight> for RoundPointCarrierAspect {
-    type Output = CircleWeight;
+impl Wedge<DipoleWeightAspect> for RoundPointCarrierAspect {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: DipoleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: DipoleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -47701,11 +47709,11 @@ impl Wedge<MultiVector> for RoundPointCarrierAspect {
 }
 
 impl Wedge<Origin> for RoundPointCarrierAspect {
-    type Output = DipoleWeight;
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: Origin) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: Origin) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()),
             },
         }
@@ -47797,10 +47805,10 @@ impl Wedge<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Wedge<RoundPointBulk> for RoundPointCarrierAspect {
+impl Wedge<RoundPointBulkAspect> for RoundPointCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> DipoleCarrierAspect {
+    fn wedge(self, other: RoundPointBulkAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(self.group0()[3]) * other.group0(),
@@ -47852,10 +47860,10 @@ impl Wedge<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Wedge<TransFlector> for RoundPointCarrierAspect {
+impl Wedge<Transflector> for RoundPointCarrierAspect {
     type Output = Motor;
 
-    fn wedge(self, other: TransFlector) -> Motor {
+    fn wedge(self, other: Transflector) -> Motor {
         Motor {
             groups: MotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group1()[0]])
@@ -47910,12 +47918,12 @@ impl Wedge<Circle> for Scalar {
     }
 }
 
-impl Wedge<CircleBulk> for Scalar {
-    type Output = CircleBulk;
+impl Wedge<CircleBulkAspect> for Scalar {
+    type Output = CircleBulkAspect;
 
-    fn wedge(self, other: CircleBulk) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups {
+    fn wedge(self, other: CircleBulkAspect) -> CircleBulkAspect {
+        CircleBulkAspect {
+            groups: CircleBulkAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
@@ -47934,12 +47942,12 @@ impl Wedge<CircleCarrierAspect> for Scalar {
     }
 }
 
-impl Wedge<CircleWeight> for Scalar {
-    type Output = CircleWeight;
+impl Wedge<CircleWeightAspect> for Scalar {
+    type Output = CircleWeightAspect;
 
-    fn wedge(self, other: CircleWeight) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn wedge(self, other: CircleWeightAspect) -> CircleWeightAspect {
+        CircleWeightAspect {
+            groups: CircleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -47960,12 +47968,12 @@ impl Wedge<Dipole> for Scalar {
     }
 }
 
-impl Wedge<DipoleBulk> for Scalar {
-    type Output = DipoleBulk;
+impl Wedge<DipoleBulkAspect> for Scalar {
+    type Output = DipoleBulkAspect;
 
-    fn wedge(self, other: DipoleBulk) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn wedge(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
+        DipoleBulkAspect {
+            groups: DipoleBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -47985,12 +47993,12 @@ impl Wedge<DipoleCarrierAspect> for Scalar {
     }
 }
 
-impl Wedge<DipoleWeight> for Scalar {
-    type Output = DipoleWeight;
+impl Wedge<DipoleWeightAspect> for Scalar {
+    type Output = DipoleWeightAspect;
 
-    fn wedge(self, other: DipoleWeight) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn wedge(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
+        DipoleWeightAspect {
+            groups: DipoleWeightAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -48251,12 +48259,12 @@ impl Wedge<RoundPointAtOrigin> for Scalar {
     }
 }
 
-impl Wedge<RoundPointBulk> for Scalar {
-    type Output = RoundPointBulk;
+impl Wedge<RoundPointBulkAspect> for Scalar {
+    type Output = RoundPointBulkAspect;
 
-    fn wedge(self, other: RoundPointBulk) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn wedge(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
+        RoundPointBulkAspect {
+            groups: RoundPointBulkAspectGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
             },
         }
@@ -48300,24 +48308,24 @@ impl Wedge<Sphere> for Scalar {
     }
 }
 
-impl Wedge<SphereWeight> for Scalar {
-    type Output = SphereWeight;
+impl Wedge<SphereWeightAspect> for Scalar {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: SphereWeight) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: SphereWeightAspect) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Wedge<TransFlector> for Scalar {
-    type Output = TransFlector;
+impl Wedge<Transflector> for Scalar {
+    type Output = Transflector;
 
-    fn wedge(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -48440,10 +48448,10 @@ impl Wedge<RoundPointAtOrigin> for Sphere {
     }
 }
 
-impl Wedge<RoundPointBulk> for Sphere {
+impl Wedge<RoundPointBulkAspect> for Sphere {
     type Output = AntiScalar;
 
-    fn wedge(self, other: RoundPointBulk) -> AntiScalar {
+    fn wedge(self, other: RoundPointBulkAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -48477,7 +48485,7 @@ impl Wedge<Scalar> for Sphere {
     }
 }
 
-impl Wedge<Infinity> for SphereWeight {
+impl Wedge<Infinity> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: Infinity) -> AntiScalar {
@@ -48489,19 +48497,19 @@ impl Wedge<Infinity> for SphereWeight {
     }
 }
 
-impl Wedge<Magnitude> for SphereWeight {
-    type Output = SphereWeight;
+impl Wedge<Magnitude> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: Magnitude) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: Magnitude) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0()[0],
             },
         }
     }
 }
 
-impl Wedge<MultiVector> for SphereWeight {
+impl Wedge<MultiVector> for SphereWeightAspect {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -48523,7 +48531,7 @@ impl Wedge<MultiVector> for SphereWeight {
     }
 }
 
-impl Wedge<RoundPoint> for SphereWeight {
+impl Wedge<RoundPoint> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: RoundPoint) -> AntiScalar {
@@ -48535,7 +48543,7 @@ impl Wedge<RoundPoint> for SphereWeight {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for SphereWeight {
+impl Wedge<RoundPointAtInfinity> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: RoundPointAtInfinity) -> AntiScalar {
@@ -48547,7 +48555,7 @@ impl Wedge<RoundPointAtInfinity> for SphereWeight {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for SphereWeight {
+impl Wedge<RoundPointAtOrigin> for SphereWeightAspect {
     type Output = AntiScalar;
 
     fn wedge(self, other: RoundPointAtOrigin) -> AntiScalar {
@@ -48559,19 +48567,19 @@ impl Wedge<RoundPointAtOrigin> for SphereWeight {
     }
 }
 
-impl Wedge<Scalar> for SphereWeight {
-    type Output = SphereWeight;
+impl Wedge<Scalar> for SphereWeightAspect {
+    type Output = SphereWeightAspect;
 
-    fn wedge(self, other: Scalar) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups {
+    fn wedge(self, other: Scalar) -> SphereWeightAspect {
+        SphereWeightAspect {
+            groups: SphereWeightAspectGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl Wedge<Circle> for TransFlector {
+impl Wedge<Circle> for Transflector {
     type Output = AntiScalar;
 
     fn wedge(self, other: Circle) -> AntiScalar {
@@ -48583,7 +48591,7 @@ impl Wedge<Circle> for TransFlector {
     }
 }
 
-impl Wedge<CircleCarrierAspect> for TransFlector {
+impl Wedge<CircleCarrierAspect> for Transflector {
     type Output = AntiScalar;
 
     fn wedge(self, other: CircleCarrierAspect) -> AntiScalar {
@@ -48595,10 +48603,10 @@ impl Wedge<CircleCarrierAspect> for TransFlector {
     }
 }
 
-impl Wedge<CircleWeight> for TransFlector {
+impl Wedge<CircleWeightAspect> for Transflector {
     type Output = AntiScalar;
 
-    fn wedge(self, other: CircleWeight) -> AntiScalar {
+    fn wedge(self, other: CircleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -48607,7 +48615,7 @@ impl Wedge<CircleWeight> for TransFlector {
     }
 }
 
-impl Wedge<Dipole> for TransFlector {
+impl Wedge<Dipole> for Transflector {
     type Output = Plane;
 
     fn wedge(self, other: Dipole) -> Plane {
@@ -48621,10 +48629,10 @@ impl Wedge<Dipole> for TransFlector {
     }
 }
 
-impl Wedge<DipoleBulk> for TransFlector {
+impl Wedge<DipoleBulkAspect> for Transflector {
     type Output = Horizon;
 
-    fn wedge(self, other: DipoleBulk) -> Horizon {
+    fn wedge(self, other: DipoleBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -48633,7 +48641,7 @@ impl Wedge<DipoleBulk> for TransFlector {
     }
 }
 
-impl Wedge<DipoleCarrierAspect> for TransFlector {
+impl Wedge<DipoleCarrierAspect> for Transflector {
     type Output = Plane;
 
     fn wedge(self, other: DipoleCarrierAspect) -> Plane {
@@ -48647,10 +48655,10 @@ impl Wedge<DipoleCarrierAspect> for TransFlector {
     }
 }
 
-impl Wedge<DipoleWeight> for TransFlector {
+impl Wedge<DipoleWeightAspect> for Transflector {
     type Output = PlaneAtOrigin;
 
-    fn wedge(self, other: DipoleWeight) -> PlaneAtOrigin {
+    fn wedge(self, other: DipoleWeightAspect) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
@@ -48661,12 +48669,12 @@ impl Wedge<DipoleWeight> for TransFlector {
     }
 }
 
-impl Wedge<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl Wedge<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn wedge(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: self.group1() * Simd32x4::from(other.group0()[0]),
             },
@@ -48674,7 +48682,7 @@ impl Wedge<Magnitude> for TransFlector {
     }
 }
 
-impl Wedge<MultiVector> for TransFlector {
+impl Wedge<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn wedge(self, other: MultiVector) -> MultiVector {
@@ -48711,7 +48719,7 @@ impl Wedge<MultiVector> for TransFlector {
     }
 }
 
-impl Wedge<Origin> for TransFlector {
+impl Wedge<Origin> for Transflector {
     type Output = Rotor;
 
     fn wedge(self, other: Origin) -> Rotor {
@@ -48725,7 +48733,7 @@ impl Wedge<Origin> for TransFlector {
     }
 }
 
-impl Wedge<RoundPoint> for TransFlector {
+impl Wedge<RoundPoint> for Transflector {
     type Output = Motor;
 
     fn wedge(self, other: RoundPoint) -> Motor {
@@ -48745,7 +48753,7 @@ impl Wedge<RoundPoint> for TransFlector {
     }
 }
 
-impl Wedge<RoundPointAtInfinity> for TransFlector {
+impl Wedge<RoundPointAtInfinity> for Transflector {
     type Output = Translator;
 
     fn wedge(self, other: RoundPointAtInfinity) -> Translator {
@@ -48762,7 +48770,7 @@ impl Wedge<RoundPointAtInfinity> for TransFlector {
     }
 }
 
-impl Wedge<RoundPointAtOrigin> for TransFlector {
+impl Wedge<RoundPointAtOrigin> for Transflector {
     type Output = Rotor;
 
     fn wedge(self, other: RoundPointAtOrigin) -> Rotor {
@@ -48776,10 +48784,10 @@ impl Wedge<RoundPointAtOrigin> for TransFlector {
     }
 }
 
-impl Wedge<RoundPointBulk> for TransFlector {
+impl Wedge<RoundPointBulkAspect> for Transflector {
     type Output = Translator;
 
-    fn wedge(self, other: RoundPointBulk) -> Translator {
+    fn wedge(self, other: RoundPointBulkAspect) -> Translator {
         Translator {
             groups: TranslatorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, other.group0()[2], -other.group0()[1], 0.0])
@@ -48793,7 +48801,7 @@ impl Wedge<RoundPointBulk> for TransFlector {
     }
 }
 
-impl Wedge<RoundPointCarrierAspect> for TransFlector {
+impl Wedge<RoundPointCarrierAspect> for Transflector {
     type Output = Motor;
 
     fn wedge(self, other: RoundPointCarrierAspect) -> Motor {
@@ -48813,12 +48821,12 @@ impl Wedge<RoundPointCarrierAspect> for TransFlector {
     }
 }
 
-impl Wedge<Scalar> for TransFlector {
-    type Output = TransFlector;
+impl Wedge<Scalar> for Transflector {
+    type Output = Transflector;
 
-    fn wedge(self, other: Scalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge(self, other: Scalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -48850,10 +48858,10 @@ impl Wedge<DipoleCarrierAspect> for Translator {
     }
 }
 
-impl Wedge<DipoleWeight> for Translator {
+impl Wedge<DipoleWeightAspect> for Translator {
     type Output = AntiScalar;
 
-    fn wedge(self, other: DipoleWeight) -> AntiScalar {
+    fn wedge(self, other: DipoleWeightAspect) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -48951,10 +48959,10 @@ impl Wedge<RoundPointAtOrigin> for Translator {
     }
 }
 
-impl Wedge<RoundPointBulk> for Translator {
+impl Wedge<RoundPointBulkAspect> for Translator {
     type Output = Horizon;
 
-    fn wedge(self, other: RoundPointBulk) -> Horizon {
+    fn wedge(self, other: RoundPointBulkAspect) -> Horizon {
         Horizon {
             groups: HorizonGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],

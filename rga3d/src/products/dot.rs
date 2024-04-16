@@ -7,15 +7,21 @@
 
 use crate::*;
 
+///
 /// Dot Product
+///
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
+///
 pub trait Dot<T> {
     type Output;
     fn dot(self, other: T) -> Self::Output;
 }
 
+///
 /// Anti-Dot Product
+///
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Dot_products
+///
 pub trait AntiDot<T> {
     type Output;
     fn anti_dot(self, other: T) -> Self::Output;
@@ -189,10 +195,10 @@ impl AntiDot<Point> for Flector {
     }
 }
 
-impl AntiDot<TransFlector> for Flector {
+impl AntiDot<Transflector> for Flector {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
@@ -707,10 +713,10 @@ impl AntiDot<Rotor> for MultiVector {
     }
 }
 
-impl AntiDot<TransFlector> for MultiVector {
+impl AntiDot<Transflector> for MultiVector {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group4()[0] * other.group1()[0] + self.group4()[1] * other.group1()[1] + self.group4()[2] * other.group1()[2],
@@ -899,10 +905,10 @@ impl AntiDot<Rotor> for MultiVectorAtOrigin {
     }
 }
 
-impl AntiDot<TransFlector> for MultiVectorAtOrigin {
+impl AntiDot<Transflector> for MultiVectorAtOrigin {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group2()[0] * other.group1()[0] + self.group2()[1] * other.group1()[1] + self.group2()[2] * other.group1()[2],
@@ -1043,10 +1049,10 @@ impl AntiDot<PlaneAtOrigin> for Plane {
     }
 }
 
-impl AntiDot<TransFlector> for Plane {
+impl AntiDot<Transflector> for Plane {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -1115,10 +1121,10 @@ impl AntiDot<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl AntiDot<TransFlector> for PlaneAtOrigin {
+impl AntiDot<Transflector> for PlaneAtOrigin {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
@@ -1295,7 +1301,7 @@ impl AntiDot<Translator> for Rotor {
     }
 }
 
-impl AntiDot<Flector> for TransFlector {
+impl AntiDot<Flector> for Transflector {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: Flector) -> AntiScalar {
@@ -1307,7 +1313,7 @@ impl AntiDot<Flector> for TransFlector {
     }
 }
 
-impl AntiDot<MultiVector> for TransFlector {
+impl AntiDot<MultiVector> for Transflector {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
@@ -1319,7 +1325,7 @@ impl AntiDot<MultiVector> for TransFlector {
     }
 }
 
-impl AntiDot<MultiVectorAtOrigin> for TransFlector {
+impl AntiDot<MultiVectorAtOrigin> for Transflector {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: MultiVectorAtOrigin) -> AntiScalar {
@@ -1331,7 +1337,7 @@ impl AntiDot<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl AntiDot<Plane> for TransFlector {
+impl AntiDot<Plane> for Transflector {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: Plane) -> AntiScalar {
@@ -1343,7 +1349,7 @@ impl AntiDot<Plane> for TransFlector {
     }
 }
 
-impl AntiDot<PlaneAtOrigin> for TransFlector {
+impl AntiDot<PlaneAtOrigin> for Transflector {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: PlaneAtOrigin) -> AntiScalar {
@@ -1355,10 +1361,10 @@ impl AntiDot<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl AntiDot<TransFlector> for TransFlector {
+impl AntiDot<Transflector> for Transflector {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: TransFlector) -> AntiScalar {
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
@@ -1547,10 +1553,10 @@ impl Dot<PointAtInfinity> for Flector {
     }
 }
 
-impl Dot<TransFlector> for Flector {
+impl Dot<Transflector> for Flector {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[3] * other.group1()[3],
@@ -1655,10 +1661,10 @@ impl Dot<PointAtInfinity> for FlectorAtInfinity {
     }
 }
 
-impl Dot<TransFlector> for FlectorAtInfinity {
+impl Dot<Transflector> for FlectorAtInfinity {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group1()[3],
@@ -1739,10 +1745,10 @@ impl Dot<Plane> for Horizon {
     }
 }
 
-impl Dot<TransFlector> for Horizon {
+impl Dot<Transflector> for Horizon {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[3],
@@ -2179,10 +2185,10 @@ impl Dot<Scalar> for MultiVector {
     }
 }
 
-impl Dot<TransFlector> for MultiVector {
+impl Dot<Transflector> for MultiVector {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] - self.group4()[3] * other.group1()[3],
@@ -2371,10 +2377,10 @@ impl Dot<Scalar> for MultiVectorAtInfinity {
     }
 }
 
-impl Dot<TransFlector> for MultiVectorAtInfinity {
+impl Dot<Transflector> for MultiVectorAtInfinity {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[1] * other.group1()[3] + self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
@@ -2467,10 +2473,10 @@ impl Dot<Plane> for Plane {
     }
 }
 
-impl Dot<TransFlector> for Plane {
+impl Dot<Transflector> for Plane {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group1()[3],
@@ -2551,10 +2557,10 @@ impl Dot<PointAtInfinity> for Point {
     }
 }
 
-impl Dot<TransFlector> for Point {
+impl Dot<Transflector> for Point {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -2635,10 +2641,10 @@ impl Dot<PointAtInfinity> for PointAtInfinity {
     }
 }
 
-impl Dot<TransFlector> for PointAtInfinity {
+impl Dot<Transflector> for PointAtInfinity {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -2695,7 +2701,7 @@ impl Dot<Scalar> for Scalar {
     }
 }
 
-impl Dot<Flector> for TransFlector {
+impl Dot<Flector> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: Flector) -> Scalar {
@@ -2707,7 +2713,7 @@ impl Dot<Flector> for TransFlector {
     }
 }
 
-impl Dot<FlectorAtInfinity> for TransFlector {
+impl Dot<FlectorAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: FlectorAtInfinity) -> Scalar {
@@ -2719,7 +2725,7 @@ impl Dot<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Dot<Horizon> for TransFlector {
+impl Dot<Horizon> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: Horizon) -> Scalar {
@@ -2731,7 +2737,7 @@ impl Dot<Horizon> for TransFlector {
     }
 }
 
-impl Dot<MultiVector> for TransFlector {
+impl Dot<MultiVector> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: MultiVector) -> Scalar {
@@ -2743,7 +2749,7 @@ impl Dot<MultiVector> for TransFlector {
     }
 }
 
-impl Dot<MultiVectorAtInfinity> for TransFlector {
+impl Dot<MultiVectorAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: MultiVectorAtInfinity) -> Scalar {
@@ -2755,7 +2761,7 @@ impl Dot<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl Dot<Plane> for TransFlector {
+impl Dot<Plane> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: Plane) -> Scalar {
@@ -2767,7 +2773,7 @@ impl Dot<Plane> for TransFlector {
     }
 }
 
-impl Dot<Point> for TransFlector {
+impl Dot<Point> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: Point) -> Scalar {
@@ -2779,7 +2785,7 @@ impl Dot<Point> for TransFlector {
     }
 }
 
-impl Dot<PointAtInfinity> for TransFlector {
+impl Dot<PointAtInfinity> for Transflector {
     type Output = Scalar;
 
     fn dot(self, other: PointAtInfinity) -> Scalar {
@@ -2791,10 +2797,10 @@ impl Dot<PointAtInfinity> for TransFlector {
     }
 }
 
-impl Dot<TransFlector> for TransFlector {
+impl Dot<Transflector> for Transflector {
     type Output = Scalar;
 
-    fn dot(self, other: TransFlector) -> Scalar {
+    fn dot(self, other: Transflector) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[3] * other.group1()[3],

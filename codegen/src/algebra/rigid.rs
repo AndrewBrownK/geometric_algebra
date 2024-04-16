@@ -1,14 +1,24 @@
+use std::ops::Index;
 use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
 use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;
 
-pub struct RigidGeometricAlgebra<'a> {
-    pub generator_squares: &'a [isize],
+pub struct RigidGeometricAlgebra {
+    generator_squares: Vec<isize>,
     pub name: &'static str,
     pub dialect: Dialect,
 }
 
-impl<'a> RigidGeometricAlgebra<'a> {
+impl RigidGeometricAlgebra {
+    pub fn new(name: &'static str, dimensions: usize, dialect: Dialect) -> Self {
+        let mut generator_squares = vec![1; dimensions];
+        generator_squares.push(0);
+        return RigidGeometricAlgebra {
+            generator_squares,
+            name,
+            dialect
+        }
+    }
     pub fn sorted_basis(&self) -> Vec<BasisElement> {
         let mut basis_elements = self.basis();
         basis_elements.sort();
@@ -16,7 +26,7 @@ impl<'a> RigidGeometricAlgebra<'a> {
     }
 }
 
-impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
+impl GeometricAlgebraTrait for RigidGeometricAlgebra {
     fn basis_size(&self) -> usize {
         1 << self.generator_squares.len()
     }
@@ -53,6 +63,14 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
         result
     }
 
+    fn is_degenerate(&self) -> bool {
+        return true
+    }
+
+    fn has_multiple_complements(&self) -> bool {
+        return self.generator_squares.len() % 2 == 0;
+    }
+
     fn right_complement(&self, a: &BasisElement) -> BasisElement {
         let mut result = BasisElement {
             coefficient: a.coefficient,
@@ -72,15 +90,29 @@ impl<'a> GeometricAlgebraTrait for RigidGeometricAlgebra<'a> {
     }
 
     fn dual(&self, a: &BasisElement) -> BasisElement {
+        // May return zero because of degenerate metric. See page 67 of book
+        let origin = (1 as BasisElementIndex) << self.represented_dimensions();
+        let aligned_origin = a.index & origin == origin;
+        if aligned_origin {
+            return BasisElement {
+                coefficient: 0,
+                index: 0,
+            }
+        }
         return self.right_complement(a);
     }
 
     fn anti_dual(&self, a: &BasisElement) -> BasisElement {
-        // See pages 81 and 83 of the book
-        let mut result = self.left_complement(&a);
-        result = self.dual(&result);
-        result = self.right_complement(&result);
-        return result;
+        // May return zero because of degenerate metric. See page 68 of book
+        let origin = (1 as BasisElementIndex) << self.represented_dimensions();
+        let aligned_origin = a.index & origin == origin;
+        if !aligned_origin {
+            return BasisElement {
+                coefficient: 0,
+                index: 0,
+            }
+        }
+        return self.right_complement(a);
     }
 
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {

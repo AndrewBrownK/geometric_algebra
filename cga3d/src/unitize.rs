@@ -9,8 +9,10 @@ use crate::norms::WeightNorm;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
+///
 /// Unitization
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Unitization
+///
 pub trait Unitize {
     type Output;
     fn unitize(self) -> Self::Output;
@@ -40,10 +42,10 @@ impl Unitize for Circle {
     }
 }
 
-impl Unitize for CircleBulk {
-    type Output = CircleBulk;
+impl Unitize for CircleBulkAspect {
+    type Output = CircleBulkAspect;
 
-    fn unitize(self) -> CircleBulk {
+    fn unitize(self) -> CircleBulkAspect {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -76,10 +78,10 @@ impl Unitize for Dipole {
     }
 }
 
-impl Unitize for DipoleBulk {
-    type Output = DipoleBulk;
+impl Unitize for DipoleBulkAspect {
+    type Output = DipoleBulkAspect;
 
-    fn unitize(self) -> DipoleBulk {
+    fn unitize(self) -> DipoleBulkAspect {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -268,10 +270,10 @@ impl Unitize for RoundPointAtOrigin {
     }
 }
 
-impl Unitize for RoundPointBulk {
-    type Output = RoundPointBulk;
+impl Unitize for RoundPointBulkAspect {
+    type Output = RoundPointBulkAspect;
 
-    fn unitize(self) -> RoundPointBulk {
+    fn unitize(self) -> RoundPointBulkAspect {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -316,10 +318,10 @@ impl Unitize for Sphere {
     }
 }
 
-impl Unitize for TransFlector {
-    type Output = TransFlector;
+impl Unitize for Transflector {
+    type Output = Transflector;
 
-    fn unitize(self) -> TransFlector {
+    fn unitize(self) -> Transflector {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

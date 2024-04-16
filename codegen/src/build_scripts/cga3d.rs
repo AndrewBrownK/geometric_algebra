@@ -49,15 +49,15 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "RoundPointAtInfinity:e1,e2,e3,e5",
 
         // TODO can I get more interesting/intuitive names for these?
-        "RoundPointBulk:e1,e2,e3",
+        "RoundPointBulkAspect:e1,e2,e3",
         "RoundPointCarrierAspect:e1,e2,e3,e4",
-        "DipoleBulk:e23,e31,e12",
-        "DipoleWeight:e41,e42,e43",
+        "DipoleBulkAspect:e23,e31,e12",
+        "DipoleWeightAspect:e41,e42,e43",
         "DipoleCarrierAspect:e41,e42,e43|e23,e31,e12",
-        "CircleBulk:e321",
-        "CircleWeight:e423,e431,e412",
+        "CircleBulkAspect:e321",
+        "CircleWeightAspect:e423,e431,e412",
         "CircleCarrierAspect:e423,e431,e412,e321",
-        "SphereWeight:e1234",
+        "SphereWeightAspect:e1234",
 
 
         // Operator Objects
@@ -65,7 +65,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Rotor:e415,e425,e435,e12345",
         "Translator:e235,e315,e125,e12345",
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
-        "TransFlector:e15,e25,e35|e4235,e4315,e4125,e3215",
+        "Transflector:e15,e25,e35|e4235,e4315,e4125,e3215",
         "FlectorAtInfinity:e15,e25,e35,e3215",
 
         "MultiVector:\
@@ -216,8 +216,7 @@ use crate::products::dot::Dot;
 use crate::products::dot::AntiDot;
 use crate::products::geometric::GeometricProduct;
 use crate::products::geometric::GeometricAntiProduct;
-use crate::involutions::*;
-use crate::aspect_duals::*;",
+use crate::involutions::*;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
 
@@ -265,7 +264,7 @@ use crate::products::geometric::GeometricProduct;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::aspect_duals::*;
+use crate::involutions::*;
 use crate::products::exterior::AntiWedge;",
     )?;
     code_gen.emit_contractions(&mut emitter)?;
@@ -274,7 +273,7 @@ use crate::products::exterior::AntiWedge;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::aspect_duals::*;
+use crate::involutions::*;
 use crate::products::exterior::Wedge;",
     )?;
     code_gen.emit_expansions(&mut emitter)?;
@@ -287,7 +286,7 @@ use crate::products::exterior::Wedge;
 use crate::products::exterior::AntiWedge;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
-use crate::aspect_duals::*;",
+use crate::involutions::*;",
     )?;
     code_gen.emit_projections_and_stuff(&mut emitter)?;
 

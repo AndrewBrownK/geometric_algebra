@@ -7,33 +7,41 @@
 
 use crate::*;
 
+///
 /// Geometric Product
 /// Synonyms included: GeometricProduct, WedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
+///
 pub trait GeometricProduct<T> {
     type Output;
     fn geometric_product(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Product
 /// Synonyms included: GeometricProduct, WedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
+///
 pub trait WedgeDot<T> {
     type Output;
     fn wedge_dot(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Anti-Product
 /// Synonyms included: GeometricAntiProduct, AntiWedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
+///
 pub trait GeometricAntiProduct<T> {
     type Output;
     fn geometric_anti_product(self, other: T) -> Self::Output;
 }
 
+///
 /// Geometric Anti-Product
 /// Synonyms included: GeometricAntiProduct, AntiWedgeDot
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_products
+///
 pub trait AntiWedgeDot<T> {
     type Output;
     fn anti_wedge_dot(self, other: T) -> Self::Output;
@@ -278,12 +286,12 @@ impl AntiWedgeDot<Scalar> for AntiScalar {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl AntiWedgeDot<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -743,10 +751,10 @@ impl AntiWedgeDot<Scalar> for Flector {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Flector {
+impl AntiWedgeDot<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -1013,10 +1021,10 @@ impl AntiWedgeDot<Rotor> for FlectorAtInfinity {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for FlectorAtInfinity {
+impl AntiWedgeDot<Transflector> for FlectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -1206,10 +1214,10 @@ impl AntiWedgeDot<Rotor> for Horizon {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Horizon {
+impl AntiWedgeDot<Transflector> for Horizon {
     type Output = LineAtInfinity;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> LineAtInfinity {
+    fn anti_wedge_dot(self, other: Transflector) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -1502,11 +1510,11 @@ impl AntiWedgeDot<MultiVectorAtOrigin> for Line {
 }
 
 impl AntiWedgeDot<Origin> for Line {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Origin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Origin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
@@ -1562,11 +1570,11 @@ impl AntiWedgeDot<PlaneAtOrigin> for Line {
 }
 
 impl AntiWedgeDot<Point> for Line {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
@@ -1630,10 +1638,10 @@ impl AntiWedgeDot<Scalar> for Line {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Line {
+impl AntiWedgeDot<Transflector> for Line {
     type Output = Flector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> Flector {
+    fn anti_wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -1876,10 +1884,10 @@ impl AntiWedgeDot<Rotor> for LineAtInfinity {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for LineAtInfinity {
+impl AntiWedgeDot<Transflector> for LineAtInfinity {
     type Output = FlectorAtInfinity;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> FlectorAtInfinity {
+    fn anti_wedge_dot(self, other: Transflector) -> FlectorAtInfinity {
         FlectorAtInfinity {
             groups: FlectorAtInfinityGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group1()[2], other.group1()[1], other.group1()[0]])
@@ -2164,11 +2172,11 @@ impl AntiWedgeDot<PlaneAtOrigin> for LineAtOrigin {
 }
 
 impl AntiWedgeDot<Point> for LineAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -2220,10 +2228,10 @@ impl AntiWedgeDot<Scalar> for LineAtOrigin {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for LineAtOrigin {
+impl AntiWedgeDot<Transflector> for LineAtOrigin {
     type Output = Flector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> Flector {
+    fn anti_wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -2437,11 +2445,11 @@ impl AntiWedgeDot<Origin> for Magnitude {
 }
 
 impl AntiWedgeDot<Plane> for Magnitude {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g1: Simd32x4::from(self.group0()[1]) * other.group0(),
             },
@@ -2450,11 +2458,11 @@ impl AntiWedgeDot<Plane> for Magnitude {
 }
 
 impl AntiWedgeDot<PlaneAtOrigin> for Magnitude {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
@@ -2515,12 +2523,12 @@ impl AntiWedgeDot<Scalar> for Magnitude {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl AntiWedgeDot<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
                     + Simd32x3::from(self.group0()[1]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * other.group1(),
@@ -2980,10 +2988,10 @@ impl AntiWedgeDot<Scalar> for Motor {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Motor {
+impl AntiWedgeDot<Transflector> for Motor {
     type Output = Flector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> Flector {
+    fn anti_wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -3691,10 +3699,10 @@ impl AntiWedgeDot<Scalar> for MultiVector {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for MultiVector {
+impl AntiWedgeDot<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -4069,10 +4077,10 @@ impl AntiWedgeDot<Rotor> for MultiVectorAtInfinity {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for MultiVectorAtInfinity {
+impl AntiWedgeDot<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -4602,10 +4610,10 @@ impl AntiWedgeDot<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for MultiVectorAtOrigin {
+impl AntiWedgeDot<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[3], 0.0])
@@ -4715,11 +4723,11 @@ impl AntiWedgeDot<Horizon> for Origin {
 }
 
 impl AntiWedgeDot<Line> for Origin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Line) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Line) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
                 g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
@@ -4910,10 +4918,10 @@ impl AntiWedgeDot<Scalar> for Origin {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Origin {
+impl AntiWedgeDot<Transflector> for Origin {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[3], 0.0]),
@@ -5054,11 +5062,11 @@ impl AntiWedgeDot<LineAtOrigin> for Plane {
 }
 
 impl AntiWedgeDot<Magnitude> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[0]),
                 g1: self.group0() * Simd32x4::from(other.group0()[1]),
             },
@@ -5274,10 +5282,10 @@ impl AntiWedgeDot<Scalar> for Plane {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Plane {
+impl AntiWedgeDot<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -5298,11 +5306,11 @@ impl AntiWedgeDot<TransFlector> for Plane {
 }
 
 impl AntiWedgeDot<Translator> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -5428,11 +5436,11 @@ impl AntiWedgeDot<LineAtOrigin> for PlaneAtOrigin {
 }
 
 impl AntiWedgeDot<Magnitude> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], 0.0]),
@@ -5632,10 +5640,10 @@ impl AntiWedgeDot<Scalar> for PlaneAtOrigin {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for PlaneAtOrigin {
+impl AntiWedgeDot<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -5655,11 +5663,11 @@ impl AntiWedgeDot<TransFlector> for PlaneAtOrigin {
 }
 
 impl AntiWedgeDot<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -5732,11 +5740,11 @@ impl AntiWedgeDot<Horizon> for Point {
 }
 
 impl AntiWedgeDot<Line> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Line) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Line) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
@@ -5762,11 +5770,11 @@ impl AntiWedgeDot<LineAtInfinity> for Point {
 }
 
 impl AntiWedgeDot<LineAtOrigin> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: LineAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: LineAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -5981,10 +5989,10 @@ impl AntiWedgeDot<Scalar> for Point {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Point {
+impl AntiWedgeDot<Transflector> for Point {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -6216,10 +6224,10 @@ impl AntiWedgeDot<Rotor> for PointAtInfinity {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for PointAtInfinity {
+impl AntiWedgeDot<Transflector> for PointAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -6596,10 +6604,10 @@ impl AntiWedgeDot<Scalar> for Rotor {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Rotor {
+impl AntiWedgeDot<Transflector> for Rotor {
     type Output = Flector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> Flector {
+    fn anti_wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -6800,10 +6808,10 @@ impl AntiWedgeDot<Rotor> for Scalar {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Scalar {
+impl AntiWedgeDot<Transflector> for Scalar {
     type Output = PointAtInfinity;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> PointAtInfinity {
+    fn anti_wedge_dot(self, other: Transflector) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -6824,12 +6832,12 @@ impl AntiWedgeDot<Translator> for Scalar {
     }
 }
 
-impl AntiWedgeDot<AntiScalar> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedgeDot<AntiScalar> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: AntiScalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: AntiScalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -6837,7 +6845,7 @@ impl AntiWedgeDot<AntiScalar> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Flector> for TransFlector {
+impl AntiWedgeDot<Flector> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Flector) -> MultiVector {
@@ -6867,7 +6875,7 @@ impl AntiWedgeDot<Flector> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<FlectorAtInfinity> for TransFlector {
+impl AntiWedgeDot<FlectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn anti_wedge_dot(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
@@ -6885,7 +6893,7 @@ impl AntiWedgeDot<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Horizon> for TransFlector {
+impl AntiWedgeDot<Horizon> for Transflector {
     type Output = LineAtInfinity;
 
     fn anti_wedge_dot(self, other: Horizon) -> LineAtInfinity {
@@ -6897,7 +6905,7 @@ impl AntiWedgeDot<Horizon> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Line> for TransFlector {
+impl AntiWedgeDot<Line> for Transflector {
     type Output = Flector;
 
     fn anti_wedge_dot(self, other: Line) -> Flector {
@@ -6921,7 +6929,7 @@ impl AntiWedgeDot<Line> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<LineAtInfinity> for TransFlector {
+impl AntiWedgeDot<LineAtInfinity> for Transflector {
     type Output = FlectorAtInfinity;
 
     fn anti_wedge_dot(self, other: LineAtInfinity) -> FlectorAtInfinity {
@@ -6935,7 +6943,7 @@ impl AntiWedgeDot<LineAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<LineAtOrigin> for TransFlector {
+impl AntiWedgeDot<LineAtOrigin> for Transflector {
     type Output = Flector;
 
     fn anti_wedge_dot(self, other: LineAtOrigin) -> Flector {
@@ -6958,12 +6966,12 @@ impl AntiWedgeDot<LineAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedgeDot<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]) + Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[0]),
                 g1: self.group1() * Simd32x4::from(other.group0()[1]),
             },
@@ -6971,7 +6979,7 @@ impl AntiWedgeDot<Magnitude> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Motor> for TransFlector {
+impl AntiWedgeDot<Motor> for Transflector {
     type Output = Flector;
 
     fn anti_wedge_dot(self, other: Motor) -> Flector {
@@ -6996,7 +7004,7 @@ impl AntiWedgeDot<Motor> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<MultiVector> for TransFlector {
+impl AntiWedgeDot<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: MultiVector) -> MultiVector {
@@ -7038,7 +7046,7 @@ impl AntiWedgeDot<MultiVector> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<MultiVectorAtInfinity> for TransFlector {
+impl AntiWedgeDot<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn anti_wedge_dot(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -7058,7 +7066,7 @@ impl AntiWedgeDot<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<MultiVectorAtOrigin> for TransFlector {
+impl AntiWedgeDot<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: MultiVectorAtOrigin) -> MultiVector {
@@ -7094,7 +7102,7 @@ impl AntiWedgeDot<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Origin> for TransFlector {
+impl AntiWedgeDot<Origin> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Origin) -> MultiVector {
@@ -7110,7 +7118,7 @@ impl AntiWedgeDot<Origin> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Plane> for TransFlector {
+impl AntiWedgeDot<Plane> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Plane) -> MultiVector {
@@ -7137,7 +7145,7 @@ impl AntiWedgeDot<Plane> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<PlaneAtOrigin> for TransFlector {
+impl AntiWedgeDot<PlaneAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: PlaneAtOrigin) -> MultiVector {
@@ -7163,7 +7171,7 @@ impl AntiWedgeDot<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Point> for TransFlector {
+impl AntiWedgeDot<Point> for Transflector {
     type Output = MultiVector;
 
     fn anti_wedge_dot(self, other: Point) -> MultiVector {
@@ -7185,7 +7193,7 @@ impl AntiWedgeDot<Point> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<PointAtInfinity> for TransFlector {
+impl AntiWedgeDot<PointAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn anti_wedge_dot(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
@@ -7203,7 +7211,7 @@ impl AntiWedgeDot<PointAtInfinity> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Rotor> for TransFlector {
+impl AntiWedgeDot<Rotor> for Transflector {
     type Output = Flector;
 
     fn anti_wedge_dot(self, other: Rotor) -> Flector {
@@ -7226,7 +7234,7 @@ impl AntiWedgeDot<Rotor> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Scalar> for TransFlector {
+impl AntiWedgeDot<Scalar> for Transflector {
     type Output = PointAtInfinity;
 
     fn anti_wedge_dot(self, other: Scalar) -> PointAtInfinity {
@@ -7238,10 +7246,10 @@ impl AntiWedgeDot<Scalar> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for TransFlector {
+impl AntiWedgeDot<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn anti_wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -7267,12 +7275,12 @@ impl AntiWedgeDot<TransFlector> for TransFlector {
     }
 }
 
-impl AntiWedgeDot<Translator> for TransFlector {
-    type Output = TransFlector;
+impl AntiWedgeDot<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3])
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
@@ -7510,11 +7518,11 @@ impl AntiWedgeDot<Origin> for Translator {
 }
 
 impl AntiWedgeDot<Plane> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -7528,11 +7536,11 @@ impl AntiWedgeDot<Plane> for Translator {
 }
 
 impl AntiWedgeDot<PlaneAtOrigin> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -7601,12 +7609,12 @@ impl AntiWedgeDot<Scalar> for Translator {
     }
 }
 
-impl AntiWedgeDot<TransFlector> for Translator {
-    type Output = TransFlector;
+impl AntiWedgeDot<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn anti_wedge_dot(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_wedge_dot(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0])
@@ -7872,12 +7880,12 @@ impl GeometricAntiProduct<Scalar> for AntiScalar {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl GeometricAntiProduct<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -8337,10 +8345,10 @@ impl GeometricAntiProduct<Scalar> for Flector {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Flector {
+impl GeometricAntiProduct<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -8607,10 +8615,10 @@ impl GeometricAntiProduct<Rotor> for FlectorAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for FlectorAtInfinity {
+impl GeometricAntiProduct<Transflector> for FlectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -8800,10 +8808,10 @@ impl GeometricAntiProduct<Rotor> for Horizon {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Horizon {
+impl GeometricAntiProduct<Transflector> for Horizon {
     type Output = LineAtInfinity;
 
-    fn geometric_anti_product(self, other: TransFlector) -> LineAtInfinity {
+    fn geometric_anti_product(self, other: Transflector) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -9096,11 +9104,11 @@ impl GeometricAntiProduct<MultiVectorAtOrigin> for Line {
 }
 
 impl GeometricAntiProduct<Origin> for Line {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Origin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Origin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - self.group1() * Simd32x3::from(other.group0()),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0(), other.group0(), other.group0(), 0.0]),
@@ -9156,11 +9164,11 @@ impl GeometricAntiProduct<PlaneAtOrigin> for Line {
 }
 
 impl GeometricAntiProduct<Point> for Line {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
@@ -9224,10 +9232,10 @@ impl GeometricAntiProduct<Scalar> for Line {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Line {
+impl GeometricAntiProduct<Transflector> for Line {
     type Output = Flector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> Flector {
+    fn geometric_anti_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -9470,10 +9478,10 @@ impl GeometricAntiProduct<Rotor> for LineAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for LineAtInfinity {
+impl GeometricAntiProduct<Transflector> for LineAtInfinity {
     type Output = FlectorAtInfinity;
 
-    fn geometric_anti_product(self, other: TransFlector) -> FlectorAtInfinity {
+    fn geometric_anti_product(self, other: Transflector) -> FlectorAtInfinity {
         FlectorAtInfinity {
             groups: FlectorAtInfinityGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, -other.group1()[2], other.group1()[1], other.group1()[0]])
@@ -9758,11 +9766,11 @@ impl GeometricAntiProduct<PlaneAtOrigin> for LineAtOrigin {
 }
 
 impl GeometricAntiProduct<Point> for LineAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -9814,10 +9822,10 @@ impl GeometricAntiProduct<Scalar> for LineAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for LineAtOrigin {
+impl GeometricAntiProduct<Transflector> for LineAtOrigin {
     type Output = Flector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> Flector {
+    fn geometric_anti_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -10031,11 +10039,11 @@ impl GeometricAntiProduct<Origin> for Magnitude {
 }
 
 impl GeometricAntiProduct<Plane> for Magnitude {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g1: Simd32x4::from(self.group0()[1]) * other.group0(),
             },
@@ -10044,11 +10052,11 @@ impl GeometricAntiProduct<Plane> for Magnitude {
 }
 
 impl GeometricAntiProduct<PlaneAtOrigin> for Magnitude {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
@@ -10109,12 +10117,12 @@ impl GeometricAntiProduct<Scalar> for Magnitude {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl GeometricAntiProduct<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
                     + Simd32x3::from(self.group0()[1]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * other.group1(),
@@ -10574,10 +10582,10 @@ impl GeometricAntiProduct<Scalar> for Motor {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Motor {
+impl GeometricAntiProduct<Transflector> for Motor {
     type Output = Flector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> Flector {
+    fn geometric_anti_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -11285,10 +11293,10 @@ impl GeometricAntiProduct<Scalar> for MultiVector {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for MultiVector {
+impl GeometricAntiProduct<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -11663,10 +11671,10 @@ impl GeometricAntiProduct<Rotor> for MultiVectorAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for MultiVectorAtInfinity {
+impl GeometricAntiProduct<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -12196,10 +12204,10 @@ impl GeometricAntiProduct<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for MultiVectorAtOrigin {
+impl GeometricAntiProduct<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[3], 0.0])
@@ -12309,11 +12317,11 @@ impl GeometricAntiProduct<Horizon> for Origin {
 }
 
 impl GeometricAntiProduct<Line> for Origin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Line) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Line) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
                 g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
@@ -12504,10 +12512,10 @@ impl GeometricAntiProduct<Scalar> for Origin {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Origin {
+impl GeometricAntiProduct<Transflector> for Origin {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[3], 0.0]),
@@ -12648,11 +12656,11 @@ impl GeometricAntiProduct<LineAtOrigin> for Plane {
 }
 
 impl GeometricAntiProduct<Magnitude> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(other.group0()[0]),
                 g1: self.group0() * Simd32x4::from(other.group0()[1]),
             },
@@ -12868,10 +12876,10 @@ impl GeometricAntiProduct<Scalar> for Plane {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Plane {
+impl GeometricAntiProduct<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -12892,11 +12900,11 @@ impl GeometricAntiProduct<TransFlector> for Plane {
 }
 
 impl GeometricAntiProduct<Translator> for Plane {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -13022,11 +13030,11 @@ impl GeometricAntiProduct<LineAtOrigin> for PlaneAtOrigin {
 }
 
 impl GeometricAntiProduct<Magnitude> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], 0.0]),
@@ -13226,10 +13234,10 @@ impl GeometricAntiProduct<Scalar> for PlaneAtOrigin {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for PlaneAtOrigin {
+impl GeometricAntiProduct<Transflector> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -13249,11 +13257,11 @@ impl GeometricAntiProduct<TransFlector> for PlaneAtOrigin {
 }
 
 impl GeometricAntiProduct<Translator> for PlaneAtOrigin {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -13326,11 +13334,11 @@ impl GeometricAntiProduct<Horizon> for Point {
 }
 
 impl GeometricAntiProduct<Line> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Line) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Line) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0])
@@ -13356,11 +13364,11 @@ impl GeometricAntiProduct<LineAtInfinity> for Point {
 }
 
 impl GeometricAntiProduct<LineAtOrigin> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: LineAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: LineAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -13575,10 +13583,10 @@ impl GeometricAntiProduct<Scalar> for Point {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Point {
+impl GeometricAntiProduct<Transflector> for Point {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -13810,10 +13818,10 @@ impl GeometricAntiProduct<Rotor> for PointAtInfinity {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for PointAtInfinity {
+impl GeometricAntiProduct<Transflector> for PointAtInfinity {
     type Output = MultiVectorAtInfinity;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVectorAtInfinity {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -14190,10 +14198,10 @@ impl GeometricAntiProduct<Scalar> for Rotor {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Rotor {
+impl GeometricAntiProduct<Transflector> for Rotor {
     type Output = Flector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> Flector {
+    fn geometric_anti_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -14394,10 +14402,10 @@ impl GeometricAntiProduct<Rotor> for Scalar {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Scalar {
+impl GeometricAntiProduct<Transflector> for Scalar {
     type Output = PointAtInfinity;
 
-    fn geometric_anti_product(self, other: TransFlector) -> PointAtInfinity {
+    fn geometric_anti_product(self, other: Transflector) -> PointAtInfinity {
         PointAtInfinity {
             groups: PointAtInfinityGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from(self.group0()) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
@@ -14418,12 +14426,12 @@ impl GeometricAntiProduct<Translator> for Scalar {
     }
 }
 
-impl GeometricAntiProduct<AntiScalar> for TransFlector {
-    type Output = TransFlector;
+impl GeometricAntiProduct<AntiScalar> for Transflector {
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: AntiScalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: AntiScalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -14431,7 +14439,7 @@ impl GeometricAntiProduct<AntiScalar> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Flector> for TransFlector {
+impl GeometricAntiProduct<Flector> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Flector) -> MultiVector {
@@ -14461,7 +14469,7 @@ impl GeometricAntiProduct<Flector> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<FlectorAtInfinity> for TransFlector {
+impl GeometricAntiProduct<FlectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_anti_product(self, other: FlectorAtInfinity) -> MultiVectorAtInfinity {
@@ -14479,7 +14487,7 @@ impl GeometricAntiProduct<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Horizon> for TransFlector {
+impl GeometricAntiProduct<Horizon> for Transflector {
     type Output = LineAtInfinity;
 
     fn geometric_anti_product(self, other: Horizon) -> LineAtInfinity {
@@ -14491,7 +14499,7 @@ impl GeometricAntiProduct<Horizon> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Line> for TransFlector {
+impl GeometricAntiProduct<Line> for Transflector {
     type Output = Flector;
 
     fn geometric_anti_product(self, other: Line) -> Flector {
@@ -14515,7 +14523,7 @@ impl GeometricAntiProduct<Line> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<LineAtInfinity> for TransFlector {
+impl GeometricAntiProduct<LineAtInfinity> for Transflector {
     type Output = FlectorAtInfinity;
 
     fn geometric_anti_product(self, other: LineAtInfinity) -> FlectorAtInfinity {
@@ -14529,7 +14537,7 @@ impl GeometricAntiProduct<LineAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<LineAtOrigin> for TransFlector {
+impl GeometricAntiProduct<LineAtOrigin> for Transflector {
     type Output = Flector;
 
     fn geometric_anti_product(self, other: LineAtOrigin) -> Flector {
@@ -14552,12 +14560,12 @@ impl GeometricAntiProduct<LineAtOrigin> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Magnitude> for TransFlector {
-    type Output = TransFlector;
+impl GeometricAntiProduct<Magnitude> for Transflector {
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[1]) + Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from(other.group0()[0]),
                 g1: self.group1() * Simd32x4::from(other.group0()[1]),
             },
@@ -14565,7 +14573,7 @@ impl GeometricAntiProduct<Magnitude> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Motor> for TransFlector {
+impl GeometricAntiProduct<Motor> for Transflector {
     type Output = Flector;
 
     fn geometric_anti_product(self, other: Motor) -> Flector {
@@ -14590,7 +14598,7 @@ impl GeometricAntiProduct<Motor> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<MultiVector> for TransFlector {
+impl GeometricAntiProduct<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: MultiVector) -> MultiVector {
@@ -14632,7 +14640,7 @@ impl GeometricAntiProduct<MultiVector> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<MultiVectorAtInfinity> for TransFlector {
+impl GeometricAntiProduct<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_anti_product(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -14652,7 +14660,7 @@ impl GeometricAntiProduct<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<MultiVectorAtOrigin> for TransFlector {
+impl GeometricAntiProduct<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: MultiVectorAtOrigin) -> MultiVector {
@@ -14688,7 +14696,7 @@ impl GeometricAntiProduct<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Origin> for TransFlector {
+impl GeometricAntiProduct<Origin> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Origin) -> MultiVector {
@@ -14704,7 +14712,7 @@ impl GeometricAntiProduct<Origin> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Plane> for TransFlector {
+impl GeometricAntiProduct<Plane> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Plane) -> MultiVector {
@@ -14731,7 +14739,7 @@ impl GeometricAntiProduct<Plane> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<PlaneAtOrigin> for TransFlector {
+impl GeometricAntiProduct<PlaneAtOrigin> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: PlaneAtOrigin) -> MultiVector {
@@ -14757,7 +14765,7 @@ impl GeometricAntiProduct<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Point> for TransFlector {
+impl GeometricAntiProduct<Point> for Transflector {
     type Output = MultiVector;
 
     fn geometric_anti_product(self, other: Point) -> MultiVector {
@@ -14779,7 +14787,7 @@ impl GeometricAntiProduct<Point> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<PointAtInfinity> for TransFlector {
+impl GeometricAntiProduct<PointAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_anti_product(self, other: PointAtInfinity) -> MultiVectorAtInfinity {
@@ -14797,7 +14805,7 @@ impl GeometricAntiProduct<PointAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Rotor> for TransFlector {
+impl GeometricAntiProduct<Rotor> for Transflector {
     type Output = Flector;
 
     fn geometric_anti_product(self, other: Rotor) -> Flector {
@@ -14820,7 +14828,7 @@ impl GeometricAntiProduct<Rotor> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Scalar> for TransFlector {
+impl GeometricAntiProduct<Scalar> for Transflector {
     type Output = PointAtInfinity;
 
     fn geometric_anti_product(self, other: Scalar) -> PointAtInfinity {
@@ -14832,10 +14840,10 @@ impl GeometricAntiProduct<Scalar> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for TransFlector {
+impl GeometricAntiProduct<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_anti_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([-other.group1()[0], 0.0])
@@ -14861,12 +14869,12 @@ impl GeometricAntiProduct<TransFlector> for TransFlector {
     }
 }
 
-impl GeometricAntiProduct<Translator> for TransFlector {
-    type Output = TransFlector;
+impl GeometricAntiProduct<Translator> for Transflector {
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[3])
                     + Simd32x3::from(self.group1()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group1()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
@@ -15104,11 +15112,11 @@ impl GeometricAntiProduct<Origin> for Translator {
 }
 
 impl GeometricAntiProduct<Plane> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: Plane) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Plane) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -15122,11 +15130,11 @@ impl GeometricAntiProduct<Plane> for Translator {
 }
 
 impl GeometricAntiProduct<PlaneAtOrigin> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: PlaneAtOrigin) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: PlaneAtOrigin) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group0()[2], other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group0()[2], 0.0, -other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group0()[1], other.group0()[0], 0.0]),
@@ -15195,12 +15203,12 @@ impl GeometricAntiProduct<Scalar> for Translator {
     }
 }
 
-impl GeometricAntiProduct<TransFlector> for Translator {
-    type Output = TransFlector;
+impl GeometricAntiProduct<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn geometric_anti_product(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_anti_product(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, -other.group1()[2], other.group1()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[2], 0.0, -other.group1()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([-other.group1()[1], other.group1()[0], 0.0])
@@ -15389,10 +15397,10 @@ impl GeometricProduct<Scalar> for AntiScalar {
     }
 }
 
-impl GeometricProduct<TransFlector> for AntiScalar {
+impl GeometricProduct<Transflector> for AntiScalar {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group1()[3]]),
@@ -15856,10 +15864,10 @@ impl GeometricProduct<Scalar> for Flector {
     }
 }
 
-impl GeometricProduct<TransFlector> for Flector {
+impl GeometricProduct<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -16265,10 +16273,10 @@ impl GeometricProduct<Scalar> for FlectorAtInfinity {
     }
 }
 
-impl GeometricProduct<TransFlector> for FlectorAtInfinity {
+impl GeometricProduct<Transflector> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -16363,11 +16371,11 @@ impl GeometricProduct<Horizon> for Horizon {
 }
 
 impl GeometricProduct<Line> for Horizon {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Line) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Line) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
                 g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
@@ -16558,10 +16566,10 @@ impl GeometricProduct<Scalar> for Horizon {
     }
 }
 
-impl GeometricProduct<TransFlector> for Horizon {
+impl GeometricProduct<Transflector> for Horizon {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[3], 0.0]),
@@ -16645,11 +16653,11 @@ impl GeometricProduct<FlectorAtInfinity> for Line {
 }
 
 impl GeometricProduct<Horizon> for Line {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Horizon) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Horizon) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
@@ -16981,10 +16989,10 @@ impl GeometricProduct<Scalar> for Line {
     }
 }
 
-impl GeometricProduct<TransFlector> for Line {
+impl GeometricProduct<Transflector> for Line {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -17292,11 +17300,11 @@ impl GeometricProduct<PlaneAtOrigin> for LineAtInfinity {
 }
 
 impl GeometricProduct<Point> for LineAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -17348,10 +17356,10 @@ impl GeometricProduct<Scalar> for LineAtInfinity {
     }
 }
 
-impl GeometricProduct<TransFlector> for LineAtInfinity {
+impl GeometricProduct<Transflector> for LineAtInfinity {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -17583,10 +17591,10 @@ impl GeometricProduct<Scalar> for LineAtOrigin {
     }
 }
 
-impl GeometricProduct<TransFlector> for LineAtOrigin {
+impl GeometricProduct<Transflector> for LineAtOrigin {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -17830,11 +17838,11 @@ impl GeometricProduct<Point> for Magnitude {
 }
 
 impl GeometricProduct<PointAtInfinity> for Magnitude {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: PointAtInfinity) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: PointAtInfinity) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
             },
@@ -17866,10 +17874,10 @@ impl GeometricProduct<Scalar> for Magnitude {
     }
 }
 
-impl GeometricProduct<TransFlector> for Magnitude {
+impl GeometricProduct<Transflector> for Magnitude {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]])
@@ -18309,10 +18317,10 @@ impl GeometricProduct<Scalar> for Motor {
     }
 }
 
-impl GeometricProduct<TransFlector> for Motor {
+impl GeometricProduct<Transflector> for Motor {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -19028,10 +19036,10 @@ impl GeometricProduct<Scalar> for MultiVector {
     }
 }
 
-impl GeometricProduct<TransFlector> for MultiVector {
+impl GeometricProduct<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -19608,10 +19616,10 @@ impl GeometricProduct<Scalar> for MultiVectorAtInfinity {
     }
 }
 
-impl GeometricProduct<TransFlector> for MultiVectorAtInfinity {
+impl GeometricProduct<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group1()[3], 0.0])
@@ -19968,10 +19976,10 @@ impl GeometricProduct<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl GeometricProduct<TransFlector> for MultiVectorAtOrigin {
+impl GeometricProduct<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVectorAtOrigin {
+    fn geometric_product(self, other: Transflector) -> MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(-other.group1()[3])
@@ -20179,10 +20187,10 @@ impl GeometricProduct<Scalar> for Origin {
     }
 }
 
-impl GeometricProduct<TransFlector> for Origin {
+impl GeometricProduct<Transflector> for Origin {
     type Output = Rotor;
 
-    fn geometric_product(self, other: TransFlector) -> Rotor {
+    fn geometric_product(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -20513,10 +20521,10 @@ impl GeometricProduct<Scalar> for Plane {
     }
 }
 
-impl GeometricProduct<TransFlector> for Plane {
+impl GeometricProduct<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]]) + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
@@ -20748,10 +20756,10 @@ impl GeometricProduct<Scalar> for PlaneAtOrigin {
     }
 }
 
-impl GeometricProduct<TransFlector> for PlaneAtOrigin {
+impl GeometricProduct<Transflector> for PlaneAtOrigin {
     type Output = Rotor;
 
-    fn geometric_product(self, other: TransFlector) -> Rotor {
+    fn geometric_product(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group0()[0]])
@@ -20866,11 +20874,11 @@ impl GeometricProduct<Line> for Point {
 }
 
 impl GeometricProduct<LineAtInfinity> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: LineAtInfinity) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: LineAtInfinity) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -21116,10 +21124,10 @@ impl GeometricProduct<Scalar> for Point {
     }
 }
 
-impl GeometricProduct<TransFlector> for Point {
+impl GeometricProduct<Transflector> for Point {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -21141,11 +21149,11 @@ impl GeometricProduct<TransFlector> for Point {
 }
 
 impl GeometricProduct<Translator> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -21271,11 +21279,11 @@ impl GeometricProduct<LineAtOrigin> for PointAtInfinity {
 }
 
 impl GeometricProduct<Magnitude> for PointAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], 0.0]),
@@ -21475,10 +21483,10 @@ impl GeometricProduct<Scalar> for PointAtInfinity {
     }
 }
 
-impl GeometricProduct<TransFlector> for PointAtInfinity {
+impl GeometricProduct<Transflector> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -21498,11 +21506,11 @@ impl GeometricProduct<TransFlector> for PointAtInfinity {
 }
 
 impl GeometricProduct<Translator> for PointAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -21729,10 +21737,10 @@ impl GeometricProduct<Scalar> for Rotor {
     }
 }
 
-impl GeometricProduct<TransFlector> for Rotor {
+impl GeometricProduct<Transflector> for Rotor {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -22002,12 +22010,12 @@ impl GeometricProduct<Scalar> for Scalar {
     }
 }
 
-impl GeometricProduct<TransFlector> for Scalar {
-    type Output = TransFlector;
+impl GeometricProduct<Transflector> for Scalar {
+    type Output = Transflector;
 
-    fn geometric_product(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -22027,7 +22035,7 @@ impl GeometricProduct<Translator> for Scalar {
     }
 }
 
-impl GeometricProduct<AntiScalar> for TransFlector {
+impl GeometricProduct<AntiScalar> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: AntiScalar) -> Flector {
@@ -22041,7 +22049,7 @@ impl GeometricProduct<AntiScalar> for TransFlector {
     }
 }
 
-impl GeometricProduct<Flector> for TransFlector {
+impl GeometricProduct<Flector> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Flector) -> MultiVector {
@@ -22072,7 +22080,7 @@ impl GeometricProduct<Flector> for TransFlector {
     }
 }
 
-impl GeometricProduct<FlectorAtInfinity> for TransFlector {
+impl GeometricProduct<FlectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: FlectorAtInfinity) -> MultiVector {
@@ -22098,7 +22106,7 @@ impl GeometricProduct<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricProduct<Horizon> for TransFlector {
+impl GeometricProduct<Horizon> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Horizon) -> MultiVector {
@@ -22114,7 +22122,7 @@ impl GeometricProduct<Horizon> for TransFlector {
     }
 }
 
-impl GeometricProduct<Line> for TransFlector {
+impl GeometricProduct<Line> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: Line) -> Flector {
@@ -22138,7 +22146,7 @@ impl GeometricProduct<Line> for TransFlector {
     }
 }
 
-impl GeometricProduct<LineAtInfinity> for TransFlector {
+impl GeometricProduct<LineAtInfinity> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: LineAtInfinity) -> Flector {
@@ -22161,7 +22169,7 @@ impl GeometricProduct<LineAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricProduct<LineAtOrigin> for TransFlector {
+impl GeometricProduct<LineAtOrigin> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: LineAtOrigin) -> Flector {
@@ -22179,7 +22187,7 @@ impl GeometricProduct<LineAtOrigin> for TransFlector {
     }
 }
 
-impl GeometricProduct<Magnitude> for TransFlector {
+impl GeometricProduct<Magnitude> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: Magnitude) -> Flector {
@@ -22196,7 +22204,7 @@ impl GeometricProduct<Magnitude> for TransFlector {
     }
 }
 
-impl GeometricProduct<Motor> for TransFlector {
+impl GeometricProduct<Motor> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: Motor) -> Flector {
@@ -22221,7 +22229,7 @@ impl GeometricProduct<Motor> for TransFlector {
     }
 }
 
-impl GeometricProduct<MultiVector> for TransFlector {
+impl GeometricProduct<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: MultiVector) -> MultiVector {
@@ -22264,7 +22272,7 @@ impl GeometricProduct<MultiVector> for TransFlector {
     }
 }
 
-impl GeometricProduct<MultiVectorAtInfinity> for TransFlector {
+impl GeometricProduct<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: MultiVectorAtInfinity) -> MultiVector {
@@ -22300,7 +22308,7 @@ impl GeometricProduct<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricProduct<MultiVectorAtOrigin> for TransFlector {
+impl GeometricProduct<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVectorAtOrigin;
 
     fn geometric_product(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -22323,7 +22331,7 @@ impl GeometricProduct<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl GeometricProduct<Origin> for TransFlector {
+impl GeometricProduct<Origin> for Transflector {
     type Output = Rotor;
 
     fn geometric_product(self, other: Origin) -> Rotor {
@@ -22337,7 +22345,7 @@ impl GeometricProduct<Origin> for TransFlector {
     }
 }
 
-impl GeometricProduct<Plane> for TransFlector {
+impl GeometricProduct<Plane> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Plane) -> MultiVector {
@@ -22360,7 +22368,7 @@ impl GeometricProduct<Plane> for TransFlector {
     }
 }
 
-impl GeometricProduct<PlaneAtOrigin> for TransFlector {
+impl GeometricProduct<PlaneAtOrigin> for Transflector {
     type Output = Rotor;
 
     fn geometric_product(self, other: PlaneAtOrigin) -> Rotor {
@@ -22375,7 +22383,7 @@ impl GeometricProduct<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl GeometricProduct<Point> for TransFlector {
+impl GeometricProduct<Point> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: Point) -> MultiVector {
@@ -22403,7 +22411,7 @@ impl GeometricProduct<Point> for TransFlector {
     }
 }
 
-impl GeometricProduct<PointAtInfinity> for TransFlector {
+impl GeometricProduct<PointAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn geometric_product(self, other: PointAtInfinity) -> MultiVector {
@@ -22429,7 +22437,7 @@ impl GeometricProduct<PointAtInfinity> for TransFlector {
     }
 }
 
-impl GeometricProduct<Rotor> for TransFlector {
+impl GeometricProduct<Rotor> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: Rotor) -> Flector {
@@ -22448,12 +22456,12 @@ impl GeometricProduct<Rotor> for TransFlector {
     }
 }
 
-impl GeometricProduct<Scalar> for TransFlector {
-    type Output = TransFlector;
+impl GeometricProduct<Scalar> for Transflector {
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Scalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Scalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -22461,10 +22469,10 @@ impl GeometricProduct<Scalar> for TransFlector {
     }
 }
 
-impl GeometricProduct<TransFlector> for TransFlector {
+impl GeometricProduct<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn geometric_product(self, other: TransFlector) -> MultiVector {
+    fn geometric_product(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -22491,7 +22499,7 @@ impl GeometricProduct<TransFlector> for TransFlector {
     }
 }
 
-impl GeometricProduct<Translator> for TransFlector {
+impl GeometricProduct<Translator> for Transflector {
     type Output = Flector;
 
     fn geometric_product(self, other: Translator) -> Flector {
@@ -22794,11 +22802,11 @@ impl GeometricProduct<PlaneAtOrigin> for Translator {
 }
 
 impl GeometricProduct<Point> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -22812,11 +22820,11 @@ impl GeometricProduct<Point> for Translator {
 }
 
 impl GeometricProduct<PointAtInfinity> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn geometric_product(self, other: PointAtInfinity) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn geometric_product(self, other: PointAtInfinity) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -22854,10 +22862,10 @@ impl GeometricProduct<Scalar> for Translator {
     }
 }
 
-impl GeometricProduct<TransFlector> for Translator {
+impl GeometricProduct<Transflector> for Translator {
     type Output = Flector;
 
-    fn geometric_product(self, other: TransFlector) -> Flector {
+    fn geometric_product(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -23056,10 +23064,10 @@ impl WedgeDot<Scalar> for AntiScalar {
     }
 }
 
-impl WedgeDot<TransFlector> for AntiScalar {
+impl WedgeDot<Transflector> for AntiScalar {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([0.0, 0.0, 0.0, -other.group1()[3]]),
@@ -23523,10 +23531,10 @@ impl WedgeDot<Scalar> for Flector {
     }
 }
 
-impl WedgeDot<TransFlector> for Flector {
+impl WedgeDot<Transflector> for Flector {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -23932,10 +23940,10 @@ impl WedgeDot<Scalar> for FlectorAtInfinity {
     }
 }
 
-impl WedgeDot<TransFlector> for FlectorAtInfinity {
+impl WedgeDot<Transflector> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -24030,11 +24038,11 @@ impl WedgeDot<Horizon> for Horizon {
 }
 
 impl WedgeDot<Line> for Horizon {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Line) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Line) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group1(),
                 g1: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
@@ -24225,10 +24233,10 @@ impl WedgeDot<Scalar> for Horizon {
     }
 }
 
-impl WedgeDot<TransFlector> for Horizon {
+impl WedgeDot<Transflector> for Horizon {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()) * Simd32x2::from([-other.group1()[3], 0.0]),
@@ -24312,11 +24320,11 @@ impl WedgeDot<FlectorAtInfinity> for Line {
 }
 
 impl WedgeDot<Horizon> for Line {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Horizon) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Horizon) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group1() * Simd32x3::from(other.group0()),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([-other.group0(), -other.group0(), -other.group0(), 0.0]),
@@ -24648,10 +24656,10 @@ impl WedgeDot<Scalar> for Line {
     }
 }
 
-impl WedgeDot<TransFlector> for Line {
+impl WedgeDot<Transflector> for Line {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -24959,11 +24967,11 @@ impl WedgeDot<PlaneAtOrigin> for LineAtInfinity {
 }
 
 impl WedgeDot<Point> for LineAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -25015,10 +25023,10 @@ impl WedgeDot<Scalar> for LineAtInfinity {
     }
 }
 
-impl WedgeDot<TransFlector> for LineAtInfinity {
+impl WedgeDot<Transflector> for LineAtInfinity {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])
@@ -25250,10 +25258,10 @@ impl WedgeDot<Scalar> for LineAtOrigin {
     }
 }
 
-impl WedgeDot<TransFlector> for LineAtOrigin {
+impl WedgeDot<Transflector> for LineAtOrigin {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -25497,11 +25505,11 @@ impl WedgeDot<Point> for Magnitude {
 }
 
 impl WedgeDot<PointAtInfinity> for Magnitude {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: PointAtInfinity) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: PointAtInfinity) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * other.group0(),
                 g1: Simd32x4::from(self.group0()[1]) * Simd32x4::from([-other.group0()[0], -other.group0()[1], -other.group0()[2], 0.0]),
             },
@@ -25533,10 +25541,10 @@ impl WedgeDot<Scalar> for Magnitude {
     }
 }
 
-impl WedgeDot<TransFlector> for Magnitude {
+impl WedgeDot<Transflector> for Magnitude {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[0], self.group0()[0], self.group0()[1]])
@@ -25976,10 +25984,10 @@ impl WedgeDot<Scalar> for Motor {
     }
 }
 
-impl WedgeDot<TransFlector> for Motor {
+impl WedgeDot<Transflector> for Motor {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -26695,10 +26703,10 @@ impl WedgeDot<Scalar> for MultiVector {
     }
 }
 
-impl WedgeDot<TransFlector> for MultiVector {
+impl WedgeDot<Transflector> for MultiVector {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group1()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -27275,10 +27283,10 @@ impl WedgeDot<Scalar> for MultiVectorAtInfinity {
     }
 }
 
-impl WedgeDot<TransFlector> for MultiVectorAtInfinity {
+impl WedgeDot<Transflector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[1]) * Simd32x2::from([-other.group1()[3], 0.0])
@@ -27635,10 +27643,10 @@ impl WedgeDot<Scalar> for MultiVectorAtOrigin {
     }
 }
 
-impl WedgeDot<TransFlector> for MultiVectorAtOrigin {
+impl WedgeDot<Transflector> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVectorAtOrigin {
+    fn wedge_dot(self, other: Transflector) -> MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from(-other.group1()[3])
@@ -27846,10 +27854,10 @@ impl WedgeDot<Scalar> for Origin {
     }
 }
 
-impl WedgeDot<TransFlector> for Origin {
+impl WedgeDot<Transflector> for Origin {
     type Output = Rotor;
 
-    fn wedge_dot(self, other: TransFlector) -> Rotor {
+    fn wedge_dot(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
@@ -28180,10 +28188,10 @@ impl WedgeDot<Scalar> for Plane {
     }
 }
 
-impl WedgeDot<TransFlector> for Plane {
+impl WedgeDot<Transflector> for Plane {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([0.0, -other.group0()[0]]) + Simd32x2::from(self.group0()[1]) * Simd32x2::from([0.0, -other.group0()[1]])
@@ -28415,10 +28423,10 @@ impl WedgeDot<Scalar> for PlaneAtOrigin {
     }
 }
 
-impl WedgeDot<TransFlector> for PlaneAtOrigin {
+impl WedgeDot<Transflector> for PlaneAtOrigin {
     type Output = Rotor;
 
-    fn wedge_dot(self, other: TransFlector) -> Rotor {
+    fn wedge_dot(self, other: Transflector) -> Rotor {
         Rotor {
             groups: RotorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group0()[0]])
@@ -28533,11 +28541,11 @@ impl WedgeDot<Line> for Point {
 }
 
 impl WedgeDot<LineAtInfinity> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: LineAtInfinity) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: LineAtInfinity) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -28783,10 +28791,10 @@ impl WedgeDot<Scalar> for Point {
     }
 }
 
-impl WedgeDot<TransFlector> for Point {
+impl WedgeDot<Transflector> for Point {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -28808,11 +28816,11 @@ impl WedgeDot<TransFlector> for Point {
 }
 
 impl WedgeDot<Translator> for Point {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -28938,11 +28946,11 @@ impl WedgeDot<LineAtOrigin> for PointAtInfinity {
 }
 
 impl WedgeDot<Magnitude> for PointAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Magnitude) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Magnitude) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()[0]),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[0]])
                     * Simd32x4::from([other.group0()[1], other.group0()[1], other.group0()[1], 0.0]),
@@ -29142,10 +29150,10 @@ impl WedgeDot<Scalar> for PointAtInfinity {
     }
 }
 
-impl WedgeDot<TransFlector> for PointAtInfinity {
+impl WedgeDot<Transflector> for PointAtInfinity {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -29165,11 +29173,11 @@ impl WedgeDot<TransFlector> for PointAtInfinity {
 }
 
 impl WedgeDot<Translator> for PointAtInfinity {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Translator) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Translator) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -29396,10 +29404,10 @@ impl WedgeDot<Scalar> for Rotor {
     }
 }
 
-impl WedgeDot<TransFlector> for Rotor {
+impl WedgeDot<Transflector> for Rotor {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]])
@@ -29669,12 +29677,12 @@ impl WedgeDot<Scalar> for Scalar {
     }
 }
 
-impl WedgeDot<TransFlector> for Scalar {
-    type Output = TransFlector;
+impl WedgeDot<Transflector> for Scalar {
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: TransFlector) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Transflector) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()) * other.group0(),
                 g1: Simd32x4::from(self.group0()) * other.group1(),
             },
@@ -29694,7 +29702,7 @@ impl WedgeDot<Translator> for Scalar {
     }
 }
 
-impl WedgeDot<AntiScalar> for TransFlector {
+impl WedgeDot<AntiScalar> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: AntiScalar) -> Flector {
@@ -29708,7 +29716,7 @@ impl WedgeDot<AntiScalar> for TransFlector {
     }
 }
 
-impl WedgeDot<Flector> for TransFlector {
+impl WedgeDot<Flector> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Flector) -> MultiVector {
@@ -29739,7 +29747,7 @@ impl WedgeDot<Flector> for TransFlector {
     }
 }
 
-impl WedgeDot<FlectorAtInfinity> for TransFlector {
+impl WedgeDot<FlectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: FlectorAtInfinity) -> MultiVector {
@@ -29765,7 +29773,7 @@ impl WedgeDot<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl WedgeDot<Horizon> for TransFlector {
+impl WedgeDot<Horizon> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Horizon) -> MultiVector {
@@ -29781,7 +29789,7 @@ impl WedgeDot<Horizon> for TransFlector {
     }
 }
 
-impl WedgeDot<Line> for TransFlector {
+impl WedgeDot<Line> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: Line) -> Flector {
@@ -29805,7 +29813,7 @@ impl WedgeDot<Line> for TransFlector {
     }
 }
 
-impl WedgeDot<LineAtInfinity> for TransFlector {
+impl WedgeDot<LineAtInfinity> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: LineAtInfinity) -> Flector {
@@ -29828,7 +29836,7 @@ impl WedgeDot<LineAtInfinity> for TransFlector {
     }
 }
 
-impl WedgeDot<LineAtOrigin> for TransFlector {
+impl WedgeDot<LineAtOrigin> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: LineAtOrigin) -> Flector {
@@ -29846,7 +29854,7 @@ impl WedgeDot<LineAtOrigin> for TransFlector {
     }
 }
 
-impl WedgeDot<Magnitude> for TransFlector {
+impl WedgeDot<Magnitude> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: Magnitude) -> Flector {
@@ -29863,7 +29871,7 @@ impl WedgeDot<Magnitude> for TransFlector {
     }
 }
 
-impl WedgeDot<Motor> for TransFlector {
+impl WedgeDot<Motor> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: Motor) -> Flector {
@@ -29888,7 +29896,7 @@ impl WedgeDot<Motor> for TransFlector {
     }
 }
 
-impl WedgeDot<MultiVector> for TransFlector {
+impl WedgeDot<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: MultiVector) -> MultiVector {
@@ -29931,7 +29939,7 @@ impl WedgeDot<MultiVector> for TransFlector {
     }
 }
 
-impl WedgeDot<MultiVectorAtInfinity> for TransFlector {
+impl WedgeDot<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: MultiVectorAtInfinity) -> MultiVector {
@@ -29967,7 +29975,7 @@ impl WedgeDot<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl WedgeDot<MultiVectorAtOrigin> for TransFlector {
+impl WedgeDot<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVectorAtOrigin;
 
     fn wedge_dot(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -29990,7 +29998,7 @@ impl WedgeDot<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl WedgeDot<Origin> for TransFlector {
+impl WedgeDot<Origin> for Transflector {
     type Output = Rotor;
 
     fn wedge_dot(self, other: Origin) -> Rotor {
@@ -30004,7 +30012,7 @@ impl WedgeDot<Origin> for TransFlector {
     }
 }
 
-impl WedgeDot<Plane> for TransFlector {
+impl WedgeDot<Plane> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Plane) -> MultiVector {
@@ -30027,7 +30035,7 @@ impl WedgeDot<Plane> for TransFlector {
     }
 }
 
-impl WedgeDot<PlaneAtOrigin> for TransFlector {
+impl WedgeDot<PlaneAtOrigin> for Transflector {
     type Output = Rotor;
 
     fn wedge_dot(self, other: PlaneAtOrigin) -> Rotor {
@@ -30042,7 +30050,7 @@ impl WedgeDot<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl WedgeDot<Point> for TransFlector {
+impl WedgeDot<Point> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: Point) -> MultiVector {
@@ -30070,7 +30078,7 @@ impl WedgeDot<Point> for TransFlector {
     }
 }
 
-impl WedgeDot<PointAtInfinity> for TransFlector {
+impl WedgeDot<PointAtInfinity> for Transflector {
     type Output = MultiVector;
 
     fn wedge_dot(self, other: PointAtInfinity) -> MultiVector {
@@ -30096,7 +30104,7 @@ impl WedgeDot<PointAtInfinity> for TransFlector {
     }
 }
 
-impl WedgeDot<Rotor> for TransFlector {
+impl WedgeDot<Rotor> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: Rotor) -> Flector {
@@ -30115,12 +30123,12 @@ impl WedgeDot<Rotor> for TransFlector {
     }
 }
 
-impl WedgeDot<Scalar> for TransFlector {
-    type Output = TransFlector;
+impl WedgeDot<Scalar> for Transflector {
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Scalar) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Scalar) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(other.group0()),
                 g1: self.group1() * Simd32x4::from(other.group0()),
             },
@@ -30128,10 +30136,10 @@ impl WedgeDot<Scalar> for TransFlector {
     }
 }
 
-impl WedgeDot<TransFlector> for TransFlector {
+impl WedgeDot<Transflector> for Transflector {
     type Output = MultiVector;
 
-    fn wedge_dot(self, other: TransFlector) -> MultiVector {
+    fn wedge_dot(self, other: Transflector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(self.group0()[0]) * Simd32x2::from([other.group0()[0], other.group1()[0]])
@@ -30158,7 +30166,7 @@ impl WedgeDot<TransFlector> for TransFlector {
     }
 }
 
-impl WedgeDot<Translator> for TransFlector {
+impl WedgeDot<Translator> for Transflector {
     type Output = Flector;
 
     fn wedge_dot(self, other: Translator) -> Flector {
@@ -30461,11 +30469,11 @@ impl WedgeDot<PlaneAtOrigin> for Translator {
 }
 
 impl WedgeDot<Point> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: Point) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: Point) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -30479,11 +30487,11 @@ impl WedgeDot<Point> for Translator {
 }
 
 impl WedgeDot<PointAtInfinity> for Translator {
-    type Output = TransFlector;
+    type Output = Transflector;
 
-    fn wedge_dot(self, other: PointAtInfinity) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn wedge_dot(self, other: PointAtInfinity) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: Simd32x3::from(self.group0()[0]) * Simd32x3::from([0.0, other.group0()[2], -other.group0()[1]])
                     + Simd32x3::from(self.group0()[1]) * Simd32x3::from([-other.group0()[2], 0.0, other.group0()[0]])
                     + Simd32x3::from(self.group0()[2]) * Simd32x3::from([other.group0()[1], -other.group0()[0], 0.0]),
@@ -30521,10 +30529,10 @@ impl WedgeDot<Scalar> for Translator {
     }
 }
 
-impl WedgeDot<TransFlector> for Translator {
+impl WedgeDot<Transflector> for Translator {
     type Output = Flector;
 
-    fn wedge_dot(self, other: TransFlector) -> Flector {
+    fn wedge_dot(self, other: Transflector) -> Flector {
         Flector {
             groups: FlectorGroups {
                 g0: Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[3], other.group0()[2], -other.group0()[1], -other.group1()[0]])

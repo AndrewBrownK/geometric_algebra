@@ -13,24 +13,30 @@ use crate::products::projections::*;
 use crate::unitize::Unitize;
 use crate::*;
 
+///
 /// Euclidean distance between objects
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
 /// distance(a,b) = bulk_norm(attitude(a wedge b)) + weight_norm(a wedge attitude(b))
 /// where attitude(c) = c anti_wedge complement(e4) where e4 is the projective dimension
+///
 pub trait Distance<T> {
     type Output;
     fn distance(self, other: T) -> Self::Output;
 }
 
+///
 /// The cosine of the angle between two objects.
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait CosineAngle<T> {
     type Output;
     fn cosine_angle(self, other: T) -> Self::Output;
 }
 
+///
 /// The sine of the angle between two objects.
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait SineAngle<T> {
     type Output;
     fn sine_angle(self, other: T) -> Self::Output;
@@ -44,10 +50,42 @@ impl CosineAngle<Circle> for Circle {
     }
 }
 
+impl CosineAngle<CircleBulkAspect> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<CircleCarrierAspect> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
 impl CosineAngle<Dipole> for Circle {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -84,10 +122,274 @@ impl CosineAngle<LineAtOrigin> for Circle {
     }
 }
 
+impl CosineAngle<RoundPoint> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for Circle {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<Circle> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Circle) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<CircleBulkAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<CircleCarrierAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<Dipole> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<FlatPoint> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<Line> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Line) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<Circle> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Circle) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<CircleBulkAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<Dipole> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<FlatPoint> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<Line> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Line) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Dipole> for Dipole {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
@@ -108,10 +410,202 @@ impl CosineAngle<FlatPointAtOrigin> for Dipole {
     }
 }
 
+impl CosineAngle<RoundPoint> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for Dipole {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<Dipole> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<FlatPoint> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<Dipole> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<FlatPoint> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: FlatPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Dipole> for FlatPoint {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
@@ -132,10 +626,42 @@ impl CosineAngle<FlatPointAtOrigin> for FlatPoint {
     }
 }
 
+impl CosineAngle<RoundPoint> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for FlatPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Dipole> for FlatPointAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
@@ -156,6 +682,30 @@ impl CosineAngle<FlatPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl CosineAngle<RoundPoint> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Circle> for Line {
     type Output = f32;
 
@@ -164,10 +714,26 @@ impl CosineAngle<Circle> for Line {
     }
 }
 
+impl CosineAngle<CircleCarrierAspect> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
 impl CosineAngle<Dipole> for Line {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -204,6 +770,46 @@ impl CosineAngle<LineAtOrigin> for Line {
     }
 }
 
+impl CosineAngle<RoundPoint> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for Line {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Circle> for LineAtOrigin {
     type Output = f32;
 
@@ -212,10 +818,26 @@ impl CosineAngle<Circle> for LineAtOrigin {
     }
 }
 
+impl CosineAngle<CircleCarrierAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
 impl CosineAngle<Dipole> for LineAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -252,6 +874,46 @@ impl CosineAngle<LineAtOrigin> for LineAtOrigin {
     }
 }
 
+impl CosineAngle<RoundPoint> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Circle> for Plane {
     type Output = f32;
 
@@ -260,10 +922,34 @@ impl CosineAngle<Circle> for Plane {
     }
 }
 
+impl CosineAngle<CircleCarrierAspect> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Dipole> for Plane {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -316,6 +1002,46 @@ impl CosineAngle<PlaneAtOrigin> for Plane {
     }
 }
 
+impl CosineAngle<RoundPoint> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for Plane {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Sphere> for Plane {
     type Output = f32;
 
@@ -332,10 +1058,34 @@ impl CosineAngle<Circle> for PlaneAtOrigin {
     }
 }
 
+impl CosineAngle<CircleCarrierAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Dipole> for PlaneAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -388,10 +1138,242 @@ impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
+impl CosineAngle<RoundPoint> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Sphere> for PlaneAtOrigin {
     type Output = f32;
 
     fn cosine_angle(self, other: Sphere) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for RoundPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for RoundPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for RoundPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for RoundPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for RoundPoint {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPoint> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).group0()
     }
 }
@@ -404,10 +1386,42 @@ impl CosineAngle<Circle> for Sphere {
     }
 }
 
+impl CosineAngle<CircleBulkAspect> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<CircleCarrierAspect> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Dipole> for Sphere {
     type Output = f32;
 
     fn cosine_angle(self, other: Dipole) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleBulkAspect> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> f32 {
         self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
     }
 }
@@ -460,6 +1474,46 @@ impl CosineAngle<PlaneAtOrigin> for Sphere {
     }
 }
 
+impl CosineAngle<RoundPoint> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPoint) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointBulkAspect> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
+impl CosineAngle<RoundPointCarrierAspect> for Sphere {
+    type Output = f32;
+
+    fn cosine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    }
+}
+
 impl CosineAngle<Sphere> for Sphere {
     type Output = f32;
 
@@ -508,7 +1562,7 @@ impl Distance<RoundPointCarrierAspect> for Circle {
     }
 }
 
-impl Distance<MultiVector> for CircleBulk {
+impl Distance<MultiVector> for CircleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -516,7 +1570,7 @@ impl Distance<MultiVector> for CircleBulk {
     }
 }
 
-impl Distance<Origin> for CircleBulk {
+impl Distance<Origin> for CircleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Origin) -> Magnitude {
@@ -524,7 +1578,7 @@ impl Distance<Origin> for CircleBulk {
     }
 }
 
-impl Distance<RoundPoint> for CircleBulk {
+impl Distance<RoundPoint> for CircleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPoint) -> Magnitude {
@@ -532,7 +1586,7 @@ impl Distance<RoundPoint> for CircleBulk {
     }
 }
 
-impl Distance<RoundPointAtOrigin> for CircleBulk {
+impl Distance<RoundPointAtOrigin> for CircleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPointAtOrigin) -> Magnitude {
@@ -540,7 +1594,7 @@ impl Distance<RoundPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for CircleBulk {
+impl Distance<RoundPointCarrierAspect> for CircleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPointCarrierAspect) -> Magnitude {
@@ -588,7 +1642,7 @@ impl Distance<RoundPointCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Distance<MultiVector> for CircleWeight {
+impl Distance<MultiVector> for CircleWeightAspect {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -612,10 +1666,10 @@ impl Distance<DipoleCarrierAspect> for Dipole {
     }
 }
 
-impl Distance<DipoleWeight> for Dipole {
+impl Distance<DipoleWeightAspect> for Dipole {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -660,7 +1714,7 @@ impl Distance<RoundPointCarrierAspect> for Dipole {
     }
 }
 
-impl Distance<Dipole> for DipoleBulk {
+impl Distance<Dipole> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
@@ -668,7 +1722,7 @@ impl Distance<Dipole> for DipoleBulk {
     }
 }
 
-impl Distance<DipoleCarrierAspect> for DipoleBulk {
+impl Distance<DipoleCarrierAspect> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: DipoleCarrierAspect) -> Magnitude {
@@ -676,15 +1730,15 @@ impl Distance<DipoleCarrierAspect> for DipoleBulk {
     }
 }
 
-impl Distance<DipoleWeight> for DipoleBulk {
+impl Distance<DipoleWeightAspect> for DipoleBulkAspect {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for DipoleBulk {
+impl Distance<MultiVector> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -692,7 +1746,7 @@ impl Distance<MultiVector> for DipoleBulk {
     }
 }
 
-impl Distance<Origin> for DipoleBulk {
+impl Distance<Origin> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Origin) -> Magnitude {
@@ -700,7 +1754,7 @@ impl Distance<Origin> for DipoleBulk {
     }
 }
 
-impl Distance<RoundPoint> for DipoleBulk {
+impl Distance<RoundPoint> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPoint) -> Magnitude {
@@ -708,7 +1762,7 @@ impl Distance<RoundPoint> for DipoleBulk {
     }
 }
 
-impl Distance<RoundPointAtOrigin> for DipoleBulk {
+impl Distance<RoundPointAtOrigin> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPointAtOrigin) -> Magnitude {
@@ -716,7 +1770,7 @@ impl Distance<RoundPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for DipoleBulk {
+impl Distance<RoundPointCarrierAspect> for DipoleBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPointCarrierAspect) -> Magnitude {
@@ -740,10 +1794,10 @@ impl Distance<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Distance<DipoleWeight> for DipoleCarrierAspect {
+impl Distance<DipoleWeightAspect> for DipoleCarrierAspect {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -788,7 +1842,7 @@ impl Distance<RoundPointCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Distance<Dipole> for DipoleWeight {
+impl Distance<Dipole> for DipoleWeightAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
@@ -796,7 +1850,7 @@ impl Distance<Dipole> for DipoleWeight {
     }
 }
 
-impl Distance<MultiVector> for DipoleWeight {
+impl Distance<MultiVector> for DipoleWeightAspect {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -900,10 +1954,10 @@ impl Distance<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl Distance<CircleWeight> for Magnitude {
+impl Distance<CircleWeightAspect> for Magnitude {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -924,10 +1978,10 @@ impl Distance<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl Distance<DipoleWeight> for Magnitude {
+impl Distance<DipoleWeightAspect> for Magnitude {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -988,10 +2042,10 @@ impl Distance<Sphere> for Magnitude {
     }
 }
 
-impl Distance<SphereWeight> for Magnitude {
+impl Distance<SphereWeightAspect> for Magnitude {
     type Output = Magnitude;
 
-    fn distance(self, other: SphereWeight) -> Magnitude {
+    fn distance(self, other: SphereWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1020,10 +2074,10 @@ impl Distance<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Distance<CircleWeight> for MultiVector {
+impl Distance<CircleWeightAspect> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1044,10 +2098,10 @@ impl Distance<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Distance<DipoleWeight> for MultiVector {
+impl Distance<DipoleWeightAspect> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1180,18 +2234,18 @@ impl Distance<Sphere> for MultiVector {
     }
 }
 
-impl Distance<SphereWeight> for MultiVector {
+impl Distance<SphereWeightAspect> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: SphereWeight) -> Magnitude {
+    fn distance(self, other: SphereWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<TransFlector> for MultiVector {
+impl Distance<Transflector> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1276,10 +2330,10 @@ impl Distance<CircleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Distance<CircleWeight> for RoundPoint {
+impl Distance<CircleWeightAspect> for RoundPoint {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1300,10 +2354,10 @@ impl Distance<DipoleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Distance<DipoleWeight> for RoundPoint {
+impl Distance<DipoleWeightAspect> for RoundPoint {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1372,10 +2426,10 @@ impl Distance<CircleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Distance<CircleWeight> for RoundPointAtInfinity {
+impl Distance<CircleWeightAspect> for RoundPointAtInfinity {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1396,10 +2450,10 @@ impl Distance<DipoleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Distance<DipoleWeight> for RoundPointAtInfinity {
+impl Distance<DipoleWeightAspect> for RoundPointAtInfinity {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1508,7 +2562,7 @@ impl Distance<RoundPointCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Distance<Circle> for RoundPointBulk {
+impl Distance<Circle> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Circle) -> Magnitude {
@@ -1516,7 +2570,7 @@ impl Distance<Circle> for RoundPointBulk {
     }
 }
 
-impl Distance<CircleCarrierAspect> for RoundPointBulk {
+impl Distance<CircleCarrierAspect> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: CircleCarrierAspect) -> Magnitude {
@@ -1524,15 +2578,15 @@ impl Distance<CircleCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Distance<CircleWeight> for RoundPointBulk {
+impl Distance<CircleWeightAspect> for RoundPointBulkAspect {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Dipole> for RoundPointBulk {
+impl Distance<Dipole> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Dipole) -> Magnitude {
@@ -1540,7 +2594,7 @@ impl Distance<Dipole> for RoundPointBulk {
     }
 }
 
-impl Distance<DipoleCarrierAspect> for RoundPointBulk {
+impl Distance<DipoleCarrierAspect> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: DipoleCarrierAspect) -> Magnitude {
@@ -1548,15 +2602,15 @@ impl Distance<DipoleCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Distance<DipoleWeight> for RoundPointBulk {
+impl Distance<DipoleWeightAspect> for RoundPointBulkAspect {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for RoundPointBulk {
+impl Distance<MultiVector> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -1564,7 +2618,7 @@ impl Distance<MultiVector> for RoundPointBulk {
     }
 }
 
-impl Distance<Origin> for RoundPointBulk {
+impl Distance<Origin> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: Origin) -> Magnitude {
@@ -1572,7 +2626,7 @@ impl Distance<Origin> for RoundPointBulk {
     }
 }
 
-impl Distance<RoundPoint> for RoundPointBulk {
+impl Distance<RoundPoint> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPoint) -> Magnitude {
@@ -1580,7 +2634,7 @@ impl Distance<RoundPoint> for RoundPointBulk {
     }
 }
 
-impl Distance<RoundPointAtOrigin> for RoundPointBulk {
+impl Distance<RoundPointAtOrigin> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPointAtOrigin) -> Magnitude {
@@ -1588,7 +2642,7 @@ impl Distance<RoundPointAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for RoundPointBulk {
+impl Distance<RoundPointCarrierAspect> for RoundPointBulkAspect {
     type Output = Magnitude;
 
     fn distance(self, other: RoundPointCarrierAspect) -> Magnitude {
@@ -1612,10 +2666,10 @@ impl Distance<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<CircleWeight> for RoundPointCarrierAspect {
+impl Distance<CircleWeightAspect> for RoundPointCarrierAspect {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1636,10 +2690,10 @@ impl Distance<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<DipoleWeight> for RoundPointCarrierAspect {
+impl Distance<DipoleWeightAspect> for RoundPointCarrierAspect {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1708,10 +2762,10 @@ impl Distance<CircleCarrierAspect> for Scalar {
     }
 }
 
-impl Distance<CircleWeight> for Scalar {
+impl Distance<CircleWeightAspect> for Scalar {
     type Output = Magnitude;
 
-    fn distance(self, other: CircleWeight) -> Magnitude {
+    fn distance(self, other: CircleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1732,10 +2786,10 @@ impl Distance<DipoleCarrierAspect> for Scalar {
     }
 }
 
-impl Distance<DipoleWeight> for Scalar {
+impl Distance<DipoleWeightAspect> for Scalar {
     type Output = Magnitude;
 
-    fn distance(self, other: DipoleWeight) -> Magnitude {
+    fn distance(self, other: DipoleWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1796,10 +2850,10 @@ impl Distance<Sphere> for Scalar {
     }
 }
 
-impl Distance<SphereWeight> for Scalar {
+impl Distance<SphereWeightAspect> for Scalar {
     type Output = Magnitude;
 
-    fn distance(self, other: SphereWeight) -> Magnitude {
+    fn distance(self, other: SphereWeightAspect) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1812,7 +2866,7 @@ impl Distance<MultiVector> for Sphere {
     }
 }
 
-impl Distance<MultiVector> for SphereWeight {
+impl Distance<MultiVector> for SphereWeightAspect {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -1820,7 +2874,7 @@ impl Distance<MultiVector> for SphereWeight {
     }
 }
 
-impl Distance<MultiVector> for TransFlector {
+impl Distance<MultiVector> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -1847,10 +2901,54 @@ impl SineAngle<Circle> for Circle {
     }
 }
 
+impl SineAngle<CircleBulkAspect> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleCarrierAspect> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for Circle {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1902,10 +3000,373 @@ impl SineAngle<LineAtOrigin> for Circle {
     }
 }
 
+impl SineAngle<RoundPoint> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for Circle {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Circle> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Circle) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleBulkAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleCarrierAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Dipole> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<FlatPoint> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Line> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Line) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for CircleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Circle> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Circle) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleBulkAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Dipole> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<FlatPoint> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Line> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Line) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for CircleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for Dipole {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1935,10 +3396,274 @@ impl SineAngle<FlatPointAtOrigin> for Dipole {
     }
 }
 
+impl SineAngle<RoundPoint> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for Dipole {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Dipole> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<FlatPoint> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for DipoleBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Dipole> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<FlatPoint> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: FlatPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for DipoleCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for FlatPoint {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -1968,10 +3693,54 @@ impl SineAngle<FlatPointAtOrigin> for FlatPoint {
     }
 }
 
+impl SineAngle<RoundPoint> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for FlatPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for FlatPointAtOrigin {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2001,6 +3770,39 @@ impl SineAngle<FlatPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl SineAngle<RoundPoint> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for FlatPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Circle> for Line {
     type Output = f32;
 
@@ -2012,10 +3814,32 @@ impl SineAngle<Circle> for Line {
     }
 }
 
+impl SineAngle<CircleCarrierAspect> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for Line {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2067,6 +3891,61 @@ impl SineAngle<LineAtOrigin> for Line {
     }
 }
 
+impl SineAngle<RoundPoint> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for Line {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Circle> for LineAtOrigin {
     type Output = f32;
 
@@ -2078,10 +3957,32 @@ impl SineAngle<Circle> for LineAtOrigin {
     }
 }
 
+impl SineAngle<CircleCarrierAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for LineAtOrigin {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2133,6 +4034,61 @@ impl SineAngle<LineAtOrigin> for LineAtOrigin {
     }
 }
 
+impl SineAngle<RoundPoint> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for LineAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Circle> for Plane {
     type Output = f32;
 
@@ -2144,10 +4100,43 @@ impl SineAngle<Circle> for Plane {
     }
 }
 
+impl SineAngle<CircleCarrierAspect> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for Plane {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2221,6 +4210,61 @@ impl SineAngle<PlaneAtOrigin> for Plane {
     }
 }
 
+impl SineAngle<RoundPoint> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for Plane {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Sphere> for Plane {
     type Output = f32;
 
@@ -2243,10 +4287,43 @@ impl SineAngle<Circle> for PlaneAtOrigin {
     }
 }
 
+impl SineAngle<CircleCarrierAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for PlaneAtOrigin {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2320,10 +4397,329 @@ impl SineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     }
 }
 
+impl SineAngle<RoundPoint> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for PlaneAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Sphere> for PlaneAtOrigin {
     type Output = f32;
 
     fn sine_angle(self, other: Sphere) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for RoundPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for RoundPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for RoundPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for RoundPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for RoundPoint {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for RoundPointAtInfinity {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for RoundPointAtOrigin {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for RoundPointBulkAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2342,10 +4738,54 @@ impl SineAngle<Circle> for Sphere {
     }
 }
 
+impl SineAngle<CircleBulkAspect> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleCarrierAspect> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for Sphere {
     type Output = f32;
 
     fn sine_angle(self, other: Dipole) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulkAspect> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;
@@ -2412,6 +4852,61 @@ impl SineAngle<PlaneAtOrigin> for Sphere {
     type Output = f32;
 
     fn sine_angle(self, other: PlaneAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPoint) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulkAspect> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointBulkAspect) -> f32 {
+        let mut cos: f32 = self.cosine_angle(other);
+        let mut cos_squared: f32 = cos * cos;
+        let mut sub: f32 = 1.0 - cos_squared;
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointCarrierAspect> for Sphere {
+    type Output = f32;
+
+    fn sine_angle(self, other: RoundPointCarrierAspect) -> f32 {
         let mut cos: f32 = self.cosine_angle(other);
         let mut cos_squared: f32 = cos * cos;
         let mut sub: f32 = 1.0 - cos_squared;

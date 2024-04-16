@@ -10,56 +10,70 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::unitize::Unitize;
 use crate::*;
 
+///
 /// self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+///
 /// Also called sandwich product
 /// See article "Projective Geometric Algebra Done Right"
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Projective_Geometric_Algebra_Done_Right
+///
 pub trait Sandwich<T> {
     type Output;
     fn sandwich(self, other: T) -> Self::Output;
 }
 
+///
 /// Point Inversion
 /// An improper isometry that performs an inversion through a point.
 /// Points may pass as specialized as Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
+///
 /// Be careful not to confuse with `Inverse`, which raises a number to the power of `-1.0`.
+///
 pub trait PointInversion<T> {
     type Output;
     fn point_inversion(self, other: T) -> Self::Output;
 }
 
+///
 /// Reflection
 /// An improper isometry that performs reflection across a plane.
 /// Planes may pass as specialized Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reflection
+///
 pub trait Reflect<T> {
     type Output;
     fn reflect(self, other: T) -> Self::Output;
 }
 
+///
 /// Transflection
 /// An improper isometry that performs a reflection and translation.
 /// Transflectors are specialized Flectors, so in other words, this is a specialized Flector sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
+///
 pub trait Transflect<T> {
     type Output;
     fn transflect(self, other: T) -> Self::Output;
 }
 
+///
 /// Translate
 /// A proper isometry that performs translation.
 /// Translators are specialized Motors, so in other words, this is a specialized Motor sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Translation
+///
 pub trait Translate<T> {
     type Output;
     fn translate(self, other: T) -> Self::Output;
 }
 
+///
 /// Rotate
 /// A proper isometry that performs rotation.
 /// Rotors are specialized Motors, so in other words, this is a specialized Motor sandwich.
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Rotation
+///
 pub trait Rotate<T> {
     type Output;
     fn rotate(self, other: T) -> Self::Output;
@@ -193,10 +207,10 @@ impl Sandwich<Rotor> for AntiScalar {
     }
 }
 
-impl Sandwich<TransFlector> for AntiScalar {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for AntiScalar {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -337,10 +351,10 @@ impl Sandwich<Rotor> for Flector {
     }
 }
 
-impl Sandwich<TransFlector> for Flector {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Flector {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -481,10 +495,10 @@ impl Sandwich<Rotor> for Line {
     }
 }
 
-impl Sandwich<TransFlector> for Line {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Line {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -625,10 +639,10 @@ impl Sandwich<Rotor> for LineAtOrigin {
     }
 }
 
-impl Sandwich<TransFlector> for LineAtOrigin {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for LineAtOrigin {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -769,10 +783,10 @@ impl Sandwich<Rotor> for Magnitude {
     }
 }
 
-impl Sandwich<TransFlector> for Magnitude {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Magnitude {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -913,10 +927,10 @@ impl Sandwich<Rotor> for Motor {
     }
 }
 
-impl Sandwich<TransFlector> for Motor {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Motor {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1057,10 +1071,10 @@ impl Sandwich<Rotor> for MultiVector {
     }
 }
 
-impl Sandwich<TransFlector> for MultiVector {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for MultiVector {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1201,10 +1215,10 @@ impl Sandwich<Rotor> for MultiVectorAtOrigin {
     }
 }
 
-impl Sandwich<TransFlector> for MultiVectorAtOrigin {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for MultiVectorAtOrigin {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1345,10 +1359,10 @@ impl Sandwich<Rotor> for Origin {
     }
 }
 
-impl Sandwich<TransFlector> for Origin {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Origin {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1489,10 +1503,10 @@ impl Sandwich<Rotor> for Plane {
     }
 }
 
-impl Sandwich<TransFlector> for Plane {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Plane {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1633,10 +1647,10 @@ impl Sandwich<Rotor> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<TransFlector> for PlaneAtOrigin {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for PlaneAtOrigin {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1777,10 +1791,10 @@ impl Sandwich<Rotor> for Point {
     }
 }
 
-impl Sandwich<TransFlector> for Point {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Point {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1921,10 +1935,10 @@ impl Sandwich<Rotor> for Rotor {
     }
 }
 
-impl Sandwich<TransFlector> for Rotor {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Rotor {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1937,7 +1951,7 @@ impl Sandwich<Translator> for Rotor {
     }
 }
 
-impl Sandwich<Flector> for TransFlector {
+impl Sandwich<Flector> for Transflector {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -1945,7 +1959,7 @@ impl Sandwich<Flector> for TransFlector {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for TransFlector {
+impl Sandwich<FlectorAtInfinity> for Transflector {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -1953,7 +1967,7 @@ impl Sandwich<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Sandwich<Horizon> for TransFlector {
+impl Sandwich<Horizon> for Transflector {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -1961,7 +1975,7 @@ impl Sandwich<Horizon> for TransFlector {
     }
 }
 
-impl Sandwich<Line> for TransFlector {
+impl Sandwich<Line> for Transflector {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -1969,7 +1983,7 @@ impl Sandwich<Line> for TransFlector {
     }
 }
 
-impl Sandwich<LineAtInfinity> for TransFlector {
+impl Sandwich<LineAtInfinity> for Transflector {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -1977,7 +1991,7 @@ impl Sandwich<LineAtInfinity> for TransFlector {
     }
 }
 
-impl Sandwich<LineAtOrigin> for TransFlector {
+impl Sandwich<LineAtOrigin> for Transflector {
     type Output = LineAtOrigin;
 
     fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -1985,7 +1999,7 @@ impl Sandwich<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Sandwich<Motor> for TransFlector {
+impl Sandwich<Motor> for Transflector {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -1993,7 +2007,7 @@ impl Sandwich<Motor> for TransFlector {
     }
 }
 
-impl Sandwich<MultiVector> for TransFlector {
+impl Sandwich<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -2001,7 +2015,7 @@ impl Sandwich<MultiVector> for TransFlector {
     }
 }
 
-impl Sandwich<MultiVectorAtInfinity> for TransFlector {
+impl Sandwich<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn sandwich(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -2009,7 +2023,7 @@ impl Sandwich<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl Sandwich<MultiVectorAtOrigin> for TransFlector {
+impl Sandwich<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVectorAtOrigin;
 
     fn sandwich(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -2017,7 +2031,7 @@ impl Sandwich<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl Sandwich<Origin> for TransFlector {
+impl Sandwich<Origin> for Transflector {
     type Output = Origin;
 
     fn sandwich(self, other: Origin) -> Origin {
@@ -2025,7 +2039,7 @@ impl Sandwich<Origin> for TransFlector {
     }
 }
 
-impl Sandwich<Plane> for TransFlector {
+impl Sandwich<Plane> for Transflector {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -2033,7 +2047,7 @@ impl Sandwich<Plane> for TransFlector {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for TransFlector {
+impl Sandwich<PlaneAtOrigin> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -2041,7 +2055,7 @@ impl Sandwich<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl Sandwich<Point> for TransFlector {
+impl Sandwich<Point> for Transflector {
     type Output = Point;
 
     fn sandwich(self, other: Point) -> Point {
@@ -2049,7 +2063,7 @@ impl Sandwich<Point> for TransFlector {
     }
 }
 
-impl Sandwich<PointAtInfinity> for TransFlector {
+impl Sandwich<PointAtInfinity> for Transflector {
     type Output = PointAtInfinity;
 
     fn sandwich(self, other: PointAtInfinity) -> PointAtInfinity {
@@ -2057,7 +2071,7 @@ impl Sandwich<PointAtInfinity> for TransFlector {
     }
 }
 
-impl Sandwich<Rotor> for TransFlector {
+impl Sandwich<Rotor> for Transflector {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -2065,15 +2079,15 @@ impl Sandwich<Rotor> for TransFlector {
     }
 }
 
-impl Sandwich<TransFlector> for TransFlector {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Transflector {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Translator> for TransFlector {
+impl Sandwich<Translator> for Transflector {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
@@ -2209,10 +2223,10 @@ impl Sandwich<Rotor> for Translator {
     }
 }
 
-impl Sandwich<TransFlector> for Translator {
-    type Output = TransFlector;
+impl Sandwich<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn sandwich(self, other: TransFlector) -> TransFlector {
+    fn sandwich(self, other: Transflector) -> Transflector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -2353,10 +2367,10 @@ impl PointInversion<Rotor> for Point {
     }
 }
 
-impl PointInversion<TransFlector> for Point {
-    type Output = TransFlector;
+impl PointInversion<Transflector> for Point {
+    type Output = Transflector;
 
-    fn point_inversion(self, other: TransFlector) -> TransFlector {
+    fn point_inversion(self, other: Transflector) -> Transflector {
         self.unitize().sandwich(other)
     }
 }
@@ -2497,10 +2511,10 @@ impl Reflect<Rotor> for Plane {
     }
 }
 
-impl Reflect<TransFlector> for Plane {
-    type Output = TransFlector;
+impl Reflect<Transflector> for Plane {
+    type Output = Transflector;
 
-    fn reflect(self, other: TransFlector) -> TransFlector {
+    fn reflect(self, other: Transflector) -> Transflector {
         self.unitize().sandwich(other)
     }
 }
@@ -2641,10 +2655,10 @@ impl Rotate<Rotor> for Rotor {
     }
 }
 
-impl Rotate<TransFlector> for Rotor {
-    type Output = TransFlector;
+impl Rotate<Transflector> for Rotor {
+    type Output = Transflector;
 
-    fn rotate(self, other: TransFlector) -> TransFlector {
+    fn rotate(self, other: Transflector) -> Transflector {
         self.sandwich(other)
     }
 }
@@ -2657,7 +2671,7 @@ impl Rotate<Translator> for Rotor {
     }
 }
 
-impl Transflect<Flector> for TransFlector {
+impl Transflect<Flector> for Transflector {
     type Output = Flector;
 
     fn transflect(self, other: Flector) -> Flector {
@@ -2665,7 +2679,7 @@ impl Transflect<Flector> for TransFlector {
     }
 }
 
-impl Transflect<FlectorAtInfinity> for TransFlector {
+impl Transflect<FlectorAtInfinity> for Transflector {
     type Output = FlectorAtInfinity;
 
     fn transflect(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -2673,7 +2687,7 @@ impl Transflect<FlectorAtInfinity> for TransFlector {
     }
 }
 
-impl Transflect<Horizon> for TransFlector {
+impl Transflect<Horizon> for Transflector {
     type Output = Horizon;
 
     fn transflect(self, other: Horizon) -> Horizon {
@@ -2681,7 +2695,7 @@ impl Transflect<Horizon> for TransFlector {
     }
 }
 
-impl Transflect<Line> for TransFlector {
+impl Transflect<Line> for Transflector {
     type Output = Line;
 
     fn transflect(self, other: Line) -> Line {
@@ -2689,7 +2703,7 @@ impl Transflect<Line> for TransFlector {
     }
 }
 
-impl Transflect<LineAtInfinity> for TransFlector {
+impl Transflect<LineAtInfinity> for Transflector {
     type Output = LineAtInfinity;
 
     fn transflect(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -2697,7 +2711,7 @@ impl Transflect<LineAtInfinity> for TransFlector {
     }
 }
 
-impl Transflect<LineAtOrigin> for TransFlector {
+impl Transflect<LineAtOrigin> for Transflector {
     type Output = LineAtOrigin;
 
     fn transflect(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -2705,7 +2719,7 @@ impl Transflect<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Transflect<Motor> for TransFlector {
+impl Transflect<Motor> for Transflector {
     type Output = Motor;
 
     fn transflect(self, other: Motor) -> Motor {
@@ -2713,7 +2727,7 @@ impl Transflect<Motor> for TransFlector {
     }
 }
 
-impl Transflect<MultiVector> for TransFlector {
+impl Transflect<MultiVector> for Transflector {
     type Output = MultiVector;
 
     fn transflect(self, other: MultiVector) -> MultiVector {
@@ -2721,7 +2735,7 @@ impl Transflect<MultiVector> for TransFlector {
     }
 }
 
-impl Transflect<MultiVectorAtInfinity> for TransFlector {
+impl Transflect<MultiVectorAtInfinity> for Transflector {
     type Output = MultiVectorAtInfinity;
 
     fn transflect(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -2729,7 +2743,7 @@ impl Transflect<MultiVectorAtInfinity> for TransFlector {
     }
 }
 
-impl Transflect<MultiVectorAtOrigin> for TransFlector {
+impl Transflect<MultiVectorAtOrigin> for Transflector {
     type Output = MultiVectorAtOrigin;
 
     fn transflect(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
@@ -2737,7 +2751,7 @@ impl Transflect<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl Transflect<Origin> for TransFlector {
+impl Transflect<Origin> for Transflector {
     type Output = Origin;
 
     fn transflect(self, other: Origin) -> Origin {
@@ -2745,7 +2759,7 @@ impl Transflect<Origin> for TransFlector {
     }
 }
 
-impl Transflect<Plane> for TransFlector {
+impl Transflect<Plane> for Transflector {
     type Output = Plane;
 
     fn transflect(self, other: Plane) -> Plane {
@@ -2753,7 +2767,7 @@ impl Transflect<Plane> for TransFlector {
     }
 }
 
-impl Transflect<PlaneAtOrigin> for TransFlector {
+impl Transflect<PlaneAtOrigin> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn transflect(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -2761,7 +2775,7 @@ impl Transflect<PlaneAtOrigin> for TransFlector {
     }
 }
 
-impl Transflect<Point> for TransFlector {
+impl Transflect<Point> for Transflector {
     type Output = Point;
 
     fn transflect(self, other: Point) -> Point {
@@ -2769,7 +2783,7 @@ impl Transflect<Point> for TransFlector {
     }
 }
 
-impl Transflect<PointAtInfinity> for TransFlector {
+impl Transflect<PointAtInfinity> for Transflector {
     type Output = PointAtInfinity;
 
     fn transflect(self, other: PointAtInfinity) -> PointAtInfinity {
@@ -2777,7 +2791,7 @@ impl Transflect<PointAtInfinity> for TransFlector {
     }
 }
 
-impl Transflect<Rotor> for TransFlector {
+impl Transflect<Rotor> for Transflector {
     type Output = Rotor;
 
     fn transflect(self, other: Rotor) -> Rotor {
@@ -2785,15 +2799,15 @@ impl Transflect<Rotor> for TransFlector {
     }
 }
 
-impl Transflect<TransFlector> for TransFlector {
-    type Output = TransFlector;
+impl Transflect<Transflector> for Transflector {
+    type Output = Transflector;
 
-    fn transflect(self, other: TransFlector) -> TransFlector {
+    fn transflect(self, other: Transflector) -> Transflector {
         self.sandwich(other)
     }
 }
 
-impl Transflect<Translator> for TransFlector {
+impl Transflect<Translator> for Transflector {
     type Output = Translator;
 
     fn transflect(self, other: Translator) -> Translator {
@@ -2929,10 +2943,10 @@ impl Translate<Rotor> for Translator {
     }
 }
 
-impl Translate<TransFlector> for Translator {
-    type Output = TransFlector;
+impl Translate<Transflector> for Translator {
+    type Output = Transflector;
 
-    fn translate(self, other: TransFlector) -> TransFlector {
+    fn translate(self, other: Transflector) -> Transflector {
         self.sandwich(other)
     }
 }

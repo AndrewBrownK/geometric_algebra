@@ -13,24 +13,30 @@ use crate::products::projections::*;
 use crate::unitize::Unitize;
 use crate::*;
 
+///
 /// Euclidean distance between objects
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
 /// distance(a,b) = bulk_norm(attitude(a wedge b)) + weight_norm(a wedge attitude(b))
 /// where attitude(c) = c anti_wedge complement(e4) where e4 is the projective dimension
+///
 pub trait Distance<T> {
     type Output;
     fn distance(self, other: T) -> Self::Output;
 }
 
+///
 /// The cosine of the angle between two objects.
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait CosineAngle<T> {
     type Output;
     fn cosine_angle(self, other: T) -> Self::Output;
 }
 
+///
 /// The sine of the angle between two objects.
 /// https://projectivegeometricalgebra.org/projgeomalg.pdf
+///
 pub trait SineAngle<T> {
     type Output;
     fn sine_angle(self, other: T) -> Self::Output;
@@ -332,10 +338,10 @@ impl Distance<Rotor> for Flector {
     }
 }
 
-impl Distance<TransFlector> for Flector {
+impl Distance<Transflector> for Flector {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -420,10 +426,10 @@ impl Distance<Rotor> for Line {
     }
 }
 
-impl Distance<TransFlector> for Line {
+impl Distance<Transflector> for Line {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -468,10 +474,10 @@ impl Distance<Point> for LineAtOrigin {
     }
 }
 
-impl Distance<TransFlector> for LineAtOrigin {
+impl Distance<Transflector> for LineAtOrigin {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -588,10 +594,10 @@ impl Distance<Rotor> for Motor {
     }
 }
 
-impl Distance<TransFlector> for Motor {
+impl Distance<Transflector> for Motor {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -700,10 +706,10 @@ impl Distance<Rotor> for MultiVector {
     }
 }
 
-impl Distance<TransFlector> for MultiVector {
+impl Distance<Transflector> for MultiVector {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -772,10 +778,10 @@ impl Distance<Point> for MultiVectorAtOrigin {
     }
 }
 
-impl Distance<TransFlector> for MultiVectorAtOrigin {
+impl Distance<Transflector> for MultiVectorAtOrigin {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -844,10 +850,10 @@ impl Distance<Point> for Origin {
     }
 }
 
-impl Distance<TransFlector> for Origin {
+impl Distance<Transflector> for Origin {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1020,10 +1026,10 @@ impl Distance<Rotor> for Point {
     }
 }
 
-impl Distance<TransFlector> for Point {
+impl Distance<Transflector> for Point {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1076,15 +1082,15 @@ impl Distance<Point> for Rotor {
     }
 }
 
-impl Distance<TransFlector> for Rotor {
+impl Distance<Transflector> for Rotor {
     type Output = Magnitude;
 
-    fn distance(self, other: TransFlector) -> Magnitude {
+    fn distance(self, other: Transflector) -> Magnitude {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Flector> for TransFlector {
+impl Distance<Flector> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: Flector) -> Magnitude {
@@ -1092,7 +1098,7 @@ impl Distance<Flector> for TransFlector {
     }
 }
 
-impl Distance<Line> for TransFlector {
+impl Distance<Line> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: Line) -> Magnitude {
@@ -1100,7 +1106,7 @@ impl Distance<Line> for TransFlector {
     }
 }
 
-impl Distance<LineAtOrigin> for TransFlector {
+impl Distance<LineAtOrigin> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: LineAtOrigin) -> Magnitude {
@@ -1108,7 +1114,7 @@ impl Distance<LineAtOrigin> for TransFlector {
     }
 }
 
-impl Distance<Motor> for TransFlector {
+impl Distance<Motor> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: Motor) -> Magnitude {
@@ -1116,7 +1122,7 @@ impl Distance<Motor> for TransFlector {
     }
 }
 
-impl Distance<MultiVector> for TransFlector {
+impl Distance<MultiVector> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVector) -> Magnitude {
@@ -1124,7 +1130,7 @@ impl Distance<MultiVector> for TransFlector {
     }
 }
 
-impl Distance<MultiVectorAtOrigin> for TransFlector {
+impl Distance<MultiVectorAtOrigin> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: MultiVectorAtOrigin) -> Magnitude {
@@ -1132,7 +1138,7 @@ impl Distance<MultiVectorAtOrigin> for TransFlector {
     }
 }
 
-impl Distance<Origin> for TransFlector {
+impl Distance<Origin> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: Origin) -> Magnitude {
@@ -1140,7 +1146,7 @@ impl Distance<Origin> for TransFlector {
     }
 }
 
-impl Distance<Point> for TransFlector {
+impl Distance<Point> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: Point) -> Magnitude {
@@ -1148,7 +1154,7 @@ impl Distance<Point> for TransFlector {
     }
 }
 
-impl Distance<Rotor> for TransFlector {
+impl Distance<Rotor> for Transflector {
     type Output = Magnitude;
 
     fn distance(self, other: Rotor) -> Magnitude {

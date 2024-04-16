@@ -9,20 +9,25 @@ use crate::*;
 use projective_ga::{simd::*, *};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
+///
 /// Negates elements with `grade % 2 == 1`
+///
 /// Also called main involution
 pub trait Automorphism {
     type Output;
     fn automorphism(self) -> Self::Output;
 }
 
+///
 /// Negates elements with `(grade + 3) % 4 < 2`
 pub trait Conjugation {
     type Output;
     fn conjugation(self) -> Self::Output;
 }
 
+///
 /// Negates elements with `grade % 4 >= 2`
+///
 /// Also called transpose
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
 pub trait Reversal {
@@ -30,13 +35,16 @@ pub trait Reversal {
     fn reversal(self) -> Self::Output;
 }
 
+///
 /// Negates elements with `grade % 4 >= 2`
+///
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Reverses
 pub trait AntiReversal {
     type Output;
     fn anti_reversal(self) -> Self::Output;
 }
 
+///
 /// Element order reversed
 /// Also known as Right Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
@@ -45,6 +53,7 @@ pub trait Dual {
     fn dual(self) -> Self::Output;
 }
 
+///
 /// AntiDuals are a special kind a Dual.
 /// https://conformalgeometricalgebra.org/wiki/index.php?title=Duals
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
@@ -53,20 +62,7 @@ pub trait AntiDual {
     fn anti_dual(self) -> Self::Output;
 }
 
-/// Right Complement
-/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-pub trait RightComplement {
-    type Output;
-    fn right_complement(self) -> Self::Output;
-}
-
-/// Left Complement
-/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
-pub trait LeftComplement {
-    type Output;
-    fn left_complement(self) -> Self::Output;
-}
-
+///
 /// Double Complement
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
 pub trait DoubleComplement {
@@ -74,71 +70,40 @@ pub trait DoubleComplement {
     fn double_complement(self) -> Self::Output;
 }
 
-impl AntiDual for AntiScalar {
-    type Output = Scalar;
+///
+/// Right Complement
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait RightComplement {
+    type Output;
+    fn right_complement(self) -> Self::Output;
+}
 
-    fn anti_dual(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
-    }
+///
+/// Left Complement
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Complements
+pub trait LeftComplement {
+    type Output;
+    fn left_complement(self) -> Self::Output;
 }
 
 impl AntiDual for Flector {
-    type Output = Flector;
+    type Output = FlectorAtInfinity;
 
-    fn anti_dual(self) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group1(),
-                g1: self.group0() * Simd32x4::from(-1.0),
+    fn anti_dual(self) -> FlectorAtInfinity {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups {
+                g0: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], self.group0()[3]]),
             },
-        }
-    }
-}
-
-impl AntiDual for FlectorAtInfinity {
-    type Output = Flector;
-
-    fn anti_dual(self) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g1: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
-            },
-        }
-    }
-}
-
-impl AntiDual for Horizon {
-    type Output = Origin;
-
-    fn anti_dual(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
         }
     }
 }
 
 impl AntiDual for Line {
-    type Output = Line;
+    type Output = LineAtInfinity;
 
-    fn anti_dual(self) -> Line {
-        Line {
-            groups: LineGroups {
-                g0: self.group1() * Simd32x3::from(-1.0),
-                g1: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for LineAtInfinity {
-    type Output = LineAtOrigin;
-
-    fn anti_dual(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups {
+    fn anti_dual(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -157,59 +122,29 @@ impl AntiDual for LineAtOrigin {
     }
 }
 
-impl AntiDual for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_dual(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-            },
-        }
-    }
-}
-
 impl AntiDual for Motor {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: self.group1() * Simd32x3::from(-1.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x4::from(0.0),
+    fn anti_dual(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
 }
 
 impl AntiDual for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtInfinity;
 
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group4(),
-                g2: self.group3() * Simd32x3::from(-1.0),
-                g3: self.group2() * Simd32x3::from(-1.0),
-                g4: self.group1() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for MultiVectorAtInfinity {
-    type Output = MultiVectorAtOrigin;
-
-    fn anti_dual(self) -> MultiVectorAtOrigin {
-        MultiVectorAtOrigin {
-            groups: MultiVectorAtOriginGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group2() * Simd32x3::from(-1.0),
-                g2: self.group1() * Simd32x3::from(-1.0),
+    fn anti_dual(self) -> MultiVectorAtInfinity {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from([0.0, self.group1()[3]]),
+                g1: Simd32x3::from([-self.group4()[0], self.group4()[1], self.group4()[2]]),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -221,8 +156,8 @@ impl AntiDual for MultiVectorAtOrigin {
     fn anti_dual(self) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
-                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
-                g1: self.group2(),
+                g0: Simd32x2::from([0.0, self.group0()[0]]),
+                g1: self.group2() * Simd32x3::from(-1.0),
                 g2: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -234,17 +169,19 @@ impl AntiDual for Origin {
 
     fn anti_dual(self) -> Horizon {
         Horizon {
-            groups: HorizonGroups { g0: -self.group0() },
+            groups: HorizonGroups { g0: self.group0() },
         }
     }
 }
 
 impl AntiDual for Plane {
-    type Output = Point;
+    type Output = PointAtInfinity;
 
-    fn anti_dual(self) -> Point {
-        Point {
-            groups: PointGroups { g0: self.group0() },
+    fn anti_dual(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
         }
     }
 }
@@ -254,31 +191,19 @@ impl AntiDual for PlaneAtOrigin {
 
     fn anti_dual(self) -> PointAtInfinity {
         PointAtInfinity {
-            groups: PointAtInfinityGroups { g0: self.group0() },
+            groups: PointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
         }
     }
 }
 
 impl AntiDual for Point {
-    type Output = Plane;
+    type Output = Horizon;
 
-    fn anti_dual(self) -> Plane {
-        Plane {
-            groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for PointAtInfinity {
-    type Output = PlaneAtOrigin;
-
-    fn anti_dual(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
+    fn anti_dual(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -289,7 +214,7 @@ impl AntiDual for Rotor {
     fn anti_dual(self) -> MultiVectorAtInfinity {
         MultiVectorAtInfinity {
             groups: MultiVectorAtInfinityGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
+                g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
@@ -297,40 +222,13 @@ impl AntiDual for Rotor {
     }
 }
 
-impl AntiDual for Scalar {
-    type Output = AntiScalar;
+impl AntiDual for Transflector {
+    type Output = PointAtInfinity;
 
-    fn anti_dual(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl AntiDual for TransFlector {
-    type Output = Flector;
-
-    fn anti_dual(self) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group1(),
-                g1: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
-            },
-        }
-    }
-}
-
-impl AntiDual for Translator {
-    type Output = MultiVector;
-
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x4::from(0.0),
+    fn anti_dual(self) -> PointAtInfinity {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups {
+                g0: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
             },
         }
     }
@@ -565,12 +463,12 @@ impl AntiReversal for Scalar {
     }
 }
 
-impl AntiReversal for TransFlector {
-    type Output = TransFlector;
+impl AntiReversal for Transflector {
+    type Output = Transflector;
 
-    fn anti_reversal(self) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn anti_reversal(self) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
@@ -817,12 +715,12 @@ impl Automorphism for Scalar {
     }
 }
 
-impl Automorphism for TransFlector {
-    type Output = TransFlector;
+impl Automorphism for Transflector {
+    type Output = Transflector;
 
-    fn automorphism(self) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn automorphism(self) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
             },
@@ -1069,12 +967,12 @@ impl Conjugation for Scalar {
     }
 }
 
-impl Conjugation for TransFlector {
-    type Output = TransFlector;
+impl Conjugation for Transflector {
+    type Output = Transflector;
 
-    fn conjugation(self) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn conjugation(self) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
             },
@@ -1317,12 +1215,12 @@ impl DoubleComplement for Scalar {
     }
 }
 
-impl DoubleComplement for TransFlector {
-    type Output = TransFlector;
+impl DoubleComplement for Transflector {
+    type Output = Transflector;
 
-    fn double_complement(self) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn double_complement(self) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x4::from(-1.0),
             },
@@ -1340,24 +1238,14 @@ impl DoubleComplement for Translator {
     }
 }
 
-impl Dual for AntiScalar {
-    type Output = Scalar;
-
-    fn dual(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
-    }
-}
-
 impl Dual for Flector {
     type Output = Flector;
 
     fn dual(self) -> Flector {
         Flector {
             groups: FlectorGroups {
-                g0: self.group1() * Simd32x4::from(-1.0),
-                g1: self.group0(),
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group1()[3]]),
+                g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }
@@ -1387,13 +1275,12 @@ impl Dual for Horizon {
 }
 
 impl Dual for Line {
-    type Output = Line;
+    type Output = LineAtOrigin;
 
-    fn dual(self) -> Line {
-        Line {
-            groups: LineGroups {
+    fn dual(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
                 g0: self.group1() * Simd32x3::from(-1.0),
-                g1: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1411,57 +1298,37 @@ impl Dual for LineAtInfinity {
     }
 }
 
-impl Dual for LineAtOrigin {
-    type Output = LineAtInfinity;
-
-    fn dual(self) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Dual for Magnitude {
-    type Output = Magnitude;
+    type Output = AntiScalar;
 
-    fn dual(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-            },
+    fn dual(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[0] },
         }
     }
 }
 
 impl Dual for Motor {
-    type Output = MultiVector;
+    type Output = LineAtOrigin;
 
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: self.group1() * Simd32x3::from(-1.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x4::from(0.0),
+    fn dual(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
 }
 
 impl Dual for MultiVector {
-    type Output = MultiVector;
+    type Output = MultiVectorAtOrigin;
 
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group4() * Simd32x4::from(-1.0),
-                g2: self.group3() * Simd32x3::from(-1.0),
-                g3: self.group2() * Simd32x3::from(-1.0),
-                g4: self.group1(),
+    fn dual(self) -> MultiVectorAtOrigin {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from([-self.group4()[3], self.group0()[0]]),
+                g1: self.group3() * Simd32x3::from(-1.0),
+                g2: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             },
         }
     }
@@ -1481,60 +1348,24 @@ impl Dual for MultiVectorAtInfinity {
     }
 }
 
-impl Dual for MultiVectorAtOrigin {
-    type Output = MultiVectorAtInfinity;
-
-    fn dual(self) -> MultiVectorAtInfinity {
-        MultiVectorAtInfinity {
-            groups: MultiVectorAtInfinityGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-                g1: self.group2() * Simd32x3::from(-1.0),
-                g2: self.group1() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Dual for Origin {
-    type Output = Horizon;
-
-    fn dual(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
-    }
-}
-
 impl Dual for Plane {
-    type Output = Point;
+    type Output = Origin;
 
-    fn dual(self) -> Point {
-        Point {
-            groups: PointGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Dual for PlaneAtOrigin {
-    type Output = PointAtInfinity;
-
-    fn dual(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
+    fn dual(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: -self.group0()[3] },
         }
     }
 }
 
 impl Dual for Point {
-    type Output = Plane;
+    type Output = PlaneAtOrigin;
 
-    fn dual(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
+    fn dual(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
         }
     }
 }
@@ -1549,20 +1380,6 @@ impl Dual for PointAtInfinity {
     }
 }
 
-impl Dual for Rotor {
-    type Output = MultiVectorAtInfinity;
-
-    fn dual(self) -> MultiVectorAtInfinity {
-        MultiVectorAtInfinity {
-            groups: MultiVectorAtInfinityGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
 impl Dual for Scalar {
     type Output = AntiScalar;
 
@@ -1573,13 +1390,13 @@ impl Dual for Scalar {
     }
 }
 
-impl Dual for TransFlector {
+impl Dual for Transflector {
     type Output = Flector;
 
     fn dual(self) -> Flector {
         Flector {
             groups: FlectorGroups {
-                g0: self.group1() * Simd32x4::from(-1.0),
+                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group1()[3]]),
                 g1: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
@@ -1587,16 +1404,12 @@ impl Dual for TransFlector {
 }
 
 impl Dual for Translator {
-    type Output = MultiVector;
+    type Output = LineAtOrigin;
 
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x4::from(0.0),
-                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x4::from(0.0),
+    fn dual(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
+                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
@@ -1835,7 +1648,7 @@ impl LeftComplement for Scalar {
     }
 }
 
-impl LeftComplement for TransFlector {
+impl LeftComplement for Transflector {
     type Output = Flector;
 
     fn left_complement(self) -> Flector {
@@ -2089,12 +1902,12 @@ impl Reversal for Scalar {
     }
 }
 
-impl Reversal for TransFlector {
-    type Output = TransFlector;
+impl Reversal for Transflector {
+    type Output = Transflector;
 
-    fn reversal(self) -> TransFlector {
-        TransFlector {
-            groups: TransFlectorGroups {
+    fn reversal(self) -> Transflector {
+        Transflector {
+            groups: TransflectorGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
             },
@@ -2347,7 +2160,7 @@ impl RightComplement for Scalar {
     }
 }
 
-impl RightComplement for TransFlector {
+impl RightComplement for Transflector {
     type Output = Flector;
 
     fn right_complement(self) -> Flector {
