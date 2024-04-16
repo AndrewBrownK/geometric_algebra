@@ -79,27 +79,27 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     // TODO add more of these if/where applicable to CGA
     let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
 
-        (("Translator", "Origin"), "Point"),
-        (("Translator", "LineAtOrigin"), "Line"),
-        (("Translator", "PlaneAtOrigin"), "Plane"),
-        (("Translator", "Rotor"), "Motor"),
+        ("Translator", "Origin", "Point"),
+        ("Translator", "LineAtOrigin", "Line"),
+        ("Translator", "PlaneAtOrigin", "Plane"),
+        ("Translator", "Rotor", "Motor"),
 
-        (("Motor", "Origin"), "Point"),
-        (("Motor", "LineAtOrigin"), "Line"),
-        (("Motor", "PlaneAtOrigin"), "Plane"),
-        (("Motor", "Rotor"), "Motor"),
+        ("Motor", "Origin", "Point"),
+        ("Motor", "LineAtOrigin", "Line"),
+        ("Motor", "PlaneAtOrigin", "Plane"),
+        ("Motor", "Rotor", "Motor"),
 
-        (("Flector", "Origin"), "Point"),
-        (("Flector", "LineAtOrigin"), "Line"),
-        (("Flector", "PlaneAtOrigin"), "Plane"),
-        (("Flector", "Rotor"), "Motor"),
+        ("Flector", "Origin", "Point"),
+        ("Flector", "LineAtOrigin", "Line"),
+        ("Flector", "PlaneAtOrigin", "Plane"),
+        ("Flector", "Rotor", "Motor"),
 
-        (("FlectorAtInfinity", "Origin"), "Point"),
-        (("FlectorAtInfinity", "LineAtOrigin"), "Line"),
-        (("FlectorAtInfinity", "PlaneAtOrigin"), "Plane"),
-        (("FlectorAtInfinity", "Rotor"), "Motor"),
+        ("FlectorAtInfinity", "Origin", "Point"),
+        ("FlectorAtInfinity", "LineAtOrigin", "Line"),
+        ("FlectorAtInfinity", "PlaneAtOrigin", "Plane"),
+        ("FlectorAtInfinity", "Rotor", "Motor"),
 
-    ].into_iter().collect();
+    ].into_iter().map(|it| ((it.0, it.1), it.2)).collect();
 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();

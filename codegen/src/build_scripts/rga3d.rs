@@ -61,40 +61,39 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         // so we do not need to add special guidance here. The input
         // and output being the same is the default assumption.
 
-        // (("Rotor", "Origin"), "Origin"),
-        // (("Rotor", "LineAtOrigin"), "LineAtOrigin"),
-        // (("Rotor", "PlaneAtOrigin"), "PlaneAtOrigin"),
+        // ("Rotor", "Origin", "Origin"),
+        // ("Rotor", "LineAtOrigin", "LineAtOrigin"),
+        // ("Rotor", "PlaneAtOrigin", "PlaneAtOrigin"),
 
         // In contrast to rotations, translations of objects at origin
         // are not objects at origin. Therefore, we must add the special
         // guidance on output types here.
 
-        (("Translator", "Origin"), "Point"),
-        (("Translator", "LineAtOrigin"), "Line"),
-        (("Translator", "PlaneAtOrigin"), "Plane"),
-        (("Translator", "Rotor"), "Motor"),
+        ("Translator", "Origin", "Point"),
+        ("Translator", "LineAtOrigin", "Line"),
+        ("Translator", "PlaneAtOrigin", "Plane"),
+        ("Translator", "Rotor", "Motor"),
 
         // And obviously motor outputs must be at least as general as translator outputs
 
-        (("Motor", "Origin"), "Point"),
-        (("Motor", "LineAtOrigin"), "Line"),
-        (("Motor", "PlaneAtOrigin"), "Plane"),
-        (("Motor", "Rotor"), "Motor"),
+        ("Motor", "Origin", "Point"),
+        ("Motor", "LineAtOrigin", "Line"),
+        ("Motor", "PlaneAtOrigin", "Plane"),
+        ("Motor", "Rotor", "Motor"),
 
         // Flectors move stuff too
 
-        (("Flector", "Origin"), "Point"),
-        (("Flector", "LineAtOrigin"), "Line"),
-        (("Flector", "PlaneAtOrigin"), "Plane"),
-        (("Flector", "Rotor"), "Motor"),
+        ("Flector", "Origin", "Point"),
+        ("Flector", "LineAtOrigin", "Line"),
+        ("Flector", "PlaneAtOrigin", "Plane"),
+        ("Flector", "Rotor", "Motor"),
 
-        (("FlectorAtInfinity", "Origin"), "Point"),
-        (("FlectorAtInfinity", "LineAtOrigin"), "Line"),
-        (("FlectorAtInfinity", "PlaneAtOrigin"), "Plane"),
-        (("FlectorAtInfinity", "Rotor"), "Motor"),
+        ("FlectorAtInfinity", "Origin", "Point"),
+        ("FlectorAtInfinity", "LineAtOrigin", "Line"),
+        ("FlectorAtInfinity", "PlaneAtOrigin", "Plane"),
+        ("FlectorAtInfinity", "Rotor", "Motor"),
 
-
-    ].into_iter().collect();
+    ].into_iter().map(|it| ((it.0, it.1), it.2)).collect();
 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();

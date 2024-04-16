@@ -1923,9 +1923,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        // TODO here
-        // TODO similar to how "PointInversion" is a special type of sandwich using a point,
-        //  "Sphere Inversion" is a special type of sandwich using spheres (generalizing
+        // TODO "Sphere Inversion" is a special type of sandwich using spheres (generalizing
         //  reflection across planes, and/or motors). When the spheres are concentric, this
         //  is called dilation. See pages 239 and 244
         // TODO then there is "Circle rotation" which is like instead of rotating around a line
@@ -1936,9 +1934,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             // Point Inversion
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Inversion
-            // The choice of what class should constitute a "Point" is somewhat contrived.
-            // It will need extra consideration for CGA.
-
             let n = param_a.multi_vector_class().class_name.as_str();
             if n != "Point" && n != "FlatPoint" {
                 continue;
@@ -2044,6 +2039,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
         }
 
+        // TODO here
         // TODO get rid of left/right distinction in GA's that only have one complement
         // TODO reflect the insights in this thread: https://twitter.com/EricLengyel/status/1775663934424654262
         let aspect_duals = [
@@ -2147,17 +2143,14 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
-        // anti_project_via_horizon can be a little confusing... are these okay?
+        // anti_project_via_horizon might seem weird at first...
         //  line_at_origin.anti_project_via_horizon_onto(point_at_infinity) = line_at_origin
         //  plane.anti_project_via_horizon_onto(point_at_infinity) = plane
         //  ...
-        //  I'm 90% sure it's okay though. I suspect what is happening is objects at the origin
-        //  more or less rotate at the origin. (Might not be the exact same thing as a Rotor
-        //  transformation if there are effects on the weight of the result.) Objects not at the
-        //  origin presumably rotate in a similar fashion, although I'm not certain around
-        //  which point. Heck... probably the origin again.
-        // TODO play with this at runtime to get a better feel, and reach 100% certainty it's okay.
-        // TODO see page 104 of the book
+        //  but it is confirmed on page 104 of the book.
+        //  "The utility of central antiprojection is questionable, but it is included for
+        //  completeness. It tends to reorient the object `a` being antiprojected so that it
+        //  contains the object `b` instead of moving it in a direction perpendicular to `b`."
         for (param_a, param_b) in registry.pair_parameters() {
             let name = "AntiProjectViaHorizonOnto";
             let _: Option<()> = try {
