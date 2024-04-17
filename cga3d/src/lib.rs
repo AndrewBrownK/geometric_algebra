@@ -1561,26 +1561,26 @@ impl std::fmt::Debug for RoundPointAtInfinity {
 }
 
 #[derive(Clone, Copy)]
-struct RoundPointBulkAspectGroups {
+struct RoundPointBulkGroups {
     /// e1, e2, e3
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
-pub union RoundPointBulkAspect {
-    groups: RoundPointBulkAspectGroups,
+pub union RoundPointBulk {
+    groups: RoundPointBulkGroups,
     /// e1, e2, e3, 0
     elements: [f32; 4],
 }
 
-impl RoundPointBulkAspect {
+impl RoundPointBulk {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(e1: f32, e2: f32, e3: f32) -> Self {
         Self { elements: [e1, e2, e3, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
-            groups: RoundPointBulkAspectGroups { g0 },
+            groups: RoundPointBulkGroups { g0 },
         }
     }
     #[inline(always)]
@@ -1593,29 +1593,29 @@ impl RoundPointBulkAspect {
     }
 }
 
-const ROUNDPOINTBULKASPECT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+const ROUNDPOINTBULK_INDEX_REMAP: [usize; 3] = [0, 1, 2];
 
-impl std::ops::Index<usize> for RoundPointBulkAspect {
+impl std::ops::Index<usize> for RoundPointBulk {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ROUNDPOINTBULKASPECT_INDEX_REMAP[index]] }
+        unsafe { &self.elements[ROUNDPOINTBULK_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for RoundPointBulkAspect {
+impl std::ops::IndexMut<usize> for RoundPointBulk {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ROUNDPOINTBULKASPECT_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[ROUNDPOINTBULK_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<RoundPointBulkAspect> for [f32; 3] {
-    fn from(vector: RoundPointBulkAspect) -> Self {
+impl std::convert::From<RoundPointBulk> for [f32; 3] {
+    fn from(vector: RoundPointBulk) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
     }
 }
 
-impl std::convert::From<[f32; 3]> for RoundPointBulkAspect {
+impl std::convert::From<[f32; 3]> for RoundPointBulk {
     fn from(array: [f32; 3]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0],
@@ -1623,14 +1623,9 @@ impl std::convert::From<[f32; 3]> for RoundPointBulkAspect {
     }
 }
 
-impl std::fmt::Debug for RoundPointBulkAspect {
+impl std::fmt::Debug for RoundPointBulk {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("RoundPointBulkAspect")
-            .field("e1", &self[0])
-            .field("e2", &self[1])
-            .field("e3", &self[2])
-            .finish()
+        formatter.debug_struct("RoundPointBulk").field("e1", &self[0]).field("e2", &self[1]).field("e3", &self[2]).finish()
     }
 }
 
@@ -1710,19 +1705,19 @@ impl std::fmt::Debug for RoundPointCarrierAspect {
 }
 
 #[derive(Clone, Copy)]
-struct DipoleBulkAspectGroups {
+struct DipoleBulkGroups {
     /// e23, -e13, e12
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
-pub union DipoleBulkAspect {
-    groups: DipoleBulkAspectGroups,
+pub union DipoleBulk {
+    groups: DipoleBulkGroups,
     /// e23, -e13, e12, 0
     elements: [f32; 4],
 }
 
-impl DipoleBulkAspect {
+impl DipoleBulk {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(e23: f32, neg_e13: f32, e12: f32) -> Self {
         Self {
@@ -1730,9 +1725,7 @@ impl DipoleBulkAspect {
         }
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
-        Self {
-            groups: DipoleBulkAspectGroups { g0 },
-        }
+        Self { groups: DipoleBulkGroups { g0 } }
     }
     #[inline(always)]
     pub fn group0(&self) -> Simd32x3 {
@@ -1744,29 +1737,29 @@ impl DipoleBulkAspect {
     }
 }
 
-const DIPOLEBULKASPECT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+const DIPOLEBULK_INDEX_REMAP: [usize; 3] = [0, 1, 2];
 
-impl std::ops::Index<usize> for DipoleBulkAspect {
+impl std::ops::Index<usize> for DipoleBulk {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[DIPOLEBULKASPECT_INDEX_REMAP[index]] }
+        unsafe { &self.elements[DIPOLEBULK_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for DipoleBulkAspect {
+impl std::ops::IndexMut<usize> for DipoleBulk {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[DIPOLEBULKASPECT_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[DIPOLEBULK_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<DipoleBulkAspect> for [f32; 3] {
-    fn from(vector: DipoleBulkAspect) -> Self {
+impl std::convert::From<DipoleBulk> for [f32; 3] {
+    fn from(vector: DipoleBulk) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
     }
 }
 
-impl std::convert::From<[f32; 3]> for DipoleBulkAspect {
+impl std::convert::From<[f32; 3]> for DipoleBulk {
     fn from(array: [f32; 3]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0],
@@ -1774,31 +1767,26 @@ impl std::convert::From<[f32; 3]> for DipoleBulkAspect {
     }
 }
 
-impl std::fmt::Debug for DipoleBulkAspect {
+impl std::fmt::Debug for DipoleBulk {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("DipoleBulkAspect")
-            .field("e23", &self[0])
-            .field("-e13", &self[1])
-            .field("e12", &self[2])
-            .finish()
+        formatter.debug_struct("DipoleBulk").field("e23", &self[0]).field("-e13", &self[1]).field("e12", &self[2]).finish()
     }
 }
 
 #[derive(Clone, Copy)]
-struct DipoleWeightAspectGroups {
+struct DipoleWeightGroups {
     /// -e14, -e24, -e34
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
-pub union DipoleWeightAspect {
-    groups: DipoleWeightAspectGroups,
+pub union DipoleWeight {
+    groups: DipoleWeightGroups,
     /// -e14, -e24, -e34, 0
     elements: [f32; 4],
 }
 
-impl DipoleWeightAspect {
+impl DipoleWeight {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(neg_e14: f32, neg_e24: f32, neg_e34: f32) -> Self {
         Self {
@@ -1807,7 +1795,7 @@ impl DipoleWeightAspect {
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
-            groups: DipoleWeightAspectGroups { g0 },
+            groups: DipoleWeightGroups { g0 },
         }
     }
     #[inline(always)]
@@ -1820,29 +1808,29 @@ impl DipoleWeightAspect {
     }
 }
 
-const DIPOLEWEIGHTASPECT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+const DIPOLEWEIGHT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
 
-impl std::ops::Index<usize> for DipoleWeightAspect {
+impl std::ops::Index<usize> for DipoleWeight {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[DIPOLEWEIGHTASPECT_INDEX_REMAP[index]] }
+        unsafe { &self.elements[DIPOLEWEIGHT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for DipoleWeightAspect {
+impl std::ops::IndexMut<usize> for DipoleWeight {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[DIPOLEWEIGHTASPECT_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[DIPOLEWEIGHT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<DipoleWeightAspect> for [f32; 3] {
-    fn from(vector: DipoleWeightAspect) -> Self {
+impl std::convert::From<DipoleWeight> for [f32; 3] {
+    fn from(vector: DipoleWeight) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
     }
 }
 
-impl std::convert::From<[f32; 3]> for DipoleWeightAspect {
+impl std::convert::From<[f32; 3]> for DipoleWeight {
     fn from(array: [f32; 3]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0],
@@ -1850,14 +1838,9 @@ impl std::convert::From<[f32; 3]> for DipoleWeightAspect {
     }
 }
 
-impl std::fmt::Debug for DipoleWeightAspect {
+impl std::fmt::Debug for DipoleWeight {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("DipoleWeightAspect")
-            .field("-e14", &self[0])
-            .field("-e24", &self[1])
-            .field("-e34", &self[2])
-            .finish()
+        formatter.debug_struct("DipoleWeight").field("-e14", &self[0]).field("-e24", &self[1]).field("-e34", &self[2]).finish()
     }
 }
 
@@ -1951,27 +1934,25 @@ impl std::fmt::Debug for DipoleCarrierAspect {
 }
 
 #[derive(Clone, Copy)]
-struct CircleBulkAspectGroups {
+struct CircleBulkGroups {
     /// -e123
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
-pub union CircleBulkAspect {
-    groups: CircleBulkAspectGroups,
+pub union CircleBulk {
+    groups: CircleBulkGroups,
     /// -e123
     elements: [f32; 1],
 }
 
-impl CircleBulkAspect {
+impl CircleBulk {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(neg_e123: f32) -> Self {
         Self { elements: [neg_e123] }
     }
     pub const fn from_groups(g0: f32) -> Self {
-        Self {
-            groups: CircleBulkAspectGroups { g0 },
-        }
+        Self { groups: CircleBulkGroups { g0 } }
     }
     #[inline(always)]
     pub fn group0(&self) -> f32 {
@@ -1983,54 +1964,54 @@ impl CircleBulkAspect {
     }
 }
 
-const CIRCLEBULKASPECT_INDEX_REMAP: [usize; 1] = [0];
+const CIRCLEBULK_INDEX_REMAP: [usize; 1] = [0];
 
-impl std::ops::Index<usize> for CircleBulkAspect {
+impl std::ops::Index<usize> for CircleBulk {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[CIRCLEBULKASPECT_INDEX_REMAP[index]] }
+        unsafe { &self.elements[CIRCLEBULK_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for CircleBulkAspect {
+impl std::ops::IndexMut<usize> for CircleBulk {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[CIRCLEBULKASPECT_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[CIRCLEBULK_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<CircleBulkAspect> for [f32; 1] {
-    fn from(vector: CircleBulkAspect) -> Self {
+impl std::convert::From<CircleBulk> for [f32; 1] {
+    fn from(vector: CircleBulk) -> Self {
         unsafe { [vector.elements[0]] }
     }
 }
 
-impl std::convert::From<[f32; 1]> for CircleBulkAspect {
+impl std::convert::From<[f32; 1]> for CircleBulk {
     fn from(array: [f32; 1]) -> Self {
         Self { elements: [array[0]] }
     }
 }
 
-impl std::fmt::Debug for CircleBulkAspect {
+impl std::fmt::Debug for CircleBulk {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("CircleBulkAspect").field("-e123", &self[0]).finish()
+        formatter.debug_struct("CircleBulk").field("-e123", &self[0]).finish()
     }
 }
 
 #[derive(Clone, Copy)]
-struct CircleWeightAspectGroups {
+struct CircleWeightGroups {
     /// e234, -e134, e124
     g0: Simd32x3,
 }
 
 #[derive(Clone, Copy)]
-pub union CircleWeightAspect {
-    groups: CircleWeightAspectGroups,
+pub union CircleWeight {
+    groups: CircleWeightGroups,
     /// e234, -e134, e124, 0
     elements: [f32; 4],
 }
 
-impl CircleWeightAspect {
+impl CircleWeight {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(e234: f32, neg_e134: f32, e124: f32) -> Self {
         Self {
@@ -2039,7 +2020,7 @@ impl CircleWeightAspect {
     }
     pub const fn from_groups(g0: Simd32x3) -> Self {
         Self {
-            groups: CircleWeightAspectGroups { g0 },
+            groups: CircleWeightGroups { g0 },
         }
     }
     #[inline(always)]
@@ -2052,29 +2033,29 @@ impl CircleWeightAspect {
     }
 }
 
-const CIRCLEWEIGHTASPECT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
+const CIRCLEWEIGHT_INDEX_REMAP: [usize; 3] = [0, 1, 2];
 
-impl std::ops::Index<usize> for CircleWeightAspect {
+impl std::ops::Index<usize> for CircleWeight {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[CIRCLEWEIGHTASPECT_INDEX_REMAP[index]] }
+        unsafe { &self.elements[CIRCLEWEIGHT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for CircleWeightAspect {
+impl std::ops::IndexMut<usize> for CircleWeight {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[CIRCLEWEIGHTASPECT_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[CIRCLEWEIGHT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<CircleWeightAspect> for [f32; 3] {
-    fn from(vector: CircleWeightAspect) -> Self {
+impl std::convert::From<CircleWeight> for [f32; 3] {
+    fn from(vector: CircleWeight) -> Self {
         unsafe { [vector.elements[0], vector.elements[1], vector.elements[2]] }
     }
 }
 
-impl std::convert::From<[f32; 3]> for CircleWeightAspect {
+impl std::convert::From<[f32; 3]> for CircleWeight {
     fn from(array: [f32; 3]) -> Self {
         Self {
             elements: [array[0], array[1], array[2], 0.0],
@@ -2082,14 +2063,9 @@ impl std::convert::From<[f32; 3]> for CircleWeightAspect {
     }
 }
 
-impl std::fmt::Debug for CircleWeightAspect {
+impl std::fmt::Debug for CircleWeight {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("CircleWeightAspect")
-            .field("e234", &self[0])
-            .field("-e134", &self[1])
-            .field("e124", &self[2])
-            .finish()
+        formatter.debug_struct("CircleWeight").field("e234", &self[0]).field("-e134", &self[1]).field("e124", &self[2]).finish()
     }
 }
 
@@ -2171,26 +2147,26 @@ impl std::fmt::Debug for CircleCarrierAspect {
 }
 
 #[derive(Clone, Copy)]
-struct SphereWeightAspectGroups {
+struct SphereWeightGroups {
     /// e1234
     g0: f32,
 }
 
 #[derive(Clone, Copy)]
-pub union SphereWeightAspect {
-    groups: SphereWeightAspectGroups,
+pub union SphereWeight {
+    groups: SphereWeightGroups,
     /// e1234
     elements: [f32; 1],
 }
 
-impl SphereWeightAspect {
+impl SphereWeight {
     #[allow(clippy::too_many_arguments)]
     pub const fn new(e1234: f32) -> Self {
         Self { elements: [e1234] }
     }
     pub const fn from_groups(g0: f32) -> Self {
         Self {
-            groups: SphereWeightAspectGroups { g0 },
+            groups: SphereWeightGroups { g0 },
         }
     }
     #[inline(always)]
@@ -2203,37 +2179,37 @@ impl SphereWeightAspect {
     }
 }
 
-const SPHEREWEIGHTASPECT_INDEX_REMAP: [usize; 1] = [0];
+const SPHEREWEIGHT_INDEX_REMAP: [usize; 1] = [0];
 
-impl std::ops::Index<usize> for SphereWeightAspect {
+impl std::ops::Index<usize> for SphereWeight {
     type Output = f32;
 
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[SPHEREWEIGHTASPECT_INDEX_REMAP[index]] }
+        unsafe { &self.elements[SPHEREWEIGHT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::ops::IndexMut<usize> for SphereWeightAspect {
+impl std::ops::IndexMut<usize> for SphereWeight {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[SPHEREWEIGHTASPECT_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[SPHEREWEIGHT_INDEX_REMAP[index]] }
     }
 }
 
-impl std::convert::From<SphereWeightAspect> for [f32; 1] {
-    fn from(vector: SphereWeightAspect) -> Self {
+impl std::convert::From<SphereWeight> for [f32; 1] {
+    fn from(vector: SphereWeight) -> Self {
         unsafe { [vector.elements[0]] }
     }
 }
 
-impl std::convert::From<[f32; 1]> for SphereWeightAspect {
+impl std::convert::From<[f32; 1]> for SphereWeight {
     fn from(array: [f32; 1]) -> Self {
         Self { elements: [array[0]] }
     }
 }
 
-impl std::fmt::Debug for SphereWeightAspect {
+impl std::fmt::Debug for SphereWeight {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("SphereWeightAspect").field("e1234", &self[0]).finish()
+        formatter.debug_struct("SphereWeight").field("e1234", &self[0]).finish()
     }
 }
 
@@ -3040,10 +3016,10 @@ impl One for Circle {
     }
 }
 
-impl One for CircleBulkAspect {
+impl One for CircleBulk {
     fn one() -> Self {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups { g0: 0.0 },
+        CircleBulk {
+            groups: CircleBulkGroups { g0: 0.0 },
         }
     }
 }
@@ -3056,10 +3032,10 @@ impl One for CircleCarrierAspect {
     }
 }
 
-impl One for CircleWeightAspect {
+impl One for CircleWeight {
     fn one() -> Self {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups { g0: Simd32x3::from(0.0) },
+        CircleWeight {
+            groups: CircleWeightGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3076,10 +3052,10 @@ impl One for Dipole {
     }
 }
 
-impl One for DipoleBulkAspect {
+impl One for DipoleBulk {
     fn one() -> Self {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups { g0: Simd32x3::from(0.0) },
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3095,10 +3071,10 @@ impl One for DipoleCarrierAspect {
     }
 }
 
-impl One for DipoleWeightAspect {
+impl One for DipoleWeight {
     fn one() -> Self {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups { g0: Simd32x3::from(0.0) },
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3285,10 +3261,10 @@ impl One for RoundPointAtOrigin {
     }
 }
 
-impl One for RoundPointBulkAspect {
+impl One for RoundPointBulk {
     fn one() -> Self {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups { g0: Simd32x3::from(0.0) },
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3318,10 +3294,10 @@ impl One for Sphere {
     }
 }
 
-impl One for SphereWeightAspect {
+impl One for SphereWeight {
     fn one() -> Self {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups { g0: 0.0 },
+        SphereWeight {
+            groups: SphereWeightGroups { g0: 0.0 },
         }
     }
 }
@@ -3365,10 +3341,10 @@ impl Zero for Circle {
     }
 }
 
-impl Zero for CircleBulkAspect {
+impl Zero for CircleBulk {
     fn zero() -> Self {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups { g0: 0.0 },
+        CircleBulk {
+            groups: CircleBulkGroups { g0: 0.0 },
         }
     }
 }
@@ -3381,10 +3357,10 @@ impl Zero for CircleCarrierAspect {
     }
 }
 
-impl Zero for CircleWeightAspect {
+impl Zero for CircleWeight {
     fn zero() -> Self {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups { g0: Simd32x3::from(0.0) },
+        CircleWeight {
+            groups: CircleWeightGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3401,10 +3377,10 @@ impl Zero for Dipole {
     }
 }
 
-impl Zero for DipoleBulkAspect {
+impl Zero for DipoleBulk {
     fn zero() -> Self {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups { g0: Simd32x3::from(0.0) },
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3420,10 +3396,10 @@ impl Zero for DipoleCarrierAspect {
     }
 }
 
-impl Zero for DipoleWeightAspect {
+impl Zero for DipoleWeight {
     fn zero() -> Self {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups { g0: Simd32x3::from(0.0) },
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3610,10 +3586,10 @@ impl Zero for RoundPointAtOrigin {
     }
 }
 
-impl Zero for RoundPointBulkAspect {
+impl Zero for RoundPointBulk {
     fn zero() -> Self {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups { g0: Simd32x3::from(0.0) },
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: Simd32x3::from(0.0) },
         }
     }
 }
@@ -3643,10 +3619,10 @@ impl Zero for Sphere {
     }
 }
 
-impl Zero for SphereWeightAspect {
+impl Zero for SphereWeight {
     fn zero() -> Self {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups { g0: 0.0 },
+        SphereWeight {
+            groups: SphereWeightGroups { g0: 0.0 },
         }
     }
 }
@@ -3694,12 +3670,12 @@ impl Neg for Circle {
     }
 }
 
-impl Neg for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Neg for CircleBulk {
+    type Output = CircleBulk;
 
-    fn neg(self) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups { g0: -self.group0() },
+    fn neg(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: -self.group0() },
         }
     }
 }
@@ -3716,12 +3692,12 @@ impl Neg for CircleCarrierAspect {
     }
 }
 
-impl Neg for CircleWeightAspect {
-    type Output = CircleWeightAspect;
+impl Neg for CircleWeight {
+    type Output = CircleWeight;
 
-    fn neg(self) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+    fn neg(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
         }
@@ -3742,12 +3718,12 @@ impl Neg for Dipole {
     }
 }
 
-impl Neg for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Neg for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn neg(self) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups {
+    fn neg(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -3767,12 +3743,12 @@ impl Neg for DipoleCarrierAspect {
     }
 }
 
-impl Neg for DipoleWeightAspect {
-    type Output = DipoleWeightAspect;
+impl Neg for DipoleWeight {
+    type Output = DipoleWeight;
 
-    fn neg(self) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups {
+    fn neg(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -4025,12 +4001,12 @@ impl Neg for RoundPointAtOrigin {
     }
 }
 
-impl Neg for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Neg for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn neg(self) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+    fn neg(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -4072,12 +4048,12 @@ impl Neg for Sphere {
     }
 }
 
-impl Neg for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Neg for SphereWeight {
+    type Output = SphereWeight;
 
-    fn neg(self) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups { g0: -self.group0() },
+    fn neg(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: -self.group0() },
         }
     }
 }
@@ -4147,10 +4123,10 @@ impl Add<Circle> for AntiScalar {
     }
 }
 
-impl Add<CircleBulkAspect> for AntiScalar {
+impl Add<CircleBulk> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -4191,10 +4167,10 @@ impl Add<CircleCarrierAspect> for AntiScalar {
     }
 }
 
-impl Add<CircleWeightAspect> for AntiScalar {
+impl Add<CircleWeight> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -4235,10 +4211,10 @@ impl Add<Dipole> for AntiScalar {
     }
 }
 
-impl Add<DipoleBulkAspect> for AntiScalar {
+impl Add<DipoleBulk> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -4279,10 +4255,10 @@ impl Add<DipoleCarrierAspect> for AntiScalar {
     }
 }
 
-impl Add<DipoleWeightAspect> for AntiScalar {
+impl Add<DipoleWeight> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -4683,10 +4659,10 @@ impl Add<RoundPointAtOrigin> for AntiScalar {
     }
 }
 
-impl Add<RoundPointBulkAspect> for AntiScalar {
+impl Add<RoundPointBulk> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -4761,10 +4737,10 @@ impl Add<Sphere> for AntiScalar {
     }
 }
 
-impl Add<SphereWeightAspect> for AntiScalar {
+impl Add<SphereWeight> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -4859,10 +4835,10 @@ impl AddAssign<Circle> for Circle {
     }
 }
 
-impl Add<CircleBulkAspect> for Circle {
+impl Add<CircleBulk> for Circle {
     type Output = Circle;
 
-    fn add(self, other: CircleBulkAspect) -> Circle {
+    fn add(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -4873,8 +4849,8 @@ impl Add<CircleBulkAspect> for Circle {
     }
 }
 
-impl AddAssign<CircleBulkAspect> for Circle {
-    fn add_assign(&mut self, other: CircleBulkAspect) {
+impl AddAssign<CircleBulk> for Circle {
+    fn add_assign(&mut self, other: CircleBulk) {
         *self = (*self).add(other);
     }
 }
@@ -4899,10 +4875,10 @@ impl AddAssign<CircleCarrierAspect> for Circle {
     }
 }
 
-impl Add<CircleWeightAspect> for Circle {
+impl Add<CircleWeight> for Circle {
     type Output = Circle;
 
-    fn add(self, other: CircleWeightAspect) -> Circle {
+    fn add(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -4913,8 +4889,8 @@ impl Add<CircleWeightAspect> for Circle {
     }
 }
 
-impl AddAssign<CircleWeightAspect> for Circle {
-    fn add_assign(&mut self, other: CircleWeightAspect) {
+impl AddAssign<CircleWeight> for Circle {
+    fn add_assign(&mut self, other: CircleWeight) {
         *self = (*self).add(other);
     }
 }
@@ -4941,10 +4917,10 @@ impl Add<Dipole> for Circle {
     }
 }
 
-impl Add<DipoleBulkAspect> for Circle {
+impl Add<DipoleBulk> for Circle {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -4985,10 +4961,10 @@ impl Add<DipoleCarrierAspect> for Circle {
     }
 }
 
-impl Add<DipoleWeightAspect> for Circle {
+impl Add<DipoleWeight> for Circle {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -5441,10 +5417,10 @@ impl Add<RoundPointAtOrigin> for Circle {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Circle {
+impl Add<RoundPointBulk> for Circle {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -5529,10 +5505,10 @@ impl Add<Sphere> for Circle {
     }
 }
 
-impl Add<SphereWeightAspect> for Circle {
+impl Add<SphereWeight> for Circle {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -5595,7 +5571,7 @@ impl Add<Translator> for Circle {
     }
 }
 
-impl Add<AntiScalar> for CircleBulkAspect {
+impl Add<AntiScalar> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -5617,7 +5593,7 @@ impl Add<AntiScalar> for CircleBulkAspect {
     }
 }
 
-impl Add<Circle> for CircleBulkAspect {
+impl Add<Circle> for CircleBulk {
     type Output = Circle;
 
     fn add(self, other: Circle) -> Circle {
@@ -5631,25 +5607,25 @@ impl Add<Circle> for CircleBulkAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Add<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
 
-    fn add(self, other: CircleBulkAspect) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups {
+    fn add(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<CircleBulkAspect> for CircleBulkAspect {
-    fn add_assign(&mut self, other: CircleBulkAspect) {
+impl AddAssign<CircleBulk> for CircleBulk {
+    fn add_assign(&mut self, other: CircleBulk) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<CircleCarrierAspect> for CircleBulkAspect {
+impl Add<CircleCarrierAspect> for CircleBulk {
     type Output = CircleCarrierAspect;
 
     fn add(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
@@ -5661,10 +5637,10 @@ impl Add<CircleCarrierAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for CircleBulkAspect {
+impl Add<CircleWeight> for CircleBulk {
     type Output = CircleCarrierAspect;
 
-    fn add(self, other: CircleWeightAspect) -> CircleCarrierAspect {
+    fn add(self, other: CircleWeight) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -5673,7 +5649,7 @@ impl Add<CircleWeightAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<Dipole> for CircleBulkAspect {
+impl Add<Dipole> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Dipole) -> MultiVector {
@@ -5695,10 +5671,10 @@ impl Add<Dipole> for CircleBulkAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for CircleBulkAspect {
+impl Add<DipoleBulk> for CircleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -5717,7 +5693,7 @@ impl Add<DipoleBulkAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<DipoleCarrierAspect> for CircleBulkAspect {
+impl Add<DipoleCarrierAspect> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -5739,10 +5715,10 @@ impl Add<DipoleCarrierAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for CircleBulkAspect {
+impl Add<DipoleWeight> for CircleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -5761,7 +5737,7 @@ impl Add<DipoleWeightAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<FlatPoint> for CircleBulkAspect {
+impl Add<FlatPoint> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlatPoint) -> MultiVector {
@@ -5783,7 +5759,7 @@ impl Add<FlatPoint> for CircleBulkAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for CircleBulkAspect {
+impl Add<FlatPointAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -5805,7 +5781,7 @@ impl Add<FlatPointAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for CircleBulkAspect {
+impl Add<FlatPointAtOrigin> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -5827,7 +5803,7 @@ impl Add<FlatPointAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Add<Flector> for CircleBulkAspect {
+impl Add<Flector> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -5849,7 +5825,7 @@ impl Add<Flector> for CircleBulkAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for CircleBulkAspect {
+impl Add<FlectorAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -5871,7 +5847,7 @@ impl Add<FlectorAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Add<Horizon> for CircleBulkAspect {
+impl Add<Horizon> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Horizon) -> MultiVector {
@@ -5893,7 +5869,7 @@ impl Add<Horizon> for CircleBulkAspect {
     }
 }
 
-impl Add<Infinity> for CircleBulkAspect {
+impl Add<Infinity> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Infinity) -> MultiVector {
@@ -5915,7 +5891,7 @@ impl Add<Infinity> for CircleBulkAspect {
     }
 }
 
-impl Add<Line> for CircleBulkAspect {
+impl Add<Line> for CircleBulk {
     type Output = Circle;
 
     fn add(self, other: Line) -> Circle {
@@ -5929,7 +5905,7 @@ impl Add<Line> for CircleBulkAspect {
     }
 }
 
-impl Add<LineAtInfinity> for CircleBulkAspect {
+impl Add<LineAtInfinity> for CircleBulk {
     type Output = Circle;
 
     fn add(self, other: LineAtInfinity) -> Circle {
@@ -5943,7 +5919,7 @@ impl Add<LineAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Add<LineAtOrigin> for CircleBulkAspect {
+impl Add<LineAtOrigin> for CircleBulk {
     type Output = Circle;
 
     fn add(self, other: LineAtOrigin) -> Circle {
@@ -5957,7 +5933,7 @@ impl Add<LineAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Add<Magnitude> for CircleBulkAspect {
+impl Add<Magnitude> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Magnitude) -> MultiVector {
@@ -5979,7 +5955,7 @@ impl Add<Magnitude> for CircleBulkAspect {
     }
 }
 
-impl Add<Motor> for CircleBulkAspect {
+impl Add<Motor> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -6001,7 +5977,7 @@ impl Add<Motor> for CircleBulkAspect {
     }
 }
 
-impl Add<MultiVector> for CircleBulkAspect {
+impl Add<MultiVector> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -6023,7 +5999,7 @@ impl Add<MultiVector> for CircleBulkAspect {
     }
 }
 
-impl Add<Origin> for CircleBulkAspect {
+impl Add<Origin> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Origin) -> MultiVector {
@@ -6045,7 +6021,7 @@ impl Add<Origin> for CircleBulkAspect {
     }
 }
 
-impl Add<Plane> for CircleBulkAspect {
+impl Add<Plane> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Plane) -> MultiVector {
@@ -6067,7 +6043,7 @@ impl Add<Plane> for CircleBulkAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for CircleBulkAspect {
+impl Add<PlaneAtOrigin> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: PlaneAtOrigin) -> MultiVector {
@@ -6089,7 +6065,7 @@ impl Add<PlaneAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Add<Rotor> for CircleBulkAspect {
+impl Add<Rotor> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -6111,7 +6087,7 @@ impl Add<Rotor> for CircleBulkAspect {
     }
 }
 
-impl Add<RoundPoint> for CircleBulkAspect {
+impl Add<RoundPoint> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPoint) -> MultiVector {
@@ -6133,7 +6109,7 @@ impl Add<RoundPoint> for CircleBulkAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for CircleBulkAspect {
+impl Add<RoundPointAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -6155,7 +6131,7 @@ impl Add<RoundPointAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for CircleBulkAspect {
+impl Add<RoundPointAtOrigin> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -6177,10 +6153,10 @@ impl Add<RoundPointAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for CircleBulkAspect {
+impl Add<RoundPointBulk> for CircleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -6199,7 +6175,7 @@ impl Add<RoundPointBulkAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for CircleBulkAspect {
+impl Add<RoundPointCarrierAspect> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -6221,7 +6197,7 @@ impl Add<RoundPointCarrierAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<Scalar> for CircleBulkAspect {
+impl Add<Scalar> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -6243,7 +6219,7 @@ impl Add<Scalar> for CircleBulkAspect {
     }
 }
 
-impl Add<Sphere> for CircleBulkAspect {
+impl Add<Sphere> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Sphere) -> MultiVector {
@@ -6265,10 +6241,10 @@ impl Add<Sphere> for CircleBulkAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for CircleBulkAspect {
+impl Add<SphereWeight> for CircleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -6287,7 +6263,7 @@ impl Add<SphereWeightAspect> for CircleBulkAspect {
     }
 }
 
-impl Add<Transflector> for CircleBulkAspect {
+impl Add<Transflector> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -6309,7 +6285,7 @@ impl Add<Transflector> for CircleBulkAspect {
     }
 }
 
-impl Add<Translator> for CircleBulkAspect {
+impl Add<Translator> for CircleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -6367,10 +6343,10 @@ impl Add<Circle> for CircleCarrierAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for CircleCarrierAspect {
+impl Add<CircleBulk> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn add(self, other: CircleBulkAspect) -> CircleCarrierAspect {
+    fn add(self, other: CircleBulk) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -6379,8 +6355,8 @@ impl Add<CircleBulkAspect> for CircleCarrierAspect {
     }
 }
 
-impl AddAssign<CircleBulkAspect> for CircleCarrierAspect {
-    fn add_assign(&mut self, other: CircleBulkAspect) {
+impl AddAssign<CircleBulk> for CircleCarrierAspect {
+    fn add_assign(&mut self, other: CircleBulk) {
         *self = (*self).add(other);
     }
 }
@@ -6403,10 +6379,10 @@ impl AddAssign<CircleCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for CircleCarrierAspect {
+impl Add<CircleWeight> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn add(self, other: CircleWeightAspect) -> CircleCarrierAspect {
+    fn add(self, other: CircleWeight) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -6415,8 +6391,8 @@ impl Add<CircleWeightAspect> for CircleCarrierAspect {
     }
 }
 
-impl AddAssign<CircleWeightAspect> for CircleCarrierAspect {
-    fn add_assign(&mut self, other: CircleWeightAspect) {
+impl AddAssign<CircleWeight> for CircleCarrierAspect {
+    fn add_assign(&mut self, other: CircleWeight) {
         *self = (*self).add(other);
     }
 }
@@ -6443,10 +6419,10 @@ impl Add<Dipole> for CircleCarrierAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for CircleCarrierAspect {
+impl Add<DipoleBulk> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -6487,10 +6463,10 @@ impl Add<DipoleCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for CircleCarrierAspect {
+impl Add<DipoleWeight> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -6925,10 +6901,10 @@ impl Add<RoundPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for CircleCarrierAspect {
+impl Add<RoundPointBulk> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7013,10 +6989,10 @@ impl Add<Sphere> for CircleCarrierAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for CircleCarrierAspect {
+impl Add<SphereWeight> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7079,7 +7055,7 @@ impl Add<Translator> for CircleCarrierAspect {
     }
 }
 
-impl Add<AntiScalar> for CircleWeightAspect {
+impl Add<AntiScalar> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -7101,7 +7077,7 @@ impl Add<AntiScalar> for CircleWeightAspect {
     }
 }
 
-impl Add<Circle> for CircleWeightAspect {
+impl Add<Circle> for CircleWeight {
     type Output = Circle;
 
     fn add(self, other: Circle) -> Circle {
@@ -7115,10 +7091,10 @@ impl Add<Circle> for CircleWeightAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for CircleWeightAspect {
+impl Add<CircleBulk> for CircleWeight {
     type Output = CircleCarrierAspect;
 
-    fn add(self, other: CircleBulkAspect) -> CircleCarrierAspect {
+    fn add(self, other: CircleBulk) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -7127,7 +7103,7 @@ impl Add<CircleBulkAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<CircleCarrierAspect> for CircleWeightAspect {
+impl Add<CircleCarrierAspect> for CircleWeight {
     type Output = CircleCarrierAspect;
 
     fn add(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
@@ -7139,25 +7115,25 @@ impl Add<CircleCarrierAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for CircleWeightAspect {
-    type Output = CircleWeightAspect;
+impl Add<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
 
-    fn add(self, other: CircleWeightAspect) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+    fn add(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<CircleWeightAspect> for CircleWeightAspect {
-    fn add_assign(&mut self, other: CircleWeightAspect) {
+impl AddAssign<CircleWeight> for CircleWeight {
+    fn add_assign(&mut self, other: CircleWeight) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<Dipole> for CircleWeightAspect {
+impl Add<Dipole> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Dipole) -> MultiVector {
@@ -7179,10 +7155,10 @@ impl Add<Dipole> for CircleWeightAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for CircleWeightAspect {
+impl Add<DipoleBulk> for CircleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7201,7 +7177,7 @@ impl Add<DipoleBulkAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<DipoleCarrierAspect> for CircleWeightAspect {
+impl Add<DipoleCarrierAspect> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -7223,10 +7199,10 @@ impl Add<DipoleCarrierAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for CircleWeightAspect {
+impl Add<DipoleWeight> for CircleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7245,7 +7221,7 @@ impl Add<DipoleWeightAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<FlatPoint> for CircleWeightAspect {
+impl Add<FlatPoint> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlatPoint) -> MultiVector {
@@ -7267,7 +7243,7 @@ impl Add<FlatPoint> for CircleWeightAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for CircleWeightAspect {
+impl Add<FlatPointAtInfinity> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -7289,7 +7265,7 @@ impl Add<FlatPointAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for CircleWeightAspect {
+impl Add<FlatPointAtOrigin> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -7311,7 +7287,7 @@ impl Add<FlatPointAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Add<Flector> for CircleWeightAspect {
+impl Add<Flector> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -7333,7 +7309,7 @@ impl Add<Flector> for CircleWeightAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for CircleWeightAspect {
+impl Add<FlectorAtInfinity> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -7355,7 +7331,7 @@ impl Add<FlectorAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Add<Horizon> for CircleWeightAspect {
+impl Add<Horizon> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Horizon) -> MultiVector {
@@ -7377,7 +7353,7 @@ impl Add<Horizon> for CircleWeightAspect {
     }
 }
 
-impl Add<Infinity> for CircleWeightAspect {
+impl Add<Infinity> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Infinity) -> MultiVector {
@@ -7399,7 +7375,7 @@ impl Add<Infinity> for CircleWeightAspect {
     }
 }
 
-impl Add<Line> for CircleWeightAspect {
+impl Add<Line> for CircleWeight {
     type Output = Circle;
 
     fn add(self, other: Line) -> Circle {
@@ -7413,7 +7389,7 @@ impl Add<Line> for CircleWeightAspect {
     }
 }
 
-impl Add<LineAtInfinity> for CircleWeightAspect {
+impl Add<LineAtInfinity> for CircleWeight {
     type Output = Circle;
 
     fn add(self, other: LineAtInfinity) -> Circle {
@@ -7427,7 +7403,7 @@ impl Add<LineAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Add<LineAtOrigin> for CircleWeightAspect {
+impl Add<LineAtOrigin> for CircleWeight {
     type Output = Circle;
 
     fn add(self, other: LineAtOrigin) -> Circle {
@@ -7441,7 +7417,7 @@ impl Add<LineAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Add<Magnitude> for CircleWeightAspect {
+impl Add<Magnitude> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Magnitude) -> MultiVector {
@@ -7463,7 +7439,7 @@ impl Add<Magnitude> for CircleWeightAspect {
     }
 }
 
-impl Add<Motor> for CircleWeightAspect {
+impl Add<Motor> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -7485,7 +7461,7 @@ impl Add<Motor> for CircleWeightAspect {
     }
 }
 
-impl Add<MultiVector> for CircleWeightAspect {
+impl Add<MultiVector> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -7507,7 +7483,7 @@ impl Add<MultiVector> for CircleWeightAspect {
     }
 }
 
-impl Add<Origin> for CircleWeightAspect {
+impl Add<Origin> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Origin) -> MultiVector {
@@ -7529,7 +7505,7 @@ impl Add<Origin> for CircleWeightAspect {
     }
 }
 
-impl Add<Plane> for CircleWeightAspect {
+impl Add<Plane> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Plane) -> MultiVector {
@@ -7551,7 +7527,7 @@ impl Add<Plane> for CircleWeightAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for CircleWeightAspect {
+impl Add<PlaneAtOrigin> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: PlaneAtOrigin) -> MultiVector {
@@ -7573,7 +7549,7 @@ impl Add<PlaneAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Add<Rotor> for CircleWeightAspect {
+impl Add<Rotor> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -7595,7 +7571,7 @@ impl Add<Rotor> for CircleWeightAspect {
     }
 }
 
-impl Add<RoundPoint> for CircleWeightAspect {
+impl Add<RoundPoint> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPoint) -> MultiVector {
@@ -7617,7 +7593,7 @@ impl Add<RoundPoint> for CircleWeightAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for CircleWeightAspect {
+impl Add<RoundPointAtInfinity> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -7639,7 +7615,7 @@ impl Add<RoundPointAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for CircleWeightAspect {
+impl Add<RoundPointAtOrigin> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -7661,10 +7637,10 @@ impl Add<RoundPointAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for CircleWeightAspect {
+impl Add<RoundPointBulk> for CircleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7683,7 +7659,7 @@ impl Add<RoundPointBulkAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for CircleWeightAspect {
+impl Add<RoundPointCarrierAspect> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -7705,7 +7681,7 @@ impl Add<RoundPointCarrierAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<Scalar> for CircleWeightAspect {
+impl Add<Scalar> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -7727,7 +7703,7 @@ impl Add<Scalar> for CircleWeightAspect {
     }
 }
 
-impl Add<Sphere> for CircleWeightAspect {
+impl Add<Sphere> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Sphere) -> MultiVector {
@@ -7749,10 +7725,10 @@ impl Add<Sphere> for CircleWeightAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for CircleWeightAspect {
+impl Add<SphereWeight> for CircleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7771,7 +7747,7 @@ impl Add<SphereWeightAspect> for CircleWeightAspect {
     }
 }
 
-impl Add<Transflector> for CircleWeightAspect {
+impl Add<Transflector> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -7793,7 +7769,7 @@ impl Add<Transflector> for CircleWeightAspect {
     }
 }
 
-impl Add<Translator> for CircleWeightAspect {
+impl Add<Translator> for CircleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -7859,10 +7835,10 @@ impl Add<Circle> for Dipole {
     }
 }
 
-impl Add<CircleBulkAspect> for Dipole {
+impl Add<CircleBulk> for Dipole {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7903,10 +7879,10 @@ impl Add<CircleCarrierAspect> for Dipole {
     }
 }
 
-impl Add<CircleWeightAspect> for Dipole {
+impl Add<CircleWeight> for Dipole {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7945,10 +7921,10 @@ impl AddAssign<Dipole> for Dipole {
     }
 }
 
-impl Add<DipoleBulkAspect> for Dipole {
+impl Add<DipoleBulk> for Dipole {
     type Output = Dipole;
 
-    fn add(self, other: DipoleBulkAspect) -> Dipole {
+    fn add(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: self.group0(),
@@ -7959,8 +7935,8 @@ impl Add<DipoleBulkAspect> for Dipole {
     }
 }
 
-impl AddAssign<DipoleBulkAspect> for Dipole {
-    fn add_assign(&mut self, other: DipoleBulkAspect) {
+impl AddAssign<DipoleBulk> for Dipole {
+    fn add_assign(&mut self, other: DipoleBulk) {
         *self = (*self).add(other);
     }
 }
@@ -7985,10 +7961,10 @@ impl AddAssign<DipoleCarrierAspect> for Dipole {
     }
 }
 
-impl Add<DipoleWeightAspect> for Dipole {
+impl Add<DipoleWeight> for Dipole {
     type Output = Dipole;
 
-    fn add(self, other: DipoleWeightAspect) -> Dipole {
+    fn add(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: self.group0() + other.group0(),
@@ -7999,8 +7975,8 @@ impl Add<DipoleWeightAspect> for Dipole {
     }
 }
 
-impl AddAssign<DipoleWeightAspect> for Dipole {
-    fn add_assign(&mut self, other: DipoleWeightAspect) {
+impl AddAssign<DipoleWeight> for Dipole {
+    fn add_assign(&mut self, other: DipoleWeight) {
         *self = (*self).add(other);
     }
 }
@@ -8439,10 +8415,10 @@ impl Add<RoundPointAtOrigin> for Dipole {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Dipole {
+impl Add<RoundPointBulk> for Dipole {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -8527,10 +8503,10 @@ impl Add<Sphere> for Dipole {
     }
 }
 
-impl Add<SphereWeightAspect> for Dipole {
+impl Add<SphereWeight> for Dipole {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -8593,7 +8569,7 @@ impl Add<Translator> for Dipole {
     }
 }
 
-impl Add<AntiScalar> for DipoleBulkAspect {
+impl Add<AntiScalar> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -8615,7 +8591,7 @@ impl Add<AntiScalar> for DipoleBulkAspect {
     }
 }
 
-impl Add<Circle> for DipoleBulkAspect {
+impl Add<Circle> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Circle) -> MultiVector {
@@ -8637,10 +8613,10 @@ impl Add<Circle> for DipoleBulkAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for DipoleBulkAspect {
+impl Add<CircleBulk> for DipoleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -8659,7 +8635,7 @@ impl Add<CircleBulkAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<CircleCarrierAspect> for DipoleBulkAspect {
+impl Add<CircleCarrierAspect> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: CircleCarrierAspect) -> MultiVector {
@@ -8681,10 +8657,10 @@ impl Add<CircleCarrierAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for DipoleBulkAspect {
+impl Add<CircleWeight> for DipoleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -8703,7 +8679,7 @@ impl Add<CircleWeightAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<Dipole> for DipoleBulkAspect {
+impl Add<Dipole> for DipoleBulk {
     type Output = Dipole;
 
     fn add(self, other: Dipole) -> Dipole {
@@ -8717,25 +8693,25 @@ impl Add<Dipole> for DipoleBulkAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Add<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn add(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups {
+    fn add(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<DipoleBulkAspect> for DipoleBulkAspect {
-    fn add_assign(&mut self, other: DipoleBulkAspect) {
+impl AddAssign<DipoleBulk> for DipoleBulk {
+    fn add_assign(&mut self, other: DipoleBulk) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<DipoleCarrierAspect> for DipoleBulkAspect {
+impl Add<DipoleCarrierAspect> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
     fn add(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
@@ -8748,10 +8724,10 @@ impl Add<DipoleCarrierAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for DipoleBulkAspect {
+impl Add<DipoleWeight> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
-    fn add(self, other: DipoleWeightAspect) -> DipoleCarrierAspect {
+    fn add(self, other: DipoleWeight) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: other.group0(),
@@ -8761,7 +8737,7 @@ impl Add<DipoleWeightAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<FlatPoint> for DipoleBulkAspect {
+impl Add<FlatPoint> for DipoleBulk {
     type Output = Dipole;
 
     fn add(self, other: FlatPoint) -> Dipole {
@@ -8775,7 +8751,7 @@ impl Add<FlatPoint> for DipoleBulkAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for DipoleBulkAspect {
+impl Add<FlatPointAtInfinity> for DipoleBulk {
     type Output = Dipole;
 
     fn add(self, other: FlatPointAtInfinity) -> Dipole {
@@ -8789,7 +8765,7 @@ impl Add<FlatPointAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for DipoleBulkAspect {
+impl Add<FlatPointAtOrigin> for DipoleBulk {
     type Output = Dipole;
 
     fn add(self, other: FlatPointAtOrigin) -> Dipole {
@@ -8803,7 +8779,7 @@ impl Add<FlatPointAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Add<Flector> for DipoleBulkAspect {
+impl Add<Flector> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -8825,7 +8801,7 @@ impl Add<Flector> for DipoleBulkAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for DipoleBulkAspect {
+impl Add<FlectorAtInfinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -8847,7 +8823,7 @@ impl Add<FlectorAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Add<Horizon> for DipoleBulkAspect {
+impl Add<Horizon> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Horizon) -> MultiVector {
@@ -8869,7 +8845,7 @@ impl Add<Horizon> for DipoleBulkAspect {
     }
 }
 
-impl Add<Infinity> for DipoleBulkAspect {
+impl Add<Infinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Infinity) -> MultiVector {
@@ -8891,7 +8867,7 @@ impl Add<Infinity> for DipoleBulkAspect {
     }
 }
 
-impl Add<Line> for DipoleBulkAspect {
+impl Add<Line> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Line) -> MultiVector {
@@ -8913,7 +8889,7 @@ impl Add<Line> for DipoleBulkAspect {
     }
 }
 
-impl Add<LineAtInfinity> for DipoleBulkAspect {
+impl Add<LineAtInfinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: LineAtInfinity) -> MultiVector {
@@ -8935,7 +8911,7 @@ impl Add<LineAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Add<LineAtOrigin> for DipoleBulkAspect {
+impl Add<LineAtOrigin> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: LineAtOrigin) -> MultiVector {
@@ -8957,7 +8933,7 @@ impl Add<LineAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Add<Magnitude> for DipoleBulkAspect {
+impl Add<Magnitude> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Magnitude) -> MultiVector {
@@ -8979,7 +8955,7 @@ impl Add<Magnitude> for DipoleBulkAspect {
     }
 }
 
-impl Add<Motor> for DipoleBulkAspect {
+impl Add<Motor> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -9001,7 +8977,7 @@ impl Add<Motor> for DipoleBulkAspect {
     }
 }
 
-impl Add<MultiVector> for DipoleBulkAspect {
+impl Add<MultiVector> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -9023,7 +8999,7 @@ impl Add<MultiVector> for DipoleBulkAspect {
     }
 }
 
-impl Add<Origin> for DipoleBulkAspect {
+impl Add<Origin> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Origin) -> MultiVector {
@@ -9045,7 +9021,7 @@ impl Add<Origin> for DipoleBulkAspect {
     }
 }
 
-impl Add<Plane> for DipoleBulkAspect {
+impl Add<Plane> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Plane) -> MultiVector {
@@ -9067,7 +9043,7 @@ impl Add<Plane> for DipoleBulkAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for DipoleBulkAspect {
+impl Add<PlaneAtOrigin> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: PlaneAtOrigin) -> MultiVector {
@@ -9089,7 +9065,7 @@ impl Add<PlaneAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Add<Rotor> for DipoleBulkAspect {
+impl Add<Rotor> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -9111,7 +9087,7 @@ impl Add<Rotor> for DipoleBulkAspect {
     }
 }
 
-impl Add<RoundPoint> for DipoleBulkAspect {
+impl Add<RoundPoint> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPoint) -> MultiVector {
@@ -9133,7 +9109,7 @@ impl Add<RoundPoint> for DipoleBulkAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for DipoleBulkAspect {
+impl Add<RoundPointAtInfinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -9155,7 +9131,7 @@ impl Add<RoundPointAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for DipoleBulkAspect {
+impl Add<RoundPointAtOrigin> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -9177,10 +9153,10 @@ impl Add<RoundPointAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for DipoleBulkAspect {
+impl Add<RoundPointBulk> for DipoleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9199,7 +9175,7 @@ impl Add<RoundPointBulkAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for DipoleBulkAspect {
+impl Add<RoundPointCarrierAspect> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -9221,7 +9197,7 @@ impl Add<RoundPointCarrierAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<Scalar> for DipoleBulkAspect {
+impl Add<Scalar> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -9243,7 +9219,7 @@ impl Add<Scalar> for DipoleBulkAspect {
     }
 }
 
-impl Add<Sphere> for DipoleBulkAspect {
+impl Add<Sphere> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Sphere) -> MultiVector {
@@ -9265,10 +9241,10 @@ impl Add<Sphere> for DipoleBulkAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for DipoleBulkAspect {
+impl Add<SphereWeight> for DipoleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9287,7 +9263,7 @@ impl Add<SphereWeightAspect> for DipoleBulkAspect {
     }
 }
 
-impl Add<Transflector> for DipoleBulkAspect {
+impl Add<Transflector> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -9309,7 +9285,7 @@ impl Add<Transflector> for DipoleBulkAspect {
     }
 }
 
-impl Add<Translator> for DipoleBulkAspect {
+impl Add<Translator> for DipoleBulk {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -9375,10 +9351,10 @@ impl Add<Circle> for DipoleCarrierAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for DipoleCarrierAspect {
+impl Add<CircleBulk> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9419,10 +9395,10 @@ impl Add<CircleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for DipoleCarrierAspect {
+impl Add<CircleWeight> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9455,10 +9431,10 @@ impl Add<Dipole> for DipoleCarrierAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for DipoleCarrierAspect {
+impl Add<DipoleBulk> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn add(self, other: DipoleBulkAspect) -> DipoleCarrierAspect {
+    fn add(self, other: DipoleBulk) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0(),
@@ -9468,8 +9444,8 @@ impl Add<DipoleBulkAspect> for DipoleCarrierAspect {
     }
 }
 
-impl AddAssign<DipoleBulkAspect> for DipoleCarrierAspect {
-    fn add_assign(&mut self, other: DipoleBulkAspect) {
+impl AddAssign<DipoleBulk> for DipoleCarrierAspect {
+    fn add_assign(&mut self, other: DipoleBulk) {
         *self = (*self).add(other);
     }
 }
@@ -9493,10 +9469,10 @@ impl AddAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for DipoleCarrierAspect {
+impl Add<DipoleWeight> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn add(self, other: DipoleWeightAspect) -> DipoleCarrierAspect {
+    fn add(self, other: DipoleWeight) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0() + other.group0(),
@@ -9506,8 +9482,8 @@ impl Add<DipoleWeightAspect> for DipoleCarrierAspect {
     }
 }
 
-impl AddAssign<DipoleWeightAspect> for DipoleCarrierAspect {
-    fn add_assign(&mut self, other: DipoleWeightAspect) {
+impl AddAssign<DipoleWeight> for DipoleCarrierAspect {
+    fn add_assign(&mut self, other: DipoleWeight) {
         *self = (*self).add(other);
     }
 }
@@ -9928,10 +9904,10 @@ impl Add<RoundPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for DipoleCarrierAspect {
+impl Add<RoundPointBulk> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10016,10 +9992,10 @@ impl Add<Sphere> for DipoleCarrierAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for DipoleCarrierAspect {
+impl Add<SphereWeight> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10082,7 +10058,7 @@ impl Add<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl Add<AntiScalar> for DipoleWeightAspect {
+impl Add<AntiScalar> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -10104,7 +10080,7 @@ impl Add<AntiScalar> for DipoleWeightAspect {
     }
 }
 
-impl Add<Circle> for DipoleWeightAspect {
+impl Add<Circle> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Circle) -> MultiVector {
@@ -10126,10 +10102,10 @@ impl Add<Circle> for DipoleWeightAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for DipoleWeightAspect {
+impl Add<CircleBulk> for DipoleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10148,7 +10124,7 @@ impl Add<CircleBulkAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<CircleCarrierAspect> for DipoleWeightAspect {
+impl Add<CircleCarrierAspect> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: CircleCarrierAspect) -> MultiVector {
@@ -10170,10 +10146,10 @@ impl Add<CircleCarrierAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for DipoleWeightAspect {
+impl Add<CircleWeight> for DipoleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10192,7 +10168,7 @@ impl Add<CircleWeightAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<Dipole> for DipoleWeightAspect {
+impl Add<Dipole> for DipoleWeight {
     type Output = Dipole;
 
     fn add(self, other: Dipole) -> Dipole {
@@ -10206,10 +10182,10 @@ impl Add<Dipole> for DipoleWeightAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for DipoleWeightAspect {
+impl Add<DipoleBulk> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn add(self, other: DipoleBulkAspect) -> DipoleCarrierAspect {
+    fn add(self, other: DipoleBulk) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0(),
@@ -10219,7 +10195,7 @@ impl Add<DipoleBulkAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<DipoleCarrierAspect> for DipoleWeightAspect {
+impl Add<DipoleCarrierAspect> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
     fn add(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
@@ -10232,25 +10208,25 @@ impl Add<DipoleCarrierAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for DipoleWeightAspect {
-    type Output = DipoleWeightAspect;
+impl Add<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
 
-    fn add(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups {
+    fn add(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<DipoleWeightAspect> for DipoleWeightAspect {
-    fn add_assign(&mut self, other: DipoleWeightAspect) {
+impl AddAssign<DipoleWeight> for DipoleWeight {
+    fn add_assign(&mut self, other: DipoleWeight) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<FlatPoint> for DipoleWeightAspect {
+impl Add<FlatPoint> for DipoleWeight {
     type Output = Dipole;
 
     fn add(self, other: FlatPoint) -> Dipole {
@@ -10264,7 +10240,7 @@ impl Add<FlatPoint> for DipoleWeightAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for DipoleWeightAspect {
+impl Add<FlatPointAtInfinity> for DipoleWeight {
     type Output = Dipole;
 
     fn add(self, other: FlatPointAtInfinity) -> Dipole {
@@ -10278,7 +10254,7 @@ impl Add<FlatPointAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for DipoleWeightAspect {
+impl Add<FlatPointAtOrigin> for DipoleWeight {
     type Output = Dipole;
 
     fn add(self, other: FlatPointAtOrigin) -> Dipole {
@@ -10292,7 +10268,7 @@ impl Add<FlatPointAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Add<Flector> for DipoleWeightAspect {
+impl Add<Flector> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -10314,7 +10290,7 @@ impl Add<Flector> for DipoleWeightAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for DipoleWeightAspect {
+impl Add<FlectorAtInfinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -10336,7 +10312,7 @@ impl Add<FlectorAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Add<Horizon> for DipoleWeightAspect {
+impl Add<Horizon> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Horizon) -> MultiVector {
@@ -10358,7 +10334,7 @@ impl Add<Horizon> for DipoleWeightAspect {
     }
 }
 
-impl Add<Infinity> for DipoleWeightAspect {
+impl Add<Infinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Infinity) -> MultiVector {
@@ -10380,7 +10356,7 @@ impl Add<Infinity> for DipoleWeightAspect {
     }
 }
 
-impl Add<Line> for DipoleWeightAspect {
+impl Add<Line> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Line) -> MultiVector {
@@ -10402,7 +10378,7 @@ impl Add<Line> for DipoleWeightAspect {
     }
 }
 
-impl Add<LineAtInfinity> for DipoleWeightAspect {
+impl Add<LineAtInfinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: LineAtInfinity) -> MultiVector {
@@ -10424,7 +10400,7 @@ impl Add<LineAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Add<LineAtOrigin> for DipoleWeightAspect {
+impl Add<LineAtOrigin> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: LineAtOrigin) -> MultiVector {
@@ -10446,7 +10422,7 @@ impl Add<LineAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Add<Magnitude> for DipoleWeightAspect {
+impl Add<Magnitude> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Magnitude) -> MultiVector {
@@ -10468,7 +10444,7 @@ impl Add<Magnitude> for DipoleWeightAspect {
     }
 }
 
-impl Add<Motor> for DipoleWeightAspect {
+impl Add<Motor> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -10490,7 +10466,7 @@ impl Add<Motor> for DipoleWeightAspect {
     }
 }
 
-impl Add<MultiVector> for DipoleWeightAspect {
+impl Add<MultiVector> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -10512,7 +10488,7 @@ impl Add<MultiVector> for DipoleWeightAspect {
     }
 }
 
-impl Add<Origin> for DipoleWeightAspect {
+impl Add<Origin> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Origin) -> MultiVector {
@@ -10534,7 +10510,7 @@ impl Add<Origin> for DipoleWeightAspect {
     }
 }
 
-impl Add<Plane> for DipoleWeightAspect {
+impl Add<Plane> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Plane) -> MultiVector {
@@ -10556,7 +10532,7 @@ impl Add<Plane> for DipoleWeightAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for DipoleWeightAspect {
+impl Add<PlaneAtOrigin> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: PlaneAtOrigin) -> MultiVector {
@@ -10578,7 +10554,7 @@ impl Add<PlaneAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Add<Rotor> for DipoleWeightAspect {
+impl Add<Rotor> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -10600,7 +10576,7 @@ impl Add<Rotor> for DipoleWeightAspect {
     }
 }
 
-impl Add<RoundPoint> for DipoleWeightAspect {
+impl Add<RoundPoint> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPoint) -> MultiVector {
@@ -10622,7 +10598,7 @@ impl Add<RoundPoint> for DipoleWeightAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for DipoleWeightAspect {
+impl Add<RoundPointAtInfinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -10644,7 +10620,7 @@ impl Add<RoundPointAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for DipoleWeightAspect {
+impl Add<RoundPointAtOrigin> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -10666,10 +10642,10 @@ impl Add<RoundPointAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for DipoleWeightAspect {
+impl Add<RoundPointBulk> for DipoleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10688,7 +10664,7 @@ impl Add<RoundPointBulkAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for DipoleWeightAspect {
+impl Add<RoundPointCarrierAspect> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -10710,7 +10686,7 @@ impl Add<RoundPointCarrierAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<Scalar> for DipoleWeightAspect {
+impl Add<Scalar> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -10732,7 +10708,7 @@ impl Add<Scalar> for DipoleWeightAspect {
     }
 }
 
-impl Add<Sphere> for DipoleWeightAspect {
+impl Add<Sphere> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Sphere) -> MultiVector {
@@ -10754,10 +10730,10 @@ impl Add<Sphere> for DipoleWeightAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for DipoleWeightAspect {
+impl Add<SphereWeight> for DipoleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10776,7 +10752,7 @@ impl Add<SphereWeightAspect> for DipoleWeightAspect {
     }
 }
 
-impl Add<Transflector> for DipoleWeightAspect {
+impl Add<Transflector> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -10798,7 +10774,7 @@ impl Add<Transflector> for DipoleWeightAspect {
     }
 }
 
-impl Add<Translator> for DipoleWeightAspect {
+impl Add<Translator> for DipoleWeight {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -10864,10 +10840,10 @@ impl Add<Circle> for FlatPoint {
     }
 }
 
-impl Add<CircleBulkAspect> for FlatPoint {
+impl Add<CircleBulk> for FlatPoint {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10908,10 +10884,10 @@ impl Add<CircleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Add<CircleWeightAspect> for FlatPoint {
+impl Add<CircleWeight> for FlatPoint {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10944,10 +10920,10 @@ impl Add<Dipole> for FlatPoint {
     }
 }
 
-impl Add<DipoleBulkAspect> for FlatPoint {
+impl Add<DipoleBulk> for FlatPoint {
     type Output = Dipole;
 
-    fn add(self, other: DipoleBulkAspect) -> Dipole {
+    fn add(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -10972,10 +10948,10 @@ impl Add<DipoleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Add<DipoleWeightAspect> for FlatPoint {
+impl Add<DipoleWeight> for FlatPoint {
     type Output = Dipole;
 
-    fn add(self, other: DipoleWeightAspect) -> Dipole {
+    fn add(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: other.group0(),
@@ -11369,10 +11345,10 @@ impl Add<RoundPointAtOrigin> for FlatPoint {
     }
 }
 
-impl Add<RoundPointBulkAspect> for FlatPoint {
+impl Add<RoundPointBulk> for FlatPoint {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11457,10 +11433,10 @@ impl Add<Sphere> for FlatPoint {
     }
 }
 
-impl Add<SphereWeightAspect> for FlatPoint {
+impl Add<SphereWeight> for FlatPoint {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11558,10 +11534,10 @@ impl Add<Circle> for FlatPointAtInfinity {
     }
 }
 
-impl Add<CircleBulkAspect> for FlatPointAtInfinity {
+impl Add<CircleBulk> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11602,10 +11578,10 @@ impl Add<CircleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Add<CircleWeightAspect> for FlatPointAtInfinity {
+impl Add<CircleWeight> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11638,10 +11614,10 @@ impl Add<Dipole> for FlatPointAtInfinity {
     }
 }
 
-impl Add<DipoleBulkAspect> for FlatPointAtInfinity {
+impl Add<DipoleBulk> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn add(self, other: DipoleBulkAspect) -> Dipole {
+    fn add(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -11666,10 +11642,10 @@ impl Add<DipoleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Add<DipoleWeightAspect> for FlatPointAtInfinity {
+impl Add<DipoleWeight> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn add(self, other: DipoleWeightAspect) -> Dipole {
+    fn add(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: other.group0(),
@@ -12049,10 +12025,10 @@ impl Add<RoundPointAtOrigin> for FlatPointAtInfinity {
     }
 }
 
-impl Add<RoundPointBulkAspect> for FlatPointAtInfinity {
+impl Add<RoundPointBulk> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12137,10 +12113,10 @@ impl Add<Sphere> for FlatPointAtInfinity {
     }
 }
 
-impl Add<SphereWeightAspect> for FlatPointAtInfinity {
+impl Add<SphereWeight> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12238,10 +12214,10 @@ impl Add<Circle> for FlatPointAtOrigin {
     }
 }
 
-impl Add<CircleBulkAspect> for FlatPointAtOrigin {
+impl Add<CircleBulk> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12282,10 +12258,10 @@ impl Add<CircleCarrierAspect> for FlatPointAtOrigin {
     }
 }
 
-impl Add<CircleWeightAspect> for FlatPointAtOrigin {
+impl Add<CircleWeight> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12318,10 +12294,10 @@ impl Add<Dipole> for FlatPointAtOrigin {
     }
 }
 
-impl Add<DipoleBulkAspect> for FlatPointAtOrigin {
+impl Add<DipoleBulk> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn add(self, other: DipoleBulkAspect) -> Dipole {
+    fn add(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -12346,10 +12322,10 @@ impl Add<DipoleCarrierAspect> for FlatPointAtOrigin {
     }
 }
 
-impl Add<DipoleWeightAspect> for FlatPointAtOrigin {
+impl Add<DipoleWeight> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn add(self, other: DipoleWeightAspect) -> Dipole {
+    fn add(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: other.group0(),
@@ -12731,10 +12707,10 @@ impl Add<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl Add<RoundPointBulkAspect> for FlatPointAtOrigin {
+impl Add<RoundPointBulk> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12819,10 +12795,10 @@ impl Add<Sphere> for FlatPointAtOrigin {
     }
 }
 
-impl Add<SphereWeightAspect> for FlatPointAtOrigin {
+impl Add<SphereWeight> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12920,10 +12896,10 @@ impl Add<Circle> for Flector {
     }
 }
 
-impl Add<CircleBulkAspect> for Flector {
+impl Add<CircleBulk> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -12964,10 +12940,10 @@ impl Add<CircleCarrierAspect> for Flector {
     }
 }
 
-impl Add<CircleWeightAspect> for Flector {
+impl Add<CircleWeight> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13008,10 +12984,10 @@ impl Add<Dipole> for Flector {
     }
 }
 
-impl Add<DipoleBulkAspect> for Flector {
+impl Add<DipoleBulk> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13052,10 +13028,10 @@ impl Add<DipoleCarrierAspect> for Flector {
     }
 }
 
-impl Add<DipoleWeightAspect> for Flector {
+impl Add<DipoleWeight> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13490,10 +13466,10 @@ impl Add<RoundPointAtOrigin> for Flector {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Flector {
+impl Add<RoundPointBulk> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13578,10 +13554,10 @@ impl Add<Sphere> for Flector {
     }
 }
 
-impl Add<SphereWeightAspect> for Flector {
+impl Add<SphereWeight> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13685,10 +13661,10 @@ impl Add<Circle> for FlectorAtInfinity {
     }
 }
 
-impl Add<CircleBulkAspect> for FlectorAtInfinity {
+impl Add<CircleBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13729,10 +13705,10 @@ impl Add<CircleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Add<CircleWeightAspect> for FlectorAtInfinity {
+impl Add<CircleWeight> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13773,10 +13749,10 @@ impl Add<Dipole> for FlectorAtInfinity {
     }
 }
 
-impl Add<DipoleBulkAspect> for FlectorAtInfinity {
+impl Add<DipoleBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13817,10 +13793,10 @@ impl Add<DipoleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Add<DipoleWeightAspect> for FlectorAtInfinity {
+impl Add<DipoleWeight> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14222,10 +14198,10 @@ impl Add<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl Add<RoundPointBulkAspect> for FlectorAtInfinity {
+impl Add<RoundPointBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14310,10 +14286,10 @@ impl Add<Sphere> for FlectorAtInfinity {
     }
 }
 
-impl Add<SphereWeightAspect> for FlectorAtInfinity {
+impl Add<SphereWeight> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14411,10 +14387,10 @@ impl Add<Circle> for Horizon {
     }
 }
 
-impl Add<CircleBulkAspect> for Horizon {
+impl Add<CircleBulk> for Horizon {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14455,10 +14431,10 @@ impl Add<CircleCarrierAspect> for Horizon {
     }
 }
 
-impl Add<CircleWeightAspect> for Horizon {
+impl Add<CircleWeight> for Horizon {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14499,10 +14475,10 @@ impl Add<Dipole> for Horizon {
     }
 }
 
-impl Add<DipoleBulkAspect> for Horizon {
+impl Add<DipoleBulk> for Horizon {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14543,10 +14519,10 @@ impl Add<DipoleCarrierAspect> for Horizon {
     }
 }
 
-impl Add<DipoleWeightAspect> for Horizon {
+impl Add<DipoleWeight> for Horizon {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14934,10 +14910,10 @@ impl Add<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Horizon {
+impl Add<RoundPointBulk> for Horizon {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15013,10 +14989,10 @@ impl Add<Sphere> for Horizon {
     }
 }
 
-impl Add<SphereWeightAspect> for Horizon {
+impl Add<SphereWeight> for Horizon {
     type Output = Sphere;
 
-    fn add(self, other: SphereWeightAspect) -> Sphere {
+    fn add(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0),
@@ -15105,10 +15081,10 @@ impl Add<Circle> for Infinity {
     }
 }
 
-impl Add<CircleBulkAspect> for Infinity {
+impl Add<CircleBulk> for Infinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15149,10 +15125,10 @@ impl Add<CircleCarrierAspect> for Infinity {
     }
 }
 
-impl Add<CircleWeightAspect> for Infinity {
+impl Add<CircleWeight> for Infinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15193,10 +15169,10 @@ impl Add<Dipole> for Infinity {
     }
 }
 
-impl Add<DipoleBulkAspect> for Infinity {
+impl Add<DipoleBulk> for Infinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15237,10 +15213,10 @@ impl Add<DipoleCarrierAspect> for Infinity {
     }
 }
 
-impl Add<DipoleWeightAspect> for Infinity {
+impl Add<DipoleWeight> for Infinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15656,10 +15632,10 @@ impl Add<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Infinity {
+impl Add<RoundPointBulk> for Infinity {
     type Output = RoundPointAtInfinity;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPointAtInfinity {
+    fn add(self, other: RoundPointBulk) -> RoundPointAtInfinity {
         RoundPointAtInfinity {
             groups: RoundPointAtInfinityGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -15725,10 +15701,10 @@ impl Add<Sphere> for Infinity {
     }
 }
 
-impl Add<SphereWeightAspect> for Infinity {
+impl Add<SphereWeight> for Infinity {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15818,10 +15794,10 @@ impl Add<Circle> for Line {
     }
 }
 
-impl Add<CircleBulkAspect> for Line {
+impl Add<CircleBulk> for Line {
     type Output = Circle;
 
-    fn add(self, other: CircleBulkAspect) -> Circle {
+    fn add(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -15846,10 +15822,10 @@ impl Add<CircleCarrierAspect> for Line {
     }
 }
 
-impl Add<CircleWeightAspect> for Line {
+impl Add<CircleWeight> for Line {
     type Output = Circle;
 
-    fn add(self, other: CircleWeightAspect) -> Circle {
+    fn add(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -15882,10 +15858,10 @@ impl Add<Dipole> for Line {
     }
 }
 
-impl Add<DipoleBulkAspect> for Line {
+impl Add<DipoleBulk> for Line {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15926,10 +15902,10 @@ impl Add<DipoleCarrierAspect> for Line {
     }
 }
 
-impl Add<DipoleWeightAspect> for Line {
+impl Add<DipoleWeight> for Line {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -16361,10 +16337,10 @@ impl Add<RoundPointAtOrigin> for Line {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Line {
+impl Add<RoundPointBulk> for Line {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -16449,10 +16425,10 @@ impl Add<Sphere> for Line {
     }
 }
 
-impl Add<SphereWeightAspect> for Line {
+impl Add<SphereWeight> for Line {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -16532,10 +16508,10 @@ impl Add<Circle> for LineAtInfinity {
     }
 }
 
-impl Add<CircleBulkAspect> for LineAtInfinity {
+impl Add<CircleBulk> for LineAtInfinity {
     type Output = Circle;
 
-    fn add(self, other: CircleBulkAspect) -> Circle {
+    fn add(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -16560,10 +16536,10 @@ impl Add<CircleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Add<CircleWeightAspect> for LineAtInfinity {
+impl Add<CircleWeight> for LineAtInfinity {
     type Output = Circle;
 
-    fn add(self, other: CircleWeightAspect) -> Circle {
+    fn add(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -16596,10 +16572,10 @@ impl Add<Dipole> for LineAtInfinity {
     }
 }
 
-impl Add<DipoleBulkAspect> for LineAtInfinity {
+impl Add<DipoleBulk> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -16640,10 +16616,10 @@ impl Add<DipoleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Add<DipoleWeightAspect> for LineAtInfinity {
+impl Add<DipoleWeight> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17062,10 +17038,10 @@ impl Add<RoundPointAtOrigin> for LineAtInfinity {
     }
 }
 
-impl Add<RoundPointBulkAspect> for LineAtInfinity {
+impl Add<RoundPointBulk> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17150,10 +17126,10 @@ impl Add<Sphere> for LineAtInfinity {
     }
 }
 
-impl Add<SphereWeightAspect> for LineAtInfinity {
+impl Add<SphereWeight> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17232,10 +17208,10 @@ impl Add<Circle> for LineAtOrigin {
     }
 }
 
-impl Add<CircleBulkAspect> for LineAtOrigin {
+impl Add<CircleBulk> for LineAtOrigin {
     type Output = Circle;
 
-    fn add(self, other: CircleBulkAspect) -> Circle {
+    fn add(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -17260,10 +17236,10 @@ impl Add<CircleCarrierAspect> for LineAtOrigin {
     }
 }
 
-impl Add<CircleWeightAspect> for LineAtOrigin {
+impl Add<CircleWeight> for LineAtOrigin {
     type Output = Circle;
 
-    fn add(self, other: CircleWeightAspect) -> Circle {
+    fn add(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -17296,10 +17272,10 @@ impl Add<Dipole> for LineAtOrigin {
     }
 }
 
-impl Add<DipoleBulkAspect> for LineAtOrigin {
+impl Add<DipoleBulk> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17340,10 +17316,10 @@ impl Add<DipoleCarrierAspect> for LineAtOrigin {
     }
 }
 
-impl Add<DipoleWeightAspect> for LineAtOrigin {
+impl Add<DipoleWeight> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17761,10 +17737,10 @@ impl Add<RoundPointAtOrigin> for LineAtOrigin {
     }
 }
 
-impl Add<RoundPointBulkAspect> for LineAtOrigin {
+impl Add<RoundPointBulk> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17849,10 +17825,10 @@ impl Add<Sphere> for LineAtOrigin {
     }
 }
 
-impl Add<SphereWeightAspect> for LineAtOrigin {
+impl Add<SphereWeight> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -17946,10 +17922,10 @@ impl Add<Circle> for Magnitude {
     }
 }
 
-impl Add<CircleBulkAspect> for Magnitude {
+impl Add<CircleBulk> for Magnitude {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -17990,10 +17966,10 @@ impl Add<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl Add<CircleWeightAspect> for Magnitude {
+impl Add<CircleWeight> for Magnitude {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -18034,10 +18010,10 @@ impl Add<Dipole> for Magnitude {
     }
 }
 
-impl Add<DipoleBulkAspect> for Magnitude {
+impl Add<DipoleBulk> for Magnitude {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -18078,10 +18054,10 @@ impl Add<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl Add<DipoleWeightAspect> for Magnitude {
+impl Add<DipoleWeight> for Magnitude {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -18536,10 +18512,10 @@ impl Add<RoundPointAtOrigin> for Magnitude {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Magnitude {
+impl Add<RoundPointBulk> for Magnitude {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -18620,10 +18596,10 @@ impl Add<Sphere> for Magnitude {
     }
 }
 
-impl Add<SphereWeightAspect> for Magnitude {
+impl Add<SphereWeight> for Magnitude {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -18727,10 +18703,10 @@ impl Add<Circle> for Motor {
     }
 }
 
-impl Add<CircleBulkAspect> for Motor {
+impl Add<CircleBulk> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -18771,10 +18747,10 @@ impl Add<CircleCarrierAspect> for Motor {
     }
 }
 
-impl Add<CircleWeightAspect> for Motor {
+impl Add<CircleWeight> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -18815,10 +18791,10 @@ impl Add<Dipole> for Motor {
     }
 }
 
-impl Add<DipoleBulkAspect> for Motor {
+impl Add<DipoleBulk> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -18859,10 +18835,10 @@ impl Add<DipoleCarrierAspect> for Motor {
     }
 }
 
-impl Add<DipoleWeightAspect> for Motor {
+impl Add<DipoleWeight> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -19306,10 +19282,10 @@ impl Add<RoundPointAtOrigin> for Motor {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Motor {
+impl Add<RoundPointBulk> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -19394,10 +19370,10 @@ impl Add<Sphere> for Motor {
     }
 }
 
-impl Add<SphereWeightAspect> for Motor {
+impl Add<SphereWeight> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -19513,10 +19489,10 @@ impl AddAssign<Circle> for MultiVector {
     }
 }
 
-impl Add<CircleBulkAspect> for MultiVector {
+impl Add<CircleBulk> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -19535,8 +19511,8 @@ impl Add<CircleBulkAspect> for MultiVector {
     }
 }
 
-impl AddAssign<CircleBulkAspect> for MultiVector {
-    fn add_assign(&mut self, other: CircleBulkAspect) {
+impl AddAssign<CircleBulk> for MultiVector {
+    fn add_assign(&mut self, other: CircleBulk) {
         *self = (*self).add(other);
     }
 }
@@ -19569,10 +19545,10 @@ impl AddAssign<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Add<CircleWeightAspect> for MultiVector {
+impl Add<CircleWeight> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -19591,8 +19567,8 @@ impl Add<CircleWeightAspect> for MultiVector {
     }
 }
 
-impl AddAssign<CircleWeightAspect> for MultiVector {
-    fn add_assign(&mut self, other: CircleWeightAspect) {
+impl AddAssign<CircleWeight> for MultiVector {
+    fn add_assign(&mut self, other: CircleWeight) {
         *self = (*self).add(other);
     }
 }
@@ -19625,10 +19601,10 @@ impl AddAssign<Dipole> for MultiVector {
     }
 }
 
-impl Add<DipoleBulkAspect> for MultiVector {
+impl Add<DipoleBulk> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -19647,8 +19623,8 @@ impl Add<DipoleBulkAspect> for MultiVector {
     }
 }
 
-impl AddAssign<DipoleBulkAspect> for MultiVector {
-    fn add_assign(&mut self, other: DipoleBulkAspect) {
+impl AddAssign<DipoleBulk> for MultiVector {
+    fn add_assign(&mut self, other: DipoleBulk) {
         *self = (*self).add(other);
     }
 }
@@ -19681,10 +19657,10 @@ impl AddAssign<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Add<DipoleWeightAspect> for MultiVector {
+impl Add<DipoleWeight> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -19703,8 +19679,8 @@ impl Add<DipoleWeightAspect> for MultiVector {
     }
 }
 
-impl AddAssign<DipoleWeightAspect> for MultiVector {
-    fn add_assign(&mut self, other: DipoleWeightAspect) {
+impl AddAssign<DipoleWeight> for MultiVector {
+    fn add_assign(&mut self, other: DipoleWeight) {
         *self = (*self).add(other);
     }
 }
@@ -20269,10 +20245,10 @@ impl AddAssign<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Add<RoundPointBulkAspect> for MultiVector {
+impl Add<RoundPointBulk> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -20291,8 +20267,8 @@ impl Add<RoundPointBulkAspect> for MultiVector {
     }
 }
 
-impl AddAssign<RoundPointBulkAspect> for MultiVector {
-    fn add_assign(&mut self, other: RoundPointBulkAspect) {
+impl AddAssign<RoundPointBulk> for MultiVector {
+    fn add_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).add(other);
     }
 }
@@ -20381,10 +20357,10 @@ impl AddAssign<Sphere> for MultiVector {
     }
 }
 
-impl Add<SphereWeightAspect> for MultiVector {
+impl Add<SphereWeight> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -20403,8 +20379,8 @@ impl Add<SphereWeightAspect> for MultiVector {
     }
 }
 
-impl AddAssign<SphereWeightAspect> for MultiVector {
-    fn add_assign(&mut self, other: SphereWeightAspect) {
+impl AddAssign<SphereWeight> for MultiVector {
+    fn add_assign(&mut self, other: SphereWeight) {
         *self = (*self).add(other);
     }
 }
@@ -20509,10 +20485,10 @@ impl Add<Circle> for Origin {
     }
 }
 
-impl Add<CircleBulkAspect> for Origin {
+impl Add<CircleBulk> for Origin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -20553,10 +20529,10 @@ impl Add<CircleCarrierAspect> for Origin {
     }
 }
 
-impl Add<CircleWeightAspect> for Origin {
+impl Add<CircleWeight> for Origin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -20597,10 +20573,10 @@ impl Add<Dipole> for Origin {
     }
 }
 
-impl Add<DipoleBulkAspect> for Origin {
+impl Add<DipoleBulk> for Origin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -20641,10 +20617,10 @@ impl Add<DipoleCarrierAspect> for Origin {
     }
 }
 
-impl Add<DipoleWeightAspect> for Origin {
+impl Add<DipoleWeight> for Origin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21061,10 +21037,10 @@ impl Add<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Origin {
+impl Add<RoundPointBulk> for Origin {
     type Output = RoundPointCarrierAspect;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPointCarrierAspect {
+    fn add(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -21129,10 +21105,10 @@ impl Add<Sphere> for Origin {
     }
 }
 
-impl Add<SphereWeightAspect> for Origin {
+impl Add<SphereWeight> for Origin {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21239,10 +21215,10 @@ impl Add<Circle> for Plane {
     }
 }
 
-impl Add<CircleBulkAspect> for Plane {
+impl Add<CircleBulk> for Plane {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21283,10 +21259,10 @@ impl Add<CircleCarrierAspect> for Plane {
     }
 }
 
-impl Add<CircleWeightAspect> for Plane {
+impl Add<CircleWeight> for Plane {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21327,10 +21303,10 @@ impl Add<Dipole> for Plane {
     }
 }
 
-impl Add<DipoleBulkAspect> for Plane {
+impl Add<DipoleBulk> for Plane {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21371,10 +21347,10 @@ impl Add<DipoleCarrierAspect> for Plane {
     }
 }
 
-impl Add<DipoleWeightAspect> for Plane {
+impl Add<DipoleWeight> for Plane {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21776,10 +21752,10 @@ impl Add<RoundPointAtOrigin> for Plane {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Plane {
+impl Add<RoundPointBulk> for Plane {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21855,10 +21831,10 @@ impl Add<Sphere> for Plane {
     }
 }
 
-impl Add<SphereWeightAspect> for Plane {
+impl Add<SphereWeight> for Plane {
     type Output = Sphere;
 
-    fn add(self, other: SphereWeightAspect) -> Sphere {
+    fn add(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
@@ -21947,10 +21923,10 @@ impl Add<Circle> for PlaneAtOrigin {
     }
 }
 
-impl Add<CircleBulkAspect> for PlaneAtOrigin {
+impl Add<CircleBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -21991,10 +21967,10 @@ impl Add<CircleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl Add<CircleWeightAspect> for PlaneAtOrigin {
+impl Add<CircleWeight> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -22035,10 +22011,10 @@ impl Add<Dipole> for PlaneAtOrigin {
     }
 }
 
-impl Add<DipoleBulkAspect> for PlaneAtOrigin {
+impl Add<DipoleBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -22079,10 +22055,10 @@ impl Add<DipoleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl Add<DipoleWeightAspect> for PlaneAtOrigin {
+impl Add<DipoleWeight> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -22472,10 +22448,10 @@ impl Add<RoundPointAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Add<RoundPointBulkAspect> for PlaneAtOrigin {
+impl Add<RoundPointBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -22551,10 +22527,10 @@ impl Add<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl Add<SphereWeightAspect> for PlaneAtOrigin {
+impl Add<SphereWeight> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn add(self, other: SphereWeightAspect) -> Sphere {
+    fn add(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: self.group0(),
@@ -22639,10 +22615,10 @@ impl Add<Circle> for Rotor {
     }
 }
 
-impl Add<CircleBulkAspect> for Rotor {
+impl Add<CircleBulk> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -22683,10 +22659,10 @@ impl Add<CircleCarrierAspect> for Rotor {
     }
 }
 
-impl Add<CircleWeightAspect> for Rotor {
+impl Add<CircleWeight> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -22727,10 +22703,10 @@ impl Add<Dipole> for Rotor {
     }
 }
 
-impl Add<DipoleBulkAspect> for Rotor {
+impl Add<DipoleBulk> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -22771,10 +22747,10 @@ impl Add<DipoleCarrierAspect> for Rotor {
     }
 }
 
-impl Add<DipoleWeightAspect> for Rotor {
+impl Add<DipoleWeight> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -23198,10 +23174,10 @@ impl Add<RoundPointAtOrigin> for Rotor {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Rotor {
+impl Add<RoundPointBulk> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -23286,10 +23262,10 @@ impl Add<Sphere> for Rotor {
     }
 }
 
-impl Add<SphereWeightAspect> for Rotor {
+impl Add<SphereWeight> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -23387,10 +23363,10 @@ impl Add<Circle> for RoundPoint {
     }
 }
 
-impl Add<CircleBulkAspect> for RoundPoint {
+impl Add<CircleBulk> for RoundPoint {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23431,10 +23407,10 @@ impl Add<CircleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Add<CircleWeightAspect> for RoundPoint {
+impl Add<CircleWeight> for RoundPoint {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23475,10 +23451,10 @@ impl Add<Dipole> for RoundPoint {
     }
 }
 
-impl Add<DipoleBulkAspect> for RoundPoint {
+impl Add<DipoleBulk> for RoundPoint {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23519,10 +23495,10 @@ impl Add<DipoleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Add<DipoleWeightAspect> for RoundPoint {
+impl Add<DipoleWeight> for RoundPoint {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23966,10 +23942,10 @@ impl AddAssign<RoundPointAtOrigin> for RoundPoint {
     }
 }
 
-impl Add<RoundPointBulkAspect> for RoundPoint {
+impl Add<RoundPointBulk> for RoundPoint {
     type Output = RoundPoint;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPoint {
+    fn add(self, other: RoundPointBulk) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0() + other.group0(),
@@ -23979,8 +23955,8 @@ impl Add<RoundPointBulkAspect> for RoundPoint {
     }
 }
 
-impl AddAssign<RoundPointBulkAspect> for RoundPoint {
-    fn add_assign(&mut self, other: RoundPointBulkAspect) {
+impl AddAssign<RoundPointBulk> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).add(other);
     }
 }
@@ -24048,10 +24024,10 @@ impl Add<Sphere> for RoundPoint {
     }
 }
 
-impl Add<SphereWeightAspect> for RoundPoint {
+impl Add<SphereWeight> for RoundPoint {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24158,10 +24134,10 @@ impl Add<Circle> for RoundPointAtInfinity {
     }
 }
 
-impl Add<CircleBulkAspect> for RoundPointAtInfinity {
+impl Add<CircleBulk> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24202,10 +24178,10 @@ impl Add<CircleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Add<CircleWeightAspect> for RoundPointAtInfinity {
+impl Add<CircleWeight> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24246,10 +24222,10 @@ impl Add<Dipole> for RoundPointAtInfinity {
     }
 }
 
-impl Add<DipoleBulkAspect> for RoundPointAtInfinity {
+impl Add<DipoleBulk> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24290,10 +24266,10 @@ impl Add<DipoleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Add<DipoleWeightAspect> for RoundPointAtInfinity {
+impl Add<DipoleWeight> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24717,10 +24693,10 @@ impl Add<RoundPointAtOrigin> for RoundPointAtInfinity {
     }
 }
 
-impl Add<RoundPointBulkAspect> for RoundPointAtInfinity {
+impl Add<RoundPointBulk> for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPointAtInfinity {
+    fn add(self, other: RoundPointBulk) -> RoundPointAtInfinity {
         RoundPointAtInfinity {
             groups: RoundPointAtInfinityGroups {
                 g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -24729,8 +24705,8 @@ impl Add<RoundPointBulkAspect> for RoundPointAtInfinity {
     }
 }
 
-impl AddAssign<RoundPointBulkAspect> for RoundPointAtInfinity {
-    fn add_assign(&mut self, other: RoundPointBulkAspect) {
+impl AddAssign<RoundPointBulk> for RoundPointAtInfinity {
+    fn add_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).add(other);
     }
 }
@@ -24792,10 +24768,10 @@ impl Add<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl Add<SphereWeightAspect> for RoundPointAtInfinity {
+impl Add<SphereWeight> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24902,10 +24878,10 @@ impl Add<Circle> for RoundPointAtOrigin {
     }
 }
 
-impl Add<CircleBulkAspect> for RoundPointAtOrigin {
+impl Add<CircleBulk> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24946,10 +24922,10 @@ impl Add<CircleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Add<CircleWeightAspect> for RoundPointAtOrigin {
+impl Add<CircleWeight> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -24990,10 +24966,10 @@ impl Add<Dipole> for RoundPointAtOrigin {
     }
 }
 
-impl Add<DipoleBulkAspect> for RoundPointAtOrigin {
+impl Add<DipoleBulk> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25034,10 +25010,10 @@ impl Add<DipoleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Add<DipoleWeightAspect> for RoundPointAtOrigin {
+impl Add<DipoleWeight> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25466,10 +25442,10 @@ impl AddAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Add<RoundPointBulkAspect> for RoundPointAtOrigin {
+impl Add<RoundPointBulk> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPoint {
+    fn add(self, other: RoundPointBulk) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: other.group0(),
@@ -25536,10 +25512,10 @@ impl Add<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl Add<SphereWeightAspect> for RoundPointAtOrigin {
+impl Add<SphereWeight> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25602,7 +25578,7 @@ impl Add<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl Add<AntiScalar> for RoundPointBulkAspect {
+impl Add<AntiScalar> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -25624,7 +25600,7 @@ impl Add<AntiScalar> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Circle> for RoundPointBulkAspect {
+impl Add<Circle> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Circle) -> MultiVector {
@@ -25646,10 +25622,10 @@ impl Add<Circle> for RoundPointBulkAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for RoundPointBulkAspect {
+impl Add<CircleBulk> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25668,7 +25644,7 @@ impl Add<CircleBulkAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<CircleCarrierAspect> for RoundPointBulkAspect {
+impl Add<CircleCarrierAspect> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: CircleCarrierAspect) -> MultiVector {
@@ -25690,10 +25666,10 @@ impl Add<CircleCarrierAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for RoundPointBulkAspect {
+impl Add<CircleWeight> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25712,7 +25688,7 @@ impl Add<CircleWeightAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Dipole> for RoundPointBulkAspect {
+impl Add<Dipole> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Dipole) -> MultiVector {
@@ -25734,10 +25710,10 @@ impl Add<Dipole> for RoundPointBulkAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for RoundPointBulkAspect {
+impl Add<DipoleBulk> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25756,7 +25732,7 @@ impl Add<DipoleBulkAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<DipoleCarrierAspect> for RoundPointBulkAspect {
+impl Add<DipoleCarrierAspect> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -25778,10 +25754,10 @@ impl Add<DipoleCarrierAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for RoundPointBulkAspect {
+impl Add<DipoleWeight> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -25800,7 +25776,7 @@ impl Add<DipoleWeightAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<FlatPoint> for RoundPointBulkAspect {
+impl Add<FlatPoint> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlatPoint) -> MultiVector {
@@ -25822,7 +25798,7 @@ impl Add<FlatPoint> for RoundPointBulkAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for RoundPointBulkAspect {
+impl Add<FlatPointAtInfinity> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -25844,7 +25820,7 @@ impl Add<FlatPointAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for RoundPointBulkAspect {
+impl Add<FlatPointAtOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -25866,7 +25842,7 @@ impl Add<FlatPointAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Flector> for RoundPointBulkAspect {
+impl Add<Flector> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -25888,7 +25864,7 @@ impl Add<Flector> for RoundPointBulkAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for RoundPointBulkAspect {
+impl Add<FlectorAtInfinity> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -25910,7 +25886,7 @@ impl Add<FlectorAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Horizon> for RoundPointBulkAspect {
+impl Add<Horizon> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Horizon) -> MultiVector {
@@ -25932,7 +25908,7 @@ impl Add<Horizon> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Infinity> for RoundPointBulkAspect {
+impl Add<Infinity> for RoundPointBulk {
     type Output = RoundPointAtInfinity;
 
     fn add(self, other: Infinity) -> RoundPointAtInfinity {
@@ -25944,7 +25920,7 @@ impl Add<Infinity> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Line> for RoundPointBulkAspect {
+impl Add<Line> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Line) -> MultiVector {
@@ -25966,7 +25942,7 @@ impl Add<Line> for RoundPointBulkAspect {
     }
 }
 
-impl Add<LineAtInfinity> for RoundPointBulkAspect {
+impl Add<LineAtInfinity> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: LineAtInfinity) -> MultiVector {
@@ -25988,7 +25964,7 @@ impl Add<LineAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Add<LineAtOrigin> for RoundPointBulkAspect {
+impl Add<LineAtOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: LineAtOrigin) -> MultiVector {
@@ -26010,7 +25986,7 @@ impl Add<LineAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Magnitude> for RoundPointBulkAspect {
+impl Add<Magnitude> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Magnitude) -> MultiVector {
@@ -26032,7 +26008,7 @@ impl Add<Magnitude> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Motor> for RoundPointBulkAspect {
+impl Add<Motor> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -26054,7 +26030,7 @@ impl Add<Motor> for RoundPointBulkAspect {
     }
 }
 
-impl Add<MultiVector> for RoundPointBulkAspect {
+impl Add<MultiVector> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -26076,7 +26052,7 @@ impl Add<MultiVector> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Origin> for RoundPointBulkAspect {
+impl Add<Origin> for RoundPointBulk {
     type Output = RoundPointCarrierAspect;
 
     fn add(self, other: Origin) -> RoundPointCarrierAspect {
@@ -26088,7 +26064,7 @@ impl Add<Origin> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Plane> for RoundPointBulkAspect {
+impl Add<Plane> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Plane) -> MultiVector {
@@ -26110,7 +26086,7 @@ impl Add<Plane> for RoundPointBulkAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for RoundPointBulkAspect {
+impl Add<PlaneAtOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: PlaneAtOrigin) -> MultiVector {
@@ -26132,7 +26108,7 @@ impl Add<PlaneAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Rotor> for RoundPointBulkAspect {
+impl Add<Rotor> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -26154,7 +26130,7 @@ impl Add<Rotor> for RoundPointBulkAspect {
     }
 }
 
-impl Add<RoundPoint> for RoundPointBulkAspect {
+impl Add<RoundPoint> for RoundPointBulk {
     type Output = RoundPoint;
 
     fn add(self, other: RoundPoint) -> RoundPoint {
@@ -26167,7 +26143,7 @@ impl Add<RoundPoint> for RoundPointBulkAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for RoundPointBulkAspect {
+impl Add<RoundPointAtInfinity> for RoundPointBulk {
     type Output = RoundPointAtInfinity;
 
     fn add(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
@@ -26179,7 +26155,7 @@ impl Add<RoundPointAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for RoundPointBulkAspect {
+impl Add<RoundPointAtOrigin> for RoundPointBulk {
     type Output = RoundPoint;
 
     fn add(self, other: RoundPointAtOrigin) -> RoundPoint {
@@ -26192,25 +26168,25 @@ impl Add<RoundPointAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Add<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+    fn add(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<RoundPointBulkAspect> for RoundPointBulkAspect {
-    fn add_assign(&mut self, other: RoundPointBulkAspect) {
+impl AddAssign<RoundPointBulk> for RoundPointBulk {
+    fn add_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<RoundPointCarrierAspect> for RoundPointBulkAspect {
+impl Add<RoundPointCarrierAspect> for RoundPointBulk {
     type Output = RoundPointCarrierAspect;
 
     fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
@@ -26222,7 +26198,7 @@ impl Add<RoundPointCarrierAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Scalar> for RoundPointBulkAspect {
+impl Add<Scalar> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -26244,7 +26220,7 @@ impl Add<Scalar> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Sphere> for RoundPointBulkAspect {
+impl Add<Sphere> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Sphere) -> MultiVector {
@@ -26266,10 +26242,10 @@ impl Add<Sphere> for RoundPointBulkAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for RoundPointBulkAspect {
+impl Add<SphereWeight> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26288,7 +26264,7 @@ impl Add<SphereWeightAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Transflector> for RoundPointBulkAspect {
+impl Add<Transflector> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -26310,7 +26286,7 @@ impl Add<Transflector> for RoundPointBulkAspect {
     }
 }
 
-impl Add<Translator> for RoundPointBulkAspect {
+impl Add<Translator> for RoundPointBulk {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -26376,10 +26352,10 @@ impl Add<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for RoundPointCarrierAspect {
+impl Add<CircleBulk> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26420,10 +26396,10 @@ impl Add<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for RoundPointCarrierAspect {
+impl Add<CircleWeight> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26464,10 +26440,10 @@ impl Add<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for RoundPointCarrierAspect {
+impl Add<DipoleBulk> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26508,10 +26484,10 @@ impl Add<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for RoundPointCarrierAspect {
+impl Add<DipoleWeight> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -26930,10 +26906,10 @@ impl Add<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for RoundPointCarrierAspect {
+impl Add<RoundPointBulk> for RoundPointCarrierAspect {
     type Output = RoundPointCarrierAspect;
 
-    fn add(self, other: RoundPointBulkAspect) -> RoundPointCarrierAspect {
+    fn add(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -26942,8 +26918,8 @@ impl Add<RoundPointBulkAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl AddAssign<RoundPointBulkAspect> for RoundPointCarrierAspect {
-    fn add_assign(&mut self, other: RoundPointBulkAspect) {
+impl AddAssign<RoundPointBulk> for RoundPointCarrierAspect {
+    fn add_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).add(other);
     }
 }
@@ -27010,10 +26986,10 @@ impl Add<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for RoundPointCarrierAspect {
+impl Add<SphereWeight> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -27110,10 +27086,10 @@ impl Add<Circle> for Scalar {
     }
 }
 
-impl Add<CircleBulkAspect> for Scalar {
+impl Add<CircleBulk> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -27154,10 +27130,10 @@ impl Add<CircleCarrierAspect> for Scalar {
     }
 }
 
-impl Add<CircleWeightAspect> for Scalar {
+impl Add<CircleWeight> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -27198,10 +27174,10 @@ impl Add<Dipole> for Scalar {
     }
 }
 
-impl Add<DipoleBulkAspect> for Scalar {
+impl Add<DipoleBulk> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -27242,10 +27218,10 @@ impl Add<DipoleCarrierAspect> for Scalar {
     }
 }
 
-impl Add<DipoleWeightAspect> for Scalar {
+impl Add<DipoleWeight> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -27694,10 +27670,10 @@ impl Add<RoundPointAtOrigin> for Scalar {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Scalar {
+impl Add<RoundPointBulk> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -27778,10 +27754,10 @@ impl Add<Sphere> for Scalar {
     }
 }
 
-impl Add<SphereWeightAspect> for Scalar {
+impl Add<SphereWeight> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -27888,10 +27864,10 @@ impl Add<Circle> for Sphere {
     }
 }
 
-impl Add<CircleBulkAspect> for Sphere {
+impl Add<CircleBulk> for Sphere {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -27932,10 +27908,10 @@ impl Add<CircleCarrierAspect> for Sphere {
     }
 }
 
-impl Add<CircleWeightAspect> for Sphere {
+impl Add<CircleWeight> for Sphere {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -27976,10 +27952,10 @@ impl Add<Dipole> for Sphere {
     }
 }
 
-impl Add<DipoleBulkAspect> for Sphere {
+impl Add<DipoleBulk> for Sphere {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28020,10 +27996,10 @@ impl Add<DipoleCarrierAspect> for Sphere {
     }
 }
 
-impl Add<DipoleWeightAspect> for Sphere {
+impl Add<DipoleWeight> for Sphere {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28473,10 +28449,10 @@ impl Add<RoundPointAtOrigin> for Sphere {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Sphere {
+impl Add<RoundPointBulk> for Sphere {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28558,10 +28534,10 @@ impl AddAssign<Sphere> for Sphere {
     }
 }
 
-impl Add<SphereWeightAspect> for Sphere {
+impl Add<SphereWeight> for Sphere {
     type Output = Sphere;
 
-    fn add(self, other: SphereWeightAspect) -> Sphere {
+    fn add(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: self.group0(),
@@ -28571,8 +28547,8 @@ impl Add<SphereWeightAspect> for Sphere {
     }
 }
 
-impl AddAssign<SphereWeightAspect> for Sphere {
-    fn add_assign(&mut self, other: SphereWeightAspect) {
+impl AddAssign<SphereWeight> for Sphere {
+    fn add_assign(&mut self, other: SphereWeight) {
         *self = (*self).add(other);
     }
 }
@@ -28621,7 +28597,7 @@ impl Add<Translator> for Sphere {
     }
 }
 
-impl Add<AntiScalar> for SphereWeightAspect {
+impl Add<AntiScalar> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -28643,7 +28619,7 @@ impl Add<AntiScalar> for SphereWeightAspect {
     }
 }
 
-impl Add<Circle> for SphereWeightAspect {
+impl Add<Circle> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Circle) -> MultiVector {
@@ -28665,10 +28641,10 @@ impl Add<Circle> for SphereWeightAspect {
     }
 }
 
-impl Add<CircleBulkAspect> for SphereWeightAspect {
+impl Add<CircleBulk> for SphereWeight {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28687,7 +28663,7 @@ impl Add<CircleBulkAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<CircleCarrierAspect> for SphereWeightAspect {
+impl Add<CircleCarrierAspect> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: CircleCarrierAspect) -> MultiVector {
@@ -28709,10 +28685,10 @@ impl Add<CircleCarrierAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<CircleWeightAspect> for SphereWeightAspect {
+impl Add<CircleWeight> for SphereWeight {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28731,7 +28707,7 @@ impl Add<CircleWeightAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<Dipole> for SphereWeightAspect {
+impl Add<Dipole> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Dipole) -> MultiVector {
@@ -28753,10 +28729,10 @@ impl Add<Dipole> for SphereWeightAspect {
     }
 }
 
-impl Add<DipoleBulkAspect> for SphereWeightAspect {
+impl Add<DipoleBulk> for SphereWeight {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28775,7 +28751,7 @@ impl Add<DipoleBulkAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<DipoleCarrierAspect> for SphereWeightAspect {
+impl Add<DipoleCarrierAspect> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -28797,10 +28773,10 @@ impl Add<DipoleCarrierAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<DipoleWeightAspect> for SphereWeightAspect {
+impl Add<DipoleWeight> for SphereWeight {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -28819,7 +28795,7 @@ impl Add<DipoleWeightAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<FlatPoint> for SphereWeightAspect {
+impl Add<FlatPoint> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlatPoint) -> MultiVector {
@@ -28841,7 +28817,7 @@ impl Add<FlatPoint> for SphereWeightAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for SphereWeightAspect {
+impl Add<FlatPointAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -28863,7 +28839,7 @@ impl Add<FlatPointAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for SphereWeightAspect {
+impl Add<FlatPointAtOrigin> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -28885,7 +28861,7 @@ impl Add<FlatPointAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Add<Flector> for SphereWeightAspect {
+impl Add<Flector> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -28907,7 +28883,7 @@ impl Add<Flector> for SphereWeightAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for SphereWeightAspect {
+impl Add<FlectorAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -28929,7 +28905,7 @@ impl Add<FlectorAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Add<Horizon> for SphereWeightAspect {
+impl Add<Horizon> for SphereWeight {
     type Output = Sphere;
 
     fn add(self, other: Horizon) -> Sphere {
@@ -28942,7 +28918,7 @@ impl Add<Horizon> for SphereWeightAspect {
     }
 }
 
-impl Add<Infinity> for SphereWeightAspect {
+impl Add<Infinity> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Infinity) -> MultiVector {
@@ -28964,7 +28940,7 @@ impl Add<Infinity> for SphereWeightAspect {
     }
 }
 
-impl Add<Line> for SphereWeightAspect {
+impl Add<Line> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Line) -> MultiVector {
@@ -28986,7 +28962,7 @@ impl Add<Line> for SphereWeightAspect {
     }
 }
 
-impl Add<LineAtInfinity> for SphereWeightAspect {
+impl Add<LineAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: LineAtInfinity) -> MultiVector {
@@ -29008,7 +28984,7 @@ impl Add<LineAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Add<LineAtOrigin> for SphereWeightAspect {
+impl Add<LineAtOrigin> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: LineAtOrigin) -> MultiVector {
@@ -29030,7 +29006,7 @@ impl Add<LineAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Add<Magnitude> for SphereWeightAspect {
+impl Add<Magnitude> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Magnitude) -> MultiVector {
@@ -29052,7 +29028,7 @@ impl Add<Magnitude> for SphereWeightAspect {
     }
 }
 
-impl Add<Motor> for SphereWeightAspect {
+impl Add<Motor> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -29074,7 +29050,7 @@ impl Add<Motor> for SphereWeightAspect {
     }
 }
 
-impl Add<MultiVector> for SphereWeightAspect {
+impl Add<MultiVector> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -29096,7 +29072,7 @@ impl Add<MultiVector> for SphereWeightAspect {
     }
 }
 
-impl Add<Origin> for SphereWeightAspect {
+impl Add<Origin> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Origin) -> MultiVector {
@@ -29118,7 +29094,7 @@ impl Add<Origin> for SphereWeightAspect {
     }
 }
 
-impl Add<Plane> for SphereWeightAspect {
+impl Add<Plane> for SphereWeight {
     type Output = Sphere;
 
     fn add(self, other: Plane) -> Sphere {
@@ -29131,7 +29107,7 @@ impl Add<Plane> for SphereWeightAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for SphereWeightAspect {
+impl Add<PlaneAtOrigin> for SphereWeight {
     type Output = Sphere;
 
     fn add(self, other: PlaneAtOrigin) -> Sphere {
@@ -29144,7 +29120,7 @@ impl Add<PlaneAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Add<Rotor> for SphereWeightAspect {
+impl Add<Rotor> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -29166,7 +29142,7 @@ impl Add<Rotor> for SphereWeightAspect {
     }
 }
 
-impl Add<RoundPoint> for SphereWeightAspect {
+impl Add<RoundPoint> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPoint) -> MultiVector {
@@ -29188,7 +29164,7 @@ impl Add<RoundPoint> for SphereWeightAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for SphereWeightAspect {
+impl Add<RoundPointAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -29210,7 +29186,7 @@ impl Add<RoundPointAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for SphereWeightAspect {
+impl Add<RoundPointAtOrigin> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -29232,10 +29208,10 @@ impl Add<RoundPointAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Add<RoundPointBulkAspect> for SphereWeightAspect {
+impl Add<RoundPointBulk> for SphereWeight {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29254,7 +29230,7 @@ impl Add<RoundPointBulkAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for SphereWeightAspect {
+impl Add<RoundPointCarrierAspect> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -29276,7 +29252,7 @@ impl Add<RoundPointCarrierAspect> for SphereWeightAspect {
     }
 }
 
-impl Add<Scalar> for SphereWeightAspect {
+impl Add<Scalar> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -29298,7 +29274,7 @@ impl Add<Scalar> for SphereWeightAspect {
     }
 }
 
-impl Add<Sphere> for SphereWeightAspect {
+impl Add<Sphere> for SphereWeight {
     type Output = Sphere;
 
     fn add(self, other: Sphere) -> Sphere {
@@ -29311,25 +29287,25 @@ impl Add<Sphere> for SphereWeightAspect {
     }
 }
 
-impl Add<SphereWeightAspect> for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Add<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
 
-    fn add(self, other: SphereWeightAspect) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups {
+    fn add(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<SphereWeightAspect> for SphereWeightAspect {
-    fn add_assign(&mut self, other: SphereWeightAspect) {
+impl AddAssign<SphereWeight> for SphereWeight {
+    fn add_assign(&mut self, other: SphereWeight) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<Transflector> for SphereWeightAspect {
+impl Add<Transflector> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -29351,7 +29327,7 @@ impl Add<Transflector> for SphereWeightAspect {
     }
 }
 
-impl Add<Translator> for SphereWeightAspect {
+impl Add<Translator> for SphereWeight {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -29417,10 +29393,10 @@ impl Add<Circle> for Transflector {
     }
 }
 
-impl Add<CircleBulkAspect> for Transflector {
+impl Add<CircleBulk> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29461,10 +29437,10 @@ impl Add<CircleCarrierAspect> for Transflector {
     }
 }
 
-impl Add<CircleWeightAspect> for Transflector {
+impl Add<CircleWeight> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29505,10 +29481,10 @@ impl Add<Dipole> for Transflector {
     }
 }
 
-impl Add<DipoleBulkAspect> for Transflector {
+impl Add<DipoleBulk> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29549,10 +29525,10 @@ impl Add<DipoleCarrierAspect> for Transflector {
     }
 }
 
-impl Add<DipoleWeightAspect> for Transflector {
+impl Add<DipoleWeight> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -29969,10 +29945,10 @@ impl Add<RoundPointAtOrigin> for Transflector {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Transflector {
+impl Add<RoundPointBulk> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -30057,10 +30033,10 @@ impl Add<Sphere> for Transflector {
     }
 }
 
-impl Add<SphereWeightAspect> for Transflector {
+impl Add<SphereWeight> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -30160,10 +30136,10 @@ impl Add<Circle> for Translator {
     }
 }
 
-impl Add<CircleBulkAspect> for Translator {
+impl Add<CircleBulk> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: CircleBulkAspect) -> MultiVector {
+    fn add(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -30204,10 +30180,10 @@ impl Add<CircleCarrierAspect> for Translator {
     }
 }
 
-impl Add<CircleWeightAspect> for Translator {
+impl Add<CircleWeight> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: CircleWeightAspect) -> MultiVector {
+    fn add(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -30248,10 +30224,10 @@ impl Add<Dipole> for Translator {
     }
 }
 
-impl Add<DipoleBulkAspect> for Translator {
+impl Add<DipoleBulk> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleBulkAspect) -> MultiVector {
+    fn add(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -30292,10 +30268,10 @@ impl Add<DipoleCarrierAspect> for Translator {
     }
 }
 
-impl Add<DipoleWeightAspect> for Translator {
+impl Add<DipoleWeight> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: DipoleWeightAspect) -> MultiVector {
+    fn add(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -30714,10 +30690,10 @@ impl Add<RoundPointAtOrigin> for Translator {
     }
 }
 
-impl Add<RoundPointBulkAspect> for Translator {
+impl Add<RoundPointBulk> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn add(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -30802,10 +30778,10 @@ impl Add<Sphere> for Translator {
     }
 }
 
-impl Add<SphereWeightAspect> for Translator {
+impl Add<SphereWeight> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: SphereWeightAspect) -> MultiVector {
+    fn add(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -30908,20 +30884,20 @@ impl DivAssign<Circle> for Circle {
     }
 }
 
-impl Div<CircleBulkAspect> for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Div<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
 
-    fn div(self, other: CircleBulkAspect) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups {
+    fn div(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
                 g0: self.group0() * 1.0 / other.group0() * 1.0,
             },
         }
     }
 }
 
-impl DivAssign<CircleBulkAspect> for CircleBulkAspect {
-    fn div_assign(&mut self, other: CircleBulkAspect) {
+impl DivAssign<CircleBulk> for CircleBulk {
+    fn div_assign(&mut self, other: CircleBulk) {
         *self = (*self).div(other);
     }
 }
@@ -30946,12 +30922,12 @@ impl DivAssign<CircleCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Div<CircleWeightAspect> for CircleWeightAspect {
-    type Output = CircleWeightAspect;
+impl Div<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
 
-    fn div(self, other: CircleWeightAspect) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+    fn div(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
                     / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
                     * Simd32x3::from([1.0, 1.0, 1.0]),
@@ -30960,8 +30936,8 @@ impl Div<CircleWeightAspect> for CircleWeightAspect {
     }
 }
 
-impl DivAssign<CircleWeightAspect> for CircleWeightAspect {
-    fn div_assign(&mut self, other: CircleWeightAspect) {
+impl DivAssign<CircleWeight> for CircleWeight {
+    fn div_assign(&mut self, other: CircleWeight) {
         *self = (*self).div(other);
     }
 }
@@ -30992,12 +30968,12 @@ impl DivAssign<Dipole> for Dipole {
     }
 }
 
-impl Div<DipoleBulkAspect> for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Div<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn div(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups {
+    fn div(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
                     / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
                     * Simd32x3::from([1.0, 1.0, 1.0]),
@@ -31006,8 +30982,8 @@ impl Div<DipoleBulkAspect> for DipoleBulkAspect {
     }
 }
 
-impl DivAssign<DipoleBulkAspect> for DipoleBulkAspect {
-    fn div_assign(&mut self, other: DipoleBulkAspect) {
+impl DivAssign<DipoleBulk> for DipoleBulk {
+    fn div_assign(&mut self, other: DipoleBulk) {
         *self = (*self).div(other);
     }
 }
@@ -31035,12 +31011,12 @@ impl DivAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Div<DipoleWeightAspect> for DipoleWeightAspect {
-    type Output = DipoleWeightAspect;
+impl Div<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
 
-    fn div(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups {
+    fn div(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
                     / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
                     * Simd32x3::from([1.0, 1.0, 1.0]),
@@ -31049,8 +31025,8 @@ impl Div<DipoleWeightAspect> for DipoleWeightAspect {
     }
 }
 
-impl DivAssign<DipoleWeightAspect> for DipoleWeightAspect {
-    fn div_assign(&mut self, other: DipoleWeightAspect) {
+impl DivAssign<DipoleWeight> for DipoleWeight {
+    fn div_assign(&mut self, other: DipoleWeight) {
         *self = (*self).div(other);
     }
 }
@@ -31483,12 +31459,12 @@ impl DivAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Div<RoundPointBulkAspect> for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Div<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn div(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+    fn div(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
                     / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
                     * Simd32x3::from([1.0, 1.0, 1.0]),
@@ -31497,8 +31473,8 @@ impl Div<RoundPointBulkAspect> for RoundPointBulkAspect {
     }
 }
 
-impl DivAssign<RoundPointBulkAspect> for RoundPointBulkAspect {
-    fn div_assign(&mut self, other: RoundPointBulkAspect) {
+impl DivAssign<RoundPointBulk> for RoundPointBulk {
+    fn div_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).div(other);
     }
 }
@@ -31563,20 +31539,20 @@ impl DivAssign<Sphere> for Sphere {
     }
 }
 
-impl Div<SphereWeightAspect> for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Div<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
 
-    fn div(self, other: SphereWeightAspect) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups {
+    fn div(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
                 g0: self.group0() * 1.0 / other.group0() * 1.0,
             },
         }
     }
 }
 
-impl DivAssign<SphereWeightAspect> for SphereWeightAspect {
-    fn div_assign(&mut self, other: SphereWeightAspect) {
+impl DivAssign<SphereWeight> for SphereWeight {
+    fn div_assign(&mut self, other: SphereWeight) {
         *self = (*self).div(other);
     }
 }
@@ -31624,10 +31600,10 @@ impl DivAssign<Translator> for Translator {
     }
 }
 
-impl Into<CircleBulkAspect> for Circle {
-    fn into(self) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups { g0: self.group0()[3] },
+impl Into<CircleBulk> for Circle {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -31640,10 +31616,10 @@ impl Into<CircleCarrierAspect> for Circle {
     }
 }
 
-impl Into<CircleWeightAspect> for Circle {
-    fn into(self) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+impl Into<CircleWeight> for Circle {
+    fn into(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
@@ -31677,28 +31653,28 @@ impl Into<LineAtOrigin> for Circle {
     }
 }
 
-impl Into<CircleBulkAspect> for CircleCarrierAspect {
-    fn into(self) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups { g0: self.group0()[3] },
+impl Into<CircleBulk> for CircleCarrierAspect {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group0()[3] },
         }
     }
 }
 
-impl Into<CircleWeightAspect> for CircleCarrierAspect {
-    fn into(self) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+impl Into<CircleWeight> for CircleCarrierAspect {
+    fn into(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
     }
 }
 
-impl Into<DipoleBulkAspect> for Dipole {
-    fn into(self) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups { g0: self.group1() },
+impl Into<DipoleBulk> for Dipole {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group1() },
         }
     }
 }
@@ -31714,10 +31690,10 @@ impl Into<DipoleCarrierAspect> for Dipole {
     }
 }
 
-impl Into<DipoleWeightAspect> for Dipole {
-    fn into(self) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups { g0: self.group0() },
+impl Into<DipoleWeight> for Dipole {
+    fn into(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: self.group0() },
         }
     }
 }
@@ -31748,18 +31724,18 @@ impl Into<FlatPointAtOrigin> for Dipole {
     }
 }
 
-impl Into<DipoleBulkAspect> for DipoleCarrierAspect {
-    fn into(self) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups { g0: self.group1() },
+impl Into<DipoleBulk> for DipoleCarrierAspect {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group1() },
         }
     }
 }
 
-impl Into<DipoleWeightAspect> for DipoleCarrierAspect {
-    fn into(self) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups { g0: self.group0() },
+impl Into<DipoleWeight> for DipoleCarrierAspect {
+    fn into(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: self.group0() },
         }
     }
 }
@@ -31980,10 +31956,10 @@ impl Into<Circle> for MultiVector {
     }
 }
 
-impl Into<CircleBulkAspect> for MultiVector {
-    fn into(self) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups { g0: self.group6()[3] },
+impl Into<CircleBulk> for MultiVector {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group6()[3] },
         }
     }
 }
@@ -31996,10 +31972,10 @@ impl Into<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Into<CircleWeightAspect> for MultiVector {
-    fn into(self) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+impl Into<CircleWeight> for MultiVector {
+    fn into(self) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
             },
         }
@@ -32018,10 +31994,10 @@ impl Into<Dipole> for MultiVector {
     }
 }
 
-impl Into<DipoleBulkAspect> for MultiVector {
-    fn into(self) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups { g0: self.group4() },
+impl Into<DipoleBulk> for MultiVector {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group4() },
         }
     }
 }
@@ -32037,10 +32013,10 @@ impl Into<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Into<DipoleWeightAspect> for MultiVector {
-    fn into(self) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups { g0: self.group3() },
+impl Into<DipoleWeight> for MultiVector {
+    fn into(self) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: self.group3() },
         }
     }
 }
@@ -32219,10 +32195,10 @@ impl Into<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Into<RoundPointBulkAspect> for MultiVector {
-    fn into(self) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups { g0: self.group1() },
+impl Into<RoundPointBulk> for MultiVector {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: self.group1() },
         }
     }
 }
@@ -32256,10 +32232,10 @@ impl Into<Sphere> for MultiVector {
     }
 }
 
-impl Into<SphereWeightAspect> for MultiVector {
-    fn into(self) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups { g0: self.group10()[0] },
+impl Into<SphereWeight> for MultiVector {
+    fn into(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: self.group10()[0] },
         }
     }
 }
@@ -32355,10 +32331,10 @@ impl Into<RoundPointAtOrigin> for RoundPoint {
     }
 }
 
-impl Into<RoundPointBulkAspect> for RoundPoint {
-    fn into(self) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups { g0: self.group0() },
+impl Into<RoundPointBulk> for RoundPoint {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: self.group0() },
         }
     }
 }
@@ -32381,10 +32357,10 @@ impl Into<Infinity> for RoundPointAtInfinity {
     }
 }
 
-impl Into<RoundPointBulkAspect> for RoundPointAtInfinity {
-    fn into(self) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+impl Into<RoundPointBulk> for RoundPointAtInfinity {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
@@ -32415,10 +32391,10 @@ impl Into<Origin> for RoundPointCarrierAspect {
     }
 }
 
-impl Into<RoundPointBulkAspect> for RoundPointCarrierAspect {
-    fn into(self) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+impl Into<RoundPointBulk> for RoundPointCarrierAspect {
+    fn into(self) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
             },
         }
@@ -32451,10 +32427,10 @@ impl Into<PlaneAtOrigin> for Sphere {
     }
 }
 
-impl Into<SphereWeightAspect> for Sphere {
-    fn into(self) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups { g0: self.group1()[0] },
+impl Into<SphereWeight> for Sphere {
+    fn into(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: self.group1()[0] },
         }
     }
 }
@@ -32559,20 +32535,20 @@ impl MulAssign<Circle> for Circle {
     }
 }
 
-impl Mul<CircleBulkAspect> for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Mul<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
 
-    fn mul(self, other: CircleBulkAspect) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups {
+    fn mul(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<CircleBulkAspect> for CircleBulkAspect {
-    fn mul_assign(&mut self, other: CircleBulkAspect) {
+impl MulAssign<CircleBulk> for CircleBulk {
+    fn mul_assign(&mut self, other: CircleBulk) {
         *self = (*self).mul(other);
     }
 }
@@ -32595,20 +32571,20 @@ impl MulAssign<CircleCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Mul<CircleWeightAspect> for CircleWeightAspect {
-    type Output = CircleWeightAspect;
+impl Mul<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
 
-    fn mul(self, other: CircleWeightAspect) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+    fn mul(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<CircleWeightAspect> for CircleWeightAspect {
-    fn mul_assign(&mut self, other: CircleWeightAspect) {
+impl MulAssign<CircleWeight> for CircleWeight {
+    fn mul_assign(&mut self, other: CircleWeight) {
         *self = (*self).mul(other);
     }
 }
@@ -32633,20 +32609,20 @@ impl MulAssign<Dipole> for Dipole {
     }
 }
 
-impl Mul<DipoleBulkAspect> for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Mul<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn mul(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups {
+    fn mul(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<DipoleBulkAspect> for DipoleBulkAspect {
-    fn mul_assign(&mut self, other: DipoleBulkAspect) {
+impl MulAssign<DipoleBulk> for DipoleBulk {
+    fn mul_assign(&mut self, other: DipoleBulk) {
         *self = (*self).mul(other);
     }
 }
@@ -32670,20 +32646,20 @@ impl MulAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Mul<DipoleWeightAspect> for DipoleWeightAspect {
-    type Output = DipoleWeightAspect;
+impl Mul<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
 
-    fn mul(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups {
+    fn mul(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<DipoleWeightAspect> for DipoleWeightAspect {
-    fn mul_assign(&mut self, other: DipoleWeightAspect) {
+impl MulAssign<DipoleWeight> for DipoleWeight {
+    fn mul_assign(&mut self, other: DipoleWeight) {
         *self = (*self).mul(other);
     }
 }
@@ -33062,20 +33038,20 @@ impl MulAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Mul<RoundPointBulkAspect> for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Mul<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn mul(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+    fn mul(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<RoundPointBulkAspect> for RoundPointBulkAspect {
-    fn mul_assign(&mut self, other: RoundPointBulkAspect) {
+impl MulAssign<RoundPointBulk> for RoundPointBulk {
+    fn mul_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).mul(other);
     }
 }
@@ -33135,20 +33111,20 @@ impl MulAssign<Sphere> for Sphere {
     }
 }
 
-impl Mul<SphereWeightAspect> for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Mul<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
 
-    fn mul(self, other: SphereWeightAspect) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups {
+    fn mul(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<SphereWeightAspect> for SphereWeightAspect {
-    fn mul_assign(&mut self, other: SphereWeightAspect) {
+impl MulAssign<SphereWeight> for SphereWeight {
+    fn mul_assign(&mut self, other: SphereWeight) {
         *self = (*self).mul(other);
     }
 }
@@ -33230,10 +33206,10 @@ impl Sub<Circle> for AntiScalar {
     }
 }
 
-impl Sub<CircleBulkAspect> for AntiScalar {
+impl Sub<CircleBulk> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -33274,10 +33250,10 @@ impl Sub<CircleCarrierAspect> for AntiScalar {
     }
 }
 
-impl Sub<CircleWeightAspect> for AntiScalar {
+impl Sub<CircleWeight> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -33318,10 +33294,10 @@ impl Sub<Dipole> for AntiScalar {
     }
 }
 
-impl Sub<DipoleBulkAspect> for AntiScalar {
+impl Sub<DipoleBulk> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -33362,10 +33338,10 @@ impl Sub<DipoleCarrierAspect> for AntiScalar {
     }
 }
 
-impl Sub<DipoleWeightAspect> for AntiScalar {
+impl Sub<DipoleWeight> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -33766,10 +33742,10 @@ impl Sub<RoundPointAtOrigin> for AntiScalar {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for AntiScalar {
+impl Sub<RoundPointBulk> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -33844,10 +33820,10 @@ impl Sub<Sphere> for AntiScalar {
     }
 }
 
-impl Sub<SphereWeightAspect> for AntiScalar {
+impl Sub<SphereWeight> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -33942,10 +33918,10 @@ impl SubAssign<Circle> for Circle {
     }
 }
 
-impl Sub<CircleBulkAspect> for Circle {
+impl Sub<CircleBulk> for Circle {
     type Output = Circle;
 
-    fn sub(self, other: CircleBulkAspect) -> Circle {
+    fn sub(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -33956,8 +33932,8 @@ impl Sub<CircleBulkAspect> for Circle {
     }
 }
 
-impl SubAssign<CircleBulkAspect> for Circle {
-    fn sub_assign(&mut self, other: CircleBulkAspect) {
+impl SubAssign<CircleBulk> for Circle {
+    fn sub_assign(&mut self, other: CircleBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -33982,10 +33958,10 @@ impl SubAssign<CircleCarrierAspect> for Circle {
     }
 }
 
-impl Sub<CircleWeightAspect> for Circle {
+impl Sub<CircleWeight> for Circle {
     type Output = Circle;
 
-    fn sub(self, other: CircleWeightAspect) -> Circle {
+    fn sub(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -33996,8 +33972,8 @@ impl Sub<CircleWeightAspect> for Circle {
     }
 }
 
-impl SubAssign<CircleWeightAspect> for Circle {
-    fn sub_assign(&mut self, other: CircleWeightAspect) {
+impl SubAssign<CircleWeight> for Circle {
+    fn sub_assign(&mut self, other: CircleWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -34024,10 +34000,10 @@ impl Sub<Dipole> for Circle {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Circle {
+impl Sub<DipoleBulk> for Circle {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34068,10 +34044,10 @@ impl Sub<DipoleCarrierAspect> for Circle {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Circle {
+impl Sub<DipoleWeight> for Circle {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34524,10 +34500,10 @@ impl Sub<RoundPointAtOrigin> for Circle {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Circle {
+impl Sub<RoundPointBulk> for Circle {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34612,10 +34588,10 @@ impl Sub<Sphere> for Circle {
     }
 }
 
-impl Sub<SphereWeightAspect> for Circle {
+impl Sub<SphereWeight> for Circle {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34678,7 +34654,7 @@ impl Sub<Translator> for Circle {
     }
 }
 
-impl Sub<AntiScalar> for CircleBulkAspect {
+impl Sub<AntiScalar> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -34700,7 +34676,7 @@ impl Sub<AntiScalar> for CircleBulkAspect {
     }
 }
 
-impl Sub<Circle> for CircleBulkAspect {
+impl Sub<Circle> for CircleBulk {
     type Output = Circle;
 
     fn sub(self, other: Circle) -> Circle {
@@ -34714,25 +34690,25 @@ impl Sub<Circle> for CircleBulkAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Sub<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
 
-    fn sub(self, other: CircleBulkAspect) -> CircleBulkAspect {
-        CircleBulkAspect {
-            groups: CircleBulkAspectGroups {
+    fn sub(self, other: CircleBulk) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<CircleBulkAspect> for CircleBulkAspect {
-    fn sub_assign(&mut self, other: CircleBulkAspect) {
+impl SubAssign<CircleBulk> for CircleBulk {
+    fn sub_assign(&mut self, other: CircleBulk) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<CircleCarrierAspect> for CircleBulkAspect {
+impl Sub<CircleCarrierAspect> for CircleBulk {
     type Output = CircleCarrierAspect;
 
     fn sub(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
@@ -34744,10 +34720,10 @@ impl Sub<CircleCarrierAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for CircleBulkAspect {
+impl Sub<CircleWeight> for CircleBulk {
     type Output = CircleCarrierAspect;
 
-    fn sub(self, other: CircleWeightAspect) -> CircleCarrierAspect {
+    fn sub(self, other: CircleWeight) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -34756,7 +34732,7 @@ impl Sub<CircleWeightAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<Dipole> for CircleBulkAspect {
+impl Sub<Dipole> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Dipole) -> MultiVector {
@@ -34778,10 +34754,10 @@ impl Sub<Dipole> for CircleBulkAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for CircleBulkAspect {
+impl Sub<DipoleBulk> for CircleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34800,7 +34776,7 @@ impl Sub<DipoleBulkAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<DipoleCarrierAspect> for CircleBulkAspect {
+impl Sub<DipoleCarrierAspect> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -34822,10 +34798,10 @@ impl Sub<DipoleCarrierAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for CircleBulkAspect {
+impl Sub<DipoleWeight> for CircleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -34844,7 +34820,7 @@ impl Sub<DipoleWeightAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<FlatPoint> for CircleBulkAspect {
+impl Sub<FlatPoint> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPoint) -> MultiVector {
@@ -34866,7 +34842,7 @@ impl Sub<FlatPoint> for CircleBulkAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for CircleBulkAspect {
+impl Sub<FlatPointAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -34888,7 +34864,7 @@ impl Sub<FlatPointAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for CircleBulkAspect {
+impl Sub<FlatPointAtOrigin> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -34910,7 +34886,7 @@ impl Sub<FlatPointAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Sub<Flector> for CircleBulkAspect {
+impl Sub<Flector> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -34932,7 +34908,7 @@ impl Sub<Flector> for CircleBulkAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for CircleBulkAspect {
+impl Sub<FlectorAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -34954,7 +34930,7 @@ impl Sub<FlectorAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Sub<Horizon> for CircleBulkAspect {
+impl Sub<Horizon> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Horizon) -> MultiVector {
@@ -34976,7 +34952,7 @@ impl Sub<Horizon> for CircleBulkAspect {
     }
 }
 
-impl Sub<Infinity> for CircleBulkAspect {
+impl Sub<Infinity> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Infinity) -> MultiVector {
@@ -34998,7 +34974,7 @@ impl Sub<Infinity> for CircleBulkAspect {
     }
 }
 
-impl Sub<Line> for CircleBulkAspect {
+impl Sub<Line> for CircleBulk {
     type Output = Circle;
 
     fn sub(self, other: Line) -> Circle {
@@ -35012,7 +34988,7 @@ impl Sub<Line> for CircleBulkAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for CircleBulkAspect {
+impl Sub<LineAtInfinity> for CircleBulk {
     type Output = Circle;
 
     fn sub(self, other: LineAtInfinity) -> Circle {
@@ -35026,7 +35002,7 @@ impl Sub<LineAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for CircleBulkAspect {
+impl Sub<LineAtOrigin> for CircleBulk {
     type Output = Circle;
 
     fn sub(self, other: LineAtOrigin) -> Circle {
@@ -35040,7 +35016,7 @@ impl Sub<LineAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Sub<Magnitude> for CircleBulkAspect {
+impl Sub<Magnitude> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Magnitude) -> MultiVector {
@@ -35062,7 +35038,7 @@ impl Sub<Magnitude> for CircleBulkAspect {
     }
 }
 
-impl Sub<Motor> for CircleBulkAspect {
+impl Sub<Motor> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -35084,7 +35060,7 @@ impl Sub<Motor> for CircleBulkAspect {
     }
 }
 
-impl Sub<MultiVector> for CircleBulkAspect {
+impl Sub<MultiVector> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -35106,7 +35082,7 @@ impl Sub<MultiVector> for CircleBulkAspect {
     }
 }
 
-impl Sub<Origin> for CircleBulkAspect {
+impl Sub<Origin> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Origin) -> MultiVector {
@@ -35128,7 +35104,7 @@ impl Sub<Origin> for CircleBulkAspect {
     }
 }
 
-impl Sub<Plane> for CircleBulkAspect {
+impl Sub<Plane> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Plane) -> MultiVector {
@@ -35150,7 +35126,7 @@ impl Sub<Plane> for CircleBulkAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for CircleBulkAspect {
+impl Sub<PlaneAtOrigin> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: PlaneAtOrigin) -> MultiVector {
@@ -35172,7 +35148,7 @@ impl Sub<PlaneAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Sub<Rotor> for CircleBulkAspect {
+impl Sub<Rotor> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -35194,7 +35170,7 @@ impl Sub<Rotor> for CircleBulkAspect {
     }
 }
 
-impl Sub<RoundPoint> for CircleBulkAspect {
+impl Sub<RoundPoint> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPoint) -> MultiVector {
@@ -35216,7 +35192,7 @@ impl Sub<RoundPoint> for CircleBulkAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for CircleBulkAspect {
+impl Sub<RoundPointAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -35238,7 +35214,7 @@ impl Sub<RoundPointAtInfinity> for CircleBulkAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for CircleBulkAspect {
+impl Sub<RoundPointAtOrigin> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -35260,10 +35236,10 @@ impl Sub<RoundPointAtOrigin> for CircleBulkAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for CircleBulkAspect {
+impl Sub<RoundPointBulk> for CircleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -35282,7 +35258,7 @@ impl Sub<RoundPointBulkAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for CircleBulkAspect {
+impl Sub<RoundPointCarrierAspect> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -35304,7 +35280,7 @@ impl Sub<RoundPointCarrierAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<Scalar> for CircleBulkAspect {
+impl Sub<Scalar> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -35326,7 +35302,7 @@ impl Sub<Scalar> for CircleBulkAspect {
     }
 }
 
-impl Sub<Sphere> for CircleBulkAspect {
+impl Sub<Sphere> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Sphere) -> MultiVector {
@@ -35348,10 +35324,10 @@ impl Sub<Sphere> for CircleBulkAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for CircleBulkAspect {
+impl Sub<SphereWeight> for CircleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -35370,7 +35346,7 @@ impl Sub<SphereWeightAspect> for CircleBulkAspect {
     }
 }
 
-impl Sub<Transflector> for CircleBulkAspect {
+impl Sub<Transflector> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -35392,7 +35368,7 @@ impl Sub<Transflector> for CircleBulkAspect {
     }
 }
 
-impl Sub<Translator> for CircleBulkAspect {
+impl Sub<Translator> for CircleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -35450,10 +35426,10 @@ impl Sub<Circle> for CircleCarrierAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for CircleCarrierAspect {
+impl Sub<CircleBulk> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn sub(self, other: CircleBulkAspect) -> CircleCarrierAspect {
+    fn sub(self, other: CircleBulk) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -35462,8 +35438,8 @@ impl Sub<CircleBulkAspect> for CircleCarrierAspect {
     }
 }
 
-impl SubAssign<CircleBulkAspect> for CircleCarrierAspect {
-    fn sub_assign(&mut self, other: CircleBulkAspect) {
+impl SubAssign<CircleBulk> for CircleCarrierAspect {
+    fn sub_assign(&mut self, other: CircleBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -35486,10 +35462,10 @@ impl SubAssign<CircleCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for CircleCarrierAspect {
+impl Sub<CircleWeight> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn sub(self, other: CircleWeightAspect) -> CircleCarrierAspect {
+    fn sub(self, other: CircleWeight) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -35498,8 +35474,8 @@ impl Sub<CircleWeightAspect> for CircleCarrierAspect {
     }
 }
 
-impl SubAssign<CircleWeightAspect> for CircleCarrierAspect {
-    fn sub_assign(&mut self, other: CircleWeightAspect) {
+impl SubAssign<CircleWeight> for CircleCarrierAspect {
+    fn sub_assign(&mut self, other: CircleWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -35526,10 +35502,10 @@ impl Sub<Dipole> for CircleCarrierAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for CircleCarrierAspect {
+impl Sub<DipoleBulk> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -35570,10 +35546,10 @@ impl Sub<DipoleCarrierAspect> for CircleCarrierAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for CircleCarrierAspect {
+impl Sub<DipoleWeight> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36008,10 +35984,10 @@ impl Sub<RoundPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for CircleCarrierAspect {
+impl Sub<RoundPointBulk> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36096,10 +36072,10 @@ impl Sub<Sphere> for CircleCarrierAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for CircleCarrierAspect {
+impl Sub<SphereWeight> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36162,7 +36138,7 @@ impl Sub<Translator> for CircleCarrierAspect {
     }
 }
 
-impl Sub<AntiScalar> for CircleWeightAspect {
+impl Sub<AntiScalar> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -36184,7 +36160,7 @@ impl Sub<AntiScalar> for CircleWeightAspect {
     }
 }
 
-impl Sub<Circle> for CircleWeightAspect {
+impl Sub<Circle> for CircleWeight {
     type Output = Circle;
 
     fn sub(self, other: Circle) -> Circle {
@@ -36198,10 +36174,10 @@ impl Sub<Circle> for CircleWeightAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for CircleWeightAspect {
+impl Sub<CircleBulk> for CircleWeight {
     type Output = CircleCarrierAspect;
 
-    fn sub(self, other: CircleBulkAspect) -> CircleCarrierAspect {
+    fn sub(self, other: CircleBulk) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -36210,7 +36186,7 @@ impl Sub<CircleBulkAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<CircleCarrierAspect> for CircleWeightAspect {
+impl Sub<CircleCarrierAspect> for CircleWeight {
     type Output = CircleCarrierAspect;
 
     fn sub(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
@@ -36222,25 +36198,25 @@ impl Sub<CircleCarrierAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for CircleWeightAspect {
-    type Output = CircleWeightAspect;
+impl Sub<CircleWeight> for CircleWeight {
+    type Output = CircleWeight;
 
-    fn sub(self, other: CircleWeightAspect) -> CircleWeightAspect {
-        CircleWeightAspect {
-            groups: CircleWeightAspectGroups {
+    fn sub(self, other: CircleWeight) -> CircleWeight {
+        CircleWeight {
+            groups: CircleWeightGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<CircleWeightAspect> for CircleWeightAspect {
-    fn sub_assign(&mut self, other: CircleWeightAspect) {
+impl SubAssign<CircleWeight> for CircleWeight {
+    fn sub_assign(&mut self, other: CircleWeight) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<Dipole> for CircleWeightAspect {
+impl Sub<Dipole> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Dipole) -> MultiVector {
@@ -36262,10 +36238,10 @@ impl Sub<Dipole> for CircleWeightAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for CircleWeightAspect {
+impl Sub<DipoleBulk> for CircleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36284,7 +36260,7 @@ impl Sub<DipoleBulkAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<DipoleCarrierAspect> for CircleWeightAspect {
+impl Sub<DipoleCarrierAspect> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -36306,10 +36282,10 @@ impl Sub<DipoleCarrierAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for CircleWeightAspect {
+impl Sub<DipoleWeight> for CircleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36328,7 +36304,7 @@ impl Sub<DipoleWeightAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<FlatPoint> for CircleWeightAspect {
+impl Sub<FlatPoint> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPoint) -> MultiVector {
@@ -36350,7 +36326,7 @@ impl Sub<FlatPoint> for CircleWeightAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for CircleWeightAspect {
+impl Sub<FlatPointAtInfinity> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -36372,7 +36348,7 @@ impl Sub<FlatPointAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for CircleWeightAspect {
+impl Sub<FlatPointAtOrigin> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -36394,7 +36370,7 @@ impl Sub<FlatPointAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Sub<Flector> for CircleWeightAspect {
+impl Sub<Flector> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -36416,7 +36392,7 @@ impl Sub<Flector> for CircleWeightAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for CircleWeightAspect {
+impl Sub<FlectorAtInfinity> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -36438,7 +36414,7 @@ impl Sub<FlectorAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Sub<Horizon> for CircleWeightAspect {
+impl Sub<Horizon> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Horizon) -> MultiVector {
@@ -36460,7 +36436,7 @@ impl Sub<Horizon> for CircleWeightAspect {
     }
 }
 
-impl Sub<Infinity> for CircleWeightAspect {
+impl Sub<Infinity> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Infinity) -> MultiVector {
@@ -36482,7 +36458,7 @@ impl Sub<Infinity> for CircleWeightAspect {
     }
 }
 
-impl Sub<Line> for CircleWeightAspect {
+impl Sub<Line> for CircleWeight {
     type Output = Circle;
 
     fn sub(self, other: Line) -> Circle {
@@ -36496,7 +36472,7 @@ impl Sub<Line> for CircleWeightAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for CircleWeightAspect {
+impl Sub<LineAtInfinity> for CircleWeight {
     type Output = Circle;
 
     fn sub(self, other: LineAtInfinity) -> Circle {
@@ -36510,7 +36486,7 @@ impl Sub<LineAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for CircleWeightAspect {
+impl Sub<LineAtOrigin> for CircleWeight {
     type Output = Circle;
 
     fn sub(self, other: LineAtOrigin) -> Circle {
@@ -36524,7 +36500,7 @@ impl Sub<LineAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Sub<Magnitude> for CircleWeightAspect {
+impl Sub<Magnitude> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Magnitude) -> MultiVector {
@@ -36546,7 +36522,7 @@ impl Sub<Magnitude> for CircleWeightAspect {
     }
 }
 
-impl Sub<Motor> for CircleWeightAspect {
+impl Sub<Motor> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -36568,7 +36544,7 @@ impl Sub<Motor> for CircleWeightAspect {
     }
 }
 
-impl Sub<MultiVector> for CircleWeightAspect {
+impl Sub<MultiVector> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -36590,7 +36566,7 @@ impl Sub<MultiVector> for CircleWeightAspect {
     }
 }
 
-impl Sub<Origin> for CircleWeightAspect {
+impl Sub<Origin> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Origin) -> MultiVector {
@@ -36612,7 +36588,7 @@ impl Sub<Origin> for CircleWeightAspect {
     }
 }
 
-impl Sub<Plane> for CircleWeightAspect {
+impl Sub<Plane> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Plane) -> MultiVector {
@@ -36634,7 +36610,7 @@ impl Sub<Plane> for CircleWeightAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for CircleWeightAspect {
+impl Sub<PlaneAtOrigin> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: PlaneAtOrigin) -> MultiVector {
@@ -36656,7 +36632,7 @@ impl Sub<PlaneAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Sub<Rotor> for CircleWeightAspect {
+impl Sub<Rotor> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -36678,7 +36654,7 @@ impl Sub<Rotor> for CircleWeightAspect {
     }
 }
 
-impl Sub<RoundPoint> for CircleWeightAspect {
+impl Sub<RoundPoint> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPoint) -> MultiVector {
@@ -36700,7 +36676,7 @@ impl Sub<RoundPoint> for CircleWeightAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for CircleWeightAspect {
+impl Sub<RoundPointAtInfinity> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -36722,7 +36698,7 @@ impl Sub<RoundPointAtInfinity> for CircleWeightAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for CircleWeightAspect {
+impl Sub<RoundPointAtOrigin> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -36744,10 +36720,10 @@ impl Sub<RoundPointAtOrigin> for CircleWeightAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for CircleWeightAspect {
+impl Sub<RoundPointBulk> for CircleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36766,7 +36742,7 @@ impl Sub<RoundPointBulkAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for CircleWeightAspect {
+impl Sub<RoundPointCarrierAspect> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -36788,7 +36764,7 @@ impl Sub<RoundPointCarrierAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<Scalar> for CircleWeightAspect {
+impl Sub<Scalar> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -36810,7 +36786,7 @@ impl Sub<Scalar> for CircleWeightAspect {
     }
 }
 
-impl Sub<Sphere> for CircleWeightAspect {
+impl Sub<Sphere> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Sphere) -> MultiVector {
@@ -36832,10 +36808,10 @@ impl Sub<Sphere> for CircleWeightAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for CircleWeightAspect {
+impl Sub<SphereWeight> for CircleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36854,7 +36830,7 @@ impl Sub<SphereWeightAspect> for CircleWeightAspect {
     }
 }
 
-impl Sub<Transflector> for CircleWeightAspect {
+impl Sub<Transflector> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -36876,7 +36852,7 @@ impl Sub<Transflector> for CircleWeightAspect {
     }
 }
 
-impl Sub<Translator> for CircleWeightAspect {
+impl Sub<Translator> for CircleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -36942,10 +36918,10 @@ impl Sub<Circle> for Dipole {
     }
 }
 
-impl Sub<CircleBulkAspect> for Dipole {
+impl Sub<CircleBulk> for Dipole {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36986,10 +36962,10 @@ impl Sub<CircleCarrierAspect> for Dipole {
     }
 }
 
-impl Sub<CircleWeightAspect> for Dipole {
+impl Sub<CircleWeight> for Dipole {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37028,10 +37004,10 @@ impl SubAssign<Dipole> for Dipole {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Dipole {
+impl Sub<DipoleBulk> for Dipole {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleBulkAspect) -> Dipole {
+    fn sub(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: self.group0(),
@@ -37042,8 +37018,8 @@ impl Sub<DipoleBulkAspect> for Dipole {
     }
 }
 
-impl SubAssign<DipoleBulkAspect> for Dipole {
-    fn sub_assign(&mut self, other: DipoleBulkAspect) {
+impl SubAssign<DipoleBulk> for Dipole {
+    fn sub_assign(&mut self, other: DipoleBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -37068,10 +37044,10 @@ impl SubAssign<DipoleCarrierAspect> for Dipole {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Dipole {
+impl Sub<DipoleWeight> for Dipole {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleWeightAspect) -> Dipole {
+    fn sub(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: self.group0() - other.group0(),
@@ -37082,8 +37058,8 @@ impl Sub<DipoleWeightAspect> for Dipole {
     }
 }
 
-impl SubAssign<DipoleWeightAspect> for Dipole {
-    fn sub_assign(&mut self, other: DipoleWeightAspect) {
+impl SubAssign<DipoleWeight> for Dipole {
+    fn sub_assign(&mut self, other: DipoleWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -37522,10 +37498,10 @@ impl Sub<RoundPointAtOrigin> for Dipole {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Dipole {
+impl Sub<RoundPointBulk> for Dipole {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37610,10 +37586,10 @@ impl Sub<Sphere> for Dipole {
     }
 }
 
-impl Sub<SphereWeightAspect> for Dipole {
+impl Sub<SphereWeight> for Dipole {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37676,7 +37652,7 @@ impl Sub<Translator> for Dipole {
     }
 }
 
-impl Sub<AntiScalar> for DipoleBulkAspect {
+impl Sub<AntiScalar> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -37698,7 +37674,7 @@ impl Sub<AntiScalar> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Circle> for DipoleBulkAspect {
+impl Sub<Circle> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Circle) -> MultiVector {
@@ -37720,10 +37696,10 @@ impl Sub<Circle> for DipoleBulkAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for DipoleBulkAspect {
+impl Sub<CircleBulk> for DipoleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37742,7 +37718,7 @@ impl Sub<CircleBulkAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<CircleCarrierAspect> for DipoleBulkAspect {
+impl Sub<CircleCarrierAspect> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: CircleCarrierAspect) -> MultiVector {
@@ -37764,10 +37740,10 @@ impl Sub<CircleCarrierAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for DipoleBulkAspect {
+impl Sub<CircleWeight> for DipoleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37786,7 +37762,7 @@ impl Sub<CircleWeightAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Dipole> for DipoleBulkAspect {
+impl Sub<Dipole> for DipoleBulk {
     type Output = Dipole;
 
     fn sub(self, other: Dipole) -> Dipole {
@@ -37800,25 +37776,25 @@ impl Sub<Dipole> for DipoleBulkAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Sub<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn sub(self, other: DipoleBulkAspect) -> DipoleBulkAspect {
-        DipoleBulkAspect {
-            groups: DipoleBulkAspectGroups {
+    fn sub(self, other: DipoleBulk) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<DipoleBulkAspect> for DipoleBulkAspect {
-    fn sub_assign(&mut self, other: DipoleBulkAspect) {
+impl SubAssign<DipoleBulk> for DipoleBulk {
+    fn sub_assign(&mut self, other: DipoleBulk) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<DipoleCarrierAspect> for DipoleBulkAspect {
+impl Sub<DipoleCarrierAspect> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
     fn sub(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
@@ -37831,10 +37807,10 @@ impl Sub<DipoleCarrierAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for DipoleBulkAspect {
+impl Sub<DipoleWeight> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
-    fn sub(self, other: DipoleWeightAspect) -> DipoleCarrierAspect {
+    fn sub(self, other: DipoleWeight) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
@@ -37844,7 +37820,7 @@ impl Sub<DipoleWeightAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<FlatPoint> for DipoleBulkAspect {
+impl Sub<FlatPoint> for DipoleBulk {
     type Output = Dipole;
 
     fn sub(self, other: FlatPoint) -> Dipole {
@@ -37858,7 +37834,7 @@ impl Sub<FlatPoint> for DipoleBulkAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for DipoleBulkAspect {
+impl Sub<FlatPointAtInfinity> for DipoleBulk {
     type Output = Dipole;
 
     fn sub(self, other: FlatPointAtInfinity) -> Dipole {
@@ -37872,7 +37848,7 @@ impl Sub<FlatPointAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for DipoleBulkAspect {
+impl Sub<FlatPointAtOrigin> for DipoleBulk {
     type Output = Dipole;
 
     fn sub(self, other: FlatPointAtOrigin) -> Dipole {
@@ -37886,7 +37862,7 @@ impl Sub<FlatPointAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Flector> for DipoleBulkAspect {
+impl Sub<Flector> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -37908,7 +37884,7 @@ impl Sub<Flector> for DipoleBulkAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for DipoleBulkAspect {
+impl Sub<FlectorAtInfinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -37930,7 +37906,7 @@ impl Sub<FlectorAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Horizon> for DipoleBulkAspect {
+impl Sub<Horizon> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Horizon) -> MultiVector {
@@ -37952,7 +37928,7 @@ impl Sub<Horizon> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Infinity> for DipoleBulkAspect {
+impl Sub<Infinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Infinity) -> MultiVector {
@@ -37974,7 +37950,7 @@ impl Sub<Infinity> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Line> for DipoleBulkAspect {
+impl Sub<Line> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Line) -> MultiVector {
@@ -37996,7 +37972,7 @@ impl Sub<Line> for DipoleBulkAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for DipoleBulkAspect {
+impl Sub<LineAtInfinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtInfinity) -> MultiVector {
@@ -38018,7 +37994,7 @@ impl Sub<LineAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for DipoleBulkAspect {
+impl Sub<LineAtOrigin> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtOrigin) -> MultiVector {
@@ -38040,7 +38016,7 @@ impl Sub<LineAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Magnitude> for DipoleBulkAspect {
+impl Sub<Magnitude> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Magnitude) -> MultiVector {
@@ -38062,7 +38038,7 @@ impl Sub<Magnitude> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Motor> for DipoleBulkAspect {
+impl Sub<Motor> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -38084,7 +38060,7 @@ impl Sub<Motor> for DipoleBulkAspect {
     }
 }
 
-impl Sub<MultiVector> for DipoleBulkAspect {
+impl Sub<MultiVector> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -38106,7 +38082,7 @@ impl Sub<MultiVector> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Origin> for DipoleBulkAspect {
+impl Sub<Origin> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Origin) -> MultiVector {
@@ -38128,7 +38104,7 @@ impl Sub<Origin> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Plane> for DipoleBulkAspect {
+impl Sub<Plane> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Plane) -> MultiVector {
@@ -38150,7 +38126,7 @@ impl Sub<Plane> for DipoleBulkAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for DipoleBulkAspect {
+impl Sub<PlaneAtOrigin> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: PlaneAtOrigin) -> MultiVector {
@@ -38172,7 +38148,7 @@ impl Sub<PlaneAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Rotor> for DipoleBulkAspect {
+impl Sub<Rotor> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -38194,7 +38170,7 @@ impl Sub<Rotor> for DipoleBulkAspect {
     }
 }
 
-impl Sub<RoundPoint> for DipoleBulkAspect {
+impl Sub<RoundPoint> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPoint) -> MultiVector {
@@ -38216,7 +38192,7 @@ impl Sub<RoundPoint> for DipoleBulkAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for DipoleBulkAspect {
+impl Sub<RoundPointAtInfinity> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -38238,7 +38214,7 @@ impl Sub<RoundPointAtInfinity> for DipoleBulkAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for DipoleBulkAspect {
+impl Sub<RoundPointAtOrigin> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -38260,10 +38236,10 @@ impl Sub<RoundPointAtOrigin> for DipoleBulkAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for DipoleBulkAspect {
+impl Sub<RoundPointBulk> for DipoleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -38282,7 +38258,7 @@ impl Sub<RoundPointBulkAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for DipoleBulkAspect {
+impl Sub<RoundPointCarrierAspect> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -38304,7 +38280,7 @@ impl Sub<RoundPointCarrierAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Scalar> for DipoleBulkAspect {
+impl Sub<Scalar> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -38326,7 +38302,7 @@ impl Sub<Scalar> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Sphere> for DipoleBulkAspect {
+impl Sub<Sphere> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Sphere) -> MultiVector {
@@ -38348,10 +38324,10 @@ impl Sub<Sphere> for DipoleBulkAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for DipoleBulkAspect {
+impl Sub<SphereWeight> for DipoleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -38370,7 +38346,7 @@ impl Sub<SphereWeightAspect> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Transflector> for DipoleBulkAspect {
+impl Sub<Transflector> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -38392,7 +38368,7 @@ impl Sub<Transflector> for DipoleBulkAspect {
     }
 }
 
-impl Sub<Translator> for DipoleBulkAspect {
+impl Sub<Translator> for DipoleBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -38458,10 +38434,10 @@ impl Sub<Circle> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for DipoleCarrierAspect {
+impl Sub<CircleBulk> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -38502,10 +38478,10 @@ impl Sub<CircleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for DipoleCarrierAspect {
+impl Sub<CircleWeight> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -38538,10 +38514,10 @@ impl Sub<Dipole> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for DipoleCarrierAspect {
+impl Sub<DipoleBulk> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn sub(self, other: DipoleBulkAspect) -> DipoleCarrierAspect {
+    fn sub(self, other: DipoleBulk) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0(),
@@ -38551,8 +38527,8 @@ impl Sub<DipoleBulkAspect> for DipoleCarrierAspect {
     }
 }
 
-impl SubAssign<DipoleBulkAspect> for DipoleCarrierAspect {
-    fn sub_assign(&mut self, other: DipoleBulkAspect) {
+impl SubAssign<DipoleBulk> for DipoleCarrierAspect {
+    fn sub_assign(&mut self, other: DipoleBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -38576,10 +38552,10 @@ impl SubAssign<DipoleCarrierAspect> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for DipoleCarrierAspect {
+impl Sub<DipoleWeight> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn sub(self, other: DipoleWeightAspect) -> DipoleCarrierAspect {
+    fn sub(self, other: DipoleWeight) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0() - other.group0(),
@@ -38589,8 +38565,8 @@ impl Sub<DipoleWeightAspect> for DipoleCarrierAspect {
     }
 }
 
-impl SubAssign<DipoleWeightAspect> for DipoleCarrierAspect {
-    fn sub_assign(&mut self, other: DipoleWeightAspect) {
+impl SubAssign<DipoleWeight> for DipoleCarrierAspect {
+    fn sub_assign(&mut self, other: DipoleWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -39011,10 +38987,10 @@ impl Sub<RoundPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for DipoleCarrierAspect {
+impl Sub<RoundPointBulk> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39099,10 +39075,10 @@ impl Sub<Sphere> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for DipoleCarrierAspect {
+impl Sub<SphereWeight> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39165,7 +39141,7 @@ impl Sub<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<AntiScalar> for DipoleWeightAspect {
+impl Sub<AntiScalar> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -39187,7 +39163,7 @@ impl Sub<AntiScalar> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Circle> for DipoleWeightAspect {
+impl Sub<Circle> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Circle) -> MultiVector {
@@ -39209,10 +39185,10 @@ impl Sub<Circle> for DipoleWeightAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for DipoleWeightAspect {
+impl Sub<CircleBulk> for DipoleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39231,7 +39207,7 @@ impl Sub<CircleBulkAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<CircleCarrierAspect> for DipoleWeightAspect {
+impl Sub<CircleCarrierAspect> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: CircleCarrierAspect) -> MultiVector {
@@ -39253,10 +39229,10 @@ impl Sub<CircleCarrierAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for DipoleWeightAspect {
+impl Sub<CircleWeight> for DipoleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39275,7 +39251,7 @@ impl Sub<CircleWeightAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Dipole> for DipoleWeightAspect {
+impl Sub<Dipole> for DipoleWeight {
     type Output = Dipole;
 
     fn sub(self, other: Dipole) -> Dipole {
@@ -39289,10 +39265,10 @@ impl Sub<Dipole> for DipoleWeightAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for DipoleWeightAspect {
+impl Sub<DipoleBulk> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn sub(self, other: DipoleBulkAspect) -> DipoleCarrierAspect {
+    fn sub(self, other: DipoleBulk) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
                 g0: self.group0(),
@@ -39302,7 +39278,7 @@ impl Sub<DipoleBulkAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<DipoleCarrierAspect> for DipoleWeightAspect {
+impl Sub<DipoleCarrierAspect> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
     fn sub(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
@@ -39315,25 +39291,25 @@ impl Sub<DipoleCarrierAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for DipoleWeightAspect {
-    type Output = DipoleWeightAspect;
+impl Sub<DipoleWeight> for DipoleWeight {
+    type Output = DipoleWeight;
 
-    fn sub(self, other: DipoleWeightAspect) -> DipoleWeightAspect {
-        DipoleWeightAspect {
-            groups: DipoleWeightAspectGroups {
+    fn sub(self, other: DipoleWeight) -> DipoleWeight {
+        DipoleWeight {
+            groups: DipoleWeightGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<DipoleWeightAspect> for DipoleWeightAspect {
-    fn sub_assign(&mut self, other: DipoleWeightAspect) {
+impl SubAssign<DipoleWeight> for DipoleWeight {
+    fn sub_assign(&mut self, other: DipoleWeight) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<FlatPoint> for DipoleWeightAspect {
+impl Sub<FlatPoint> for DipoleWeight {
     type Output = Dipole;
 
     fn sub(self, other: FlatPoint) -> Dipole {
@@ -39347,7 +39323,7 @@ impl Sub<FlatPoint> for DipoleWeightAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for DipoleWeightAspect {
+impl Sub<FlatPointAtInfinity> for DipoleWeight {
     type Output = Dipole;
 
     fn sub(self, other: FlatPointAtInfinity) -> Dipole {
@@ -39361,7 +39337,7 @@ impl Sub<FlatPointAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for DipoleWeightAspect {
+impl Sub<FlatPointAtOrigin> for DipoleWeight {
     type Output = Dipole;
 
     fn sub(self, other: FlatPointAtOrigin) -> Dipole {
@@ -39375,7 +39351,7 @@ impl Sub<FlatPointAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Flector> for DipoleWeightAspect {
+impl Sub<Flector> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -39397,7 +39373,7 @@ impl Sub<Flector> for DipoleWeightAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for DipoleWeightAspect {
+impl Sub<FlectorAtInfinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -39419,7 +39395,7 @@ impl Sub<FlectorAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Horizon> for DipoleWeightAspect {
+impl Sub<Horizon> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Horizon) -> MultiVector {
@@ -39441,7 +39417,7 @@ impl Sub<Horizon> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Infinity> for DipoleWeightAspect {
+impl Sub<Infinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Infinity) -> MultiVector {
@@ -39463,7 +39439,7 @@ impl Sub<Infinity> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Line> for DipoleWeightAspect {
+impl Sub<Line> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Line) -> MultiVector {
@@ -39485,7 +39461,7 @@ impl Sub<Line> for DipoleWeightAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for DipoleWeightAspect {
+impl Sub<LineAtInfinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtInfinity) -> MultiVector {
@@ -39507,7 +39483,7 @@ impl Sub<LineAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for DipoleWeightAspect {
+impl Sub<LineAtOrigin> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtOrigin) -> MultiVector {
@@ -39529,7 +39505,7 @@ impl Sub<LineAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Magnitude> for DipoleWeightAspect {
+impl Sub<Magnitude> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Magnitude) -> MultiVector {
@@ -39551,7 +39527,7 @@ impl Sub<Magnitude> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Motor> for DipoleWeightAspect {
+impl Sub<Motor> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -39573,7 +39549,7 @@ impl Sub<Motor> for DipoleWeightAspect {
     }
 }
 
-impl Sub<MultiVector> for DipoleWeightAspect {
+impl Sub<MultiVector> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -39595,7 +39571,7 @@ impl Sub<MultiVector> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Origin> for DipoleWeightAspect {
+impl Sub<Origin> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Origin) -> MultiVector {
@@ -39617,7 +39593,7 @@ impl Sub<Origin> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Plane> for DipoleWeightAspect {
+impl Sub<Plane> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Plane) -> MultiVector {
@@ -39639,7 +39615,7 @@ impl Sub<Plane> for DipoleWeightAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for DipoleWeightAspect {
+impl Sub<PlaneAtOrigin> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: PlaneAtOrigin) -> MultiVector {
@@ -39661,7 +39637,7 @@ impl Sub<PlaneAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Rotor> for DipoleWeightAspect {
+impl Sub<Rotor> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -39683,7 +39659,7 @@ impl Sub<Rotor> for DipoleWeightAspect {
     }
 }
 
-impl Sub<RoundPoint> for DipoleWeightAspect {
+impl Sub<RoundPoint> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPoint) -> MultiVector {
@@ -39705,7 +39681,7 @@ impl Sub<RoundPoint> for DipoleWeightAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for DipoleWeightAspect {
+impl Sub<RoundPointAtInfinity> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -39727,7 +39703,7 @@ impl Sub<RoundPointAtInfinity> for DipoleWeightAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for DipoleWeightAspect {
+impl Sub<RoundPointAtOrigin> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -39749,10 +39725,10 @@ impl Sub<RoundPointAtOrigin> for DipoleWeightAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for DipoleWeightAspect {
+impl Sub<RoundPointBulk> for DipoleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39771,7 +39747,7 @@ impl Sub<RoundPointBulkAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for DipoleWeightAspect {
+impl Sub<RoundPointCarrierAspect> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -39793,7 +39769,7 @@ impl Sub<RoundPointCarrierAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Scalar> for DipoleWeightAspect {
+impl Sub<Scalar> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -39815,7 +39791,7 @@ impl Sub<Scalar> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Sphere> for DipoleWeightAspect {
+impl Sub<Sphere> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Sphere) -> MultiVector {
@@ -39837,10 +39813,10 @@ impl Sub<Sphere> for DipoleWeightAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for DipoleWeightAspect {
+impl Sub<SphereWeight> for DipoleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39859,7 +39835,7 @@ impl Sub<SphereWeightAspect> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Transflector> for DipoleWeightAspect {
+impl Sub<Transflector> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -39881,7 +39857,7 @@ impl Sub<Transflector> for DipoleWeightAspect {
     }
 }
 
-impl Sub<Translator> for DipoleWeightAspect {
+impl Sub<Translator> for DipoleWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -39947,10 +39923,10 @@ impl Sub<Circle> for FlatPoint {
     }
 }
 
-impl Sub<CircleBulkAspect> for FlatPoint {
+impl Sub<CircleBulk> for FlatPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39991,10 +39967,10 @@ impl Sub<CircleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Sub<CircleWeightAspect> for FlatPoint {
+impl Sub<CircleWeight> for FlatPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40027,10 +40003,10 @@ impl Sub<Dipole> for FlatPoint {
     }
 }
 
-impl Sub<DipoleBulkAspect> for FlatPoint {
+impl Sub<DipoleBulk> for FlatPoint {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleBulkAspect) -> Dipole {
+    fn sub(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -40055,10 +40031,10 @@ impl Sub<DipoleCarrierAspect> for FlatPoint {
     }
 }
 
-impl Sub<DipoleWeightAspect> for FlatPoint {
+impl Sub<DipoleWeight> for FlatPoint {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleWeightAspect) -> Dipole {
+    fn sub(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
@@ -40452,10 +40428,10 @@ impl Sub<RoundPointAtOrigin> for FlatPoint {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for FlatPoint {
+impl Sub<RoundPointBulk> for FlatPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40540,10 +40516,10 @@ impl Sub<Sphere> for FlatPoint {
     }
 }
 
-impl Sub<SphereWeightAspect> for FlatPoint {
+impl Sub<SphereWeight> for FlatPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40641,10 +40617,10 @@ impl Sub<Circle> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<CircleBulkAspect> for FlatPointAtInfinity {
+impl Sub<CircleBulk> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40685,10 +40661,10 @@ impl Sub<CircleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<CircleWeightAspect> for FlatPointAtInfinity {
+impl Sub<CircleWeight> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40721,10 +40697,10 @@ impl Sub<Dipole> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<DipoleBulkAspect> for FlatPointAtInfinity {
+impl Sub<DipoleBulk> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleBulkAspect) -> Dipole {
+    fn sub(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -40749,10 +40725,10 @@ impl Sub<DipoleCarrierAspect> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<DipoleWeightAspect> for FlatPointAtInfinity {
+impl Sub<DipoleWeight> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleWeightAspect) -> Dipole {
+    fn sub(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
@@ -41132,10 +41108,10 @@ impl Sub<RoundPointAtOrigin> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for FlatPointAtInfinity {
+impl Sub<RoundPointBulk> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -41220,10 +41196,10 @@ impl Sub<Sphere> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<SphereWeightAspect> for FlatPointAtInfinity {
+impl Sub<SphereWeight> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -41321,10 +41297,10 @@ impl Sub<Circle> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<CircleBulkAspect> for FlatPointAtOrigin {
+impl Sub<CircleBulk> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -41365,10 +41341,10 @@ impl Sub<CircleCarrierAspect> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<CircleWeightAspect> for FlatPointAtOrigin {
+impl Sub<CircleWeight> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -41401,10 +41377,10 @@ impl Sub<Dipole> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<DipoleBulkAspect> for FlatPointAtOrigin {
+impl Sub<DipoleBulk> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleBulkAspect) -> Dipole {
+    fn sub(self, other: DipoleBulk) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0),
@@ -41429,10 +41405,10 @@ impl Sub<DipoleCarrierAspect> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<DipoleWeightAspect> for FlatPointAtOrigin {
+impl Sub<DipoleWeight> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn sub(self, other: DipoleWeightAspect) -> Dipole {
+    fn sub(self, other: DipoleWeight) -> Dipole {
         Dipole {
             groups: DipoleGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
@@ -41814,10 +41790,10 @@ impl Sub<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for FlatPointAtOrigin {
+impl Sub<RoundPointBulk> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -41902,10 +41878,10 @@ impl Sub<Sphere> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<SphereWeightAspect> for FlatPointAtOrigin {
+impl Sub<SphereWeight> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42003,10 +41979,10 @@ impl Sub<Circle> for Flector {
     }
 }
 
-impl Sub<CircleBulkAspect> for Flector {
+impl Sub<CircleBulk> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42047,10 +42023,10 @@ impl Sub<CircleCarrierAspect> for Flector {
     }
 }
 
-impl Sub<CircleWeightAspect> for Flector {
+impl Sub<CircleWeight> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42091,10 +42067,10 @@ impl Sub<Dipole> for Flector {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Flector {
+impl Sub<DipoleBulk> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42135,10 +42111,10 @@ impl Sub<DipoleCarrierAspect> for Flector {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Flector {
+impl Sub<DipoleWeight> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42573,10 +42549,10 @@ impl Sub<RoundPointAtOrigin> for Flector {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Flector {
+impl Sub<RoundPointBulk> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42661,10 +42637,10 @@ impl Sub<Sphere> for Flector {
     }
 }
 
-impl Sub<SphereWeightAspect> for Flector {
+impl Sub<SphereWeight> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42768,10 +42744,10 @@ impl Sub<Circle> for FlectorAtInfinity {
     }
 }
 
-impl Sub<CircleBulkAspect> for FlectorAtInfinity {
+impl Sub<CircleBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42812,10 +42788,10 @@ impl Sub<CircleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Sub<CircleWeightAspect> for FlectorAtInfinity {
+impl Sub<CircleWeight> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42856,10 +42832,10 @@ impl Sub<Dipole> for FlectorAtInfinity {
     }
 }
 
-impl Sub<DipoleBulkAspect> for FlectorAtInfinity {
+impl Sub<DipoleBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42900,10 +42876,10 @@ impl Sub<DipoleCarrierAspect> for FlectorAtInfinity {
     }
 }
 
-impl Sub<DipoleWeightAspect> for FlectorAtInfinity {
+impl Sub<DipoleWeight> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43305,10 +43281,10 @@ impl Sub<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for FlectorAtInfinity {
+impl Sub<RoundPointBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43393,10 +43369,10 @@ impl Sub<Sphere> for FlectorAtInfinity {
     }
 }
 
-impl Sub<SphereWeightAspect> for FlectorAtInfinity {
+impl Sub<SphereWeight> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43494,10 +43470,10 @@ impl Sub<Circle> for Horizon {
     }
 }
 
-impl Sub<CircleBulkAspect> for Horizon {
+impl Sub<CircleBulk> for Horizon {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43538,10 +43514,10 @@ impl Sub<CircleCarrierAspect> for Horizon {
     }
 }
 
-impl Sub<CircleWeightAspect> for Horizon {
+impl Sub<CircleWeight> for Horizon {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43582,10 +43558,10 @@ impl Sub<Dipole> for Horizon {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Horizon {
+impl Sub<DipoleBulk> for Horizon {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43626,10 +43602,10 @@ impl Sub<DipoleCarrierAspect> for Horizon {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Horizon {
+impl Sub<DipoleWeight> for Horizon {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44017,10 +43993,10 @@ impl Sub<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Horizon {
+impl Sub<RoundPointBulk> for Horizon {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44096,10 +44072,10 @@ impl Sub<Sphere> for Horizon {
     }
 }
 
-impl Sub<SphereWeightAspect> for Horizon {
+impl Sub<SphereWeight> for Horizon {
     type Output = Sphere;
 
-    fn sub(self, other: SphereWeightAspect) -> Sphere {
+    fn sub(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from(0.0),
@@ -44188,10 +44164,10 @@ impl Sub<Circle> for Infinity {
     }
 }
 
-impl Sub<CircleBulkAspect> for Infinity {
+impl Sub<CircleBulk> for Infinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44232,10 +44208,10 @@ impl Sub<CircleCarrierAspect> for Infinity {
     }
 }
 
-impl Sub<CircleWeightAspect> for Infinity {
+impl Sub<CircleWeight> for Infinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44276,10 +44252,10 @@ impl Sub<Dipole> for Infinity {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Infinity {
+impl Sub<DipoleBulk> for Infinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44320,10 +44296,10 @@ impl Sub<DipoleCarrierAspect> for Infinity {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Infinity {
+impl Sub<DipoleWeight> for Infinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44739,10 +44715,10 @@ impl Sub<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Infinity {
+impl Sub<RoundPointBulk> for Infinity {
     type Output = RoundPointAtInfinity;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPointAtInfinity {
+    fn sub(self, other: RoundPointBulk) -> RoundPointAtInfinity {
         RoundPointAtInfinity {
             groups: RoundPointAtInfinityGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -44808,10 +44784,10 @@ impl Sub<Sphere> for Infinity {
     }
 }
 
-impl Sub<SphereWeightAspect> for Infinity {
+impl Sub<SphereWeight> for Infinity {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44901,10 +44877,10 @@ impl Sub<Circle> for Line {
     }
 }
 
-impl Sub<CircleBulkAspect> for Line {
+impl Sub<CircleBulk> for Line {
     type Output = Circle;
 
-    fn sub(self, other: CircleBulkAspect) -> Circle {
+    fn sub(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -44929,10 +44905,10 @@ impl Sub<CircleCarrierAspect> for Line {
     }
 }
 
-impl Sub<CircleWeightAspect> for Line {
+impl Sub<CircleWeight> for Line {
     type Output = Circle;
 
-    fn sub(self, other: CircleWeightAspect) -> Circle {
+    fn sub(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -44965,10 +44941,10 @@ impl Sub<Dipole> for Line {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Line {
+impl Sub<DipoleBulk> for Line {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -45009,10 +44985,10 @@ impl Sub<DipoleCarrierAspect> for Line {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Line {
+impl Sub<DipoleWeight> for Line {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -45444,10 +45420,10 @@ impl Sub<RoundPointAtOrigin> for Line {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Line {
+impl Sub<RoundPointBulk> for Line {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -45532,10 +45508,10 @@ impl Sub<Sphere> for Line {
     }
 }
 
-impl Sub<SphereWeightAspect> for Line {
+impl Sub<SphereWeight> for Line {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -45615,10 +45591,10 @@ impl Sub<Circle> for LineAtInfinity {
     }
 }
 
-impl Sub<CircleBulkAspect> for LineAtInfinity {
+impl Sub<CircleBulk> for LineAtInfinity {
     type Output = Circle;
 
-    fn sub(self, other: CircleBulkAspect) -> Circle {
+    fn sub(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -45643,10 +45619,10 @@ impl Sub<CircleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Sub<CircleWeightAspect> for LineAtInfinity {
+impl Sub<CircleWeight> for LineAtInfinity {
     type Output = Circle;
 
-    fn sub(self, other: CircleWeightAspect) -> Circle {
+    fn sub(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -45679,10 +45655,10 @@ impl Sub<Dipole> for LineAtInfinity {
     }
 }
 
-impl Sub<DipoleBulkAspect> for LineAtInfinity {
+impl Sub<DipoleBulk> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -45723,10 +45699,10 @@ impl Sub<DipoleCarrierAspect> for LineAtInfinity {
     }
 }
 
-impl Sub<DipoleWeightAspect> for LineAtInfinity {
+impl Sub<DipoleWeight> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46145,10 +46121,10 @@ impl Sub<RoundPointAtOrigin> for LineAtInfinity {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for LineAtInfinity {
+impl Sub<RoundPointBulk> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46233,10 +46209,10 @@ impl Sub<Sphere> for LineAtInfinity {
     }
 }
 
-impl Sub<SphereWeightAspect> for LineAtInfinity {
+impl Sub<SphereWeight> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46315,10 +46291,10 @@ impl Sub<Circle> for LineAtOrigin {
     }
 }
 
-impl Sub<CircleBulkAspect> for LineAtOrigin {
+impl Sub<CircleBulk> for LineAtOrigin {
     type Output = Circle;
 
-    fn sub(self, other: CircleBulkAspect) -> Circle {
+    fn sub(self, other: CircleBulk) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
@@ -46343,10 +46319,10 @@ impl Sub<CircleCarrierAspect> for LineAtOrigin {
     }
 }
 
-impl Sub<CircleWeightAspect> for LineAtOrigin {
+impl Sub<CircleWeight> for LineAtOrigin {
     type Output = Circle;
 
-    fn sub(self, other: CircleWeightAspect) -> Circle {
+    fn sub(self, other: CircleWeight) -> Circle {
         Circle {
             groups: CircleGroups {
                 g0: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -46379,10 +46355,10 @@ impl Sub<Dipole> for LineAtOrigin {
     }
 }
 
-impl Sub<DipoleBulkAspect> for LineAtOrigin {
+impl Sub<DipoleBulk> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46423,10 +46399,10 @@ impl Sub<DipoleCarrierAspect> for LineAtOrigin {
     }
 }
 
-impl Sub<DipoleWeightAspect> for LineAtOrigin {
+impl Sub<DipoleWeight> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46844,10 +46820,10 @@ impl Sub<RoundPointAtOrigin> for LineAtOrigin {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for LineAtOrigin {
+impl Sub<RoundPointBulk> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46932,10 +46908,10 @@ impl Sub<Sphere> for LineAtOrigin {
     }
 }
 
-impl Sub<SphereWeightAspect> for LineAtOrigin {
+impl Sub<SphereWeight> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -47029,10 +47005,10 @@ impl Sub<Circle> for Magnitude {
     }
 }
 
-impl Sub<CircleBulkAspect> for Magnitude {
+impl Sub<CircleBulk> for Magnitude {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -47073,10 +47049,10 @@ impl Sub<CircleCarrierAspect> for Magnitude {
     }
 }
 
-impl Sub<CircleWeightAspect> for Magnitude {
+impl Sub<CircleWeight> for Magnitude {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -47117,10 +47093,10 @@ impl Sub<Dipole> for Magnitude {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Magnitude {
+impl Sub<DipoleBulk> for Magnitude {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -47161,10 +47137,10 @@ impl Sub<DipoleCarrierAspect> for Magnitude {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Magnitude {
+impl Sub<DipoleWeight> for Magnitude {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -47619,10 +47595,10 @@ impl Sub<RoundPointAtOrigin> for Magnitude {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Magnitude {
+impl Sub<RoundPointBulk> for Magnitude {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -47703,10 +47679,10 @@ impl Sub<Sphere> for Magnitude {
     }
 }
 
-impl Sub<SphereWeightAspect> for Magnitude {
+impl Sub<SphereWeight> for Magnitude {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -47810,10 +47786,10 @@ impl Sub<Circle> for Motor {
     }
 }
 
-impl Sub<CircleBulkAspect> for Motor {
+impl Sub<CircleBulk> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -47854,10 +47830,10 @@ impl Sub<CircleCarrierAspect> for Motor {
     }
 }
 
-impl Sub<CircleWeightAspect> for Motor {
+impl Sub<CircleWeight> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -47898,10 +47874,10 @@ impl Sub<Dipole> for Motor {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Motor {
+impl Sub<DipoleBulk> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -47942,10 +47918,10 @@ impl Sub<DipoleCarrierAspect> for Motor {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Motor {
+impl Sub<DipoleWeight> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -48389,10 +48365,10 @@ impl Sub<RoundPointAtOrigin> for Motor {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Motor {
+impl Sub<RoundPointBulk> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -48477,10 +48453,10 @@ impl Sub<Sphere> for Motor {
     }
 }
 
-impl Sub<SphereWeightAspect> for Motor {
+impl Sub<SphereWeight> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -48596,10 +48572,10 @@ impl SubAssign<Circle> for MultiVector {
     }
 }
 
-impl Sub<CircleBulkAspect> for MultiVector {
+impl Sub<CircleBulk> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -48618,8 +48594,8 @@ impl Sub<CircleBulkAspect> for MultiVector {
     }
 }
 
-impl SubAssign<CircleBulkAspect> for MultiVector {
-    fn sub_assign(&mut self, other: CircleBulkAspect) {
+impl SubAssign<CircleBulk> for MultiVector {
+    fn sub_assign(&mut self, other: CircleBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -48652,10 +48628,10 @@ impl SubAssign<CircleCarrierAspect> for MultiVector {
     }
 }
 
-impl Sub<CircleWeightAspect> for MultiVector {
+impl Sub<CircleWeight> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -48674,8 +48650,8 @@ impl Sub<CircleWeightAspect> for MultiVector {
     }
 }
 
-impl SubAssign<CircleWeightAspect> for MultiVector {
-    fn sub_assign(&mut self, other: CircleWeightAspect) {
+impl SubAssign<CircleWeight> for MultiVector {
+    fn sub_assign(&mut self, other: CircleWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -48708,10 +48684,10 @@ impl SubAssign<Dipole> for MultiVector {
     }
 }
 
-impl Sub<DipoleBulkAspect> for MultiVector {
+impl Sub<DipoleBulk> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -48730,8 +48706,8 @@ impl Sub<DipoleBulkAspect> for MultiVector {
     }
 }
 
-impl SubAssign<DipoleBulkAspect> for MultiVector {
-    fn sub_assign(&mut self, other: DipoleBulkAspect) {
+impl SubAssign<DipoleBulk> for MultiVector {
+    fn sub_assign(&mut self, other: DipoleBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -48764,10 +48740,10 @@ impl SubAssign<DipoleCarrierAspect> for MultiVector {
     }
 }
 
-impl Sub<DipoleWeightAspect> for MultiVector {
+impl Sub<DipoleWeight> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -48786,8 +48762,8 @@ impl Sub<DipoleWeightAspect> for MultiVector {
     }
 }
 
-impl SubAssign<DipoleWeightAspect> for MultiVector {
-    fn sub_assign(&mut self, other: DipoleWeightAspect) {
+impl SubAssign<DipoleWeight> for MultiVector {
+    fn sub_assign(&mut self, other: DipoleWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -49352,10 +49328,10 @@ impl SubAssign<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for MultiVector {
+impl Sub<RoundPointBulk> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -49374,8 +49350,8 @@ impl Sub<RoundPointBulkAspect> for MultiVector {
     }
 }
 
-impl SubAssign<RoundPointBulkAspect> for MultiVector {
-    fn sub_assign(&mut self, other: RoundPointBulkAspect) {
+impl SubAssign<RoundPointBulk> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -49464,10 +49440,10 @@ impl SubAssign<Sphere> for MultiVector {
     }
 }
 
-impl Sub<SphereWeightAspect> for MultiVector {
+impl Sub<SphereWeight> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -49486,8 +49462,8 @@ impl Sub<SphereWeightAspect> for MultiVector {
     }
 }
 
-impl SubAssign<SphereWeightAspect> for MultiVector {
-    fn sub_assign(&mut self, other: SphereWeightAspect) {
+impl SubAssign<SphereWeight> for MultiVector {
+    fn sub_assign(&mut self, other: SphereWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -49592,10 +49568,10 @@ impl Sub<Circle> for Origin {
     }
 }
 
-impl Sub<CircleBulkAspect> for Origin {
+impl Sub<CircleBulk> for Origin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -49636,10 +49612,10 @@ impl Sub<CircleCarrierAspect> for Origin {
     }
 }
 
-impl Sub<CircleWeightAspect> for Origin {
+impl Sub<CircleWeight> for Origin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -49680,10 +49656,10 @@ impl Sub<Dipole> for Origin {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Origin {
+impl Sub<DipoleBulk> for Origin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -49724,10 +49700,10 @@ impl Sub<DipoleCarrierAspect> for Origin {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Origin {
+impl Sub<DipoleWeight> for Origin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50144,10 +50120,10 @@ impl Sub<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Origin {
+impl Sub<RoundPointBulk> for Origin {
     type Output = RoundPointCarrierAspect;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPointCarrierAspect {
+    fn sub(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -50212,10 +50188,10 @@ impl Sub<Sphere> for Origin {
     }
 }
 
-impl Sub<SphereWeightAspect> for Origin {
+impl Sub<SphereWeight> for Origin {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50322,10 +50298,10 @@ impl Sub<Circle> for Plane {
     }
 }
 
-impl Sub<CircleBulkAspect> for Plane {
+impl Sub<CircleBulk> for Plane {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50366,10 +50342,10 @@ impl Sub<CircleCarrierAspect> for Plane {
     }
 }
 
-impl Sub<CircleWeightAspect> for Plane {
+impl Sub<CircleWeight> for Plane {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50410,10 +50386,10 @@ impl Sub<Dipole> for Plane {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Plane {
+impl Sub<DipoleBulk> for Plane {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50454,10 +50430,10 @@ impl Sub<DipoleCarrierAspect> for Plane {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Plane {
+impl Sub<DipoleWeight> for Plane {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50859,10 +50835,10 @@ impl Sub<RoundPointAtOrigin> for Plane {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Plane {
+impl Sub<RoundPointBulk> for Plane {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50938,10 +50914,10 @@ impl Sub<Sphere> for Plane {
     }
 }
 
-impl Sub<SphereWeightAspect> for Plane {
+impl Sub<SphereWeight> for Plane {
     type Output = Sphere;
 
-    fn sub(self, other: SphereWeightAspect) -> Sphere {
+    fn sub(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
@@ -51030,10 +51006,10 @@ impl Sub<Circle> for PlaneAtOrigin {
     }
 }
 
-impl Sub<CircleBulkAspect> for PlaneAtOrigin {
+impl Sub<CircleBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -51074,10 +51050,10 @@ impl Sub<CircleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl Sub<CircleWeightAspect> for PlaneAtOrigin {
+impl Sub<CircleWeight> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -51118,10 +51094,10 @@ impl Sub<Dipole> for PlaneAtOrigin {
     }
 }
 
-impl Sub<DipoleBulkAspect> for PlaneAtOrigin {
+impl Sub<DipoleBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -51162,10 +51138,10 @@ impl Sub<DipoleCarrierAspect> for PlaneAtOrigin {
     }
 }
 
-impl Sub<DipoleWeightAspect> for PlaneAtOrigin {
+impl Sub<DipoleWeight> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -51555,10 +51531,10 @@ impl Sub<RoundPointAtOrigin> for PlaneAtOrigin {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for PlaneAtOrigin {
+impl Sub<RoundPointBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -51634,10 +51610,10 @@ impl Sub<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl Sub<SphereWeightAspect> for PlaneAtOrigin {
+impl Sub<SphereWeight> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn sub(self, other: SphereWeightAspect) -> Sphere {
+    fn sub(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: self.group0(),
@@ -51722,10 +51698,10 @@ impl Sub<Circle> for Rotor {
     }
 }
 
-impl Sub<CircleBulkAspect> for Rotor {
+impl Sub<CircleBulk> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -51766,10 +51742,10 @@ impl Sub<CircleCarrierAspect> for Rotor {
     }
 }
 
-impl Sub<CircleWeightAspect> for Rotor {
+impl Sub<CircleWeight> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -51810,10 +51786,10 @@ impl Sub<Dipole> for Rotor {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Rotor {
+impl Sub<DipoleBulk> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -51854,10 +51830,10 @@ impl Sub<DipoleCarrierAspect> for Rotor {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Rotor {
+impl Sub<DipoleWeight> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -52281,10 +52257,10 @@ impl Sub<RoundPointAtOrigin> for Rotor {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Rotor {
+impl Sub<RoundPointBulk> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -52369,10 +52345,10 @@ impl Sub<Sphere> for Rotor {
     }
 }
 
-impl Sub<SphereWeightAspect> for Rotor {
+impl Sub<SphereWeight> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -52470,10 +52446,10 @@ impl Sub<Circle> for RoundPoint {
     }
 }
 
-impl Sub<CircleBulkAspect> for RoundPoint {
+impl Sub<CircleBulk> for RoundPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -52514,10 +52490,10 @@ impl Sub<CircleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Sub<CircleWeightAspect> for RoundPoint {
+impl Sub<CircleWeight> for RoundPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -52558,10 +52534,10 @@ impl Sub<Dipole> for RoundPoint {
     }
 }
 
-impl Sub<DipoleBulkAspect> for RoundPoint {
+impl Sub<DipoleBulk> for RoundPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -52602,10 +52578,10 @@ impl Sub<DipoleCarrierAspect> for RoundPoint {
     }
 }
 
-impl Sub<DipoleWeightAspect> for RoundPoint {
+impl Sub<DipoleWeight> for RoundPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53049,10 +53025,10 @@ impl SubAssign<RoundPointAtOrigin> for RoundPoint {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for RoundPoint {
+impl Sub<RoundPointBulk> for RoundPoint {
     type Output = RoundPoint;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPoint {
+    fn sub(self, other: RoundPointBulk) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0() - other.group0(),
@@ -53062,8 +53038,8 @@ impl Sub<RoundPointBulkAspect> for RoundPoint {
     }
 }
 
-impl SubAssign<RoundPointBulkAspect> for RoundPoint {
-    fn sub_assign(&mut self, other: RoundPointBulkAspect) {
+impl SubAssign<RoundPointBulk> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -53131,10 +53107,10 @@ impl Sub<Sphere> for RoundPoint {
     }
 }
 
-impl Sub<SphereWeightAspect> for RoundPoint {
+impl Sub<SphereWeight> for RoundPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53241,10 +53217,10 @@ impl Sub<Circle> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<CircleBulkAspect> for RoundPointAtInfinity {
+impl Sub<CircleBulk> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53285,10 +53261,10 @@ impl Sub<CircleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<CircleWeightAspect> for RoundPointAtInfinity {
+impl Sub<CircleWeight> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53329,10 +53305,10 @@ impl Sub<Dipole> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<DipoleBulkAspect> for RoundPointAtInfinity {
+impl Sub<DipoleBulk> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53373,10 +53349,10 @@ impl Sub<DipoleCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<DipoleWeightAspect> for RoundPointAtInfinity {
+impl Sub<DipoleWeight> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53800,10 +53776,10 @@ impl Sub<RoundPointAtOrigin> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for RoundPointAtInfinity {
+impl Sub<RoundPointBulk> for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPointAtInfinity {
+    fn sub(self, other: RoundPointBulk) -> RoundPointAtInfinity {
         RoundPointAtInfinity {
             groups: RoundPointAtInfinityGroups {
                 g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -53812,8 +53788,8 @@ impl Sub<RoundPointBulkAspect> for RoundPointAtInfinity {
     }
 }
 
-impl SubAssign<RoundPointBulkAspect> for RoundPointAtInfinity {
-    fn sub_assign(&mut self, other: RoundPointBulkAspect) {
+impl SubAssign<RoundPointBulk> for RoundPointAtInfinity {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -53875,10 +53851,10 @@ impl Sub<Sphere> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<SphereWeightAspect> for RoundPointAtInfinity {
+impl Sub<SphereWeight> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53985,10 +53961,10 @@ impl Sub<Circle> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<CircleBulkAspect> for RoundPointAtOrigin {
+impl Sub<CircleBulk> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54029,10 +54005,10 @@ impl Sub<CircleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<CircleWeightAspect> for RoundPointAtOrigin {
+impl Sub<CircleWeight> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54073,10 +54049,10 @@ impl Sub<Dipole> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<DipoleBulkAspect> for RoundPointAtOrigin {
+impl Sub<DipoleBulk> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54117,10 +54093,10 @@ impl Sub<DipoleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<DipoleWeightAspect> for RoundPointAtOrigin {
+impl Sub<DipoleWeight> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54549,10 +54525,10 @@ impl SubAssign<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for RoundPointAtOrigin {
+impl Sub<RoundPointBulk> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPoint {
+    fn sub(self, other: RoundPointBulk) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
@@ -54619,10 +54595,10 @@ impl Sub<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<SphereWeightAspect> for RoundPointAtOrigin {
+impl Sub<SphereWeight> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54685,7 +54661,7 @@ impl Sub<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<AntiScalar> for RoundPointBulkAspect {
+impl Sub<AntiScalar> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -54707,7 +54683,7 @@ impl Sub<AntiScalar> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Circle> for RoundPointBulkAspect {
+impl Sub<Circle> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Circle) -> MultiVector {
@@ -54729,10 +54705,10 @@ impl Sub<Circle> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for RoundPointBulkAspect {
+impl Sub<CircleBulk> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54751,7 +54727,7 @@ impl Sub<CircleBulkAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<CircleCarrierAspect> for RoundPointBulkAspect {
+impl Sub<CircleCarrierAspect> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: CircleCarrierAspect) -> MultiVector {
@@ -54773,10 +54749,10 @@ impl Sub<CircleCarrierAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for RoundPointBulkAspect {
+impl Sub<CircleWeight> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54795,7 +54771,7 @@ impl Sub<CircleWeightAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Dipole> for RoundPointBulkAspect {
+impl Sub<Dipole> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Dipole) -> MultiVector {
@@ -54817,10 +54793,10 @@ impl Sub<Dipole> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for RoundPointBulkAspect {
+impl Sub<DipoleBulk> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54839,7 +54815,7 @@ impl Sub<DipoleBulkAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<DipoleCarrierAspect> for RoundPointBulkAspect {
+impl Sub<DipoleCarrierAspect> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -54861,10 +54837,10 @@ impl Sub<DipoleCarrierAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for RoundPointBulkAspect {
+impl Sub<DipoleWeight> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54883,7 +54859,7 @@ impl Sub<DipoleWeightAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<FlatPoint> for RoundPointBulkAspect {
+impl Sub<FlatPoint> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPoint) -> MultiVector {
@@ -54905,7 +54881,7 @@ impl Sub<FlatPoint> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for RoundPointBulkAspect {
+impl Sub<FlatPointAtInfinity> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -54927,7 +54903,7 @@ impl Sub<FlatPointAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for RoundPointBulkAspect {
+impl Sub<FlatPointAtOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -54949,7 +54925,7 @@ impl Sub<FlatPointAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Flector> for RoundPointBulkAspect {
+impl Sub<Flector> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -54971,7 +54947,7 @@ impl Sub<Flector> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for RoundPointBulkAspect {
+impl Sub<FlectorAtInfinity> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -54993,7 +54969,7 @@ impl Sub<FlectorAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Horizon> for RoundPointBulkAspect {
+impl Sub<Horizon> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Horizon) -> MultiVector {
@@ -55015,7 +54991,7 @@ impl Sub<Horizon> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Infinity> for RoundPointBulkAspect {
+impl Sub<Infinity> for RoundPointBulk {
     type Output = RoundPointAtInfinity;
 
     fn sub(self, other: Infinity) -> RoundPointAtInfinity {
@@ -55027,7 +55003,7 @@ impl Sub<Infinity> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Line> for RoundPointBulkAspect {
+impl Sub<Line> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Line) -> MultiVector {
@@ -55049,7 +55025,7 @@ impl Sub<Line> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for RoundPointBulkAspect {
+impl Sub<LineAtInfinity> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtInfinity) -> MultiVector {
@@ -55071,7 +55047,7 @@ impl Sub<LineAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for RoundPointBulkAspect {
+impl Sub<LineAtOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtOrigin) -> MultiVector {
@@ -55093,7 +55069,7 @@ impl Sub<LineAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Magnitude> for RoundPointBulkAspect {
+impl Sub<Magnitude> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Magnitude) -> MultiVector {
@@ -55115,7 +55091,7 @@ impl Sub<Magnitude> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Motor> for RoundPointBulkAspect {
+impl Sub<Motor> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -55137,7 +55113,7 @@ impl Sub<Motor> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<MultiVector> for RoundPointBulkAspect {
+impl Sub<MultiVector> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -55159,7 +55135,7 @@ impl Sub<MultiVector> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Origin> for RoundPointBulkAspect {
+impl Sub<Origin> for RoundPointBulk {
     type Output = RoundPointCarrierAspect;
 
     fn sub(self, other: Origin) -> RoundPointCarrierAspect {
@@ -55171,7 +55147,7 @@ impl Sub<Origin> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Plane> for RoundPointBulkAspect {
+impl Sub<Plane> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Plane) -> MultiVector {
@@ -55193,7 +55169,7 @@ impl Sub<Plane> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for RoundPointBulkAspect {
+impl Sub<PlaneAtOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: PlaneAtOrigin) -> MultiVector {
@@ -55215,7 +55191,7 @@ impl Sub<PlaneAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Rotor> for RoundPointBulkAspect {
+impl Sub<Rotor> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -55237,7 +55213,7 @@ impl Sub<Rotor> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<RoundPoint> for RoundPointBulkAspect {
+impl Sub<RoundPoint> for RoundPointBulk {
     type Output = RoundPoint;
 
     fn sub(self, other: RoundPoint) -> RoundPoint {
@@ -55250,7 +55226,7 @@ impl Sub<RoundPoint> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for RoundPointBulkAspect {
+impl Sub<RoundPointAtInfinity> for RoundPointBulk {
     type Output = RoundPointAtInfinity;
 
     fn sub(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
@@ -55262,7 +55238,7 @@ impl Sub<RoundPointAtInfinity> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for RoundPointBulkAspect {
+impl Sub<RoundPointAtOrigin> for RoundPointBulk {
     type Output = RoundPoint;
 
     fn sub(self, other: RoundPointAtOrigin) -> RoundPoint {
@@ -55275,25 +55251,25 @@ impl Sub<RoundPointAtOrigin> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Sub<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPointBulkAspect {
-        RoundPointBulkAspect {
-            groups: RoundPointBulkAspectGroups {
+    fn sub(self, other: RoundPointBulk) -> RoundPointBulk {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<RoundPointBulkAspect> for RoundPointBulkAspect {
-    fn sub_assign(&mut self, other: RoundPointBulkAspect) {
+impl SubAssign<RoundPointBulk> for RoundPointBulk {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for RoundPointBulkAspect {
+impl Sub<RoundPointCarrierAspect> for RoundPointBulk {
     type Output = RoundPointCarrierAspect;
 
     fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
@@ -55305,7 +55281,7 @@ impl Sub<RoundPointCarrierAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Scalar> for RoundPointBulkAspect {
+impl Sub<Scalar> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -55327,7 +55303,7 @@ impl Sub<Scalar> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Sphere> for RoundPointBulkAspect {
+impl Sub<Sphere> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Sphere) -> MultiVector {
@@ -55349,10 +55325,10 @@ impl Sub<Sphere> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for RoundPointBulkAspect {
+impl Sub<SphereWeight> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -55371,7 +55347,7 @@ impl Sub<SphereWeightAspect> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Transflector> for RoundPointBulkAspect {
+impl Sub<Transflector> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -55393,7 +55369,7 @@ impl Sub<Transflector> for RoundPointBulkAspect {
     }
 }
 
-impl Sub<Translator> for RoundPointBulkAspect {
+impl Sub<Translator> for RoundPointBulk {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -55459,10 +55435,10 @@ impl Sub<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for RoundPointCarrierAspect {
+impl Sub<CircleBulk> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -55503,10 +55479,10 @@ impl Sub<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for RoundPointCarrierAspect {
+impl Sub<CircleWeight> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -55547,10 +55523,10 @@ impl Sub<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for RoundPointCarrierAspect {
+impl Sub<DipoleBulk> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -55591,10 +55567,10 @@ impl Sub<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for RoundPointCarrierAspect {
+impl Sub<DipoleWeight> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -56013,10 +55989,10 @@ impl Sub<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for RoundPointCarrierAspect {
+impl Sub<RoundPointBulk> for RoundPointCarrierAspect {
     type Output = RoundPointCarrierAspect;
 
-    fn sub(self, other: RoundPointBulkAspect) -> RoundPointCarrierAspect {
+    fn sub(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
                 g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
@@ -56025,8 +56001,8 @@ impl Sub<RoundPointBulkAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl SubAssign<RoundPointBulkAspect> for RoundPointCarrierAspect {
-    fn sub_assign(&mut self, other: RoundPointBulkAspect) {
+impl SubAssign<RoundPointBulk> for RoundPointCarrierAspect {
+    fn sub_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).sub(other);
     }
 }
@@ -56093,10 +56069,10 @@ impl Sub<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for RoundPointCarrierAspect {
+impl Sub<SphereWeight> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -56193,10 +56169,10 @@ impl Sub<Circle> for Scalar {
     }
 }
 
-impl Sub<CircleBulkAspect> for Scalar {
+impl Sub<CircleBulk> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -56237,10 +56213,10 @@ impl Sub<CircleCarrierAspect> for Scalar {
     }
 }
 
-impl Sub<CircleWeightAspect> for Scalar {
+impl Sub<CircleWeight> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -56281,10 +56257,10 @@ impl Sub<Dipole> for Scalar {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Scalar {
+impl Sub<DipoleBulk> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -56325,10 +56301,10 @@ impl Sub<DipoleCarrierAspect> for Scalar {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Scalar {
+impl Sub<DipoleWeight> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -56777,10 +56753,10 @@ impl Sub<RoundPointAtOrigin> for Scalar {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Scalar {
+impl Sub<RoundPointBulk> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -56861,10 +56837,10 @@ impl Sub<Sphere> for Scalar {
     }
 }
 
-impl Sub<SphereWeightAspect> for Scalar {
+impl Sub<SphereWeight> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -56971,10 +56947,10 @@ impl Sub<Circle> for Sphere {
     }
 }
 
-impl Sub<CircleBulkAspect> for Sphere {
+impl Sub<CircleBulk> for Sphere {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57015,10 +56991,10 @@ impl Sub<CircleCarrierAspect> for Sphere {
     }
 }
 
-impl Sub<CircleWeightAspect> for Sphere {
+impl Sub<CircleWeight> for Sphere {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57059,10 +57035,10 @@ impl Sub<Dipole> for Sphere {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Sphere {
+impl Sub<DipoleBulk> for Sphere {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57103,10 +57079,10 @@ impl Sub<DipoleCarrierAspect> for Sphere {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Sphere {
+impl Sub<DipoleWeight> for Sphere {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57556,10 +57532,10 @@ impl Sub<RoundPointAtOrigin> for Sphere {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Sphere {
+impl Sub<RoundPointBulk> for Sphere {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57641,10 +57617,10 @@ impl SubAssign<Sphere> for Sphere {
     }
 }
 
-impl Sub<SphereWeightAspect> for Sphere {
+impl Sub<SphereWeight> for Sphere {
     type Output = Sphere;
 
-    fn sub(self, other: SphereWeightAspect) -> Sphere {
+    fn sub(self, other: SphereWeight) -> Sphere {
         Sphere {
             groups: SphereGroups {
                 g0: self.group0(),
@@ -57654,8 +57630,8 @@ impl Sub<SphereWeightAspect> for Sphere {
     }
 }
 
-impl SubAssign<SphereWeightAspect> for Sphere {
-    fn sub_assign(&mut self, other: SphereWeightAspect) {
+impl SubAssign<SphereWeight> for Sphere {
+    fn sub_assign(&mut self, other: SphereWeight) {
         *self = (*self).sub(other);
     }
 }
@@ -57704,7 +57680,7 @@ impl Sub<Translator> for Sphere {
     }
 }
 
-impl Sub<AntiScalar> for SphereWeightAspect {
+impl Sub<AntiScalar> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -57726,7 +57702,7 @@ impl Sub<AntiScalar> for SphereWeightAspect {
     }
 }
 
-impl Sub<Circle> for SphereWeightAspect {
+impl Sub<Circle> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Circle) -> MultiVector {
@@ -57748,10 +57724,10 @@ impl Sub<Circle> for SphereWeightAspect {
     }
 }
 
-impl Sub<CircleBulkAspect> for SphereWeightAspect {
+impl Sub<CircleBulk> for SphereWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57770,7 +57746,7 @@ impl Sub<CircleBulkAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<CircleCarrierAspect> for SphereWeightAspect {
+impl Sub<CircleCarrierAspect> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: CircleCarrierAspect) -> MultiVector {
@@ -57792,10 +57768,10 @@ impl Sub<CircleCarrierAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<CircleWeightAspect> for SphereWeightAspect {
+impl Sub<CircleWeight> for SphereWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57814,7 +57790,7 @@ impl Sub<CircleWeightAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<Dipole> for SphereWeightAspect {
+impl Sub<Dipole> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Dipole) -> MultiVector {
@@ -57836,10 +57812,10 @@ impl Sub<Dipole> for SphereWeightAspect {
     }
 }
 
-impl Sub<DipoleBulkAspect> for SphereWeightAspect {
+impl Sub<DipoleBulk> for SphereWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57858,7 +57834,7 @@ impl Sub<DipoleBulkAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<DipoleCarrierAspect> for SphereWeightAspect {
+impl Sub<DipoleCarrierAspect> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -57880,10 +57856,10 @@ impl Sub<DipoleCarrierAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<DipoleWeightAspect> for SphereWeightAspect {
+impl Sub<DipoleWeight> for SphereWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -57902,7 +57878,7 @@ impl Sub<DipoleWeightAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<FlatPoint> for SphereWeightAspect {
+impl Sub<FlatPoint> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPoint) -> MultiVector {
@@ -57924,7 +57900,7 @@ impl Sub<FlatPoint> for SphereWeightAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for SphereWeightAspect {
+impl Sub<FlatPointAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -57946,7 +57922,7 @@ impl Sub<FlatPointAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for SphereWeightAspect {
+impl Sub<FlatPointAtOrigin> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -57968,7 +57944,7 @@ impl Sub<FlatPointAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Sub<Flector> for SphereWeightAspect {
+impl Sub<Flector> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -57990,7 +57966,7 @@ impl Sub<Flector> for SphereWeightAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for SphereWeightAspect {
+impl Sub<FlectorAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -58012,7 +57988,7 @@ impl Sub<FlectorAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Sub<Horizon> for SphereWeightAspect {
+impl Sub<Horizon> for SphereWeight {
     type Output = Sphere;
 
     fn sub(self, other: Horizon) -> Sphere {
@@ -58025,7 +58001,7 @@ impl Sub<Horizon> for SphereWeightAspect {
     }
 }
 
-impl Sub<Infinity> for SphereWeightAspect {
+impl Sub<Infinity> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Infinity) -> MultiVector {
@@ -58047,7 +58023,7 @@ impl Sub<Infinity> for SphereWeightAspect {
     }
 }
 
-impl Sub<Line> for SphereWeightAspect {
+impl Sub<Line> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Line) -> MultiVector {
@@ -58069,7 +58045,7 @@ impl Sub<Line> for SphereWeightAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for SphereWeightAspect {
+impl Sub<LineAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtInfinity) -> MultiVector {
@@ -58091,7 +58067,7 @@ impl Sub<LineAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for SphereWeightAspect {
+impl Sub<LineAtOrigin> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtOrigin) -> MultiVector {
@@ -58113,7 +58089,7 @@ impl Sub<LineAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Sub<Magnitude> for SphereWeightAspect {
+impl Sub<Magnitude> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Magnitude) -> MultiVector {
@@ -58135,7 +58111,7 @@ impl Sub<Magnitude> for SphereWeightAspect {
     }
 }
 
-impl Sub<Motor> for SphereWeightAspect {
+impl Sub<Motor> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -58157,7 +58133,7 @@ impl Sub<Motor> for SphereWeightAspect {
     }
 }
 
-impl Sub<MultiVector> for SphereWeightAspect {
+impl Sub<MultiVector> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -58179,7 +58155,7 @@ impl Sub<MultiVector> for SphereWeightAspect {
     }
 }
 
-impl Sub<Origin> for SphereWeightAspect {
+impl Sub<Origin> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Origin) -> MultiVector {
@@ -58201,7 +58177,7 @@ impl Sub<Origin> for SphereWeightAspect {
     }
 }
 
-impl Sub<Plane> for SphereWeightAspect {
+impl Sub<Plane> for SphereWeight {
     type Output = Sphere;
 
     fn sub(self, other: Plane) -> Sphere {
@@ -58214,7 +58190,7 @@ impl Sub<Plane> for SphereWeightAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for SphereWeightAspect {
+impl Sub<PlaneAtOrigin> for SphereWeight {
     type Output = Sphere;
 
     fn sub(self, other: PlaneAtOrigin) -> Sphere {
@@ -58227,7 +58203,7 @@ impl Sub<PlaneAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Sub<Rotor> for SphereWeightAspect {
+impl Sub<Rotor> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -58249,7 +58225,7 @@ impl Sub<Rotor> for SphereWeightAspect {
     }
 }
 
-impl Sub<RoundPoint> for SphereWeightAspect {
+impl Sub<RoundPoint> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPoint) -> MultiVector {
@@ -58271,7 +58247,7 @@ impl Sub<RoundPoint> for SphereWeightAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for SphereWeightAspect {
+impl Sub<RoundPointAtInfinity> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -58293,7 +58269,7 @@ impl Sub<RoundPointAtInfinity> for SphereWeightAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for SphereWeightAspect {
+impl Sub<RoundPointAtOrigin> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -58315,10 +58291,10 @@ impl Sub<RoundPointAtOrigin> for SphereWeightAspect {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for SphereWeightAspect {
+impl Sub<RoundPointBulk> for SphereWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -58337,7 +58313,7 @@ impl Sub<RoundPointBulkAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for SphereWeightAspect {
+impl Sub<RoundPointCarrierAspect> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
@@ -58359,7 +58335,7 @@ impl Sub<RoundPointCarrierAspect> for SphereWeightAspect {
     }
 }
 
-impl Sub<Scalar> for SphereWeightAspect {
+impl Sub<Scalar> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -58381,7 +58357,7 @@ impl Sub<Scalar> for SphereWeightAspect {
     }
 }
 
-impl Sub<Sphere> for SphereWeightAspect {
+impl Sub<Sphere> for SphereWeight {
     type Output = Sphere;
 
     fn sub(self, other: Sphere) -> Sphere {
@@ -58394,25 +58370,25 @@ impl Sub<Sphere> for SphereWeightAspect {
     }
 }
 
-impl Sub<SphereWeightAspect> for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Sub<SphereWeight> for SphereWeight {
+    type Output = SphereWeight;
 
-    fn sub(self, other: SphereWeightAspect) -> SphereWeightAspect {
-        SphereWeightAspect {
-            groups: SphereWeightAspectGroups {
+    fn sub(self, other: SphereWeight) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<SphereWeightAspect> for SphereWeightAspect {
-    fn sub_assign(&mut self, other: SphereWeightAspect) {
+impl SubAssign<SphereWeight> for SphereWeight {
+    fn sub_assign(&mut self, other: SphereWeight) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<Transflector> for SphereWeightAspect {
+impl Sub<Transflector> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -58434,7 +58410,7 @@ impl Sub<Transflector> for SphereWeightAspect {
     }
 }
 
-impl Sub<Translator> for SphereWeightAspect {
+impl Sub<Translator> for SphereWeight {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -58500,10 +58476,10 @@ impl Sub<Circle> for Transflector {
     }
 }
 
-impl Sub<CircleBulkAspect> for Transflector {
+impl Sub<CircleBulk> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -58544,10 +58520,10 @@ impl Sub<CircleCarrierAspect> for Transflector {
     }
 }
 
-impl Sub<CircleWeightAspect> for Transflector {
+impl Sub<CircleWeight> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -58588,10 +58564,10 @@ impl Sub<Dipole> for Transflector {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Transflector {
+impl Sub<DipoleBulk> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -58632,10 +58608,10 @@ impl Sub<DipoleCarrierAspect> for Transflector {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Transflector {
+impl Sub<DipoleWeight> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -59052,10 +59028,10 @@ impl Sub<RoundPointAtOrigin> for Transflector {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Transflector {
+impl Sub<RoundPointBulk> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -59140,10 +59116,10 @@ impl Sub<Sphere> for Transflector {
     }
 }
 
-impl Sub<SphereWeightAspect> for Transflector {
+impl Sub<SphereWeight> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -59243,10 +59219,10 @@ impl Sub<Circle> for Translator {
     }
 }
 
-impl Sub<CircleBulkAspect> for Translator {
+impl Sub<CircleBulk> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleBulkAspect) -> MultiVector {
+    fn sub(self, other: CircleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -59287,10 +59263,10 @@ impl Sub<CircleCarrierAspect> for Translator {
     }
 }
 
-impl Sub<CircleWeightAspect> for Translator {
+impl Sub<CircleWeight> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: CircleWeightAspect) -> MultiVector {
+    fn sub(self, other: CircleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -59331,10 +59307,10 @@ impl Sub<Dipole> for Translator {
     }
 }
 
-impl Sub<DipoleBulkAspect> for Translator {
+impl Sub<DipoleBulk> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleBulkAspect) -> MultiVector {
+    fn sub(self, other: DipoleBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -59375,10 +59351,10 @@ impl Sub<DipoleCarrierAspect> for Translator {
     }
 }
 
-impl Sub<DipoleWeightAspect> for Translator {
+impl Sub<DipoleWeight> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: DipoleWeightAspect) -> MultiVector {
+    fn sub(self, other: DipoleWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -59797,10 +59773,10 @@ impl Sub<RoundPointAtOrigin> for Translator {
     }
 }
 
-impl Sub<RoundPointBulkAspect> for Translator {
+impl Sub<RoundPointBulk> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointBulkAspect) -> MultiVector {
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -59885,10 +59861,10 @@ impl Sub<Sphere> for Translator {
     }
 }
 
-impl Sub<SphereWeightAspect> for Translator {
+impl Sub<SphereWeight> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: SphereWeightAspect) -> MultiVector {
+    fn sub(self, other: SphereWeight) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),

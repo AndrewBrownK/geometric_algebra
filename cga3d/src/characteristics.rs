@@ -115,7 +115,7 @@ impl AntiGrade for Circle {
     }
 }
 
-impl AntiGrade for CircleBulkAspect {
+impl AntiGrade for CircleBulk {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -131,7 +131,7 @@ impl AntiGrade for CircleCarrierAspect {
     }
 }
 
-impl AntiGrade for CircleWeightAspect {
+impl AntiGrade for CircleWeight {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -147,7 +147,7 @@ impl AntiGrade for Dipole {
     }
 }
 
-impl AntiGrade for DipoleBulkAspect {
+impl AntiGrade for DipoleBulk {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -163,7 +163,7 @@ impl AntiGrade for DipoleCarrierAspect {
     }
 }
 
-impl AntiGrade for DipoleWeightAspect {
+impl AntiGrade for DipoleWeight {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -283,7 +283,7 @@ impl AntiGrade for RoundPointAtOrigin {
     }
 }
 
-impl AntiGrade for RoundPointBulkAspect {
+impl AntiGrade for RoundPointBulk {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -315,7 +315,7 @@ impl AntiGrade for Sphere {
     }
 }
 
-impl AntiGrade for SphereWeightAspect {
+impl AntiGrade for SphereWeight {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -339,7 +339,7 @@ impl Grade for Circle {
     }
 }
 
-impl Grade for CircleBulkAspect {
+impl Grade for CircleBulk {
     type Output = isize;
 
     fn grade() -> isize {
@@ -355,7 +355,7 @@ impl Grade for CircleCarrierAspect {
     }
 }
 
-impl Grade for CircleWeightAspect {
+impl Grade for CircleWeight {
     type Output = isize;
 
     fn grade() -> isize {
@@ -371,7 +371,7 @@ impl Grade for Dipole {
     }
 }
 
-impl Grade for DipoleBulkAspect {
+impl Grade for DipoleBulk {
     type Output = isize;
 
     fn grade() -> isize {
@@ -387,7 +387,7 @@ impl Grade for DipoleCarrierAspect {
     }
 }
 
-impl Grade for DipoleWeightAspect {
+impl Grade for DipoleWeight {
     type Output = isize;
 
     fn grade() -> isize {
@@ -507,7 +507,7 @@ impl Grade for RoundPointAtOrigin {
     }
 }
 
-impl Grade for RoundPointBulkAspect {
+impl Grade for RoundPointBulk {
     type Output = isize;
 
     fn grade() -> isize {
@@ -539,7 +539,7 @@ impl Grade for Sphere {
     }
 }
 
-impl Grade for SphereWeightAspect {
+impl Grade for SphereWeight {
     type Output = isize;
 
     fn grade() -> isize {
@@ -564,17 +564,17 @@ impl Attitude for Circle {
 }
 
 impl Attitude for CircleCarrierAspect {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn attitude(self) -> DipoleBulkAspect {
+    fn attitude(self) -> DipoleBulk {
         self.anti_wedge(Horizon::one())
     }
 }
 
-impl Attitude for CircleWeightAspect {
-    type Output = DipoleBulkAspect;
+impl Attitude for CircleWeight {
+    type Output = DipoleBulk;
 
-    fn attitude(self) -> DipoleBulkAspect {
+    fn attitude(self) -> DipoleBulk {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -588,17 +588,17 @@ impl Attitude for Dipole {
 }
 
 impl Attitude for DipoleCarrierAspect {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn attitude(self) -> RoundPointBulkAspect {
+    fn attitude(self) -> RoundPointBulk {
         self.anti_wedge(Horizon::one())
     }
 }
 
-impl Attitude for DipoleWeightAspect {
-    type Output = RoundPointBulkAspect;
+impl Attitude for DipoleWeight {
+    type Output = RoundPointBulk;
 
-    fn attitude(self) -> RoundPointBulkAspect {
+    fn attitude(self) -> RoundPointBulk {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -731,10 +731,10 @@ impl Attitude for Sphere {
     }
 }
 
-impl Attitude for SphereWeightAspect {
-    type Output = CircleBulkAspect;
+impl Attitude for SphereWeight {
+    type Output = CircleBulk;
 
-    fn attitude(self) -> CircleBulkAspect {
+    fn attitude(self) -> CircleBulk {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -763,7 +763,7 @@ impl Carrier for Circle {
     }
 }
 
-impl Carrier for CircleBulkAspect {
+impl Carrier for CircleBulk {
     type Output = Horizon;
 
     fn carrier(self) -> Horizon {
@@ -779,7 +779,7 @@ impl Carrier for CircleCarrierAspect {
     }
 }
 
-impl Carrier for CircleWeightAspect {
+impl Carrier for CircleWeight {
     type Output = PlaneAtOrigin;
 
     fn carrier(self) -> PlaneAtOrigin {
@@ -795,7 +795,7 @@ impl Carrier for Dipole {
     }
 }
 
-impl Carrier for DipoleBulkAspect {
+impl Carrier for DipoleBulk {
     type Output = LineAtInfinity;
 
     fn carrier(self) -> LineAtInfinity {
@@ -811,7 +811,7 @@ impl Carrier for DipoleCarrierAspect {
     }
 }
 
-impl Carrier for DipoleWeightAspect {
+impl Carrier for DipoleWeight {
     type Output = LineAtOrigin;
 
     fn carrier(self) -> LineAtOrigin {
@@ -867,7 +867,7 @@ impl Carrier for RoundPointAtOrigin {
     }
 }
 
-impl Carrier for RoundPointBulkAspect {
+impl Carrier for RoundPointBulk {
     type Output = FlatPointAtInfinity;
 
     fn carrier(self) -> FlatPointAtInfinity {
@@ -899,7 +899,7 @@ impl Carrier for Sphere {
     }
 }
 
-impl Carrier for SphereWeightAspect {
+impl Carrier for SphereWeight {
     type Output = AntiScalar;
 
     fn carrier(self) -> AntiScalar {
@@ -923,7 +923,7 @@ impl CoCarrier for CircleCarrierAspect {
     }
 }
 
-impl CoCarrier for CircleWeightAspect {
+impl CoCarrier for CircleWeight {
     type Output = LineAtOrigin;
 
     fn co_carrier(self) -> LineAtOrigin {
@@ -947,7 +947,7 @@ impl CoCarrier for DipoleCarrierAspect {
     }
 }
 
-impl CoCarrier for DipoleWeightAspect {
+impl CoCarrier for DipoleWeight {
     type Output = PlaneAtOrigin;
 
     fn co_carrier(self) -> PlaneAtOrigin {
@@ -1011,7 +1011,7 @@ impl CoCarrier for Sphere {
     }
 }
 
-impl CoCarrier for SphereWeightAspect {
+impl CoCarrier for SphereWeight {
     type Output = FlatPointAtOrigin;
 
     fn co_carrier(self) -> FlatPointAtOrigin {
@@ -1055,7 +1055,7 @@ impl Center for CircleCarrierAspect {
     }
 }
 
-impl Center for CircleWeightAspect {
+impl Center for CircleWeight {
     type Output = Origin;
 
     fn center(self) -> Origin {
@@ -1079,7 +1079,7 @@ impl Center for DipoleCarrierAspect {
     }
 }
 
-impl Center for DipoleWeightAspect {
+impl Center for DipoleWeight {
     type Output = Origin;
 
     fn center(self) -> Origin {
@@ -1143,7 +1143,7 @@ impl Center for Sphere {
     }
 }
 
-impl Center for SphereWeightAspect {
+impl Center for SphereWeight {
     type Output = Origin;
 
     fn center(self) -> Origin {
@@ -1159,7 +1159,7 @@ impl Container for Circle {
     }
 }
 
-impl Container for CircleBulkAspect {
+impl Container for CircleBulk {
     type Output = Horizon;
 
     fn container(self) -> Horizon {
@@ -1175,10 +1175,10 @@ impl Container for CircleCarrierAspect {
     }
 }
 
-impl Container for CircleWeightAspect {
-    type Output = SphereWeightAspect;
+impl Container for CircleWeight {
+    type Output = SphereWeight;
 
-    fn container(self) -> SphereWeightAspect {
+    fn container(self) -> SphereWeight {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1191,7 +1191,7 @@ impl Container for Dipole {
     }
 }
 
-impl Container for DipoleBulkAspect {
+impl Container for DipoleBulk {
     type Output = Horizon;
 
     fn container(self) -> Horizon {
@@ -1207,10 +1207,10 @@ impl Container for DipoleCarrierAspect {
     }
 }
 
-impl Container for DipoleWeightAspect {
-    type Output = SphereWeightAspect;
+impl Container for DipoleWeight {
+    type Output = SphereWeight;
 
-    fn container(self) -> SphereWeightAspect {
+    fn container(self) -> SphereWeight {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1232,9 +1232,9 @@ impl Container for MultiVector {
 }
 
 impl Container for Origin {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn container(self) -> SphereWeightAspect {
+    fn container(self) -> SphereWeight {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1263,7 +1263,7 @@ impl Container for RoundPointAtOrigin {
     }
 }
 
-impl Container for RoundPointBulkAspect {
+impl Container for RoundPointBulk {
     type Output = Horizon;
 
     fn container(self) -> Horizon {
@@ -1295,10 +1295,10 @@ impl Container for Sphere {
     }
 }
 
-impl Container for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Container for SphereWeight {
+    type Output = SphereWeight;
 
-    fn container(self) -> SphereWeightAspect {
+    fn container(self) -> SphereWeight {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1319,10 +1319,10 @@ impl Partner for CircleCarrierAspect {
     }
 }
 
-impl Partner for CircleWeightAspect {
-    type Output = CircleWeightAspect;
+impl Partner for CircleWeight {
+    type Output = CircleWeight;
 
-    fn partner(self) -> CircleWeightAspect {
+    fn partner(self) -> CircleWeight {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -1343,10 +1343,10 @@ impl Partner for DipoleCarrierAspect {
     }
 }
 
-impl Partner for DipoleWeightAspect {
-    type Output = DipoleWeightAspect;
+impl Partner for DipoleWeight {
+    type Output = DipoleWeight;
 
-    fn partner(self) -> DipoleWeightAspect {
+    fn partner(self) -> DipoleWeight {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -1399,10 +1399,10 @@ impl Partner for Sphere {
     }
 }
 
-impl Partner for SphereWeightAspect {
-    type Output = SphereWeightAspect;
+impl Partner for SphereWeight {
+    type Output = SphereWeight;
 
-    fn partner(self) -> SphereWeightAspect {
+    fn partner(self) -> SphereWeight {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -1423,10 +1423,10 @@ impl AntiInverse for Circle {
     }
 }
 
-impl AntiInverse for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl AntiInverse for CircleBulk {
+    type Output = CircleBulk;
 
-    fn anti_inverse(self) -> CircleBulkAspect {
+    fn anti_inverse(self) -> CircleBulk {
         self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
     }
 }
@@ -1447,10 +1447,10 @@ impl AntiInverse for Dipole {
     }
 }
 
-impl AntiInverse for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl AntiInverse for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn anti_inverse(self) -> DipoleBulkAspect {
+    fn anti_inverse(self) -> DipoleBulk {
         self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
     }
 }
@@ -1575,10 +1575,10 @@ impl AntiInverse for RoundPointAtOrigin {
     }
 }
 
-impl AntiInverse for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl AntiInverse for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn anti_inverse(self) -> RoundPointBulkAspect {
+    fn anti_inverse(self) -> RoundPointBulk {
         self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
     }
 }
@@ -1639,10 +1639,10 @@ impl Inverse for Circle {
     }
 }
 
-impl Inverse for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Inverse for CircleBulk {
+    type Output = CircleBulk;
 
-    fn inverse(self) -> CircleBulkAspect {
+    fn inverse(self) -> CircleBulk {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }
@@ -1663,10 +1663,10 @@ impl Inverse for Dipole {
     }
 }
 
-impl Inverse for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Inverse for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn inverse(self) -> DipoleBulkAspect {
+    fn inverse(self) -> DipoleBulk {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }
@@ -1791,10 +1791,10 @@ impl Inverse for RoundPointAtOrigin {
     }
 }
 
-impl Inverse for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Inverse for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn inverse(self) -> RoundPointBulkAspect {
+    fn inverse(self) -> RoundPointBulk {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

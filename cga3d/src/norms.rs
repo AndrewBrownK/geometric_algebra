@@ -89,7 +89,7 @@ impl BulkNormSquared for Circle {
     }
 }
 
-impl BulkNormSquared for CircleBulkAspect {
+impl BulkNormSquared for CircleBulk {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -113,7 +113,7 @@ impl BulkNormSquared for Dipole {
     }
 }
 
-impl BulkNormSquared for DipoleBulkAspect {
+impl BulkNormSquared for DipoleBulk {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -241,7 +241,7 @@ impl BulkNormSquared for RoundPointAtOrigin {
     }
 }
 
-impl BulkNormSquared for RoundPointBulkAspect {
+impl BulkNormSquared for RoundPointBulk {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -305,7 +305,7 @@ impl BulkNorm for Circle {
     }
 }
 
-impl BulkNorm for CircleBulkAspect {
+impl BulkNorm for CircleBulk {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -329,7 +329,7 @@ impl BulkNorm for Dipole {
     }
 }
 
-impl BulkNorm for DipoleBulkAspect {
+impl BulkNorm for DipoleBulk {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -457,7 +457,7 @@ impl BulkNorm for RoundPointAtOrigin {
     }
 }
 
-impl BulkNorm for RoundPointBulkAspect {
+impl BulkNorm for RoundPointBulk {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -521,7 +521,7 @@ impl WeightNormSquared for Circle {
     }
 }
 
-impl WeightNormSquared for CircleBulkAspect {
+impl WeightNormSquared for CircleBulk {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -545,7 +545,7 @@ impl WeightNormSquared for Dipole {
     }
 }
 
-impl WeightNormSquared for DipoleBulkAspect {
+impl WeightNormSquared for DipoleBulk {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -673,7 +673,7 @@ impl WeightNormSquared for RoundPointAtOrigin {
     }
 }
 
-impl WeightNormSquared for RoundPointBulkAspect {
+impl WeightNormSquared for RoundPointBulk {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -737,7 +737,7 @@ impl WeightNorm for Circle {
     }
 }
 
-impl WeightNorm for CircleBulkAspect {
+impl WeightNorm for CircleBulk {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -761,7 +761,7 @@ impl WeightNorm for Dipole {
     }
 }
 
-impl WeightNorm for DipoleBulkAspect {
+impl WeightNorm for DipoleBulk {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -889,7 +889,7 @@ impl WeightNorm for RoundPointAtOrigin {
     }
 }
 
-impl WeightNorm for RoundPointBulkAspect {
+impl WeightNorm for RoundPointBulk {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -953,7 +953,7 @@ impl GeometricNorm for Circle {
     }
 }
 
-impl GeometricNorm for CircleBulkAspect {
+impl GeometricNorm for CircleBulk {
     type Output = Magnitude;
 
     fn geometric_norm(self) -> Magnitude {
@@ -977,7 +977,7 @@ impl GeometricNorm for Dipole {
     }
 }
 
-impl GeometricNorm for DipoleBulkAspect {
+impl GeometricNorm for DipoleBulk {
     type Output = Magnitude;
 
     fn geometric_norm(self) -> Magnitude {
@@ -1105,7 +1105,7 @@ impl GeometricNorm for RoundPointAtOrigin {
     }
 }
 
-impl GeometricNorm for RoundPointBulkAspect {
+impl GeometricNorm for RoundPointBulk {
     type Output = Magnitude;
 
     fn geometric_norm(self) -> Magnitude {
@@ -1169,7 +1169,7 @@ impl UnitizedNormSquared for Circle {
     }
 }
 
-impl UnitizedNormSquared for CircleBulkAspect {
+impl UnitizedNormSquared for CircleBulk {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1193,7 +1193,7 @@ impl UnitizedNormSquared for Dipole {
     }
 }
 
-impl UnitizedNormSquared for DipoleBulkAspect {
+impl UnitizedNormSquared for DipoleBulk {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1321,7 +1321,7 @@ impl UnitizedNormSquared for RoundPointAtOrigin {
     }
 }
 
-impl UnitizedNormSquared for RoundPointBulkAspect {
+impl UnitizedNormSquared for RoundPointBulk {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1385,7 +1385,7 @@ impl UnitizedNorm for Circle {
     }
 }
 
-impl UnitizedNorm for CircleBulkAspect {
+impl UnitizedNorm for CircleBulk {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1409,7 +1409,7 @@ impl UnitizedNorm for Dipole {
     }
 }
 
-impl UnitizedNorm for DipoleBulkAspect {
+impl UnitizedNorm for DipoleBulk {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1537,7 +1537,7 @@ impl UnitizedNorm for RoundPointAtOrigin {
     }
 }
 
-impl UnitizedNorm for RoundPointBulkAspect {
+impl UnitizedNorm for RoundPointBulk {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1589,7 +1589,7 @@ impl CenterBulkNormSquared for Circle {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulkAspect = self.center().round_bulk();
+        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1598,7 +1598,7 @@ impl CenterBulkNormSquared for Dipole {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulkAspect = self.center().round_bulk();
+        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1607,7 +1607,7 @@ impl CenterBulkNormSquared for RoundPoint {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulkAspect = self.center().round_bulk();
+        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1616,7 +1616,7 @@ impl CenterBulkNormSquared for Sphere {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulkAspect = self.center().round_bulk();
+        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }

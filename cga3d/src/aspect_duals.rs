@@ -52,33 +52,33 @@ pub trait RoundWeightDual {
 }
 
 impl BulkDual for Circle {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn bulk_dual(self) -> DipoleWeightAspect {
+    fn bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for Dipole {
-    type Output = CircleWeightAspect;
+    type Output = CircleWeight;
 
-    fn bulk_dual(self) -> CircleWeightAspect {
+    fn bulk_dual(self) -> CircleWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for FlatPoint {
-    type Output = CircleWeightAspect;
+    type Output = CircleWeight;
 
-    fn bulk_dual(self) -> CircleWeightAspect {
+    fn bulk_dual(self) -> CircleWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for FlatPointAtInfinity {
-    type Output = CircleWeightAspect;
+    type Output = CircleWeight;
 
-    fn bulk_dual(self) -> CircleWeightAspect {
+    fn bulk_dual(self) -> CircleWeight {
         self.bulk().complement()
     }
 }
@@ -108,33 +108,33 @@ impl BulkDual for Horizon {
 }
 
 impl BulkDual for Infinity {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn bulk_dual(self) -> SphereWeightAspect {
+    fn bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for Line {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn bulk_dual(self) -> DipoleWeightAspect {
+    fn bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for LineAtInfinity {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn bulk_dual(self) -> DipoleWeightAspect {
+    fn bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for Motor {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn bulk_dual(self) -> DipoleWeightAspect {
+    fn bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
@@ -156,25 +156,25 @@ impl BulkDual for Plane {
 }
 
 impl BulkDual for RoundPoint {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn bulk_dual(self) -> SphereWeightAspect {
+    fn bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for RoundPointAtInfinity {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn bulk_dual(self) -> SphereWeightAspect {
+    fn bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
 
 impl BulkDual for RoundPointAtOrigin {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn bulk_dual(self) -> SphereWeightAspect {
+    fn bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
@@ -196,41 +196,41 @@ impl BulkDual for Transflector {
 }
 
 impl BulkDual for Translator {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn bulk_dual(self) -> DipoleWeightAspect {
+    fn bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for Circle {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn round_bulk_dual(self) -> DipoleWeightAspect {
+    fn round_bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for Dipole {
-    type Output = CircleWeightAspect;
+    type Output = CircleWeight;
 
-    fn round_bulk_dual(self) -> CircleWeightAspect {
+    fn round_bulk_dual(self) -> CircleWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for FlatPoint {
-    type Output = CircleWeightAspect;
+    type Output = CircleWeight;
 
-    fn round_bulk_dual(self) -> CircleWeightAspect {
+    fn round_bulk_dual(self) -> CircleWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for FlatPointAtInfinity {
-    type Output = CircleWeightAspect;
+    type Output = CircleWeight;
 
-    fn round_bulk_dual(self) -> CircleWeightAspect {
+    fn round_bulk_dual(self) -> CircleWeight {
         self.bulk().complement()
     }
 }
@@ -260,33 +260,33 @@ impl RoundBulkDual for Horizon {
 }
 
 impl RoundBulkDual for Infinity {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn round_bulk_dual(self) -> SphereWeightAspect {
+    fn round_bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for Line {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn round_bulk_dual(self) -> DipoleWeightAspect {
+    fn round_bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for LineAtInfinity {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn round_bulk_dual(self) -> DipoleWeightAspect {
+    fn round_bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for Motor {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn round_bulk_dual(self) -> DipoleWeightAspect {
+    fn round_bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
@@ -308,25 +308,25 @@ impl RoundBulkDual for Plane {
 }
 
 impl RoundBulkDual for RoundPoint {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn round_bulk_dual(self) -> SphereWeightAspect {
+    fn round_bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for RoundPointAtInfinity {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn round_bulk_dual(self) -> SphereWeightAspect {
+    fn round_bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
 
 impl RoundBulkDual for RoundPointAtOrigin {
-    type Output = SphereWeightAspect;
+    type Output = SphereWeight;
 
-    fn round_bulk_dual(self) -> SphereWeightAspect {
+    fn round_bulk_dual(self) -> SphereWeight {
         self.bulk().complement()
     }
 }
@@ -348,9 +348,9 @@ impl RoundBulkDual for Transflector {
 }
 
 impl RoundBulkDual for Translator {
-    type Output = DipoleWeightAspect;
+    type Output = DipoleWeight;
 
-    fn round_bulk_dual(self) -> DipoleWeightAspect {
+    fn round_bulk_dual(self) -> DipoleWeight {
         self.bulk().complement()
     }
 }
@@ -364,33 +364,33 @@ impl RoundWeightDual for AntiScalar {
 }
 
 impl RoundWeightDual for Circle {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn round_weight_dual(self) -> DipoleBulkAspect {
+    fn round_weight_dual(self) -> DipoleBulk {
         self.weight().complement()
     }
 }
 
 impl RoundWeightDual for Dipole {
-    type Output = CircleBulkAspect;
+    type Output = CircleBulk;
 
-    fn round_weight_dual(self) -> CircleBulkAspect {
+    fn round_weight_dual(self) -> CircleBulk {
         self.weight().complement()
     }
 }
 
 impl RoundWeightDual for FlatPoint {
-    type Output = CircleBulkAspect;
+    type Output = CircleBulk;
 
-    fn round_weight_dual(self) -> CircleBulkAspect {
+    fn round_weight_dual(self) -> CircleBulk {
         self.weight().complement()
     }
 }
 
 impl RoundWeightDual for FlatPointAtOrigin {
-    type Output = CircleBulkAspect;
+    type Output = CircleBulk;
 
-    fn round_weight_dual(self) -> CircleBulkAspect {
+    fn round_weight_dual(self) -> CircleBulk {
         self.weight().complement()
     }
 }
@@ -404,17 +404,17 @@ impl RoundWeightDual for Flector {
 }
 
 impl RoundWeightDual for Line {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn round_weight_dual(self) -> DipoleBulkAspect {
+    fn round_weight_dual(self) -> DipoleBulk {
         self.weight().complement()
     }
 }
 
 impl RoundWeightDual for LineAtOrigin {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn round_weight_dual(self) -> DipoleBulkAspect {
+    fn round_weight_dual(self) -> DipoleBulk {
         self.weight().complement()
     }
 }
@@ -444,17 +444,17 @@ impl RoundWeightDual for MultiVector {
 }
 
 impl RoundWeightDual for Plane {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn round_weight_dual(self) -> RoundPointBulkAspect {
+    fn round_weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
 
 impl RoundWeightDual for PlaneAtOrigin {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn round_weight_dual(self) -> RoundPointBulkAspect {
+    fn round_weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
@@ -468,17 +468,17 @@ impl RoundWeightDual for Rotor {
 }
 
 impl RoundWeightDual for Sphere {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn round_weight_dual(self) -> RoundPointBulkAspect {
+    fn round_weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
 
 impl RoundWeightDual for Transflector {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn round_weight_dual(self) -> RoundPointBulkAspect {
+    fn round_weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
@@ -500,33 +500,33 @@ impl WeightDual for AntiScalar {
 }
 
 impl WeightDual for Circle {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn weight_dual(self) -> DipoleBulkAspect {
+    fn weight_dual(self) -> DipoleBulk {
         self.weight().complement()
     }
 }
 
 impl WeightDual for Dipole {
-    type Output = CircleBulkAspect;
+    type Output = CircleBulk;
 
-    fn weight_dual(self) -> CircleBulkAspect {
+    fn weight_dual(self) -> CircleBulk {
         self.weight().complement()
     }
 }
 
 impl WeightDual for FlatPoint {
-    type Output = CircleBulkAspect;
+    type Output = CircleBulk;
 
-    fn weight_dual(self) -> CircleBulkAspect {
+    fn weight_dual(self) -> CircleBulk {
         self.weight().complement()
     }
 }
 
 impl WeightDual for FlatPointAtOrigin {
-    type Output = CircleBulkAspect;
+    type Output = CircleBulk;
 
-    fn weight_dual(self) -> CircleBulkAspect {
+    fn weight_dual(self) -> CircleBulk {
         self.weight().complement()
     }
 }
@@ -540,17 +540,17 @@ impl WeightDual for Flector {
 }
 
 impl WeightDual for Line {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn weight_dual(self) -> DipoleBulkAspect {
+    fn weight_dual(self) -> DipoleBulk {
         self.weight().complement()
     }
 }
 
 impl WeightDual for LineAtOrigin {
-    type Output = DipoleBulkAspect;
+    type Output = DipoleBulk;
 
-    fn weight_dual(self) -> DipoleBulkAspect {
+    fn weight_dual(self) -> DipoleBulk {
         self.weight().complement()
     }
 }
@@ -580,17 +580,17 @@ impl WeightDual for MultiVector {
 }
 
 impl WeightDual for Plane {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn weight_dual(self) -> RoundPointBulkAspect {
+    fn weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
 
 impl WeightDual for PlaneAtOrigin {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn weight_dual(self) -> RoundPointBulkAspect {
+    fn weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
@@ -604,17 +604,17 @@ impl WeightDual for Rotor {
 }
 
 impl WeightDual for Sphere {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn weight_dual(self) -> RoundPointBulkAspect {
+    fn weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }
 
 impl WeightDual for Transflector {
-    type Output = RoundPointBulkAspect;
+    type Output = RoundPointBulk;
 
-    fn weight_dual(self) -> RoundPointBulkAspect {
+    fn weight_dual(self) -> RoundPointBulk {
         self.weight().complement()
     }
 }

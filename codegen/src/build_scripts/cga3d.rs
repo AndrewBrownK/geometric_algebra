@@ -49,15 +49,15 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "RoundPointAtInfinity:e1,e2,e3,e5",
 
         // TODO can I get more interesting/intuitive names for these?
-        "RoundPointBulkAspect:e1,e2,e3",
+        "RoundPointBulk:e1,e2,e3",
         "RoundPointCarrierAspect:e1,e2,e3,e4",
-        "DipoleBulkAspect:e23,e31,e12",
-        "DipoleWeightAspect:e41,e42,e43",
+        "DipoleBulk:e23,e31,e12",
+        "DipoleWeight:e41,e42,e43",
         "DipoleCarrierAspect:e41,e42,e43|e23,e31,e12",
-        "CircleBulkAspect:e321",
-        "CircleWeightAspect:e423,e431,e412",
+        "CircleBulk:e321",
+        "CircleWeight:e423,e431,e412",
         "CircleCarrierAspect:e423,e431,e412,e321",
-        "SphereWeightAspect:e1234",
+        "SphereWeight:e1234",
 
 
         // Operator Objects

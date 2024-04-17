@@ -40,10 +40,10 @@ impl Unitize for Circle {
     }
 }
 
-impl Unitize for CircleBulkAspect {
-    type Output = CircleBulkAspect;
+impl Unitize for CircleBulk {
+    type Output = CircleBulk;
 
-    fn unitize(self) -> CircleBulkAspect {
+    fn unitize(self) -> CircleBulk {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -76,10 +76,10 @@ impl Unitize for Dipole {
     }
 }
 
-impl Unitize for DipoleBulkAspect {
-    type Output = DipoleBulkAspect;
+impl Unitize for DipoleBulk {
+    type Output = DipoleBulk;
 
-    fn unitize(self) -> DipoleBulkAspect {
+    fn unitize(self) -> DipoleBulk {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -268,10 +268,10 @@ impl Unitize for RoundPointAtOrigin {
     }
 }
 
-impl Unitize for RoundPointBulkAspect {
-    type Output = RoundPointBulkAspect;
+impl Unitize for RoundPointBulk {
+    type Output = RoundPointBulk;
 
-    fn unitize(self) -> RoundPointBulkAspect {
+    fn unitize(self) -> RoundPointBulk {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
