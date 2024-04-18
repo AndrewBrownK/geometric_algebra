@@ -24,6 +24,8 @@ pub mod products {
     pub mod isometries;
     pub mod projections;
     pub mod quotients;
+    pub mod rejections;
+    pub mod supports;
 }
 
 #[derive(Clone, Copy)]

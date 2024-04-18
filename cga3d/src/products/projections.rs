@@ -45,6 +45,5670 @@ pub trait AntiProjectViaHorizonOnto<T> {
     fn anti_project_via_horizon_onto(self, other: T) -> Self::Output;
 }
 
+impl AntiProjectOrthogonallyOnto<Circle> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Circle {
+    type Output = CircleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> CircleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Circle {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Circle {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Circle {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Circle {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for Circle {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Circle {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for Circle {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Circle {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for Circle {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Circle {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Circle {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Circle {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for CircleBulk {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> CircleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for CircleBulk {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> CircleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for CircleBulk {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for CircleBulk {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for CircleBulk {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for CircleBulk {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for CircleBulk {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> CircleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for CircleBulk {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for CircleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for CircleCarrierAspect {
+    type Output = CircleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> CircleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for CircleCarrierAspect {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for CircleCarrierAspect {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for CircleCarrierAspect {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for CircleCarrierAspect {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for CircleCarrierAspect {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for CircleCarrierAspect {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for CircleWeight {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for CircleWeight {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for CircleWeight {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for CircleWeight {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for CircleWeight {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for CircleWeight {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for CircleWeight {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for CircleWeight {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for CircleWeight {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for CircleWeight {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for CircleWeight {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleWeight {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for CircleWeight {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for CircleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Dipole {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Dipole {
+    type Output = DipoleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> DipoleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Dipole {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Dipole {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Dipole {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for Dipole {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Dipole {
+    type Output = FlatPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for Dipole {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Dipole {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Dipole {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Dipole {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Dipole {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Dipole {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Dipole {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for DipoleBulk {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> DipoleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for DipoleBulk {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for DipoleBulk {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for DipoleBulk {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for DipoleBulk {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for DipoleBulk {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for DipoleBulk {
+    type Output = DipoleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> DipoleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for DipoleBulk {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for DipoleCarrierAspect {
+    type Output = DipoleBulk;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> DipoleBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for DipoleCarrierAspect {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for DipoleCarrierAspect {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for DipoleCarrierAspect {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for DipoleCarrierAspect {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for DipoleWeight {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for DipoleWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for DipoleWeight {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for DipoleWeight {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for DipoleWeight {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for DipoleWeight {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for DipoleWeight {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for DipoleWeight {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for DipoleWeight {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for DipoleWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for FlatPoint {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for FlatPoint {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for FlatPoint {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for FlatPoint {
+    type Output = FlatPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for FlatPoint {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for FlatPoint {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for FlatPoint {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for FlatPoint {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for FlatPoint {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlatPoint {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for FlatPointAtInfinity {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for FlatPointAtInfinity {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for FlatPointAtInfinity {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for FlatPointAtInfinity {
+    type Output = DipoleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> DipoleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for FlatPointAtOrigin {
+    type Output = DipoleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for FlatPointAtOrigin {
+    type Output = FlatPoint;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for FlatPointAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> FlatPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> FlatPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Flector {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Flector {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Flector {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Flector {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Flector {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Flector {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Flector {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Flector {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Flector {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Flector {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for Flector {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for FlectorAtInfinity {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for FlectorAtInfinity {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for FlectorAtInfinity {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for FlectorAtInfinity {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for FlectorAtInfinity {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for FlectorAtInfinity {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for FlectorAtInfinity {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for FlectorAtInfinity {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Horizon {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Horizon {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Horizon {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Horizon {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Horizon {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Horizon {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Horizon {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Horizon {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Horizon {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Horizon {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for Horizon {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Infinity {
+    type Output = Origin;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> Origin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Infinity {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Infinity {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Line {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Line {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Line {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Line {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Line {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Line {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Line {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Line {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Line {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Line {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Line {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Line {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Line {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Line {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Line {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Line {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Line {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for LineAtInfinity {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for LineAtInfinity {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for LineAtInfinity {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for LineAtInfinity {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for LineAtInfinity {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for LineAtInfinity {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for LineAtInfinity {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for LineAtInfinity {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for LineAtInfinity {
+    type Output = CircleWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> CircleWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for LineAtInfinity {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for LineAtInfinity {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> LineAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for LineAtInfinity {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for LineAtOrigin {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for LineAtOrigin {
+    type Output = CircleCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for LineAtOrigin {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for LineAtOrigin {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for LineAtOrigin {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for LineAtOrigin {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for LineAtOrigin {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for LineAtOrigin {
+    type Output = Line;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Line {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for LineAtOrigin {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> LineAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for LineAtOrigin {
+    type Output = Circle;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Motor {
+    type Output = Motor;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Motor {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Motor {
+    type Output = Motor;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Motor {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Horizon> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Horizon) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for Origin {
+    type Output = Infinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Infinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Origin {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Origin {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Origin {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Plane {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Plane {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Plane {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Plane {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Plane {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Plane {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Plane {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Plane {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Plane {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Plane {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Plane {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Plane {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Plane {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Plane {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for Plane {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for PlaneAtOrigin {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for PlaneAtOrigin {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for PlaneAtOrigin {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for PlaneAtOrigin {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Rotor {
+    type Output = Motor;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Motor {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Rotor {
+    type Output = Motor;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Motor {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for RoundPoint {
+    type Output = Infinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Infinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for RoundPoint {
+    type Output = Origin;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> Origin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPoint {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPoint {
+    type Output = RoundPointBulk;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> RoundPointBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPoint {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for RoundPointAtInfinity {
+    type Output = Origin;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> Origin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointAtInfinity {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> RoundPointBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for RoundPointAtOrigin {
+    type Output = Infinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Infinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for RoundPointAtOrigin {
+    type Output = Origin;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> Origin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointAtOrigin {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointBulk {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointBulk {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointBulk {
+    type Output = RoundPointBulk;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> RoundPointBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointBulk {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for RoundPointCarrierAspect {
+    type Output = Infinity;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Infinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
+    type Output = RoundPointAtInfinity;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointCarrierAspect {
+    type Output = RoundPointBulk;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> RoundPointBulk {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+    type Output = RoundPointCarrierAspect;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Sphere {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Sphere {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Sphere {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Horizon> for Sphere {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: Horizon) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for Sphere {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Sphere {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Sphere {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Sphere {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Sphere {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Sphere {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for Sphere {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for SphereWeight {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for SphereWeight {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for SphereWeight {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for SphereWeight {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Horizon> for SphereWeight {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: Horizon) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for SphereWeight {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for SphereWeight {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for SphereWeight {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for SphereWeight {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for SphereWeight {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for SphereWeight {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for SphereWeight {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for SphereWeight {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for SphereWeight {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for SphereWeight {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Transflector {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Transflector {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Horizon {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Transflector {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Transflector {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Transflector {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Transflector {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Transflector {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Transflector {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Transflector {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Transflector {
+    type Output = PlaneAtOrigin;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Transflector {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for Transflector {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Translator {
+    type Output = Translator;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Translator {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Translator {
+    type Output = Translator;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Translator {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.weight_contraction(other))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for Circle {
     type Output = Circle;
 

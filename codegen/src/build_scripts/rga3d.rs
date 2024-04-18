@@ -137,6 +137,8 @@ pub mod products {
     pub mod contractions;
     pub mod expansions;
     pub mod projections;
+    pub mod rejections;
+    pub mod supports;
     pub mod dot;
     pub mod isometries;
     pub mod quotients;
@@ -274,6 +276,30 @@ use crate::products::expansions::*;
 use crate::involutions::*;",
     )?;
     code_gen.emit_projections_and_stuff(&mut emitter)?;
+
+    emitter.new_rust_collector(&file_path.join(Path::new("products/rejections")));
+    emitter.emit_rust_preamble(
+        "
+use crate::*;
+use crate::products::exterior::Wedge;
+use crate::products::exterior::AntiWedge;
+use crate::products::contractions::*;
+use crate::products::expansions::*;
+use crate::involutions::*;",
+    )?;
+    code_gen.emit_rejections_and_stuff(&mut emitter)?;
+
+    emitter.new_rust_collector(&file_path.join(Path::new("products/supports")));
+    emitter.emit_rust_preamble(
+        "
+use crate::*;
+use crate::products::exterior::Wedge;
+use crate::products::exterior::AntiWedge;
+use crate::products::contractions::*;
+use crate::products::expansions::*;
+use crate::involutions::*;",
+    )?;
+    code_gen.emit_supports(&mut emitter)?;
 
     emitter.new_rust_collector(&file_path.join(Path::new("metrics")));
     emitter.emit_rust_preamble(

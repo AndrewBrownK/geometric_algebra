@@ -2190,6 +2190,86 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        // TODO figure out what the heck these rejections are
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            let name = "RejectOrthogonallyFrom";
+            let _: Option<()> = try {
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), variable(&param_b))?;
+                let we = self.trait_impls.get_pair_invocation("WeightExpansion", anti_wedge, variable(&param_a))?;
+                let po = single_expression_pair_trait_impl(name, &param_a, &param_b, we);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, po);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            let name = "AntiRejectOrthogonallyFrom";
+            let _: Option<()> = try {
+                let wedge = self.algebra.dialect().exterior_product.first()?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), variable(&param_b))?;
+                let wc = self.trait_impls.get_pair_invocation("WeightContraction", wedge, variable(&param_a))?;
+                let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wc);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            let name = "RejectViaOriginFrom";
+            let _: Option<()> = try {
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), variable(&param_b))?;
+                let be = self.trait_impls.get_pair_invocation("BulkExpansion", anti_wedge, variable(&param_a))?;
+                let po = single_expression_pair_trait_impl(name, &param_a, &param_b, be);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, po);
+            };
+        }
+
+        for (param_a, param_b) in registry.pair_parameters() {
+            let name = "AntiRejectViaHorizonFrom";
+            let _: Option<()> = try {
+                let wedge = self.algebra.dialect().exterior_product.first()?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), variable(&param_b))?;
+                let bc = self.trait_impls.get_pair_invocation("BulkContraction", wedge, variable(&param_a))?;
+                let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, bc);
+                self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
+            };
+        }
+
+        let origin = registry.classes.iter().find(|it| it.class_name.as_str() == "Origin");
+        for param_a in registry.single_parameters() {
+            let name = "Support";
+            let _: Option<()> = try {
+                let origin = origin.clone()?;
+                let origin = self.trait_impls.get_class_invocation("One", origin)?;
+                let ad = self.trait_impls.get_single_invocation("AntiDual", variable(&param_a))?;
+                let wedge = self.algebra.dialect().exterior_product.first()?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge, origin, ad)?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), wedge)?;
+                let the_impl = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                self.trait_impls.add_single_impl(name, param_a, the_impl);
+            };
+        }
+
+        for param_a in registry.single_parameters() {
+            let name = "AntiSupport";
+            let _: Option<()> = try {
+                let origin = origin.clone()?;
+                let origin = self.trait_impls.get_class_invocation("One", origin)?;
+                let origin_right_complement = self.trait_impls.get_single_invocation("RightComplement", origin.clone());
+                let origin_complement = self.trait_impls.get_single_invocation("Complement", origin);
+                let origin_complement = origin_right_complement.or(origin_complement)?;
+                let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_a))?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, origin_complement, dual)?;
+                let wedge = self.algebra.dialect().exterior_product.first()?;
+                let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), anti_wedge)?;
+                let the_impl = single_expression_single_trait_impl(name, &param_a, wedge);
+                self.trait_impls.add_single_impl(name, param_a, the_impl);
+            };
+        }
+
         /*
         To understand the CosineAngle operation, let's walk through a few examples
         See this chart for various stuff:
@@ -3057,8 +3137,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
             https://projectivegeometricalgebra.org/projgeomalg.pdf
         "
-            .to_string()
-            .to_string(),
+                .to_string()
+                .to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {
             name: "AntiProjectOrthogonallyOnto".to_string(),
@@ -3069,7 +3149,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
             https://projectivegeometricalgebra.org/projgeomalg.pdf
         "
-            .to_string(),
+                .to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {
             name: "ProjectViaOriginOnto".to_string(),
@@ -3079,7 +3159,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
             https://projectivegeometricalgebra.org/projgeomalg.pdf
         "
-            .to_string(),
+                .to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {
             name: "AntiProjectViaHorizonOnto".to_string(),
@@ -3088,10 +3168,86 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             Outward (to horizon) AntiProjection
             https://rigidgeometricalgebra.org/wiki/index.php?title=Projections
         "
-            .to_string(),
+                .to_string(),
         })?;
 
-        let trait_names = ["ProjectOrthogonallyOnto", "ProjectOrthogonallyOnto", "ProjectViaOriginOnto", "AntiProjectViaHorizonOnto"];
+        let trait_names = ["ProjectOrthogonallyOnto", "AntiProjectOrthogonallyOnto", "ProjectViaOriginOnto", "AntiProjectViaHorizonOnto"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_rejections_and_stuff(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+
+        // TODO refine the conjugates in the names once you have an idea what these actually look like
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "RejectOrthogonallyFrom".to_string(),
+            params: 2,
+            docs: "
+            Orthogonal Rejection
+            Rejection and Projection are counterparts to one another.
+            This is the counterpart to `ProjectOrthogonallyOnto`.
+        "
+                .to_string()
+                .to_string(),
+        })?;
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiRejectOrthogonallyFrom".to_string(),
+            params: 2,
+            docs: "
+            Orthogonal AntiRejection
+            Rejection and Projection are counterparts to one another.
+            This is the counterpart to `AntiProjectOrthogonallyOnto`.
+        "
+                .to_string(),
+        })?;
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "RejectViaOriginFrom".to_string(),
+            params: 2,
+            docs: "
+            Central (from origin) Rejection
+            Rejection and Projection are counterparts to one another.
+            This is the counterpart to `ProjectViaOriginOnto`.
+        "
+                .to_string(),
+        })?;
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiRejectViaHorizonFrom".to_string(),
+            params: 2,
+            docs: "
+            Outward (from horizon) AntiRejection
+            Rejection and Projection are counterparts to one another.
+            This is the counterpart to `AntiProjectViaHorizonOnto`.
+        "
+                .to_string(),
+        })?;
+
+        let trait_names = ["RejectOrthogonallyFrom", "AntiRejectOrthogonallyFrom", "RejectViaOriginFrom", "AntiRejectViaHorizonFrom"];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+        Ok(())
+    }
+
+    pub fn emit_supports(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Support".to_string(),
+            params: 1,
+            docs: "
+            Support
+            The support is the point enclosed by the object closest to the origin.
+        "
+                .to_string(),
+        })?;
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiSupport".to_string(),
+            params: 1,
+            docs: "
+            AntiSupport
+            The anti-support is the anti-vector furthest from the origin that encloses the object.
+        "
+                .to_string(),
+        })?;
+
+        let trait_names = ["Support", "AntiSupport"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }
