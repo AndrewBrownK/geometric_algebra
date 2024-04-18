@@ -239,6 +239,14 @@ impl Attitude for AntiScalar {
     }
 }
 
+impl Attitude for DualNum {
+    type Output = Horizon;
+
+    fn attitude(self) -> Horizon {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
 impl Attitude for Flector {
     type Output = MultiVectorAtInfinity;
 
@@ -259,14 +267,6 @@ impl Attitude for LineAtOrigin {
     type Output = PointAtInfinity;
 
     fn attitude(self) -> PointAtInfinity {
-        self.anti_wedge(Horizon::one())
-    }
-}
-
-impl Attitude for Magnitude {
-    type Output = Horizon;
-
-    fn attitude(self) -> Horizon {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -379,6 +379,14 @@ impl AntiInverse for AntiScalar {
     }
 }
 
+impl AntiInverse for DualNum {
+    type Output = DualNum;
+
+    fn anti_inverse(self) -> DualNum {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
 impl AntiInverse for Flector {
     type Output = Flector;
 
@@ -399,14 +407,6 @@ impl AntiInverse for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn anti_inverse(self) -> LineAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
-    }
-}
-
-impl AntiInverse for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_inverse(self) -> Magnitude {
         self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
     }
 }
@@ -491,6 +491,14 @@ impl AntiInverse for Translator {
     }
 }
 
+impl Inverse for DualNum {
+    type Output = DualNum;
+
+    fn inverse(self) -> DualNum {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
 impl Inverse for Flector {
     type Output = Flector;
 
@@ -527,14 +535,6 @@ impl Inverse for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn inverse(self) -> LineAtInfinity {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
-    }
-}
-
-impl Inverse for Magnitude {
-    type Output = Magnitude;
-
-    fn inverse(self) -> Magnitude {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

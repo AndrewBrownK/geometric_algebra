@@ -178,6 +178,18 @@ impl AntiDual for DipoleWeight {
     }
 }
 
+impl AntiDual for DualNum {
+    type Output = DualNum;
+
+    fn anti_dual(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl AntiDual for FlatPoint {
     type Output = Circle;
 
@@ -309,18 +321,6 @@ impl AntiDual for LineAtOrigin {
         DipoleBulk {
             groups: DipoleBulkGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_dual(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
             },
         }
     }
@@ -673,6 +673,18 @@ impl AntiReversal for DipoleWeight {
     }
 }
 
+impl AntiReversal for DualNum {
+    type Output = DualNum;
+
+    fn anti_reversal(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for FlatPoint {
     type Output = FlatPoint;
 
@@ -784,18 +796,6 @@ impl AntiReversal for LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl AntiReversal for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_reversal(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
             },
         }
     }
@@ -1098,6 +1098,16 @@ impl Automorphism for DipoleWeight {
     }
 }
 
+impl Automorphism for DualNum {
+    type Output = DualNum;
+
+    fn automorphism(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl Automorphism for FlatPoint {
     type Output = FlatPoint;
 
@@ -1206,16 +1216,6 @@ impl Automorphism for LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
-        }
-    }
-}
-
-impl Automorphism for Magnitude {
-    type Output = Magnitude;
-
-    fn automorphism(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -1529,6 +1529,18 @@ impl Complement for DipoleWeight {
     }
 }
 
+impl Complement for DualNum {
+    type Output = DualNum;
+
+    fn complement(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
 impl Complement for FlatPoint {
     type Output = CircleCarrierAspect;
 
@@ -1659,18 +1671,6 @@ impl Complement for LineAtOrigin {
         DipoleBulk {
             groups: DipoleBulkGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Complement for Magnitude {
-    type Output = Magnitude;
-
-    fn complement(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
             },
         }
     }
@@ -2017,6 +2017,16 @@ impl Conjugation for DipoleWeight {
     }
 }
 
+impl Conjugation for DualNum {
+    type Output = DualNum;
+
+    fn conjugation(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl Conjugation for FlatPoint {
     type Output = FlatPoint;
 
@@ -2129,16 +2139,6 @@ impl Conjugation for LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
-        }
-    }
-}
-
-impl Conjugation for Magnitude {
-    type Output = Magnitude;
-
-    fn conjugation(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -2444,6 +2444,16 @@ impl DoubleComplement for DipoleWeight {
     }
 }
 
+impl DoubleComplement for DualNum {
+    type Output = DualNum;
+
+    fn double_complement(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl DoubleComplement for FlatPoint {
     type Output = FlatPoint;
 
@@ -2546,16 +2556,6 @@ impl DoubleComplement for LineAtOrigin {
     fn double_complement(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl DoubleComplement for Magnitude {
-    type Output = Magnitude;
-
-    fn double_complement(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -2854,6 +2854,18 @@ impl Dual for DipoleWeight {
     }
 }
 
+impl Dual for DualNum {
+    type Output = DualNum;
+
+    fn dual(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Dual for FlatPoint {
     type Output = Circle;
 
@@ -2984,18 +2996,6 @@ impl Dual for LineAtOrigin {
     fn dual(self) -> DipoleBulk {
         DipoleBulk {
             groups: DipoleBulkGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Dual for Magnitude {
-    type Output = Magnitude;
-
-    fn dual(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
-            },
         }
     }
 }
@@ -3347,6 +3347,18 @@ impl Reversal for DipoleWeight {
     }
 }
 
+impl Reversal for DualNum {
+    type Output = DualNum;
+
+    fn reversal(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Reversal for FlatPoint {
     type Output = FlatPoint;
 
@@ -3458,18 +3470,6 @@ impl Reversal for LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl Reversal for Magnitude {
-    type Output = Magnitude;
-
-    fn reversal(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
             },
         }
     }

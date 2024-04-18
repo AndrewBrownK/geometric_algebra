@@ -90,6 +90,14 @@ impl AntiSupport for DipoleWeight {
     }
 }
 
+impl AntiSupport for DualNum {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::one().complement().anti_wedge(self.dual()))
+    }
+}
+
 impl AntiSupport for FlatPoint {
     type Output = Plane;
 
@@ -118,14 +126,6 @@ impl AntiSupport for Line {
     type Output = Plane;
 
     fn anti_support(self) -> Plane {
-        self.wedge(Origin::one().complement().anti_wedge(self.dual()))
-    }
-}
-
-impl AntiSupport for Magnitude {
-    type Output = Horizon;
-
-    fn anti_support(self) -> Horizon {
         self.wedge(Origin::one().complement().anti_wedge(self.dual()))
     }
 }
@@ -282,6 +282,14 @@ impl Support for DipoleCarrierAspect {
     }
 }
 
+impl Support for DualNum {
+    type Output = Origin;
+
+    fn support(self) -> Origin {
+        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+    }
+}
+
 impl Support for FlatPoint {
     type Output = RoundPoint;
 
@@ -355,14 +363,6 @@ impl Support for LineAtInfinity {
 }
 
 impl Support for LineAtOrigin {
-    type Output = Origin;
-
-    fn support(self) -> Origin {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
-    }
-}
-
-impl Support for Magnitude {
     type Output = Origin;
 
     fn support(self) -> Origin {

@@ -26,6 +26,14 @@ pub trait AntiSupport {
     fn anti_support(self) -> Self::Output;
 }
 
+impl AntiSupport for DualNum {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+    }
+}
+
 impl AntiSupport for Flector {
     type Output = MultiVector;
 
@@ -59,14 +67,6 @@ impl AntiSupport for Line {
 }
 
 impl AntiSupport for LineAtInfinity {
-    type Output = Horizon;
-
-    fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
-    }
-}
-
-impl AntiSupport for Magnitude {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {

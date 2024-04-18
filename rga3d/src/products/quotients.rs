@@ -33,6 +33,14 @@ impl GeometricAntiQuotient<AntiScalar> for AntiScalar {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for AntiScalar {
+    type Output = DualNum;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> DualNum {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for AntiScalar {
     type Output = Flector;
 
@@ -53,14 +61,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for AntiScalar {
     type Output = LineAtOrigin;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> LineAtOrigin {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for AntiScalar {
-    type Output = Magnitude;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Magnitude {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -145,10 +145,138 @@ impl GeometricAntiQuotient<Translator> for AntiScalar {
     }
 }
 
+impl GeometricAntiQuotient<AntiScalar> for DualNum {
+    type Output = DualNum;
+
+    fn geometric_anti_quotient(self, other: AntiScalar) -> DualNum {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<DualNum> for DualNum {
+    type Output = DualNum;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> DualNum {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Flector> for DualNum {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Line> for DualNum {
+    type Output = Line;
+
+    fn geometric_anti_quotient(self, other: Line) -> Line {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<LineAtOrigin> for DualNum {
+    type Output = Line;
+
+    fn geometric_anti_quotient(self, other: LineAtOrigin) -> Line {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Motor> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Motor) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<MultiVector> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<MultiVectorAtOrigin> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: MultiVectorAtOrigin) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Origin> for DualNum {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: Origin) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Plane> for DualNum {
+    type Output = Transflector;
+
+    fn geometric_anti_quotient(self, other: Plane) -> Transflector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<PlaneAtOrigin> for DualNum {
+    type Output = Transflector;
+
+    fn geometric_anti_quotient(self, other: PlaneAtOrigin) -> Transflector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Point> for DualNum {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: Point) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Rotor> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Transflector> for DualNum {
+    type Output = Transflector;
+
+    fn geometric_anti_quotient(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<Translator> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<AntiScalar> for Flector {
     type Output = Flector;
 
     fn geometric_anti_quotient(self, other: AntiScalar) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<DualNum> for Flector {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -173,14 +301,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Flector {
     type Output = Flector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Flector {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -273,6 +393,14 @@ impl GeometricAntiQuotient<AntiScalar> for FlectorAtInfinity {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> FlectorAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for FlectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
@@ -293,14 +421,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> FlectorAtInfinity {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for FlectorAtInfinity {
-    type Output = FlectorAtInfinity;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> FlectorAtInfinity {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -393,6 +513,14 @@ impl GeometricAntiQuotient<AntiScalar> for Horizon {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Horizon {
+    type Output = Horizon;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Horizon {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Horizon {
     type Output = MultiVectorAtInfinity;
 
@@ -413,14 +541,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Horizon {
     type Output = PointAtInfinity;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> PointAtInfinity {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Horizon {
-    type Output = Horizon;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Horizon {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -513,6 +633,14 @@ impl GeometricAntiQuotient<AntiScalar> for Line {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Line {
+    type Output = Line;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Line {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Line {
     type Output = Flector;
 
@@ -533,14 +661,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Line {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Line {
-    type Output = Line;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Line {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -633,6 +753,14 @@ impl GeometricAntiQuotient<AntiScalar> for LineAtInfinity {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for LineAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> LineAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for LineAtInfinity {
     type Output = FlectorAtInfinity;
 
@@ -653,14 +781,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for LineAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for LineAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> LineAtInfinity {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -753,6 +873,14 @@ impl GeometricAntiQuotient<AntiScalar> for LineAtOrigin {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for LineAtOrigin {
+    type Output = Line;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Line {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for LineAtOrigin {
     type Output = Flector;
 
@@ -773,14 +901,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for LineAtOrigin {
     type Output = Rotor;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Rotor {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for LineAtOrigin {
-    type Output = Line;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Line {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -865,130 +985,18 @@ impl GeometricAntiQuotient<Translator> for LineAtOrigin {
     }
 }
 
-impl GeometricAntiQuotient<AntiScalar> for Magnitude {
-    type Output = Magnitude;
-
-    fn geometric_anti_quotient(self, other: AntiScalar) -> Magnitude {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Flector> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Line> for Magnitude {
-    type Output = Line;
-
-    fn geometric_anti_quotient(self, other: Line) -> Line {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<LineAtOrigin> for Magnitude {
-    type Output = Line;
-
-    fn geometric_anti_quotient(self, other: LineAtOrigin) -> Line {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Magnitude {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Motor> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Motor) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<MultiVectorAtOrigin> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: MultiVectorAtOrigin) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Origin> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Origin) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Plane> for Magnitude {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Plane) -> Transflector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<PlaneAtOrigin> for Magnitude {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: PlaneAtOrigin) -> Transflector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Point> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Point) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Rotor> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Magnitude {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> Transflector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<AntiScalar> for Motor {
     type Output = Motor;
 
     fn geometric_anti_quotient(self, other: AntiScalar) -> Motor {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
+impl GeometricAntiQuotient<DualNum> for Motor {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1013,14 +1021,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Motor {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1113,6 +1113,14 @@ impl GeometricAntiQuotient<AntiScalar> for MultiVector {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for MultiVector {
     type Output = MultiVector;
 
@@ -1133,14 +1141,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1233,6 +1233,14 @@ impl GeometricAntiQuotient<AntiScalar> for MultiVectorAtInfinity {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for MultiVectorAtInfinity {
+    type Output = MultiVectorAtInfinity;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> MultiVectorAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
@@ -1253,14 +1261,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVectorAtInfinity {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for MultiVectorAtInfinity {
-    type Output = MultiVectorAtInfinity;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVectorAtInfinity {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1353,6 +1353,14 @@ impl GeometricAntiQuotient<AntiScalar> for MultiVectorAtOrigin {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for MultiVectorAtOrigin {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for MultiVectorAtOrigin {
     type Output = MultiVector;
 
@@ -1373,14 +1381,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVectorAtOrigin {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for MultiVectorAtOrigin {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1473,6 +1473,14 @@ impl GeometricAntiQuotient<AntiScalar> for Origin {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Origin {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Origin {
     type Output = MultiVector;
 
@@ -1493,14 +1501,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Origin {
     type Output = PlaneAtOrigin;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> PlaneAtOrigin {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Origin {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1593,6 +1593,14 @@ impl GeometricAntiQuotient<AntiScalar> for Plane {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Plane {
+    type Output = Transflector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Transflector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Plane {
     type Output = MultiVector;
 
@@ -1613,14 +1621,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Plane {
     type Output = Flector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Plane {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Transflector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1713,6 +1713,14 @@ impl GeometricAntiQuotient<AntiScalar> for PlaneAtOrigin {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for PlaneAtOrigin {
+    type Output = Transflector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Transflector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -1733,14 +1741,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for PlaneAtOrigin {
     type Output = Flector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for PlaneAtOrigin {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Transflector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1833,6 +1833,14 @@ impl GeometricAntiQuotient<AntiScalar> for Point {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Point {
+    type Output = Flector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Flector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Point {
     type Output = MultiVector;
 
@@ -1853,14 +1861,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Point {
     type Output = Transflector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Transflector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Point {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Flector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1953,6 +1953,14 @@ impl GeometricAntiQuotient<AntiScalar> for PointAtInfinity {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for PointAtInfinity {
+    type Output = PointAtInfinity;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> PointAtInfinity {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for PointAtInfinity {
     type Output = MultiVectorAtInfinity;
 
@@ -1973,14 +1981,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for PointAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> FlectorAtInfinity {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for PointAtInfinity {
-    type Output = PointAtInfinity;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> PointAtInfinity {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2073,6 +2073,14 @@ impl GeometricAntiQuotient<AntiScalar> for Rotor {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Rotor {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Rotor {
     type Output = Flector;
 
@@ -2093,14 +2101,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Rotor {
     type Output = Rotor;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Rotor {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2193,6 +2193,14 @@ impl GeometricAntiQuotient<AntiScalar> for Scalar {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Scalar {
+    type Output = Scalar;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Scalar {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Scalar {
     type Output = FlectorAtInfinity;
 
@@ -2213,14 +2221,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Scalar {
     type Output = LineAtInfinity;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> LineAtInfinity {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Scalar {
-    type Output = Scalar;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Scalar {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2313,6 +2313,14 @@ impl GeometricAntiQuotient<AntiScalar> for Transflector {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Transflector {
+    type Output = Transflector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> Transflector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Transflector {
     type Output = MultiVector;
 
@@ -2333,14 +2341,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Transflector {
     type Output = Flector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> Flector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Transflector {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> Transflector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2433,6 +2433,14 @@ impl GeometricAntiQuotient<AntiScalar> for Translator {
     }
 }
 
+impl GeometricAntiQuotient<DualNum> for Translator {
+    type Output = MultiVector;
+
+    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
+        self.geometric_anti_product(other.anti_inverse())
+    }
+}
+
 impl GeometricAntiQuotient<Flector> for Translator {
     type Output = Flector;
 
@@ -2453,14 +2461,6 @@ impl GeometricAntiQuotient<LineAtOrigin> for Translator {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVector {
-        self.geometric_anti_product(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Magnitude> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2545,6 +2545,14 @@ impl GeometricAntiQuotient<Translator> for Translator {
     }
 }
 
+impl GeometricQuotient<DualNum> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn geometric_quotient(self, other: DualNum) -> AntiScalar {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for AntiScalar {
     type Output = Flector;
 
@@ -2581,14 +2589,6 @@ impl GeometricQuotient<LineAtInfinity> for AntiScalar {
     type Output = LineAtOrigin;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> LineAtOrigin {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn geometric_quotient(self, other: Magnitude) -> AntiScalar {
         self.geometric_product(other.inverse())
     }
 }
@@ -2665,6 +2665,134 @@ impl GeometricQuotient<Translator> for AntiScalar {
     }
 }
 
+impl GeometricQuotient<DualNum> for DualNum {
+    type Output = DualNum;
+
+    fn geometric_quotient(self, other: DualNum) -> DualNum {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Flector> for DualNum {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Flector) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<FlectorAtInfinity> for DualNum {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: FlectorAtInfinity) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Horizon> for DualNum {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Horizon) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Line> for DualNum {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: Line) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<LineAtInfinity> for DualNum {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: LineAtInfinity) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Motor> for DualNum {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: Motor) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVector> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<MultiVectorAtInfinity> for DualNum {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: MultiVectorAtInfinity) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Plane> for DualNum {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Plane) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Point> for DualNum {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Point) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<PointAtInfinity> for DualNum {
+    type Output = Transflector;
+
+    fn geometric_quotient(self, other: PointAtInfinity) -> Transflector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Scalar> for DualNum {
+    type Output = DualNum;
+
+    fn geometric_quotient(self, other: Scalar) -> DualNum {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Transflector> for DualNum {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: Transflector) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<Translator> for DualNum {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: Translator) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
+impl GeometricQuotient<DualNum> for Flector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DualNum) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Flector {
     type Output = MultiVector;
 
@@ -2701,14 +2829,6 @@ impl GeometricQuotient<LineAtInfinity> for Flector {
     type Output = Flector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Flector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -2785,6 +2905,14 @@ impl GeometricQuotient<Translator> for Flector {
     }
 }
 
+impl GeometricQuotient<DualNum> for FlectorAtInfinity {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DualNum) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -2821,14 +2949,6 @@ impl GeometricQuotient<LineAtInfinity> for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> FlectorAtInfinity {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for FlectorAtInfinity {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -2905,6 +3025,14 @@ impl GeometricQuotient<Translator> for FlectorAtInfinity {
     }
 }
 
+impl GeometricQuotient<DualNum> for Horizon {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DualNum) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -2941,14 +3069,6 @@ impl GeometricQuotient<LineAtInfinity> for Horizon {
     type Output = PointAtInfinity;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> PointAtInfinity {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Horizon {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -3025,6 +3145,14 @@ impl GeometricQuotient<Translator> for Horizon {
     }
 }
 
+impl GeometricQuotient<DualNum> for Line {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: DualNum) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Line {
     type Output = Flector;
 
@@ -3061,14 +3189,6 @@ impl GeometricQuotient<LineAtInfinity> for Line {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Line {
-    type Output = Line;
-
-    fn geometric_quotient(self, other: Magnitude) -> Line {
         self.geometric_product(other.inverse())
     }
 }
@@ -3145,6 +3265,14 @@ impl GeometricQuotient<Translator> for Line {
     }
 }
 
+impl GeometricQuotient<DualNum> for LineAtInfinity {
+    type Output = Line;
+
+    fn geometric_quotient(self, other: DualNum) -> Line {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for LineAtInfinity {
     type Output = Flector;
 
@@ -3181,14 +3309,6 @@ impl GeometricQuotient<LineAtInfinity> for LineAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for LineAtInfinity {
-    type Output = Line;
-
-    fn geometric_quotient(self, other: Magnitude) -> Line {
         self.geometric_product(other.inverse())
     }
 }
@@ -3265,6 +3385,14 @@ impl GeometricQuotient<Translator> for LineAtInfinity {
     }
 }
 
+impl GeometricQuotient<DualNum> for LineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn geometric_quotient(self, other: DualNum) -> LineAtOrigin {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for LineAtOrigin {
     type Output = Flector;
 
@@ -3301,14 +3429,6 @@ impl GeometricQuotient<LineAtInfinity> for LineAtOrigin {
     type Output = Rotor;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for LineAtOrigin {
-    type Output = LineAtOrigin;
-
-    fn geometric_quotient(self, other: Magnitude) -> LineAtOrigin {
         self.geometric_product(other.inverse())
     }
 }
@@ -3385,122 +3505,10 @@ impl GeometricQuotient<Translator> for LineAtOrigin {
     }
 }
 
-impl GeometricQuotient<Flector> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Flector) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<FlectorAtInfinity> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: FlectorAtInfinity) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Horizon> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Horizon) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Line> for Magnitude {
-    type Output = Line;
-
-    fn geometric_quotient(self, other: Line) -> Line {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<LineAtInfinity> for Magnitude {
-    type Output = Line;
-
-    fn geometric_quotient(self, other: LineAtInfinity) -> Line {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Magnitude {
-    type Output = Magnitude;
-
-    fn geometric_quotient(self, other: Magnitude) -> Magnitude {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Motor> for Magnitude {
+impl GeometricQuotient<DualNum> for Motor {
     type Output = Motor;
 
-    fn geometric_quotient(self, other: Motor) -> Motor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVectorAtInfinity> for Magnitude {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVectorAtInfinity) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Plane> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Plane) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Point> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Point) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<PointAtInfinity> for Magnitude {
-    type Output = Transflector;
-
-    fn geometric_quotient(self, other: PointAtInfinity) -> Transflector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Scalar> for Magnitude {
-    type Output = Magnitude;
-
-    fn geometric_quotient(self, other: Scalar) -> Magnitude {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Magnitude {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Transflector) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Magnitude {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Translator) -> Motor {
+    fn geometric_quotient(self, other: DualNum) -> Motor {
         self.geometric_product(other.inverse())
     }
 }
@@ -3541,14 +3549,6 @@ impl GeometricQuotient<LineAtInfinity> for Motor {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Motor {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Magnitude) -> Motor {
         self.geometric_product(other.inverse())
     }
 }
@@ -3625,6 +3625,14 @@ impl GeometricQuotient<Translator> for Motor {
     }
 }
 
+impl GeometricQuotient<DualNum> for MultiVector {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: DualNum) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for MultiVector {
     type Output = MultiVector;
 
@@ -3661,14 +3669,6 @@ impl GeometricQuotient<LineAtInfinity> for MultiVector {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -3745,6 +3745,14 @@ impl GeometricQuotient<Translator> for MultiVector {
     }
 }
 
+impl GeometricQuotient<DualNum> for MultiVectorAtInfinity {
+    type Output = MultiVector;
+
+    fn geometric_quotient(self, other: DualNum) -> MultiVector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for MultiVectorAtInfinity {
     type Output = MultiVector;
 
@@ -3781,14 +3789,6 @@ impl GeometricQuotient<LineAtInfinity> for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVectorAtInfinity {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for MultiVectorAtInfinity {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Magnitude) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -3865,6 +3865,14 @@ impl GeometricQuotient<Translator> for MultiVectorAtInfinity {
     }
 }
 
+impl GeometricQuotient<DualNum> for MultiVectorAtOrigin {
+    type Output = MultiVectorAtOrigin;
+
+    fn geometric_quotient(self, other: DualNum) -> MultiVectorAtOrigin {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
@@ -3901,14 +3909,6 @@ impl GeometricQuotient<LineAtInfinity> for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVectorAtOrigin {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for MultiVectorAtOrigin {
-    type Output = MultiVectorAtOrigin;
-
-    fn geometric_quotient(self, other: Magnitude) -> MultiVectorAtOrigin {
         self.geometric_product(other.inverse())
     }
 }
@@ -3985,6 +3985,14 @@ impl GeometricQuotient<Translator> for MultiVectorAtOrigin {
     }
 }
 
+impl GeometricQuotient<DualNum> for Origin {
+    type Output = Origin;
+
+    fn geometric_quotient(self, other: DualNum) -> Origin {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Origin {
     type Output = Rotor;
 
@@ -4021,14 +4029,6 @@ impl GeometricQuotient<LineAtInfinity> for Origin {
     type Output = PlaneAtOrigin;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> PlaneAtOrigin {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Origin {
-    type Output = Origin;
-
-    fn geometric_quotient(self, other: Magnitude) -> Origin {
         self.geometric_product(other.inverse())
     }
 }
@@ -4105,6 +4105,14 @@ impl GeometricQuotient<Translator> for Origin {
     }
 }
 
+impl GeometricQuotient<DualNum> for Plane {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DualNum) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Plane {
     type Output = MultiVector;
 
@@ -4141,14 +4149,6 @@ impl GeometricQuotient<LineAtInfinity> for Plane {
     type Output = Flector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Plane {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -4225,6 +4225,14 @@ impl GeometricQuotient<Translator> for Plane {
     }
 }
 
+impl GeometricQuotient<DualNum> for PlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn geometric_quotient(self, other: DualNum) -> PlaneAtOrigin {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for PlaneAtOrigin {
     type Output = Rotor;
 
@@ -4261,14 +4269,6 @@ impl GeometricQuotient<LineAtInfinity> for PlaneAtOrigin {
     type Output = Flector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for PlaneAtOrigin {
-    type Output = PlaneAtOrigin;
-
-    fn geometric_quotient(self, other: Magnitude) -> PlaneAtOrigin {
         self.geometric_product(other.inverse())
     }
 }
@@ -4345,6 +4345,14 @@ impl GeometricQuotient<Translator> for PlaneAtOrigin {
     }
 }
 
+impl GeometricQuotient<DualNum> for Point {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DualNum) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Point {
     type Output = MultiVector;
 
@@ -4381,14 +4389,6 @@ impl GeometricQuotient<LineAtInfinity> for Point {
     type Output = Transflector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Transflector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Point {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -4465,6 +4465,14 @@ impl GeometricQuotient<Translator> for Point {
     }
 }
 
+impl GeometricQuotient<DualNum> for PointAtInfinity {
+    type Output = Transflector;
+
+    fn geometric_quotient(self, other: DualNum) -> Transflector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for PointAtInfinity {
     type Output = MultiVector;
 
@@ -4501,14 +4509,6 @@ impl GeometricQuotient<LineAtInfinity> for PointAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> FlectorAtInfinity {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for PointAtInfinity {
-    type Output = Transflector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Transflector {
         self.geometric_product(other.inverse())
     }
 }
@@ -4585,6 +4585,14 @@ impl GeometricQuotient<Translator> for PointAtInfinity {
     }
 }
 
+impl GeometricQuotient<DualNum> for Rotor {
+    type Output = Rotor;
+
+    fn geometric_quotient(self, other: DualNum) -> Rotor {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Rotor {
     type Output = Flector;
 
@@ -4621,14 +4629,6 @@ impl GeometricQuotient<LineAtInfinity> for Rotor {
     type Output = Rotor;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Rotor {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Magnitude) -> Rotor {
         self.geometric_product(other.inverse())
     }
 }
@@ -4705,6 +4705,14 @@ impl GeometricQuotient<Translator> for Rotor {
     }
 }
 
+impl GeometricQuotient<DualNum> for Scalar {
+    type Output = DualNum;
+
+    fn geometric_quotient(self, other: DualNum) -> DualNum {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Scalar {
     type Output = Flector;
 
@@ -4741,14 +4749,6 @@ impl GeometricQuotient<LineAtInfinity> for Scalar {
     type Output = LineAtInfinity;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Scalar {
-    type Output = Magnitude;
-
-    fn geometric_quotient(self, other: Magnitude) -> Magnitude {
         self.geometric_product(other.inverse())
     }
 }
@@ -4825,6 +4825,14 @@ impl GeometricQuotient<Translator> for Scalar {
     }
 }
 
+impl GeometricQuotient<DualNum> for Transflector {
+    type Output = Flector;
+
+    fn geometric_quotient(self, other: DualNum) -> Flector {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Transflector {
     type Output = MultiVector;
 
@@ -4861,14 +4869,6 @@ impl GeometricQuotient<LineAtInfinity> for Transflector {
     type Output = Flector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> Flector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Transflector {
-    type Output = Flector;
-
-    fn geometric_quotient(self, other: Magnitude) -> Flector {
         self.geometric_product(other.inverse())
     }
 }
@@ -4945,6 +4945,14 @@ impl GeometricQuotient<Translator> for Transflector {
     }
 }
 
+impl GeometricQuotient<DualNum> for Translator {
+    type Output = Motor;
+
+    fn geometric_quotient(self, other: DualNum) -> Motor {
+        self.geometric_product(other.inverse())
+    }
+}
+
 impl GeometricQuotient<Flector> for Translator {
     type Output = Flector;
 
@@ -4981,14 +4989,6 @@ impl GeometricQuotient<LineAtInfinity> for Translator {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: LineAtInfinity) -> MultiVector {
-        self.geometric_product(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Magnitude> for Translator {
-    type Output = Motor;
-
-    fn geometric_quotient(self, other: Magnitude) -> Motor {
         self.geometric_product(other.inverse())
     }
 }

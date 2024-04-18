@@ -35,10 +35,10 @@ impl AntiDot<AntiScalar> for AntiScalar {
     }
 }
 
-impl AntiDot<Magnitude> for AntiScalar {
+impl AntiDot<DualNum> for AntiScalar {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group0()[1],
@@ -872,6 +872,90 @@ impl AntiDot<Transflector> for DipoleWeight {
     }
 }
 
+impl AntiDot<AntiScalar> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[1] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<DualNum> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
+            },
+        }
+    }
+}
+
+impl AntiDot<Motor> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Motor) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[1] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
+            },
+        }
+    }
+}
+
+impl AntiDot<Rotor> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Rotor) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[1] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<Scalar> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Scalar) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<Translator> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Translator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[1] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Dipole> for FlatPoint {
     type Output = AntiScalar;
 
@@ -1608,90 +1692,6 @@ impl AntiDot<Rotor> for LineAtOrigin {
     }
 }
 
-impl AntiDot<AntiScalar> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: AntiScalar) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiDot<Magnitude> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl AntiDot<Motor> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Motor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<MultiVector> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: MultiVector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl AntiDot<Rotor> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Scalar> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Scalar) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for Magnitude {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
 impl AntiDot<AntiScalar> for Motor {
     type Output = AntiScalar;
 
@@ -1746,6 +1746,18 @@ impl AntiDot<CircleWeight> for Motor {
     }
 }
 
+impl AntiDot<DualNum> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[3] * other.group0()[1],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for Motor {
     type Output = AntiScalar;
 
@@ -1765,18 +1777,6 @@ impl AntiDot<LineAtOrigin> for Motor {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Magnitude> for Motor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[1],
             },
         }
     }
@@ -1961,6 +1961,18 @@ impl AntiDot<DipoleWeight> for MultiVector {
     }
 }
 
+impl AntiDot<DualNum> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
+            },
+        }
+    }
+}
+
 impl AntiDot<FlatPoint> for MultiVector {
     type Output = AntiScalar;
 
@@ -2086,18 +2098,6 @@ impl AntiDot<LineAtOrigin> for MultiVector {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group7()[0] * other.group0()[0] - self.group7()[1] * other.group0()[1] - self.group7()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Magnitude> for MultiVector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1],
             },
         }
     }
@@ -2581,6 +2581,18 @@ impl AntiDot<Circle> for Rotor {
     }
 }
 
+impl AntiDot<DualNum> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[3] * other.group0()[1],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for Rotor {
     type Output = AntiScalar;
 
@@ -2600,18 +2612,6 @@ impl AntiDot<LineAtOrigin> for Rotor {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Magnitude> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[1],
             },
         }
     }
@@ -3077,10 +3077,10 @@ impl AntiDot<RoundPointCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<Magnitude> for Scalar {
+impl AntiDot<DualNum> for Scalar {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group0()[0],
@@ -3483,10 +3483,10 @@ impl AntiDot<CircleWeight> for Translator {
     }
 }
 
-impl AntiDot<Magnitude> for Translator {
+impl AntiDot<DualNum> for Translator {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: Magnitude) -> AntiScalar {
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[3] * other.group0()[1],
@@ -3555,10 +3555,10 @@ impl Dot<AntiScalar> for AntiScalar {
     }
 }
 
-impl Dot<Magnitude> for AntiScalar {
+impl Dot<DualNum> for AntiScalar {
     type Output = Scalar;
 
-    fn dot(self, other: Magnitude) -> Scalar {
+    fn dot(self, other: DualNum) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0()[1],
@@ -4395,6 +4395,90 @@ impl Dot<Transflector> for DipoleWeight {
     }
 }
 
+impl Dot<AntiScalar> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: AntiScalar) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<DualNum> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: DualNum) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1],
+            },
+        }
+    }
+}
+
+impl Dot<Motor> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: Motor) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1],
+            },
+        }
+    }
+}
+
+impl Dot<Rotor> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: Rotor) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Scalar> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: Scalar) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<Translator> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: Translator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Dipole> for FlatPoint {
     type Output = Scalar;
 
@@ -5130,90 +5214,6 @@ impl Dot<Rotor> for LineAtOrigin {
     }
 }
 
-impl Dot<AntiScalar> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: AntiScalar) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0(),
-            },
-        }
-    }
-}
-
-impl Dot<Magnitude> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: Magnitude) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Motor> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: Motor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<MultiVector> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: MultiVector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Rotor> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Scalar> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: Scalar) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0(),
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for Magnitude {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
 impl Dot<AntiScalar> for Motor {
     type Output = Scalar;
 
@@ -5267,6 +5267,18 @@ impl Dot<CircleWeight> for Motor {
     }
 }
 
+impl Dot<DualNum> for Motor {
+    type Output = Scalar;
+
+    fn dot(self, other: DualNum) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0()[1],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for Motor {
     type Output = Scalar;
 
@@ -5286,18 +5298,6 @@ impl Dot<LineAtOrigin> for Motor {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Magnitude> for Motor {
-    type Output = Scalar;
-
-    fn dot(self, other: Magnitude) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[1],
             },
         }
     }
@@ -5484,6 +5484,18 @@ impl Dot<DipoleWeight> for MultiVector {
     }
 }
 
+impl Dot<DualNum> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: DualNum) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1],
+            },
+        }
+    }
+}
+
 impl Dot<FlatPoint> for MultiVector {
     type Output = Scalar;
 
@@ -5609,18 +5621,6 @@ impl Dot<LineAtOrigin> for MultiVector {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group7()[0] * other.group0()[0] + self.group7()[1] * other.group0()[1] + self.group7()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Magnitude> for MultiVector {
-    type Output = Scalar;
-
-    fn dot(self, other: Magnitude) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1],
             },
         }
     }
@@ -6107,6 +6107,18 @@ impl Dot<Circle> for Rotor {
     }
 }
 
+impl Dot<DualNum> for Rotor {
+    type Output = Scalar;
+
+    fn dot(self, other: DualNum) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0()[1],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for Rotor {
     type Output = Scalar;
 
@@ -6126,18 +6138,6 @@ impl Dot<LineAtOrigin> for Rotor {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Magnitude> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: Magnitude) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[1],
             },
         }
     }
@@ -6603,10 +6603,10 @@ impl Dot<RoundPointCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<Magnitude> for Scalar {
+impl Dot<DualNum> for Scalar {
     type Output = Scalar;
 
-    fn dot(self, other: Magnitude) -> Scalar {
+    fn dot(self, other: DualNum) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group0()[0],
@@ -7010,10 +7010,10 @@ impl Dot<CircleWeight> for Translator {
     }
 }
 
-impl Dot<Magnitude> for Translator {
+impl Dot<DualNum> for Translator {
     type Output = Scalar;
 
-    fn dot(self, other: Magnitude) -> Scalar {
+    fn dot(self, other: DualNum) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[3] * other.group0()[1],

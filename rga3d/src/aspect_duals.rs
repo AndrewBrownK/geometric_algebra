@@ -57,6 +57,14 @@ pub trait LeftWeightDual {
     fn left_weight_dual(self) -> Self::Output;
 }
 
+impl LeftBulkDual for DualNum {
+    type Output = AntiScalar;
+
+    fn left_bulk_dual(self) -> AntiScalar {
+        self.bulk().left_complement()
+    }
+}
+
 impl LeftBulkDual for Flector {
     type Output = Flector;
 
@@ -93,14 +101,6 @@ impl LeftBulkDual for LineAtInfinity {
     type Output = LineAtOrigin;
 
     fn left_bulk_dual(self) -> LineAtOrigin {
-        self.bulk().left_complement()
-    }
-}
-
-impl LeftBulkDual for Magnitude {
-    type Output = AntiScalar;
-
-    fn left_bulk_dual(self) -> AntiScalar {
         self.bulk().left_complement()
     }
 }
@@ -185,6 +185,14 @@ impl LeftWeightDual for AntiScalar {
     }
 }
 
+impl LeftWeightDual for DualNum {
+    type Output = Scalar;
+
+    fn left_weight_dual(self) -> Scalar {
+        self.weight().left_complement()
+    }
+}
+
 impl LeftWeightDual for Flector {
     type Output = Flector;
 
@@ -205,14 +213,6 @@ impl LeftWeightDual for LineAtOrigin {
     type Output = LineAtInfinity;
 
     fn left_weight_dual(self) -> LineAtInfinity {
-        self.weight().left_complement()
-    }
-}
-
-impl LeftWeightDual for Magnitude {
-    type Output = Scalar;
-
-    fn left_weight_dual(self) -> Scalar {
         self.weight().left_complement()
     }
 }
@@ -297,6 +297,14 @@ impl LeftWeightDual for Translator {
     }
 }
 
+impl RightBulkDual for DualNum {
+    type Output = AntiScalar;
+
+    fn right_bulk_dual(self) -> AntiScalar {
+        self.bulk().right_complement()
+    }
+}
+
 impl RightBulkDual for Flector {
     type Output = Flector;
 
@@ -333,14 +341,6 @@ impl RightBulkDual for LineAtInfinity {
     type Output = LineAtOrigin;
 
     fn right_bulk_dual(self) -> LineAtOrigin {
-        self.bulk().right_complement()
-    }
-}
-
-impl RightBulkDual for Magnitude {
-    type Output = AntiScalar;
-
-    fn right_bulk_dual(self) -> AntiScalar {
         self.bulk().right_complement()
     }
 }
@@ -425,6 +425,14 @@ impl RightWeightDual for AntiScalar {
     }
 }
 
+impl RightWeightDual for DualNum {
+    type Output = Scalar;
+
+    fn right_weight_dual(self) -> Scalar {
+        self.weight().right_complement()
+    }
+}
+
 impl RightWeightDual for Flector {
     type Output = Flector;
 
@@ -445,14 +453,6 @@ impl RightWeightDual for LineAtOrigin {
     type Output = LineAtInfinity;
 
     fn right_weight_dual(self) -> LineAtInfinity {
-        self.weight().right_complement()
-    }
-}
-
-impl RightWeightDual for Magnitude {
-    type Output = Scalar;
-
-    fn right_weight_dual(self) -> Scalar {
         self.weight().right_complement()
     }
 }

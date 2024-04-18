@@ -603,6 +603,14 @@ impl Attitude for DipoleWeight {
     }
 }
 
+impl Attitude for DualNum {
+    type Output = Horizon;
+
+    fn attitude(self) -> Horizon {
+        self.anti_wedge(Horizon::one())
+    }
+}
+
 impl Attitude for FlatPoint {
     type Output = Infinity;
 
@@ -639,14 +647,6 @@ impl Attitude for LineAtOrigin {
     type Output = FlatPointAtInfinity;
 
     fn attitude(self) -> FlatPointAtInfinity {
-        self.anti_wedge(Horizon::one())
-    }
-}
-
-impl Attitude for Magnitude {
-    type Output = Horizon;
-
-    fn attitude(self) -> Horizon {
         self.anti_wedge(Horizon::one())
     }
 }
@@ -819,7 +819,7 @@ impl Carrier for DipoleWeight {
     }
 }
 
-impl Carrier for Magnitude {
+impl Carrier for DualNum {
     type Output = Infinity;
 
     fn carrier(self) -> Infinity {
@@ -955,7 +955,7 @@ impl CoCarrier for DipoleWeight {
     }
 }
 
-impl CoCarrier for Magnitude {
+impl CoCarrier for DualNum {
     type Output = Infinity;
 
     fn co_carrier(self) -> Infinity {
@@ -1087,7 +1087,7 @@ impl Center for DipoleWeight {
     }
 }
 
-impl Center for Magnitude {
+impl Center for DualNum {
     type Output = Infinity;
 
     fn center(self) -> Infinity {
@@ -1215,7 +1215,7 @@ impl Container for DipoleWeight {
     }
 }
 
-impl Container for Magnitude {
+impl Container for DualNum {
     type Output = Horizon;
 
     fn container(self) -> Horizon {
@@ -1463,6 +1463,14 @@ impl AntiInverse for DipoleCarrierAspect {
     }
 }
 
+impl AntiInverse for DualNum {
+    type Output = DualNum;
+
+    fn anti_inverse(self) -> DualNum {
+        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    }
+}
+
 impl AntiInverse for FlatPoint {
     type Output = FlatPoint;
 
@@ -1499,14 +1507,6 @@ impl AntiInverse for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn anti_inverse(self) -> LineAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
-    }
-}
-
-impl AntiInverse for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_inverse(self) -> Magnitude {
         self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
     }
 }
@@ -1679,6 +1679,14 @@ impl Inverse for DipoleCarrierAspect {
     }
 }
 
+impl Inverse for DualNum {
+    type Output = DualNum;
+
+    fn inverse(self) -> DualNum {
+        self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
 impl Inverse for FlatPoint {
     type Output = FlatPoint;
 
@@ -1715,14 +1723,6 @@ impl Inverse for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn inverse(self) -> LineAtOrigin {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
-    }
-}
-
-impl Inverse for Magnitude {
-    type Output = Magnitude;
-
-    fn inverse(self) -> Magnitude {
         self.geometric_product(Scalar::one().div(self.dot(self)))
     }
 }

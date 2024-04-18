@@ -100,6 +100,18 @@ impl Unitize for DipoleCarrierAspect {
     }
 }
 
+impl Unitize for DualNum {
+    type Output = DualNum;
+
+    fn unitize(self) -> DualNum {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for FlatPoint {
     type Output = FlatPoint;
 
@@ -152,18 +164,6 @@ impl Unitize for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn unitize(self) -> LineAtOrigin {
-        self.geometric_product(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Magnitude {
-    type Output = Magnitude;
-
-    fn unitize(self) -> Magnitude {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

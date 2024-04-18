@@ -297,7 +297,7 @@ impl RoundBulk for DipoleCarrierAspect {
     }
 }
 
-impl RoundBulk for Magnitude {
+impl RoundBulk for DualNum {
     type Output = Scalar;
 
     fn round_bulk(self) -> Scalar {
@@ -545,6 +545,16 @@ impl Weight for Dipole {
     }
 }
 
+impl Weight for DualNum {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
 impl Weight for FlatPoint {
     type Output = FlatPointAtOrigin;
 
@@ -591,16 +601,6 @@ impl Weight for LineAtOrigin {
 
     fn weight(self) -> LineAtOrigin {
         self
-    }
-}
-
-impl Weight for Magnitude {
-    type Output = AntiScalar;
-
-    fn weight(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[1] },
-        }
     }
 }
 

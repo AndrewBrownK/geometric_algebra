@@ -129,6 +129,14 @@ impl BulkNormSquared for DipoleCarrierAspect {
     }
 }
 
+impl BulkNormSquared for DualNum {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for FlatPoint {
     type Output = Scalar;
 
@@ -162,14 +170,6 @@ impl BulkNormSquared for Line {
 }
 
 impl BulkNormSquared for LineAtOrigin {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
-impl BulkNormSquared for Magnitude {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -345,6 +345,14 @@ impl BulkNorm for DipoleCarrierAspect {
     }
 }
 
+impl BulkNorm for DualNum {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
 impl BulkNorm for FlatPoint {
     type Output = Scalar;
 
@@ -378,14 +386,6 @@ impl BulkNorm for Line {
 }
 
 impl BulkNorm for LineAtOrigin {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Magnitude {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -561,6 +561,14 @@ impl WeightNormSquared for DipoleCarrierAspect {
     }
 }
 
+impl WeightNormSquared for DualNum {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
 impl WeightNormSquared for FlatPoint {
     type Output = AntiScalar;
 
@@ -594,14 +602,6 @@ impl WeightNormSquared for Line {
 }
 
 impl WeightNormSquared for LineAtOrigin {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
-impl WeightNormSquared for Magnitude {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -777,6 +777,14 @@ impl WeightNorm for DipoleCarrierAspect {
     }
 }
 
+impl WeightNorm for DualNum {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).sqrt()
+    }
+}
+
 impl WeightNorm for FlatPoint {
     type Output = AntiScalar;
 
@@ -810,14 +818,6 @@ impl WeightNorm for Line {
 }
 
 impl WeightNorm for LineAtOrigin {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).sqrt()
-    }
-}
-
-impl WeightNorm for Magnitude {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -938,217 +938,217 @@ impl WeightNorm for Translator {
 }
 
 impl GeometricNorm for AntiScalar {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Circle {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for CircleBulk {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for CircleCarrierAspect {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Dipole {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for DipoleBulk {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for DipoleCarrierAspect {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for DualNum {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for FlatPoint {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for FlatPointAtOrigin {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Flector {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Line {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for LineAtOrigin {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Magnitude {
-    type Output = Magnitude;
-
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Motor {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for MultiVector {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Plane {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for PlaneAtOrigin {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Rotor {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for RoundPoint {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for RoundPointAtInfinity {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for RoundPointAtOrigin {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for RoundPointBulk {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for RoundPointCarrierAspect {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Scalar {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Sphere {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Transflector {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
 
 impl GeometricNorm for Translator {
-    type Output = Magnitude;
+    type Output = DualNum;
 
-    fn geometric_norm(self) -> Magnitude {
+    fn geometric_norm(self) -> DualNum {
         self.bulk_norm().add(self.weight_norm())
     }
 }
@@ -1209,6 +1209,14 @@ impl UnitizedNormSquared for DipoleCarrierAspect {
     }
 }
 
+impl UnitizedNormSquared for DualNum {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedNormSquared for FlatPoint {
     type Output = f32;
 
@@ -1242,14 +1250,6 @@ impl UnitizedNormSquared for Line {
 }
 
 impl UnitizedNormSquared for LineAtOrigin {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
-impl UnitizedNormSquared for Magnitude {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1425,6 +1425,14 @@ impl UnitizedNorm for DipoleCarrierAspect {
     }
 }
 
+impl UnitizedNorm for DualNum {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
 impl UnitizedNorm for FlatPoint {
     type Output = f32;
 
@@ -1458,14 +1466,6 @@ impl UnitizedNorm for Line {
 }
 
 impl UnitizedNorm for LineAtOrigin {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
-impl UnitizedNorm for Magnitude {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {

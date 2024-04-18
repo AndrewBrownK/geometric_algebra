@@ -25,6 +25,16 @@ pub trait Weight {
     fn weight(self) -> Self::Output;
 }
 
+impl Bulk for DualNum {
+    type Output = Scalar;
+
+    fn bulk(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
 impl Bulk for Flector {
     type Output = FlectorAtInfinity;
 
@@ -68,16 +78,6 @@ impl Bulk for LineAtInfinity {
 
     fn bulk(self) -> LineAtInfinity {
         self
-    }
-}
-
-impl Bulk for Magnitude {
-    type Output = Scalar;
-
-    fn bulk(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0()[0] },
-        }
     }
 }
 
@@ -183,6 +183,16 @@ impl Weight for AntiScalar {
     }
 }
 
+impl Weight for DualNum {
+    type Output = AntiScalar;
+
+    fn weight(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
 impl Weight for Flector {
     type Output = Flector;
 
@@ -211,16 +221,6 @@ impl Weight for LineAtOrigin {
 
     fn weight(self) -> LineAtOrigin {
         self
-    }
-}
-
-impl Weight for Magnitude {
-    type Output = AntiScalar;
-
-    fn weight(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[1] },
-        }
     }
 }
 

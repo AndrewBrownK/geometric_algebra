@@ -379,6 +379,14 @@ impl RoundWeightDual for Dipole {
     }
 }
 
+impl RoundWeightDual for DualNum {
+    type Output = Scalar;
+
+    fn round_weight_dual(self) -> Scalar {
+        self.weight().complement()
+    }
+}
+
 impl RoundWeightDual for FlatPoint {
     type Output = CircleBulk;
 
@@ -415,14 +423,6 @@ impl RoundWeightDual for LineAtOrigin {
     type Output = DipoleBulk;
 
     fn round_weight_dual(self) -> DipoleBulk {
-        self.weight().complement()
-    }
-}
-
-impl RoundWeightDual for Magnitude {
-    type Output = Scalar;
-
-    fn round_weight_dual(self) -> Scalar {
         self.weight().complement()
     }
 }
@@ -515,6 +515,14 @@ impl WeightDual for Dipole {
     }
 }
 
+impl WeightDual for DualNum {
+    type Output = Scalar;
+
+    fn weight_dual(self) -> Scalar {
+        self.weight().complement()
+    }
+}
+
 impl WeightDual for FlatPoint {
     type Output = CircleBulk;
 
@@ -551,14 +559,6 @@ impl WeightDual for LineAtOrigin {
     type Output = DipoleBulk;
 
     fn weight_dual(self) -> DipoleBulk {
-        self.weight().complement()
-    }
-}
-
-impl WeightDual for Magnitude {
-    type Output = Scalar;
-
-    fn weight_dual(self) -> Scalar {
         self.weight().complement()
     }
 }

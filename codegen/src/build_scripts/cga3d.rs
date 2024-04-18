@@ -24,7 +24,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     let mv_iter = [
         "Scalar:1",
         "AntiScalar:e12345",
-        "Magnitude:1,e12345",
+        "DualNum:1,e12345",
 
         "FlatPoint:e15,e25,e35,e45",
         "FlatPointAtOrigin:e45",

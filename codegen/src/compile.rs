@@ -1901,7 +1901,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //  https://rigidgeometricalgebra.org/wiki/index.php?title=Reciprocal_translation
         //  https://rigidgeometricalgebra.org/wiki/index.php?title=Reciprocal_reflection
         // let allowed_to_sandwich = ["Motor", "Translator", "Rotor", "Flector", "Point", "Plane"];
-        let disallowed_to_be_sandwiched = ["Scalar", "AntiScalar", "Magnitude"];
+        let disallowed_to_be_sandwiched = ["Scalar", "AntiScalar", "DualNum"];
         for (param_a, param_b) in registry.pair_parameters() {
             // if !allowed_to_sandwich.contains(&param_a.multi_vector_class().class_name.as_str()) {
             //     continue
@@ -2093,7 +2093,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // We can end up with some very strange expansions, contractions, and projections
         // if we don't manually exclude these at some point.
-        let non_objects = ["Scalar", "AntiScalar", "Magnitude"];
+        let non_objects = ["Scalar", "AntiScalar", "DualNum"];
 
         // In the future it might also not be a bad idea to restrict to objects of uniform grade.
         // However I'm not overly worried about that yet. Projecting to and from Flectors and Motors
@@ -2643,6 +2643,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
             if class.class_name == "Horizon" {
                 emitter.emit(&AstNode::TypeAlias("PlaneAtInfinity".to_string(), "Horizon".to_string()))?;
+            }
+            if class.class_name == "DualNum" {
+                emitter.emit(&AstNode::TypeAlias("Magnitude".to_string(), "DualNum".to_string()))?;
             }
             emitter.emit(&AstNode::ClassDefinition { class })?;
         }

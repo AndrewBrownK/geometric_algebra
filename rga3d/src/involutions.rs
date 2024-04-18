@@ -235,6 +235,16 @@ impl AntiReversal for AntiScalar {
     }
 }
 
+impl AntiReversal for DualNum {
+    type Output = DualNum;
+
+    fn anti_reversal(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl AntiReversal for Flector {
     type Output = Flector;
 
@@ -303,16 +313,6 @@ impl AntiReversal for LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
-        }
-    }
-}
-
-impl AntiReversal for Magnitude {
-    type Output = Magnitude;
-
-    fn anti_reversal(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -489,6 +489,16 @@ impl Automorphism for AntiScalar {
     }
 }
 
+impl Automorphism for DualNum {
+    type Output = DualNum;
+
+    fn automorphism(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl Automorphism for Flector {
     type Output = Flector;
 
@@ -555,16 +565,6 @@ impl Automorphism for LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
             },
-        }
-    }
-}
-
-impl Automorphism for Magnitude {
-    type Output = Magnitude;
-
-    fn automorphism(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -739,6 +739,16 @@ impl Conjugation for AntiScalar {
     }
 }
 
+impl Conjugation for DualNum {
+    type Output = DualNum;
+
+    fn conjugation(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl Conjugation for Flector {
     type Output = Flector;
 
@@ -807,16 +817,6 @@ impl Conjugation for LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
-        }
-    }
-}
-
-impl Conjugation for Magnitude {
-    type Output = Magnitude;
-
-    fn conjugation(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -993,6 +993,16 @@ impl DoubleComplement for AntiScalar {
     }
 }
 
+impl DoubleComplement for DualNum {
+    type Output = DualNum;
+
+    fn double_complement(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl DoubleComplement for Flector {
     type Output = Flector;
 
@@ -1057,16 +1067,6 @@ impl DoubleComplement for LineAtOrigin {
     fn double_complement(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl DoubleComplement for Magnitude {
-    type Output = Magnitude;
-
-    fn double_complement(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -1229,6 +1229,16 @@ impl DoubleComplement for Translator {
     }
 }
 
+impl Dual for DualNum {
+    type Output = AntiScalar;
+
+    fn dual(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
 impl Dual for Flector {
     type Output = Flector;
 
@@ -1285,16 +1295,6 @@ impl Dual for LineAtInfinity {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
-        }
-    }
-}
-
-impl Dual for Magnitude {
-    type Output = AntiScalar;
-
-    fn dual(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[0] },
         }
     }
 }
@@ -1416,6 +1416,18 @@ impl LeftComplement for AntiScalar {
     }
 }
 
+impl LeftComplement for DualNum {
+    type Output = DualNum;
+
+    fn left_complement(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
 impl LeftComplement for Flector {
     type Output = Flector;
 
@@ -1484,18 +1496,6 @@ impl LeftComplement for LineAtOrigin {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl LeftComplement for Magnitude {
-    type Output = Magnitude;
-
-    fn left_complement(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
             },
         }
     }
@@ -1678,6 +1678,16 @@ impl Reversal for AntiScalar {
     }
 }
 
+impl Reversal for DualNum {
+    type Output = DualNum;
+
+    fn reversal(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl Reversal for Flector {
     type Output = Flector;
 
@@ -1746,16 +1756,6 @@ impl Reversal for LineAtOrigin {
             groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
             },
-        }
-    }
-}
-
-impl Reversal for Magnitude {
-    type Output = Magnitude;
-
-    fn reversal(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups { g0: self.group0() },
         }
     }
 }
@@ -1928,6 +1928,18 @@ impl RightComplement for AntiScalar {
     }
 }
 
+impl RightComplement for DualNum {
+    type Output = DualNum;
+
+    fn right_complement(self) -> DualNum {
+        DualNum {
+            groups: DualNumGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
 impl RightComplement for Flector {
     type Output = Flector;
 
@@ -1996,18 +2008,6 @@ impl RightComplement for LineAtOrigin {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl RightComplement for Magnitude {
-    type Output = Magnitude;
-
-    fn right_complement(self) -> Magnitude {
-        Magnitude {
-            groups: MagnitudeGroups {
-                g0: swizzle!(self.group0(), 1, 0),
             },
         }
     }
