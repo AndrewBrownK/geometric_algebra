@@ -2137,35 +2137,52 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             }
         }
 
-
-        // TODO it's hard to discern which projections are valid in CGA
-
-
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "ProjectOrthogonallyOnto";
             let _: Option<()> = try {
-                let we = self.trait_impls.get_pair_invocation("WeightExpansion", variable(&param_a), variable(&param_b))?;
+                let wedge = self.algebra.dialect().exterior_product.first()?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
+                let we = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), anti_dual)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), we)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "AntiProjectOrthogonallyOnto";
             let _: Option<()> = try {
-                let wc = self.trait_impls.get_pair_invocation("WeightContraction", variable(&param_a), variable(&param_b))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
+                let wc = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), anti_dual)?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), wc)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "ProjectViaOriginOnto";
             let _: Option<()> = try {
-                let be = self.trait_impls.get_pair_invocation("BulkExpansion", variable(&param_a), variable(&param_b))?;
+                let wedge = self.algebra.dialect().exterior_product.first()?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
+                let be = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), dual)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), be)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
@@ -2180,10 +2197,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         //  completeness. It tends to reorient the object `a` being antiprojected so that it
         //  contains the object `b` instead of moving it in a direction perpendicular to `b`."
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "AntiProjectViaHorizonOnto";
             let _: Option<()> = try {
-                let bc = self.trait_impls.get_pair_invocation("BulkContraction", variable(&param_a), variable(&param_b))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
+                let bc = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), dual)?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), bc)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
@@ -2193,44 +2217,72 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // TODO figure out what the heck these rejections are
 
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "RejectOrthogonallyFrom";
             let _: Option<()> = try {
+                let wedge = self.algebra.dialect().exterior_product.first()?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), variable(&param_b))?;
-                let we = self.trait_impls.get_pair_invocation("WeightExpansion", anti_wedge, variable(&param_a))?;
+                let we = self.trait_impls.get_pair_invocation(wedge, anti_wedge, anti_dual)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, we);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
 
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "AntiRejectOrthogonallyFrom";
             let _: Option<()> = try {
                 let wedge = self.algebra.dialect().exterior_product.first()?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), variable(&param_b))?;
-                let wc = self.trait_impls.get_pair_invocation("WeightContraction", wedge, variable(&param_a))?;
+                let wc = self.trait_impls.get_pair_invocation(anti_wedge, wedge, anti_dual)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wc);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
 
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "RejectViaOriginFrom";
             let _: Option<()> = try {
+                let wedge = self.algebra.dialect().exterior_product.first()?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), variable(&param_b))?;
-                let be = self.trait_impls.get_pair_invocation("BulkExpansion", anti_wedge, variable(&param_a))?;
+                let be = self.trait_impls.get_pair_invocation(wedge, anti_wedge, dual)?;
                 let po = single_expression_pair_trait_impl(name, &param_a, &param_b, be);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
 
         for (param_a, param_b) in registry.pair_parameters() {
+            let a_name = param_a.multi_vector_class().class_name.as_str();
+            let b_name = param_b.multi_vector_class().class_name.as_str();
+            if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                continue;
+            }
             let name = "AntiRejectViaHorizonFrom";
             let _: Option<()> = try {
                 let wedge = self.algebra.dialect().exterior_product.first()?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), variable(&param_b))?;
-                let bc = self.trait_impls.get_pair_invocation("BulkContraction", wedge, variable(&param_a))?;
+                let bc = self.trait_impls.get_pair_invocation(anti_wedge, wedge, dual)?;
                 let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, bc);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };

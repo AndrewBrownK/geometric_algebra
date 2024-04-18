@@ -25747,5523 +25747,5711 @@ Horizon translator__weight_expansion__transflector(Translator self, Transflector
 }
 
 MultiVector flector__anti_project_orthogonally_onto__flector(Flector self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, flector__weight_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, flector__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Plane flector__anti_project_orthogonally_onto__line(Flector self, Line other) {
-    return line__wedge__point_at_infinity(other, flector__weight_contraction__line(self, other));
+    return line__wedge__point_at_infinity(other, flector__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PlaneAtOrigin flector__anti_project_orthogonally_onto__line_at_origin(Flector self, LineAtOrigin other) {
-    return line_at_origin__wedge__point_at_infinity(other, flector__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__point_at_infinity(other, flector__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector flector__anti_project_orthogonally_onto__motor(Flector self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, flector__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, flector__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector flector__anti_project_orthogonally_onto__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, flector__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, flector__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin flector__anti_project_orthogonally_onto__multi_vector_at_origin(Flector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, flector__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, flector__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtOrigin flector__anti_project_orthogonally_onto__origin(Flector self, Origin other) {
-    return origin__wedge__multi_vector_at_infinity(other, flector__weight_contraction__origin(self, other));
+    return origin__wedge__multi_vector_at_infinity(other, flector__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Plane flector__anti_project_orthogonally_onto__plane(Flector self, Plane other) {
-    return plane__wedge__scalar(other, flector__weight_contraction__plane(self, other));
+    return plane__wedge__scalar(other, flector__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PlaneAtOrigin flector__anti_project_orthogonally_onto__plane_at_origin(Flector self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__scalar(other, flector__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__scalar(other, flector__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector flector__anti_project_orthogonally_onto__point(Flector self, Point other) {
-    return point__wedge__multi_vector_at_infinity(other, flector__weight_contraction__point(self, other));
+    return point__wedge__multi_vector_at_infinity(other, flector__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin flector__anti_project_orthogonally_onto__rotor(Flector self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, flector__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, flector__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector flector__anti_project_orthogonally_onto__transflector(Flector self, Transflector other) {
-    return transflector__wedge__scalar(other, flector__weight_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, flector__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Motor line__anti_project_orthogonally_onto__flector(Line self, Flector other) {
-    return flector__wedge__point_at_infinity(other, line__weight_contraction__flector(self, other));
+    return flector__wedge__point_at_infinity(other, line__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Line line__anti_project_orthogonally_onto__line(Line self, Line other) {
-    return line__wedge__scalar(other, line__weight_contraction__line(self, other));
+    return line__wedge__scalar(other, line__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 LineAtOrigin line__anti_project_orthogonally_onto__line_at_origin(Line self, LineAtOrigin other) {
-    return line_at_origin__wedge__scalar(other, line__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__scalar(other, line__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector line__anti_project_orthogonally_onto__motor(Line self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, line__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, line__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector line__anti_project_orthogonally_onto__multi_vector(Line self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, line__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, line__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin line__anti_project_orthogonally_onto__multi_vector_at_origin(Line self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, line__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, line__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 LineAtOrigin line__anti_project_orthogonally_onto__origin(Line self, Origin other) {
-    return origin__wedge__point_at_infinity(other, line__weight_contraction__origin(self, other));
+    return origin__wedge__point_at_infinity(other, line__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Line line__anti_project_orthogonally_onto__point(Line self, Point other) {
-    return point__wedge__point_at_infinity(other, line__weight_contraction__point(self, other));
+    return point__wedge__point_at_infinity(other, line__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin line__anti_project_orthogonally_onto__rotor(Line self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, line__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, line__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Motor line_at_origin__anti_project_orthogonally_onto__flector(LineAtOrigin self, Flector other) {
-    return flector__wedge__point_at_infinity(other, line_at_origin__weight_contraction__flector(self, other));
+    return flector__wedge__point_at_infinity(other, line_at_origin__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Line line_at_origin__anti_project_orthogonally_onto__line(LineAtOrigin self, Line other) {
-    return line__wedge__scalar(other, line_at_origin__weight_contraction__line(self, other));
+    return line__wedge__scalar(other, line_at_origin__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 LineAtOrigin line_at_origin__anti_project_orthogonally_onto__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
-    return line_at_origin__wedge__scalar(other, line_at_origin__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__scalar(other, line_at_origin__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector line_at_origin__anti_project_orthogonally_onto__motor(LineAtOrigin self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, line_at_origin__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, line_at_origin__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector line_at_origin__anti_project_orthogonally_onto__multi_vector(LineAtOrigin self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, line_at_origin__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, line_at_origin__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin line_at_origin__anti_project_orthogonally_onto__multi_vector_at_origin(LineAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, line_at_origin__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, line_at_origin__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 LineAtOrigin line_at_origin__anti_project_orthogonally_onto__origin(LineAtOrigin self, Origin other) {
-    return origin__wedge__point_at_infinity(other, line_at_origin__weight_contraction__origin(self, other));
+    return origin__wedge__point_at_infinity(other, line_at_origin__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Line line_at_origin__anti_project_orthogonally_onto__point(LineAtOrigin self, Point other) {
-    return point__wedge__point_at_infinity(other, line_at_origin__weight_contraction__point(self, other));
+    return point__wedge__point_at_infinity(other, line_at_origin__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin line_at_origin__anti_project_orthogonally_onto__rotor(LineAtOrigin self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, line_at_origin__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, line_at_origin__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Motor motor__anti_project_orthogonally_onto__flector(Motor self, Flector other) {
-    return flector__wedge__flector_at_infinity(other, motor__weight_contraction__flector(self, other));
+    return flector__wedge__flector_at_infinity(other, motor__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector motor__anti_project_orthogonally_onto__line(Motor self, Line other) {
-    return line__wedge__multi_vector_at_infinity(other, motor__weight_contraction__line(self, other));
+    return line__wedge__multi_vector_at_infinity(other, motor__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVectorAtOrigin motor__anti_project_orthogonally_onto__line_at_origin(Motor self, LineAtOrigin other) {
-    return line_at_origin__wedge__multi_vector_at_infinity(other, motor__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__multi_vector_at_infinity(other, motor__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector motor__anti_project_orthogonally_onto__motor(Motor self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, motor__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, motor__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector motor__anti_project_orthogonally_onto__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, motor__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, motor__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin motor__anti_project_orthogonally_onto__multi_vector_at_origin(Motor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, motor__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, motor__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Rotor motor__anti_project_orthogonally_onto__origin(Motor self, Origin other) {
-    return origin__wedge__flector_at_infinity(other, motor__weight_contraction__origin(self, other));
+    return origin__wedge__flector_at_infinity(other, motor__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 AntiScalar motor__anti_project_orthogonally_onto__plane(Motor self, Plane other) {
-    return plane__wedge__point_at_infinity(other, motor__weight_contraction__plane(self, other));
+    return plane__wedge__point_at_infinity(other, motor__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 AntiScalar motor__anti_project_orthogonally_onto__plane_at_origin(Motor self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__point_at_infinity(other, motor__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__point_at_infinity(other, motor__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Motor motor__anti_project_orthogonally_onto__point(Motor self, Point other) {
-    return point__wedge__flector_at_infinity(other, motor__weight_contraction__point(self, other));
+    return point__wedge__flector_at_infinity(other, motor__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin motor__anti_project_orthogonally_onto__rotor(Motor self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, motor__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, motor__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Translator motor__anti_project_orthogonally_onto__transflector(Motor self, Transflector other) {
-    return transflector__wedge__point_at_infinity(other, motor__weight_contraction__transflector(self, other));
+    return transflector__wedge__point_at_infinity(other, motor__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__flector(MultiVector self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__line(MultiVector self, Line other) {
-    return line__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__line(self, other));
+    return line__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector__anti_project_orthogonally_onto__line_at_origin(MultiVector self, LineAtOrigin other) {
-    return line_at_origin__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__motor(MultiVector self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector__anti_project_orthogonally_onto__multi_vector_at_origin(MultiVector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector__anti_project_orthogonally_onto__origin(MultiVector self, Origin other) {
-    return origin__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__origin(self, other));
+    return origin__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__plane(MultiVector self, Plane other) {
-    return plane__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__plane(self, other));
+    return plane__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector__anti_project_orthogonally_onto__plane_at_origin(MultiVector self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__point(MultiVector self, Point other) {
-    return point__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__point(self, other));
+    return point__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector__anti_project_orthogonally_onto__rotor(MultiVector self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__wedge__multi_vector_at_infinity(other, multi_vector__weight_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector_at_infinity(other, multi_vector__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__flector(MultiVectorAtOrigin self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__line(MultiVectorAtOrigin self, Line other) {
-    return line__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__line(self, other));
+    return line__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_orthogonally_onto__line_at_origin(MultiVectorAtOrigin self, LineAtOrigin other) {
-    return line_at_origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__motor(MultiVectorAtOrigin self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_orthogonally_onto__multi_vector_at_origin(MultiVectorAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_orthogonally_onto__origin(MultiVectorAtOrigin self, Origin other) {
-    return origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__origin(self, other));
+    return origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__plane(MultiVectorAtOrigin self, Plane other) {
-    return plane__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__plane(self, other));
+    return plane__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_orthogonally_onto__plane_at_origin(MultiVectorAtOrigin self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__point(MultiVectorAtOrigin self, Point other) {
-    return point__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__point(self, other));
+    return point__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_orthogonally_onto__rotor(MultiVectorAtOrigin self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_orthogonally_onto__transflector(MultiVectorAtOrigin self, Transflector other) {
-    return transflector__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__weight_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector_at_infinity(other, multi_vector_at_origin__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector origin__anti_project_orthogonally_onto__flector(Origin self, Flector other) {
-    return flector__wedge__scalar(other, origin__weight_contraction__flector(self, other));
+    return flector__wedge__scalar(other, origin__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Motor origin__anti_project_orthogonally_onto__motor(Origin self, Motor other) {
-    return motor__wedge__scalar(other, origin__weight_contraction__motor(self, other));
+    return motor__wedge__scalar(other, origin__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector origin__anti_project_orthogonally_onto__multi_vector(Origin self, MultiVector other) {
-    return multi_vector__wedge__scalar(other, origin__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__scalar(other, origin__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin origin__anti_project_orthogonally_onto__multi_vector_at_origin(Origin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__scalar(other, origin__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__scalar(other, origin__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Origin origin__anti_project_orthogonally_onto__origin(Origin self, Origin other) {
-    return origin__wedge__scalar(other, origin__weight_contraction__origin(self, other));
+    return origin__wedge__scalar(other, origin__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Point origin__anti_project_orthogonally_onto__point(Origin self, Point other) {
-    return point__wedge__scalar(other, origin__weight_contraction__point(self, other));
+    return point__wedge__scalar(other, origin__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 Rotor origin__anti_project_orthogonally_onto__rotor(Origin self, Rotor other) {
-    return rotor__wedge__scalar(other, origin__weight_contraction__rotor(self, other));
+    return rotor__wedge__scalar(other, origin__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector plane__anti_project_orthogonally_onto__flector(Plane self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, plane__weight_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, plane__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Plane plane__anti_project_orthogonally_onto__line(Plane self, Line other) {
-    return line__wedge__point_at_infinity(other, plane__weight_contraction__line(self, other));
+    return line__wedge__point_at_infinity(other, plane__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PlaneAtOrigin plane__anti_project_orthogonally_onto__line_at_origin(Plane self, LineAtOrigin other) {
-    return line_at_origin__wedge__point_at_infinity(other, plane__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__point_at_infinity(other, plane__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector plane__anti_project_orthogonally_onto__motor(Plane self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, plane__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, plane__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector plane__anti_project_orthogonally_onto__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, plane__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, plane__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin plane__anti_project_orthogonally_onto__multi_vector_at_origin(Plane self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, plane__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, plane__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 PlaneAtOrigin plane__anti_project_orthogonally_onto__origin(Plane self, Origin other) {
-    return origin__wedge__line_at_infinity(other, plane__weight_contraction__origin(self, other));
+    return origin__wedge__line_at_infinity(other, plane__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Plane plane__anti_project_orthogonally_onto__plane(Plane self, Plane other) {
-    return plane__wedge__scalar(other, plane__weight_contraction__plane(self, other));
+    return plane__wedge__scalar(other, plane__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PlaneAtOrigin plane__anti_project_orthogonally_onto__plane_at_origin(Plane self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__scalar(other, plane__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__scalar(other, plane__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Plane plane__anti_project_orthogonally_onto__point(Plane self, Point other) {
-    return point__wedge__line_at_infinity(other, plane__weight_contraction__point(self, other));
+    return point__wedge__line_at_infinity(other, plane__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin plane__anti_project_orthogonally_onto__rotor(Plane self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, plane__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, plane__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector plane__anti_project_orthogonally_onto__transflector(Plane self, Transflector other) {
-    return transflector__wedge__scalar(other, plane__weight_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, plane__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector plane_at_origin__anti_project_orthogonally_onto__flector(PlaneAtOrigin self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, plane_at_origin__weight_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, plane_at_origin__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Plane plane_at_origin__anti_project_orthogonally_onto__line(PlaneAtOrigin self, Line other) {
-    return line__wedge__point_at_infinity(other, plane_at_origin__weight_contraction__line(self, other));
+    return line__wedge__point_at_infinity(other, plane_at_origin__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_orthogonally_onto__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
-    return line_at_origin__wedge__point_at_infinity(other, plane_at_origin__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__point_at_infinity(other, plane_at_origin__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector plane_at_origin__anti_project_orthogonally_onto__motor(PlaneAtOrigin self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, plane_at_origin__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, plane_at_origin__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector plane_at_origin__anti_project_orthogonally_onto__multi_vector(PlaneAtOrigin self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, plane_at_origin__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, plane_at_origin__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin plane_at_origin__anti_project_orthogonally_onto__multi_vector_at_origin(PlaneAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, plane_at_origin__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, plane_at_origin__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_orthogonally_onto__origin(PlaneAtOrigin self, Origin other) {
-    return origin__wedge__line_at_infinity(other, plane_at_origin__weight_contraction__origin(self, other));
+    return origin__wedge__line_at_infinity(other, plane_at_origin__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Plane plane_at_origin__anti_project_orthogonally_onto__plane(PlaneAtOrigin self, Plane other) {
-    return plane__wedge__scalar(other, plane_at_origin__weight_contraction__plane(self, other));
+    return plane__wedge__scalar(other, plane_at_origin__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_orthogonally_onto__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__scalar(other, plane_at_origin__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__scalar(other, plane_at_origin__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Plane plane_at_origin__anti_project_orthogonally_onto__point(PlaneAtOrigin self, Point other) {
-    return point__wedge__line_at_infinity(other, plane_at_origin__weight_contraction__point(self, other));
+    return point__wedge__line_at_infinity(other, plane_at_origin__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin plane_at_origin__anti_project_orthogonally_onto__rotor(PlaneAtOrigin self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, plane_at_origin__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, plane_at_origin__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector plane_at_origin__anti_project_orthogonally_onto__transflector(PlaneAtOrigin self, Transflector other) {
-    return transflector__wedge__scalar(other, plane_at_origin__weight_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, plane_at_origin__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector point__anti_project_orthogonally_onto__flector(Point self, Flector other) {
-    return flector__wedge__scalar(other, point__weight_contraction__flector(self, other));
+    return flector__wedge__scalar(other, point__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Motor point__anti_project_orthogonally_onto__motor(Point self, Motor other) {
-    return motor__wedge__scalar(other, point__weight_contraction__motor(self, other));
+    return motor__wedge__scalar(other, point__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector point__anti_project_orthogonally_onto__multi_vector(Point self, MultiVector other) {
-    return multi_vector__wedge__scalar(other, point__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__scalar(other, point__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin point__anti_project_orthogonally_onto__multi_vector_at_origin(Point self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__scalar(other, point__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__scalar(other, point__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Origin point__anti_project_orthogonally_onto__origin(Point self, Origin other) {
-    return origin__wedge__scalar(other, point__weight_contraction__origin(self, other));
+    return origin__wedge__scalar(other, point__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Point point__anti_project_orthogonally_onto__point(Point self, Point other) {
-    return point__wedge__scalar(other, point__weight_contraction__point(self, other));
+    return point__wedge__scalar(other, point__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 Rotor point__anti_project_orthogonally_onto__rotor(Point self, Rotor other) {
-    return rotor__wedge__scalar(other, point__weight_contraction__rotor(self, other));
+    return rotor__wedge__scalar(other, point__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Motor rotor__anti_project_orthogonally_onto__flector(Rotor self, Flector other) {
-    return flector__wedge__flector_at_infinity(other, rotor__weight_contraction__flector(self, other));
+    return flector__wedge__flector_at_infinity(other, rotor__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector rotor__anti_project_orthogonally_onto__line(Rotor self, Line other) {
-    return line__wedge__multi_vector_at_infinity(other, rotor__weight_contraction__line(self, other));
+    return line__wedge__multi_vector_at_infinity(other, rotor__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVectorAtOrigin rotor__anti_project_orthogonally_onto__line_at_origin(Rotor self, LineAtOrigin other) {
-    return line_at_origin__wedge__multi_vector_at_infinity(other, rotor__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__multi_vector_at_infinity(other, rotor__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector rotor__anti_project_orthogonally_onto__motor(Rotor self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, rotor__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, rotor__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector rotor__anti_project_orthogonally_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, rotor__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, rotor__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin rotor__anti_project_orthogonally_onto__multi_vector_at_origin(Rotor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, rotor__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, rotor__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Rotor rotor__anti_project_orthogonally_onto__origin(Rotor self, Origin other) {
-    return origin__wedge__flector_at_infinity(other, rotor__weight_contraction__origin(self, other));
+    return origin__wedge__flector_at_infinity(other, rotor__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 AntiScalar rotor__anti_project_orthogonally_onto__plane(Rotor self, Plane other) {
-    return plane__wedge__point_at_infinity(other, rotor__weight_contraction__plane(self, other));
+    return plane__wedge__point_at_infinity(other, rotor__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 AntiScalar rotor__anti_project_orthogonally_onto__plane_at_origin(Rotor self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__point_at_infinity(other, rotor__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__point_at_infinity(other, rotor__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Motor rotor__anti_project_orthogonally_onto__point(Rotor self, Point other) {
-    return point__wedge__flector_at_infinity(other, rotor__weight_contraction__point(self, other));
+    return point__wedge__flector_at_infinity(other, rotor__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin rotor__anti_project_orthogonally_onto__rotor(Rotor self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, rotor__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, rotor__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Translator rotor__anti_project_orthogonally_onto__transflector(Rotor self, Transflector other) {
-    return transflector__wedge__point_at_infinity(other, rotor__weight_contraction__transflector(self, other));
+    return transflector__wedge__point_at_infinity(other, rotor__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector transflector__anti_project_orthogonally_onto__flector(Transflector self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, transflector__weight_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, transflector__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Plane transflector__anti_project_orthogonally_onto__line(Transflector self, Line other) {
-    return line__wedge__point_at_infinity(other, transflector__weight_contraction__line(self, other));
+    return line__wedge__point_at_infinity(other, transflector__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PlaneAtOrigin transflector__anti_project_orthogonally_onto__line_at_origin(Transflector self, LineAtOrigin other) {
-    return line_at_origin__wedge__point_at_infinity(other, transflector__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__point_at_infinity(other, transflector__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector transflector__anti_project_orthogonally_onto__motor(Transflector self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, transflector__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, transflector__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector transflector__anti_project_orthogonally_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, transflector__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, transflector__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin transflector__anti_project_orthogonally_onto__multi_vector_at_origin(Transflector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, transflector__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, transflector__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 PlaneAtOrigin transflector__anti_project_orthogonally_onto__origin(Transflector self, Origin other) {
-    return origin__wedge__line_at_infinity(other, transflector__weight_contraction__origin(self, other));
+    return origin__wedge__line_at_infinity(other, transflector__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Plane transflector__anti_project_orthogonally_onto__plane(Transflector self, Plane other) {
-    return plane__wedge__scalar(other, transflector__weight_contraction__plane(self, other));
+    return plane__wedge__scalar(other, transflector__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PlaneAtOrigin transflector__anti_project_orthogonally_onto__plane_at_origin(Transflector self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__scalar(other, transflector__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__scalar(other, transflector__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Plane transflector__anti_project_orthogonally_onto__point(Transflector self, Point other) {
-    return point__wedge__line_at_infinity(other, transflector__weight_contraction__point(self, other));
+    return point__wedge__line_at_infinity(other, transflector__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin transflector__anti_project_orthogonally_onto__rotor(Transflector self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, transflector__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, transflector__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector transflector__anti_project_orthogonally_onto__transflector(Transflector self, Transflector other) {
-    return transflector__wedge__scalar(other, transflector__weight_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, transflector__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Motor translator__anti_project_orthogonally_onto__flector(Translator self, Flector other) {
-    return flector__wedge__flector_at_infinity(other, translator__weight_contraction__flector(self, other));
+    return flector__wedge__flector_at_infinity(other, translator__anti_wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 AntiScalar translator__anti_project_orthogonally_onto__line(Translator self, Line other) {
-    return line__wedge__line_at_infinity(other, translator__weight_contraction__line(self, other));
+    return line__wedge__line_at_infinity(other, translator__anti_wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 AntiScalar translator__anti_project_orthogonally_onto__line_at_origin(Translator self, LineAtOrigin other) {
-    return line_at_origin__wedge__line_at_infinity(other, translator__weight_contraction__line_at_origin(self, other));
+    return line_at_origin__wedge__line_at_infinity(other, translator__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector translator__anti_project_orthogonally_onto__motor(Translator self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, translator__weight_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, translator__anti_wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector translator__anti_project_orthogonally_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, translator__weight_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, translator__anti_wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin translator__anti_project_orthogonally_onto__multi_vector_at_origin(Translator self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, translator__weight_contraction__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(other, translator__anti_wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 AntiScalar translator__anti_project_orthogonally_onto__origin(Translator self, Origin other) {
-    return origin__wedge__horizon(other, translator__weight_contraction__origin(self, other));
+    return origin__wedge__horizon(other, translator__anti_wedge__horizon(self, origin__anti_dual(other)));
 }
 
 AntiScalar translator__anti_project_orthogonally_onto__plane(Translator self, Plane other) {
-    return plane__wedge__point_at_infinity(other, translator__weight_contraction__plane(self, other));
+    return plane__wedge__point_at_infinity(other, translator__anti_wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 AntiScalar translator__anti_project_orthogonally_onto__plane_at_origin(Translator self, PlaneAtOrigin other) {
-    return plane_at_origin__wedge__point_at_infinity(other, translator__weight_contraction__plane_at_origin(self, other));
+    return plane_at_origin__wedge__point_at_infinity(other, translator__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 AntiScalar translator__anti_project_orthogonally_onto__point(Translator self, Point other) {
-    return point__wedge__horizon(other, translator__weight_contraction__point(self, other));
+    return point__wedge__horizon(other, translator__anti_wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin translator__anti_project_orthogonally_onto__rotor(Translator self, Rotor other) {
-    return rotor__wedge__multi_vector_at_infinity(other, translator__weight_contraction__rotor(self, other));
+    return rotor__wedge__multi_vector_at_infinity(other, translator__anti_wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Translator translator__anti_project_orthogonally_onto__transflector(Translator self, Transflector other) {
-    return transflector__wedge__point_at_infinity(other, translator__weight_contraction__transflector(self, other));
+    return transflector__wedge__point_at_infinity(other, translator__anti_wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__flector(Flector self, Flector other) {
-    return flector__wedge__multi_vector(other, flector__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector(other, flector__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__flector_at_infinity(Flector self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector(other, flector__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector(other, flector__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon flector__anti_project_via_horizon_onto__horizon(Flector self, Horizon other) {
-    return horizon__wedge__scalar(other, flector__bulk_contraction__horizon(self, other));
+    return horizon__wedge__scalar(other, flector__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 Plane flector__anti_project_via_horizon_onto__line(Flector self, Line other) {
-    return line__wedge__point(other, flector__bulk_contraction__line(self, other));
+    return line__wedge__point(other, flector__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 Plane flector__anti_project_via_horizon_onto__line_at_infinity(Flector self, LineAtInfinity other) {
-    return line_at_infinity__wedge__point(other, flector__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__point(other, flector__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Plane flector__anti_project_via_horizon_onto__motor(Flector self, Motor other) {
-    return motor__wedge__point(other, flector__bulk_contraction__motor(self, other));
+    return motor__wedge__point(other, flector__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, flector__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, flector__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, flector__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, flector__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane flector__anti_project_via_horizon_onto__plane(Flector self, Plane other) {
-    return plane__wedge__scalar(other, flector__bulk_contraction__plane(self, other));
+    return plane__wedge__scalar(other, flector__anti_wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__point(Flector self, Point other) {
-    return point__wedge__multi_vector(other, flector__bulk_contraction__point(self, other));
+    return point__wedge__multi_vector(other, flector__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__point_at_infinity(Flector self, PointAtInfinity other) {
-    return point_at_infinity__wedge__multi_vector(other, flector__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__multi_vector(other, flector__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector flector__anti_project_via_horizon_onto__transflector(Flector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, flector__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector(other, flector__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Plane flector__anti_project_via_horizon_onto__translator(Flector self, Translator other) {
-    return translator__wedge__point(other, flector__bulk_contraction__translator(self, other));
+    return translator__wedge__point(other, flector__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector flector_at_infinity__anti_project_via_horizon_onto__flector(FlectorAtInfinity self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__anti_project_via_horizon_onto__flector_at_infinity(FlectorAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon flector_at_infinity__anti_project_via_horizon_onto__horizon(FlectorAtInfinity self, Horizon other) {
-    return horizon__wedge__scalar(other, flector_at_infinity__bulk_contraction__horizon(self, other));
+    return horizon__wedge__scalar(other, flector_at_infinity__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 Plane flector_at_infinity__anti_project_via_horizon_onto__line(FlectorAtInfinity self, Line other) {
-    return line__wedge__point_at_infinity(other, flector_at_infinity__bulk_contraction__line(self, other));
+    return line__wedge__point_at_infinity(other, flector_at_infinity__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 Horizon flector_at_infinity__anti_project_via_horizon_onto__line_at_infinity(FlectorAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__wedge__point_at_infinity(other, flector_at_infinity__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__point_at_infinity(other, flector_at_infinity__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Plane flector_at_infinity__anti_project_via_horizon_onto__motor(FlectorAtInfinity self, Motor other) {
-    return motor__wedge__point_at_infinity(other, flector_at_infinity__bulk_contraction__motor(self, other));
+    return motor__wedge__point_at_infinity(other, flector_at_infinity__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector flector_at_infinity__anti_project_via_horizon_onto__multi_vector(FlectorAtInfinity self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__anti_project_via_horizon_onto__multi_vector_at_infinity(FlectorAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane flector_at_infinity__anti_project_via_horizon_onto__plane(FlectorAtInfinity self, Plane other) {
-    return plane__wedge__scalar(other, flector_at_infinity__bulk_contraction__plane(self, other));
+    return plane__wedge__scalar(other, flector_at_infinity__anti_wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector flector_at_infinity__anti_project_via_horizon_onto__point(FlectorAtInfinity self, Point other) {
-    return point__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__point(self, other));
+    return point__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__anti_project_via_horizon_onto__point_at_infinity(FlectorAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector flector_at_infinity__anti_project_via_horizon_onto__transflector(FlectorAtInfinity self, Transflector other) {
-    return transflector__wedge__multi_vector_at_infinity(other, flector_at_infinity__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector_at_infinity(other, flector_at_infinity__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Horizon flector_at_infinity__anti_project_via_horizon_onto__translator(FlectorAtInfinity self, Translator other) {
-    return translator__wedge__point_at_infinity(other, flector_at_infinity__bulk_contraction__translator(self, other));
+    return translator__wedge__point_at_infinity(other, flector_at_infinity__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector horizon__anti_project_via_horizon_onto__flector(Horizon self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, horizon__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, horizon__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity horizon__anti_project_via_horizon_onto__flector_at_infinity(Horizon self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector_at_infinity(other, horizon__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector_at_infinity(other, horizon__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon horizon__anti_project_via_horizon_onto__horizon(Horizon self, Horizon other) {
-    return horizon__wedge__scalar(other, horizon__bulk_contraction__horizon(self, other));
+    return horizon__wedge__scalar(other, horizon__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 Plane horizon__anti_project_via_horizon_onto__line(Horizon self, Line other) {
-    return line__wedge__point_at_infinity(other, horizon__bulk_contraction__line(self, other));
+    return line__wedge__point_at_infinity(other, horizon__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 Horizon horizon__anti_project_via_horizon_onto__line_at_infinity(Horizon self, LineAtInfinity other) {
-    return line_at_infinity__wedge__point_at_infinity(other, horizon__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__point_at_infinity(other, horizon__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Plane horizon__anti_project_via_horizon_onto__motor(Horizon self, Motor other) {
-    return motor__wedge__point_at_infinity(other, horizon__bulk_contraction__motor(self, other));
+    return motor__wedge__point_at_infinity(other, horizon__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector horizon__anti_project_via_horizon_onto__multi_vector(Horizon self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, horizon__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, horizon__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity horizon__anti_project_via_horizon_onto__multi_vector_at_infinity(Horizon self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, horizon__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, horizon__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane horizon__anti_project_via_horizon_onto__plane(Horizon self, Plane other) {
-    return plane__wedge__scalar(other, horizon__bulk_contraction__plane(self, other));
+    return plane__wedge__scalar(other, horizon__anti_wedge__origin(self, plane__dual(other)));
 }
 
 Plane horizon__anti_project_via_horizon_onto__point(Horizon self, Point other) {
-    return point__wedge__line_at_infinity(other, horizon__bulk_contraction__point(self, other));
+    return point__wedge__line_at_infinity(other, horizon__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 Horizon horizon__anti_project_via_horizon_onto__point_at_infinity(Horizon self, PointAtInfinity other) {
-    return point_at_infinity__wedge__line_at_infinity(other, horizon__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__line_at_infinity(other, horizon__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector horizon__anti_project_via_horizon_onto__transflector(Horizon self, Transflector other) {
-    return transflector__wedge__multi_vector_at_infinity(other, horizon__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector_at_infinity(other, horizon__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Horizon horizon__anti_project_via_horizon_onto__translator(Horizon self, Translator other) {
-    return translator__wedge__point_at_infinity(other, horizon__bulk_contraction__translator(self, other));
+    return translator__wedge__point_at_infinity(other, horizon__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Motor line__anti_project_via_horizon_onto__flector(Line self, Flector other) {
-    return flector__wedge__point(other, line__bulk_contraction__flector(self, other));
+    return flector__wedge__point(other, line__anti_wedge__flector(self, flector__dual(other)));
 }
 
 Motor line__anti_project_via_horizon_onto__flector_at_infinity(Line self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__point(other, line__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__point(other, line__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Line line__anti_project_via_horizon_onto__line(Line self, Line other) {
-    return line__wedge__scalar(other, line__bulk_contraction__line(self, other));
+    return line__wedge__scalar(other, line__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 LineAtInfinity line__anti_project_via_horizon_onto__line_at_infinity(Line self, LineAtInfinity other) {
-    return line_at_infinity__wedge__scalar(other, line__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__scalar(other, line__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Motor line__anti_project_via_horizon_onto__motor(Line self, Motor other) {
-    return motor__wedge__scalar(other, line__bulk_contraction__motor(self, other));
+    return motor__wedge__scalar(other, line__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector line__anti_project_via_horizon_onto__multi_vector(Line self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, line__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, line__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector line__anti_project_via_horizon_onto__multi_vector_at_infinity(Line self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, line__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, line__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Line line__anti_project_via_horizon_onto__point(Line self, Point other) {
-    return point__wedge__point(other, line__bulk_contraction__point(self, other));
+    return point__wedge__point(other, line__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 Line line__anti_project_via_horizon_onto__point_at_infinity(Line self, PointAtInfinity other) {
-    return point_at_infinity__wedge__point(other, line__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__point(other, line__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Motor line__anti_project_via_horizon_onto__transflector(Line self, Transflector other) {
-    return transflector__wedge__point(other, line__bulk_contraction__transflector(self, other));
+    return transflector__wedge__point(other, line__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Translator line__anti_project_via_horizon_onto__translator(Line self, Translator other) {
-    return translator__wedge__scalar(other, line__bulk_contraction__translator(self, other));
+    return translator__wedge__scalar(other, line__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Motor line_at_infinity__anti_project_via_horizon_onto__flector(LineAtInfinity self, Flector other) {
-    return flector__wedge__point_at_infinity(other, line_at_infinity__bulk_contraction__flector(self, other));
+    return flector__wedge__point_at_infinity(other, line_at_infinity__anti_wedge__flector(self, flector__dual(other)));
 }
 
 LineAtInfinity line_at_infinity__anti_project_via_horizon_onto__flector_at_infinity(LineAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__point_at_infinity(other, line_at_infinity__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__point_at_infinity(other, line_at_infinity__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Line line_at_infinity__anti_project_via_horizon_onto__line(LineAtInfinity self, Line other) {
-    return line__wedge__scalar(other, line_at_infinity__bulk_contraction__line(self, other));
+    return line__wedge__scalar(other, line_at_infinity__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 LineAtInfinity line_at_infinity__anti_project_via_horizon_onto__line_at_infinity(LineAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__wedge__scalar(other, line_at_infinity__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__scalar(other, line_at_infinity__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Motor line_at_infinity__anti_project_via_horizon_onto__motor(LineAtInfinity self, Motor other) {
-    return motor__wedge__scalar(other, line_at_infinity__bulk_contraction__motor(self, other));
+    return motor__wedge__scalar(other, line_at_infinity__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector line_at_infinity__anti_project_via_horizon_onto__multi_vector(LineAtInfinity self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, line_at_infinity__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, line_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__anti_project_via_horizon_onto__multi_vector_at_infinity(LineAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, line_at_infinity__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, line_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Line line_at_infinity__anti_project_via_horizon_onto__point(LineAtInfinity self, Point other) {
-    return point__wedge__point_at_infinity(other, line_at_infinity__bulk_contraction__point(self, other));
+    return point__wedge__point_at_infinity(other, line_at_infinity__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 LineAtInfinity line_at_infinity__anti_project_via_horizon_onto__point_at_infinity(LineAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__wedge__point_at_infinity(other, line_at_infinity__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__point_at_infinity(other, line_at_infinity__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Translator line_at_infinity__anti_project_via_horizon_onto__transflector(LineAtInfinity self, Transflector other) {
-    return transflector__wedge__point_at_infinity(other, line_at_infinity__bulk_contraction__transflector(self, other));
+    return transflector__wedge__point_at_infinity(other, line_at_infinity__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Translator line_at_infinity__anti_project_via_horizon_onto__translator(LineAtInfinity self, Translator other) {
-    return translator__wedge__scalar(other, line_at_infinity__bulk_contraction__translator(self, other));
+    return translator__wedge__scalar(other, line_at_infinity__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Motor line_at_origin__anti_project_via_horizon_onto__flector(LineAtOrigin self, Flector other) {
-    return flector__wedge__point(other, line_at_origin__bulk_contraction__flector(self, other));
+    return flector__wedge__point(other, line_at_origin__anti_wedge__flector(self, flector__dual(other)));
 }
 
 Motor line_at_origin__anti_project_via_horizon_onto__flector_at_infinity(LineAtOrigin self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__point(other, line_at_origin__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__point(other, line_at_origin__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVectorAtOrigin line_at_origin__anti_project_via_horizon_onto__multi_vector(LineAtOrigin self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_origin(other, line_at_origin__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_origin(other, line_at_origin__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtOrigin line_at_origin__anti_project_via_horizon_onto__multi_vector_at_infinity(LineAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, line_at_origin__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, line_at_origin__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 LineAtOrigin line_at_origin__anti_project_via_horizon_onto__point(LineAtOrigin self, Point other) {
-    return point__wedge__origin(other, line_at_origin__bulk_contraction__point(self, other));
+    return point__wedge__origin(other, line_at_origin__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 LineAtOrigin line_at_origin__anti_project_via_horizon_onto__point_at_infinity(LineAtOrigin self, PointAtInfinity other) {
-    return point_at_infinity__wedge__origin(other, line_at_origin__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__origin(other, line_at_origin__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Motor line_at_origin__anti_project_via_horizon_onto__transflector(LineAtOrigin self, Transflector other) {
-    return transflector__wedge__point(other, line_at_origin__bulk_contraction__transflector(self, other));
+    return transflector__wedge__point(other, line_at_origin__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Motor motor__anti_project_via_horizon_onto__flector(Motor self, Flector other) {
-    return flector__wedge__flector(other, motor__bulk_contraction__flector(self, other));
+    return flector__wedge__flector(other, motor__anti_wedge__flector(self, flector__dual(other)));
 }
 
 Motor motor__anti_project_via_horizon_onto__flector_at_infinity(Motor self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__flector(other, motor__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__flector(other, motor__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 AntiScalar motor__anti_project_via_horizon_onto__horizon(Motor self, Horizon other) {
-    return horizon__wedge__origin(other, motor__bulk_contraction__horizon(self, other));
+    return horizon__wedge__origin(other, motor__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__line(Motor self, Line other) {
-    return line__wedge__multi_vector(other, motor__bulk_contraction__line(self, other));
+    return line__wedge__multi_vector(other, motor__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__line_at_infinity(Motor self, LineAtInfinity other) {
-    return line_at_infinity__wedge__multi_vector(other, motor__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__multi_vector(other, motor__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__motor(Motor self, Motor other) {
-    return motor__wedge__multi_vector(other, motor__bulk_contraction__motor(self, other));
+    return motor__wedge__multi_vector(other, motor__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, motor__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, motor__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__multi_vector_at_infinity(Motor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, motor__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, motor__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 AntiScalar motor__anti_project_via_horizon_onto__plane(Motor self, Plane other) {
-    return plane__wedge__origin(other, motor__bulk_contraction__plane(self, other));
+    return plane__wedge__origin(other, motor__anti_wedge__origin(self, plane__dual(other)));
 }
 
 Motor motor__anti_project_via_horizon_onto__point(Motor self, Point other) {
-    return point__wedge__flector(other, motor__bulk_contraction__point(self, other));
+    return point__wedge__flector(other, motor__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 Motor motor__anti_project_via_horizon_onto__point_at_infinity(Motor self, PointAtInfinity other) {
-    return point_at_infinity__wedge__flector(other, motor__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__flector(other, motor__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Motor motor__anti_project_via_horizon_onto__transflector(Motor self, Transflector other) {
-    return transflector__wedge__flector(other, motor__bulk_contraction__transflector(self, other));
+    return transflector__wedge__flector(other, motor__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__translator(Motor self, Translator other) {
-    return translator__wedge__multi_vector(other, motor__bulk_contraction__translator(self, other));
+    return translator__wedge__multi_vector(other, motor__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__flector(MultiVector self, Flector other) {
-    return flector__wedge__multi_vector(other, multi_vector__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector(other, multi_vector__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector(other, multi_vector__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector(other, multi_vector__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__horizon(MultiVector self, Horizon other) {
-    return horizon__wedge__multi_vector(other, multi_vector__bulk_contraction__horizon(self, other));
+    return horizon__wedge__multi_vector(other, multi_vector__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__line(MultiVector self, Line other) {
-    return line__wedge__multi_vector(other, multi_vector__bulk_contraction__line(self, other));
+    return line__wedge__multi_vector(other, multi_vector__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__line_at_infinity(MultiVector self, LineAtInfinity other) {
-    return line_at_infinity__wedge__multi_vector(other, multi_vector__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__multi_vector(other, multi_vector__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__motor(MultiVector self, Motor other) {
-    return motor__wedge__multi_vector(other, multi_vector__bulk_contraction__motor(self, other));
+    return motor__wedge__multi_vector(other, multi_vector__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, multi_vector__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__multi_vector_at_infinity(MultiVector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, multi_vector__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__plane(MultiVector self, Plane other) {
-    return plane__wedge__multi_vector(other, multi_vector__bulk_contraction__plane(self, other));
+    return plane__wedge__multi_vector(other, multi_vector__anti_wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__point(MultiVector self, Point other) {
-    return point__wedge__multi_vector(other, multi_vector__bulk_contraction__point(self, other));
+    return point__wedge__multi_vector(other, multi_vector__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__point_at_infinity(MultiVector self, PointAtInfinity other) {
-    return point_at_infinity__wedge__multi_vector(other, multi_vector__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__multi_vector(other, multi_vector__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, multi_vector__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector(other, multi_vector__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__translator(MultiVector self, Translator other) {
-    return translator__wedge__multi_vector(other, multi_vector__bulk_contraction__translator(self, other));
+    return translator__wedge__multi_vector(other, multi_vector__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__flector(MultiVectorAtInfinity self, Flector other) {
-    return flector__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_project_via_horizon_onto__flector_at_infinity(MultiVectorAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon multi_vector_at_infinity__anti_project_via_horizon_onto__horizon(MultiVectorAtInfinity self, Horizon other) {
-    return horizon__wedge__scalar(other, multi_vector_at_infinity__bulk_contraction__horizon(self, other));
+    return horizon__wedge__scalar(other, multi_vector_at_infinity__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__line(MultiVectorAtInfinity self, Line other) {
-    return line__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__line(self, other));
+    return line__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_project_via_horizon_onto__line_at_infinity(MultiVectorAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__motor(MultiVectorAtInfinity self, Motor other) {
-    return motor__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_project_via_horizon_onto__multi_vector_at_infinity(MultiVectorAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane multi_vector_at_infinity__anti_project_via_horizon_onto__plane(MultiVectorAtInfinity self, Plane other) {
-    return plane__wedge__scalar(other, multi_vector_at_infinity__bulk_contraction__plane(self, other));
+    return plane__wedge__scalar(other, multi_vector_at_infinity__anti_wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__point(MultiVectorAtInfinity self, Point other) {
-    return point__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__point(self, other));
+    return point__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_project_via_horizon_onto__point_at_infinity(MultiVectorAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__transflector(MultiVectorAtInfinity self, Transflector other) {
-    return transflector__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__anti_project_via_horizon_onto__translator(MultiVectorAtInfinity self, Translator other) {
-    return translator__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__bulk_contraction__translator(self, other));
+    return translator__wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_via_horizon_onto__flector(MultiVectorAtOrigin self, Flector other) {
-    return flector__wedge__multi_vector(other, multi_vector_at_origin__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector(other, multi_vector_at_origin__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_via_horizon_onto__flector_at_infinity(MultiVectorAtOrigin self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector(other, multi_vector_at_origin__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector(other, multi_vector_at_origin__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 AntiScalar multi_vector_at_origin__anti_project_via_horizon_onto__horizon(MultiVectorAtOrigin self, Horizon other) {
-    return horizon__wedge__origin(other, multi_vector_at_origin__bulk_contraction__horizon(self, other));
+    return horizon__wedge__origin(other, multi_vector_at_origin__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__line(MultiVectorAtOrigin self, Line other) {
-    return line__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__line(self, other));
+    return line__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__line_at_infinity(MultiVectorAtOrigin self, LineAtInfinity other) {
-    return line_at_infinity__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__motor(MultiVectorAtOrigin self, Motor other) {
-    return motor__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__motor(self, other));
+    return motor__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__multi_vector_at_infinity(MultiVectorAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 AntiScalar multi_vector_at_origin__anti_project_via_horizon_onto__plane(MultiVectorAtOrigin self, Plane other) {
-    return plane__wedge__origin(other, multi_vector_at_origin__bulk_contraction__plane(self, other));
+    return plane__wedge__origin(other, multi_vector_at_origin__anti_wedge__origin(self, plane__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__point(MultiVectorAtOrigin self, Point other) {
-    return point__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__point(self, other));
+    return point__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__point_at_infinity(MultiVectorAtOrigin self, PointAtInfinity other) {
-    return point_at_infinity__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_origin__anti_project_via_horizon_onto__transflector(MultiVectorAtOrigin self, Transflector other) {
-    return transflector__wedge__multi_vector(other, multi_vector_at_origin__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector(other, multi_vector_at_origin__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_project_via_horizon_onto__translator(MultiVectorAtOrigin self, Translator other) {
-    return translator__wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_contraction__translator(self, other));
+    return translator__wedge__multi_vector_at_origin(other, multi_vector_at_origin__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Flector origin__anti_project_via_horizon_onto__flector(Origin self, Flector other) {
-    return flector__wedge__scalar(other, origin__bulk_contraction__flector(self, other));
+    return flector__wedge__scalar(other, origin__anti_wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity origin__anti_project_via_horizon_onto__flector_at_infinity(Origin self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__scalar(other, origin__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__scalar(other, origin__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVectorAtOrigin origin__anti_project_via_horizon_onto__multi_vector(Origin self, MultiVector other) {
-    return multi_vector__wedge__origin(other, origin__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__origin(other, origin__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtOrigin origin__anti_project_via_horizon_onto__multi_vector_at_infinity(Origin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__origin(other, origin__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__origin(other, origin__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Transflector origin__anti_project_via_horizon_onto__transflector(Origin self, Transflector other) {
-    return transflector__wedge__scalar(other, origin__bulk_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, origin__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector plane__anti_project_via_horizon_onto__flector(Plane self, Flector other) {
-    return flector__wedge__multi_vector(other, plane__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector(other, plane__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVector plane__anti_project_via_horizon_onto__flector_at_infinity(Plane self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector(other, plane__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector(other, plane__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon plane__anti_project_via_horizon_onto__horizon(Plane self, Horizon other) {
-    return horizon__wedge__scalar(other, plane__bulk_contraction__horizon(self, other));
+    return horizon__wedge__scalar(other, plane__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__line(Plane self, Line other) {
-    return line__wedge__point(other, plane__bulk_contraction__line(self, other));
+    return line__wedge__point(other, plane__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__line_at_infinity(Plane self, LineAtInfinity other) {
-    return line_at_infinity__wedge__point(other, plane__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__point(other, plane__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__motor(Plane self, Motor other) {
-    return motor__wedge__point(other, plane__bulk_contraction__motor(self, other));
+    return motor__wedge__point(other, plane__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector plane__anti_project_via_horizon_onto__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, plane__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, plane__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector plane__anti_project_via_horizon_onto__multi_vector_at_infinity(Plane self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, plane__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, plane__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__plane(Plane self, Plane other) {
-    return plane__wedge__scalar(other, plane__bulk_contraction__plane(self, other));
+    return plane__wedge__scalar(other, plane__anti_wedge__origin(self, plane__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__point(Plane self, Point other) {
-    return point__wedge__line(other, plane__bulk_contraction__point(self, other));
+    return point__wedge__line(other, plane__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__point_at_infinity(Plane self, PointAtInfinity other) {
-    return point_at_infinity__wedge__line(other, plane__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__line(other, plane__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector plane__anti_project_via_horizon_onto__transflector(Plane self, Transflector other) {
-    return transflector__wedge__multi_vector(other, plane__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector(other, plane__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Plane plane__anti_project_via_horizon_onto__translator(Plane self, Translator other) {
-    return translator__wedge__point(other, plane__bulk_contraction__translator(self, other));
+    return translator__wedge__point(other, plane__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector plane_at_origin__anti_project_via_horizon_onto__flector(PlaneAtOrigin self, Flector other) {
-    return flector__wedge__multi_vector(other, plane_at_origin__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector(other, plane_at_origin__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVector plane_at_origin__anti_project_via_horizon_onto__flector_at_infinity(PlaneAtOrigin self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector(other, plane_at_origin__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector(other, plane_at_origin__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_via_horizon_onto__line(PlaneAtOrigin self, Line other) {
-    return line__wedge__origin(other, plane_at_origin__bulk_contraction__line(self, other));
+    return line__wedge__origin(other, plane_at_origin__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_via_horizon_onto__line_at_infinity(PlaneAtOrigin self, LineAtInfinity other) {
-    return line_at_infinity__wedge__origin(other, plane_at_origin__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__origin(other, plane_at_origin__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_via_horizon_onto__motor(PlaneAtOrigin self, Motor other) {
-    return motor__wedge__origin(other, plane_at_origin__bulk_contraction__motor(self, other));
+    return motor__wedge__origin(other, plane_at_origin__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVectorAtOrigin plane_at_origin__anti_project_via_horizon_onto__multi_vector(PlaneAtOrigin self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_origin(other, plane_at_origin__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_origin(other, plane_at_origin__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtOrigin plane_at_origin__anti_project_via_horizon_onto__multi_vector_at_infinity(PlaneAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, plane_at_origin__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, plane_at_origin__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_via_horizon_onto__point(PlaneAtOrigin self, Point other) {
-    return point__wedge__line_at_origin(other, plane_at_origin__bulk_contraction__point(self, other));
+    return point__wedge__line_at_origin(other, plane_at_origin__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_via_horizon_onto__point_at_infinity(PlaneAtOrigin self, PointAtInfinity other) {
-    return point_at_infinity__wedge__line_at_origin(other, plane_at_origin__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__line_at_origin(other, plane_at_origin__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector plane_at_origin__anti_project_via_horizon_onto__transflector(PlaneAtOrigin self, Transflector other) {
-    return transflector__wedge__multi_vector(other, plane_at_origin__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector(other, plane_at_origin__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__anti_project_via_horizon_onto__translator(PlaneAtOrigin self, Translator other) {
-    return translator__wedge__origin(other, plane_at_origin__bulk_contraction__translator(self, other));
+    return translator__wedge__origin(other, plane_at_origin__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Flector point__anti_project_via_horizon_onto__flector(Point self, Flector other) {
-    return flector__wedge__scalar(other, point__bulk_contraction__flector(self, other));
+    return flector__wedge__scalar(other, point__anti_wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity point__anti_project_via_horizon_onto__flector_at_infinity(Point self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__scalar(other, point__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__scalar(other, point__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVector point__anti_project_via_horizon_onto__multi_vector(Point self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, point__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, point__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector point__anti_project_via_horizon_onto__multi_vector_at_infinity(Point self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, point__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, point__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Point point__anti_project_via_horizon_onto__point(Point self, Point other) {
-    return point__wedge__scalar(other, point__bulk_contraction__point(self, other));
+    return point__wedge__scalar(other, point__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity point__anti_project_via_horizon_onto__point_at_infinity(Point self, PointAtInfinity other) {
-    return point_at_infinity__wedge__scalar(other, point__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__scalar(other, point__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Transflector point__anti_project_via_horizon_onto__transflector(Point self, Transflector other) {
-    return transflector__wedge__scalar(other, point__bulk_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, point__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Flector point_at_infinity__anti_project_via_horizon_onto__flector(PointAtInfinity self, Flector other) {
-    return flector__wedge__scalar(other, point_at_infinity__bulk_contraction__flector(self, other));
+    return flector__wedge__scalar(other, point_at_infinity__anti_wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity point_at_infinity__anti_project_via_horizon_onto__flector_at_infinity(PointAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__scalar(other, point_at_infinity__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__scalar(other, point_at_infinity__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVector point_at_infinity__anti_project_via_horizon_onto__multi_vector(PointAtInfinity self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_infinity(other, point_at_infinity__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_infinity(other, point_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity point_at_infinity__anti_project_via_horizon_onto__multi_vector_at_infinity(PointAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, point_at_infinity__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(other, point_at_infinity__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Point point_at_infinity__anti_project_via_horizon_onto__point(PointAtInfinity self, Point other) {
-    return point__wedge__scalar(other, point_at_infinity__bulk_contraction__point(self, other));
+    return point__wedge__scalar(other, point_at_infinity__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity point_at_infinity__anti_project_via_horizon_onto__point_at_infinity(PointAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__wedge__scalar(other, point_at_infinity__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__scalar(other, point_at_infinity__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Transflector point_at_infinity__anti_project_via_horizon_onto__transflector(PointAtInfinity self, Transflector other) {
-    return transflector__wedge__scalar(other, point_at_infinity__bulk_contraction__transflector(self, other));
+    return transflector__wedge__scalar(other, point_at_infinity__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Motor rotor__anti_project_via_horizon_onto__flector(Rotor self, Flector other) {
-    return flector__wedge__flector(other, rotor__bulk_contraction__flector(self, other));
+    return flector__wedge__flector(other, rotor__anti_wedge__flector(self, flector__dual(other)));
 }
 
 Motor rotor__anti_project_via_horizon_onto__flector_at_infinity(Rotor self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__flector(other, rotor__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__flector(other, rotor__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 AntiScalar rotor__anti_project_via_horizon_onto__horizon(Rotor self, Horizon other) {
-    return horizon__wedge__origin(other, rotor__bulk_contraction__horizon(self, other));
+    return horizon__wedge__origin(other, rotor__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 AntiScalar rotor__anti_project_via_horizon_onto__line(Rotor self, Line other) {
-    return line__wedge__line_at_origin(other, rotor__bulk_contraction__line(self, other));
+    return line__wedge__line_at_origin(other, rotor__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 AntiScalar rotor__anti_project_via_horizon_onto__line_at_infinity(Rotor self, LineAtInfinity other) {
-    return line_at_infinity__wedge__line_at_origin(other, rotor__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__line_at_origin(other, rotor__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 AntiScalar rotor__anti_project_via_horizon_onto__motor(Rotor self, Motor other) {
-    return motor__wedge__line_at_origin(other, rotor__bulk_contraction__motor(self, other));
+    return motor__wedge__line_at_origin(other, rotor__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVectorAtOrigin rotor__anti_project_via_horizon_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector_at_origin(other, rotor__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector_at_origin(other, rotor__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtOrigin rotor__anti_project_via_horizon_onto__multi_vector_at_infinity(Rotor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, rotor__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(other, rotor__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 AntiScalar rotor__anti_project_via_horizon_onto__plane(Rotor self, Plane other) {
-    return plane__wedge__origin(other, rotor__bulk_contraction__plane(self, other));
+    return plane__wedge__origin(other, rotor__anti_wedge__origin(self, plane__dual(other)));
 }
 
 Motor rotor__anti_project_via_horizon_onto__point(Rotor self, Point other) {
-    return point__wedge__flector(other, rotor__bulk_contraction__point(self, other));
+    return point__wedge__flector(other, rotor__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 Motor rotor__anti_project_via_horizon_onto__point_at_infinity(Rotor self, PointAtInfinity other) {
-    return point_at_infinity__wedge__flector(other, rotor__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__flector(other, rotor__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Motor rotor__anti_project_via_horizon_onto__transflector(Rotor self, Transflector other) {
-    return transflector__wedge__flector(other, rotor__bulk_contraction__transflector(self, other));
+    return transflector__wedge__flector(other, rotor__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 AntiScalar rotor__anti_project_via_horizon_onto__translator(Rotor self, Translator other) {
-    return translator__wedge__line_at_origin(other, rotor__bulk_contraction__translator(self, other));
+    return translator__wedge__line_at_origin(other, rotor__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__flector(Transflector self, Flector other) {
-    return flector__wedge__multi_vector(other, transflector__bulk_contraction__flector(self, other));
+    return flector__wedge__multi_vector(other, transflector__anti_wedge__flector(self, flector__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__flector_at_infinity(Transflector self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__multi_vector(other, transflector__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__multi_vector(other, transflector__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon transflector__anti_project_via_horizon_onto__horizon(Transflector self, Horizon other) {
-    return horizon__wedge__scalar(other, transflector__bulk_contraction__horizon(self, other));
+    return horizon__wedge__scalar(other, transflector__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 Plane transflector__anti_project_via_horizon_onto__line(Transflector self, Line other) {
-    return line__wedge__point(other, transflector__bulk_contraction__line(self, other));
+    return line__wedge__point(other, transflector__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 Plane transflector__anti_project_via_horizon_onto__line_at_infinity(Transflector self, LineAtInfinity other) {
-    return line_at_infinity__wedge__point(other, transflector__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__point(other, transflector__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Plane transflector__anti_project_via_horizon_onto__motor(Transflector self, Motor other) {
-    return motor__wedge__point(other, transflector__bulk_contraction__motor(self, other));
+    return motor__wedge__point(other, transflector__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, transflector__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, transflector__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, transflector__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane transflector__anti_project_via_horizon_onto__plane(Transflector self, Plane other) {
-    return plane__wedge__scalar(other, transflector__bulk_contraction__plane(self, other));
+    return plane__wedge__scalar(other, transflector__anti_wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__point(Transflector self, Point other) {
-    return point__wedge__multi_vector(other, transflector__bulk_contraction__point(self, other));
+    return point__wedge__multi_vector(other, transflector__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__point_at_infinity(Transflector self, PointAtInfinity other) {
-    return point_at_infinity__wedge__multi_vector(other, transflector__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__multi_vector(other, transflector__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector transflector__anti_project_via_horizon_onto__transflector(Transflector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, transflector__bulk_contraction__transflector(self, other));
+    return transflector__wedge__multi_vector(other, transflector__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 Plane transflector__anti_project_via_horizon_onto__translator(Transflector self, Translator other) {
-    return translator__wedge__point(other, transflector__bulk_contraction__translator(self, other));
+    return translator__wedge__point(other, transflector__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Motor translator__anti_project_via_horizon_onto__flector(Translator self, Flector other) {
-    return flector__wedge__flector(other, translator__bulk_contraction__flector(self, other));
+    return flector__wedge__flector(other, translator__anti_wedge__flector(self, flector__dual(other)));
 }
 
 Motor translator__anti_project_via_horizon_onto__flector_at_infinity(Translator self, FlectorAtInfinity other) {
-    return flector_at_infinity__wedge__flector(other, translator__bulk_contraction__flector_at_infinity(self, other));
+    return flector_at_infinity__wedge__flector(other, translator__anti_wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 AntiScalar translator__anti_project_via_horizon_onto__horizon(Translator self, Horizon other) {
-    return horizon__wedge__origin(other, translator__bulk_contraction__horizon(self, other));
+    return horizon__wedge__origin(other, translator__anti_wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector translator__anti_project_via_horizon_onto__line(Translator self, Line other) {
-    return line__wedge__multi_vector(other, translator__bulk_contraction__line(self, other));
+    return line__wedge__multi_vector(other, translator__anti_wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVector translator__anti_project_via_horizon_onto__line_at_infinity(Translator self, LineAtInfinity other) {
-    return line_at_infinity__wedge__multi_vector(other, translator__bulk_contraction__line_at_infinity(self, other));
+    return line_at_infinity__wedge__multi_vector(other, translator__anti_wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVector translator__anti_project_via_horizon_onto__motor(Translator self, Motor other) {
-    return motor__wedge__multi_vector(other, translator__bulk_contraction__motor(self, other));
+    return motor__wedge__multi_vector(other, translator__anti_wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector translator__anti_project_via_horizon_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, translator__bulk_contraction__multi_vector(self, other));
+    return multi_vector__wedge__multi_vector(other, translator__anti_wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVector translator__anti_project_via_horizon_onto__multi_vector_at_infinity(Translator self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__wedge__multi_vector(other, translator__bulk_contraction__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__wedge__multi_vector(other, translator__anti_wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 AntiScalar translator__anti_project_via_horizon_onto__plane(Translator self, Plane other) {
-    return plane__wedge__origin(other, translator__bulk_contraction__plane(self, other));
+    return plane__wedge__origin(other, translator__anti_wedge__origin(self, plane__dual(other)));
 }
 
 Motor translator__anti_project_via_horizon_onto__point(Translator self, Point other) {
-    return point__wedge__transflector(other, translator__bulk_contraction__point(self, other));
+    return point__wedge__transflector(other, translator__anti_wedge__plane_at_origin(self, point__dual(other)));
 }
 
 Translator translator__anti_project_via_horizon_onto__point_at_infinity(Translator self, PointAtInfinity other) {
-    return point_at_infinity__wedge__transflector(other, translator__bulk_contraction__point_at_infinity(self, other));
+    return point_at_infinity__wedge__transflector(other, translator__anti_wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Motor translator__anti_project_via_horizon_onto__transflector(Translator self, Transflector other) {
-    return transflector__wedge__flector(other, translator__bulk_contraction__transflector(self, other));
+    return transflector__wedge__flector(other, translator__anti_wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector translator__anti_project_via_horizon_onto__translator(Translator self, Translator other) {
-    return translator__wedge__multi_vector(other, translator__bulk_contraction__translator(self, other));
+    return translator__wedge__multi_vector(other, translator__anti_wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Flector flector__project_orthogonally_onto__flector(Flector self, Flector other) {
-    return flector__anti_wedge__motor(other, flector__weight_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, flector__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Point flector__project_orthogonally_onto__line(Flector self, Line other) {
-    return line__anti_wedge__plane(other, flector__weight_expansion__line(self, other));
+    return line__anti_wedge__plane(other, flector__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 Point flector__project_orthogonally_onto__line_at_origin(Flector self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__plane(other, flector__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__plane(other, flector__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector flector__project_orthogonally_onto__motor(Flector self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, flector__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, flector__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector flector__project_orthogonally_onto__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, flector__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, flector__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector flector__project_orthogonally_onto__multi_vector_at_origin(Flector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, flector__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, flector__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Origin flector__project_orthogonally_onto__origin(Flector self, Origin other) {
-    return origin__anti_wedge__anti_scalar(other, flector__weight_expansion__origin(self, other));
+    return origin__anti_wedge__anti_scalar(other, flector__wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Flector flector__project_orthogonally_onto__plane(Flector self, Plane other) {
-    return plane__anti_wedge__motor(other, flector__weight_expansion__plane(self, other));
+    return plane__anti_wedge__motor(other, flector__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 Flector flector__project_orthogonally_onto__plane_at_origin(Flector self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__motor(other, flector__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__motor(other, flector__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Point flector__project_orthogonally_onto__point(Flector self, Point other) {
-    return point__anti_wedge__anti_scalar(other, flector__weight_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, flector__wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVector flector__project_orthogonally_onto__rotor(Flector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, flector__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, flector__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Flector flector__project_orthogonally_onto__transflector(Flector self, Transflector other) {
-    return transflector__anti_wedge__motor(other, flector__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__motor(other, flector__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_orthogonally_onto__flector(FlectorAtInfinity self, Flector other) {
-    return flector__anti_wedge__line_at_infinity(other, flector_at_infinity__weight_expansion__flector(self, other));
+    return flector__anti_wedge__line_at_infinity(other, flector_at_infinity__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_orthogonally_onto__line(FlectorAtInfinity self, Line other) {
-    return line__anti_wedge__horizon(other, flector_at_infinity__weight_expansion__line(self, other));
+    return line__anti_wedge__horizon(other, flector_at_infinity__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_orthogonally_onto__line_at_origin(FlectorAtInfinity self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__horizon(other, flector_at_infinity__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__horizon(other, flector_at_infinity__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__project_orthogonally_onto__motor(FlectorAtInfinity self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__project_orthogonally_onto__multi_vector(FlectorAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__project_orthogonally_onto__multi_vector_at_origin(FlectorAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_orthogonally_onto__plane(FlectorAtInfinity self, Plane other) {
-    return plane__anti_wedge__line_at_infinity(other, flector_at_infinity__weight_expansion__plane(self, other));
+    return plane__anti_wedge__line_at_infinity(other, flector_at_infinity__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_orthogonally_onto__plane_at_origin(FlectorAtInfinity self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__line_at_infinity(other, flector_at_infinity__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__line_at_infinity(other, flector_at_infinity__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__project_orthogonally_onto__rotor(FlectorAtInfinity self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_infinity(other, flector_at_infinity__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_orthogonally_onto__transflector(FlectorAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__line_at_infinity(other, flector_at_infinity__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__line_at_infinity(other, flector_at_infinity__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 FlectorAtInfinity horizon__project_orthogonally_onto__motor(Horizon self, Motor other) {
-    return motor__anti_wedge__horizon(other, horizon__weight_expansion__motor(self, other));
+    return motor__anti_wedge__horizon(other, horizon__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVectorAtInfinity horizon__project_orthogonally_onto__multi_vector(Horizon self, MultiVector other) {
-    return multi_vector__anti_wedge__horizon(other, horizon__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__horizon(other, horizon__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity horizon__project_orthogonally_onto__multi_vector_at_origin(Horizon self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__horizon(other, horizon__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__horizon(other, horizon__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 FlectorAtInfinity horizon__project_orthogonally_onto__rotor(Horizon self, Rotor other) {
-    return rotor__anti_wedge__horizon(other, horizon__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__horizon(other, horizon__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector line__project_orthogonally_onto__flector(Line self, Flector other) {
-    return flector__anti_wedge__plane(other, line__weight_expansion__flector(self, other));
+    return flector__anti_wedge__plane(other, line__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Line line__project_orthogonally_onto__line(Line self, Line other) {
-    return line__anti_wedge__anti_scalar(other, line__weight_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, line__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 LineAtOrigin line__project_orthogonally_onto__line_at_origin(Line self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__anti_scalar(other, line__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__anti_scalar(other, line__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector line__project_orthogonally_onto__motor(Line self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, line__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, line__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector line__project_orthogonally_onto__multi_vector(Line self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, line__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, line__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector line__project_orthogonally_onto__multi_vector_at_origin(Line self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, line__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, line__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Line line__project_orthogonally_onto__plane(Line self, Plane other) {
-    return plane__anti_wedge__plane(other, line__weight_expansion__plane(self, other));
+    return plane__anti_wedge__plane(other, line__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 Line line__project_orthogonally_onto__plane_at_origin(Line self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__plane(other, line__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__plane(other, line__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector line__project_orthogonally_onto__rotor(Line self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, line__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, line__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector line__project_orthogonally_onto__transflector(Line self, Transflector other) {
-    return transflector__anti_wedge__plane(other, line__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane(other, line__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_orthogonally_onto__flector(LineAtInfinity self, Flector other) {
-    return flector__anti_wedge__horizon(other, line_at_infinity__weight_expansion__flector(self, other));
+    return flector__anti_wedge__horizon(other, line_at_infinity__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_orthogonally_onto__motor(LineAtInfinity self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_orthogonally_onto__multi_vector(LineAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_orthogonally_onto__multi_vector_at_origin(LineAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 LineAtInfinity line_at_infinity__project_orthogonally_onto__plane(LineAtInfinity self, Plane other) {
-    return plane__anti_wedge__horizon(other, line_at_infinity__weight_expansion__plane(self, other));
+    return plane__anti_wedge__horizon(other, line_at_infinity__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 LineAtInfinity line_at_infinity__project_orthogonally_onto__plane_at_origin(LineAtInfinity self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__horizon(other, line_at_infinity__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__horizon(other, line_at_infinity__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_orthogonally_onto__rotor(LineAtInfinity self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_infinity(other, line_at_infinity__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 LineAtInfinity line_at_infinity__project_orthogonally_onto__transflector(LineAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__horizon(other, line_at_infinity__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__horizon(other, line_at_infinity__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector line_at_origin__project_orthogonally_onto__flector(LineAtOrigin self, Flector other) {
-    return flector__anti_wedge__plane_at_origin(other, line_at_origin__weight_expansion__flector(self, other));
+    return flector__anti_wedge__plane_at_origin(other, line_at_origin__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Line line_at_origin__project_orthogonally_onto__line(LineAtOrigin self, Line other) {
-    return line__anti_wedge__anti_scalar(other, line_at_origin__weight_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, line_at_origin__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 LineAtOrigin line_at_origin__project_orthogonally_onto__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__anti_scalar(other, line_at_origin__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__anti_scalar(other, line_at_origin__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector line_at_origin__project_orthogonally_onto__motor(LineAtOrigin self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, line_at_origin__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, line_at_origin__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector line_at_origin__project_orthogonally_onto__multi_vector(LineAtOrigin self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, line_at_origin__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, line_at_origin__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin line_at_origin__project_orthogonally_onto__multi_vector_at_origin(LineAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, line_at_origin__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, line_at_origin__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Line line_at_origin__project_orthogonally_onto__plane(LineAtOrigin self, Plane other) {
-    return plane__anti_wedge__plane_at_origin(other, line_at_origin__weight_expansion__plane(self, other));
+    return plane__anti_wedge__plane_at_origin(other, line_at_origin__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 LineAtOrigin line_at_origin__project_orthogonally_onto__plane_at_origin(LineAtOrigin self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__plane_at_origin(other, line_at_origin__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__plane_at_origin(other, line_at_origin__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtOrigin line_at_origin__project_orthogonally_onto__rotor(LineAtOrigin self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_origin(other, line_at_origin__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_origin(other, line_at_origin__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector line_at_origin__project_orthogonally_onto__transflector(LineAtOrigin self, Transflector other) {
-    return transflector__anti_wedge__plane_at_origin(other, line_at_origin__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane_at_origin(other, line_at_origin__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector motor__project_orthogonally_onto__flector(Motor self, Flector other) {
-    return flector__anti_wedge__plane(other, motor__weight_expansion__flector(self, other));
+    return flector__anti_wedge__plane(other, motor__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Line motor__project_orthogonally_onto__line(Motor self, Line other) {
-    return line__anti_wedge__anti_scalar(other, motor__weight_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, motor__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 LineAtOrigin motor__project_orthogonally_onto__line_at_origin(Motor self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__anti_scalar(other, motor__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__anti_scalar(other, motor__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector motor__project_orthogonally_onto__motor(Motor self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, motor__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, motor__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector motor__project_orthogonally_onto__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, motor__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, motor__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector motor__project_orthogonally_onto__multi_vector_at_origin(Motor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, motor__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, motor__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Line motor__project_orthogonally_onto__plane(Motor self, Plane other) {
-    return plane__anti_wedge__plane(other, motor__weight_expansion__plane(self, other));
+    return plane__anti_wedge__plane(other, motor__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 Line motor__project_orthogonally_onto__plane_at_origin(Motor self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__plane(other, motor__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__plane(other, motor__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector motor__project_orthogonally_onto__rotor(Motor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, motor__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, motor__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector motor__project_orthogonally_onto__transflector(Motor self, Transflector other) {
-    return transflector__anti_wedge__plane(other, motor__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane(other, motor__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__flector(MultiVector self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, multi_vector__weight_expansion__flector(self, other));
+    return flector__anti_wedge__multi_vector(other, multi_vector__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__line(MultiVector self, Line other) {
-    return line__anti_wedge__multi_vector(other, multi_vector__weight_expansion__line(self, other));
+    return line__anti_wedge__multi_vector(other, multi_vector__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__line_at_origin(MultiVector self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__multi_vector(other, multi_vector__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__multi_vector(other, multi_vector__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__motor(MultiVector self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, multi_vector__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, multi_vector__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__multi_vector_at_origin(MultiVector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, multi_vector__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__origin(MultiVector self, Origin other) {
-    return origin__anti_wedge__multi_vector(other, multi_vector__weight_expansion__origin(self, other));
+    return origin__anti_wedge__multi_vector(other, multi_vector__wedge__horizon(self, origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__plane(MultiVector self, Plane other) {
-    return plane__anti_wedge__multi_vector(other, multi_vector__weight_expansion__plane(self, other));
+    return plane__anti_wedge__multi_vector(other, multi_vector__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__plane_at_origin(MultiVector self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__multi_vector(other, multi_vector__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__multi_vector(other, multi_vector__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__point(MultiVector self, Point other) {
-    return point__anti_wedge__multi_vector(other, multi_vector__weight_expansion__point(self, other));
+    return point__anti_wedge__multi_vector(other, multi_vector__wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__rotor(MultiVector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, multi_vector__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, multi_vector__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__multi_vector(other, multi_vector__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__flector(MultiVectorAtInfinity self, Flector other) {
-    return flector__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__flector(self, other));
+    return flector__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__line(MultiVectorAtInfinity self, Line other) {
-    return line__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__line(self, other));
+    return line__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__line_at_origin(MultiVectorAtInfinity self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__motor(MultiVectorAtInfinity self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__multi_vector_at_origin(MultiVectorAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Scalar multi_vector_at_infinity__project_orthogonally_onto__origin(MultiVectorAtInfinity self, Origin other) {
-    return origin__anti_wedge__horizon(other, multi_vector_at_infinity__weight_expansion__origin(self, other));
+    return origin__anti_wedge__horizon(other, multi_vector_at_infinity__wedge__horizon(self, origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__plane(MultiVectorAtInfinity self, Plane other) {
-    return plane__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__plane(self, other));
+    return plane__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__plane_at_origin(MultiVectorAtInfinity self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Scalar multi_vector_at_infinity__project_orthogonally_onto__point(MultiVectorAtInfinity self, Point other) {
-    return point__anti_wedge__horizon(other, multi_vector_at_infinity__weight_expansion__point(self, other));
+    return point__anti_wedge__horizon(other, multi_vector_at_infinity__wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__rotor(MultiVectorAtInfinity self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_orthogonally_onto__transflector(MultiVectorAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__multi_vector_at_infinity(other, multi_vector_at_infinity__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_orthogonally_onto__flector(MultiVectorAtOrigin self, Flector other) {
-    return flector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__flector(self, other));
+    return flector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_orthogonally_onto__line(MultiVectorAtOrigin self, Line other) {
-    return line__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__line(self, other));
+    return line__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__project_orthogonally_onto__line_at_origin(MultiVectorAtOrigin self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_orthogonally_onto__motor(MultiVectorAtOrigin self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_orthogonally_onto__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__project_orthogonally_onto__multi_vector_at_origin(MultiVectorAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Origin multi_vector_at_origin__project_orthogonally_onto__origin(MultiVectorAtOrigin self, Origin other) {
-    return origin__anti_wedge__anti_scalar(other, multi_vector_at_origin__weight_expansion__origin(self, other));
+    return origin__anti_wedge__anti_scalar(other, multi_vector_at_origin__wedge__horizon(self, origin__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_orthogonally_onto__plane(MultiVectorAtOrigin self, Plane other) {
-    return plane__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__plane(self, other));
+    return plane__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__project_orthogonally_onto__plane_at_origin(MultiVectorAtOrigin self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Point multi_vector_at_origin__project_orthogonally_onto__point(MultiVectorAtOrigin self, Point other) {
-    return point__anti_wedge__anti_scalar(other, multi_vector_at_origin__weight_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, multi_vector_at_origin__wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__project_orthogonally_onto__rotor(MultiVectorAtOrigin self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_orthogonally_onto__transflector(MultiVectorAtOrigin self, Transflector other) {
-    return transflector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector origin__project_orthogonally_onto__flector(Origin self, Flector other) {
-    return flector__anti_wedge__rotor(other, origin__weight_expansion__flector(self, other));
+    return flector__anti_wedge__rotor(other, origin__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Point origin__project_orthogonally_onto__line(Origin self, Line other) {
-    return line__anti_wedge__plane_at_origin(other, origin__weight_expansion__line(self, other));
+    return line__anti_wedge__plane_at_origin(other, origin__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 Origin origin__project_orthogonally_onto__line_at_origin(Origin self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__plane_at_origin(other, origin__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__plane_at_origin(other, origin__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector origin__project_orthogonally_onto__motor(Origin self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, origin__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, origin__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector origin__project_orthogonally_onto__multi_vector(Origin self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, origin__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, origin__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin origin__project_orthogonally_onto__multi_vector_at_origin(Origin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, origin__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, origin__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Origin origin__project_orthogonally_onto__origin(Origin self, Origin other) {
-    return origin__anti_wedge__anti_scalar(other, origin__weight_expansion__origin(self, other));
+    return origin__anti_wedge__anti_scalar(other, origin__wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Point origin__project_orthogonally_onto__plane(Origin self, Plane other) {
-    return plane__anti_wedge__line_at_origin(other, origin__weight_expansion__plane(self, other));
+    return plane__anti_wedge__line_at_origin(other, origin__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 Origin origin__project_orthogonally_onto__plane_at_origin(Origin self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__line_at_origin(other, origin__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__line_at_origin(other, origin__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Point origin__project_orthogonally_onto__point(Origin self, Point other) {
-    return point__anti_wedge__anti_scalar(other, origin__weight_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, origin__wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVectorAtOrigin origin__project_orthogonally_onto__rotor(Origin self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_origin(other, origin__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_origin(other, origin__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Point origin__project_orthogonally_onto__transflector(Origin self, Transflector other) {
-    return transflector__anti_wedge__line_at_origin(other, origin__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__line_at_origin(other, origin__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector plane__project_orthogonally_onto__flector(Plane self, Flector other) {
-    return flector__anti_wedge__anti_scalar(other, plane__weight_expansion__flector(self, other));
+    return flector__anti_wedge__anti_scalar(other, plane__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector plane__project_orthogonally_onto__motor(Plane self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, plane__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, plane__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector plane__project_orthogonally_onto__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, plane__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, plane__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector plane__project_orthogonally_onto__multi_vector_at_origin(Plane self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, plane__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, plane__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Plane plane__project_orthogonally_onto__plane(Plane self, Plane other) {
-    return plane__anti_wedge__anti_scalar(other, plane__weight_expansion__plane(self, other));
+    return plane__anti_wedge__anti_scalar(other, plane__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PlaneAtOrigin plane__project_orthogonally_onto__plane_at_origin(Plane self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__anti_scalar(other, plane__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__anti_scalar(other, plane__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector plane__project_orthogonally_onto__rotor(Plane self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, plane__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, plane__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector plane__project_orthogonally_onto__transflector(Plane self, Transflector other) {
-    return transflector__anti_wedge__anti_scalar(other, plane__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__anti_scalar(other, plane__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector plane_at_origin__project_orthogonally_onto__flector(PlaneAtOrigin self, Flector other) {
-    return flector__anti_wedge__anti_scalar(other, plane_at_origin__weight_expansion__flector(self, other));
+    return flector__anti_wedge__anti_scalar(other, plane_at_origin__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector plane_at_origin__project_orthogonally_onto__motor(PlaneAtOrigin self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, plane_at_origin__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, plane_at_origin__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector plane_at_origin__project_orthogonally_onto__multi_vector(PlaneAtOrigin self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, plane_at_origin__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, plane_at_origin__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin plane_at_origin__project_orthogonally_onto__multi_vector_at_origin(PlaneAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, plane_at_origin__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, plane_at_origin__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Plane plane_at_origin__project_orthogonally_onto__plane(PlaneAtOrigin self, Plane other) {
-    return plane__anti_wedge__anti_scalar(other, plane_at_origin__weight_expansion__plane(self, other));
+    return plane__anti_wedge__anti_scalar(other, plane_at_origin__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PlaneAtOrigin plane_at_origin__project_orthogonally_onto__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__anti_scalar(other, plane_at_origin__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__anti_scalar(other, plane_at_origin__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtOrigin plane_at_origin__project_orthogonally_onto__rotor(PlaneAtOrigin self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_origin(other, plane_at_origin__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_origin(other, plane_at_origin__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector plane_at_origin__project_orthogonally_onto__transflector(PlaneAtOrigin self, Transflector other) {
-    return transflector__anti_wedge__anti_scalar(other, plane_at_origin__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__anti_scalar(other, plane_at_origin__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector point__project_orthogonally_onto__flector(Point self, Flector other) {
-    return flector__anti_wedge__motor(other, point__weight_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, point__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Point point__project_orthogonally_onto__line(Point self, Line other) {
-    return line__anti_wedge__plane(other, point__weight_expansion__line(self, other));
+    return line__anti_wedge__plane(other, point__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 Point point__project_orthogonally_onto__line_at_origin(Point self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__plane(other, point__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__plane(other, point__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector point__project_orthogonally_onto__motor(Point self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, point__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, point__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector point__project_orthogonally_onto__multi_vector(Point self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, point__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, point__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector point__project_orthogonally_onto__multi_vector_at_origin(Point self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, point__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, point__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Origin point__project_orthogonally_onto__origin(Point self, Origin other) {
-    return origin__anti_wedge__anti_scalar(other, point__weight_expansion__origin(self, other));
+    return origin__anti_wedge__anti_scalar(other, point__wedge__horizon(self, origin__anti_dual(other)));
 }
 
 Point point__project_orthogonally_onto__plane(Point self, Plane other) {
-    return plane__anti_wedge__line(other, point__weight_expansion__plane(self, other));
+    return plane__anti_wedge__line(other, point__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 Point point__project_orthogonally_onto__plane_at_origin(Point self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__line(other, point__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__line(other, point__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 Point point__project_orthogonally_onto__point(Point self, Point other) {
-    return point__anti_wedge__anti_scalar(other, point__weight_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, point__wedge__horizon(self, point__anti_dual(other)));
 }
 
 MultiVector point__project_orthogonally_onto__rotor(Point self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, point__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, point__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Point point__project_orthogonally_onto__transflector(Point self, Transflector other) {
-    return transflector__anti_wedge__line(other, point__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__line(other, point__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_orthogonally_onto__flector(PointAtInfinity self, Flector other) {
-    return flector__anti_wedge__line_at_infinity(other, point_at_infinity__weight_expansion__flector(self, other));
+    return flector__anti_wedge__line_at_infinity(other, point_at_infinity__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_orthogonally_onto__line(PointAtInfinity self, Line other) {
-    return line__anti_wedge__horizon(other, point_at_infinity__weight_expansion__line(self, other));
+    return line__anti_wedge__horizon(other, point_at_infinity__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_orthogonally_onto__line_at_origin(PointAtInfinity self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__horizon(other, point_at_infinity__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__horizon(other, point_at_infinity__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity point_at_infinity__project_orthogonally_onto__motor(PointAtInfinity self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVectorAtInfinity point_at_infinity__project_orthogonally_onto__multi_vector(PointAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity point_at_infinity__project_orthogonally_onto__multi_vector_at_origin(PointAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_orthogonally_onto__plane(PointAtInfinity self, Plane other) {
-    return plane__anti_wedge__line_at_infinity(other, point_at_infinity__weight_expansion__plane(self, other));
+    return plane__anti_wedge__line_at_infinity(other, point_at_infinity__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_orthogonally_onto__plane_at_origin(PointAtInfinity self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__line_at_infinity(other, point_at_infinity__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__line_at_infinity(other, point_at_infinity__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtInfinity point_at_infinity__project_orthogonally_onto__rotor(PointAtInfinity self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_infinity(other, point_at_infinity__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_orthogonally_onto__transflector(PointAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__line_at_infinity(other, point_at_infinity__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__line_at_infinity(other, point_at_infinity__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVector rotor__project_orthogonally_onto__flector(Rotor self, Flector other) {
-    return flector__anti_wedge__plane_at_origin(other, rotor__weight_expansion__flector(self, other));
+    return flector__anti_wedge__plane_at_origin(other, rotor__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 Line rotor__project_orthogonally_onto__line(Rotor self, Line other) {
-    return line__anti_wedge__anti_scalar(other, rotor__weight_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, rotor__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 LineAtOrigin rotor__project_orthogonally_onto__line_at_origin(Rotor self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__anti_scalar(other, rotor__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__anti_scalar(other, rotor__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector rotor__project_orthogonally_onto__motor(Rotor self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, rotor__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, rotor__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector rotor__project_orthogonally_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, rotor__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, rotor__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVectorAtOrigin rotor__project_orthogonally_onto__multi_vector_at_origin(Rotor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, rotor__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(other, rotor__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Line rotor__project_orthogonally_onto__plane(Rotor self, Plane other) {
-    return plane__anti_wedge__plane_at_origin(other, rotor__weight_expansion__plane(self, other));
+    return plane__anti_wedge__plane_at_origin(other, rotor__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 LineAtOrigin rotor__project_orthogonally_onto__plane_at_origin(Rotor self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__plane_at_origin(other, rotor__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__plane_at_origin(other, rotor__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVectorAtOrigin rotor__project_orthogonally_onto__rotor(Rotor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector_at_origin(other, rotor__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector_at_origin(other, rotor__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 MultiVector rotor__project_orthogonally_onto__transflector(Rotor self, Transflector other) {
-    return transflector__anti_wedge__plane_at_origin(other, rotor__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane_at_origin(other, rotor__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector transflector__project_orthogonally_onto__flector(Transflector self, Flector other) {
-    return flector__anti_wedge__translator(other, transflector__weight_expansion__flector(self, other));
+    return flector__anti_wedge__translator(other, transflector__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 PointAtInfinity transflector__project_orthogonally_onto__line(Transflector self, Line other) {
-    return line__anti_wedge__horizon(other, transflector__weight_expansion__line(self, other));
+    return line__anti_wedge__horizon(other, transflector__wedge__line_at_infinity(self, line__anti_dual(other)));
 }
 
 PointAtInfinity transflector__project_orthogonally_onto__line_at_origin(Transflector self, LineAtOrigin other) {
-    return line_at_origin__anti_wedge__horizon(other, transflector__weight_expansion__line_at_origin(self, other));
+    return line_at_origin__anti_wedge__horizon(other, transflector__wedge__line_at_infinity(self, line_at_origin__anti_dual(other)));
 }
 
 MultiVector transflector__project_orthogonally_onto__motor(Transflector self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, transflector__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, transflector__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector transflector__project_orthogonally_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, transflector__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector transflector__project_orthogonally_onto__multi_vector_at_origin(Transflector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, transflector__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, transflector__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 Transflector transflector__project_orthogonally_onto__plane(Transflector self, Plane other) {
-    return plane__anti_wedge__translator(other, transflector__weight_expansion__plane(self, other));
+    return plane__anti_wedge__translator(other, transflector__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 Transflector transflector__project_orthogonally_onto__plane_at_origin(Transflector self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__translator(other, transflector__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__translator(other, transflector__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector transflector__project_orthogonally_onto__rotor(Transflector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, transflector__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, transflector__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 Transflector transflector__project_orthogonally_onto__transflector(Transflector self, Transflector other) {
-    return transflector__anti_wedge__translator(other, transflector__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__translator(other, transflector__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 MultiVectorAtInfinity translator__project_orthogonally_onto__flector(Translator self, Flector other) {
-    return flector__anti_wedge__horizon(other, translator__weight_expansion__flector(self, other));
+    return flector__anti_wedge__horizon(other, translator__wedge__flector_at_infinity(self, flector__anti_dual(other)));
 }
 
 MultiVector translator__project_orthogonally_onto__motor(Translator self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, translator__weight_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector(other, translator__wedge__multi_vector_at_infinity(self, motor__anti_dual(other)));
 }
 
 MultiVector translator__project_orthogonally_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, translator__weight_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector(other, translator__wedge__multi_vector_at_infinity(self, multi_vector__anti_dual(other)));
 }
 
 MultiVector translator__project_orthogonally_onto__multi_vector_at_origin(Translator self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__anti_wedge__multi_vector(other, translator__weight_expansion__multi_vector_at_origin(self, other));
+    return multi_vector_at_origin__anti_wedge__multi_vector(other, translator__wedge__multi_vector_at_infinity(self, multi_vector_at_origin__anti_dual(other)));
 }
 
 LineAtInfinity translator__project_orthogonally_onto__plane(Translator self, Plane other) {
-    return plane__anti_wedge__horizon(other, translator__weight_expansion__plane(self, other));
+    return plane__anti_wedge__horizon(other, translator__wedge__point_at_infinity(self, plane__anti_dual(other)));
 }
 
 LineAtInfinity translator__project_orthogonally_onto__plane_at_origin(Translator self, PlaneAtOrigin other) {
-    return plane_at_origin__anti_wedge__horizon(other, translator__weight_expansion__plane_at_origin(self, other));
+    return plane_at_origin__anti_wedge__horizon(other, translator__wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)));
 }
 
 MultiVector translator__project_orthogonally_onto__rotor(Translator self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, translator__weight_expansion__rotor(self, other));
+    return rotor__anti_wedge__multi_vector(other, translator__wedge__multi_vector_at_infinity(self, rotor__anti_dual(other)));
 }
 
 LineAtInfinity translator__project_orthogonally_onto__transflector(Translator self, Transflector other) {
-    return transflector__anti_wedge__horizon(other, translator__weight_expansion__transflector(self, other));
+    return transflector__anti_wedge__horizon(other, translator__wedge__point_at_infinity(self, transflector__anti_dual(other)));
 }
 
 Flector flector__project_via_origin_onto__flector(Flector self, Flector other) {
-    return flector__anti_wedge__motor(other, flector__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, flector__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity flector__project_via_origin_onto__flector_at_infinity(Flector self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__motor(other, flector__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__motor(other, flector__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 FlectorAtInfinity flector__project_via_origin_onto__horizon(Flector self, Horizon other) {
-    return horizon__anti_wedge__rotor(other, flector__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__rotor(other, flector__wedge__origin(self, horizon__dual(other)));
 }
 
 Point flector__project_via_origin_onto__line(Flector self, Line other) {
-    return line__anti_wedge__plane_at_origin(other, flector__bulk_expansion__line(self, other));
+    return line__anti_wedge__plane_at_origin(other, flector__wedge__line_at_origin(self, line__dual(other)));
 }
 
 PointAtInfinity flector__project_via_origin_onto__line_at_infinity(Flector self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__plane_at_origin(other, flector__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__plane_at_origin(other, flector__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Flector flector__project_via_origin_onto__motor(Flector self, Motor other) {
-    return motor__anti_wedge__plane_at_origin(other, flector__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__plane_at_origin(other, flector__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector flector__project_via_origin_onto__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, flector__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, flector__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity flector__project_via_origin_onto__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, flector__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, flector__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Flector flector__project_via_origin_onto__plane(Flector self, Plane other) {
-    return plane__anti_wedge__rotor(other, flector__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__rotor(other, flector__wedge__origin(self, plane__dual(other)));
 }
 
 Point flector__project_via_origin_onto__point(Flector self, Point other) {
-    return point__anti_wedge__anti_scalar(other, flector__bulk_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, flector__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity flector__project_via_origin_onto__point_at_infinity(Flector self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__anti_scalar(other, flector__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__anti_scalar(other, flector__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Flector flector__project_via_origin_onto__transflector(Flector self, Transflector other) {
-    return transflector__anti_wedge__motor(other, flector__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__motor(other, flector__wedge__flector(self, transflector__dual(other)));
 }
 
 Transflector flector__project_via_origin_onto__translator(Flector self, Translator other) {
-    return translator__anti_wedge__plane_at_origin(other, flector__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__plane_at_origin(other, flector__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Flector flector_at_infinity__project_via_origin_onto__flector(FlectorAtInfinity self, Flector other) {
-    return flector__anti_wedge__motor(other, flector_at_infinity__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, flector_at_infinity__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity flector_at_infinity__project_via_origin_onto__flector_at_infinity(FlectorAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__motor(other, flector_at_infinity__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__motor(other, flector_at_infinity__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 FlectorAtInfinity flector_at_infinity__project_via_origin_onto__horizon(FlectorAtInfinity self, Horizon other) {
-    return horizon__anti_wedge__rotor(other, flector_at_infinity__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__rotor(other, flector_at_infinity__wedge__origin(self, horizon__dual(other)));
 }
 
 Point flector_at_infinity__project_via_origin_onto__line(FlectorAtInfinity self, Line other) {
-    return line__anti_wedge__plane_at_origin(other, flector_at_infinity__bulk_expansion__line(self, other));
+    return line__anti_wedge__plane_at_origin(other, flector_at_infinity__wedge__line_at_origin(self, line__dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_via_origin_onto__line_at_infinity(FlectorAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__plane_at_origin(other, flector_at_infinity__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__plane_at_origin(other, flector_at_infinity__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Flector flector_at_infinity__project_via_origin_onto__motor(FlectorAtInfinity self, Motor other) {
-    return motor__anti_wedge__plane_at_origin(other, flector_at_infinity__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__plane_at_origin(other, flector_at_infinity__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector flector_at_infinity__project_via_origin_onto__multi_vector(FlectorAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, flector_at_infinity__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, flector_at_infinity__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity flector_at_infinity__project_via_origin_onto__multi_vector_at_infinity(FlectorAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, flector_at_infinity__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, flector_at_infinity__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Flector flector_at_infinity__project_via_origin_onto__plane(FlectorAtInfinity self, Plane other) {
-    return plane__anti_wedge__rotor(other, flector_at_infinity__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__rotor(other, flector_at_infinity__wedge__origin(self, plane__dual(other)));
 }
 
 Point flector_at_infinity__project_via_origin_onto__point(FlectorAtInfinity self, Point other) {
-    return point__anti_wedge__anti_scalar(other, flector_at_infinity__bulk_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, flector_at_infinity__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity flector_at_infinity__project_via_origin_onto__point_at_infinity(FlectorAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__anti_scalar(other, flector_at_infinity__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__anti_scalar(other, flector_at_infinity__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Flector flector_at_infinity__project_via_origin_onto__transflector(FlectorAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__motor(other, flector_at_infinity__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__motor(other, flector_at_infinity__wedge__flector(self, transflector__dual(other)));
 }
 
 Transflector flector_at_infinity__project_via_origin_onto__translator(FlectorAtInfinity self, Translator other) {
-    return translator__anti_wedge__plane_at_origin(other, flector_at_infinity__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__plane_at_origin(other, flector_at_infinity__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Flector horizon__project_via_origin_onto__flector(Horizon self, Flector other) {
-    return flector__anti_wedge__anti_scalar(other, horizon__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__anti_scalar(other, horizon__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity horizon__project_via_origin_onto__flector_at_infinity(Horizon self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__anti_scalar(other, horizon__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__anti_scalar(other, horizon__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon horizon__project_via_origin_onto__horizon(Horizon self, Horizon other) {
-    return horizon__anti_wedge__anti_scalar(other, horizon__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__anti_scalar(other, horizon__wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector horizon__project_via_origin_onto__multi_vector(Horizon self, MultiVector other) {
-    return multi_vector__anti_wedge__anti_scalar(other, horizon__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__anti_scalar(other, horizon__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity horizon__project_via_origin_onto__multi_vector_at_infinity(Horizon self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__anti_scalar(other, horizon__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__anti_scalar(other, horizon__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane horizon__project_via_origin_onto__plane(Horizon self, Plane other) {
-    return plane__anti_wedge__anti_scalar(other, horizon__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__anti_scalar(other, horizon__wedge__origin(self, plane__dual(other)));
 }
 
 Transflector horizon__project_via_origin_onto__transflector(Horizon self, Transflector other) {
-    return transflector__anti_wedge__anti_scalar(other, horizon__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__anti_scalar(other, horizon__wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector line__project_via_origin_onto__flector(Line self, Flector other) {
-    return flector__anti_wedge__plane(other, line__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__plane(other, line__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity line__project_via_origin_onto__flector_at_infinity(Line self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__plane(other, line__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__plane(other, line__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 LineAtInfinity line__project_via_origin_onto__horizon(Line self, Horizon other) {
-    return horizon__anti_wedge__plane_at_origin(other, line__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__plane_at_origin(other, line__wedge__origin(self, horizon__dual(other)));
 }
 
 Line line__project_via_origin_onto__line(Line self, Line other) {
-    return line__anti_wedge__anti_scalar(other, line__bulk_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, line__wedge__line_at_origin(self, line__dual(other)));
 }
 
 LineAtInfinity line__project_via_origin_onto__line_at_infinity(Line self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__anti_scalar(other, line__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__anti_scalar(other, line__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Motor line__project_via_origin_onto__motor(Line self, Motor other) {
-    return motor__anti_wedge__anti_scalar(other, line__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__anti_scalar(other, line__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector line__project_via_origin_onto__multi_vector(Line self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, line__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, line__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity line__project_via_origin_onto__multi_vector_at_infinity(Line self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, line__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, line__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Line line__project_via_origin_onto__plane(Line self, Plane other) {
-    return plane__anti_wedge__plane_at_origin(other, line__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__plane_at_origin(other, line__wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector line__project_via_origin_onto__transflector(Line self, Transflector other) {
-    return transflector__anti_wedge__plane(other, line__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane(other, line__wedge__flector(self, transflector__dual(other)));
 }
 
 Translator line__project_via_origin_onto__translator(Line self, Translator other) {
-    return translator__anti_wedge__anti_scalar(other, line__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__anti_scalar(other, line__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector line_at_infinity__project_via_origin_onto__flector(LineAtInfinity self, Flector other) {
-    return flector__anti_wedge__plane(other, line_at_infinity__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__plane(other, line_at_infinity__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_via_origin_onto__flector_at_infinity(LineAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__plane(other, line_at_infinity__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__plane(other, line_at_infinity__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 LineAtInfinity line_at_infinity__project_via_origin_onto__horizon(LineAtInfinity self, Horizon other) {
-    return horizon__anti_wedge__plane_at_origin(other, line_at_infinity__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__plane_at_origin(other, line_at_infinity__wedge__origin(self, horizon__dual(other)));
 }
 
 Line line_at_infinity__project_via_origin_onto__line(LineAtInfinity self, Line other) {
-    return line__anti_wedge__anti_scalar(other, line_at_infinity__bulk_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, line_at_infinity__wedge__line_at_origin(self, line__dual(other)));
 }
 
 LineAtInfinity line_at_infinity__project_via_origin_onto__line_at_infinity(LineAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__anti_scalar(other, line_at_infinity__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__anti_scalar(other, line_at_infinity__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Motor line_at_infinity__project_via_origin_onto__motor(LineAtInfinity self, Motor other) {
-    return motor__anti_wedge__anti_scalar(other, line_at_infinity__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__anti_scalar(other, line_at_infinity__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector line_at_infinity__project_via_origin_onto__multi_vector(LineAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, line_at_infinity__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, line_at_infinity__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity line_at_infinity__project_via_origin_onto__multi_vector_at_infinity(LineAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, line_at_infinity__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, line_at_infinity__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Line line_at_infinity__project_via_origin_onto__plane(LineAtInfinity self, Plane other) {
-    return plane__anti_wedge__plane_at_origin(other, line_at_infinity__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__plane_at_origin(other, line_at_infinity__wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector line_at_infinity__project_via_origin_onto__transflector(LineAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__plane(other, line_at_infinity__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane(other, line_at_infinity__wedge__flector(self, transflector__dual(other)));
 }
 
 Translator line_at_infinity__project_via_origin_onto__translator(LineAtInfinity self, Translator other) {
-    return translator__anti_wedge__anti_scalar(other, line_at_infinity__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__anti_scalar(other, line_at_infinity__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector line_at_origin__project_via_origin_onto__flector(LineAtOrigin self, Flector other) {
-    return flector__anti_wedge__plane_at_origin(other, line_at_origin__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__plane_at_origin(other, line_at_origin__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity line_at_origin__project_via_origin_onto__flector_at_infinity(LineAtOrigin self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__plane_at_origin(other, line_at_origin__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__plane_at_origin(other, line_at_origin__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVector line_at_origin__project_via_origin_onto__transflector(LineAtOrigin self, Transflector other) {
-    return transflector__anti_wedge__plane_at_origin(other, line_at_origin__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane_at_origin(other, line_at_origin__wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector motor__project_via_origin_onto__flector(Motor self, Flector other) {
-    return flector__anti_wedge__plane(other, motor__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__plane(other, motor__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity motor__project_via_origin_onto__flector_at_infinity(Motor self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__plane(other, motor__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__plane(other, motor__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 LineAtInfinity motor__project_via_origin_onto__horizon(Motor self, Horizon other) {
-    return horizon__anti_wedge__plane_at_origin(other, motor__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__plane_at_origin(other, motor__wedge__origin(self, horizon__dual(other)));
 }
 
 Line motor__project_via_origin_onto__line(Motor self, Line other) {
-    return line__anti_wedge__anti_scalar(other, motor__bulk_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, motor__wedge__line_at_origin(self, line__dual(other)));
 }
 
 LineAtInfinity motor__project_via_origin_onto__line_at_infinity(Motor self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__anti_scalar(other, motor__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__anti_scalar(other, motor__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Motor motor__project_via_origin_onto__motor(Motor self, Motor other) {
-    return motor__anti_wedge__anti_scalar(other, motor__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__anti_scalar(other, motor__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector motor__project_via_origin_onto__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, motor__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, motor__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity motor__project_via_origin_onto__multi_vector_at_infinity(Motor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, motor__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, motor__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Line motor__project_via_origin_onto__plane(Motor self, Plane other) {
-    return plane__anti_wedge__plane_at_origin(other, motor__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__plane_at_origin(other, motor__wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector motor__project_via_origin_onto__transflector(Motor self, Transflector other) {
-    return transflector__anti_wedge__plane(other, motor__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane(other, motor__wedge__flector(self, transflector__dual(other)));
 }
 
 Translator motor__project_via_origin_onto__translator(Motor self, Translator other) {
-    return translator__anti_wedge__anti_scalar(other, motor__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__anti_scalar(other, motor__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__flector(MultiVector self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, multi_vector__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__multi_vector(other, multi_vector__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector__project_via_origin_onto__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__multi_vector(other, multi_vector__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__multi_vector(other, multi_vector__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector__project_via_origin_onto__horizon(MultiVector self, Horizon other) {
-    return horizon__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__line(MultiVector self, Line other) {
-    return line__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__line(self, other));
+    return line__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector__project_via_origin_onto__line_at_infinity(MultiVector self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__motor(MultiVector self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector__project_via_origin_onto__multi_vector_at_infinity(MultiVector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__plane(MultiVector self, Plane other) {
-    return plane__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__point(MultiVector self, Point other) {
-    return point__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__point(self, other));
+    return point__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector__project_via_origin_onto__point_at_infinity(MultiVector self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, multi_vector__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__multi_vector(other, multi_vector__wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__translator(MultiVector self, Translator other) {
-    return translator__anti_wedge__multi_vector_at_origin(other, multi_vector__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__multi_vector_at_origin(other, multi_vector__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__flector(MultiVectorAtInfinity self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, multi_vector_at_infinity__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__multi_vector(other, multi_vector_at_infinity__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_via_origin_onto__flector_at_infinity(MultiVectorAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__multi_vector(other, multi_vector_at_infinity__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__multi_vector(other, multi_vector_at_infinity__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_via_origin_onto__horizon(MultiVectorAtInfinity self, Horizon other) {
-    return horizon__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__line(MultiVectorAtInfinity self, Line other) {
-    return line__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__line(self, other));
+    return line__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__line_at_origin(self, line__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_via_origin_onto__line_at_infinity(MultiVectorAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__motor(MultiVectorAtInfinity self, Motor other) {
-    return motor__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_via_origin_onto__multi_vector_at_infinity(MultiVectorAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__plane(MultiVectorAtInfinity self, Plane other) {
-    return plane__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__point(MultiVectorAtInfinity self, Point other) {
-    return point__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__point(self, other));
+    return point__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__project_via_origin_onto__point_at_infinity(MultiVectorAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__transflector(MultiVectorAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, multi_vector_at_infinity__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__multi_vector(other, multi_vector_at_infinity__wedge__flector(self, transflector__dual(other)));
 }
 
 MultiVector multi_vector_at_infinity__project_via_origin_onto__translator(MultiVectorAtInfinity self, Translator other) {
-    return translator__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__multi_vector_at_origin(other, multi_vector_at_infinity__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_via_origin_onto__flector(MultiVectorAtOrigin self, Flector other) {
-    return flector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__project_via_origin_onto__flector_at_infinity(MultiVectorAtOrigin self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVector multi_vector_at_origin__project_via_origin_onto__transflector(MultiVectorAtOrigin self, Transflector other) {
-    return transflector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__multi_vector_at_origin(other, multi_vector_at_origin__wedge__flector(self, transflector__dual(other)));
 }
 
 Flector origin__project_via_origin_onto__flector(Origin self, Flector other) {
-    return flector__anti_wedge__rotor(other, origin__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__rotor(other, origin__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity origin__project_via_origin_onto__flector_at_infinity(Origin self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__rotor(other, origin__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__rotor(other, origin__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Flector origin__project_via_origin_onto__transflector(Origin self, Transflector other) {
-    return transflector__anti_wedge__rotor(other, origin__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__rotor(other, origin__wedge__flector(self, transflector__dual(other)));
 }
 
 Flector plane__project_via_origin_onto__flector(Plane self, Flector other) {
-    return flector__anti_wedge__anti_scalar(other, plane__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__anti_scalar(other, plane__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity plane__project_via_origin_onto__flector_at_infinity(Plane self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__anti_scalar(other, plane__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__anti_scalar(other, plane__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Horizon plane__project_via_origin_onto__horizon(Plane self, Horizon other) {
-    return horizon__anti_wedge__anti_scalar(other, plane__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__anti_scalar(other, plane__wedge__origin(self, horizon__dual(other)));
 }
 
 MultiVector plane__project_via_origin_onto__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__anti_wedge__anti_scalar(other, plane__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__anti_scalar(other, plane__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity plane__project_via_origin_onto__multi_vector_at_infinity(Plane self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__anti_scalar(other, plane__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__anti_scalar(other, plane__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Plane plane__project_via_origin_onto__plane(Plane self, Plane other) {
-    return plane__anti_wedge__anti_scalar(other, plane__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__anti_scalar(other, plane__wedge__origin(self, plane__dual(other)));
 }
 
 Transflector plane__project_via_origin_onto__transflector(Plane self, Transflector other) {
-    return transflector__anti_wedge__anti_scalar(other, plane__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__anti_scalar(other, plane__wedge__flector(self, transflector__dual(other)));
 }
 
 Flector plane_at_origin__project_via_origin_onto__flector(PlaneAtOrigin self, Flector other) {
-    return flector__anti_wedge__anti_scalar(other, plane_at_origin__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__anti_scalar(other, plane_at_origin__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity plane_at_origin__project_via_origin_onto__flector_at_infinity(PlaneAtOrigin self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__anti_scalar(other, plane_at_origin__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__anti_scalar(other, plane_at_origin__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 Transflector plane_at_origin__project_via_origin_onto__transflector(PlaneAtOrigin self, Transflector other) {
-    return transflector__anti_wedge__anti_scalar(other, plane_at_origin__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__anti_scalar(other, plane_at_origin__wedge__flector(self, transflector__dual(other)));
 }
 
 Flector point__project_via_origin_onto__flector(Point self, Flector other) {
-    return flector__anti_wedge__motor(other, point__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, point__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity point__project_via_origin_onto__flector_at_infinity(Point self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__motor(other, point__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__motor(other, point__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 PointAtInfinity point__project_via_origin_onto__horizon(Point self, Horizon other) {
-    return horizon__anti_wedge__line_at_origin(other, point__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__line_at_origin(other, point__wedge__origin(self, horizon__dual(other)));
 }
 
 Point point__project_via_origin_onto__line(Point self, Line other) {
-    return line__anti_wedge__plane_at_origin(other, point__bulk_expansion__line(self, other));
+    return line__anti_wedge__plane_at_origin(other, point__wedge__line_at_origin(self, line__dual(other)));
 }
 
 PointAtInfinity point__project_via_origin_onto__line_at_infinity(Point self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__plane_at_origin(other, point__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__plane_at_origin(other, point__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Flector point__project_via_origin_onto__motor(Point self, Motor other) {
-    return motor__anti_wedge__plane_at_origin(other, point__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__plane_at_origin(other, point__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector point__project_via_origin_onto__multi_vector(Point self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, point__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, point__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity point__project_via_origin_onto__multi_vector_at_infinity(Point self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, point__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, point__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Point point__project_via_origin_onto__plane(Point self, Plane other) {
-    return plane__anti_wedge__line_at_origin(other, point__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__line_at_origin(other, point__wedge__origin(self, plane__dual(other)));
 }
 
 Point point__project_via_origin_onto__point(Point self, Point other) {
-    return point__anti_wedge__anti_scalar(other, point__bulk_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, point__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity point__project_via_origin_onto__point_at_infinity(Point self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__anti_scalar(other, point__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__anti_scalar(other, point__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Flector point__project_via_origin_onto__transflector(Point self, Transflector other) {
-    return transflector__anti_wedge__motor(other, point__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__motor(other, point__wedge__flector(self, transflector__dual(other)));
 }
 
 Transflector point__project_via_origin_onto__translator(Point self, Translator other) {
-    return translator__anti_wedge__plane_at_origin(other, point__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__plane_at_origin(other, point__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 Flector point_at_infinity__project_via_origin_onto__flector(PointAtInfinity self, Flector other) {
-    return flector__anti_wedge__motor(other, point_at_infinity__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, point_at_infinity__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity point_at_infinity__project_via_origin_onto__flector_at_infinity(PointAtInfinity self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__motor(other, point_at_infinity__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__motor(other, point_at_infinity__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_via_origin_onto__horizon(PointAtInfinity self, Horizon other) {
-    return horizon__anti_wedge__line_at_origin(other, point_at_infinity__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__line_at_origin(other, point_at_infinity__wedge__origin(self, horizon__dual(other)));
 }
 
 Point point_at_infinity__project_via_origin_onto__line(PointAtInfinity self, Line other) {
-    return line__anti_wedge__plane_at_origin(other, point_at_infinity__bulk_expansion__line(self, other));
+    return line__anti_wedge__plane_at_origin(other, point_at_infinity__wedge__line_at_origin(self, line__dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_via_origin_onto__line_at_infinity(PointAtInfinity self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__plane_at_origin(other, point_at_infinity__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__plane_at_origin(other, point_at_infinity__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Flector point_at_infinity__project_via_origin_onto__motor(PointAtInfinity self, Motor other) {
-    return motor__anti_wedge__plane_at_origin(other, point_at_infinity__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__plane_at_origin(other, point_at_infinity__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector point_at_infinity__project_via_origin_onto__multi_vector(PointAtInfinity self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, point_at_infinity__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, point_at_infinity__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity point_at_infinity__project_via_origin_onto__multi_vector_at_infinity(PointAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, point_at_infinity__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, point_at_infinity__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Point point_at_infinity__project_via_origin_onto__plane(PointAtInfinity self, Plane other) {
-    return plane__anti_wedge__line_at_origin(other, point_at_infinity__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__line_at_origin(other, point_at_infinity__wedge__origin(self, plane__dual(other)));
 }
 
 Point point_at_infinity__project_via_origin_onto__point(PointAtInfinity self, Point other) {
-    return point__anti_wedge__anti_scalar(other, point_at_infinity__bulk_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, point_at_infinity__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity point_at_infinity__project_via_origin_onto__point_at_infinity(PointAtInfinity self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__anti_scalar(other, point_at_infinity__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__anti_scalar(other, point_at_infinity__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Flector point_at_infinity__project_via_origin_onto__transflector(PointAtInfinity self, Transflector other) {
-    return transflector__anti_wedge__motor(other, point_at_infinity__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__motor(other, point_at_infinity__wedge__flector(self, transflector__dual(other)));
 }
 
 Transflector point_at_infinity__project_via_origin_onto__translator(PointAtInfinity self, Translator other) {
-    return translator__anti_wedge__plane_at_origin(other, point_at_infinity__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__plane_at_origin(other, point_at_infinity__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector rotor__project_via_origin_onto__flector(Rotor self, Flector other) {
-    return flector__anti_wedge__plane_at_origin(other, rotor__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__plane_at_origin(other, rotor__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity rotor__project_via_origin_onto__flector_at_infinity(Rotor self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__plane_at_origin(other, rotor__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__plane_at_origin(other, rotor__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 MultiVector rotor__project_via_origin_onto__transflector(Rotor self, Transflector other) {
-    return transflector__anti_wedge__plane_at_origin(other, rotor__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane_at_origin(other, rotor__wedge__flector(self, transflector__dual(other)));
 }
 
 Flector transflector__project_via_origin_onto__flector(Transflector self, Flector other) {
-    return flector__anti_wedge__motor(other, transflector__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__motor(other, transflector__wedge__flector(self, flector__dual(other)));
 }
 
 FlectorAtInfinity transflector__project_via_origin_onto__flector_at_infinity(Transflector self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__motor(other, transflector__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__motor(other, transflector__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 FlectorAtInfinity transflector__project_via_origin_onto__horizon(Transflector self, Horizon other) {
-    return horizon__anti_wedge__rotor(other, transflector__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__rotor(other, transflector__wedge__origin(self, horizon__dual(other)));
 }
 
 Point transflector__project_via_origin_onto__line(Transflector self, Line other) {
-    return line__anti_wedge__plane_at_origin(other, transflector__bulk_expansion__line(self, other));
+    return line__anti_wedge__plane_at_origin(other, transflector__wedge__line_at_origin(self, line__dual(other)));
 }
 
 PointAtInfinity transflector__project_via_origin_onto__line_at_infinity(Transflector self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__plane_at_origin(other, transflector__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__plane_at_origin(other, transflector__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Flector transflector__project_via_origin_onto__motor(Transflector self, Motor other) {
-    return motor__anti_wedge__plane_at_origin(other, transflector__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__plane_at_origin(other, transflector__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector transflector__project_via_origin_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, transflector__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, transflector__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity transflector__project_via_origin_onto__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, transflector__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, transflector__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Flector transflector__project_via_origin_onto__plane(Transflector self, Plane other) {
-    return plane__anti_wedge__rotor(other, transflector__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__rotor(other, transflector__wedge__origin(self, plane__dual(other)));
 }
 
 Point transflector__project_via_origin_onto__point(Transflector self, Point other) {
-    return point__anti_wedge__anti_scalar(other, transflector__bulk_expansion__point(self, other));
+    return point__anti_wedge__anti_scalar(other, transflector__wedge__plane_at_origin(self, point__dual(other)));
 }
 
 PointAtInfinity transflector__project_via_origin_onto__point_at_infinity(Transflector self, PointAtInfinity other) {
-    return point_at_infinity__anti_wedge__anti_scalar(other, transflector__bulk_expansion__point_at_infinity(self, other));
+    return point_at_infinity__anti_wedge__anti_scalar(other, transflector__wedge__plane_at_origin(self, point_at_infinity__dual(other)));
 }
 
 Flector transflector__project_via_origin_onto__transflector(Transflector self, Transflector other) {
-    return transflector__anti_wedge__motor(other, transflector__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__motor(other, transflector__wedge__flector(self, transflector__dual(other)));
 }
 
 Transflector transflector__project_via_origin_onto__translator(Transflector self, Translator other) {
-    return translator__anti_wedge__plane_at_origin(other, transflector__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__plane_at_origin(other, transflector__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 MultiVector translator__project_via_origin_onto__flector(Translator self, Flector other) {
-    return flector__anti_wedge__plane(other, translator__bulk_expansion__flector(self, other));
+    return flector__anti_wedge__plane(other, translator__wedge__flector(self, flector__dual(other)));
 }
 
 MultiVectorAtInfinity translator__project_via_origin_onto__flector_at_infinity(Translator self, FlectorAtInfinity other) {
-    return flector_at_infinity__anti_wedge__plane(other, translator__bulk_expansion__flector_at_infinity(self, other));
+    return flector_at_infinity__anti_wedge__plane(other, translator__wedge__flector(self, flector_at_infinity__dual(other)));
 }
 
 LineAtInfinity translator__project_via_origin_onto__horizon(Translator self, Horizon other) {
-    return horizon__anti_wedge__plane_at_origin(other, translator__bulk_expansion__horizon(self, other));
+    return horizon__anti_wedge__plane_at_origin(other, translator__wedge__origin(self, horizon__dual(other)));
 }
 
 Line translator__project_via_origin_onto__line(Translator self, Line other) {
-    return line__anti_wedge__anti_scalar(other, translator__bulk_expansion__line(self, other));
+    return line__anti_wedge__anti_scalar(other, translator__wedge__line_at_origin(self, line__dual(other)));
 }
 
 LineAtInfinity translator__project_via_origin_onto__line_at_infinity(Translator self, LineAtInfinity other) {
-    return line_at_infinity__anti_wedge__anti_scalar(other, translator__bulk_expansion__line_at_infinity(self, other));
+    return line_at_infinity__anti_wedge__anti_scalar(other, translator__wedge__line_at_origin(self, line_at_infinity__dual(other)));
 }
 
 Motor translator__project_via_origin_onto__motor(Translator self, Motor other) {
-    return motor__anti_wedge__anti_scalar(other, translator__bulk_expansion__motor(self, other));
+    return motor__anti_wedge__anti_scalar(other, translator__wedge__line_at_origin(self, motor__dual(other)));
 }
 
 MultiVector translator__project_via_origin_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector_at_origin(other, translator__bulk_expansion__multi_vector(self, other));
+    return multi_vector__anti_wedge__multi_vector_at_origin(other, translator__wedge__multi_vector_at_origin(self, multi_vector__dual(other)));
 }
 
 MultiVectorAtInfinity translator__project_via_origin_onto__multi_vector_at_infinity(Translator self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, translator__bulk_expansion__multi_vector_at_infinity(self, other));
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(other, translator__wedge__multi_vector_at_origin(self, multi_vector_at_infinity__dual(other)));
 }
 
 Line translator__project_via_origin_onto__plane(Translator self, Plane other) {
-    return plane__anti_wedge__plane_at_origin(other, translator__bulk_expansion__plane(self, other));
+    return plane__anti_wedge__plane_at_origin(other, translator__wedge__origin(self, plane__dual(other)));
 }
 
 MultiVector translator__project_via_origin_onto__transflector(Translator self, Transflector other) {
-    return transflector__anti_wedge__plane(other, translator__bulk_expansion__transflector(self, other));
+    return transflector__anti_wedge__plane(other, translator__wedge__flector(self, transflector__dual(other)));
 }
 
 Translator translator__project_via_origin_onto__translator(Translator self, Translator other) {
-    return translator__anti_wedge__anti_scalar(other, translator__bulk_expansion__translator(self, other));
+    return translator__anti_wedge__anti_scalar(other, translator__wedge__line_at_origin(self, translator__dual(other)));
 }
 
 FlectorAtInfinity flector__anti_reject_orthogonally_from__flector(Flector self, Flector other) {
-    return motor__weight_contraction__flector(flector__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector_at_infinity(flector__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-FlectorAtInfinity flector__anti_reject_orthogonally_from__flector_at_infinity(Flector self, FlectorAtInfinity other) {
-    return motor__weight_contraction__flector(flector__wedge__flector_at_infinity(self, other), self);
+PointAtInfinity flector__anti_reject_orthogonally_from__line(Flector self, Line other) {
+    return plane__anti_wedge__line_at_infinity(flector__wedge__line(self, other), line__anti_dual(other));
 }
 
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__line(Flector self, Line other) {
-    return plane__weight_contraction__flector(flector__wedge__line(self, other), self);
-}
-
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__line_at_infinity(Flector self, LineAtInfinity other) {
-    return plane__weight_contraction__flector(flector__wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__line_at_origin(Flector self, LineAtOrigin other) {
-    return plane_at_origin__weight_contraction__flector(flector__wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__magnitude(Flector self, Magnitude other) {
-    return flector__weight_contraction__flector(flector__wedge__magnitude(self, other), self);
+PointAtInfinity flector__anti_reject_orthogonally_from__line_at_origin(Flector self, LineAtOrigin other) {
+    return plane_at_origin__anti_wedge__line_at_infinity(flector__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVectorAtInfinity flector__anti_reject_orthogonally_from__motor(Flector self, Motor other) {
-    return plane__weight_contraction__flector(flector__wedge__motor(self, other), self);
+    return plane__anti_wedge__multi_vector_at_infinity(flector__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity flector__anti_reject_orthogonally_from__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__weight_contraction__flector(flector__wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__flector(flector__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(flector__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtInfinity flector__anti_reject_orthogonally_from__multi_vector_at_origin(Flector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__flector(flector__wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(flector__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
 FlectorAtInfinity flector__anti_reject_orthogonally_from__origin(Flector self, Origin other) {
-    return rotor__weight_contraction__flector(flector__wedge__origin(self, other), self);
+    return rotor__anti_wedge__horizon(flector__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+PointAtInfinity flector__anti_reject_orthogonally_from__plane(Flector self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(flector__wedge__plane(self, other), plane__anti_dual(other));
+}
+
+PointAtInfinity flector__anti_reject_orthogonally_from__plane_at_origin(Flector self, PlaneAtOrigin other) {
+    return anti_scalar__anti_wedge__point_at_infinity(flector__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
 FlectorAtInfinity flector__anti_reject_orthogonally_from__point(Flector self, Point other) {
-    return motor__weight_contraction__flector(flector__wedge__point(self, other), self);
-}
-
-FlectorAtInfinity flector__anti_reject_orthogonally_from__point_at_infinity(Flector self, PointAtInfinity other) {
-    return motor__weight_contraction__flector(flector__wedge__point_at_infinity(self, other), self);
+    return motor__anti_wedge__horizon(flector__wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVectorAtInfinity flector__anti_reject_orthogonally_from__rotor(Flector self, Rotor other) {
-    return plane_at_origin__weight_contraction__flector(flector__wedge__rotor(self, other), self);
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(flector__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__scalar(Flector self, Scalar other) {
-    return flector__weight_contraction__flector(flector__wedge__scalar(self, other), self);
+PointAtInfinity flector__anti_reject_orthogonally_from__transflector(Flector self, Transflector other) {
+    return motor__anti_wedge__point_at_infinity(flector__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-FlectorAtInfinity flector__anti_reject_orthogonally_from__transflector(Flector self, Transflector other) {
-    return motor__weight_contraction__flector(flector__wedge__transflector(self, other), self);
+FlectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__flector(FlectorAtInfinity self, Flector other) {
+    return motor__anti_wedge__flector_at_infinity(flector_at_infinity__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity flector__anti_reject_orthogonally_from__translator(Flector self, Translator other) {
-    return plane__weight_contraction__flector(flector__wedge__translator(self, other), self);
+PointAtInfinity flector_at_infinity__anti_reject_orthogonally_from__line(FlectorAtInfinity self, Line other) {
+    return plane__anti_wedge__line_at_infinity(flector_at_infinity__wedge__line(self, other), line__anti_dual(other));
 }
 
-PointAtInfinity line__anti_reject_orthogonally_from__flector(Line self, Flector other) {
-    return plane__weight_contraction__line(line__wedge__flector(self, other), self);
+PointAtInfinity flector_at_infinity__anti_reject_orthogonally_from__line_at_origin(FlectorAtInfinity self, LineAtOrigin other) {
+    return plane_at_origin__anti_wedge__line_at_infinity(flector_at_infinity__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-PointAtInfinity line__anti_reject_orthogonally_from__flector_at_infinity(Line self, FlectorAtInfinity other) {
-    return plane__weight_contraction__line(line__wedge__flector_at_infinity(self, other), self);
+MultiVectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__motor(FlectorAtInfinity self, Motor other) {
+    return plane__anti_wedge__multi_vector_at_infinity(flector_at_infinity__wedge__motor(self, other), motor__anti_dual(other));
 }
 
-Scalar line__anti_reject_orthogonally_from__magnitude(Line self, Magnitude other) {
-    return line__weight_contraction__line(line__wedge__magnitude(self, other), self);
+MultiVectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__multi_vector(FlectorAtInfinity self, MultiVector other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(flector_at_infinity__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__multi_vector_at_origin(FlectorAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(flector_at_infinity__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+FlectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__origin(FlectorAtInfinity self, Origin other) {
+    return rotor__anti_wedge__horizon(flector_at_infinity__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+PointAtInfinity flector_at_infinity__anti_reject_orthogonally_from__plane(FlectorAtInfinity self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(flector_at_infinity__wedge__plane(self, other), plane__anti_dual(other));
+}
+
+PointAtInfinity flector_at_infinity__anti_reject_orthogonally_from__plane_at_origin(FlectorAtInfinity self, PlaneAtOrigin other) {
+    return anti_scalar__anti_wedge__point_at_infinity(flector_at_infinity__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+FlectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__point(FlectorAtInfinity self, Point other) {
+    return motor__anti_wedge__horizon(flector_at_infinity__wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity flector_at_infinity__anti_reject_orthogonally_from__rotor(FlectorAtInfinity self, Rotor other) {
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(flector_at_infinity__wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+PointAtInfinity flector_at_infinity__anti_reject_orthogonally_from__transflector(FlectorAtInfinity self, Transflector other) {
+    return translator__anti_wedge__point_at_infinity(flector_at_infinity__wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+FlectorAtInfinity horizon__anti_reject_orthogonally_from__flector(Horizon self, Flector other) {
+    return anti_scalar__anti_wedge__flector_at_infinity(horizon__wedge__flector(self, other), flector__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__anti_reject_orthogonally_from__multi_vector(Horizon self, MultiVector other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(horizon__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__anti_reject_orthogonally_from__multi_vector_at_origin(Horizon self, MultiVectorAtOrigin other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(horizon__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon horizon__anti_reject_orthogonally_from__origin(Horizon self, Origin other) {
+    return anti_scalar__anti_wedge__horizon(horizon__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+Horizon horizon__anti_reject_orthogonally_from__point(Horizon self, Point other) {
+    return anti_scalar__anti_wedge__horizon(horizon__wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity line__anti_reject_orthogonally_from__flector(Line self, Flector other) {
+    return plane__anti_wedge__flector_at_infinity(line__wedge__flector(self, other), flector__anti_dual(other));
+}
+
+LineAtInfinity line__anti_reject_orthogonally_from__line(Line self, Line other) {
+    return anti_scalar__anti_wedge__line_at_infinity(line__wedge__line(self, other), line__anti_dual(other));
+}
+
+LineAtInfinity line__anti_reject_orthogonally_from__line_at_origin(Line self, LineAtOrigin other) {
+    return anti_scalar__anti_wedge__line_at_infinity(line__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity line__anti_reject_orthogonally_from__motor(Line self, Motor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(line__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity line__anti_reject_orthogonally_from__multi_vector(Line self, MultiVector other) {
-    return multi_vector__weight_contraction__line(line__wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity line__anti_reject_orthogonally_from__multi_vector_at_infinity(Line self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__line(line__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(line__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtInfinity line__anti_reject_orthogonally_from__multi_vector_at_origin(Line self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__line(line__wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(line__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-PointAtInfinity line__anti_reject_orthogonally_from__origin(Line self, Origin other) {
-    return plane_at_origin__weight_contraction__line(line__wedge__origin(self, other), self);
+LineAtInfinity line__anti_reject_orthogonally_from__origin(Line self, Origin other) {
+    return plane_at_origin__anti_wedge__horizon(line__wedge__origin(self, other), origin__anti_dual(other));
 }
 
-PointAtInfinity line__anti_reject_orthogonally_from__point(Line self, Point other) {
-    return plane__weight_contraction__line(line__wedge__point(self, other), self);
+LineAtInfinity line__anti_reject_orthogonally_from__point(Line self, Point other) {
+    return plane__anti_wedge__horizon(line__wedge__point(self, other), point__anti_dual(other));
 }
 
-PointAtInfinity line__anti_reject_orthogonally_from__point_at_infinity(Line self, PointAtInfinity other) {
-    return plane__weight_contraction__line(line__wedge__point_at_infinity(self, other), self);
+MultiVectorAtInfinity line__anti_reject_orthogonally_from__rotor(Line self, Rotor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(line__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-Scalar line__anti_reject_orthogonally_from__scalar(Line self, Scalar other) {
-    return line__weight_contraction__line(line__wedge__scalar(self, other), self);
+Scalar line__anti_reject_orthogonally_from__transflector(Line self, Transflector other) {
+    return plane__anti_wedge__point_at_infinity(line__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-PointAtInfinity line__anti_reject_orthogonally_from__transflector(Line self, Transflector other) {
-    return plane__weight_contraction__line(line__wedge__transflector(self, other), self);
+MultiVectorAtInfinity line_at_infinity__anti_reject_orthogonally_from__flector(LineAtInfinity self, Flector other) {
+    return plane__anti_wedge__flector_at_infinity(line_at_infinity__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-PointAtInfinity line_at_origin__anti_reject_orthogonally_from__flector(LineAtOrigin self, Flector other) {
-    return plane_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__flector(self, other), self);
+LineAtInfinity line_at_infinity__anti_reject_orthogonally_from__line(LineAtInfinity self, Line other) {
+    return anti_scalar__anti_wedge__line_at_infinity(line_at_infinity__wedge__line(self, other), line__anti_dual(other));
 }
 
-PointAtInfinity line_at_origin__anti_reject_orthogonally_from__flector_at_infinity(LineAtOrigin self, FlectorAtInfinity other) {
-    return plane_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__flector_at_infinity(self, other), self);
+LineAtInfinity line_at_infinity__anti_reject_orthogonally_from__line_at_origin(LineAtInfinity self, LineAtOrigin other) {
+    return anti_scalar__anti_wedge__line_at_infinity(line_at_infinity__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Scalar line_at_origin__anti_reject_orthogonally_from__magnitude(LineAtOrigin self, Magnitude other) {
-    return line_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__magnitude(self, other), self);
+MultiVectorAtInfinity line_at_infinity__anti_reject_orthogonally_from__motor(LineAtInfinity self, Motor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(line_at_infinity__wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity line_at_infinity__anti_reject_orthogonally_from__multi_vector(LineAtInfinity self, MultiVector other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(line_at_infinity__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity line_at_infinity__anti_reject_orthogonally_from__multi_vector_at_origin(LineAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(line_at_infinity__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+LineAtInfinity line_at_infinity__anti_reject_orthogonally_from__origin(LineAtInfinity self, Origin other) {
+    return plane_at_origin__anti_wedge__horizon(line_at_infinity__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+LineAtInfinity line_at_infinity__anti_reject_orthogonally_from__point(LineAtInfinity self, Point other) {
+    return plane__anti_wedge__horizon(line_at_infinity__wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity line_at_infinity__anti_reject_orthogonally_from__rotor(LineAtInfinity self, Rotor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(line_at_infinity__wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+MultiVectorAtInfinity line_at_origin__anti_reject_orthogonally_from__flector(LineAtOrigin self, Flector other) {
+    return plane_at_origin__anti_wedge__flector_at_infinity(line_at_origin__wedge__flector(self, other), flector__anti_dual(other));
+}
+
+LineAtInfinity line_at_origin__anti_reject_orthogonally_from__line(LineAtOrigin self, Line other) {
+    return anti_scalar__anti_wedge__line_at_infinity(line_at_origin__wedge__line(self, other), line__anti_dual(other));
+}
+
+MultiVectorAtInfinity line_at_origin__anti_reject_orthogonally_from__motor(LineAtOrigin self, Motor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(line_at_origin__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity line_at_origin__anti_reject_orthogonally_from__multi_vector(LineAtOrigin self, MultiVector other) {
-    return multi_vector_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__multi_vector(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(line_at_origin__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVectorAtInfinity line_at_origin__anti_reject_orthogonally_from__multi_vector_at_infinity(LineAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__multi_vector_at_infinity(self, other), self);
+LineAtInfinity line_at_origin__anti_reject_orthogonally_from__point(LineAtOrigin self, Point other) {
+    return plane_at_origin__anti_wedge__horizon(line_at_origin__wedge__point(self, other), point__anti_dual(other));
 }
 
-PointAtInfinity line_at_origin__anti_reject_orthogonally_from__point(LineAtOrigin self, Point other) {
-    return plane_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__point(self, other), self);
-}
-
-PointAtInfinity line_at_origin__anti_reject_orthogonally_from__point_at_infinity(LineAtOrigin self, PointAtInfinity other) {
-    return plane_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__point_at_infinity(self, other), self);
-}
-
-Scalar line_at_origin__anti_reject_orthogonally_from__scalar(LineAtOrigin self, Scalar other) {
-    return line_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__scalar(self, other), self);
-}
-
-PointAtInfinity line_at_origin__anti_reject_orthogonally_from__transflector(LineAtOrigin self, Transflector other) {
-    return plane_at_origin__weight_contraction__line_at_origin(line_at_origin__wedge__transflector(self, other), self);
+Scalar line_at_origin__anti_reject_orthogonally_from__transflector(LineAtOrigin self, Transflector other) {
+    return plane_at_origin__anti_wedge__point_at_infinity(line_at_origin__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVectorAtInfinity motor__anti_reject_orthogonally_from__flector(Motor self, Flector other) {
-    return plane__weight_contraction__motor(motor__wedge__flector(self, other), self);
+    return plane__anti_wedge__flector_at_infinity(motor__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__flector_at_infinity(Motor self, FlectorAtInfinity other) {
-    return plane__weight_contraction__motor(motor__wedge__flector_at_infinity(self, other), self);
+LineAtInfinity motor__anti_reject_orthogonally_from__line(Motor self, Line other) {
+    return anti_scalar__anti_wedge__line_at_infinity(motor__wedge__line(self, other), line__anti_dual(other));
 }
 
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__magnitude(Motor self, Magnitude other) {
-    return motor__weight_contraction__motor(motor__wedge__magnitude(self, other), self);
+LineAtInfinity motor__anti_reject_orthogonally_from__line_at_origin(Motor self, LineAtOrigin other) {
+    return anti_scalar__anti_wedge__line_at_infinity(motor__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity motor__anti_reject_orthogonally_from__motor(Motor self, Motor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(motor__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity motor__anti_reject_orthogonally_from__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__weight_contraction__motor(motor__wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__multi_vector_at_infinity(Motor self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__motor(motor__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(motor__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtInfinity motor__anti_reject_orthogonally_from__multi_vector_at_origin(Motor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__motor(motor__wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(motor__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__origin(Motor self, Origin other) {
-    return plane_at_origin__weight_contraction__motor(motor__wedge__origin(self, other), self);
+LineAtInfinity motor__anti_reject_orthogonally_from__origin(Motor self, Origin other) {
+    return plane_at_origin__anti_wedge__horizon(motor__wedge__origin(self, other), origin__anti_dual(other));
 }
 
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__point(Motor self, Point other) {
-    return plane__weight_contraction__motor(motor__wedge__point(self, other), self);
+LineAtInfinity motor__anti_reject_orthogonally_from__point(Motor self, Point other) {
+    return plane__anti_wedge__horizon(motor__wedge__point(self, other), point__anti_dual(other));
 }
 
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__point_at_infinity(Motor self, PointAtInfinity other) {
-    return plane__weight_contraction__motor(motor__wedge__point_at_infinity(self, other), self);
+MultiVectorAtInfinity motor__anti_reject_orthogonally_from__rotor(Motor self, Rotor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(motor__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__scalar(Motor self, Scalar other) {
-    return motor__weight_contraction__motor(motor__wedge__scalar(self, other), self);
-}
-
-MultiVectorAtInfinity motor__anti_reject_orthogonally_from__transflector(Motor self, Transflector other) {
-    return plane__weight_contraction__motor(motor__wedge__transflector(self, other), self);
+Scalar motor__anti_reject_orthogonally_from__transflector(Motor self, Transflector other) {
+    return plane__anti_wedge__point_at_infinity(motor__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__flector(MultiVector self, Flector other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__flector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__flector_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__horizon(MultiVector self, Horizon other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__horizon(self, other), self);
+    return multi_vector__anti_wedge__flector_at_infinity(multi_vector__wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__line(MultiVector self, Line other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__line(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__line_at_infinity(MultiVector self, LineAtInfinity other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__line_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__line_at_infinity(multi_vector__wedge__line(self, other), line__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__line_at_origin(MultiVector self, LineAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector(multi_vector__wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__magnitude(MultiVector self, Magnitude other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__magnitude(self, other), self);
+    return multi_vector_at_origin__anti_wedge__line_at_infinity(multi_vector__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__motor(MultiVector self, Motor other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__motor(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(multi_vector__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__multi_vector_at_infinity(MultiVector self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(multi_vector__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__multi_vector_at_origin(MultiVector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector(multi_vector__wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(multi_vector__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__origin(MultiVector self, Origin other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector(multi_vector__wedge__origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__horizon(multi_vector__wedge__origin(self, other), origin__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__plane(MultiVector self, Plane other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__plane(self, other), self);
+    return multi_vector__anti_wedge__point_at_infinity(multi_vector__wedge__plane(self, other), plane__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__plane_at_origin(MultiVector self, PlaneAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector(multi_vector__wedge__plane_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__point_at_infinity(multi_vector__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__point(MultiVector self, Point other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__point(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__point_at_infinity(MultiVector self, PointAtInfinity other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__point_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__horizon(multi_vector__wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector(multi_vector__wedge__rotor(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__scalar(MultiVector self, Scalar other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__scalar(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(multi_vector__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__transflector(self, other), self);
+    return multi_vector__anti_wedge__point_at_infinity(multi_vector__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVectorAtInfinity multi_vector__anti_reject_orthogonally_from__translator(MultiVector self, Translator other) {
-    return multi_vector__weight_contraction__multi_vector(multi_vector__wedge__translator(self, other), self);
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__flector(MultiVectorAtInfinity self, Flector other) {
+    return multi_vector__anti_wedge__flector_at_infinity(multi_vector_at_infinity__wedge__flector(self, other), flector__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__line(MultiVectorAtInfinity self, Line other) {
+    return multi_vector__anti_wedge__line_at_infinity(multi_vector_at_infinity__wedge__line(self, other), line__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__line_at_origin(MultiVectorAtInfinity self, LineAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__line_at_infinity(multi_vector_at_infinity__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__motor(MultiVectorAtInfinity self, Motor other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(multi_vector_at_infinity__wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(multi_vector_at_infinity__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__multi_vector_at_origin(MultiVectorAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(multi_vector_at_infinity__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__origin(MultiVectorAtInfinity self, Origin other) {
+    return multi_vector_at_origin__anti_wedge__horizon(multi_vector_at_infinity__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__plane(MultiVectorAtInfinity self, Plane other) {
+    return multi_vector__anti_wedge__point_at_infinity(multi_vector_at_infinity__wedge__plane(self, other), plane__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__plane_at_origin(MultiVectorAtInfinity self, PlaneAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__point_at_infinity(multi_vector_at_infinity__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__point(MultiVectorAtInfinity self, Point other) {
+    return multi_vector__anti_wedge__horizon(multi_vector_at_infinity__wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__rotor(MultiVectorAtInfinity self, Rotor other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(multi_vector_at_infinity__wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_orthogonally_from__transflector(MultiVectorAtInfinity self, Transflector other) {
+    return multi_vector__anti_wedge__point_at_infinity(multi_vector_at_infinity__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__flector(MultiVectorAtOrigin self, Flector other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__flector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__flector_at_infinity(MultiVectorAtOrigin self, FlectorAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__flector_at_infinity(self, other), self);
+    return multi_vector_at_origin__anti_wedge__flector_at_infinity(multi_vector_at_origin__wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__line(MultiVectorAtOrigin self, Line other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__line(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__line_at_infinity(MultiVectorAtOrigin self, LineAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__magnitude(MultiVectorAtOrigin self, Magnitude other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__magnitude(self, other), self);
+    return multi_vector_at_origin__anti_wedge__line_at_infinity(multi_vector_at_origin__wedge__line(self, other), line__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__motor(MultiVectorAtOrigin self, Motor other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__motor(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(multi_vector_at_origin__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__multi_vector(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(multi_vector_at_origin__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__multi_vector_at_infinity(MultiVectorAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__multi_vector_at_infinity(self, other), self);
+PointAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__plane(MultiVectorAtOrigin self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(multi_vector_at_origin__wedge__plane(self, other), plane__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__point(MultiVectorAtOrigin self, Point other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__point(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__point_at_infinity(MultiVectorAtOrigin self, PointAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__scalar(MultiVectorAtOrigin self, Scalar other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__scalar(self, other), self);
+    return multi_vector_at_origin__anti_wedge__horizon(multi_vector_at_origin__wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__transflector(MultiVectorAtOrigin self, Transflector other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__transflector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__anti_reject_orthogonally_from__translator(MultiVectorAtOrigin self, Translator other) {
-    return multi_vector_at_origin__weight_contraction__multi_vector_at_origin(multi_vector_at_origin__wedge__translator(self, other), self);
+    return multi_vector_at_origin__anti_wedge__point_at_infinity(multi_vector_at_origin__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 FlectorAtInfinity origin__anti_reject_orthogonally_from__flector(Origin self, Flector other) {
-    return rotor__weight_contraction__origin(origin__wedge__flector(self, other), self);
+    return rotor__anti_wedge__flector_at_infinity(origin__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-FlectorAtInfinity origin__anti_reject_orthogonally_from__flector_at_infinity(Origin self, FlectorAtInfinity other) {
-    return rotor__weight_contraction__origin(origin__wedge__flector_at_infinity(self, other), self);
+PointAtInfinity origin__anti_reject_orthogonally_from__line(Origin self, Line other) {
+    return plane_at_origin__anti_wedge__line_at_infinity(origin__wedge__line(self, other), line__anti_dual(other));
 }
 
-LineAtInfinity origin__anti_reject_orthogonally_from__line(Origin self, Line other) {
-    return plane_at_origin__weight_contraction__origin(origin__wedge__line(self, other), self);
-}
-
-LineAtInfinity origin__anti_reject_orthogonally_from__line_at_infinity(Origin self, LineAtInfinity other) {
-    return plane_at_origin__weight_contraction__origin(origin__wedge__line_at_infinity(self, other), self);
-}
-
-Scalar origin__anti_reject_orthogonally_from__magnitude(Origin self, Magnitude other) {
-    return origin__weight_contraction__origin(origin__wedge__magnitude(self, other), self);
-}
-
-LineAtInfinity origin__anti_reject_orthogonally_from__motor(Origin self, Motor other) {
-    return plane_at_origin__weight_contraction__origin(origin__wedge__motor(self, other), self);
+MultiVectorAtInfinity origin__anti_reject_orthogonally_from__motor(Origin self, Motor other) {
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(origin__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity origin__anti_reject_orthogonally_from__multi_vector(Origin self, MultiVector other) {
-    return multi_vector_at_origin__weight_contraction__origin(origin__wedge__multi_vector(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(origin__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVectorAtInfinity origin__anti_reject_orthogonally_from__multi_vector_at_infinity(Origin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__origin(origin__wedge__multi_vector_at_infinity(self, other), self);
+PointAtInfinity origin__anti_reject_orthogonally_from__plane(Origin self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(origin__wedge__plane(self, other), plane__anti_dual(other));
 }
 
 PointAtInfinity origin__anti_reject_orthogonally_from__point(Origin self, Point other) {
-    return line_at_origin__weight_contraction__origin(origin__wedge__point(self, other), self);
+    return line_at_origin__anti_wedge__horizon(origin__wedge__point(self, other), point__anti_dual(other));
 }
 
-PointAtInfinity origin__anti_reject_orthogonally_from__point_at_infinity(Origin self, PointAtInfinity other) {
-    return line_at_origin__weight_contraction__origin(origin__wedge__point_at_infinity(self, other), self);
+PointAtInfinity origin__anti_reject_orthogonally_from__transflector(Origin self, Transflector other) {
+    return rotor__anti_wedge__point_at_infinity(origin__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-Scalar origin__anti_reject_orthogonally_from__scalar(Origin self, Scalar other) {
-    return origin__weight_contraction__origin(origin__wedge__scalar(self, other), self);
-}
-
-FlectorAtInfinity origin__anti_reject_orthogonally_from__transflector(Origin self, Transflector other) {
-    return rotor__weight_contraction__origin(origin__wedge__transflector(self, other), self);
-}
-
-LineAtInfinity origin__anti_reject_orthogonally_from__translator(Origin self, Translator other) {
-    return plane_at_origin__weight_contraction__origin(origin__wedge__translator(self, other), self);
-}
-
-Scalar plane__anti_reject_orthogonally_from__magnitude(Plane self, Magnitude other) {
-    return plane__weight_contraction__plane(plane__wedge__magnitude(self, other), self);
+FlectorAtInfinity plane__anti_reject_orthogonally_from__flector(Plane self, Flector other) {
+    return anti_scalar__anti_wedge__flector_at_infinity(plane__wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVectorAtInfinity plane__anti_reject_orthogonally_from__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__weight_contraction__plane(plane__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(plane__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVectorAtInfinity plane__anti_reject_orthogonally_from__multi_vector_at_infinity(Plane self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__plane(plane__wedge__multi_vector_at_infinity(self, other), self);
+MultiVectorAtInfinity plane__anti_reject_orthogonally_from__multi_vector_at_origin(Plane self, MultiVectorAtOrigin other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(plane__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-Scalar plane__anti_reject_orthogonally_from__scalar(Plane self, Scalar other) {
-    return plane__weight_contraction__plane(plane__wedge__scalar(self, other), self);
+Horizon plane__anti_reject_orthogonally_from__origin(Plane self, Origin other) {
+    return anti_scalar__anti_wedge__horizon(plane__wedge__origin(self, other), origin__anti_dual(other));
 }
 
-Scalar plane_at_origin__anti_reject_orthogonally_from__magnitude(PlaneAtOrigin self, Magnitude other) {
-    return plane_at_origin__weight_contraction__plane_at_origin(plane_at_origin__wedge__magnitude(self, other), self);
+Horizon plane__anti_reject_orthogonally_from__point(Plane self, Point other) {
+    return anti_scalar__anti_wedge__horizon(plane__wedge__point(self, other), point__anti_dual(other));
+}
+
+PointAtInfinity plane__anti_reject_orthogonally_from__transflector(Plane self, Transflector other) {
+    return anti_scalar__anti_wedge__point_at_infinity(plane__wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+FlectorAtInfinity plane_at_origin__anti_reject_orthogonally_from__flector(PlaneAtOrigin self, Flector other) {
+    return anti_scalar__anti_wedge__flector_at_infinity(plane_at_origin__wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVectorAtInfinity plane_at_origin__anti_reject_orthogonally_from__multi_vector(PlaneAtOrigin self, MultiVector other) {
-    return multi_vector_at_origin__weight_contraction__plane_at_origin(plane_at_origin__wedge__multi_vector(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(plane_at_origin__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVectorAtInfinity plane_at_origin__anti_reject_orthogonally_from__multi_vector_at_infinity(PlaneAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__plane_at_origin(plane_at_origin__wedge__multi_vector_at_infinity(self, other), self);
+Horizon plane_at_origin__anti_reject_orthogonally_from__point(PlaneAtOrigin self, Point other) {
+    return anti_scalar__anti_wedge__horizon(plane_at_origin__wedge__point(self, other), point__anti_dual(other));
 }
 
-Scalar plane_at_origin__anti_reject_orthogonally_from__scalar(PlaneAtOrigin self, Scalar other) {
-    return plane_at_origin__weight_contraction__plane_at_origin(plane_at_origin__wedge__scalar(self, other), self);
+PointAtInfinity plane_at_origin__anti_reject_orthogonally_from__transflector(PlaneAtOrigin self, Transflector other) {
+    return anti_scalar__anti_wedge__point_at_infinity(plane_at_origin__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 FlectorAtInfinity point__anti_reject_orthogonally_from__flector(Point self, Flector other) {
-    return motor__weight_contraction__point(point__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector_at_infinity(point__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-FlectorAtInfinity point__anti_reject_orthogonally_from__flector_at_infinity(Point self, FlectorAtInfinity other) {
-    return motor__weight_contraction__point(point__wedge__flector_at_infinity(self, other), self);
+PointAtInfinity point__anti_reject_orthogonally_from__line(Point self, Line other) {
+    return plane__anti_wedge__line_at_infinity(point__wedge__line(self, other), line__anti_dual(other));
 }
 
-LineAtInfinity point__anti_reject_orthogonally_from__line(Point self, Line other) {
-    return plane__weight_contraction__point(point__wedge__line(self, other), self);
+PointAtInfinity point__anti_reject_orthogonally_from__line_at_origin(Point self, LineAtOrigin other) {
+    return plane_at_origin__anti_wedge__line_at_infinity(point__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-LineAtInfinity point__anti_reject_orthogonally_from__line_at_infinity(Point self, LineAtInfinity other) {
-    return plane__weight_contraction__point(point__wedge__line_at_infinity(self, other), self);
-}
-
-LineAtInfinity point__anti_reject_orthogonally_from__line_at_origin(Point self, LineAtOrigin other) {
-    return plane_at_origin__weight_contraction__point(point__wedge__line_at_origin(self, other), self);
-}
-
-Scalar point__anti_reject_orthogonally_from__magnitude(Point self, Magnitude other) {
-    return point__weight_contraction__point(point__wedge__magnitude(self, other), self);
-}
-
-LineAtInfinity point__anti_reject_orthogonally_from__motor(Point self, Motor other) {
-    return plane__weight_contraction__point(point__wedge__motor(self, other), self);
+MultiVectorAtInfinity point__anti_reject_orthogonally_from__motor(Point self, Motor other) {
+    return plane__anti_wedge__multi_vector_at_infinity(point__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity point__anti_reject_orthogonally_from__multi_vector(Point self, MultiVector other) {
-    return multi_vector__weight_contraction__point(point__wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity point__anti_reject_orthogonally_from__multi_vector_at_infinity(Point self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__point(point__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(point__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtInfinity point__anti_reject_orthogonally_from__multi_vector_at_origin(Point self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__point(point__wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(point__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
 PointAtInfinity point__anti_reject_orthogonally_from__origin(Point self, Origin other) {
-    return line_at_origin__weight_contraction__point(point__wedge__origin(self, other), self);
+    return line_at_origin__anti_wedge__horizon(point__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+PointAtInfinity point__anti_reject_orthogonally_from__plane(Point self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(point__wedge__plane(self, other), plane__anti_dual(other));
+}
+
+PointAtInfinity point__anti_reject_orthogonally_from__plane_at_origin(Point self, PlaneAtOrigin other) {
+    return anti_scalar__anti_wedge__point_at_infinity(point__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
 PointAtInfinity point__anti_reject_orthogonally_from__point(Point self, Point other) {
-    return line__weight_contraction__point(point__wedge__point(self, other), self);
+    return line__anti_wedge__horizon(point__wedge__point(self, other), point__anti_dual(other));
 }
 
-PointAtInfinity point__anti_reject_orthogonally_from__point_at_infinity(Point self, PointAtInfinity other) {
-    return line__weight_contraction__point(point__wedge__point_at_infinity(self, other), self);
+MultiVectorAtInfinity point__anti_reject_orthogonally_from__rotor(Point self, Rotor other) {
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(point__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-LineAtInfinity point__anti_reject_orthogonally_from__rotor(Point self, Rotor other) {
-    return plane_at_origin__weight_contraction__point(point__wedge__rotor(self, other), self);
+PointAtInfinity point__anti_reject_orthogonally_from__transflector(Point self, Transflector other) {
+    return motor__anti_wedge__point_at_infinity(point__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-Scalar point__anti_reject_orthogonally_from__scalar(Point self, Scalar other) {
-    return point__weight_contraction__point(point__wedge__scalar(self, other), self);
+FlectorAtInfinity point_at_infinity__anti_reject_orthogonally_from__flector(PointAtInfinity self, Flector other) {
+    return motor__anti_wedge__flector_at_infinity(point_at_infinity__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-FlectorAtInfinity point__anti_reject_orthogonally_from__transflector(Point self, Transflector other) {
-    return motor__weight_contraction__point(point__wedge__transflector(self, other), self);
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__line(PointAtInfinity self, Line other) {
+    return plane__anti_wedge__line_at_infinity(point_at_infinity__wedge__line(self, other), line__anti_dual(other));
 }
 
-LineAtInfinity point__anti_reject_orthogonally_from__translator(Point self, Translator other) {
-    return plane__weight_contraction__point(point__wedge__translator(self, other), self);
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__line_at_origin(PointAtInfinity self, LineAtOrigin other) {
+    return plane_at_origin__anti_wedge__line_at_infinity(point_at_infinity__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__anti_reject_orthogonally_from__motor(PointAtInfinity self, Motor other) {
+    return plane__anti_wedge__multi_vector_at_infinity(point_at_infinity__wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__anti_reject_orthogonally_from__multi_vector(PointAtInfinity self, MultiVector other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(point_at_infinity__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__anti_reject_orthogonally_from__multi_vector_at_origin(PointAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(point_at_infinity__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__origin(PointAtInfinity self, Origin other) {
+    return line_at_origin__anti_wedge__horizon(point_at_infinity__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__plane(PointAtInfinity self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(point_at_infinity__wedge__plane(self, other), plane__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__plane_at_origin(PointAtInfinity self, PlaneAtOrigin other) {
+    return anti_scalar__anti_wedge__point_at_infinity(point_at_infinity__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__point(PointAtInfinity self, Point other) {
+    return line__anti_wedge__horizon(point_at_infinity__wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__anti_reject_orthogonally_from__rotor(PointAtInfinity self, Rotor other) {
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(point_at_infinity__wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__anti_reject_orthogonally_from__transflector(PointAtInfinity self, Transflector other) {
+    return translator__anti_wedge__point_at_infinity(point_at_infinity__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__flector(Rotor self, Flector other) {
-    return plane_at_origin__weight_contraction__rotor(rotor__wedge__flector(self, other), self);
+    return plane_at_origin__anti_wedge__flector_at_infinity(rotor__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__flector_at_infinity(Rotor self, FlectorAtInfinity other) {
-    return plane_at_origin__weight_contraction__rotor(rotor__wedge__flector_at_infinity(self, other), self);
+LineAtInfinity rotor__anti_reject_orthogonally_from__line(Rotor self, Line other) {
+    return anti_scalar__anti_wedge__line_at_infinity(rotor__wedge__line(self, other), line__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__magnitude(Rotor self, Magnitude other) {
-    return rotor__weight_contraction__rotor(rotor__wedge__magnitude(self, other), self);
+MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__motor(Rotor self, Motor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(rotor__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector_at_origin__weight_contraction__rotor(rotor__wedge__multi_vector(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(rotor__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__multi_vector_at_infinity(Rotor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_origin__weight_contraction__rotor(rotor__wedge__multi_vector_at_infinity(self, other), self);
+LineAtInfinity rotor__anti_reject_orthogonally_from__point(Rotor self, Point other) {
+    return plane_at_origin__anti_wedge__horizon(rotor__wedge__point(self, other), point__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__point(Rotor self, Point other) {
-    return plane_at_origin__weight_contraction__rotor(rotor__wedge__point(self, other), self);
+Scalar rotor__anti_reject_orthogonally_from__transflector(Rotor self, Transflector other) {
+    return plane_at_origin__anti_wedge__point_at_infinity(rotor__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__point_at_infinity(Rotor self, PointAtInfinity other) {
-    return plane_at_origin__weight_contraction__rotor(rotor__wedge__point_at_infinity(self, other), self);
+FlectorAtInfinity transflector__anti_reject_orthogonally_from__flector(Transflector self, Flector other) {
+    return motor__anti_wedge__flector_at_infinity(transflector__wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__scalar(Rotor self, Scalar other) {
-    return rotor__weight_contraction__rotor(rotor__wedge__scalar(self, other), self);
+PointAtInfinity transflector__anti_reject_orthogonally_from__line(Transflector self, Line other) {
+    return plane__anti_wedge__line_at_infinity(transflector__wedge__line(self, other), line__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__anti_reject_orthogonally_from__transflector(Rotor self, Transflector other) {
-    return plane_at_origin__weight_contraction__rotor(rotor__wedge__transflector(self, other), self);
+PointAtInfinity transflector__anti_reject_orthogonally_from__line_at_origin(Transflector self, LineAtOrigin other) {
+    return plane_at_origin__anti_wedge__line_at_infinity(transflector__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-PointAtInfinity transflector__anti_reject_orthogonally_from__flector(Transflector self, Flector other) {
-    return motor__weight_contraction__transflector(transflector__wedge__flector(self, other), self);
-}
-
-PointAtInfinity transflector__anti_reject_orthogonally_from__flector_at_infinity(Transflector self, FlectorAtInfinity other) {
-    return translator__weight_contraction__transflector(transflector__wedge__flector_at_infinity(self, other), self);
-}
-
-Scalar transflector__anti_reject_orthogonally_from__line(Transflector self, Line other) {
-    return plane__weight_contraction__transflector(transflector__wedge__line(self, other), self);
-}
-
-Scalar transflector__anti_reject_orthogonally_from__line_at_origin(Transflector self, LineAtOrigin other) {
-    return plane_at_origin__weight_contraction__transflector(transflector__wedge__line_at_origin(self, other), self);
-}
-
-Scalar transflector__anti_reject_orthogonally_from__magnitude(Transflector self, Magnitude other) {
-    return transflector__weight_contraction__transflector(transflector__wedge__magnitude(self, other), self);
-}
-
-Scalar transflector__anti_reject_orthogonally_from__motor(Transflector self, Motor other) {
-    return plane__weight_contraction__transflector(transflector__wedge__motor(self, other), self);
+MultiVectorAtInfinity transflector__anti_reject_orthogonally_from__motor(Transflector self, Motor other) {
+    return plane__anti_wedge__multi_vector_at_infinity(transflector__wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVectorAtInfinity transflector__anti_reject_orthogonally_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__weight_contraction__transflector(transflector__wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity transflector__anti_reject_orthogonally_from__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
-    return multi_vector__weight_contraction__transflector(transflector__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_infinity(transflector__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtInfinity transflector__anti_reject_orthogonally_from__multi_vector_at_origin(Transflector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_contraction__transflector(transflector__wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(transflector__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-PointAtInfinity transflector__anti_reject_orthogonally_from__origin(Transflector self, Origin other) {
-    return rotor__weight_contraction__transflector(transflector__wedge__origin(self, other), self);
+FlectorAtInfinity transflector__anti_reject_orthogonally_from__origin(Transflector self, Origin other) {
+    return rotor__anti_wedge__horizon(transflector__wedge__origin(self, other), origin__anti_dual(other));
 }
 
-PointAtInfinity transflector__anti_reject_orthogonally_from__point(Transflector self, Point other) {
-    return motor__weight_contraction__transflector(transflector__wedge__point(self, other), self);
+PointAtInfinity transflector__anti_reject_orthogonally_from__plane(Transflector self, Plane other) {
+    return anti_scalar__anti_wedge__point_at_infinity(transflector__wedge__plane(self, other), plane__anti_dual(other));
 }
 
-PointAtInfinity transflector__anti_reject_orthogonally_from__point_at_infinity(Transflector self, PointAtInfinity other) {
-    return translator__weight_contraction__transflector(transflector__wedge__point_at_infinity(self, other), self);
+PointAtInfinity transflector__anti_reject_orthogonally_from__plane_at_origin(Transflector self, PlaneAtOrigin other) {
+    return anti_scalar__anti_wedge__point_at_infinity(transflector__wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-Scalar transflector__anti_reject_orthogonally_from__rotor(Transflector self, Rotor other) {
-    return plane_at_origin__weight_contraction__transflector(transflector__wedge__rotor(self, other), self);
+FlectorAtInfinity transflector__anti_reject_orthogonally_from__point(Transflector self, Point other) {
+    return motor__anti_wedge__horizon(transflector__wedge__point(self, other), point__anti_dual(other));
 }
 
-Scalar transflector__anti_reject_orthogonally_from__scalar(Transflector self, Scalar other) {
-    return transflector__weight_contraction__transflector(transflector__wedge__scalar(self, other), self);
+MultiVectorAtInfinity transflector__anti_reject_orthogonally_from__rotor(Transflector self, Rotor other) {
+    return plane_at_origin__anti_wedge__multi_vector_at_infinity(transflector__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 PointAtInfinity transflector__anti_reject_orthogonally_from__transflector(Transflector self, Transflector other) {
-    return translator__weight_contraction__transflector(transflector__wedge__transflector(self, other), self);
+    return translator__anti_wedge__point_at_infinity(transflector__wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+MultiVectorAtInfinity translator__anti_reject_orthogonally_from__flector(Translator self, Flector other) {
+    return plane__anti_wedge__flector_at_infinity(translator__wedge__flector(self, other), flector__anti_dual(other));
+}
+
+LineAtInfinity translator__anti_reject_orthogonally_from__line(Translator self, Line other) {
+    return anti_scalar__anti_wedge__line_at_infinity(translator__wedge__line(self, other), line__anti_dual(other));
+}
+
+LineAtInfinity translator__anti_reject_orthogonally_from__line_at_origin(Translator self, LineAtOrigin other) {
+    return anti_scalar__anti_wedge__line_at_infinity(translator__wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity translator__anti_reject_orthogonally_from__motor(Translator self, Motor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(translator__wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity translator__anti_reject_orthogonally_from__multi_vector(Translator self, MultiVector other) {
+    return multi_vector__anti_wedge__multi_vector_at_infinity(translator__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity translator__anti_reject_orthogonally_from__multi_vector_at_origin(Translator self, MultiVectorAtOrigin other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(translator__wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+LineAtInfinity translator__anti_reject_orthogonally_from__origin(Translator self, Origin other) {
+    return plane_at_origin__anti_wedge__horizon(translator__wedge__origin(self, other), origin__anti_dual(other));
+}
+
+LineAtInfinity translator__anti_reject_orthogonally_from__point(Translator self, Point other) {
+    return plane__anti_wedge__horizon(translator__wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity translator__anti_reject_orthogonally_from__rotor(Translator self, Rotor other) {
+    return anti_scalar__anti_wedge__multi_vector_at_infinity(translator__wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 Flector flector__anti_reject_via_horizon_from__flector(Flector self, Flector other) {
-    return motor__bulk_contraction__flector(flector__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector(flector__wedge__flector(self, other), flector__dual(other));
 }
 
 Flector flector__anti_reject_via_horizon_from__flector_at_infinity(Flector self, FlectorAtInfinity other) {
-    return motor__bulk_contraction__flector(flector__wedge__flector_at_infinity(self, other), self);
+    return motor__anti_wedge__flector(flector__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVector flector__anti_reject_via_horizon_from__line(Flector self, Line other) {
-    return plane__bulk_contraction__flector(flector__wedge__line(self, other), self);
+Origin flector__anti_reject_via_horizon_from__horizon(Flector self, Horizon other) {
+    return anti_scalar__anti_wedge__origin(flector__wedge__horizon(self, other), horizon__dual(other));
 }
 
-MultiVector flector__anti_reject_via_horizon_from__line_at_infinity(Flector self, LineAtInfinity other) {
-    return plane__bulk_contraction__flector(flector__wedge__line_at_infinity(self, other), self);
+Point flector__anti_reject_via_horizon_from__line(Flector self, Line other) {
+    return plane__anti_wedge__line_at_origin(flector__wedge__line(self, other), line__dual(other));
 }
 
-MultiVector flector__anti_reject_via_horizon_from__line_at_origin(Flector self, LineAtOrigin other) {
-    return plane_at_origin__bulk_contraction__flector(flector__wedge__line_at_origin(self, other), self);
+Point flector__anti_reject_via_horizon_from__line_at_infinity(Flector self, LineAtInfinity other) {
+    return plane__anti_wedge__line_at_origin(flector__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-MultiVector flector__anti_reject_via_horizon_from__magnitude(Flector self, Magnitude other) {
-    return flector__bulk_contraction__flector(flector__wedge__magnitude(self, other), self);
-}
-
-MultiVector flector__anti_reject_via_horizon_from__motor(Flector self, Motor other) {
-    return plane__bulk_contraction__flector(flector__wedge__motor(self, other), self);
+Point flector__anti_reject_via_horizon_from__motor(Flector self, Motor other) {
+    return plane__anti_wedge__line_at_origin(flector__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector flector__anti_reject_via_horizon_from__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__bulk_contraction__flector(flector__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(flector__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector flector__anti_reject_via_horizon_from__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__flector(flector__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(flector__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVector flector__anti_reject_via_horizon_from__multi_vector_at_origin(Flector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__flector(flector__wedge__multi_vector_at_origin(self, other), self);
-}
-
-Flector flector__anti_reject_via_horizon_from__origin(Flector self, Origin other) {
-    return rotor__bulk_contraction__flector(flector__wedge__origin(self, other), self);
+Origin flector__anti_reject_via_horizon_from__plane(Flector self, Plane other) {
+    return anti_scalar__anti_wedge__origin(flector__wedge__plane(self, other), plane__dual(other));
 }
 
 Flector flector__anti_reject_via_horizon_from__point(Flector self, Point other) {
-    return motor__bulk_contraction__flector(flector__wedge__point(self, other), self);
+    return motor__anti_wedge__plane_at_origin(flector__wedge__point(self, other), point__dual(other));
 }
 
 Flector flector__anti_reject_via_horizon_from__point_at_infinity(Flector self, PointAtInfinity other) {
-    return motor__bulk_contraction__flector(flector__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVector flector__anti_reject_via_horizon_from__rotor(Flector self, Rotor other) {
-    return plane_at_origin__bulk_contraction__flector(flector__wedge__rotor(self, other), self);
-}
-
-MultiVector flector__anti_reject_via_horizon_from__scalar(Flector self, Scalar other) {
-    return flector__bulk_contraction__flector(flector__wedge__scalar(self, other), self);
+    return motor__anti_wedge__plane_at_origin(flector__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 Flector flector__anti_reject_via_horizon_from__transflector(Flector self, Transflector other) {
-    return motor__bulk_contraction__flector(flector__wedge__transflector(self, other), self);
+    return motor__anti_wedge__flector(flector__wedge__transflector(self, other), transflector__dual(other));
 }
 
-MultiVector flector__anti_reject_via_horizon_from__translator(Flector self, Translator other) {
-    return plane__bulk_contraction__flector(flector__wedge__translator(self, other), self);
+Point flector__anti_reject_via_horizon_from__translator(Flector self, Translator other) {
+    return plane__anti_wedge__line_at_origin(flector__wedge__translator(self, other), translator__dual(other));
 }
 
 Flector flector_at_infinity__anti_reject_via_horizon_from__flector(FlectorAtInfinity self, Flector other) {
-    return motor__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector(flector_at_infinity__wedge__flector(self, other), flector__dual(other));
 }
 
 PointAtInfinity flector_at_infinity__anti_reject_via_horizon_from__flector_at_infinity(FlectorAtInfinity self, FlectorAtInfinity other) {
-    return line_at_infinity__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__flector_at_infinity(self, other), self);
+    return line_at_infinity__anti_wedge__flector(flector_at_infinity__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVector flector_at_infinity__anti_reject_via_horizon_from__line(FlectorAtInfinity self, Line other) {
-    return plane__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__line(self, other), self);
+Point flector_at_infinity__anti_reject_via_horizon_from__line(FlectorAtInfinity self, Line other) {
+    return plane__anti_wedge__line_at_origin(flector_at_infinity__wedge__line(self, other), line__dual(other));
 }
 
-MultiVectorAtInfinity flector_at_infinity__anti_reject_via_horizon_from__line_at_infinity(FlectorAtInfinity self, LineAtInfinity other) {
-    return horizon__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__line_at_infinity(self, other), self);
+PointAtInfinity flector_at_infinity__anti_reject_via_horizon_from__line_at_infinity(FlectorAtInfinity self, LineAtInfinity other) {
+    return horizon__anti_wedge__line_at_origin(flector_at_infinity__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-MultiVector flector_at_infinity__anti_reject_via_horizon_from__line_at_origin(FlectorAtInfinity self, LineAtOrigin other) {
-    return plane_at_origin__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtInfinity flector_at_infinity__anti_reject_via_horizon_from__magnitude(FlectorAtInfinity self, Magnitude other) {
-    return flector_at_infinity__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__magnitude(self, other), self);
-}
-
-MultiVector flector_at_infinity__anti_reject_via_horizon_from__motor(FlectorAtInfinity self, Motor other) {
-    return plane__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__motor(self, other), self);
+Point flector_at_infinity__anti_reject_via_horizon_from__motor(FlectorAtInfinity self, Motor other) {
+    return plane__anti_wedge__line_at_origin(flector_at_infinity__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector flector_at_infinity__anti_reject_via_horizon_from__multi_vector(FlectorAtInfinity self, MultiVector other) {
-    return multi_vector__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(flector_at_infinity__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtInfinity flector_at_infinity__anti_reject_via_horizon_from__multi_vector_at_infinity(FlectorAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(flector_at_infinity__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVector flector_at_infinity__anti_reject_via_horizon_from__multi_vector_at_origin(FlectorAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__multi_vector_at_origin(self, other), self);
-}
-
-Flector flector_at_infinity__anti_reject_via_horizon_from__origin(FlectorAtInfinity self, Origin other) {
-    return rotor__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__origin(self, other), self);
+Origin flector_at_infinity__anti_reject_via_horizon_from__plane(FlectorAtInfinity self, Plane other) {
+    return anti_scalar__anti_wedge__origin(flector_at_infinity__wedge__plane(self, other), plane__dual(other));
 }
 
 Flector flector_at_infinity__anti_reject_via_horizon_from__point(FlectorAtInfinity self, Point other) {
-    return motor__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__point(self, other), self);
+    return motor__anti_wedge__plane_at_origin(flector_at_infinity__wedge__point(self, other), point__dual(other));
 }
 
 PointAtInfinity flector_at_infinity__anti_reject_via_horizon_from__point_at_infinity(FlectorAtInfinity self, PointAtInfinity other) {
-    return line_at_infinity__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVector flector_at_infinity__anti_reject_via_horizon_from__rotor(FlectorAtInfinity self, Rotor other) {
-    return plane_at_origin__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__rotor(self, other), self);
-}
-
-MultiVectorAtInfinity flector_at_infinity__anti_reject_via_horizon_from__scalar(FlectorAtInfinity self, Scalar other) {
-    return flector_at_infinity__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__scalar(self, other), self);
+    return line_at_infinity__anti_wedge__plane_at_origin(flector_at_infinity__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 Flector flector_at_infinity__anti_reject_via_horizon_from__transflector(FlectorAtInfinity self, Transflector other) {
-    return translator__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__transflector(self, other), self);
+    return translator__anti_wedge__flector(flector_at_infinity__wedge__transflector(self, other), transflector__dual(other));
 }
 
-MultiVectorAtInfinity flector_at_infinity__anti_reject_via_horizon_from__translator(FlectorAtInfinity self, Translator other) {
-    return horizon__bulk_contraction__flector_at_infinity(flector_at_infinity__wedge__translator(self, other), self);
+PointAtInfinity flector_at_infinity__anti_reject_via_horizon_from__translator(FlectorAtInfinity self, Translator other) {
+    return horizon__anti_wedge__line_at_origin(flector_at_infinity__wedge__translator(self, other), translator__dual(other));
 }
 
-Scalar horizon__anti_reject_via_horizon_from__magnitude(Horizon self, Magnitude other) {
-    return horizon__bulk_contraction__horizon(horizon__wedge__magnitude(self, other), self);
+Flector horizon__anti_reject_via_horizon_from__flector(Horizon self, Flector other) {
+    return anti_scalar__anti_wedge__flector(horizon__wedge__flector(self, other), flector__dual(other));
 }
 
 MultiVector horizon__anti_reject_via_horizon_from__multi_vector(Horizon self, MultiVector other) {
-    return multi_vector__bulk_contraction__horizon(horizon__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(horizon__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-Scalar horizon__anti_reject_via_horizon_from__multi_vector_at_infinity(Horizon self, MultiVectorAtInfinity other) {
-    return horizon__bulk_contraction__horizon(horizon__wedge__multi_vector_at_infinity(self, other), self);
+MultiVectorAtInfinity horizon__anti_reject_via_horizon_from__multi_vector_at_infinity(Horizon self, MultiVectorAtInfinity other) {
+    return horizon__anti_wedge__multi_vector_at_origin(horizon__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-Scalar horizon__anti_reject_via_horizon_from__scalar(Horizon self, Scalar other) {
-    return horizon__bulk_contraction__horizon(horizon__wedge__scalar(self, other), self);
+PlaneAtOrigin horizon__anti_reject_via_horizon_from__point(Horizon self, Point other) {
+    return anti_scalar__anti_wedge__plane_at_origin(horizon__wedge__point(self, other), point__dual(other));
 }
 
-Point line__anti_reject_via_horizon_from__flector(Line self, Flector other) {
-    return plane__bulk_contraction__line(line__wedge__flector(self, other), self);
+MultiVector line__anti_reject_via_horizon_from__flector(Line self, Flector other) {
+    return plane__anti_wedge__flector(line__wedge__flector(self, other), flector__dual(other));
 }
 
-Point line__anti_reject_via_horizon_from__flector_at_infinity(Line self, FlectorAtInfinity other) {
-    return plane__bulk_contraction__line(line__wedge__flector_at_infinity(self, other), self);
+MultiVector line__anti_reject_via_horizon_from__flector_at_infinity(Line self, FlectorAtInfinity other) {
+    return plane__anti_wedge__flector(line__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-Scalar line__anti_reject_via_horizon_from__magnitude(Line self, Magnitude other) {
-    return line__bulk_contraction__line(line__wedge__magnitude(self, other), self);
+LineAtOrigin line__anti_reject_via_horizon_from__line(Line self, Line other) {
+    return anti_scalar__anti_wedge__line_at_origin(line__wedge__line(self, other), line__dual(other));
+}
+
+LineAtOrigin line__anti_reject_via_horizon_from__line_at_infinity(Line self, LineAtInfinity other) {
+    return anti_scalar__anti_wedge__line_at_origin(line__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+LineAtOrigin line__anti_reject_via_horizon_from__motor(Line self, Motor other) {
+    return anti_scalar__anti_wedge__line_at_origin(line__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector line__anti_reject_via_horizon_from__multi_vector(Line self, MultiVector other) {
-    return multi_vector__bulk_contraction__line(line__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(line__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector line__anti_reject_via_horizon_from__multi_vector_at_infinity(Line self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__line(line__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(line__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin line__anti_reject_via_horizon_from__multi_vector_at_origin(Line self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__line(line__wedge__multi_vector_at_origin(self, other), self);
+Line line__anti_reject_via_horizon_from__point(Line self, Point other) {
+    return plane__anti_wedge__plane_at_origin(line__wedge__point(self, other), point__dual(other));
 }
 
-Origin line__anti_reject_via_horizon_from__origin(Line self, Origin other) {
-    return plane_at_origin__bulk_contraction__line(line__wedge__origin(self, other), self);
+Line line__anti_reject_via_horizon_from__point_at_infinity(Line self, PointAtInfinity other) {
+    return plane__anti_wedge__plane_at_origin(line__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-Point line__anti_reject_via_horizon_from__point(Line self, Point other) {
-    return plane__bulk_contraction__line(line__wedge__point(self, other), self);
+MultiVector line__anti_reject_via_horizon_from__transflector(Line self, Transflector other) {
+    return plane__anti_wedge__flector(line__wedge__transflector(self, other), transflector__dual(other));
 }
 
-Point line__anti_reject_via_horizon_from__point_at_infinity(Line self, PointAtInfinity other) {
-    return plane__bulk_contraction__line(line__wedge__point_at_infinity(self, other), self);
+LineAtOrigin line__anti_reject_via_horizon_from__translator(Line self, Translator other) {
+    return anti_scalar__anti_wedge__line_at_origin(line__wedge__translator(self, other), translator__dual(other));
 }
 
-Scalar line__anti_reject_via_horizon_from__scalar(Line self, Scalar other) {
-    return line__bulk_contraction__line(line__wedge__scalar(self, other), self);
+MultiVector line_at_infinity__anti_reject_via_horizon_from__flector(LineAtInfinity self, Flector other) {
+    return plane__anti_wedge__flector(line_at_infinity__wedge__flector(self, other), flector__dual(other));
 }
 
-Point line__anti_reject_via_horizon_from__transflector(Line self, Transflector other) {
-    return plane__bulk_contraction__line(line__wedge__transflector(self, other), self);
+MultiVectorAtInfinity line_at_infinity__anti_reject_via_horizon_from__flector_at_infinity(LineAtInfinity self, FlectorAtInfinity other) {
+    return horizon__anti_wedge__flector(line_at_infinity__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-Point line_at_infinity__anti_reject_via_horizon_from__flector(LineAtInfinity self, Flector other) {
-    return plane__bulk_contraction__line_at_infinity(line_at_infinity__wedge__flector(self, other), self);
+LineAtOrigin line_at_infinity__anti_reject_via_horizon_from__line(LineAtInfinity self, Line other) {
+    return anti_scalar__anti_wedge__line_at_origin(line_at_infinity__wedge__line(self, other), line__dual(other));
 }
 
-PointAtInfinity line_at_infinity__anti_reject_via_horizon_from__flector_at_infinity(LineAtInfinity self, FlectorAtInfinity other) {
-    return horizon__bulk_contraction__line_at_infinity(line_at_infinity__wedge__flector_at_infinity(self, other), self);
-}
-
-Scalar line_at_infinity__anti_reject_via_horizon_from__magnitude(LineAtInfinity self, Magnitude other) {
-    return line_at_infinity__bulk_contraction__line_at_infinity(line_at_infinity__wedge__magnitude(self, other), self);
+LineAtOrigin line_at_infinity__anti_reject_via_horizon_from__motor(LineAtInfinity self, Motor other) {
+    return anti_scalar__anti_wedge__line_at_origin(line_at_infinity__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector line_at_infinity__anti_reject_via_horizon_from__multi_vector(LineAtInfinity self, MultiVector other) {
-    return multi_vector__bulk_contraction__line_at_infinity(line_at_infinity__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(line_at_infinity__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtInfinity line_at_infinity__anti_reject_via_horizon_from__multi_vector_at_infinity(LineAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__line_at_infinity(line_at_infinity__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(line_at_infinity__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin line_at_infinity__anti_reject_via_horizon_from__multi_vector_at_origin(LineAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__line_at_infinity(line_at_infinity__wedge__multi_vector_at_origin(self, other), self);
+Line line_at_infinity__anti_reject_via_horizon_from__point(LineAtInfinity self, Point other) {
+    return plane__anti_wedge__plane_at_origin(line_at_infinity__wedge__point(self, other), point__dual(other));
 }
 
-Origin line_at_infinity__anti_reject_via_horizon_from__origin(LineAtInfinity self, Origin other) {
-    return plane_at_origin__bulk_contraction__line_at_infinity(line_at_infinity__wedge__origin(self, other), self);
+LineAtInfinity line_at_infinity__anti_reject_via_horizon_from__point_at_infinity(LineAtInfinity self, PointAtInfinity other) {
+    return horizon__anti_wedge__plane_at_origin(line_at_infinity__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-Point line_at_infinity__anti_reject_via_horizon_from__point(LineAtInfinity self, Point other) {
-    return plane__bulk_contraction__line_at_infinity(line_at_infinity__wedge__point(self, other), self);
+MultiVectorAtInfinity line_at_infinity__anti_reject_via_horizon_from__transflector(LineAtInfinity self, Transflector other) {
+    return horizon__anti_wedge__flector(line_at_infinity__wedge__transflector(self, other), transflector__dual(other));
 }
 
-PointAtInfinity line_at_infinity__anti_reject_via_horizon_from__point_at_infinity(LineAtInfinity self, PointAtInfinity other) {
-    return horizon__bulk_contraction__line_at_infinity(line_at_infinity__wedge__point_at_infinity(self, other), self);
+MultiVector line_at_origin__anti_reject_via_horizon_from__flector(LineAtOrigin self, Flector other) {
+    return plane_at_origin__anti_wedge__flector(line_at_origin__wedge__flector(self, other), flector__dual(other));
 }
 
-Scalar line_at_infinity__anti_reject_via_horizon_from__scalar(LineAtInfinity self, Scalar other) {
-    return line_at_infinity__bulk_contraction__line_at_infinity(line_at_infinity__wedge__scalar(self, other), self);
+MultiVector line_at_origin__anti_reject_via_horizon_from__flector_at_infinity(LineAtOrigin self, FlectorAtInfinity other) {
+    return plane_at_origin__anti_wedge__flector(line_at_origin__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-PointAtInfinity line_at_infinity__anti_reject_via_horizon_from__transflector(LineAtInfinity self, Transflector other) {
-    return horizon__bulk_contraction__line_at_infinity(line_at_infinity__wedge__transflector(self, other), self);
+LineAtOrigin line_at_origin__anti_reject_via_horizon_from__line(LineAtOrigin self, Line other) {
+    return anti_scalar__anti_wedge__line_at_origin(line_at_origin__wedge__line(self, other), line__dual(other));
 }
 
-Point motor__anti_reject_via_horizon_from__flector(Motor self, Flector other) {
-    return plane__bulk_contraction__motor(motor__wedge__flector(self, other), self);
+LineAtOrigin line_at_origin__anti_reject_via_horizon_from__line_at_infinity(LineAtOrigin self, LineAtInfinity other) {
+    return anti_scalar__anti_wedge__line_at_origin(line_at_origin__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-Point motor__anti_reject_via_horizon_from__flector_at_infinity(Motor self, FlectorAtInfinity other) {
-    return plane__bulk_contraction__motor(motor__wedge__flector_at_infinity(self, other), self);
+LineAtOrigin line_at_origin__anti_reject_via_horizon_from__motor(LineAtOrigin self, Motor other) {
+    return anti_scalar__anti_wedge__line_at_origin(line_at_origin__wedge__motor(self, other), motor__dual(other));
 }
 
-MultiVector motor__anti_reject_via_horizon_from__magnitude(Motor self, Magnitude other) {
-    return motor__bulk_contraction__motor(motor__wedge__magnitude(self, other), self);
+MultiVectorAtOrigin line_at_origin__anti_reject_via_horizon_from__multi_vector(LineAtOrigin self, MultiVector other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(line_at_origin__wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin line_at_origin__anti_reject_via_horizon_from__multi_vector_at_infinity(LineAtOrigin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(line_at_origin__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+LineAtOrigin line_at_origin__anti_reject_via_horizon_from__point(LineAtOrigin self, Point other) {
+    return plane_at_origin__anti_wedge__plane_at_origin(line_at_origin__wedge__point(self, other), point__dual(other));
+}
+
+LineAtOrigin line_at_origin__anti_reject_via_horizon_from__point_at_infinity(LineAtOrigin self, PointAtInfinity other) {
+    return plane_at_origin__anti_wedge__plane_at_origin(line_at_origin__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+MultiVector line_at_origin__anti_reject_via_horizon_from__transflector(LineAtOrigin self, Transflector other) {
+    return plane_at_origin__anti_wedge__flector(line_at_origin__wedge__transflector(self, other), transflector__dual(other));
+}
+
+LineAtOrigin line_at_origin__anti_reject_via_horizon_from__translator(LineAtOrigin self, Translator other) {
+    return anti_scalar__anti_wedge__line_at_origin(line_at_origin__wedge__translator(self, other), translator__dual(other));
+}
+
+MultiVector motor__anti_reject_via_horizon_from__flector(Motor self, Flector other) {
+    return plane__anti_wedge__flector(motor__wedge__flector(self, other), flector__dual(other));
+}
+
+MultiVector motor__anti_reject_via_horizon_from__flector_at_infinity(Motor self, FlectorAtInfinity other) {
+    return plane__anti_wedge__flector(motor__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+LineAtOrigin motor__anti_reject_via_horizon_from__line(Motor self, Line other) {
+    return anti_scalar__anti_wedge__line_at_origin(motor__wedge__line(self, other), line__dual(other));
+}
+
+LineAtOrigin motor__anti_reject_via_horizon_from__line_at_infinity(Motor self, LineAtInfinity other) {
+    return anti_scalar__anti_wedge__line_at_origin(motor__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+LineAtOrigin motor__anti_reject_via_horizon_from__motor(Motor self, Motor other) {
+    return anti_scalar__anti_wedge__line_at_origin(motor__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector motor__anti_reject_via_horizon_from__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__bulk_contraction__motor(motor__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(motor__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector motor__anti_reject_via_horizon_from__multi_vector_at_infinity(Motor self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__motor(motor__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(motor__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin motor__anti_reject_via_horizon_from__multi_vector_at_origin(Motor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__motor(motor__wedge__multi_vector_at_origin(self, other), self);
+Line motor__anti_reject_via_horizon_from__point(Motor self, Point other) {
+    return plane__anti_wedge__plane_at_origin(motor__wedge__point(self, other), point__dual(other));
 }
 
-Origin motor__anti_reject_via_horizon_from__origin(Motor self, Origin other) {
-    return plane_at_origin__bulk_contraction__motor(motor__wedge__origin(self, other), self);
+Line motor__anti_reject_via_horizon_from__point_at_infinity(Motor self, PointAtInfinity other) {
+    return plane__anti_wedge__plane_at_origin(motor__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-Point motor__anti_reject_via_horizon_from__point(Motor self, Point other) {
-    return plane__bulk_contraction__motor(motor__wedge__point(self, other), self);
+MultiVector motor__anti_reject_via_horizon_from__transflector(Motor self, Transflector other) {
+    return plane__anti_wedge__flector(motor__wedge__transflector(self, other), transflector__dual(other));
 }
 
-Point motor__anti_reject_via_horizon_from__point_at_infinity(Motor self, PointAtInfinity other) {
-    return plane__bulk_contraction__motor(motor__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVector motor__anti_reject_via_horizon_from__scalar(Motor self, Scalar other) {
-    return motor__bulk_contraction__motor(motor__wedge__scalar(self, other), self);
-}
-
-Point motor__anti_reject_via_horizon_from__transflector(Motor self, Transflector other) {
-    return plane__bulk_contraction__motor(motor__wedge__transflector(self, other), self);
+LineAtOrigin motor__anti_reject_via_horizon_from__translator(Motor self, Translator other) {
+    return anti_scalar__anti_wedge__line_at_origin(motor__wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__flector(MultiVector self, Flector other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__flector(self, other), self);
+    return multi_vector__anti_wedge__flector(multi_vector__wedge__flector(self, other), flector__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__flector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__flector(multi_vector__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__horizon(MultiVector self, Horizon other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__horizon(self, other), self);
+    return multi_vector__anti_wedge__origin(multi_vector__wedge__horizon(self, other), horizon__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__line(MultiVector self, Line other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__line(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector__wedge__line(self, other), line__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__line_at_infinity(MultiVector self, LineAtInfinity other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__anti_reject_via_horizon_from__line_at_origin(MultiVector self, LineAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector(multi_vector__wedge__line_at_origin(self, other), self);
-}
-
-MultiVector multi_vector__anti_reject_via_horizon_from__magnitude(MultiVector self, Magnitude other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__magnitude(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__motor(MultiVector self, Motor other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__motor(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(multi_vector__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__multi_vector_at_infinity(MultiVector self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__multi_vector_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__anti_reject_via_horizon_from__multi_vector_at_origin(MultiVector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector(multi_vector__wedge__multi_vector_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__anti_reject_via_horizon_from__origin(MultiVector self, Origin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector(multi_vector__wedge__origin(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(multi_vector__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__plane(MultiVector self, Plane other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__plane(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__anti_reject_via_horizon_from__plane_at_origin(MultiVector self, PlaneAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector(multi_vector__wedge__plane_at_origin(self, other), self);
+    return multi_vector__anti_wedge__origin(multi_vector__wedge__plane(self, other), plane__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__point(MultiVector self, Point other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__point(self, other), self);
+    return multi_vector__anti_wedge__plane_at_origin(multi_vector__wedge__point(self, other), point__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__point_at_infinity(MultiVector self, PointAtInfinity other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__anti_reject_via_horizon_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector(multi_vector__wedge__rotor(self, other), self);
-}
-
-MultiVector multi_vector__anti_reject_via_horizon_from__scalar(MultiVector self, Scalar other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__scalar(self, other), self);
+    return multi_vector__anti_wedge__plane_at_origin(multi_vector__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__transflector(self, other), self);
+    return multi_vector__anti_wedge__flector(multi_vector__wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVector multi_vector__anti_reject_via_horizon_from__translator(MultiVector self, Translator other) {
-    return multi_vector__bulk_contraction__multi_vector(multi_vector__wedge__translator(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector__wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__flector(MultiVectorAtInfinity self, Flector other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__flector(self, other), self);
+    return multi_vector__anti_wedge__flector(multi_vector_at_infinity__wedge__flector(self, other), flector__dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_via_horizon_from__flector_at_infinity(MultiVectorAtInfinity self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__flector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__flector(multi_vector_at_infinity__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_via_horizon_from__horizon(MultiVectorAtInfinity self, Horizon other) {
-    return horizon__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__horizon(self, other), self);
+Scalar multi_vector_at_infinity__anti_reject_via_horizon_from__horizon(MultiVectorAtInfinity self, Horizon other) {
+    return horizon__anti_wedge__origin(multi_vector_at_infinity__wedge__horizon(self, other), horizon__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__line(MultiVectorAtInfinity self, Line other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__line(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector_at_infinity__wedge__line(self, other), line__dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_via_horizon_from__line_at_infinity(MultiVectorAtInfinity self, LineAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__anti_reject_via_horizon_from__line_at_origin(MultiVectorAtInfinity self, LineAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__line_at_origin(self, other), self);
-}
-
-MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__magnitude(MultiVectorAtInfinity self, Magnitude other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__magnitude(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__line_at_origin(multi_vector_at_infinity__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__motor(MultiVectorAtInfinity self, Motor other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__motor(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector_at_infinity__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(multi_vector_at_infinity__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_via_horizon_from__multi_vector_at_infinity(MultiVectorAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__multi_vector_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__anti_reject_via_horizon_from__multi_vector_at_origin(MultiVectorAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__multi_vector_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__anti_reject_via_horizon_from__origin(MultiVectorAtInfinity self, Origin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__origin(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(multi_vector_at_infinity__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__plane(MultiVectorAtInfinity self, Plane other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__plane(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__anti_reject_via_horizon_from__plane_at_origin(MultiVectorAtInfinity self, PlaneAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__plane_at_origin(self, other), self);
+    return multi_vector__anti_wedge__origin(multi_vector_at_infinity__wedge__plane(self, other), plane__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__point(MultiVectorAtInfinity self, Point other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__point(self, other), self);
+    return multi_vector__anti_wedge__plane_at_origin(multi_vector_at_infinity__wedge__point(self, other), point__dual(other));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_via_horizon_from__point_at_infinity(MultiVectorAtInfinity self, PointAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__anti_reject_via_horizon_from__rotor(MultiVectorAtInfinity self, Rotor other) {
-    return multi_vector_at_origin__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__rotor(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_infinity__anti_reject_via_horizon_from__scalar(MultiVectorAtInfinity self, Scalar other) {
-    return multi_vector_at_infinity__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__scalar(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__plane_at_origin(multi_vector_at_infinity__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__transflector(MultiVectorAtInfinity self, Transflector other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__transflector(self, other), self);
+    return multi_vector__anti_wedge__flector(multi_vector_at_infinity__wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVector multi_vector_at_infinity__anti_reject_via_horizon_from__translator(MultiVectorAtInfinity self, Translator other) {
-    return multi_vector__bulk_contraction__multi_vector_at_infinity(multi_vector_at_infinity__wedge__translator(self, other), self);
+    return multi_vector__anti_wedge__line_at_origin(multi_vector_at_infinity__wedge__translator(self, other), translator__dual(other));
 }
 
-Scalar plane__anti_reject_via_horizon_from__magnitude(Plane self, Magnitude other) {
-    return plane__bulk_contraction__plane(plane__wedge__magnitude(self, other), self);
+MultiVector multi_vector_at_origin__anti_reject_via_horizon_from__flector(MultiVectorAtOrigin self, Flector other) {
+    return multi_vector_at_origin__anti_wedge__flector(multi_vector_at_origin__wedge__flector(self, other), flector__dual(other));
+}
+
+MultiVector multi_vector_at_origin__anti_reject_via_horizon_from__flector_at_infinity(MultiVectorAtOrigin self, FlectorAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__flector(multi_vector_at_origin__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+Origin multi_vector_at_origin__anti_reject_via_horizon_from__horizon(MultiVectorAtOrigin self, Horizon other) {
+    return anti_scalar__anti_wedge__origin(multi_vector_at_origin__wedge__horizon(self, other), horizon__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__line(MultiVectorAtOrigin self, Line other) {
+    return multi_vector_at_origin__anti_wedge__line_at_origin(multi_vector_at_origin__wedge__line(self, other), line__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__line_at_infinity(MultiVectorAtOrigin self, LineAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__line_at_origin(multi_vector_at_origin__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__motor(MultiVectorAtOrigin self, Motor other) {
+    return multi_vector_at_origin__anti_wedge__line_at_origin(multi_vector_at_origin__wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(multi_vector_at_origin__wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__multi_vector_at_infinity(MultiVectorAtOrigin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(multi_vector_at_origin__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+Origin multi_vector_at_origin__anti_reject_via_horizon_from__plane(MultiVectorAtOrigin self, Plane other) {
+    return anti_scalar__anti_wedge__origin(multi_vector_at_origin__wedge__plane(self, other), plane__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__point(MultiVectorAtOrigin self, Point other) {
+    return multi_vector_at_origin__anti_wedge__plane_at_origin(multi_vector_at_origin__wedge__point(self, other), point__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__point_at_infinity(MultiVectorAtOrigin self, PointAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__plane_at_origin(multi_vector_at_origin__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+MultiVector multi_vector_at_origin__anti_reject_via_horizon_from__transflector(MultiVectorAtOrigin self, Transflector other) {
+    return multi_vector_at_origin__anti_wedge__flector(multi_vector_at_origin__wedge__transflector(self, other), transflector__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__anti_reject_via_horizon_from__translator(MultiVectorAtOrigin self, Translator other) {
+    return multi_vector_at_origin__anti_wedge__line_at_origin(multi_vector_at_origin__wedge__translator(self, other), translator__dual(other));
+}
+
+Flector origin__anti_reject_via_horizon_from__flector(Origin self, Flector other) {
+    return rotor__anti_wedge__flector(origin__wedge__flector(self, other), flector__dual(other));
+}
+
+Flector origin__anti_reject_via_horizon_from__flector_at_infinity(Origin self, FlectorAtInfinity other) {
+    return rotor__anti_wedge__flector(origin__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__horizon(Origin self, Horizon other) {
+    return anti_scalar__anti_wedge__origin(origin__wedge__horizon(self, other), horizon__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__line(Origin self, Line other) {
+    return plane_at_origin__anti_wedge__line_at_origin(origin__wedge__line(self, other), line__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__line_at_infinity(Origin self, LineAtInfinity other) {
+    return plane_at_origin__anti_wedge__line_at_origin(origin__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__motor(Origin self, Motor other) {
+    return plane_at_origin__anti_wedge__line_at_origin(origin__wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin origin__anti_reject_via_horizon_from__multi_vector(Origin self, MultiVector other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(origin__wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin origin__anti_reject_via_horizon_from__multi_vector_at_infinity(Origin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(origin__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__plane(Origin self, Plane other) {
+    return anti_scalar__anti_wedge__origin(origin__wedge__plane(self, other), plane__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__point(Origin self, Point other) {
+    return line_at_origin__anti_wedge__plane_at_origin(origin__wedge__point(self, other), point__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__point_at_infinity(Origin self, PointAtInfinity other) {
+    return line_at_origin__anti_wedge__plane_at_origin(origin__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+Flector origin__anti_reject_via_horizon_from__transflector(Origin self, Transflector other) {
+    return rotor__anti_wedge__flector(origin__wedge__transflector(self, other), transflector__dual(other));
+}
+
+Origin origin__anti_reject_via_horizon_from__translator(Origin self, Translator other) {
+    return plane_at_origin__anti_wedge__line_at_origin(origin__wedge__translator(self, other), translator__dual(other));
+}
+
+Flector plane__anti_reject_via_horizon_from__flector(Plane self, Flector other) {
+    return anti_scalar__anti_wedge__flector(plane__wedge__flector(self, other), flector__dual(other));
+}
+
+Flector plane__anti_reject_via_horizon_from__flector_at_infinity(Plane self, FlectorAtInfinity other) {
+    return anti_scalar__anti_wedge__flector(plane__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
 MultiVector plane__anti_reject_via_horizon_from__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__bulk_contraction__plane(plane__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(plane__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector plane__anti_reject_via_horizon_from__multi_vector_at_infinity(Plane self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__plane(plane__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(plane__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-Scalar plane__anti_reject_via_horizon_from__scalar(Plane self, Scalar other) {
-    return plane__bulk_contraction__plane(plane__wedge__scalar(self, other), self);
+PlaneAtOrigin plane__anti_reject_via_horizon_from__point(Plane self, Point other) {
+    return anti_scalar__anti_wedge__plane_at_origin(plane__wedge__point(self, other), point__dual(other));
+}
+
+PlaneAtOrigin plane__anti_reject_via_horizon_from__point_at_infinity(Plane self, PointAtInfinity other) {
+    return anti_scalar__anti_wedge__plane_at_origin(plane__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+Flector plane__anti_reject_via_horizon_from__transflector(Plane self, Transflector other) {
+    return anti_scalar__anti_wedge__flector(plane__wedge__transflector(self, other), transflector__dual(other));
+}
+
+Flector plane_at_origin__anti_reject_via_horizon_from__flector(PlaneAtOrigin self, Flector other) {
+    return anti_scalar__anti_wedge__flector(plane_at_origin__wedge__flector(self, other), flector__dual(other));
+}
+
+Flector plane_at_origin__anti_reject_via_horizon_from__flector_at_infinity(PlaneAtOrigin self, FlectorAtInfinity other) {
+    return anti_scalar__anti_wedge__flector(plane_at_origin__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+MultiVectorAtOrigin plane_at_origin__anti_reject_via_horizon_from__multi_vector(PlaneAtOrigin self, MultiVector other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(plane_at_origin__wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin plane_at_origin__anti_reject_via_horizon_from__multi_vector_at_infinity(PlaneAtOrigin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(plane_at_origin__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__anti_reject_via_horizon_from__point(PlaneAtOrigin self, Point other) {
+    return anti_scalar__anti_wedge__plane_at_origin(plane_at_origin__wedge__point(self, other), point__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__anti_reject_via_horizon_from__point_at_infinity(PlaneAtOrigin self, PointAtInfinity other) {
+    return anti_scalar__anti_wedge__plane_at_origin(plane_at_origin__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+Flector plane_at_origin__anti_reject_via_horizon_from__transflector(PlaneAtOrigin self, Transflector other) {
+    return anti_scalar__anti_wedge__flector(plane_at_origin__wedge__transflector(self, other), transflector__dual(other));
 }
 
 Flector point__anti_reject_via_horizon_from__flector(Point self, Flector other) {
-    return motor__bulk_contraction__point(point__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector(point__wedge__flector(self, other), flector__dual(other));
 }
 
 Flector point__anti_reject_via_horizon_from__flector_at_infinity(Point self, FlectorAtInfinity other) {
-    return motor__bulk_contraction__point(point__wedge__flector_at_infinity(self, other), self);
+    return motor__anti_wedge__flector(point__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-Line point__anti_reject_via_horizon_from__line(Point self, Line other) {
-    return plane__bulk_contraction__point(point__wedge__line(self, other), self);
+Origin point__anti_reject_via_horizon_from__horizon(Point self, Horizon other) {
+    return anti_scalar__anti_wedge__origin(point__wedge__horizon(self, other), horizon__dual(other));
 }
 
-Line point__anti_reject_via_horizon_from__line_at_infinity(Point self, LineAtInfinity other) {
-    return plane__bulk_contraction__point(point__wedge__line_at_infinity(self, other), self);
+Point point__anti_reject_via_horizon_from__line(Point self, Line other) {
+    return plane__anti_wedge__line_at_origin(point__wedge__line(self, other), line__dual(other));
 }
 
-LineAtOrigin point__anti_reject_via_horizon_from__line_at_origin(Point self, LineAtOrigin other) {
-    return plane_at_origin__bulk_contraction__point(point__wedge__line_at_origin(self, other), self);
+Point point__anti_reject_via_horizon_from__line_at_infinity(Point self, LineAtInfinity other) {
+    return plane__anti_wedge__line_at_origin(point__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-Scalar point__anti_reject_via_horizon_from__magnitude(Point self, Magnitude other) {
-    return point__bulk_contraction__point(point__wedge__magnitude(self, other), self);
-}
-
-Line point__anti_reject_via_horizon_from__motor(Point self, Motor other) {
-    return plane__bulk_contraction__point(point__wedge__motor(self, other), self);
+Point point__anti_reject_via_horizon_from__motor(Point self, Motor other) {
+    return plane__anti_wedge__line_at_origin(point__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector point__anti_reject_via_horizon_from__multi_vector(Point self, MultiVector other) {
-    return multi_vector__bulk_contraction__point(point__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(point__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector point__anti_reject_via_horizon_from__multi_vector_at_infinity(Point self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__point(point__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(point__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin point__anti_reject_via_horizon_from__multi_vector_at_origin(Point self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__point(point__wedge__multi_vector_at_origin(self, other), self);
-}
-
-Origin point__anti_reject_via_horizon_from__origin(Point self, Origin other) {
-    return line_at_origin__bulk_contraction__point(point__wedge__origin(self, other), self);
+Origin point__anti_reject_via_horizon_from__plane(Point self, Plane other) {
+    return anti_scalar__anti_wedge__origin(point__wedge__plane(self, other), plane__dual(other));
 }
 
 Point point__anti_reject_via_horizon_from__point(Point self, Point other) {
-    return line__bulk_contraction__point(point__wedge__point(self, other), self);
+    return line__anti_wedge__plane_at_origin(point__wedge__point(self, other), point__dual(other));
 }
 
 Point point__anti_reject_via_horizon_from__point_at_infinity(Point self, PointAtInfinity other) {
-    return line__bulk_contraction__point(point__wedge__point_at_infinity(self, other), self);
-}
-
-LineAtOrigin point__anti_reject_via_horizon_from__rotor(Point self, Rotor other) {
-    return plane_at_origin__bulk_contraction__point(point__wedge__rotor(self, other), self);
-}
-
-Scalar point__anti_reject_via_horizon_from__scalar(Point self, Scalar other) {
-    return point__bulk_contraction__point(point__wedge__scalar(self, other), self);
+    return line__anti_wedge__plane_at_origin(point__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 Flector point__anti_reject_via_horizon_from__transflector(Point self, Transflector other) {
-    return motor__bulk_contraction__point(point__wedge__transflector(self, other), self);
+    return motor__anti_wedge__flector(point__wedge__transflector(self, other), transflector__dual(other));
 }
 
-Line point__anti_reject_via_horizon_from__translator(Point self, Translator other) {
-    return plane__bulk_contraction__point(point__wedge__translator(self, other), self);
+Point point__anti_reject_via_horizon_from__translator(Point self, Translator other) {
+    return plane__anti_wedge__line_at_origin(point__wedge__translator(self, other), translator__dual(other));
 }
 
 Flector point_at_infinity__anti_reject_via_horizon_from__flector(PointAtInfinity self, Flector other) {
-    return motor__bulk_contraction__point_at_infinity(point_at_infinity__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector(point_at_infinity__wedge__flector(self, other), flector__dual(other));
 }
 
 PointAtInfinity point_at_infinity__anti_reject_via_horizon_from__flector_at_infinity(PointAtInfinity self, FlectorAtInfinity other) {
-    return line_at_infinity__bulk_contraction__point_at_infinity(point_at_infinity__wedge__flector_at_infinity(self, other), self);
+    return line_at_infinity__anti_wedge__flector(point_at_infinity__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-Line point_at_infinity__anti_reject_via_horizon_from__line(PointAtInfinity self, Line other) {
-    return plane__bulk_contraction__point_at_infinity(point_at_infinity__wedge__line(self, other), self);
+Point point_at_infinity__anti_reject_via_horizon_from__line(PointAtInfinity self, Line other) {
+    return plane__anti_wedge__line_at_origin(point_at_infinity__wedge__line(self, other), line__dual(other));
 }
 
-LineAtInfinity point_at_infinity__anti_reject_via_horizon_from__line_at_infinity(PointAtInfinity self, LineAtInfinity other) {
-    return horizon__bulk_contraction__point_at_infinity(point_at_infinity__wedge__line_at_infinity(self, other), self);
+PointAtInfinity point_at_infinity__anti_reject_via_horizon_from__line_at_infinity(PointAtInfinity self, LineAtInfinity other) {
+    return horizon__anti_wedge__line_at_origin(point_at_infinity__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-LineAtOrigin point_at_infinity__anti_reject_via_horizon_from__line_at_origin(PointAtInfinity self, LineAtOrigin other) {
-    return plane_at_origin__bulk_contraction__point_at_infinity(point_at_infinity__wedge__line_at_origin(self, other), self);
-}
-
-Scalar point_at_infinity__anti_reject_via_horizon_from__magnitude(PointAtInfinity self, Magnitude other) {
-    return point_at_infinity__bulk_contraction__point_at_infinity(point_at_infinity__wedge__magnitude(self, other), self);
-}
-
-Line point_at_infinity__anti_reject_via_horizon_from__motor(PointAtInfinity self, Motor other) {
-    return plane__bulk_contraction__point_at_infinity(point_at_infinity__wedge__motor(self, other), self);
+Point point_at_infinity__anti_reject_via_horizon_from__motor(PointAtInfinity self, Motor other) {
+    return plane__anti_wedge__line_at_origin(point_at_infinity__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector point_at_infinity__anti_reject_via_horizon_from__multi_vector(PointAtInfinity self, MultiVector other) {
-    return multi_vector__bulk_contraction__point_at_infinity(point_at_infinity__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(point_at_infinity__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtInfinity point_at_infinity__anti_reject_via_horizon_from__multi_vector_at_infinity(PointAtInfinity self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_contraction__point_at_infinity(point_at_infinity__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(point_at_infinity__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin point_at_infinity__anti_reject_via_horizon_from__multi_vector_at_origin(PointAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__point_at_infinity(point_at_infinity__wedge__multi_vector_at_origin(self, other), self);
-}
-
-Origin point_at_infinity__anti_reject_via_horizon_from__origin(PointAtInfinity self, Origin other) {
-    return line_at_origin__bulk_contraction__point_at_infinity(point_at_infinity__wedge__origin(self, other), self);
+Origin point_at_infinity__anti_reject_via_horizon_from__plane(PointAtInfinity self, Plane other) {
+    return anti_scalar__anti_wedge__origin(point_at_infinity__wedge__plane(self, other), plane__dual(other));
 }
 
 Point point_at_infinity__anti_reject_via_horizon_from__point(PointAtInfinity self, Point other) {
-    return line__bulk_contraction__point_at_infinity(point_at_infinity__wedge__point(self, other), self);
+    return line__anti_wedge__plane_at_origin(point_at_infinity__wedge__point(self, other), point__dual(other));
 }
 
 PointAtInfinity point_at_infinity__anti_reject_via_horizon_from__point_at_infinity(PointAtInfinity self, PointAtInfinity other) {
-    return line_at_infinity__bulk_contraction__point_at_infinity(point_at_infinity__wedge__point_at_infinity(self, other), self);
+    return line_at_infinity__anti_wedge__plane_at_origin(point_at_infinity__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-LineAtOrigin point_at_infinity__anti_reject_via_horizon_from__rotor(PointAtInfinity self, Rotor other) {
-    return plane_at_origin__bulk_contraction__point_at_infinity(point_at_infinity__wedge__rotor(self, other), self);
+Flector point_at_infinity__anti_reject_via_horizon_from__transflector(PointAtInfinity self, Transflector other) {
+    return translator__anti_wedge__flector(point_at_infinity__wedge__transflector(self, other), transflector__dual(other));
 }
 
-Scalar point_at_infinity__anti_reject_via_horizon_from__scalar(PointAtInfinity self, Scalar other) {
-    return point_at_infinity__bulk_contraction__point_at_infinity(point_at_infinity__wedge__scalar(self, other), self);
+PointAtInfinity point_at_infinity__anti_reject_via_horizon_from__translator(PointAtInfinity self, Translator other) {
+    return horizon__anti_wedge__line_at_origin(point_at_infinity__wedge__translator(self, other), translator__dual(other));
 }
 
-Transflector point_at_infinity__anti_reject_via_horizon_from__transflector(PointAtInfinity self, Transflector other) {
-    return translator__bulk_contraction__point_at_infinity(point_at_infinity__wedge__transflector(self, other), self);
+MultiVector rotor__anti_reject_via_horizon_from__flector(Rotor self, Flector other) {
+    return plane_at_origin__anti_wedge__flector(rotor__wedge__flector(self, other), flector__dual(other));
 }
 
-LineAtInfinity point_at_infinity__anti_reject_via_horizon_from__translator(PointAtInfinity self, Translator other) {
-    return horizon__bulk_contraction__point_at_infinity(point_at_infinity__wedge__translator(self, other), self);
+MultiVector rotor__anti_reject_via_horizon_from__flector_at_infinity(Rotor self, FlectorAtInfinity other) {
+    return plane_at_origin__anti_wedge__flector(rotor__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+LineAtOrigin rotor__anti_reject_via_horizon_from__line(Rotor self, Line other) {
+    return anti_scalar__anti_wedge__line_at_origin(rotor__wedge__line(self, other), line__dual(other));
+}
+
+LineAtOrigin rotor__anti_reject_via_horizon_from__line_at_infinity(Rotor self, LineAtInfinity other) {
+    return anti_scalar__anti_wedge__line_at_origin(rotor__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+LineAtOrigin rotor__anti_reject_via_horizon_from__motor(Rotor self, Motor other) {
+    return anti_scalar__anti_wedge__line_at_origin(rotor__wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin rotor__anti_reject_via_horizon_from__multi_vector(Rotor self, MultiVector other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(rotor__wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin rotor__anti_reject_via_horizon_from__multi_vector_at_infinity(Rotor self, MultiVectorAtInfinity other) {
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(rotor__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+LineAtOrigin rotor__anti_reject_via_horizon_from__point(Rotor self, Point other) {
+    return plane_at_origin__anti_wedge__plane_at_origin(rotor__wedge__point(self, other), point__dual(other));
+}
+
+LineAtOrigin rotor__anti_reject_via_horizon_from__point_at_infinity(Rotor self, PointAtInfinity other) {
+    return plane_at_origin__anti_wedge__plane_at_origin(rotor__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+MultiVector rotor__anti_reject_via_horizon_from__transflector(Rotor self, Transflector other) {
+    return plane_at_origin__anti_wedge__flector(rotor__wedge__transflector(self, other), transflector__dual(other));
+}
+
+LineAtOrigin rotor__anti_reject_via_horizon_from__translator(Rotor self, Translator other) {
+    return anti_scalar__anti_wedge__line_at_origin(rotor__wedge__translator(self, other), translator__dual(other));
 }
 
 Flector transflector__anti_reject_via_horizon_from__flector(Transflector self, Flector other) {
-    return motor__bulk_contraction__transflector(transflector__wedge__flector(self, other), self);
+    return motor__anti_wedge__flector(transflector__wedge__flector(self, other), flector__dual(other));
 }
 
 Flector transflector__anti_reject_via_horizon_from__flector_at_infinity(Transflector self, FlectorAtInfinity other) {
-    return translator__bulk_contraction__transflector(transflector__wedge__flector_at_infinity(self, other), self);
+    return translator__anti_wedge__flector(transflector__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVector transflector__anti_reject_via_horizon_from__line(Transflector self, Line other) {
-    return plane__bulk_contraction__transflector(transflector__wedge__line(self, other), self);
+Point transflector__anti_reject_via_horizon_from__line(Transflector self, Line other) {
+    return plane__anti_wedge__line_at_origin(transflector__wedge__line(self, other), line__dual(other));
 }
 
-MultiVectorAtInfinity transflector__anti_reject_via_horizon_from__line_at_infinity(Transflector self, LineAtInfinity other) {
-    return horizon__bulk_contraction__transflector(transflector__wedge__line_at_infinity(self, other), self);
+PointAtInfinity transflector__anti_reject_via_horizon_from__line_at_infinity(Transflector self, LineAtInfinity other) {
+    return horizon__anti_wedge__line_at_origin(transflector__wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-MultiVector transflector__anti_reject_via_horizon_from__line_at_origin(Transflector self, LineAtOrigin other) {
-    return plane_at_origin__bulk_contraction__transflector(transflector__wedge__line_at_origin(self, other), self);
-}
-
-MultiVector transflector__anti_reject_via_horizon_from__magnitude(Transflector self, Magnitude other) {
-    return transflector__bulk_contraction__transflector(transflector__wedge__magnitude(self, other), self);
-}
-
-MultiVector transflector__anti_reject_via_horizon_from__motor(Transflector self, Motor other) {
-    return plane__bulk_contraction__transflector(transflector__wedge__motor(self, other), self);
+Point transflector__anti_reject_via_horizon_from__motor(Transflector self, Motor other) {
+    return plane__anti_wedge__line_at_origin(transflector__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector transflector__anti_reject_via_horizon_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__bulk_contraction__transflector(transflector__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(transflector__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector transflector__anti_reject_via_horizon_from__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__transflector(transflector__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(transflector__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVector transflector__anti_reject_via_horizon_from__multi_vector_at_origin(Transflector self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__transflector(transflector__wedge__multi_vector_at_origin(self, other), self);
-}
-
-Flector transflector__anti_reject_via_horizon_from__origin(Transflector self, Origin other) {
-    return rotor__bulk_contraction__transflector(transflector__wedge__origin(self, other), self);
+Origin transflector__anti_reject_via_horizon_from__plane(Transflector self, Plane other) {
+    return anti_scalar__anti_wedge__origin(transflector__wedge__plane(self, other), plane__dual(other));
 }
 
 Flector transflector__anti_reject_via_horizon_from__point(Transflector self, Point other) {
-    return motor__bulk_contraction__transflector(transflector__wedge__point(self, other), self);
+    return motor__anti_wedge__plane_at_origin(transflector__wedge__point(self, other), point__dual(other));
 }
 
-Flector transflector__anti_reject_via_horizon_from__point_at_infinity(Transflector self, PointAtInfinity other) {
-    return translator__bulk_contraction__transflector(transflector__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVector transflector__anti_reject_via_horizon_from__rotor(Transflector self, Rotor other) {
-    return plane_at_origin__bulk_contraction__transflector(transflector__wedge__rotor(self, other), self);
-}
-
-MultiVector transflector__anti_reject_via_horizon_from__scalar(Transflector self, Scalar other) {
-    return transflector__bulk_contraction__transflector(transflector__wedge__scalar(self, other), self);
+Transflector transflector__anti_reject_via_horizon_from__point_at_infinity(Transflector self, PointAtInfinity other) {
+    return translator__anti_wedge__plane_at_origin(transflector__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 Flector transflector__anti_reject_via_horizon_from__transflector(Transflector self, Transflector other) {
-    return translator__bulk_contraction__transflector(transflector__wedge__transflector(self, other), self);
+    return translator__anti_wedge__flector(transflector__wedge__transflector(self, other), transflector__dual(other));
 }
 
-MultiVectorAtInfinity transflector__anti_reject_via_horizon_from__translator(Transflector self, Translator other) {
-    return horizon__bulk_contraction__transflector(transflector__wedge__translator(self, other), self);
+PointAtInfinity transflector__anti_reject_via_horizon_from__translator(Transflector self, Translator other) {
+    return horizon__anti_wedge__line_at_origin(transflector__wedge__translator(self, other), translator__dual(other));
 }
 
-Point translator__anti_reject_via_horizon_from__flector(Translator self, Flector other) {
-    return plane__bulk_contraction__translator(translator__wedge__flector(self, other), self);
+MultiVector translator__anti_reject_via_horizon_from__flector(Translator self, Flector other) {
+    return plane__anti_wedge__flector(translator__wedge__flector(self, other), flector__dual(other));
 }
 
-PointAtInfinity translator__anti_reject_via_horizon_from__flector_at_infinity(Translator self, FlectorAtInfinity other) {
-    return horizon__bulk_contraction__translator(translator__wedge__flector_at_infinity(self, other), self);
+MultiVectorAtInfinity translator__anti_reject_via_horizon_from__flector_at_infinity(Translator self, FlectorAtInfinity other) {
+    return horizon__anti_wedge__flector(translator__wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVector translator__anti_reject_via_horizon_from__magnitude(Translator self, Magnitude other) {
-    return translator__bulk_contraction__translator(translator__wedge__magnitude(self, other), self);
+LineAtOrigin translator__anti_reject_via_horizon_from__line(Translator self, Line other) {
+    return anti_scalar__anti_wedge__line_at_origin(translator__wedge__line(self, other), line__dual(other));
+}
+
+LineAtOrigin translator__anti_reject_via_horizon_from__motor(Translator self, Motor other) {
+    return anti_scalar__anti_wedge__line_at_origin(translator__wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVector translator__anti_reject_via_horizon_from__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__bulk_contraction__translator(translator__wedge__multi_vector(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(translator__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVector translator__anti_reject_via_horizon_from__multi_vector_at_infinity(Translator self, MultiVectorAtInfinity other) {
-    return multi_vector__bulk_contraction__translator(translator__wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__anti_wedge__multi_vector_at_origin(translator__wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin translator__anti_reject_via_horizon_from__multi_vector_at_origin(Translator self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__bulk_contraction__translator(translator__wedge__multi_vector_at_origin(self, other), self);
+Line translator__anti_reject_via_horizon_from__point(Translator self, Point other) {
+    return plane__anti_wedge__plane_at_origin(translator__wedge__point(self, other), point__dual(other));
 }
 
-Origin translator__anti_reject_via_horizon_from__origin(Translator self, Origin other) {
-    return plane_at_origin__bulk_contraction__translator(translator__wedge__origin(self, other), self);
+LineAtInfinity translator__anti_reject_via_horizon_from__point_at_infinity(Translator self, PointAtInfinity other) {
+    return horizon__anti_wedge__plane_at_origin(translator__wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-Point translator__anti_reject_via_horizon_from__point(Translator self, Point other) {
-    return plane__bulk_contraction__translator(translator__wedge__point(self, other), self);
-}
-
-PointAtInfinity translator__anti_reject_via_horizon_from__point_at_infinity(Translator self, PointAtInfinity other) {
-    return horizon__bulk_contraction__translator(translator__wedge__point_at_infinity(self, other), self);
-}
-
-MultiVector translator__anti_reject_via_horizon_from__scalar(Translator self, Scalar other) {
-    return translator__bulk_contraction__translator(translator__wedge__scalar(self, other), self);
-}
-
-PointAtInfinity translator__anti_reject_via_horizon_from__transflector(Translator self, Transflector other) {
-    return horizon__bulk_contraction__translator(translator__wedge__transflector(self, other), self);
-}
-
-Motor flector__reject_orthogonally_from__anti_scalar(Flector self, AntiScalar other) {
-    return flector__weight_expansion__flector(flector__anti_wedge__anti_scalar(self, other), self);
+MultiVectorAtInfinity translator__anti_reject_via_horizon_from__transflector(Translator self, Transflector other) {
+    return horizon__anti_wedge__flector(translator__wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__flector(Flector self, Flector other) {
-    return multi_vector__weight_expansion__flector(flector__anti_wedge__flector(self, other), self);
+    return multi_vector__wedge__flector_at_infinity(flector__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity flector__reject_orthogonally_from__flector_at_infinity(Flector self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__flector(flector__anti_wedge__flector_at_infinity(self, other), self);
+Plane flector__reject_orthogonally_from__line(Flector self, Line other) {
+    return point__wedge__line_at_infinity(flector__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-MultiVectorAtInfinity flector__reject_orthogonally_from__horizon(Flector self, Horizon other) {
-    return multi_vector_at_infinity__weight_expansion__flector(flector__anti_wedge__horizon(self, other), self);
+Plane flector__reject_orthogonally_from__line_at_origin(Flector self, LineAtOrigin other) {
+    return point__wedge__line_at_infinity(flector__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Motor flector__reject_orthogonally_from__line(Flector self, Line other) {
-    return point__weight_expansion__flector(flector__anti_wedge__line(self, other), self);
-}
-
-LineAtInfinity flector__reject_orthogonally_from__line_at_infinity(Flector self, LineAtInfinity other) {
-    return point_at_infinity__weight_expansion__flector(flector__anti_wedge__line_at_infinity(self, other), self);
-}
-
-Motor flector__reject_orthogonally_from__line_at_origin(Flector self, LineAtOrigin other) {
-    return point__weight_expansion__flector(flector__anti_wedge__line_at_origin(self, other), self);
-}
-
-Motor flector__reject_orthogonally_from__magnitude(Flector self, Magnitude other) {
-    return flector__weight_expansion__flector(flector__anti_wedge__magnitude(self, other), self);
-}
-
-Motor flector__reject_orthogonally_from__motor(Flector self, Motor other) {
-    return flector__weight_expansion__flector(flector__anti_wedge__motor(self, other), self);
+MultiVector flector__reject_orthogonally_from__motor(Flector self, Motor other) {
+    return flector__wedge__multi_vector_at_infinity(flector__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__weight_expansion__flector(flector__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity flector__reject_orthogonally_from__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__flector(flector__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(flector__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__multi_vector_at_origin(Flector self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__flector(flector__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(flector__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon flector__reject_orthogonally_from__origin(Flector self, Origin other) {
+    return scalar__wedge__horizon(flector__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__plane(Flector self, Plane other) {
-    return multi_vector__weight_expansion__flector(flector__anti_wedge__plane(self, other), self);
+    return multi_vector__wedge__point_at_infinity(flector__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__plane_at_origin(Flector self, PlaneAtOrigin other) {
-    return multi_vector__weight_expansion__flector(flector__anti_wedge__plane_at_origin(self, other), self);
+    return multi_vector__wedge__point_at_infinity(flector__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-Motor flector__reject_orthogonally_from__rotor(Flector self, Rotor other) {
-    return flector__weight_expansion__flector(flector__anti_wedge__rotor(self, other), self);
+Horizon flector__reject_orthogonally_from__point(Flector self, Point other) {
+    return scalar__wedge__horizon(flector__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVector flector__reject_orthogonally_from__rotor(Flector self, Rotor other) {
+    return flector__wedge__multi_vector_at_infinity(flector__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__transflector(Flector self, Transflector other) {
-    return multi_vector__weight_expansion__flector(flector__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__point_at_infinity(flector__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-Motor flector__reject_orthogonally_from__translator(Flector self, Translator other) {
-    return flector__weight_expansion__flector(flector__anti_wedge__translator(self, other), self);
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__flector(FlectorAtInfinity self, Flector other) {
+    return multi_vector_at_infinity__wedge__flector_at_infinity(flector_at_infinity__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-AntiScalar line__reject_orthogonally_from__anti_scalar(Line self, AntiScalar other) {
-    return line__weight_expansion__line(line__anti_wedge__anti_scalar(self, other), self);
+Horizon flector_at_infinity__reject_orthogonally_from__line(FlectorAtInfinity self, Line other) {
+    return point_at_infinity__wedge__line_at_infinity(flector_at_infinity__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-Plane line__reject_orthogonally_from__flector(Line self, Flector other) {
-    return point__weight_expansion__line(line__anti_wedge__flector(self, other), self);
+Horizon flector_at_infinity__reject_orthogonally_from__line_at_origin(FlectorAtInfinity self, LineAtOrigin other) {
+    return point_at_infinity__wedge__line_at_infinity(flector_at_infinity__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Horizon line__reject_orthogonally_from__flector_at_infinity(Line self, FlectorAtInfinity other) {
-    return point_at_infinity__weight_expansion__line(line__anti_wedge__flector_at_infinity(self, other), self);
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__motor(FlectorAtInfinity self, Motor other) {
+    return flector_at_infinity__wedge__multi_vector_at_infinity(flector_at_infinity__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
-Horizon line__reject_orthogonally_from__horizon(Line self, Horizon other) {
-    return point_at_infinity__weight_expansion__line(line__anti_wedge__horizon(self, other), self);
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__multi_vector(FlectorAtInfinity self, MultiVector other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(flector_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-AntiScalar line__reject_orthogonally_from__magnitude(Line self, Magnitude other) {
-    return line__weight_expansion__line(line__anti_wedge__magnitude(self, other), self);
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__multi_vector_at_origin(FlectorAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(flector_at_infinity__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon flector_at_infinity__reject_orthogonally_from__origin(FlectorAtInfinity self, Origin other) {
+    return scalar__wedge__horizon(flector_at_infinity__anti_wedge__origin(self, other), origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__plane(FlectorAtInfinity self, Plane other) {
+    return multi_vector_at_infinity__wedge__point_at_infinity(flector_at_infinity__anti_wedge__plane(self, other), plane__anti_dual(other));
+}
+
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__plane_at_origin(FlectorAtInfinity self, PlaneAtOrigin other) {
+    return multi_vector_at_infinity__wedge__point_at_infinity(flector_at_infinity__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+Horizon flector_at_infinity__reject_orthogonally_from__point(FlectorAtInfinity self, Point other) {
+    return scalar__wedge__horizon(flector_at_infinity__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__rotor(FlectorAtInfinity self, Rotor other) {
+    return flector_at_infinity__wedge__multi_vector_at_infinity(flector_at_infinity__anti_wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+MultiVectorAtInfinity flector_at_infinity__reject_orthogonally_from__transflector(FlectorAtInfinity self, Transflector other) {
+    return multi_vector_at_infinity__wedge__point_at_infinity(flector_at_infinity__anti_wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__reject_orthogonally_from__flector(Horizon self, Flector other) {
+    return multi_vector_at_infinity__wedge__flector_at_infinity(horizon__anti_wedge__flector(self, other), flector__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__line(Horizon self, Line other) {
+    return point_at_infinity__wedge__line_at_infinity(horizon__anti_wedge__line(self, other), line__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__line_at_origin(Horizon self, LineAtOrigin other) {
+    return point_at_infinity__wedge__line_at_infinity(horizon__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__reject_orthogonally_from__motor(Horizon self, Motor other) {
+    return flector_at_infinity__wedge__multi_vector_at_infinity(horizon__anti_wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__reject_orthogonally_from__multi_vector(Horizon self, MultiVector other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(horizon__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__reject_orthogonally_from__multi_vector_at_origin(Horizon self, MultiVectorAtOrigin other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(horizon__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__origin(Horizon self, Origin other) {
+    return scalar__wedge__horizon(horizon__anti_wedge__origin(self, other), origin__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__plane(Horizon self, Plane other) {
+    return line_at_infinity__wedge__point_at_infinity(horizon__anti_wedge__plane(self, other), plane__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__plane_at_origin(Horizon self, PlaneAtOrigin other) {
+    return line_at_infinity__wedge__point_at_infinity(horizon__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__point(Horizon self, Point other) {
+    return scalar__wedge__horizon(horizon__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity horizon__reject_orthogonally_from__rotor(Horizon self, Rotor other) {
+    return flector_at_infinity__wedge__multi_vector_at_infinity(horizon__anti_wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+Horizon horizon__reject_orthogonally_from__transflector(Horizon self, Transflector other) {
+    return line_at_infinity__wedge__point_at_infinity(horizon__anti_wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+Motor line__reject_orthogonally_from__flector(Line self, Flector other) {
+    return point__wedge__flector_at_infinity(line__anti_wedge__flector(self, other), flector__anti_dual(other));
+}
+
+LineAtInfinity line__reject_orthogonally_from__line(Line self, Line other) {
+    return scalar__wedge__line_at_infinity(line__anti_wedge__line(self, other), line__anti_dual(other));
+}
+
+LineAtInfinity line__reject_orthogonally_from__line_at_origin(Line self, LineAtOrigin other) {
+    return scalar__wedge__line_at_infinity(line__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVector line__reject_orthogonally_from__motor(Line self, Motor other) {
-    return multi_vector__weight_expansion__line(line__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(line__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector line__reject_orthogonally_from__multi_vector(Line self, MultiVector other) {
-    return multi_vector__weight_expansion__line(line__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity line__reject_orthogonally_from__multi_vector_at_infinity(Line self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__line(line__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(line__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector line__reject_orthogonally_from__multi_vector_at_origin(Line self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__line(line__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(line__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-Plane line__reject_orthogonally_from__plane(Line self, Plane other) {
-    return point__weight_expansion__line(line__anti_wedge__plane(self, other), self);
+Line line__reject_orthogonally_from__plane(Line self, Plane other) {
+    return point__wedge__point_at_infinity(line__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-Plane line__reject_orthogonally_from__plane_at_origin(Line self, PlaneAtOrigin other) {
-    return point__weight_expansion__line(line__anti_wedge__plane_at_origin(self, other), self);
+Line line__reject_orthogonally_from__plane_at_origin(Line self, PlaneAtOrigin other) {
+    return point__wedge__point_at_infinity(line__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
 MultiVector line__reject_orthogonally_from__rotor(Line self, Rotor other) {
-    return multi_vector__weight_expansion__line(line__anti_wedge__rotor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(line__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-Plane line__reject_orthogonally_from__transflector(Line self, Transflector other) {
-    return point__weight_expansion__line(line__anti_wedge__transflector(self, other), self);
+Line line__reject_orthogonally_from__transflector(Line self, Transflector other) {
+    return point__wedge__point_at_infinity(line__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVector line__reject_orthogonally_from__translator(Line self, Translator other) {
-    return multi_vector__weight_expansion__line(line__anti_wedge__translator(self, other), self);
+LineAtInfinity line_at_infinity__reject_orthogonally_from__flector(LineAtInfinity self, Flector other) {
+    return point_at_infinity__wedge__flector_at_infinity(line_at_infinity__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-AntiScalar line_at_origin__reject_orthogonally_from__anti_scalar(LineAtOrigin self, AntiScalar other) {
-    return line_at_origin__weight_expansion__line_at_origin(line_at_origin__anti_wedge__anti_scalar(self, other), self);
+LineAtInfinity line_at_infinity__reject_orthogonally_from__line(LineAtInfinity self, Line other) {
+    return scalar__wedge__line_at_infinity(line_at_infinity__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-Plane line_at_origin__reject_orthogonally_from__flector(LineAtOrigin self, Flector other) {
-    return point__weight_expansion__line_at_origin(line_at_origin__anti_wedge__flector(self, other), self);
+LineAtInfinity line_at_infinity__reject_orthogonally_from__line_at_origin(LineAtInfinity self, LineAtOrigin other) {
+    return scalar__wedge__line_at_infinity(line_at_infinity__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Horizon line_at_origin__reject_orthogonally_from__flector_at_infinity(LineAtOrigin self, FlectorAtInfinity other) {
-    return point_at_infinity__weight_expansion__line_at_origin(line_at_origin__anti_wedge__flector_at_infinity(self, other), self);
+MultiVectorAtInfinity line_at_infinity__reject_orthogonally_from__motor(LineAtInfinity self, Motor other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(line_at_infinity__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
-Horizon line_at_origin__reject_orthogonally_from__horizon(LineAtOrigin self, Horizon other) {
-    return point_at_infinity__weight_expansion__line_at_origin(line_at_origin__anti_wedge__horizon(self, other), self);
+MultiVectorAtInfinity line_at_infinity__reject_orthogonally_from__multi_vector(LineAtInfinity self, MultiVector other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(line_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-AntiScalar line_at_origin__reject_orthogonally_from__magnitude(LineAtOrigin self, Magnitude other) {
-    return line_at_origin__weight_expansion__line_at_origin(line_at_origin__anti_wedge__magnitude(self, other), self);
+MultiVectorAtInfinity line_at_infinity__reject_orthogonally_from__multi_vector_at_origin(LineAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(line_at_infinity__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+LineAtInfinity line_at_infinity__reject_orthogonally_from__plane(LineAtInfinity self, Plane other) {
+    return point_at_infinity__wedge__point_at_infinity(line_at_infinity__anti_wedge__plane(self, other), plane__anti_dual(other));
+}
+
+LineAtInfinity line_at_infinity__reject_orthogonally_from__plane_at_origin(LineAtInfinity self, PlaneAtOrigin other) {
+    return point_at_infinity__wedge__point_at_infinity(line_at_infinity__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity line_at_infinity__reject_orthogonally_from__rotor(LineAtInfinity self, Rotor other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(line_at_infinity__anti_wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+LineAtInfinity line_at_infinity__reject_orthogonally_from__transflector(LineAtInfinity self, Transflector other) {
+    return point_at_infinity__wedge__point_at_infinity(line_at_infinity__anti_wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+Motor line_at_origin__reject_orthogonally_from__flector(LineAtOrigin self, Flector other) {
+    return point__wedge__flector_at_infinity(line_at_origin__anti_wedge__flector(self, other), flector__anti_dual(other));
+}
+
+LineAtInfinity line_at_origin__reject_orthogonally_from__line(LineAtOrigin self, Line other) {
+    return scalar__wedge__line_at_infinity(line_at_origin__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
 MultiVector line_at_origin__reject_orthogonally_from__motor(LineAtOrigin self, Motor other) {
-    return multi_vector__weight_expansion__line_at_origin(line_at_origin__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(line_at_origin__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector line_at_origin__reject_orthogonally_from__multi_vector(LineAtOrigin self, MultiVector other) {
-    return multi_vector__weight_expansion__line_at_origin(line_at_origin__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity line_at_origin__reject_orthogonally_from__multi_vector_at_infinity(LineAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__line_at_origin(line_at_origin__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(line_at_origin__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtOrigin line_at_origin__reject_orthogonally_from__multi_vector_at_origin(LineAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_expansion__line_at_origin(line_at_origin__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(line_at_origin__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-Plane line_at_origin__reject_orthogonally_from__plane(LineAtOrigin self, Plane other) {
-    return point__weight_expansion__line_at_origin(line_at_origin__anti_wedge__plane(self, other), self);
+Line line_at_origin__reject_orthogonally_from__plane(LineAtOrigin self, Plane other) {
+    return point__wedge__point_at_infinity(line_at_origin__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-PlaneAtOrigin line_at_origin__reject_orthogonally_from__plane_at_origin(LineAtOrigin self, PlaneAtOrigin other) {
-    return origin__weight_expansion__line_at_origin(line_at_origin__anti_wedge__plane_at_origin(self, other), self);
+LineAtOrigin line_at_origin__reject_orthogonally_from__plane_at_origin(LineAtOrigin self, PlaneAtOrigin other) {
+    return origin__wedge__point_at_infinity(line_at_origin__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-AntiScalar line_at_origin__reject_orthogonally_from__rotor(LineAtOrigin self, Rotor other) {
-    return line_at_origin__weight_expansion__line_at_origin(line_at_origin__anti_wedge__rotor(self, other), self);
+MultiVectorAtOrigin line_at_origin__reject_orthogonally_from__rotor(LineAtOrigin self, Rotor other) {
+    return line_at_origin__wedge__multi_vector_at_infinity(line_at_origin__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-Plane line_at_origin__reject_orthogonally_from__transflector(LineAtOrigin self, Transflector other) {
-    return point__weight_expansion__line_at_origin(line_at_origin__anti_wedge__transflector(self, other), self);
+Line line_at_origin__reject_orthogonally_from__transflector(LineAtOrigin self, Transflector other) {
+    return point__wedge__point_at_infinity(line_at_origin__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVector line_at_origin__reject_orthogonally_from__translator(LineAtOrigin self, Translator other) {
-    return multi_vector__weight_expansion__line_at_origin(line_at_origin__anti_wedge__translator(self, other), self);
-}
-
-MultiVector motor__reject_orthogonally_from__anti_scalar(Motor self, AntiScalar other) {
-    return motor__weight_expansion__motor(motor__anti_wedge__anti_scalar(self, other), self);
-}
-
-MultiVector motor__reject_orthogonally_from__flector(Motor self, Flector other) {
-    return flector__weight_expansion__motor(motor__anti_wedge__flector(self, other), self);
-}
-
-MultiVectorAtInfinity motor__reject_orthogonally_from__flector_at_infinity(Motor self, FlectorAtInfinity other) {
-    return flector_at_infinity__weight_expansion__motor(motor__anti_wedge__flector_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity motor__reject_orthogonally_from__horizon(Motor self, Horizon other) {
-    return flector_at_infinity__weight_expansion__motor(motor__anti_wedge__horizon(self, other), self);
+Motor motor__reject_orthogonally_from__flector(Motor self, Flector other) {
+    return flector__wedge__flector_at_infinity(motor__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__line(Motor self, Line other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__line(self, other), self);
-}
-
-MultiVectorAtInfinity motor__reject_orthogonally_from__line_at_infinity(Motor self, LineAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__motor(motor__anti_wedge__line_at_infinity(self, other), self);
+    return multi_vector__wedge__line_at_infinity(motor__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__line_at_origin(Motor self, LineAtOrigin other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVector motor__reject_orthogonally_from__magnitude(Motor self, Magnitude other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__magnitude(self, other), self);
+    return multi_vector__wedge__line_at_infinity(motor__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__motor(Motor self, Motor other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(motor__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity motor__reject_orthogonally_from__multi_vector_at_infinity(Motor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__motor(motor__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(motor__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__multi_vector_at_origin(Motor self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(motor__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-MultiVectorAtOrigin motor__reject_orthogonally_from__origin(Motor self, Origin other) {
-    return origin__weight_expansion__motor(motor__anti_wedge__origin(self, other), self);
+AntiScalar motor__reject_orthogonally_from__origin(Motor self, Origin other) {
+    return origin__wedge__horizon(motor__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
-MultiVector motor__reject_orthogonally_from__plane(Motor self, Plane other) {
-    return flector__weight_expansion__motor(motor__anti_wedge__plane(self, other), self);
+Motor motor__reject_orthogonally_from__plane(Motor self, Plane other) {
+    return flector__wedge__point_at_infinity(motor__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector motor__reject_orthogonally_from__plane_at_origin(Motor self, PlaneAtOrigin other) {
-    return flector__weight_expansion__motor(motor__anti_wedge__plane_at_origin(self, other), self);
+Motor motor__reject_orthogonally_from__plane_at_origin(Motor self, PlaneAtOrigin other) {
+    return flector__wedge__point_at_infinity(motor__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-MultiVector motor__reject_orthogonally_from__point(Motor self, Point other) {
-    return point__weight_expansion__motor(motor__anti_wedge__point(self, other), self);
-}
-
-MultiVectorAtInfinity motor__reject_orthogonally_from__point_at_infinity(Motor self, PointAtInfinity other) {
-    return point_at_infinity__weight_expansion__motor(motor__anti_wedge__point_at_infinity(self, other), self);
+AntiScalar motor__reject_orthogonally_from__point(Motor self, Point other) {
+    return point__wedge__horizon(motor__anti_wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__rotor(Motor self, Rotor other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__rotor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(motor__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-MultiVector motor__reject_orthogonally_from__transflector(Motor self, Transflector other) {
-    return flector__weight_expansion__motor(motor__anti_wedge__transflector(self, other), self);
-}
-
-MultiVector motor__reject_orthogonally_from__translator(Motor self, Translator other) {
-    return multi_vector__weight_expansion__motor(motor__anti_wedge__translator(self, other), self);
-}
-
-MultiVector multi_vector__reject_orthogonally_from__anti_scalar(MultiVector self, AntiScalar other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__anti_scalar(self, other), self);
+Motor motor__reject_orthogonally_from__transflector(Motor self, Transflector other) {
+    return flector__wedge__point_at_infinity(motor__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__flector(MultiVector self, Flector other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__flector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__reject_orthogonally_from__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector(multi_vector__anti_wedge__flector_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__reject_orthogonally_from__horizon(MultiVector self, Horizon other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector(multi_vector__anti_wedge__horizon(self, other), self);
+    return multi_vector__wedge__flector_at_infinity(multi_vector__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__line(MultiVector self, Line other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__line(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__reject_orthogonally_from__line_at_infinity(MultiVector self, LineAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector(multi_vector__anti_wedge__line_at_infinity(self, other), self);
+    return multi_vector__wedge__line_at_infinity(multi_vector__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__line_at_origin(MultiVector self, LineAtOrigin other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVector multi_vector__reject_orthogonally_from__magnitude(MultiVector self, Magnitude other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__magnitude(self, other), self);
+    return multi_vector__wedge__line_at_infinity(multi_vector__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__motor(MultiVector self, Motor other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(multi_vector__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__reject_orthogonally_from__multi_vector_at_infinity(MultiVector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector(multi_vector__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(multi_vector__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__multi_vector_at_origin(MultiVector self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(multi_vector__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__origin(MultiVector self, Origin other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__origin(self, other), self);
+    return multi_vector__wedge__horizon(multi_vector__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__plane(MultiVector self, Plane other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__plane(self, other), self);
+    return multi_vector__wedge__point_at_infinity(multi_vector__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__plane_at_origin(MultiVector self, PlaneAtOrigin other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__plane_at_origin(self, other), self);
+    return multi_vector__wedge__point_at_infinity(multi_vector__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__point(MultiVector self, Point other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__point(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector__reject_orthogonally_from__point_at_infinity(MultiVector self, PointAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector(multi_vector__anti_wedge__point_at_infinity(self, other), self);
+    return multi_vector__wedge__horizon(multi_vector__anti_wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__rotor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(multi_vector__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__point_at_infinity(multi_vector__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVector multi_vector__reject_orthogonally_from__translator(MultiVector self, Translator other) {
-    return multi_vector__weight_expansion__multi_vector(multi_vector__anti_wedge__translator(self, other), self);
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__flector(MultiVectorAtInfinity self, Flector other) {
+    return multi_vector_at_infinity__wedge__flector_at_infinity(multi_vector_at_infinity__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtOrigin multi_vector_at_origin__reject_orthogonally_from__anti_scalar(MultiVectorAtOrigin self, AntiScalar other) {
-    return multi_vector_at_origin__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__anti_scalar(self, other), self);
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__line(MultiVectorAtInfinity self, Line other) {
+    return multi_vector_at_infinity__wedge__line_at_infinity(multi_vector_at_infinity__anti_wedge__line(self, other), line__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__line_at_origin(MultiVectorAtInfinity self, LineAtOrigin other) {
+    return multi_vector_at_infinity__wedge__line_at_infinity(multi_vector_at_infinity__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__motor(MultiVectorAtInfinity self, Motor other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__multi_vector_at_origin(MultiVectorAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon multi_vector_at_infinity__reject_orthogonally_from__origin(MultiVectorAtInfinity self, Origin other) {
+    return scalar__wedge__horizon(multi_vector_at_infinity__anti_wedge__origin(self, other), origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__plane(MultiVectorAtInfinity self, Plane other) {
+    return multi_vector_at_infinity__wedge__point_at_infinity(multi_vector_at_infinity__anti_wedge__plane(self, other), plane__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__plane_at_origin(MultiVectorAtInfinity self, PlaneAtOrigin other) {
+    return multi_vector_at_infinity__wedge__point_at_infinity(multi_vector_at_infinity__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+Horizon multi_vector_at_infinity__reject_orthogonally_from__point(MultiVectorAtInfinity self, Point other) {
+    return scalar__wedge__horizon(multi_vector_at_infinity__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__rotor(MultiVectorAtInfinity self, Rotor other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+MultiVectorAtInfinity multi_vector_at_infinity__reject_orthogonally_from__transflector(MultiVectorAtInfinity self, Transflector other) {
+    return multi_vector_at_infinity__wedge__point_at_infinity(multi_vector_at_infinity__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__flector(MultiVectorAtOrigin self, Flector other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__flector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__reject_orthogonally_from__flector_at_infinity(MultiVectorAtOrigin self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__flector_at_infinity(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__reject_orthogonally_from__horizon(MultiVectorAtOrigin self, Horizon other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__horizon(self, other), self);
+    return multi_vector__wedge__flector_at_infinity(multi_vector_at_origin__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__line(MultiVectorAtOrigin self, Line other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__line(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__reject_orthogonally_from__line_at_infinity(MultiVectorAtOrigin self, LineAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__line_at_infinity(self, other), self);
+    return multi_vector__wedge__line_at_infinity(multi_vector_at_origin__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__reject_orthogonally_from__line_at_origin(MultiVectorAtOrigin self, LineAtOrigin other) {
-    return multi_vector_at_origin__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVector multi_vector_at_origin__reject_orthogonally_from__magnitude(MultiVectorAtOrigin self, Magnitude other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__magnitude(self, other), self);
+    return multi_vector_at_origin__wedge__line_at_infinity(multi_vector_at_origin__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__motor(MultiVectorAtOrigin self, Motor other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(multi_vector_at_origin__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__reject_orthogonally_from__multi_vector_at_infinity(MultiVectorAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(multi_vector_at_origin__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__reject_orthogonally_from__multi_vector_at_origin(MultiVectorAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(multi_vector_at_origin__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-MultiVectorAtOrigin multi_vector_at_origin__reject_orthogonally_from__origin(MultiVectorAtOrigin self, Origin other) {
-    return origin__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__origin(self, other), self);
+AntiScalar multi_vector_at_origin__reject_orthogonally_from__origin(MultiVectorAtOrigin self, Origin other) {
+    return origin__wedge__horizon(multi_vector_at_origin__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__plane(MultiVectorAtOrigin self, Plane other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__plane(self, other), self);
+    return multi_vector__wedge__point_at_infinity(multi_vector_at_origin__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__reject_orthogonally_from__plane_at_origin(MultiVectorAtOrigin self, PlaneAtOrigin other) {
-    return multi_vector_at_origin__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__plane_at_origin(self, other), self);
+    return multi_vector_at_origin__wedge__point_at_infinity(multi_vector_at_origin__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__point(MultiVectorAtOrigin self, Point other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__point(self, other), self);
-}
-
-MultiVectorAtInfinity multi_vector_at_origin__reject_orthogonally_from__point_at_infinity(MultiVectorAtOrigin self, PointAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__point_at_infinity(self, other), self);
+    return multi_vector__wedge__horizon(multi_vector_at_origin__anti_wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__reject_orthogonally_from__rotor(MultiVectorAtOrigin self, Rotor other) {
-    return multi_vector_at_origin__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__rotor(self, other), self);
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(multi_vector_at_origin__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVector multi_vector_at_origin__reject_orthogonally_from__transflector(MultiVectorAtOrigin self, Transflector other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__point_at_infinity(multi_vector_at_origin__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVector multi_vector_at_origin__reject_orthogonally_from__translator(MultiVectorAtOrigin self, Translator other) {
-    return multi_vector__weight_expansion__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__translator(self, other), self);
+FlectorAtInfinity origin__reject_orthogonally_from__flector(Origin self, Flector other) {
+    return scalar__wedge__flector_at_infinity(origin__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-AntiScalar origin__reject_orthogonally_from__anti_scalar(Origin self, AntiScalar other) {
-    return origin__weight_expansion__origin(origin__anti_wedge__anti_scalar(self, other), self);
-}
-
-AntiScalar origin__reject_orthogonally_from__magnitude(Origin self, Magnitude other) {
-    return origin__weight_expansion__origin(origin__anti_wedge__magnitude(self, other), self);
-}
-
-AntiScalar origin__reject_orthogonally_from__motor(Origin self, Motor other) {
-    return origin__weight_expansion__origin(origin__anti_wedge__motor(self, other), self);
+MultiVectorAtOrigin origin__reject_orthogonally_from__motor(Origin self, Motor other) {
+    return origin__wedge__multi_vector_at_infinity(origin__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector origin__reject_orthogonally_from__multi_vector(Origin self, MultiVector other) {
-    return multi_vector__weight_expansion__origin(origin__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(origin__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-AntiScalar origin__reject_orthogonally_from__multi_vector_at_origin(Origin self, MultiVectorAtOrigin other) {
-    return origin__weight_expansion__origin(origin__anti_wedge__multi_vector_at_origin(self, other), self);
+MultiVectorAtOrigin origin__reject_orthogonally_from__multi_vector_at_origin(Origin self, MultiVectorAtOrigin other) {
+    return origin__wedge__multi_vector_at_infinity(origin__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-AntiScalar origin__reject_orthogonally_from__rotor(Origin self, Rotor other) {
-    return origin__weight_expansion__origin(origin__anti_wedge__rotor(self, other), self);
+PointAtInfinity origin__reject_orthogonally_from__plane(Origin self, Plane other) {
+    return scalar__wedge__point_at_infinity(origin__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-AntiScalar origin__reject_orthogonally_from__translator(Origin self, Translator other) {
-    return origin__weight_expansion__origin(origin__anti_wedge__translator(self, other), self);
+MultiVectorAtOrigin origin__reject_orthogonally_from__rotor(Origin self, Rotor other) {
+    return origin__wedge__multi_vector_at_infinity(origin__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-AntiScalar plane__reject_orthogonally_from__anti_scalar(Plane self, AntiScalar other) {
-    return plane__weight_expansion__plane(plane__anti_wedge__anti_scalar(self, other), self);
+PointAtInfinity origin__reject_orthogonally_from__transflector(Origin self, Transflector other) {
+    return scalar__wedge__point_at_infinity(origin__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVector plane__reject_orthogonally_from__flector(Plane self, Flector other) {
-    return multi_vector__weight_expansion__plane(plane__anti_wedge__flector(self, other), self);
+    return multi_vector__wedge__flector_at_infinity(plane__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity plane__reject_orthogonally_from__flector_at_infinity(Plane self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__plane(plane__anti_wedge__flector_at_infinity(self, other), self);
+Plane plane__reject_orthogonally_from__line(Plane self, Line other) {
+    return point__wedge__line_at_infinity(plane__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-Horizon plane__reject_orthogonally_from__horizon(Plane self, Horizon other) {
-    return line_at_infinity__weight_expansion__plane(plane__anti_wedge__horizon(self, other), self);
+Plane plane__reject_orthogonally_from__line_at_origin(Plane self, LineAtOrigin other) {
+    return point__wedge__line_at_infinity(plane__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Line plane__reject_orthogonally_from__line(Plane self, Line other) {
-    return point__weight_expansion__plane(plane__anti_wedge__line(self, other), self);
-}
-
-LineAtInfinity plane__reject_orthogonally_from__line_at_infinity(Plane self, LineAtInfinity other) {
-    return point_at_infinity__weight_expansion__plane(plane__anti_wedge__line_at_infinity(self, other), self);
-}
-
-Line plane__reject_orthogonally_from__line_at_origin(Plane self, LineAtOrigin other) {
-    return point__weight_expansion__plane(plane__anti_wedge__line_at_origin(self, other), self);
-}
-
-AntiScalar plane__reject_orthogonally_from__magnitude(Plane self, Magnitude other) {
-    return plane__weight_expansion__plane(plane__anti_wedge__magnitude(self, other), self);
-}
-
-Motor plane__reject_orthogonally_from__motor(Plane self, Motor other) {
-    return flector__weight_expansion__plane(plane__anti_wedge__motor(self, other), self);
+MultiVector plane__reject_orthogonally_from__motor(Plane self, Motor other) {
+    return flector__wedge__multi_vector_at_infinity(plane__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector plane__reject_orthogonally_from__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__weight_expansion__plane(plane__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity plane__reject_orthogonally_from__multi_vector_at_infinity(Plane self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__plane(plane__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(plane__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector plane__reject_orthogonally_from__multi_vector_at_origin(Plane self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__plane(plane__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(plane__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon plane__reject_orthogonally_from__origin(Plane self, Origin other) {
+    return scalar__wedge__horizon(plane__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
 Plane plane__reject_orthogonally_from__plane(Plane self, Plane other) {
-    return line__weight_expansion__plane(plane__anti_wedge__plane(self, other), self);
+    return line__wedge__point_at_infinity(plane__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
 Plane plane__reject_orthogonally_from__plane_at_origin(Plane self, PlaneAtOrigin other) {
-    return line__weight_expansion__plane(plane__anti_wedge__plane_at_origin(self, other), self);
+    return line__wedge__point_at_infinity(plane__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-Motor plane__reject_orthogonally_from__rotor(Plane self, Rotor other) {
-    return flector__weight_expansion__plane(plane__anti_wedge__rotor(self, other), self);
+Horizon plane__reject_orthogonally_from__point(Plane self, Point other) {
+    return scalar__wedge__horizon(plane__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVector plane__reject_orthogonally_from__rotor(Plane self, Rotor other) {
+    return flector__wedge__multi_vector_at_infinity(plane__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVector plane__reject_orthogonally_from__transflector(Plane self, Transflector other) {
-    return multi_vector__weight_expansion__plane(plane__anti_wedge__transflector(self, other), self);
-}
-
-Translator plane__reject_orthogonally_from__translator(Plane self, Translator other) {
-    return transflector__weight_expansion__plane(plane__anti_wedge__translator(self, other), self);
-}
-
-AntiScalar plane_at_origin__reject_orthogonally_from__anti_scalar(PlaneAtOrigin self, AntiScalar other) {
-    return plane_at_origin__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__anti_scalar(self, other), self);
+    return multi_vector__wedge__point_at_infinity(plane__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVector plane_at_origin__reject_orthogonally_from__flector(PlaneAtOrigin self, Flector other) {
-    return multi_vector__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__flector(self, other), self);
+    return multi_vector__wedge__flector_at_infinity(plane_at_origin__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity plane_at_origin__reject_orthogonally_from__flector_at_infinity(PlaneAtOrigin self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__flector_at_infinity(self, other), self);
+Plane plane_at_origin__reject_orthogonally_from__line(PlaneAtOrigin self, Line other) {
+    return point__wedge__line_at_infinity(plane_at_origin__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-Horizon plane_at_origin__reject_orthogonally_from__horizon(PlaneAtOrigin self, Horizon other) {
-    return line_at_infinity__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__horizon(self, other), self);
+PlaneAtOrigin plane_at_origin__reject_orthogonally_from__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
+    return origin__wedge__line_at_infinity(plane_at_origin__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Line plane_at_origin__reject_orthogonally_from__line(PlaneAtOrigin self, Line other) {
-    return point__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__line(self, other), self);
-}
-
-LineAtInfinity plane_at_origin__reject_orthogonally_from__line_at_infinity(PlaneAtOrigin self, LineAtInfinity other) {
-    return point_at_infinity__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__line_at_infinity(self, other), self);
-}
-
-LineAtOrigin plane_at_origin__reject_orthogonally_from__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
-    return origin__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__line_at_origin(self, other), self);
-}
-
-AntiScalar plane_at_origin__reject_orthogonally_from__magnitude(PlaneAtOrigin self, Magnitude other) {
-    return plane_at_origin__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__magnitude(self, other), self);
-}
-
-Motor plane_at_origin__reject_orthogonally_from__motor(PlaneAtOrigin self, Motor other) {
-    return flector__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__motor(self, other), self);
+MultiVector plane_at_origin__reject_orthogonally_from__motor(PlaneAtOrigin self, Motor other) {
+    return flector__wedge__multi_vector_at_infinity(plane_at_origin__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector plane_at_origin__reject_orthogonally_from__multi_vector(PlaneAtOrigin self, MultiVector other) {
-    return multi_vector__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity plane_at_origin__reject_orthogonally_from__multi_vector_at_infinity(PlaneAtOrigin self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(plane_at_origin__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtOrigin plane_at_origin__reject_orthogonally_from__multi_vector_at_origin(PlaneAtOrigin self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(plane_at_origin__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
 Plane plane_at_origin__reject_orthogonally_from__plane(PlaneAtOrigin self, Plane other) {
-    return line__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__plane(self, other), self);
+    return line__wedge__point_at_infinity(plane_at_origin__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
 PlaneAtOrigin plane_at_origin__reject_orthogonally_from__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return line_at_origin__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__plane_at_origin(self, other), self);
+    return line_at_origin__wedge__point_at_infinity(plane_at_origin__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-Motor plane_at_origin__reject_orthogonally_from__rotor(PlaneAtOrigin self, Rotor other) {
-    return flector__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__rotor(self, other), self);
+Horizon plane_at_origin__reject_orthogonally_from__point(PlaneAtOrigin self, Point other) {
+    return scalar__wedge__horizon(plane_at_origin__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVector plane_at_origin__reject_orthogonally_from__rotor(PlaneAtOrigin self, Rotor other) {
+    return flector__wedge__multi_vector_at_infinity(plane_at_origin__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVector plane_at_origin__reject_orthogonally_from__transflector(PlaneAtOrigin self, Transflector other) {
-    return multi_vector__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__point_at_infinity(plane_at_origin__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-Translator plane_at_origin__reject_orthogonally_from__translator(PlaneAtOrigin self, Translator other) {
-    return transflector__weight_expansion__plane_at_origin(plane_at_origin__anti_wedge__translator(self, other), self);
+FlectorAtInfinity point__reject_orthogonally_from__flector(Point self, Flector other) {
+    return scalar__wedge__flector_at_infinity(point__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-AntiScalar point__reject_orthogonally_from__anti_scalar(Point self, AntiScalar other) {
-    return point__weight_expansion__point(point__anti_wedge__anti_scalar(self, other), self);
-}
-
-AntiScalar point__reject_orthogonally_from__magnitude(Point self, Magnitude other) {
-    return point__weight_expansion__point(point__anti_wedge__magnitude(self, other), self);
-}
-
-AntiScalar point__reject_orthogonally_from__motor(Point self, Motor other) {
-    return point__weight_expansion__point(point__anti_wedge__motor(self, other), self);
+MultiVector point__reject_orthogonally_from__motor(Point self, Motor other) {
+    return point__wedge__multi_vector_at_infinity(point__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector point__reject_orthogonally_from__multi_vector(Point self, MultiVector other) {
-    return multi_vector__weight_expansion__point(point__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(point__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector point__reject_orthogonally_from__multi_vector_at_origin(Point self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__point(point__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(point__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-AntiScalar point__reject_orthogonally_from__rotor(Point self, Rotor other) {
-    return point__weight_expansion__point(point__anti_wedge__rotor(self, other), self);
+PointAtInfinity point__reject_orthogonally_from__plane(Point self, Plane other) {
+    return scalar__wedge__point_at_infinity(point__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-AntiScalar point__reject_orthogonally_from__translator(Point self, Translator other) {
-    return point__weight_expansion__point(point__anti_wedge__translator(self, other), self);
+PointAtInfinity point__reject_orthogonally_from__plane_at_origin(Point self, PlaneAtOrigin other) {
+    return scalar__wedge__point_at_infinity(point__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-MultiVectorAtOrigin rotor__reject_orthogonally_from__anti_scalar(Rotor self, AntiScalar other) {
-    return rotor__weight_expansion__rotor(rotor__anti_wedge__anti_scalar(self, other), self);
+MultiVector point__reject_orthogonally_from__rotor(Point self, Rotor other) {
+    return point__wedge__multi_vector_at_infinity(point__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-MultiVector rotor__reject_orthogonally_from__flector(Rotor self, Flector other) {
-    return flector__weight_expansion__rotor(rotor__anti_wedge__flector(self, other), self);
+PointAtInfinity point__reject_orthogonally_from__transflector(Point self, Transflector other) {
+    return scalar__wedge__point_at_infinity(point__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__reject_orthogonally_from__flector_at_infinity(Rotor self, FlectorAtInfinity other) {
-    return flector_at_infinity__weight_expansion__rotor(rotor__anti_wedge__flector_at_infinity(self, other), self);
+FlectorAtInfinity point_at_infinity__reject_orthogonally_from__flector(PointAtInfinity self, Flector other) {
+    return scalar__wedge__flector_at_infinity(point_at_infinity__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__reject_orthogonally_from__horizon(Rotor self, Horizon other) {
-    return flector_at_infinity__weight_expansion__rotor(rotor__anti_wedge__horizon(self, other), self);
+MultiVectorAtInfinity point_at_infinity__reject_orthogonally_from__motor(PointAtInfinity self, Motor other) {
+    return point_at_infinity__wedge__multi_vector_at_infinity(point_at_infinity__anti_wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__reject_orthogonally_from__multi_vector(PointAtInfinity self, MultiVector other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(point_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__reject_orthogonally_from__multi_vector_at_origin(PointAtInfinity self, MultiVectorAtOrigin other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(point_at_infinity__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__reject_orthogonally_from__plane(PointAtInfinity self, Plane other) {
+    return scalar__wedge__point_at_infinity(point_at_infinity__anti_wedge__plane(self, other), plane__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__reject_orthogonally_from__plane_at_origin(PointAtInfinity self, PlaneAtOrigin other) {
+    return scalar__wedge__point_at_infinity(point_at_infinity__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+MultiVectorAtInfinity point_at_infinity__reject_orthogonally_from__rotor(PointAtInfinity self, Rotor other) {
+    return point_at_infinity__wedge__multi_vector_at_infinity(point_at_infinity__anti_wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+PointAtInfinity point_at_infinity__reject_orthogonally_from__transflector(PointAtInfinity self, Transflector other) {
+    return scalar__wedge__point_at_infinity(point_at_infinity__anti_wedge__transflector(self, other), transflector__anti_dual(other));
+}
+
+Motor rotor__reject_orthogonally_from__flector(Rotor self, Flector other) {
+    return flector__wedge__flector_at_infinity(rotor__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
 MultiVector rotor__reject_orthogonally_from__line(Rotor self, Line other) {
-    return multi_vector__weight_expansion__rotor(rotor__anti_wedge__line(self, other), self);
+    return multi_vector__wedge__line_at_infinity(rotor__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-MultiVectorAtInfinity rotor__reject_orthogonally_from__line_at_infinity(Rotor self, LineAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__rotor(rotor__anti_wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin rotor__reject_orthogonally_from__line_at_origin(Rotor self, LineAtOrigin other) {
-    return line_at_origin__weight_expansion__rotor(rotor__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVector rotor__reject_orthogonally_from__magnitude(Rotor self, Magnitude other) {
-    return multi_vector__weight_expansion__rotor(rotor__anti_wedge__magnitude(self, other), self);
+AntiScalar rotor__reject_orthogonally_from__line_at_origin(Rotor self, LineAtOrigin other) {
+    return line_at_origin__wedge__line_at_infinity(rotor__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
 MultiVector rotor__reject_orthogonally_from__motor(Rotor self, Motor other) {
-    return multi_vector__weight_expansion__rotor(rotor__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(rotor__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector rotor__reject_orthogonally_from__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__weight_expansion__rotor(rotor__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity rotor__reject_orthogonally_from__multi_vector_at_infinity(Rotor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__rotor(rotor__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(rotor__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVectorAtOrigin rotor__reject_orthogonally_from__multi_vector_at_origin(Rotor self, MultiVectorAtOrigin other) {
-    return multi_vector_at_origin__weight_expansion__rotor(rotor__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_origin__wedge__multi_vector_at_infinity(rotor__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
 }
 
-MultiVectorAtOrigin rotor__reject_orthogonally_from__origin(Rotor self, Origin other) {
-    return origin__weight_expansion__rotor(rotor__anti_wedge__origin(self, other), self);
+AntiScalar rotor__reject_orthogonally_from__origin(Rotor self, Origin other) {
+    return origin__wedge__horizon(rotor__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
-MultiVector rotor__reject_orthogonally_from__plane(Rotor self, Plane other) {
-    return flector__weight_expansion__rotor(rotor__anti_wedge__plane(self, other), self);
+Motor rotor__reject_orthogonally_from__plane(Rotor self, Plane other) {
+    return flector__wedge__point_at_infinity(rotor__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector rotor__reject_orthogonally_from__plane_at_origin(Rotor self, PlaneAtOrigin other) {
-    return flector__weight_expansion__rotor(rotor__anti_wedge__plane_at_origin(self, other), self);
+Motor rotor__reject_orthogonally_from__plane_at_origin(Rotor self, PlaneAtOrigin other) {
+    return flector__wedge__point_at_infinity(rotor__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-MultiVector rotor__reject_orthogonally_from__point(Rotor self, Point other) {
-    return point__weight_expansion__rotor(rotor__anti_wedge__point(self, other), self);
-}
-
-MultiVectorAtInfinity rotor__reject_orthogonally_from__point_at_infinity(Rotor self, PointAtInfinity other) {
-    return point_at_infinity__weight_expansion__rotor(rotor__anti_wedge__point_at_infinity(self, other), self);
+AntiScalar rotor__reject_orthogonally_from__point(Rotor self, Point other) {
+    return point__wedge__horizon(rotor__anti_wedge__point(self, other), point__anti_dual(other));
 }
 
 MultiVectorAtOrigin rotor__reject_orthogonally_from__rotor(Rotor self, Rotor other) {
-    return rotor__weight_expansion__rotor(rotor__anti_wedge__rotor(self, other), self);
+    return rotor__wedge__multi_vector_at_infinity(rotor__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
-MultiVector rotor__reject_orthogonally_from__transflector(Rotor self, Transflector other) {
-    return flector__weight_expansion__rotor(rotor__anti_wedge__transflector(self, other), self);
-}
-
-MultiVector rotor__reject_orthogonally_from__translator(Rotor self, Translator other) {
-    return multi_vector__weight_expansion__rotor(rotor__anti_wedge__translator(self, other), self);
-}
-
-Translator transflector__reject_orthogonally_from__anti_scalar(Transflector self, AntiScalar other) {
-    return transflector__weight_expansion__transflector(transflector__anti_wedge__anti_scalar(self, other), self);
+Motor rotor__reject_orthogonally_from__transflector(Rotor self, Transflector other) {
+    return flector__wedge__point_at_infinity(rotor__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVector transflector__reject_orthogonally_from__flector(Transflector self, Flector other) {
-    return multi_vector__weight_expansion__transflector(transflector__anti_wedge__flector(self, other), self);
+    return multi_vector__wedge__flector_at_infinity(transflector__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-MultiVectorAtInfinity transflector__reject_orthogonally_from__flector_at_infinity(Transflector self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__transflector(transflector__anti_wedge__flector_at_infinity(self, other), self);
+Plane transflector__reject_orthogonally_from__line(Transflector self, Line other) {
+    return point__wedge__line_at_infinity(transflector__anti_wedge__line(self, other), line__anti_dual(other));
 }
 
-Horizon transflector__reject_orthogonally_from__horizon(Transflector self, Horizon other) {
-    return line_at_infinity__weight_expansion__transflector(transflector__anti_wedge__horizon(self, other), self);
+Plane transflector__reject_orthogonally_from__line_at_origin(Transflector self, LineAtOrigin other) {
+    return point__wedge__line_at_infinity(transflector__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
 }
 
-Line transflector__reject_orthogonally_from__line(Transflector self, Line other) {
-    return point__weight_expansion__transflector(transflector__anti_wedge__line(self, other), self);
-}
-
-LineAtInfinity transflector__reject_orthogonally_from__line_at_infinity(Transflector self, LineAtInfinity other) {
-    return point_at_infinity__weight_expansion__transflector(transflector__anti_wedge__line_at_infinity(self, other), self);
-}
-
-Line transflector__reject_orthogonally_from__line_at_origin(Transflector self, LineAtOrigin other) {
-    return point__weight_expansion__transflector(transflector__anti_wedge__line_at_origin(self, other), self);
-}
-
-Translator transflector__reject_orthogonally_from__magnitude(Transflector self, Magnitude other) {
-    return transflector__weight_expansion__transflector(transflector__anti_wedge__magnitude(self, other), self);
-}
-
-Motor transflector__reject_orthogonally_from__motor(Transflector self, Motor other) {
-    return flector__weight_expansion__transflector(transflector__anti_wedge__motor(self, other), self);
+MultiVector transflector__reject_orthogonally_from__motor(Transflector self, Motor other) {
+    return flector__wedge__multi_vector_at_infinity(transflector__anti_wedge__motor(self, other), motor__anti_dual(other));
 }
 
 MultiVector transflector__reject_orthogonally_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__weight_expansion__transflector(transflector__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtInfinity transflector__reject_orthogonally_from__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__weight_expansion__transflector(transflector__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(transflector__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 MultiVector transflector__reject_orthogonally_from__multi_vector_at_origin(Transflector self, MultiVectorAtOrigin other) {
-    return multi_vector__weight_expansion__transflector(transflector__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector__wedge__multi_vector_at_infinity(transflector__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+Horizon transflector__reject_orthogonally_from__origin(Transflector self, Origin other) {
+    return scalar__wedge__horizon(transflector__anti_wedge__origin(self, other), origin__anti_dual(other));
 }
 
 MultiVector transflector__reject_orthogonally_from__plane(Transflector self, Plane other) {
-    return multi_vector__weight_expansion__transflector(transflector__anti_wedge__plane(self, other), self);
+    return multi_vector__wedge__point_at_infinity(transflector__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
 MultiVector transflector__reject_orthogonally_from__plane_at_origin(Transflector self, PlaneAtOrigin other) {
-    return multi_vector__weight_expansion__transflector(transflector__anti_wedge__plane_at_origin(self, other), self);
+    return multi_vector__wedge__point_at_infinity(transflector__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
 }
 
-Motor transflector__reject_orthogonally_from__rotor(Transflector self, Rotor other) {
-    return flector__weight_expansion__transflector(transflector__anti_wedge__rotor(self, other), self);
+Horizon transflector__reject_orthogonally_from__point(Transflector self, Point other) {
+    return scalar__wedge__horizon(transflector__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVector transflector__reject_orthogonally_from__rotor(Transflector self, Rotor other) {
+    return flector__wedge__multi_vector_at_infinity(transflector__anti_wedge__rotor(self, other), rotor__anti_dual(other));
 }
 
 MultiVector transflector__reject_orthogonally_from__transflector(Transflector self, Transflector other) {
-    return multi_vector__weight_expansion__transflector(transflector__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__point_at_infinity(transflector__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
-Translator transflector__reject_orthogonally_from__translator(Transflector self, Translator other) {
-    return transflector__weight_expansion__transflector(transflector__anti_wedge__translator(self, other), self);
+Motor translator__reject_orthogonally_from__flector(Translator self, Flector other) {
+    return flector__wedge__flector_at_infinity(translator__anti_wedge__flector(self, other), flector__anti_dual(other));
 }
 
-Motor flector__reject_via_origin_from__anti_scalar(Flector self, AntiScalar other) {
-    return flector__bulk_expansion__flector(flector__anti_wedge__anti_scalar(self, other), self);
+MultiVector translator__reject_orthogonally_from__line(Translator self, Line other) {
+    return multi_vector__wedge__line_at_infinity(translator__anti_wedge__line(self, other), line__anti_dual(other));
+}
+
+MultiVector translator__reject_orthogonally_from__line_at_origin(Translator self, LineAtOrigin other) {
+    return multi_vector__wedge__line_at_infinity(translator__anti_wedge__line_at_origin(self, other), line_at_origin__anti_dual(other));
+}
+
+MultiVector translator__reject_orthogonally_from__motor(Translator self, Motor other) {
+    return multi_vector__wedge__multi_vector_at_infinity(translator__anti_wedge__motor(self, other), motor__anti_dual(other));
+}
+
+MultiVector translator__reject_orthogonally_from__multi_vector(Translator self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_infinity(translator__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
+}
+
+MultiVector translator__reject_orthogonally_from__multi_vector_at_origin(Translator self, MultiVectorAtOrigin other) {
+    return multi_vector__wedge__multi_vector_at_infinity(translator__anti_wedge__multi_vector_at_origin(self, other), multi_vector_at_origin__anti_dual(other));
+}
+
+AntiScalar translator__reject_orthogonally_from__origin(Translator self, Origin other) {
+    return origin__wedge__horizon(translator__anti_wedge__origin(self, other), origin__anti_dual(other));
+}
+
+Translator translator__reject_orthogonally_from__plane(Translator self, Plane other) {
+    return transflector__wedge__point_at_infinity(translator__anti_wedge__plane(self, other), plane__anti_dual(other));
+}
+
+Translator translator__reject_orthogonally_from__plane_at_origin(Translator self, PlaneAtOrigin other) {
+    return transflector__wedge__point_at_infinity(translator__anti_wedge__plane_at_origin(self, other), plane_at_origin__anti_dual(other));
+}
+
+AntiScalar translator__reject_orthogonally_from__point(Translator self, Point other) {
+    return point__wedge__horizon(translator__anti_wedge__point(self, other), point__anti_dual(other));
+}
+
+MultiVector translator__reject_orthogonally_from__rotor(Translator self, Rotor other) {
+    return multi_vector__wedge__multi_vector_at_infinity(translator__anti_wedge__rotor(self, other), rotor__anti_dual(other));
+}
+
+Translator translator__reject_orthogonally_from__transflector(Translator self, Transflector other) {
+    return transflector__wedge__point_at_infinity(translator__anti_wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 MultiVector flector__reject_via_origin_from__flector(Flector self, Flector other) {
-    return multi_vector__bulk_expansion__flector(flector__anti_wedge__flector(self, other), self);
+    return multi_vector__wedge__flector(flector__anti_wedge__flector(self, other), flector__dual(other));
 }
 
 MultiVector flector__reject_via_origin_from__flector_at_infinity(Flector self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__flector(flector__anti_wedge__flector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__wedge__flector(flector__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVector flector__reject_via_origin_from__horizon(Flector self, Horizon other) {
-    return multi_vector_at_infinity__bulk_expansion__flector(flector__anti_wedge__horizon(self, other), self);
+MultiVectorAtOrigin flector__reject_via_origin_from__horizon(Flector self, Horizon other) {
+    return multi_vector_at_infinity__wedge__origin(flector__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
-Motor flector__reject_via_origin_from__line(Flector self, Line other) {
-    return point__bulk_expansion__flector(flector__anti_wedge__line(self, other), self);
+PlaneAtOrigin flector__reject_via_origin_from__line(Flector self, Line other) {
+    return point__wedge__line_at_origin(flector__anti_wedge__line(self, other), line__dual(other));
 }
 
-Motor flector__reject_via_origin_from__line_at_infinity(Flector self, LineAtInfinity other) {
-    return point_at_infinity__bulk_expansion__flector(flector__anti_wedge__line_at_infinity(self, other), self);
+PlaneAtOrigin flector__reject_via_origin_from__line_at_infinity(Flector self, LineAtInfinity other) {
+    return point_at_infinity__wedge__line_at_origin(flector__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-Motor flector__reject_via_origin_from__line_at_origin(Flector self, LineAtOrigin other) {
-    return point__bulk_expansion__flector(flector__anti_wedge__line_at_origin(self, other), self);
+PlaneAtOrigin flector__reject_via_origin_from__motor(Flector self, Motor other) {
+    return flector__wedge__line_at_origin(flector__anti_wedge__motor(self, other), motor__dual(other));
 }
 
-Motor flector__reject_via_origin_from__magnitude(Flector self, Magnitude other) {
-    return flector__bulk_expansion__flector(flector__anti_wedge__magnitude(self, other), self);
+MultiVectorAtOrigin flector__reject_via_origin_from__multi_vector(Flector self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(flector__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-Motor flector__reject_via_origin_from__motor(Flector self, Motor other) {
-    return flector__bulk_expansion__flector(flector__anti_wedge__motor(self, other), self);
+MultiVectorAtOrigin flector__reject_via_origin_from__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(flector__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVector flector__reject_via_origin_from__multi_vector(Flector self, MultiVector other) {
-    return multi_vector__bulk_expansion__flector(flector__anti_wedge__multi_vector(self, other), self);
+MultiVectorAtOrigin flector__reject_via_origin_from__plane(Flector self, Plane other) {
+    return multi_vector__wedge__origin(flector__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector flector__reject_via_origin_from__multi_vector_at_infinity(Flector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__flector(flector__anti_wedge__multi_vector_at_infinity(self, other), self);
+PlaneAtOrigin flector__reject_via_origin_from__point(Flector self, Point other) {
+    return scalar__wedge__plane_at_origin(flector__anti_wedge__point(self, other), point__dual(other));
 }
 
-MultiVector flector__reject_via_origin_from__multi_vector_at_origin(Flector self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__flector(flector__anti_wedge__multi_vector_at_origin(self, other), self);
-}
-
-MultiVector flector__reject_via_origin_from__plane(Flector self, Plane other) {
-    return multi_vector__bulk_expansion__flector(flector__anti_wedge__plane(self, other), self);
-}
-
-MultiVector flector__reject_via_origin_from__plane_at_origin(Flector self, PlaneAtOrigin other) {
-    return multi_vector__bulk_expansion__flector(flector__anti_wedge__plane_at_origin(self, other), self);
-}
-
-Motor flector__reject_via_origin_from__rotor(Flector self, Rotor other) {
-    return flector__bulk_expansion__flector(flector__anti_wedge__rotor(self, other), self);
+PlaneAtOrigin flector__reject_via_origin_from__point_at_infinity(Flector self, PointAtInfinity other) {
+    return scalar__wedge__plane_at_origin(flector__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 MultiVector flector__reject_via_origin_from__transflector(Flector self, Transflector other) {
-    return multi_vector__bulk_expansion__flector(flector__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__flector(flector__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-Motor flector__reject_via_origin_from__translator(Flector self, Translator other) {
-    return flector__bulk_expansion__flector(flector__anti_wedge__translator(self, other), self);
-}
-
-Motor flector_at_infinity__reject_via_origin_from__anti_scalar(FlectorAtInfinity self, AntiScalar other) {
-    return flector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__anti_scalar(self, other), self);
+PlaneAtOrigin flector__reject_via_origin_from__translator(Flector self, Translator other) {
+    return flector__wedge__line_at_origin(flector__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector flector_at_infinity__reject_via_origin_from__flector(FlectorAtInfinity self, Flector other) {
-    return multi_vector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__flector(self, other), self);
+    return multi_vector_at_infinity__wedge__flector(flector_at_infinity__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-Motor flector_at_infinity__reject_via_origin_from__line(FlectorAtInfinity self, Line other) {
-    return point_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__line(self, other), self);
+PlaneAtOrigin flector_at_infinity__reject_via_origin_from__line(FlectorAtInfinity self, Line other) {
+    return point_at_infinity__wedge__line_at_origin(flector_at_infinity__anti_wedge__line(self, other), line__dual(other));
 }
 
-Motor flector_at_infinity__reject_via_origin_from__line_at_origin(FlectorAtInfinity self, LineAtOrigin other) {
-    return point_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__line_at_origin(self, other), self);
+PlaneAtOrigin flector_at_infinity__reject_via_origin_from__motor(FlectorAtInfinity self, Motor other) {
+    return flector_at_infinity__wedge__line_at_origin(flector_at_infinity__anti_wedge__motor(self, other), motor__dual(other));
 }
 
-Motor flector_at_infinity__reject_via_origin_from__magnitude(FlectorAtInfinity self, Magnitude other) {
-    return flector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__magnitude(self, other), self);
+MultiVectorAtOrigin flector_at_infinity__reject_via_origin_from__multi_vector(FlectorAtInfinity self, MultiVector other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(flector_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-Motor flector_at_infinity__reject_via_origin_from__motor(FlectorAtInfinity self, Motor other) {
-    return flector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__motor(self, other), self);
+MultiVectorAtOrigin flector_at_infinity__reject_via_origin_from__plane(FlectorAtInfinity self, Plane other) {
+    return multi_vector_at_infinity__wedge__origin(flector_at_infinity__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector flector_at_infinity__reject_via_origin_from__multi_vector(FlectorAtInfinity self, MultiVector other) {
-    return multi_vector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVector flector_at_infinity__reject_via_origin_from__multi_vector_at_origin(FlectorAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__multi_vector_at_origin(self, other), self);
-}
-
-MultiVector flector_at_infinity__reject_via_origin_from__plane(FlectorAtInfinity self, Plane other) {
-    return multi_vector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__plane(self, other), self);
-}
-
-MultiVector flector_at_infinity__reject_via_origin_from__plane_at_origin(FlectorAtInfinity self, PlaneAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__plane_at_origin(self, other), self);
-}
-
-Motor flector_at_infinity__reject_via_origin_from__rotor(FlectorAtInfinity self, Rotor other) {
-    return flector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__rotor(self, other), self);
+PlaneAtOrigin flector_at_infinity__reject_via_origin_from__point(FlectorAtInfinity self, Point other) {
+    return scalar__wedge__plane_at_origin(flector_at_infinity__anti_wedge__point(self, other), point__dual(other));
 }
 
 MultiVector flector_at_infinity__reject_via_origin_from__transflector(FlectorAtInfinity self, Transflector other) {
-    return multi_vector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__transflector(self, other), self);
+    return multi_vector_at_infinity__wedge__flector(flector_at_infinity__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-Motor flector_at_infinity__reject_via_origin_from__translator(FlectorAtInfinity self, Translator other) {
-    return flector_at_infinity__bulk_expansion__flector_at_infinity(flector_at_infinity__anti_wedge__translator(self, other), self);
+PlaneAtOrigin flector_at_infinity__reject_via_origin_from__translator(FlectorAtInfinity self, Translator other) {
+    return flector_at_infinity__wedge__line_at_origin(flector_at_infinity__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar horizon__reject_via_origin_from__anti_scalar(Horizon self, AntiScalar other) {
-    return horizon__bulk_expansion__horizon(horizon__anti_wedge__anti_scalar(self, other), self);
+MultiVector horizon__reject_via_origin_from__flector(Horizon self, Flector other) {
+    return multi_vector_at_infinity__wedge__flector(horizon__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-MultiVectorAtOrigin horizon__reject_via_origin_from__flector(Horizon self, Flector other) {
-    return multi_vector_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__flector(self, other), self);
+PlaneAtOrigin horizon__reject_via_origin_from__line(Horizon self, Line other) {
+    return point_at_infinity__wedge__line_at_origin(horizon__anti_wedge__line(self, other), line__dual(other));
 }
 
-LineAtOrigin horizon__reject_via_origin_from__line(Horizon self, Line other) {
-    return point_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__line(self, other), self);
-}
-
-LineAtOrigin horizon__reject_via_origin_from__line_at_origin(Horizon self, LineAtOrigin other) {
-    return point_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__line_at_origin(self, other), self);
-}
-
-AntiScalar horizon__reject_via_origin_from__magnitude(Horizon self, Magnitude other) {
-    return horizon__bulk_expansion__horizon(horizon__anti_wedge__magnitude(self, other), self);
-}
-
-Rotor horizon__reject_via_origin_from__motor(Horizon self, Motor other) {
-    return flector_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__motor(self, other), self);
+PlaneAtOrigin horizon__reject_via_origin_from__motor(Horizon self, Motor other) {
+    return flector_at_infinity__wedge__line_at_origin(horizon__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin horizon__reject_via_origin_from__multi_vector(Horizon self, MultiVector other) {
-    return multi_vector_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtOrigin horizon__reject_via_origin_from__multi_vector_at_origin(Horizon self, MultiVectorAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(horizon__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 PlaneAtOrigin horizon__reject_via_origin_from__plane(Horizon self, Plane other) {
-    return line_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__plane(self, other), self);
+    return line_at_infinity__wedge__origin(horizon__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-PlaneAtOrigin horizon__reject_via_origin_from__plane_at_origin(Horizon self, PlaneAtOrigin other) {
-    return line_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__plane_at_origin(self, other), self);
+PlaneAtOrigin horizon__reject_via_origin_from__point(Horizon self, Point other) {
+    return scalar__wedge__plane_at_origin(horizon__anti_wedge__point(self, other), point__dual(other));
 }
 
-Rotor horizon__reject_via_origin_from__rotor(Horizon self, Rotor other) {
-    return flector_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__rotor(self, other), self);
+Plane horizon__reject_via_origin_from__transflector(Horizon self, Transflector other) {
+    return line_at_infinity__wedge__flector(horizon__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-PlaneAtOrigin horizon__reject_via_origin_from__transflector(Horizon self, Transflector other) {
-    return line_at_infinity__bulk_expansion__horizon(horizon__anti_wedge__transflector(self, other), self);
+Motor line__reject_via_origin_from__flector(Line self, Flector other) {
+    return point__wedge__flector(line__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-AntiScalar horizon__reject_via_origin_from__translator(Horizon self, Translator other) {
-    return horizon__bulk_expansion__horizon(horizon__anti_wedge__translator(self, other), self);
+Motor line__reject_via_origin_from__flector_at_infinity(Line self, FlectorAtInfinity other) {
+    return point_at_infinity__wedge__flector(line__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-AntiScalar line__reject_via_origin_from__anti_scalar(Line self, AntiScalar other) {
-    return line__bulk_expansion__line(line__anti_wedge__anti_scalar(self, other), self);
+LineAtOrigin line__reject_via_origin_from__horizon(Line self, Horizon other) {
+    return point_at_infinity__wedge__origin(line__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
-PlaneAtOrigin line__reject_via_origin_from__flector(Line self, Flector other) {
-    return point__bulk_expansion__line(line__anti_wedge__flector(self, other), self);
+LineAtOrigin line__reject_via_origin_from__line(Line self, Line other) {
+    return scalar__wedge__line_at_origin(line__anti_wedge__line(self, other), line__dual(other));
 }
 
-PlaneAtOrigin line__reject_via_origin_from__flector_at_infinity(Line self, FlectorAtInfinity other) {
-    return point_at_infinity__bulk_expansion__line(line__anti_wedge__flector_at_infinity(self, other), self);
-}
-
-PlaneAtOrigin line__reject_via_origin_from__horizon(Line self, Horizon other) {
-    return point_at_infinity__bulk_expansion__line(line__anti_wedge__horizon(self, other), self);
-}
-
-AntiScalar line__reject_via_origin_from__magnitude(Line self, Magnitude other) {
-    return line__bulk_expansion__line(line__anti_wedge__magnitude(self, other), self);
+LineAtOrigin line__reject_via_origin_from__line_at_infinity(Line self, LineAtInfinity other) {
+    return scalar__wedge__line_at_origin(line__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
 MultiVectorAtOrigin line__reject_via_origin_from__motor(Line self, Motor other) {
-    return multi_vector__bulk_expansion__line(line__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__line_at_origin(line__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin line__reject_via_origin_from__multi_vector(Line self, MultiVector other) {
-    return multi_vector__bulk_expansion__line(line__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_origin(line__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtOrigin line__reject_via_origin_from__multi_vector_at_infinity(Line self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__line(line__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(line__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin line__reject_via_origin_from__multi_vector_at_origin(Line self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__line(line__anti_wedge__multi_vector_at_origin(self, other), self);
+LineAtOrigin line__reject_via_origin_from__plane(Line self, Plane other) {
+    return point__wedge__origin(line__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-PlaneAtOrigin line__reject_via_origin_from__plane(Line self, Plane other) {
-    return point__bulk_expansion__line(line__anti_wedge__plane(self, other), self);
-}
-
-PlaneAtOrigin line__reject_via_origin_from__plane_at_origin(Line self, PlaneAtOrigin other) {
-    return point__bulk_expansion__line(line__anti_wedge__plane_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin line__reject_via_origin_from__rotor(Line self, Rotor other) {
-    return multi_vector__bulk_expansion__line(line__anti_wedge__rotor(self, other), self);
-}
-
-PlaneAtOrigin line__reject_via_origin_from__transflector(Line self, Transflector other) {
-    return point__bulk_expansion__line(line__anti_wedge__transflector(self, other), self);
+Motor line__reject_via_origin_from__transflector(Line self, Transflector other) {
+    return point__wedge__flector(line__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVectorAtOrigin line__reject_via_origin_from__translator(Line self, Translator other) {
-    return multi_vector__bulk_expansion__line(line__anti_wedge__translator(self, other), self);
+    return multi_vector__wedge__line_at_origin(line__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar line_at_infinity__reject_via_origin_from__anti_scalar(LineAtInfinity self, AntiScalar other) {
-    return line_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__anti_scalar(self, other), self);
+Motor line_at_infinity__reject_via_origin_from__flector(LineAtInfinity self, Flector other) {
+    return point_at_infinity__wedge__flector(line_at_infinity__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-PlaneAtOrigin line_at_infinity__reject_via_origin_from__flector(LineAtInfinity self, Flector other) {
-    return point_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__flector(self, other), self);
-}
-
-AntiScalar line_at_infinity__reject_via_origin_from__magnitude(LineAtInfinity self, Magnitude other) {
-    return line_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__magnitude(self, other), self);
+LineAtOrigin line_at_infinity__reject_via_origin_from__line(LineAtInfinity self, Line other) {
+    return scalar__wedge__line_at_origin(line_at_infinity__anti_wedge__line(self, other), line__dual(other));
 }
 
 MultiVectorAtOrigin line_at_infinity__reject_via_origin_from__motor(LineAtInfinity self, Motor other) {
-    return multi_vector_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__motor(self, other), self);
+    return multi_vector_at_infinity__wedge__line_at_origin(line_at_infinity__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin line_at_infinity__reject_via_origin_from__multi_vector(LineAtInfinity self, MultiVector other) {
-    return multi_vector_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__multi_vector(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(line_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-MultiVectorAtOrigin line_at_infinity__reject_via_origin_from__multi_vector_at_origin(LineAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__multi_vector_at_origin(self, other), self);
+LineAtOrigin line_at_infinity__reject_via_origin_from__plane(LineAtInfinity self, Plane other) {
+    return point_at_infinity__wedge__origin(line_at_infinity__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-PlaneAtOrigin line_at_infinity__reject_via_origin_from__plane(LineAtInfinity self, Plane other) {
-    return point_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__plane(self, other), self);
-}
-
-PlaneAtOrigin line_at_infinity__reject_via_origin_from__plane_at_origin(LineAtInfinity self, PlaneAtOrigin other) {
-    return point_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__plane_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin line_at_infinity__reject_via_origin_from__rotor(LineAtInfinity self, Rotor other) {
-    return multi_vector_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__rotor(self, other), self);
-}
-
-PlaneAtOrigin line_at_infinity__reject_via_origin_from__transflector(LineAtInfinity self, Transflector other) {
-    return point_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__transflector(self, other), self);
+Motor line_at_infinity__reject_via_origin_from__transflector(LineAtInfinity self, Transflector other) {
+    return point_at_infinity__wedge__flector(line_at_infinity__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
 AntiScalar line_at_infinity__reject_via_origin_from__translator(LineAtInfinity self, Translator other) {
-    return line_at_infinity__bulk_expansion__line_at_infinity(line_at_infinity__anti_wedge__translator(self, other), self);
+    return line_at_infinity__wedge__line_at_origin(line_at_infinity__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar motor__reject_via_origin_from__anti_scalar(Motor self, AntiScalar other) {
-    return motor__bulk_expansion__motor(motor__anti_wedge__anti_scalar(self, other), self);
+Motor line_at_origin__reject_via_origin_from__flector(LineAtOrigin self, Flector other) {
+    return point__wedge__flector(line_at_origin__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-PlaneAtOrigin motor__reject_via_origin_from__flector(Motor self, Flector other) {
-    return flector__bulk_expansion__motor(motor__anti_wedge__flector(self, other), self);
+Motor line_at_origin__reject_via_origin_from__flector_at_infinity(LineAtOrigin self, FlectorAtInfinity other) {
+    return point_at_infinity__wedge__flector(line_at_origin__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-PlaneAtOrigin motor__reject_via_origin_from__flector_at_infinity(Motor self, FlectorAtInfinity other) {
-    return flector_at_infinity__bulk_expansion__motor(motor__anti_wedge__flector_at_infinity(self, other), self);
+LineAtOrigin line_at_origin__reject_via_origin_from__horizon(LineAtOrigin self, Horizon other) {
+    return point_at_infinity__wedge__origin(line_at_origin__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
-PlaneAtOrigin motor__reject_via_origin_from__horizon(Motor self, Horizon other) {
-    return flector_at_infinity__bulk_expansion__motor(motor__anti_wedge__horizon(self, other), self);
+LineAtOrigin line_at_origin__reject_via_origin_from__line(LineAtOrigin self, Line other) {
+    return scalar__wedge__line_at_origin(line_at_origin__anti_wedge__line(self, other), line__dual(other));
+}
+
+LineAtOrigin line_at_origin__reject_via_origin_from__line_at_infinity(LineAtOrigin self, LineAtInfinity other) {
+    return scalar__wedge__line_at_origin(line_at_origin__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+MultiVectorAtOrigin line_at_origin__reject_via_origin_from__motor(LineAtOrigin self, Motor other) {
+    return multi_vector__wedge__line_at_origin(line_at_origin__anti_wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin line_at_origin__reject_via_origin_from__multi_vector(LineAtOrigin self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(line_at_origin__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin line_at_origin__reject_via_origin_from__multi_vector_at_infinity(LineAtOrigin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(line_at_origin__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+LineAtOrigin line_at_origin__reject_via_origin_from__plane(LineAtOrigin self, Plane other) {
+    return point__wedge__origin(line_at_origin__anti_wedge__plane(self, other), plane__dual(other));
+}
+
+Motor line_at_origin__reject_via_origin_from__transflector(LineAtOrigin self, Transflector other) {
+    return point__wedge__flector(line_at_origin__anti_wedge__transflector(self, other), transflector__dual(other));
+}
+
+MultiVectorAtOrigin line_at_origin__reject_via_origin_from__translator(LineAtOrigin self, Translator other) {
+    return multi_vector__wedge__line_at_origin(line_at_origin__anti_wedge__translator(self, other), translator__dual(other));
+}
+
+Motor motor__reject_via_origin_from__flector(Motor self, Flector other) {
+    return flector__wedge__flector(motor__anti_wedge__flector(self, other), flector__dual(other));
+}
+
+Motor motor__reject_via_origin_from__flector_at_infinity(Motor self, FlectorAtInfinity other) {
+    return flector_at_infinity__wedge__flector(motor__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+Rotor motor__reject_via_origin_from__horizon(Motor self, Horizon other) {
+    return flector_at_infinity__wedge__origin(motor__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
 MultiVectorAtOrigin motor__reject_via_origin_from__line(Motor self, Line other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__line(self, other), self);
+    return multi_vector__wedge__line_at_origin(motor__anti_wedge__line(self, other), line__dual(other));
 }
 
 MultiVectorAtOrigin motor__reject_via_origin_from__line_at_infinity(Motor self, LineAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__motor(motor__anti_wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin motor__reject_via_origin_from__line_at_origin(Motor self, LineAtOrigin other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin motor__reject_via_origin_from__magnitude(Motor self, Magnitude other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__magnitude(self, other), self);
+    return multi_vector_at_infinity__wedge__line_at_origin(motor__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
 MultiVectorAtOrigin motor__reject_via_origin_from__motor(Motor self, Motor other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__line_at_origin(motor__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin motor__reject_via_origin_from__multi_vector(Motor self, MultiVector other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_origin(motor__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtOrigin motor__reject_via_origin_from__multi_vector_at_infinity(Motor self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__motor(motor__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(motor__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin motor__reject_via_origin_from__multi_vector_at_origin(Motor self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__multi_vector_at_origin(self, other), self);
+Rotor motor__reject_via_origin_from__plane(Motor self, Plane other) {
+    return flector__wedge__origin(motor__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-PlaneAtOrigin motor__reject_via_origin_from__plane(Motor self, Plane other) {
-    return flector__bulk_expansion__motor(motor__anti_wedge__plane(self, other), self);
+AntiScalar motor__reject_via_origin_from__point(Motor self, Point other) {
+    return point__wedge__plane_at_origin(motor__anti_wedge__point(self, other), point__dual(other));
 }
 
-PlaneAtOrigin motor__reject_via_origin_from__plane_at_origin(Motor self, PlaneAtOrigin other) {
-    return flector__bulk_expansion__motor(motor__anti_wedge__plane_at_origin(self, other), self);
+AntiScalar motor__reject_via_origin_from__point_at_infinity(Motor self, PointAtInfinity other) {
+    return point_at_infinity__wedge__plane_at_origin(motor__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-PlaneAtOrigin motor__reject_via_origin_from__point(Motor self, Point other) {
-    return point__bulk_expansion__motor(motor__anti_wedge__point(self, other), self);
-}
-
-PlaneAtOrigin motor__reject_via_origin_from__point_at_infinity(Motor self, PointAtInfinity other) {
-    return point_at_infinity__bulk_expansion__motor(motor__anti_wedge__point_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin motor__reject_via_origin_from__rotor(Motor self, Rotor other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__rotor(self, other), self);
-}
-
-PlaneAtOrigin motor__reject_via_origin_from__transflector(Motor self, Transflector other) {
-    return flector__bulk_expansion__motor(motor__anti_wedge__transflector(self, other), self);
+Motor motor__reject_via_origin_from__transflector(Motor self, Transflector other) {
+    return flector__wedge__flector(motor__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVectorAtOrigin motor__reject_via_origin_from__translator(Motor self, Translator other) {
-    return multi_vector__bulk_expansion__motor(motor__anti_wedge__translator(self, other), self);
+    return multi_vector__wedge__line_at_origin(motor__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__anti_scalar(MultiVector self, AntiScalar other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__anti_scalar(self, other), self);
+MultiVector multi_vector__reject_via_origin_from__flector(MultiVector self, Flector other) {
+    return multi_vector__wedge__flector(multi_vector__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__flector(MultiVector self, Flector other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__flector(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector(multi_vector__anti_wedge__flector_at_infinity(self, other), self);
+MultiVector multi_vector__reject_via_origin_from__flector_at_infinity(MultiVector self, FlectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__flector(multi_vector__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__horizon(MultiVector self, Horizon other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector(multi_vector__anti_wedge__horizon(self, other), self);
+    return multi_vector_at_infinity__wedge__origin(multi_vector__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__line(MultiVector self, Line other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__line(self, other), self);
+    return multi_vector__wedge__line_at_origin(multi_vector__anti_wedge__line(self, other), line__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__line_at_infinity(MultiVector self, LineAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector(multi_vector__anti_wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__line_at_origin(MultiVector self, LineAtOrigin other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__magnitude(MultiVector self, Magnitude other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__magnitude(self, other), self);
+    return multi_vector_at_infinity__wedge__line_at_origin(multi_vector__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__motor(MultiVector self, Motor other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__line_at_origin(multi_vector__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__multi_vector(MultiVector self, MultiVector other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_origin(multi_vector__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__multi_vector_at_infinity(MultiVector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector(multi_vector__anti_wedge__multi_vector_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__multi_vector_at_origin(MultiVector self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__multi_vector_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__origin(MultiVector self, Origin other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__origin(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(multi_vector__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__plane(MultiVector self, Plane other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__plane(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__plane_at_origin(MultiVector self, PlaneAtOrigin other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__plane_at_origin(self, other), self);
+    return multi_vector__wedge__origin(multi_vector__anti_wedge__plane(self, other), plane__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__point(MultiVector self, Point other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__point(self, other), self);
+    return multi_vector__wedge__plane_at_origin(multi_vector__anti_wedge__point(self, other), point__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__point_at_infinity(MultiVector self, PointAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector(multi_vector__anti_wedge__point_at_infinity(self, other), self);
+    return multi_vector_at_infinity__wedge__plane_at_origin(multi_vector__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__rotor(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector__reject_via_origin_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__transflector(self, other), self);
+MultiVector multi_vector__reject_via_origin_from__transflector(MultiVector self, Transflector other) {
+    return multi_vector__wedge__flector(multi_vector__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector__reject_via_origin_from__translator(MultiVector self, Translator other) {
-    return multi_vector__bulk_expansion__multi_vector(multi_vector__anti_wedge__translator(self, other), self);
+    return multi_vector__wedge__line_at_origin(multi_vector__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__anti_scalar(MultiVectorAtInfinity self, AntiScalar other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__anti_scalar(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__flector(MultiVectorAtInfinity self, Flector other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__flector(self, other), self);
+MultiVector multi_vector_at_infinity__reject_via_origin_from__flector(MultiVectorAtInfinity self, Flector other) {
+    return multi_vector_at_infinity__wedge__flector(multi_vector_at_infinity__anti_wedge__flector(self, other), flector__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__line(MultiVectorAtInfinity self, Line other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__line(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__line_at_origin(MultiVectorAtInfinity self, LineAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__magnitude(MultiVectorAtInfinity self, Magnitude other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__magnitude(self, other), self);
+    return multi_vector_at_infinity__wedge__line_at_origin(multi_vector_at_infinity__anti_wedge__line(self, other), line__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__motor(MultiVectorAtInfinity self, Motor other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__motor(self, other), self);
+    return multi_vector_at_infinity__wedge__line_at_origin(multi_vector_at_infinity__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__multi_vector(MultiVectorAtInfinity self, MultiVector other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__multi_vector(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__multi_vector_at_origin(MultiVectorAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(multi_vector_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__plane(MultiVectorAtInfinity self, Plane other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__plane(self, other), self);
+    return multi_vector_at_infinity__wedge__origin(multi_vector_at_infinity__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__plane_at_origin(MultiVectorAtInfinity self, PlaneAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__plane_at_origin(self, other), self);
+PlaneAtOrigin multi_vector_at_infinity__reject_via_origin_from__point(MultiVectorAtInfinity self, Point other) {
+    return scalar__wedge__plane_at_origin(multi_vector_at_infinity__anti_wedge__point(self, other), point__dual(other));
 }
 
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__rotor(MultiVectorAtInfinity self, Rotor other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__rotor(self, other), self);
-}
-
-MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__transflector(MultiVectorAtInfinity self, Transflector other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__transflector(self, other), self);
+MultiVector multi_vector_at_infinity__reject_via_origin_from__transflector(MultiVectorAtInfinity self, Transflector other) {
+    return multi_vector_at_infinity__wedge__flector(multi_vector_at_infinity__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
 MultiVectorAtOrigin multi_vector_at_infinity__reject_via_origin_from__translator(MultiVectorAtInfinity self, Translator other) {
-    return multi_vector_at_infinity__bulk_expansion__multi_vector_at_infinity(multi_vector_at_infinity__anti_wedge__translator(self, other), self);
+    return multi_vector_at_infinity__wedge__line_at_origin(multi_vector_at_infinity__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar plane__reject_via_origin_from__anti_scalar(Plane self, AntiScalar other) {
-    return plane__bulk_expansion__plane(plane__anti_wedge__anti_scalar(self, other), self);
+MultiVector multi_vector_at_origin__reject_via_origin_from__flector(MultiVectorAtOrigin self, Flector other) {
+    return multi_vector__wedge__flector(multi_vector_at_origin__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-MultiVectorAtOrigin plane__reject_via_origin_from__flector(Plane self, Flector other) {
-    return multi_vector__bulk_expansion__plane(plane__anti_wedge__flector(self, other), self);
+MultiVector multi_vector_at_origin__reject_via_origin_from__flector_at_infinity(MultiVectorAtOrigin self, FlectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__flector(multi_vector_at_origin__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin plane__reject_via_origin_from__flector_at_infinity(Plane self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__plane(plane__anti_wedge__flector_at_infinity(self, other), self);
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__horizon(MultiVectorAtOrigin self, Horizon other) {
+    return multi_vector_at_infinity__wedge__origin(multi_vector_at_origin__anti_wedge__horizon(self, other), horizon__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__line(MultiVectorAtOrigin self, Line other) {
+    return multi_vector__wedge__line_at_origin(multi_vector_at_origin__anti_wedge__line(self, other), line__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__line_at_infinity(MultiVectorAtOrigin self, LineAtInfinity other) {
+    return multi_vector_at_infinity__wedge__line_at_origin(multi_vector_at_origin__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__motor(MultiVectorAtOrigin self, Motor other) {
+    return multi_vector__wedge__line_at_origin(multi_vector_at_origin__anti_wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__multi_vector(MultiVectorAtOrigin self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__multi_vector_at_infinity(MultiVectorAtOrigin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(multi_vector_at_origin__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__plane(MultiVectorAtOrigin self, Plane other) {
+    return multi_vector__wedge__origin(multi_vector_at_origin__anti_wedge__plane(self, other), plane__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__point(MultiVectorAtOrigin self, Point other) {
+    return multi_vector__wedge__plane_at_origin(multi_vector_at_origin__anti_wedge__point(self, other), point__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__point_at_infinity(MultiVectorAtOrigin self, PointAtInfinity other) {
+    return multi_vector_at_infinity__wedge__plane_at_origin(multi_vector_at_origin__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+MultiVector multi_vector_at_origin__reject_via_origin_from__transflector(MultiVectorAtOrigin self, Transflector other) {
+    return multi_vector__wedge__flector(multi_vector_at_origin__anti_wedge__transflector(self, other), transflector__dual(other));
+}
+
+MultiVectorAtOrigin multi_vector_at_origin__reject_via_origin_from__translator(MultiVectorAtOrigin self, Translator other) {
+    return multi_vector__wedge__line_at_origin(multi_vector_at_origin__anti_wedge__translator(self, other), translator__dual(other));
+}
+
+Flector origin__reject_via_origin_from__flector(Origin self, Flector other) {
+    return scalar__wedge__flector(origin__anti_wedge__flector(self, other), flector__dual(other));
+}
+
+Flector origin__reject_via_origin_from__flector_at_infinity(Origin self, FlectorAtInfinity other) {
+    return scalar__wedge__flector(origin__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+Origin origin__reject_via_origin_from__horizon(Origin self, Horizon other) {
+    return scalar__wedge__origin(origin__anti_wedge__horizon(self, other), horizon__dual(other));
+}
+
+MultiVectorAtOrigin origin__reject_via_origin_from__multi_vector(Origin self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(origin__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin origin__reject_via_origin_from__multi_vector_at_infinity(Origin self, MultiVectorAtInfinity other) {
+    return scalar__wedge__multi_vector_at_origin(origin__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+Origin origin__reject_via_origin_from__plane(Origin self, Plane other) {
+    return scalar__wedge__origin(origin__anti_wedge__plane(self, other), plane__dual(other));
+}
+
+Flector origin__reject_via_origin_from__transflector(Origin self, Transflector other) {
+    return scalar__wedge__flector(origin__anti_wedge__transflector(self, other), transflector__dual(other));
+}
+
+MultiVector plane__reject_via_origin_from__flector(Plane self, Flector other) {
+    return multi_vector__wedge__flector(plane__anti_wedge__flector(self, other), flector__dual(other));
+}
+
+MultiVector plane__reject_via_origin_from__flector_at_infinity(Plane self, FlectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__flector(plane__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
 PlaneAtOrigin plane__reject_via_origin_from__horizon(Plane self, Horizon other) {
-    return line_at_infinity__bulk_expansion__plane(plane__anti_wedge__horizon(self, other), self);
+    return line_at_infinity__wedge__origin(plane__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
-LineAtOrigin plane__reject_via_origin_from__line(Plane self, Line other) {
-    return point__bulk_expansion__plane(plane__anti_wedge__line(self, other), self);
+PlaneAtOrigin plane__reject_via_origin_from__line(Plane self, Line other) {
+    return point__wedge__line_at_origin(plane__anti_wedge__line(self, other), line__dual(other));
 }
 
-LineAtOrigin plane__reject_via_origin_from__line_at_infinity(Plane self, LineAtInfinity other) {
-    return point_at_infinity__bulk_expansion__plane(plane__anti_wedge__line_at_infinity(self, other), self);
+PlaneAtOrigin plane__reject_via_origin_from__line_at_infinity(Plane self, LineAtInfinity other) {
+    return point_at_infinity__wedge__line_at_origin(plane__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-LineAtOrigin plane__reject_via_origin_from__line_at_origin(Plane self, LineAtOrigin other) {
-    return point__bulk_expansion__plane(plane__anti_wedge__line_at_origin(self, other), self);
-}
-
-AntiScalar plane__reject_via_origin_from__magnitude(Plane self, Magnitude other) {
-    return plane__bulk_expansion__plane(plane__anti_wedge__magnitude(self, other), self);
-}
-
-Rotor plane__reject_via_origin_from__motor(Plane self, Motor other) {
-    return flector__bulk_expansion__plane(plane__anti_wedge__motor(self, other), self);
+PlaneAtOrigin plane__reject_via_origin_from__motor(Plane self, Motor other) {
+    return flector__wedge__line_at_origin(plane__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin plane__reject_via_origin_from__multi_vector(Plane self, MultiVector other) {
-    return multi_vector__bulk_expansion__plane(plane__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_origin(plane__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtOrigin plane__reject_via_origin_from__multi_vector_at_infinity(Plane self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__plane(plane__anti_wedge__multi_vector_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin plane__reject_via_origin_from__multi_vector_at_origin(Plane self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__plane(plane__anti_wedge__multi_vector_at_origin(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(plane__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
 PlaneAtOrigin plane__reject_via_origin_from__plane(Plane self, Plane other) {
-    return line__bulk_expansion__plane(plane__anti_wedge__plane(self, other), self);
+    return line__wedge__origin(plane__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-PlaneAtOrigin plane__reject_via_origin_from__plane_at_origin(Plane self, PlaneAtOrigin other) {
-    return line__bulk_expansion__plane(plane__anti_wedge__plane_at_origin(self, other), self);
+PlaneAtOrigin plane__reject_via_origin_from__point(Plane self, Point other) {
+    return scalar__wedge__plane_at_origin(plane__anti_wedge__point(self, other), point__dual(other));
 }
 
-Rotor plane__reject_via_origin_from__rotor(Plane self, Rotor other) {
-    return flector__bulk_expansion__plane(plane__anti_wedge__rotor(self, other), self);
+PlaneAtOrigin plane__reject_via_origin_from__point_at_infinity(Plane self, PointAtInfinity other) {
+    return scalar__wedge__plane_at_origin(plane__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin plane__reject_via_origin_from__transflector(Plane self, Transflector other) {
-    return multi_vector__bulk_expansion__plane(plane__anti_wedge__transflector(self, other), self);
+MultiVector plane__reject_via_origin_from__transflector(Plane self, Transflector other) {
+    return multi_vector__wedge__flector(plane__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-Rotor plane__reject_via_origin_from__translator(Plane self, Translator other) {
-    return transflector__bulk_expansion__plane(plane__anti_wedge__translator(self, other), self);
+PlaneAtOrigin plane__reject_via_origin_from__translator(Plane self, Translator other) {
+    return transflector__wedge__line_at_origin(plane__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar point__reject_via_origin_from__anti_scalar(Point self, AntiScalar other) {
-    return point__bulk_expansion__point(point__anti_wedge__anti_scalar(self, other), self);
+MultiVector plane_at_origin__reject_via_origin_from__flector(PlaneAtOrigin self, Flector other) {
+    return multi_vector__wedge__flector(plane_at_origin__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-AntiScalar point__reject_via_origin_from__magnitude(Point self, Magnitude other) {
-    return point__bulk_expansion__point(point__anti_wedge__magnitude(self, other), self);
+MultiVector plane_at_origin__reject_via_origin_from__flector_at_infinity(PlaneAtOrigin self, FlectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__flector(plane_at_origin__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-AntiScalar point__reject_via_origin_from__motor(Point self, Motor other) {
-    return point__bulk_expansion__point(point__anti_wedge__motor(self, other), self);
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__horizon(PlaneAtOrigin self, Horizon other) {
+    return line_at_infinity__wedge__origin(plane_at_origin__anti_wedge__horizon(self, other), horizon__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__line(PlaneAtOrigin self, Line other) {
+    return point__wedge__line_at_origin(plane_at_origin__anti_wedge__line(self, other), line__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__line_at_infinity(PlaneAtOrigin self, LineAtInfinity other) {
+    return point_at_infinity__wedge__line_at_origin(plane_at_origin__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__motor(PlaneAtOrigin self, Motor other) {
+    return flector__wedge__line_at_origin(plane_at_origin__anti_wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin plane_at_origin__reject_via_origin_from__multi_vector(PlaneAtOrigin self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(plane_at_origin__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin plane_at_origin__reject_via_origin_from__multi_vector_at_infinity(PlaneAtOrigin self, MultiVectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(plane_at_origin__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__plane(PlaneAtOrigin self, Plane other) {
+    return line__wedge__origin(plane_at_origin__anti_wedge__plane(self, other), plane__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__point(PlaneAtOrigin self, Point other) {
+    return scalar__wedge__plane_at_origin(plane_at_origin__anti_wedge__point(self, other), point__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__point_at_infinity(PlaneAtOrigin self, PointAtInfinity other) {
+    return scalar__wedge__plane_at_origin(plane_at_origin__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+MultiVector plane_at_origin__reject_via_origin_from__transflector(PlaneAtOrigin self, Transflector other) {
+    return multi_vector__wedge__flector(plane_at_origin__anti_wedge__transflector(self, other), transflector__dual(other));
+}
+
+PlaneAtOrigin plane_at_origin__reject_via_origin_from__translator(PlaneAtOrigin self, Translator other) {
+    return transflector__wedge__line_at_origin(plane_at_origin__anti_wedge__translator(self, other), translator__dual(other));
+}
+
+Flector point__reject_via_origin_from__flector(Point self, Flector other) {
+    return scalar__wedge__flector(point__anti_wedge__flector(self, other), flector__dual(other));
+}
+
+Flector point__reject_via_origin_from__flector_at_infinity(Point self, FlectorAtInfinity other) {
+    return scalar__wedge__flector(point__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+Origin point__reject_via_origin_from__horizon(Point self, Horizon other) {
+    return scalar__wedge__origin(point__anti_wedge__horizon(self, other), horizon__dual(other));
+}
+
+PlaneAtOrigin point__reject_via_origin_from__motor(Point self, Motor other) {
+    return point__wedge__line_at_origin(point__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin point__reject_via_origin_from__multi_vector(Point self, MultiVector other) {
-    return multi_vector__bulk_expansion__point(point__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_origin(point__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-MultiVectorAtOrigin point__reject_via_origin_from__multi_vector_at_origin(Point self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__point(point__anti_wedge__multi_vector_at_origin(self, other), self);
+MultiVectorAtOrigin point__reject_via_origin_from__multi_vector_at_infinity(Point self, MultiVectorAtInfinity other) {
+    return scalar__wedge__multi_vector_at_origin(point__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-AntiScalar point__reject_via_origin_from__rotor(Point self, Rotor other) {
-    return point__bulk_expansion__point(point__anti_wedge__rotor(self, other), self);
+Origin point__reject_via_origin_from__plane(Point self, Plane other) {
+    return scalar__wedge__origin(point__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-AntiScalar point__reject_via_origin_from__translator(Point self, Translator other) {
-    return point__bulk_expansion__point(point__anti_wedge__translator(self, other), self);
+Flector point__reject_via_origin_from__transflector(Point self, Transflector other) {
+    return scalar__wedge__flector(point__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-AntiScalar point_at_infinity__reject_via_origin_from__anti_scalar(PointAtInfinity self, AntiScalar other) {
-    return point_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__anti_scalar(self, other), self);
+PlaneAtOrigin point__reject_via_origin_from__translator(Point self, Translator other) {
+    return point__wedge__line_at_origin(point__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar point_at_infinity__reject_via_origin_from__magnitude(PointAtInfinity self, Magnitude other) {
-    return point_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__magnitude(self, other), self);
+Flector point_at_infinity__reject_via_origin_from__flector(PointAtInfinity self, Flector other) {
+    return scalar__wedge__flector(point_at_infinity__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-AntiScalar point_at_infinity__reject_via_origin_from__motor(PointAtInfinity self, Motor other) {
-    return point_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__motor(self, other), self);
+PlaneAtOrigin point_at_infinity__reject_via_origin_from__motor(PointAtInfinity self, Motor other) {
+    return point_at_infinity__wedge__line_at_origin(point_at_infinity__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin point_at_infinity__reject_via_origin_from__multi_vector(PointAtInfinity self, MultiVector other) {
-    return multi_vector_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__multi_vector(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(point_at_infinity__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-MultiVectorAtOrigin point_at_infinity__reject_via_origin_from__multi_vector_at_origin(PointAtInfinity self, MultiVectorAtOrigin other) {
-    return multi_vector_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__multi_vector_at_origin(self, other), self);
+Origin point_at_infinity__reject_via_origin_from__plane(PointAtInfinity self, Plane other) {
+    return scalar__wedge__origin(point_at_infinity__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-AntiScalar point_at_infinity__reject_via_origin_from__rotor(PointAtInfinity self, Rotor other) {
-    return point_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__rotor(self, other), self);
+Flector point_at_infinity__reject_via_origin_from__transflector(PointAtInfinity self, Transflector other) {
+    return scalar__wedge__flector(point_at_infinity__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-AntiScalar point_at_infinity__reject_via_origin_from__translator(PointAtInfinity self, Translator other) {
-    return point_at_infinity__bulk_expansion__point_at_infinity(point_at_infinity__anti_wedge__translator(self, other), self);
+PlaneAtOrigin point_at_infinity__reject_via_origin_from__translator(PointAtInfinity self, Translator other) {
+    return point_at_infinity__wedge__line_at_origin(point_at_infinity__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__anti_scalar(Transflector self, AntiScalar other) {
-    return transflector__bulk_expansion__transflector(transflector__anti_wedge__anti_scalar(self, other), self);
+Motor rotor__reject_via_origin_from__flector(Rotor self, Flector other) {
+    return flector__wedge__flector(rotor__anti_wedge__flector(self, other), flector__dual(other));
+}
+
+Motor rotor__reject_via_origin_from__flector_at_infinity(Rotor self, FlectorAtInfinity other) {
+    return flector_at_infinity__wedge__flector(rotor__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
+}
+
+Rotor rotor__reject_via_origin_from__horizon(Rotor self, Horizon other) {
+    return flector_at_infinity__wedge__origin(rotor__anti_wedge__horizon(self, other), horizon__dual(other));
+}
+
+MultiVectorAtOrigin rotor__reject_via_origin_from__line(Rotor self, Line other) {
+    return multi_vector__wedge__line_at_origin(rotor__anti_wedge__line(self, other), line__dual(other));
+}
+
+MultiVectorAtOrigin rotor__reject_via_origin_from__line_at_infinity(Rotor self, LineAtInfinity other) {
+    return multi_vector_at_infinity__wedge__line_at_origin(rotor__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
+}
+
+MultiVectorAtOrigin rotor__reject_via_origin_from__motor(Rotor self, Motor other) {
+    return multi_vector__wedge__line_at_origin(rotor__anti_wedge__motor(self, other), motor__dual(other));
+}
+
+MultiVectorAtOrigin rotor__reject_via_origin_from__multi_vector(Rotor self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(rotor__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
+}
+
+MultiVectorAtOrigin rotor__reject_via_origin_from__multi_vector_at_infinity(Rotor self, MultiVectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(rotor__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
+}
+
+Rotor rotor__reject_via_origin_from__plane(Rotor self, Plane other) {
+    return flector__wedge__origin(rotor__anti_wedge__plane(self, other), plane__dual(other));
+}
+
+AntiScalar rotor__reject_via_origin_from__point(Rotor self, Point other) {
+    return point__wedge__plane_at_origin(rotor__anti_wedge__point(self, other), point__dual(other));
+}
+
+AntiScalar rotor__reject_via_origin_from__point_at_infinity(Rotor self, PointAtInfinity other) {
+    return point_at_infinity__wedge__plane_at_origin(rotor__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
+}
+
+Motor rotor__reject_via_origin_from__transflector(Rotor self, Transflector other) {
+    return flector__wedge__flector(rotor__anti_wedge__transflector(self, other), transflector__dual(other));
+}
+
+MultiVectorAtOrigin rotor__reject_via_origin_from__translator(Rotor self, Translator other) {
+    return multi_vector__wedge__line_at_origin(rotor__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector transflector__reject_via_origin_from__flector(Transflector self, Flector other) {
-    return multi_vector__bulk_expansion__transflector(transflector__anti_wedge__flector(self, other), self);
+    return multi_vector__wedge__flector(transflector__anti_wedge__flector(self, other), flector__dual(other));
 }
 
 MultiVector transflector__reject_via_origin_from__flector_at_infinity(Transflector self, FlectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__transflector(transflector__anti_wedge__flector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__wedge__flector(transflector__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-Plane transflector__reject_via_origin_from__horizon(Transflector self, Horizon other) {
-    return line_at_infinity__bulk_expansion__transflector(transflector__anti_wedge__horizon(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__horizon(Transflector self, Horizon other) {
+    return line_at_infinity__wedge__origin(transflector__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__line(Transflector self, Line other) {
-    return point__bulk_expansion__transflector(transflector__anti_wedge__line(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__line(Transflector self, Line other) {
+    return point__wedge__line_at_origin(transflector__anti_wedge__line(self, other), line__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__line_at_infinity(Transflector self, LineAtInfinity other) {
-    return point_at_infinity__bulk_expansion__transflector(transflector__anti_wedge__line_at_infinity(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__line_at_infinity(Transflector self, LineAtInfinity other) {
+    return point_at_infinity__wedge__line_at_origin(transflector__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__line_at_origin(Transflector self, LineAtOrigin other) {
-    return point__bulk_expansion__transflector(transflector__anti_wedge__line_at_origin(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__motor(Transflector self, Motor other) {
+    return flector__wedge__line_at_origin(transflector__anti_wedge__motor(self, other), motor__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__magnitude(Transflector self, Magnitude other) {
-    return transflector__bulk_expansion__transflector(transflector__anti_wedge__magnitude(self, other), self);
+MultiVectorAtOrigin transflector__reject_via_origin_from__multi_vector(Transflector self, MultiVector other) {
+    return multi_vector__wedge__multi_vector_at_origin(transflector__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__motor(Transflector self, Motor other) {
-    return flector__bulk_expansion__transflector(transflector__anti_wedge__motor(self, other), self);
+MultiVectorAtOrigin transflector__reject_via_origin_from__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(transflector__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVector transflector__reject_via_origin_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__bulk_expansion__transflector(transflector__anti_wedge__multi_vector(self, other), self);
+MultiVectorAtOrigin transflector__reject_via_origin_from__plane(Transflector self, Plane other) {
+    return multi_vector__wedge__origin(transflector__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector transflector__reject_via_origin_from__multi_vector_at_infinity(Transflector self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__transflector(transflector__anti_wedge__multi_vector_at_infinity(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__point(Transflector self, Point other) {
+    return scalar__wedge__plane_at_origin(transflector__anti_wedge__point(self, other), point__dual(other));
 }
 
-MultiVector transflector__reject_via_origin_from__multi_vector_at_origin(Transflector self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__transflector(transflector__anti_wedge__multi_vector_at_origin(self, other), self);
-}
-
-MultiVector transflector__reject_via_origin_from__plane(Transflector self, Plane other) {
-    return multi_vector__bulk_expansion__transflector(transflector__anti_wedge__plane(self, other), self);
-}
-
-MultiVector transflector__reject_via_origin_from__plane_at_origin(Transflector self, PlaneAtOrigin other) {
-    return multi_vector__bulk_expansion__transflector(transflector__anti_wedge__plane_at_origin(self, other), self);
-}
-
-Motor transflector__reject_via_origin_from__rotor(Transflector self, Rotor other) {
-    return flector__bulk_expansion__transflector(transflector__anti_wedge__rotor(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__point_at_infinity(Transflector self, PointAtInfinity other) {
+    return scalar__wedge__plane_at_origin(transflector__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
 MultiVector transflector__reject_via_origin_from__transflector(Transflector self, Transflector other) {
-    return multi_vector__bulk_expansion__transflector(transflector__anti_wedge__transflector(self, other), self);
+    return multi_vector__wedge__flector(transflector__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
-Motor transflector__reject_via_origin_from__translator(Transflector self, Translator other) {
-    return transflector__bulk_expansion__transflector(transflector__anti_wedge__translator(self, other), self);
+PlaneAtOrigin transflector__reject_via_origin_from__translator(Transflector self, Translator other) {
+    return transflector__wedge__line_at_origin(transflector__anti_wedge__translator(self, other), translator__dual(other));
 }
 
-AntiScalar translator__reject_via_origin_from__anti_scalar(Translator self, AntiScalar other) {
-    return translator__bulk_expansion__translator(translator__anti_wedge__anti_scalar(self, other), self);
+Motor translator__reject_via_origin_from__flector(Translator self, Flector other) {
+    return flector__wedge__flector(translator__anti_wedge__flector(self, other), flector__dual(other));
 }
 
-PlaneAtOrigin translator__reject_via_origin_from__flector(Translator self, Flector other) {
-    return flector__bulk_expansion__translator(translator__anti_wedge__flector(self, other), self);
+Motor translator__reject_via_origin_from__flector_at_infinity(Translator self, FlectorAtInfinity other) {
+    return flector_at_infinity__wedge__flector(translator__anti_wedge__flector_at_infinity(self, other), flector_at_infinity__dual(other));
 }
 
-PlaneAtOrigin translator__reject_via_origin_from__flector_at_infinity(Translator self, FlectorAtInfinity other) {
-    return flector_at_infinity__bulk_expansion__translator(translator__anti_wedge__flector_at_infinity(self, other), self);
+AntiScalar translator__reject_via_origin_from__horizon(Translator self, Horizon other) {
+    return horizon__wedge__origin(translator__anti_wedge__horizon(self, other), horizon__dual(other));
 }
 
 MultiVectorAtOrigin translator__reject_via_origin_from__line(Translator self, Line other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__line(self, other), self);
+    return multi_vector__wedge__line_at_origin(translator__anti_wedge__line(self, other), line__dual(other));
 }
 
 AntiScalar translator__reject_via_origin_from__line_at_infinity(Translator self, LineAtInfinity other) {
-    return line_at_infinity__bulk_expansion__translator(translator__anti_wedge__line_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin translator__reject_via_origin_from__line_at_origin(Translator self, LineAtOrigin other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__line_at_origin(self, other), self);
-}
-
-MultiVectorAtOrigin translator__reject_via_origin_from__magnitude(Translator self, Magnitude other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__magnitude(self, other), self);
+    return line_at_infinity__wedge__line_at_origin(translator__anti_wedge__line_at_infinity(self, other), line_at_infinity__dual(other));
 }
 
 MultiVectorAtOrigin translator__reject_via_origin_from__motor(Translator self, Motor other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__motor(self, other), self);
+    return multi_vector__wedge__line_at_origin(translator__anti_wedge__motor(self, other), motor__dual(other));
 }
 
 MultiVectorAtOrigin translator__reject_via_origin_from__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__multi_vector(self, other), self);
+    return multi_vector__wedge__multi_vector_at_origin(translator__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 MultiVectorAtOrigin translator__reject_via_origin_from__multi_vector_at_infinity(Translator self, MultiVectorAtInfinity other) {
-    return multi_vector_at_infinity__bulk_expansion__translator(translator__anti_wedge__multi_vector_at_infinity(self, other), self);
+    return multi_vector_at_infinity__wedge__multi_vector_at_origin(translator__anti_wedge__multi_vector_at_infinity(self, other), multi_vector_at_infinity__dual(other));
 }
 
-MultiVectorAtOrigin translator__reject_via_origin_from__multi_vector_at_origin(Translator self, MultiVectorAtOrigin other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__multi_vector_at_origin(self, other), self);
+Rotor translator__reject_via_origin_from__plane(Translator self, Plane other) {
+    return transflector__wedge__origin(translator__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-PlaneAtOrigin translator__reject_via_origin_from__plane(Translator self, Plane other) {
-    return transflector__bulk_expansion__translator(translator__anti_wedge__plane(self, other), self);
+AntiScalar translator__reject_via_origin_from__point(Translator self, Point other) {
+    return point__wedge__plane_at_origin(translator__anti_wedge__point(self, other), point__dual(other));
 }
 
-PlaneAtOrigin translator__reject_via_origin_from__plane_at_origin(Translator self, PlaneAtOrigin other) {
-    return transflector__bulk_expansion__translator(translator__anti_wedge__plane_at_origin(self, other), self);
+AntiScalar translator__reject_via_origin_from__point_at_infinity(Translator self, PointAtInfinity other) {
+    return point_at_infinity__wedge__plane_at_origin(translator__anti_wedge__point_at_infinity(self, other), point_at_infinity__dual(other));
 }
 
-PlaneAtOrigin translator__reject_via_origin_from__point(Translator self, Point other) {
-    return point__bulk_expansion__translator(translator__anti_wedge__point(self, other), self);
-}
-
-PlaneAtOrigin translator__reject_via_origin_from__point_at_infinity(Translator self, PointAtInfinity other) {
-    return point_at_infinity__bulk_expansion__translator(translator__anti_wedge__point_at_infinity(self, other), self);
-}
-
-MultiVectorAtOrigin translator__reject_via_origin_from__rotor(Translator self, Rotor other) {
-    return multi_vector__bulk_expansion__translator(translator__anti_wedge__rotor(self, other), self);
-}
-
-PlaneAtOrigin translator__reject_via_origin_from__transflector(Translator self, Transflector other) {
-    return transflector__bulk_expansion__translator(translator__anti_wedge__transflector(self, other), self);
+Motor translator__reject_via_origin_from__transflector(Translator self, Transflector other) {
+    return transflector__wedge__flector(translator__anti_wedge__transflector(self, other), transflector__dual(other));
 }
 
 AntiScalar translator__reject_via_origin_from__translator(Translator self, Translator other) {
-    return translator__bulk_expansion__translator(translator__anti_wedge__translator(self, other), self);
+    return translator__wedge__line_at_origin(translator__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector flector__anti_support(Flector self) {
