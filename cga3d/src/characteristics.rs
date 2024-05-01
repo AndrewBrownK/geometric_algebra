@@ -1635,7 +1635,13 @@ impl AntiInverse for DualNum {
     type Output = DualNum;
 
     fn anti_inverse(self) -> DualNum {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([-1.0 * s / (t * t), 1.0 / t]),
+            },
+        }
     }
 }
 
@@ -1859,7 +1865,13 @@ impl Inverse for DualNum {
     type Output = DualNum;
 
     fn inverse(self) -> DualNum {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([1.0 / s, -1.0 * t / (s * s)]),
+            },
+        }
     }
 }
 

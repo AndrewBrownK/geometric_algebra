@@ -2151,87 +2151,87 @@ Translator translator__add__translator(Translator self, Translator other) {
 }
 
 AntiScalar anti_scalar__div__anti_scalar(AntiScalar self, AntiScalar other) {
-    return AntiScalar(self.g0 * 1.0 / other.g0 * 1.0);
+    return AntiScalar(self.g0 / other.g0);
 }
 
 DualNum dual_num__div__dual_num(DualNum self, DualNum other) {
-    return DualNum(vec2(self.g0.x, self.g0.y) * vec2(1.0, 1.0) / vec2(other.g0.x, other.g0.y) * vec2(1.0, 1.0));
+    return DualNum(self.g0 / other.g0);
 }
 
 Flector flector__div__flector(Flector self, Flector other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Flector(self.g0 / other.g0, self.g1 / other.g1);
 }
 
 FlectorAtInfinity flector_at_infinity__div__flector_at_infinity(FlectorAtInfinity self, FlectorAtInfinity other) {
-    return FlectorAtInfinity(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return FlectorAtInfinity(self.g0 / other.g0);
 }
 
 Horizon horizon__div__horizon(Horizon self, Horizon other) {
-    return Horizon(self.g0 * 1.0 / other.g0 * 1.0);
+    return Horizon(self.g0 / other.g0);
 }
 
 Line line__div__line(Line self, Line other) {
-    return Line(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0));
+    return Line(self.g0 / other.g0, self.g1 / other.g1);
 }
 
 LineAtInfinity line_at_infinity__div__line_at_infinity(LineAtInfinity self, LineAtInfinity other) {
-    return LineAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0));
+    return LineAtInfinity(self.g0 / other.g0);
 }
 
 LineAtOrigin line_at_origin__div__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
-    return LineAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0));
+    return LineAtOrigin(self.g0 / other.g0);
 }
 
 Motor motor__div__motor(Motor self, Motor other) {
-    return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0));
+    return Motor(self.g0 / other.g0, self.g1 / other.g1);
 }
 
 MultiVector multi_vector__div__multi_vector(MultiVector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x, self.g0.y) * vec2(1.0, 1.0) / vec2(other.g0.x, other.g0.y) * vec2(1.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.w) * vec4(1.0, 1.0, 1.0, 1.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g2.x, other.g2.y, other.g2.z) * vec3(1.0, 1.0, 1.0), vec3(self.g3.x, self.g3.y, self.g3.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g3.x, other.g3.y, other.g3.z) * vec3(1.0, 1.0, 1.0), vec4(self.g4.x, self.g4.y, self.g4.z, self.g4.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g4.x, other.g4.y, other.g4.z, other.g4.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return MultiVector(self.g0 / other.g0, self.g1 / other.g1, self.g2 / other.g2, self.g3 / other.g3, self.g4 / other.g4);
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__div__multi_vector_at_infinity(MultiVectorAtInfinity self, MultiVectorAtInfinity other) {
-    return MultiVectorAtInfinity(vec2(self.g0.x, self.g0.y) * vec2(1.0, 1.0) / vec2(other.g0.x, other.g0.y) * vec2(1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g2.x, other.g2.y, other.g2.z) * vec3(1.0, 1.0, 1.0));
+    return MultiVectorAtInfinity(self.g0 / other.g0, self.g1 / other.g1, self.g2 / other.g2);
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__div__multi_vector_at_origin(MultiVectorAtOrigin self, MultiVectorAtOrigin other) {
-    return MultiVectorAtOrigin(vec2(self.g0.x, self.g0.y) * vec2(1.0, 1.0) / vec2(other.g0.x, other.g0.y) * vec2(1.0, 1.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g1.x, other.g1.y, other.g1.z) * vec3(1.0, 1.0, 1.0), vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g2.x, other.g2.y, other.g2.z) * vec3(1.0, 1.0, 1.0));
+    return MultiVectorAtOrigin(self.g0 / other.g0, self.g1 / other.g1, self.g2 / other.g2);
 }
 
 Origin origin__div__origin(Origin self, Origin other) {
-    return Origin(self.g0 * 1.0 / other.g0 * 1.0);
+    return Origin(self.g0 / other.g0);
 }
 
 Plane plane__div__plane(Plane self, Plane other) {
-    return Plane(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Plane(self.g0 / other.g0);
 }
 
 PlaneAtOrigin plane_at_origin__div__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return PlaneAtOrigin(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0));
+    return PlaneAtOrigin(self.g0 / other.g0);
 }
 
 Point point__div__point(Point self, Point other) {
-    return Point(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Point(self.g0 / other.g0);
 }
 
 PointAtInfinity point_at_infinity__div__point_at_infinity(PointAtInfinity self, PointAtInfinity other) {
-    return PointAtInfinity(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0));
+    return PointAtInfinity(self.g0 / other.g0);
 }
 
 Rotor rotor__div__rotor(Rotor self, Rotor other) {
-    return Rotor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Rotor(self.g0 / other.g0);
 }
 
 Scalar scalar__div__scalar(Scalar self, Scalar other) {
-    return Scalar(self.g0 * 1.0 / other.g0 * 1.0);
+    return Scalar(self.g0 / other.g0);
 }
 
 Transflector transflector__div__transflector(Transflector self, Transflector other) {
-    return Transflector(vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(1.0, 1.0, 1.0) / vec3(other.g0.x, other.g0.y, other.g0.z) * vec3(1.0, 1.0, 1.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g1.x, other.g1.y, other.g1.z, other.g1.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Transflector(self.g0 / other.g0, self.g1 / other.g1);
 }
 
 Translator translator__div__translator(Translator self, Translator other) {
-    return Translator(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.w) * vec4(1.0, 1.0, 1.0, 1.0) / vec4(other.g0.x, other.g0.y, other.g0.z, other.g0.w) * vec4(1.0, 1.0, 1.0, 1.0));
+    return Translator(self.g0 / other.g0);
 }
 
 AntiScalar dual_num__into__anti_scalar(DualNum self) {
@@ -18523,7 +18523,9 @@ AntiScalar anti_scalar__anti_inverse(AntiScalar self) {
 }
 
 DualNum dual_num__anti_inverse(DualNum self) {
-    return dual_num__geometric_anti_product__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__one(), dual_num__anti_dot__dual_num(self, self)));
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(-1.0 * s / (t * t), 1.0 / t));
 }
 
 Flector flector__anti_inverse(Flector self) {
@@ -18579,7 +18581,9 @@ Translator translator__anti_inverse(Translator self) {
 }
 
 DualNum dual_num__inverse(DualNum self) {
-    return dual_num__geometric_product__scalar(self, scalar__div__scalar(scalar__one(), dual_num__dot__dual_num(self, self)));
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(1.0 / s, -1.0 * t / (s * s)));
 }
 
 Flector flector__inverse(Flector self) {

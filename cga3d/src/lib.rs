@@ -32479,7 +32479,7 @@ impl Div<AntiScalar> for AntiScalar {
     fn div(self, other: AntiScalar) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32497,15 +32497,9 @@ impl Div<Circle> for Circle {
     fn div(self, other: Circle) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
+                g2: self.group2() / other.group2(),
             },
         }
     }
@@ -32523,7 +32517,7 @@ impl Div<CircleBulk> for CircleBulk {
     fn div(self, other: CircleBulk) -> CircleBulk {
         CircleBulk {
             groups: CircleBulkGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32541,9 +32535,7 @@ impl Div<CircleCarrierAspect> for CircleCarrierAspect {
     fn div(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32561,9 +32553,7 @@ impl Div<CircleWeight> for CircleWeight {
     fn div(self, other: CircleWeight) -> CircleWeight {
         CircleWeight {
             groups: CircleWeightGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32581,15 +32571,9 @@ impl Div<Dipole> for Dipole {
     fn div(self, other: Dipole) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g2: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group2()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], other.group2()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
+                g2: self.group2() / other.group2(),
             },
         }
     }
@@ -32607,9 +32591,7 @@ impl Div<DipoleBulk> for DipoleBulk {
     fn div(self, other: DipoleBulk) -> DipoleBulk {
         DipoleBulk {
             groups: DipoleBulkGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32627,12 +32609,8 @@ impl Div<DipoleCarrierAspect> for DipoleCarrierAspect {
     fn div(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
         DipoleCarrierAspect {
             groups: DipoleCarrierAspectGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -32650,9 +32628,7 @@ impl Div<DipoleWeight> for DipoleWeight {
     fn div(self, other: DipoleWeight) -> DipoleWeight {
         DipoleWeight {
             groups: DipoleWeightGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32670,8 +32646,7 @@ impl Div<DualNum> for DualNum {
     fn div(self, other: DualNum) -> DualNum {
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32689,9 +32664,7 @@ impl Div<FlatPoint> for FlatPoint {
     fn div(self, other: FlatPoint) -> FlatPoint {
         FlatPoint {
             groups: FlatPointGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32709,9 +32682,7 @@ impl Div<FlatPointAtInfinity> for FlatPointAtInfinity {
     fn div(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
         FlatPointAtInfinity {
             groups: FlatPointAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32729,7 +32700,7 @@ impl Div<FlatPointAtOrigin> for FlatPointAtOrigin {
     fn div(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
         FlatPointAtOrigin {
             groups: FlatPointAtOriginGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32747,12 +32718,8 @@ impl Div<Flector> for Flector {
     fn div(self, other: Flector) -> Flector {
         Flector {
             groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
-                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -32770,9 +32737,7 @@ impl Div<FlectorAtInfinity> for FlectorAtInfinity {
     fn div(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
         FlectorAtInfinity {
             groups: FlectorAtInfinityGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32790,7 +32755,7 @@ impl Div<Horizon> for Horizon {
     fn div(self, other: Horizon) -> Horizon {
         Horizon {
             groups: HorizonGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32808,7 +32773,7 @@ impl Div<Infinity> for Infinity {
     fn div(self, other: Infinity) -> Infinity {
         Infinity {
             groups: InfinityGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32826,12 +32791,8 @@ impl Div<Line> for Line {
     fn div(self, other: Line) -> Line {
         Line {
             groups: LineGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -32849,9 +32810,7 @@ impl Div<LineAtInfinity> for LineAtInfinity {
     fn div(self, other: LineAtInfinity) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32869,9 +32828,7 @@ impl Div<LineAtOrigin> for LineAtOrigin {
     fn div(self, other: LineAtOrigin) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32889,12 +32846,8 @@ impl Div<Motor> for Motor {
     fn div(self, other: Motor) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -32912,36 +32865,17 @@ impl Div<MultiVector> for MultiVector {
     fn div(self, other: MultiVector) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g2: Simd32x2::from([self.group2()[0], self.group2()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group2()[0], other.group2()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
-                g3: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group3()[0], other.group3()[1], other.group3()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g4: Simd32x3::from([self.group4()[0], self.group4()[1], self.group4()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group4()[0], other.group4()[1], other.group4()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g5: Simd32x4::from([self.group5()[0], self.group5()[1], self.group5()[2], self.group5()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group5()[0], other.group5()[1], other.group5()[2], other.group5()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
-                g6: Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], self.group6()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group6()[0], other.group6()[1], other.group6()[2], other.group6()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
-                g7: Simd32x3::from([self.group7()[0], self.group7()[1], self.group7()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group7()[0], other.group7()[1], other.group7()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g8: Simd32x3::from([self.group8()[0], self.group8()[1], self.group8()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group8()[0], other.group8()[1], other.group8()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g9: Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g10: Simd32x2::from([self.group10()[0], self.group10()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group10()[0], other.group10()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
+                g2: self.group2() / other.group2(),
+                g3: self.group3() / other.group3(),
+                g4: self.group4() / other.group4(),
+                g5: self.group5() / other.group5(),
+                g6: self.group6() / other.group6(),
+                g7: self.group7() / other.group7(),
+                g8: self.group8() / other.group8(),
+                g9: self.group9() / other.group9(),
+                g10: self.group10() / other.group10(),
             },
         }
     }
@@ -32959,7 +32893,7 @@ impl Div<Origin> for Origin {
     fn div(self, other: Origin) -> Origin {
         Origin {
             groups: OriginGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32977,9 +32911,7 @@ impl Div<Plane> for Plane {
     fn div(self, other: Plane) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -32997,9 +32929,7 @@ impl Div<PlaneAtOrigin> for PlaneAtOrigin {
     fn div(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33017,9 +32947,7 @@ impl Div<Rotor> for Rotor {
     fn div(self, other: Rotor) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33037,11 +32965,8 @@ impl Div<RoundPoint> for RoundPoint {
     fn div(self, other: RoundPoint) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g1: Simd32x2::from([self.group1()[0], self.group1()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group1()[0], other.group1()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -33059,9 +32984,7 @@ impl Div<RoundPointAtInfinity> for RoundPointAtInfinity {
     fn div(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
         RoundPointAtInfinity {
             groups: RoundPointAtInfinityGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33079,8 +33002,7 @@ impl Div<RoundPointAtOrigin> for RoundPointAtOrigin {
     fn div(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
         RoundPointAtOrigin {
             groups: RoundPointAtOriginGroups {
-                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33098,9 +33020,7 @@ impl Div<RoundPointBulk> for RoundPointBulk {
     fn div(self, other: RoundPointBulk) -> RoundPointBulk {
         RoundPointBulk {
             groups: RoundPointBulkGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33118,9 +33038,7 @@ impl Div<RoundPointCarrierAspect> for RoundPointCarrierAspect {
     fn div(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
         RoundPointCarrierAspect {
             groups: RoundPointCarrierAspectGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33138,7 +33056,7 @@ impl Div<Scalar> for Scalar {
     fn div(self, other: Scalar) -> Scalar {
         Scalar {
             groups: ScalarGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33156,8 +33074,7 @@ impl Div<SpacialCurvature> for SpacialCurvature {
     fn div(self, other: SpacialCurvature) -> SpacialCurvature {
         SpacialCurvature {
             groups: SpacialCurvatureGroups {
-                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33175,11 +33092,8 @@ impl Div<Sphere> for Sphere {
     fn div(self, other: Sphere) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g1: Simd32x2::from([self.group1()[0], self.group1()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group1()[0], other.group1()[1]])
-                    * Simd32x2::from([1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -33197,7 +33111,7 @@ impl Div<SphereWeight> for SphereWeight {
     fn div(self, other: SphereWeight) -> SphereWeight {
         SphereWeight {
             groups: SphereWeightGroups {
-                g0: self.group0() * 1.0 / other.group0() * 1.0,
+                g0: self.group0() / other.group0(),
             },
         }
     }
@@ -33215,12 +33129,8 @@ impl Div<Transflector> for Transflector {
     fn div(self, other: Transflector) -> Transflector {
         Transflector {
             groups: TransflectorGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from([1.0, 1.0, 1.0])
-                    / Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])
-                    * Simd32x3::from([1.0, 1.0, 1.0]),
-                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group1()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group1()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
             },
         }
     }
@@ -33238,9 +33148,7 @@ impl Div<Translator> for Translator {
     fn div(self, other: Translator) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group0()[3]]) * Simd32x4::from([1.0, 1.0, 1.0, 1.0])
-                    / Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group0()[3]])
-                    * Simd32x4::from([1.0, 1.0, 1.0, 1.0]),
+                g0: self.group0() / other.group0(),
             },
         }
     }

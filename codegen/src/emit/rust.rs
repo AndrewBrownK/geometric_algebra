@@ -186,18 +186,34 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
         | ExpressionContent::LogicAnd(lhs, rhs)
         | ExpressionContent::BitShiftRight(lhs, rhs) => {
             emit_expression(collector, lhs)?;
-            collector.write_all(match expression.content {
+            let mut group_rhs = false;
+            collector.write_all(match &expression.content {
                 ExpressionContent::Add(_, _) => b" + ",
                 ExpressionContent::Subtract(_, _) => b" - ",
                 ExpressionContent::Multiply(_, _) => b" * ",
-                ExpressionContent::Divide(_, _) => b" / ",
+                ExpressionContent::Divide(_, r) => {
+                    group_rhs = match &r.content {
+                        ExpressionContent::Add(_, _) => true,
+                        ExpressionContent::Subtract(_, _) => true,
+                        ExpressionContent::Multiply(_, _) => true,
+                        ExpressionContent::Divide(_, _) => true,
+                        _ => false,
+                    };
+                    b" / "
+                },
                 ExpressionContent::LessThan(_, _) => b" < ",
                 ExpressionContent::Equal(_, _) => b" == ",
                 ExpressionContent::LogicAnd(_, _) => b" & ",
                 ExpressionContent::BitShiftRight(_, _) => b" >> ",
                 _ => unreachable!(),
             })?;
+            if group_rhs {
+                collector.write_all(b"(")?;
+            }
             emit_expression(collector, rhs)?;
+            if group_rhs {
+                collector.write_all(b")")?;
+            }
         }
     }
     Ok(())

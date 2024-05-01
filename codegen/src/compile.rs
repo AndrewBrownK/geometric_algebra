@@ -237,6 +237,16 @@ pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
                 data_type_hint,
             });
         }
+        ExpressionContent::Divide(mut a, mut b) => {
+            a = simplify_and_legalize(a);
+            b = simplify_and_legalize(b);
+            let data_type_hint = if a.data_type_hint == b.data_type_hint { a.data_type_hint.clone() } else { None };
+            return Box::new(Expression {
+                size: expression.size,
+                content: ExpressionContent::Divide(a, b),
+                data_type_hint,
+            });
+        }
         _ => expression,
     }
 }
@@ -1421,17 +1431,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 })]),
             }),
         };
-        let var_s = Box::new(Expression {
-            size: 1,
-            data_type_hint: Some(DataType::SimdVector(1)),
-            content: ExpressionContent::Variable("s"),
-        });
-        let var_t = Box::new(Expression {
-            size: 1,
-            data_type_hint: Some(DataType::SimdVector(1)),
-            content: ExpressionContent::Variable("t"),
-        });
-
+        let var_s = ExpressionContent::Variable("s");
+        let var_t = ExpressionContent::Variable("t");
 
         let mut construct_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
             return Expression {
@@ -1479,30 +1480,71 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             self.trait_impls.add_single_impl(name, dual_num_param.clone(), the_impl);
         };
 
-        let mul_2 = |a: ExpressionContent<'r>| {
+        let multiply = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
             return ExpressionContent::Multiply(
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![2]),
-                }),
                 Box::new(Expression {
                     size: 1,
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: a,
                 }),
+                Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: b,
+                }),
             );
+        };
+
+        let divide = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            return ExpressionContent::Divide(
+                Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: a,
+                }),
+                Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: b,
+                }),
+            );
+        };
+
+        let reciprocal = |a: ExpressionContent<'r>| {
+            return divide(ExpressionContent::Constant(DataType::SimdVector(1), vec![1]), a);
+        };
+        let mul_2 = |a: ExpressionContent<'r>| {
+            return multiply(ExpressionContent::Constant(DataType::SimdVector(1), vec![2]), a);
+        };
+        let negate = |a: ExpressionContent<'r>| {
+            return multiply(ExpressionContent::Constant(DataType::SimdVector(1), vec![-1]), a);
         };
 
         dual_num_trait_impl(
             "Square",
-            ExpressionContent::Multiply(var_s.clone(), var_s.clone()),
-            mul_2(ExpressionContent::Multiply(var_s.clone(), var_t.clone())),
+            multiply(var_s.clone(), var_s.clone()),
+            mul_2(multiply(var_s.clone(), var_t.clone())),
         );
         dual_num_trait_impl(
             "AntiSquare",
-            mul_2(ExpressionContent::Multiply(var_s.clone(), var_t.clone())),
-            ExpressionContent::Multiply(var_t.clone(), var_t.clone()),
+            mul_2(multiply(var_s.clone(), var_t.clone())),
+            multiply(var_t.clone(), var_t.clone()),
+        );
+        dual_num_trait_impl(
+            "Inverse",
+            reciprocal(var_s.clone()),
+            divide(
+                negate(var_t.clone()),
+                multiply(var_s.clone(), var_s.clone())
+            ),
+        );
+        dual_num_trait_impl(
+            "AntiInverse",
+            divide(
+                negate(var_s.clone()),
+                multiply(var_t.clone(), var_t.clone())
+            ),
+            reciprocal(var_t.clone()),
         );
         Ok(())
     }
