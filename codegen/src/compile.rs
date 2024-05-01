@@ -1519,6 +1519,13 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let negate = |a: ExpressionContent<'r>| {
             return multiply(ExpressionContent::Constant(DataType::SimdVector(1), vec![-1]), a);
         };
+        let sqrt = |a: ExpressionContent<'r>| {
+            return ExpressionContent::SquareRoot(Box::new(Expression {
+                size: 1,
+                data_type_hint: Some(DataType::SimdVector(1)),
+                content: a,
+            }));
+        };
 
         dual_num_trait_impl(
             "Square",
@@ -1545,6 +1552,16 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 multiply(var_t.clone(), var_t.clone())
             ),
             reciprocal(var_t.clone()),
+        );
+        dual_num_trait_impl(
+            "Sqrt",
+            sqrt(var_s.clone()),
+            divide(var_t.clone(), mul_2(sqrt(var_s.clone()))),
+        );
+        dual_num_trait_impl(
+            "AntiSqrt",
+            divide(var_s.clone(), mul_2(sqrt(var_t.clone()))),
+            sqrt(var_t.clone()),
         );
         Ok(())
     }

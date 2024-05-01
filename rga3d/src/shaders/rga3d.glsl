@@ -18514,6 +18514,12 @@ Horizon translator__attitude(Translator self) {
     return translator__anti_wedge__horizon(self, horizon__one());
 }
 
+DualNum dual_num__sqrt(DualNum self) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(sqrt(s), t / (2.0 * sqrt(s))));
+}
+
 Scalar scalar__sqrt(Scalar self) {
     return Scalar(sqrt(self.g0));
 }
@@ -18644,6 +18650,12 @@ Translator translator__inverse(Translator self) {
 
 AntiScalar anti_scalar__anti_sqrt(AntiScalar self) {
     return AntiScalar(sqrt(self.g0));
+}
+
+DualNum dual_num__anti_sqrt(DualNum self) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(s / (2.0 * sqrt(t)), sqrt(t)));
 }
 
 DualNum dual_num__anti_square(DualNum self) {

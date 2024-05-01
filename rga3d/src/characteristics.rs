@@ -465,6 +465,20 @@ impl Attitude for Translator {
     }
 }
 
+impl Sqrt for DualNum {
+    type Output = DualNum;
+
+    fn sqrt(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s.sqrt(), t / (2.0 * s.sqrt())]),
+            },
+        }
+    }
+}
+
 impl Sqrt for Scalar {
     type Output = Scalar;
 
@@ -733,6 +747,20 @@ impl AntiSqrt for AntiScalar {
     fn anti_sqrt(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0().sqrt() },
+        }
+    }
+}
+
+impl AntiSqrt for DualNum {
+    type Output = DualNum;
+
+    fn anti_sqrt(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s / (2.0 * t.sqrt()), t.sqrt()]),
+            },
         }
     }
 }

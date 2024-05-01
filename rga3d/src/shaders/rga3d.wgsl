@@ -18514,6 +18514,12 @@ fn translator__attitude(self_: Translator) -> Horizon {
     return translator__anti_wedge__horizon(self_, horizon__one());
 }
 
+fn dual_num__sqrt(self_: DualNum) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    return DualNum(vec2<f32>(sqrt(s), t / (2.0 * sqrt(s))));
+}
+
 fn scalar__sqrt(self_: Scalar) -> Scalar {
     return Scalar(sqrt(self_.g0));
 }
@@ -18644,6 +18650,12 @@ fn translator__inverse(self_: Translator) -> Translator {
 
 fn anti_scalar__anti_sqrt(self_: AntiScalar) -> AntiScalar {
     return AntiScalar(sqrt(self_.g0));
+}
+
+fn dual_num__anti_sqrt(self_: DualNum) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    return DualNum(vec2<f32>(s / (2.0 * sqrt(t)), sqrt(t)));
 }
 
 fn dual_num__anti_square(self_: DualNum) -> DualNum {
