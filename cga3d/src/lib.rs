@@ -2218,6 +2218,77 @@ impl std::fmt::Debug for SphereWeight {
 }
 
 #[derive(Clone, Copy)]
+struct SpacialCurvatureGroups {
+    /// e1234, -e1235
+    g0: Simd32x2,
+}
+
+#[derive(Clone, Copy)]
+pub union SpacialCurvature {
+    groups: SpacialCurvatureGroups,
+    /// e1234, -e1235, 0, 0
+    elements: [f32; 4],
+}
+
+impl SpacialCurvature {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e1234: f32, neg_e1235: f32) -> Self {
+        Self {
+            elements: [e1234, neg_e1235, 0.0, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x2) -> Self {
+        Self {
+            groups: SpacialCurvatureGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x2 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x2 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const SPACIALCURVATURE_INDEX_REMAP: [usize; 2] = [0, 1];
+
+impl std::ops::Index<usize> for SpacialCurvature {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[SPACIALCURVATURE_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for SpacialCurvature {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[SPACIALCURVATURE_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<SpacialCurvature> for [f32; 2] {
+    fn from(vector: SpacialCurvature) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1]] }
+    }
+}
+
+impl std::convert::From<[f32; 2]> for SpacialCurvature {
+    fn from(array: [f32; 2]) -> Self {
+        Self {
+            elements: [array[0], array[1], 0.0, 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for SpacialCurvature {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.debug_struct("SpacialCurvature").field("e1234", &self[0]).field("-e1235", &self[1]).finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct MotorGroups {
     /// -e145, -e245, -e345, e12345
     g0: Simd32x4,
@@ -3287,6 +3358,14 @@ impl One for Scalar {
     }
 }
 
+impl One for SpacialCurvature {
+    fn one() -> Self {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: Simd32x2::from(0.0) },
+        }
+    }
+}
+
 impl One for Sphere {
     fn one() -> Self {
         Sphere {
@@ -3609,6 +3688,14 @@ impl Zero for RoundPointCarrierAspect {
 impl Zero for Scalar {
     fn zero() -> Self {
         Scalar { groups: ScalarGroups { g0: 0.0 } }
+    }
+}
+
+impl Zero for SpacialCurvature {
+    fn zero() -> Self {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: Simd32x2::from(0.0) },
+        }
     }
 }
 
@@ -4035,6 +4122,18 @@ impl Neg for Scalar {
     fn neg(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Neg for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn neg(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+            },
         }
     }
 }
@@ -4714,6 +4813,28 @@ impl Add<Scalar> for AntiScalar {
         DualNum {
             groups: DualNumGroups {
                 g0: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for AntiScalar {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -5487,6 +5608,28 @@ impl Add<Scalar> for Circle {
     }
 }
 
+impl Add<SpacialCurvature> for Circle {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: self.group0(),
+                g7: self.group1(),
+                g8: self.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Circle {
     type Output = MultiVector;
 
@@ -6218,6 +6361,28 @@ impl Add<Scalar> for CircleBulk {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for CircleBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -6971,6 +7136,28 @@ impl Add<Scalar> for CircleCarrierAspect {
     }
 }
 
+impl Add<SpacialCurvature> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: self.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for CircleCarrierAspect {
     type Output = MultiVector;
 
@@ -7702,6 +7889,28 @@ impl Add<Scalar> for CircleWeight {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for CircleWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -8485,6 +8694,28 @@ impl Add<Scalar> for Dipole {
     }
 }
 
+impl Add<SpacialCurvature> for Dipole {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: self.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Dipole {
     type Output = MultiVector;
 
@@ -9218,6 +9449,28 @@ impl Add<Scalar> for DipoleBulk {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -9974,6 +10227,28 @@ impl Add<Scalar> for DipoleCarrierAspect {
     }
 }
 
+impl Add<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for DipoleCarrierAspect {
     type Output = MultiVector;
 
@@ -10707,6 +10982,28 @@ impl Add<Scalar> for DipoleWeight {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -11492,6 +11789,28 @@ impl AddAssign<Scalar> for DualNum {
     }
 }
 
+impl Add<SpacialCurvature> for DualNum {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for DualNum {
     type Output = MultiVector;
 
@@ -12195,6 +12514,28 @@ impl Add<Scalar> for FlatPoint {
     }
 }
 
+impl Add<SpacialCurvature> for FlatPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for FlatPoint {
     type Output = MultiVector;
 
@@ -12870,6 +13211,28 @@ impl Add<Scalar> for FlatPointAtInfinity {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -13552,6 +13915,28 @@ impl Add<Scalar> for FlatPointAtOrigin {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -14316,6 +14701,28 @@ impl Add<Scalar> for Flector {
     }
 }
 
+impl Add<SpacialCurvature> for Flector {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]) + other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Flector {
     type Output = MultiVector;
 
@@ -15048,6 +15455,28 @@ impl Add<Scalar> for FlectorAtInfinity {
     }
 }
 
+impl Add<SpacialCurvature> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -15760,6 +16189,18 @@ impl Add<Scalar> for Horizon {
     }
 }
 
+impl Add<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn add(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Horizon {
     type Output = Sphere;
 
@@ -15774,13 +16215,12 @@ impl Add<Sphere> for Horizon {
 }
 
 impl Add<SphereWeight> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn add(self, other: SphereWeight) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0(), 0.0]),
+    fn add(self, other: SphereWeight) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -16458,6 +16898,28 @@ impl Add<Scalar> for Infinity {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for Infinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -17187,6 +17649,28 @@ impl Add<Scalar> for Line {
     }
 }
 
+impl Add<SpacialCurvature> for Line {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Line {
     type Output = MultiVector;
 
@@ -17888,6 +18372,28 @@ impl Add<Scalar> for LineAtInfinity {
     }
 }
 
+impl Add<SpacialCurvature> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -18582,6 +19088,28 @@ impl Add<Scalar> for LineAtOrigin {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -19347,6 +19875,28 @@ impl Add<Scalar> for Motor {
                 g8: self.group1(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for Motor {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -20333,6 +20883,34 @@ impl AddAssign<Scalar> for MultiVector {
     }
 }
 
+impl Add<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<SpacialCurvature> for MultiVector {
+    fn add_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -21087,6 +21665,28 @@ impl Add<Scalar> for Origin {
     }
 }
 
+impl Add<SpacialCurvature> for Origin {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Origin {
     type Output = MultiVector;
 
@@ -21822,6 +22422,19 @@ impl Add<Scalar> for Plane {
     }
 }
 
+impl Add<SpacialCurvature> for Plane {
+    type Output = Sphere;
+
+    fn add(self, other: SpacialCurvature) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Plane {
     type Output = Sphere;
 
@@ -22513,6 +23126,19 @@ impl Add<Scalar> for PlaneAtOrigin {
                 g8: Simd32x3::from(0.0),
                 g9: self.group0(),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn add(self, other: SpacialCurvature) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: self.group0(),
+                g1: other.group0(),
             },
         }
     }
@@ -23239,6 +23865,28 @@ impl Add<Scalar> for Rotor {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for Rotor {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -24006,6 +24654,28 @@ impl Add<Scalar> for RoundPoint {
     }
 }
 
+impl Add<SpacialCurvature> for RoundPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for RoundPoint {
     type Output = MultiVector;
 
@@ -24745,6 +25415,28 @@ impl Add<Scalar> for RoundPointAtInfinity {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -25494,6 +26186,28 @@ impl Add<Scalar> for RoundPointAtOrigin {
     }
 }
 
+impl Add<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for RoundPointAtOrigin {
     type Output = MultiVector;
 
@@ -26219,6 +26933,28 @@ impl Add<Scalar> for RoundPointBulk {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -26963,6 +27699,28 @@ impl Add<Scalar> for RoundPointCarrierAspect {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -27736,6 +28494,28 @@ impl AddAssign<Scalar> for Scalar {
     }
 }
 
+impl Add<SpacialCurvature> for Scalar {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Sphere> for Scalar {
     type Output = MultiVector;
 
@@ -27819,6 +28599,781 @@ impl Add<Translator> for Scalar {
                 g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<AntiScalar> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiScalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Circle> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: other.group0(),
+                g7: other.group1(),
+                g8: other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<CircleBulk> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<CircleCarrierAspect> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: other.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<CircleWeight> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Dipole> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: other.group1(),
+                g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleBulk> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleCarrierAspect> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: other.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleWeight> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<DualNum> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPoint> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: other.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtOrigin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: other.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: self.group0() + Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Horizon> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn add(self, other: Horizon) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Horizon> for SpacialCurvature {
+    fn add_assign(&mut self, other: Horizon) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Infinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Line> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: other.group0(),
+                g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtOrigin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: LineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: self.group0() + other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Plane> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn add(self, other: Plane) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<PlaneAtOrigin> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn add(self, other: PlaneAtOrigin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPoint> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: other.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Scalar> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn add(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<SpacialCurvature> for SpacialCurvature {
+    fn add_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn add(self, other: Sphere) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<SphereWeight> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn add(self, other: SphereWeight) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() + Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<SphereWeight> for SpacialCurvature {
+    fn add_assign(&mut self, other: SphereWeight) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: self.group0() + Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
             },
         }
     }
@@ -28519,6 +30074,25 @@ impl Add<Scalar> for Sphere {
     }
 }
 
+impl Add<SpacialCurvature> for Sphere {
+    type Output = Sphere;
+
+    fn add(self, other: SpacialCurvature) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<SpacialCurvature> for Sphere {
+    fn add_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<Sphere> for Sphere {
     type Output = Sphere;
 
@@ -28932,13 +30506,12 @@ impl Add<FlectorAtInfinity> for SphereWeight {
 }
 
 impl Add<Horizon> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn add(self, other: Horizon) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()]),
+    fn add(self, other: Horizon) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -29273,6 +30846,18 @@ impl Add<Scalar> for SphereWeight {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn add(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + other.group0(),
             },
         }
     }
@@ -30010,6 +31595,28 @@ impl Add<Scalar> for Transflector {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for Transflector {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]) + other.group0(),
             },
         }
     }
@@ -30755,6 +32362,28 @@ impl Add<Scalar> for Translator {
                 g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for Translator {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
             },
         }
     }
@@ -31521,6 +33150,25 @@ impl DivAssign<Scalar> for Scalar {
     }
 }
 
+impl Div<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn div(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([self.group0()[0], self.group0()[1]]) * Simd32x2::from([1.0, 1.0]) / Simd32x2::from([other.group0()[0], other.group0()[1]])
+                    * Simd32x2::from([1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl DivAssign<SpacialCurvature> for SpacialCurvature {
+    fn div_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<Sphere> for Sphere {
     type Output = Sphere;
 
@@ -32225,6 +33873,14 @@ impl Into<Scalar> for MultiVector {
     }
 }
 
+impl Into<SpacialCurvature> for MultiVector {
+    fn into(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: self.group10() },
+        }
+    }
+}
+
 impl Into<Sphere> for MultiVector {
     fn into(self) -> Sphere {
         Sphere {
@@ -32405,6 +34061,22 @@ impl Into<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
+impl Into<Horizon> for SpacialCurvature {
+    fn into(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
+impl Into<SphereWeight> for SpacialCurvature {
+    fn into(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
 impl Into<Horizon> for Sphere {
     fn into(self) -> Horizon {
         Horizon {
@@ -32427,6 +34099,14 @@ impl Into<PlaneAtOrigin> for Sphere {
     fn into(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<SpacialCurvature> for Sphere {
+    fn into(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: self.group1() },
         }
     }
 }
@@ -33092,6 +34772,24 @@ impl Mul<Scalar> for Scalar {
 
 impl MulAssign<Scalar> for Scalar {
     fn mul_assign(&mut self, other: Scalar) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn mul(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<SpacialCurvature> for SpacialCurvature {
+    fn mul_assign(&mut self, other: SpacialCurvature) {
         *self = (*self).mul(other);
     }
 }
@@ -33797,6 +35495,28 @@ impl Sub<Scalar> for AntiScalar {
         DualNum {
             groups: DualNumGroups {
                 g0: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for AntiScalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -34570,6 +36290,28 @@ impl Sub<Scalar> for Circle {
     }
 }
 
+impl Sub<SpacialCurvature> for Circle {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: self.group0(),
+                g7: self.group1(),
+                g8: self.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Circle {
     type Output = MultiVector;
 
@@ -35301,6 +37043,28 @@ impl Sub<Scalar> for CircleBulk {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for CircleBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -36054,6 +37818,28 @@ impl Sub<Scalar> for CircleCarrierAspect {
     }
 }
 
+impl Sub<SpacialCurvature> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: self.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for CircleCarrierAspect {
     type Output = MultiVector;
 
@@ -36785,6 +38571,28 @@ impl Sub<Scalar> for CircleWeight {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for CircleWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -37568,6 +39376,28 @@ impl Sub<Scalar> for Dipole {
     }
 }
 
+impl Sub<SpacialCurvature> for Dipole {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: self.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Dipole {
     type Output = MultiVector;
 
@@ -38301,6 +40131,28 @@ impl Sub<Scalar> for DipoleBulk {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -39057,6 +40909,28 @@ impl Sub<Scalar> for DipoleCarrierAspect {
     }
 }
 
+impl Sub<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for DipoleCarrierAspect {
     type Output = MultiVector;
 
@@ -39790,6 +41664,28 @@ impl Sub<Scalar> for DipoleWeight {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -40575,6 +42471,28 @@ impl SubAssign<Scalar> for DualNum {
     }
 }
 
+impl Sub<SpacialCurvature> for DualNum {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for DualNum {
     type Output = MultiVector;
 
@@ -41278,6 +43196,28 @@ impl Sub<Scalar> for FlatPoint {
     }
 }
 
+impl Sub<SpacialCurvature> for FlatPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for FlatPoint {
     type Output = MultiVector;
 
@@ -41953,6 +43893,28 @@ impl Sub<Scalar> for FlatPointAtInfinity {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -42635,6 +44597,28 @@ impl Sub<Scalar> for FlatPointAtOrigin {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -43399,6 +45383,28 @@ impl Sub<Scalar> for Flector {
     }
 }
 
+impl Sub<SpacialCurvature> for Flector {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Flector {
     type Output = MultiVector;
 
@@ -44131,6 +46137,28 @@ impl Sub<Scalar> for FlectorAtInfinity {
     }
 }
 
+impl Sub<SpacialCurvature> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -44843,6 +46871,18 @@ impl Sub<Scalar> for Horizon {
     }
 }
 
+impl Sub<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn sub(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Horizon {
     type Output = Sphere;
 
@@ -44857,13 +46897,12 @@ impl Sub<Sphere> for Horizon {
 }
 
 impl Sub<SphereWeight> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn sub(self, other: SphereWeight) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0(), 0.0]),
+    fn sub(self, other: SphereWeight) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0(), 0.0]),
             },
         }
     }
@@ -45541,6 +47580,28 @@ impl Sub<Scalar> for Infinity {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for Infinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -46270,6 +48331,28 @@ impl Sub<Scalar> for Line {
     }
 }
 
+impl Sub<SpacialCurvature> for Line {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Line {
     type Output = MultiVector;
 
@@ -46971,6 +49054,28 @@ impl Sub<Scalar> for LineAtInfinity {
     }
 }
 
+impl Sub<SpacialCurvature> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -47665,6 +49770,28 @@ impl Sub<Scalar> for LineAtOrigin {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -48430,6 +50557,28 @@ impl Sub<Scalar> for Motor {
                 g8: self.group1(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for Motor {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -49416,6 +51565,34 @@ impl SubAssign<Scalar> for MultiVector {
     }
 }
 
+impl Sub<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<SpacialCurvature> for MultiVector {
+    fn sub_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -50170,6 +52347,28 @@ impl Sub<Scalar> for Origin {
     }
 }
 
+impl Sub<SpacialCurvature> for Origin {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Origin {
     type Output = MultiVector;
 
@@ -50905,6 +53104,19 @@ impl Sub<Scalar> for Plane {
     }
 }
 
+impl Sub<SpacialCurvature> for Plane {
+    type Output = Sphere;
+
+    fn sub(self, other: SpacialCurvature) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g1: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Plane {
     type Output = Sphere;
 
@@ -51596,6 +53808,19 @@ impl Sub<Scalar> for PlaneAtOrigin {
                 g8: Simd32x3::from(0.0),
                 g9: self.group0(),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn sub(self, other: SpacialCurvature) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: self.group0(),
+                g1: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -52322,6 +54547,28 @@ impl Sub<Scalar> for Rotor {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for Rotor {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -53089,6 +55336,28 @@ impl Sub<Scalar> for RoundPoint {
     }
 }
 
+impl Sub<SpacialCurvature> for RoundPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for RoundPoint {
     type Output = MultiVector;
 
@@ -53828,6 +56097,28 @@ impl Sub<Scalar> for RoundPointAtInfinity {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -54577,6 +56868,28 @@ impl Sub<Scalar> for RoundPointAtOrigin {
     }
 }
 
+impl Sub<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for RoundPointAtOrigin {
     type Output = MultiVector;
 
@@ -55302,6 +57615,28 @@ impl Sub<Scalar> for RoundPointBulk {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -56046,6 +58381,28 @@ impl Sub<Scalar> for RoundPointCarrierAspect {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }
@@ -56819,6 +59176,28 @@ impl SubAssign<Scalar> for Scalar {
     }
 }
 
+impl Sub<SpacialCurvature> for Scalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Sphere> for Scalar {
     type Output = MultiVector;
 
@@ -56902,6 +59281,781 @@ impl Sub<Translator> for Scalar {
                 g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<AntiScalar> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiScalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Circle> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - other.group0(),
+                g7: Simd32x3::from(0.0) - other.group1(),
+                g8: Simd32x3::from(0.0) - other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleBulk> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleCarrierAspect> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - other.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleWeight> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Dipole> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleBulk> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleWeight> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<DualNum> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPoint> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - other.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - other.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: self.group0() - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Horizon> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn sub(self, other: Horizon) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Horizon> for SpacialCurvature {
+    fn sub_assign(&mut self, other: Horizon) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Infinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Line> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - other.group0(),
+                g8: Simd32x3::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtOrigin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: LineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: self.group0() - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Plane> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn sub(self, other: Plane) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g1: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<PlaneAtOrigin> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn sub(self, other: PlaneAtOrigin) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPoint> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0) - other.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - other.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Scalar> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn sub(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<SpacialCurvature> for SpacialCurvature {
+    fn sub_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn sub(self, other: Sphere) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<SphereWeight> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn sub(self, other: SphereWeight) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<SphereWeight> for SpacialCurvature {
+    fn sub_assign(&mut self, other: SphereWeight) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: self.group0() - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
             },
         }
     }
@@ -57602,6 +60756,25 @@ impl Sub<Scalar> for Sphere {
     }
 }
 
+impl Sub<SpacialCurvature> for Sphere {
+    type Output = Sphere;
+
+    fn sub(self, other: SpacialCurvature) -> Sphere {
+        Sphere {
+            groups: SphereGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<SpacialCurvature> for Sphere {
+    fn sub_assign(&mut self, other: SpacialCurvature) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<Sphere> for Sphere {
     type Output = Sphere;
 
@@ -58015,13 +61188,12 @@ impl Sub<FlectorAtInfinity> for SphereWeight {
 }
 
 impl Sub<Horizon> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn sub(self, other: Horizon) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()]),
+    fn sub(self, other: Horizon) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()]),
             },
         }
     }
@@ -58356,6 +61528,18 @@ impl Sub<Scalar> for SphereWeight {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn sub(self, other: SpacialCurvature) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - other.group0(),
             },
         }
     }
@@ -59093,6 +62277,28 @@ impl Sub<Scalar> for Transflector {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for Transflector {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]) - other.group0(),
             },
         }
     }
@@ -59838,6 +63044,28 @@ impl Sub<Scalar> for Translator {
                 g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for Translator {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
             },
         }
     }

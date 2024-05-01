@@ -12,10 +12,140 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
-/// Square Root
+/// Square (with respect to geometric product)
+pub trait Square {
+    type Output;
+    fn square(self) -> Self::Output;
+}
+
+/// Anti Square (with respect to geometric anti-product)
+pub trait AntiSquare {
+    type Output;
+    fn anti_square(self) -> Self::Output;
+}
+
+/// Inverse, as in `x^-1` (with respect to geometric product).
+/// Useful to define the geometric quotient.
+/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+pub trait Inverse {
+    type Output;
+    fn inverse(self) -> Self::Output;
+}
+
+/// Anti Inverse, as in `x^-1` (with respect to geometric anti-product).
+/// Useful to define the geometric anti-quotient.
+/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
+pub trait AntiInverse {
+    type Output;
+    fn anti_inverse(self) -> Self::Output;
+}
+
+/// Square Root (with respect to geometric product)
 pub trait Sqrt {
     type Output;
     fn sqrt(self) -> Self::Output;
+}
+
+/// Anti Square Root (with respect to geometric anti-product)
+pub trait AntiSqrt {
+    type Output;
+    fn anti_sqrt(self) -> Self::Output;
+}
+
+/// Inverse Square Root (with respect to geometric product)
+pub trait InverseSqrt {
+    type Output;
+    fn inverse_sqrt(self) -> Self::Output;
+}
+
+/// Anti Inverse Square Root (with respect to geometric anti-product)
+pub trait AntiInverseSqrt {
+    type Output;
+    fn anti_inverse_sqrt(self) -> Self::Output;
+}
+
+/// Natural Exponentiation (with respect to geometric product)
+pub trait Exp {
+    type Output;
+    fn exp(self) -> Self::Output;
+}
+
+/// Anti Natural Exponentiation (with respect to geometric anti-product)
+pub trait AntiExp {
+    type Output;
+    fn anti_exp(self) -> Self::Output;
+}
+
+/// Sine (with respect to geometric product)
+pub trait Sine {
+    type Output;
+    fn sine(self) -> Self::Output;
+}
+
+/// Anti Sine (with respect to geometric anti-product)
+pub trait AntiSine {
+    type Output;
+    fn anti_sine(self) -> Self::Output;
+}
+
+/// Cosine (with respect to geometric product)
+pub trait Cosine {
+    type Output;
+    fn cosine(self) -> Self::Output;
+}
+
+/// Anti Cosine (with respect to geometric anti-product)
+pub trait AntiCosine {
+    type Output;
+    fn anti_cosine(self) -> Self::Output;
+}
+
+/// Tangent (with respect to geometric product)
+pub trait Tangent {
+    type Output;
+    fn tangent(self) -> Self::Output;
+}
+
+/// Anti Tangent (with respect to geometric anti-product)
+pub trait AntiTangent {
+    type Output;
+    fn anti_tangent(self) -> Self::Output;
+}
+
+/// Hyperbolic Sine (with respect to geometric product)
+pub trait Sinh {
+    type Output;
+    fn sinh(self) -> Self::Output;
+}
+
+/// Anti Hyperbolic Sine (with respect to geometric anti-product)
+pub trait AntiSinh {
+    type Output;
+    fn anti_sinh(self) -> Self::Output;
+}
+
+/// Hyperbolic Cosine (with respect to geometric product)
+pub trait Cosh {
+    type Output;
+    fn cosh(self) -> Self::Output;
+}
+
+/// Anti Hyperbolic Cosine (with respect to geometric anti-product)
+pub trait AntiCosh {
+    type Output;
+    fn anti_cosh(self) -> Self::Output;
+}
+
+/// Hyperbolic Tangent (with respect to geometric product)
+pub trait Tanh {
+    type Output;
+    fn tanh(self) -> Self::Output;
+}
+
+/// Anti Hyperbolic Tangent (with respect to geometric anti-product)
+pub trait AntiTanh {
+    type Output;
+    fn anti_tanh(self) -> Self::Output;
 }
 
 /// Grade
@@ -37,22 +167,6 @@ pub trait AntiGrade {
 pub trait Attitude {
     type Output;
     fn attitude(self) -> Self::Output;
-}
-
-/// Inverse, as in `x^-1` (with respect to geometric product).
-/// Useful to define the geometric quotient.
-/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
-pub trait Inverse {
-    type Output;
-    fn inverse(self) -> Self::Output;
-}
-
-/// Inverse, as in `x^-1` (with respect to geometric anti-product).
-/// Useful to define the geometric anti-quotient.
-/// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
-pub trait AntiInverse {
-    type Output;
-    fn anti_inverse(self) -> Self::Output;
 }
 
 impl AntiGrade for AntiScalar {
@@ -351,16 +465,6 @@ impl Attitude for Translator {
     }
 }
 
-impl Sqrt for AntiScalar {
-    type Output = AntiScalar;
-
-    fn sqrt(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0().sqrt() },
-        }
-    }
-}
-
 impl Sqrt for Scalar {
     type Output = Scalar;
 
@@ -608,5 +712,43 @@ impl Inverse for Translator {
 
     fn inverse(self) -> Translator {
         self.geometric_product(Scalar::one().div(self.dot(self)))
+    }
+}
+
+impl AntiSqrt for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_sqrt(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0().sqrt() },
+        }
+    }
+}
+
+impl AntiSquare for DualNum {
+    type Output = DualNum;
+
+    fn anti_square(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([2.0 * s * t, t * t]),
+            },
+        }
+    }
+}
+
+impl Square for DualNum {
+    type Output = DualNum;
+
+    fn square(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * s, 2.0 * s * t]),
+            },
+        }
     }
 }

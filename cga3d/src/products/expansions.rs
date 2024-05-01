@@ -143,6 +143,14 @@ impl BulkExpansion<Rotor> for Circle {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Circle {
+    type Output = Sphere;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Sphere {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Circle {
     type Output = Sphere;
 
@@ -263,10 +271,18 @@ impl BulkExpansion<Rotor> for CircleBulk {
     }
 }
 
-impl BulkExpansion<Sphere> for CircleBulk {
-    type Output = Sphere;
+impl BulkExpansion<SpacialCurvature> for CircleBulk {
+    type Output = SpacialCurvature;
 
-    fn bulk_expansion(self, other: Sphere) -> Sphere {
+    fn bulk_expansion(self, other: SpacialCurvature) -> SpacialCurvature {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Sphere> for CircleBulk {
+    type Output = SpacialCurvature;
+
+    fn bulk_expansion(self, other: Sphere) -> SpacialCurvature {
         self.wedge(other.dual())
     }
 }
@@ -399,6 +415,14 @@ impl BulkExpansion<Rotor> for CircleCarrierAspect {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for CircleCarrierAspect {
+    type Output = Sphere;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Sphere {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for CircleCarrierAspect {
     type Output = Sphere;
 
@@ -523,6 +547,14 @@ impl BulkExpansion<Rotor> for CircleWeight {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for CircleWeight {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.dual())
     }
 }
@@ -727,6 +759,14 @@ impl BulkExpansion<Rotor> for Dipole {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Dipole {
+    type Output = Circle;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Circle {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Dipole {
     type Output = Circle;
 
@@ -899,6 +939,14 @@ impl BulkExpansion<Rotor> for DipoleBulk {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for DipoleBulk {
+    type Output = Circle;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Circle {
         self.wedge(other.dual())
     }
 }
@@ -1095,6 +1143,14 @@ impl BulkExpansion<Rotor> for DipoleCarrierAspect {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = Circle;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Circle {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for DipoleCarrierAspect {
     type Output = Circle;
 
@@ -1263,6 +1319,14 @@ impl BulkExpansion<Rotor> for DipoleWeight {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for DipoleWeight {
+    type Output = LineAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> LineAtOrigin {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for DipoleWeight {
     type Output = Circle;
 
@@ -1423,6 +1487,14 @@ impl BulkExpansion<Rotor> for FlatPoint {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> LineAtOrigin {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for FlatPoint {
     type Output = Line;
 
@@ -1579,6 +1651,14 @@ impl BulkExpansion<Rotor> for FlatPointAtInfinity {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = LineAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> LineAtOrigin {
         self.wedge(other.dual())
     }
 }
@@ -1895,6 +1975,14 @@ impl BulkExpansion<Rotor> for Flector {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Flector {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Rotor {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Flector {
     type Output = Motor;
 
@@ -2055,6 +2143,14 @@ impl BulkExpansion<Rotor> for FlectorAtInfinity {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for FlectorAtInfinity {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Rotor {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for FlectorAtInfinity {
     type Output = Motor;
 
@@ -2123,6 +2219,14 @@ impl BulkExpansion<Rotor> for Horizon {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for Horizon {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -2327,6 +2431,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for Infinity {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Infinity {
+    type Output = FlatPointAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> FlatPointAtOrigin {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Infinity {
     type Output = FlatPoint;
 
@@ -2455,6 +2567,14 @@ impl BulkExpansion<Rotor> for Line {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Line {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Line {
     type Output = Plane;
 
@@ -2571,6 +2691,14 @@ impl BulkExpansion<Rotor> for LineAtInfinity {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for LineAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.dual())
     }
 }
@@ -2811,6 +2939,14 @@ impl BulkExpansion<Rotor> for Motor {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for Motor {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.dual())
     }
 }
@@ -3079,6 +3215,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -3295,6 +3439,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for Origin {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Origin {
+    type Output = FlatPointAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> FlatPointAtOrigin {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Origin {
     type Output = Dipole;
 
@@ -3371,6 +3523,14 @@ impl BulkExpansion<Rotor> for Plane {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for Plane {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -3680,9 +3840,9 @@ impl BulkExpansion<FlatPointAtInfinity> for RoundPoint {
 }
 
 impl BulkExpansion<FlatPointAtOrigin> for RoundPoint {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn bulk_expansion(self, other: FlatPointAtOrigin) -> Sphere {
+    fn bulk_expansion(self, other: FlatPointAtOrigin) -> SpacialCurvature {
         self.wedge(other.dual())
     }
 }
@@ -3827,6 +3987,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for RoundPoint {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for RoundPoint {
+    type Output = Dipole;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Dipole {
         self.wedge(other.dual())
     }
 }
@@ -4087,6 +4255,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = Dipole;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Dipole {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for RoundPointAtInfinity {
     type Output = Dipole;
 
@@ -4184,9 +4360,9 @@ impl BulkExpansion<FlatPointAtInfinity> for RoundPointAtOrigin {
 }
 
 impl BulkExpansion<FlatPointAtOrigin> for RoundPointAtOrigin {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn bulk_expansion(self, other: FlatPointAtOrigin) -> Sphere {
+    fn bulk_expansion(self, other: FlatPointAtOrigin) -> SpacialCurvature {
         self.wedge(other.dual())
     }
 }
@@ -4323,6 +4499,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> FlatPointAtOrigin {
         self.wedge(other.dual())
     }
 }
@@ -4543,14 +4727,6 @@ impl BulkExpansion<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl BulkExpansion<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = AntiScalar;
-
-    fn bulk_expansion(self, other: RoundPointAtOrigin) -> AntiScalar {
-        self.wedge(other.dual())
-    }
-}
-
 impl BulkExpansion<RoundPointBulk> for RoundPointBulk {
     type Output = AntiScalar;
 
@@ -4563,6 +4739,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for RoundPointBulk {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for RoundPointBulk {
+    type Output = Dipole;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Dipole {
         self.wedge(other.dual())
     }
 }
@@ -4823,6 +5007,14 @@ impl BulkExpansion<RoundPointCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = Dipole;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Dipole {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for RoundPointCarrierAspect {
     type Output = Dipole;
 
@@ -4848,6 +5040,102 @@ impl BulkExpansion<Transflector> for RoundPointCarrierAspect {
 }
 
 impl BulkExpansion<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Translator) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Horizon> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Horizon) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Motor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Plane> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Plane) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Sphere> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: Sphere) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SphereWeight> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: SphereWeight) -> AntiScalar {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn bulk_expansion(self, other: Transflector) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<Translator> for SpacialCurvature {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Translator) -> MultiVector {
@@ -4915,6 +5203,14 @@ impl BulkExpansion<Rotor> for Sphere {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for Sphere {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -5003,6 +5299,14 @@ impl BulkExpansion<Rotor> for SphereWeight {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for SphereWeight {
+    type Output = AntiScalar;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -5159,6 +5463,14 @@ impl BulkExpansion<Rotor> for Transflector {
     }
 }
 
+impl BulkExpansion<SpacialCurvature> for Transflector {
+    type Output = Rotor;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> Rotor {
+        self.wedge(other.dual())
+    }
+}
+
 impl BulkExpansion<Sphere> for Transflector {
     type Output = Motor;
 
@@ -5275,6 +5587,14 @@ impl BulkExpansion<Rotor> for Translator {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.dual())
+    }
+}
+
+impl BulkExpansion<SpacialCurvature> for Translator {
+    type Output = PlaneAtOrigin;
+
+    fn bulk_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.dual())
     }
 }
@@ -5431,6 +5751,14 @@ impl WeightExpansion<Rotor> for Circle {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Circle {
+    type Output = Sphere;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Circle {
     type Output = Sphere;
 
@@ -5551,10 +5879,18 @@ impl WeightExpansion<Rotor> for CircleBulk {
     }
 }
 
-impl WeightExpansion<Sphere> for CircleBulk {
-    type Output = Sphere;
+impl WeightExpansion<SpacialCurvature> for CircleBulk {
+    type Output = SpacialCurvature;
 
-    fn weight_expansion(self, other: Sphere) -> Sphere {
+    fn weight_expansion(self, other: SpacialCurvature) -> SpacialCurvature {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Sphere> for CircleBulk {
+    type Output = SpacialCurvature;
+
+    fn weight_expansion(self, other: Sphere) -> SpacialCurvature {
         self.wedge(other.anti_dual())
     }
 }
@@ -5687,6 +6023,14 @@ impl WeightExpansion<Rotor> for CircleCarrierAspect {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for CircleCarrierAspect {
+    type Output = Sphere;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for CircleCarrierAspect {
     type Output = Sphere;
 
@@ -5811,6 +6155,14 @@ impl WeightExpansion<Rotor> for CircleWeight {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for CircleWeight {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.anti_dual())
     }
 }
@@ -6015,6 +6367,14 @@ impl WeightExpansion<Rotor> for Dipole {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Dipole {
+    type Output = Circle;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Circle {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Dipole {
     type Output = Circle;
 
@@ -6187,6 +6547,14 @@ impl WeightExpansion<Rotor> for DipoleBulk {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for DipoleBulk {
+    type Output = Circle;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Circle {
         self.wedge(other.anti_dual())
     }
 }
@@ -6383,6 +6751,14 @@ impl WeightExpansion<Rotor> for DipoleCarrierAspect {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = Circle;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Circle {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for DipoleCarrierAspect {
     type Output = Circle;
 
@@ -6551,6 +6927,14 @@ impl WeightExpansion<Rotor> for DipoleWeight {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for DipoleWeight {
+    type Output = LineAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> LineAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for DipoleWeight {
     type Output = Circle;
 
@@ -6711,6 +7095,14 @@ impl WeightExpansion<Rotor> for FlatPoint {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> LineAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for FlatPoint {
     type Output = Line;
 
@@ -6867,6 +7259,14 @@ impl WeightExpansion<Rotor> for FlatPointAtInfinity {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = LineAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> LineAtOrigin {
         self.wedge(other.anti_dual())
     }
 }
@@ -7183,6 +7583,14 @@ impl WeightExpansion<Rotor> for Flector {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Flector {
+    type Output = Rotor;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Rotor {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Flector {
     type Output = Motor;
 
@@ -7343,6 +7751,14 @@ impl WeightExpansion<Rotor> for FlectorAtInfinity {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for FlectorAtInfinity {
+    type Output = Rotor;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Rotor {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for FlectorAtInfinity {
     type Output = Motor;
 
@@ -7411,6 +7827,14 @@ impl WeightExpansion<Rotor> for Horizon {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for Horizon {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -7615,6 +8039,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for Infinity {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Infinity {
+    type Output = FlatPointAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> FlatPointAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Infinity {
     type Output = FlatPoint;
 
@@ -7743,6 +8175,14 @@ impl WeightExpansion<Rotor> for Line {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Line {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Line {
     type Output = Plane;
 
@@ -7859,6 +8299,14 @@ impl WeightExpansion<Rotor> for LineAtInfinity {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for LineAtInfinity {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.anti_dual())
     }
 }
@@ -8099,6 +8547,14 @@ impl WeightExpansion<Rotor> for Motor {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for Motor {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.anti_dual())
     }
 }
@@ -8367,6 +8823,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -8583,6 +9047,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for Origin {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Origin {
+    type Output = FlatPointAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> FlatPointAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Origin {
     type Output = Dipole;
 
@@ -8659,6 +9131,14 @@ impl WeightExpansion<Rotor> for Plane {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for Plane {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -8968,9 +9448,9 @@ impl WeightExpansion<FlatPointAtInfinity> for RoundPoint {
 }
 
 impl WeightExpansion<FlatPointAtOrigin> for RoundPoint {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn weight_expansion(self, other: FlatPointAtOrigin) -> Sphere {
+    fn weight_expansion(self, other: FlatPointAtOrigin) -> SpacialCurvature {
         self.wedge(other.anti_dual())
     }
 }
@@ -9115,6 +9595,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for RoundPoint {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for RoundPoint {
+    type Output = Dipole;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Dipole {
         self.wedge(other.anti_dual())
     }
 }
@@ -9375,6 +9863,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for RoundPointAtInfinity {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = Dipole;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Dipole {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for RoundPointAtInfinity {
     type Output = Dipole;
 
@@ -9472,9 +9968,9 @@ impl WeightExpansion<FlatPointAtInfinity> for RoundPointAtOrigin {
 }
 
 impl WeightExpansion<FlatPointAtOrigin> for RoundPointAtOrigin {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn weight_expansion(self, other: FlatPointAtOrigin) -> Sphere {
+    fn weight_expansion(self, other: FlatPointAtOrigin) -> SpacialCurvature {
         self.wedge(other.anti_dual())
     }
 }
@@ -9611,6 +10107,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> FlatPointAtOrigin {
         self.wedge(other.anti_dual())
     }
 }
@@ -9831,14 +10335,6 @@ impl WeightExpansion<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl WeightExpansion<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = AntiScalar;
-
-    fn weight_expansion(self, other: RoundPointAtOrigin) -> AntiScalar {
-        self.wedge(other.anti_dual())
-    }
-}
-
 impl WeightExpansion<RoundPointBulk> for RoundPointBulk {
     type Output = AntiScalar;
 
@@ -9851,6 +10347,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for RoundPointBulk {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for RoundPointBulk {
+    type Output = Dipole;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Dipole {
         self.wedge(other.anti_dual())
     }
 }
@@ -10111,6 +10615,14 @@ impl WeightExpansion<RoundPointCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = Dipole;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Dipole {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for RoundPointCarrierAspect {
     type Output = Dipole;
 
@@ -10136,6 +10648,102 @@ impl WeightExpansion<Transflector> for RoundPointCarrierAspect {
 }
 
 impl WeightExpansion<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Translator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: FlectorAtInfinity) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Horizon> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Horizon) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Motor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Plane> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Plane) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Sphere> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: Sphere) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SphereWeight> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: SphereWeight) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn weight_expansion(self, other: Transflector) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<Translator> for SpacialCurvature {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Translator) -> MultiVector {
@@ -10203,6 +10811,14 @@ impl WeightExpansion<Rotor> for Sphere {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for Sphere {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -10291,6 +10907,14 @@ impl WeightExpansion<Rotor> for SphereWeight {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for SphereWeight {
+    type Output = AntiScalar;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -10447,6 +11071,14 @@ impl WeightExpansion<Rotor> for Transflector {
     }
 }
 
+impl WeightExpansion<SpacialCurvature> for Transflector {
+    type Output = Rotor;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> Rotor {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl WeightExpansion<Sphere> for Transflector {
     type Output = Motor;
 
@@ -10563,6 +11195,14 @@ impl WeightExpansion<Rotor> for Translator {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl WeightExpansion<SpacialCurvature> for Translator {
+    type Output = PlaneAtOrigin;
+
+    fn weight_expansion(self, other: SpacialCurvature) -> PlaneAtOrigin {
         self.wedge(other.anti_dual())
     }
 }

@@ -136,6 +136,22 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             }
             _ => unreachable!(),
         },
+        ExpressionContent::ConstructVec(data_type, values) => match data_type {
+            DataType::SimdVector(size) => {
+                emit_data_type(collector, &DataType::SimdVector(*size))?;
+                collector.write_all(b"(")?;
+                let mut first = true;
+                for value in values {
+                    if !first {
+                        collector.write_all(b", ")?;
+                    }
+                    first = false;
+                    emit_expression(collector, value)?;
+                }
+                collector.write_all(b")")?;
+            }
+            _ => unreachable!(),
+        }
         ExpressionContent::SquareRoot(inner_expression) => {
             collector.write_all(b"sqrt(")?;
             emit_expression(collector, inner_expression)?;

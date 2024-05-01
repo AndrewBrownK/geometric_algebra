@@ -369,6 +369,8 @@ impl std::fmt::Debug for Origin {
     }
 }
 
+type Direction = PointAtInfinity;
+
 #[derive(Clone, Copy)]
 struct PointAtInfinityGroups {
     /// e1, e2, e3

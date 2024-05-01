@@ -245,9 +245,9 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for CircleBulk {
 }
 
 impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for CircleBulk {
-    type Output = Circle;
+    type Output = CircleBulk;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> CircleBulk {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1765,9 +1765,9 @@ impl AntiRejectOrthogonallyFrom<RoundPoint> for Horizon {
 }
 
 impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1896,6 +1896,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Infinity {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2468,6 +2476,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -2676,6 +2692,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Origin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Sphere> for Origin {
     type Output = RoundPoint;
 
@@ -2733,9 +2757,9 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for Plane {
 }
 
 impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for Plane {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3092,6 +3116,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPoint {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
@@ -3324,6 +3356,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointAtInfinit
     }
 }
 
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Sphere> for RoundPointAtInfinity {
     type Output = RoundPoint;
 
@@ -3552,6 +3592,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointAtOrigin 
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3988,6 +4036,14 @@ impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointCarrierAs
     }
 }
 
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Sphere> for RoundPointCarrierAspect {
     type Output = RoundPoint;
 
@@ -4008,6 +4064,62 @@ impl AntiRejectOrthogonallyFrom<Translator> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: Translator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Infinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_reject_orthogonally_from(self, other: Infinity) -> Horizon {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Origin> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_reject_orthogonally_from(self, other: Origin) -> SphereWeight {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<RoundPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Sphere {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtInfinity) -> Plane {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4053,9 +4165,9 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for Sphere {
 }
 
 impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4109,9 +4221,9 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for SphereWeight {
 }
 
 impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4509,9 +4621,9 @@ impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for CircleBulk {
 }
 
 impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for CircleBulk {
-    type Output = Circle;
+    type Output = CircleBulk;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> CircleBulk {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6029,9 +6141,9 @@ impl AntiRejectViaHorizonFrom<RoundPoint> for Horizon {
 }
 
 impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6160,6 +6272,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Infinity {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6732,6 +6852,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -6940,6 +7068,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Origin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Sphere> for Origin {
     type Output = RoundPoint;
 
@@ -6997,9 +7133,9 @@ impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for Plane {
 }
 
 impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for Plane {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7356,6 +7492,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPoint {
     }
 }
 
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
@@ -7588,6 +7732,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointAtInfinity 
     }
 }
 
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Sphere> for RoundPointAtInfinity {
     type Output = RoundPoint;
 
@@ -7816,6 +7968,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8252,6 +8412,14 @@ impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointCarrierAspe
     }
 }
 
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Sphere> for RoundPointCarrierAspect {
     type Output = RoundPoint;
 
@@ -8272,6 +8440,62 @@ impl AntiRejectViaHorizonFrom<Translator> for RoundPointCarrierAspect {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: Translator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Infinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_reject_via_horizon_from(self, other: Infinity) -> Horizon {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: MultiVector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Origin> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_reject_via_horizon_from(self, other: Origin) -> SphereWeight {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<RoundPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Sphere {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtInfinity) -> Plane {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Sphere {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8317,9 +8541,9 @@ impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for Sphere {
 }
 
 impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8373,9 +8597,9 @@ impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for SphereWeight {
 }
 
 impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8748,6 +8972,14 @@ impl RejectOrthogonallyFrom<Rotor> for Circle {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for Circle {
+    type Output = Circle;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for Circle {
     type Output = Circle;
 
@@ -9028,6 +9260,14 @@ impl RejectOrthogonallyFrom<Rotor> for CircleCarrierAspect {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for CircleCarrierAspect {
     type Output = Circle;
 
@@ -9172,6 +9412,14 @@ impl RejectOrthogonallyFrom<Rotor> for CircleWeight {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for CircleWeight {
+    type Output = Circle;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for CircleWeight {
     type Output = Circle;
 
@@ -9312,6 +9560,14 @@ impl RejectOrthogonallyFrom<Rotor> for Dipole {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Dipole {
+    type Output = Dipole;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Dipole {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -9540,6 +9796,14 @@ impl RejectOrthogonallyFrom<Rotor> for DipoleCarrierAspect {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Dipole {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for DipoleCarrierAspect {
     type Output = Dipole;
 
@@ -9648,6 +9912,14 @@ impl RejectOrthogonallyFrom<Rotor> for DipoleWeight {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for DipoleWeight {
+    type Output = Dipole;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Dipole {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -9764,6 +10036,14 @@ impl RejectOrthogonallyFrom<Rotor> for FlatPoint {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for FlatPoint {
+    type Output = Dipole;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Dipole {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for FlatPoint {
     type Output = Dipole;
 
@@ -9868,6 +10148,14 @@ impl RejectOrthogonallyFrom<Rotor> for FlatPointAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Dipole {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -9968,6 +10256,14 @@ impl RejectOrthogonallyFrom<Rotor> for FlatPointAtOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> FlatPointAtOrigin {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10181,9 +10477,9 @@ impl RejectOrthogonallyFrom<RoundPointAtInfinity> for Flector {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Flector {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10200,6 +10496,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Flector {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Flector {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10381,9 +10685,9 @@ impl RejectOrthogonallyFrom<RoundPoint> for FlectorAtInfinity {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for FlectorAtInfinity {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10392,6 +10696,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for FlectorAtInfinity {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10573,9 +10885,9 @@ impl RejectOrthogonallyFrom<RoundPoint> for Horizon {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10584,6 +10896,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Horizon {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10640,6 +10960,14 @@ impl RejectOrthogonallyFrom<Rotor> for Infinity {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10804,6 +11132,14 @@ impl RejectOrthogonallyFrom<Rotor> for Line {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for Line {
+    type Output = Circle;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for Line {
     type Output = Circle;
 
@@ -10948,6 +11284,14 @@ impl RejectOrthogonallyFrom<Rotor> for LineAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for LineAtInfinity {
+    type Output = Circle;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for LineAtInfinity {
     type Output = Circle;
 
@@ -11088,6 +11432,14 @@ impl RejectOrthogonallyFrom<Rotor> for LineAtOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for LineAtOrigin {
+    type Output = Circle;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Circle {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -11312,6 +11664,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Motor {
     type Output = AntiScalar;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Motor {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -11580,6 +11940,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -11664,6 +12032,14 @@ impl RejectOrthogonallyFrom<Rotor> for Origin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -11869,9 +12245,9 @@ impl RejectOrthogonallyFrom<RoundPointAtInfinity> for Plane {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Plane {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -11888,6 +12264,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Plane {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Plane {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12080,6 +12464,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for PlaneAtOrigin {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12300,6 +12692,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Rotor {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for Rotor {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for Rotor {
     type Output = MultiVector;
 
@@ -12396,6 +12796,14 @@ impl RejectOrthogonallyFrom<Rotor> for RoundPoint {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
@@ -12472,6 +12880,14 @@ impl RejectOrthogonallyFrom<Rotor> for RoundPointAtInfinity {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12560,6 +12976,14 @@ impl RejectOrthogonallyFrom<Rotor> for RoundPointAtOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12732,6 +13156,14 @@ impl RejectOrthogonallyFrom<Rotor> for RoundPointCarrierAspect {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for RoundPointCarrierAspect {
     type Output = RoundPoint;
 
@@ -12749,6 +13181,254 @@ impl RejectOrthogonallyFrom<Transflector> for RoundPointCarrierAspect {
 }
 
 impl RejectOrthogonallyFrom<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Circle> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: Circle) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: CircleCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_orthogonally_from(self, other: CircleWeight) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dipole> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: Dipole) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: DipoleCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_orthogonally_from(self, other: DipoleWeight) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlatPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: FlatPoint) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlatPointAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_orthogonally_from(self, other: FlatPointAtInfinity) -> Horizon {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlatPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reject_orthogonally_from(self, other: FlatPointAtOrigin) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Horizon> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_orthogonally_from(self, other: Horizon) -> Horizon {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Infinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_orthogonally_from(self, other: Infinity) -> Horizon {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Line> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: Line) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<LineAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_orthogonally_from(self, other: LineAtInfinity) -> Horizon {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<LineAtOrigin> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: LineAtOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Origin> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_orthogonally_from(self, other: Origin) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Plane> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: Plane) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<PlaneAtOrigin> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: PlaneAtOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<RoundPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: RoundPoint) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = Plane;
+
+    fn reject_orthogonally_from(self, other: RoundPointAtInfinity) -> Plane {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: Sphere) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SphereWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_orthogonally_from(self, other: SphereWeight) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Translator> for SpacialCurvature {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
@@ -12837,9 +13517,9 @@ impl RejectOrthogonallyFrom<FlatPointAtInfinity> for Sphere {
 }
 
 impl RejectOrthogonallyFrom<FlatPointAtOrigin> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: FlatPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: FlatPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12965,9 +13645,9 @@ impl RejectOrthogonallyFrom<RoundPointAtInfinity> for Sphere {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12984,6 +13664,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Sphere {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Sphere {
+    type Output = Sphere;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -13173,9 +13861,17 @@ impl RejectOrthogonallyFrom<RoundPointAtInfinity> for SphereWeight {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -13381,9 +14077,9 @@ impl RejectOrthogonallyFrom<RoundPointAtInfinity> for Transflector {
 }
 
 impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Transflector {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -13400,6 +14096,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Transflector {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SpacialCurvature> for Transflector {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -13628,6 +14332,14 @@ impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Translator {
     }
 }
 
+impl RejectOrthogonallyFrom<SpacialCurvature> for Translator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SpacialCurvature) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Sphere> for Translator {
     type Output = MultiVector;
 
@@ -13832,6 +14544,14 @@ impl RejectViaOriginFrom<Rotor> for Circle {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Circle {
+    type Output = Circle;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Circle {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -14116,6 +14836,14 @@ impl RejectViaOriginFrom<Rotor> for CircleCarrierAspect {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for CircleCarrierAspect {
     type Output = Circle;
 
@@ -14260,6 +14988,14 @@ impl RejectViaOriginFrom<Rotor> for CircleWeight {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for CircleWeight {
+    type Output = Circle;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for CircleWeight {
     type Output = Circle;
 
@@ -14400,6 +15136,14 @@ impl RejectViaOriginFrom<Rotor> for Dipole {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Dipole {
+    type Output = Dipole;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Dipole {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -14628,6 +15372,14 @@ impl RejectViaOriginFrom<Rotor> for DipoleCarrierAspect {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Dipole {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for DipoleCarrierAspect {
     type Output = Dipole;
 
@@ -14736,6 +15488,14 @@ impl RejectViaOriginFrom<Rotor> for DipoleWeight {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for DipoleWeight {
+    type Output = Dipole;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Dipole {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -14852,6 +15612,14 @@ impl RejectViaOriginFrom<Rotor> for FlatPoint {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for FlatPoint {
+    type Output = Dipole;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Dipole {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for FlatPoint {
     type Output = Dipole;
 
@@ -14956,6 +15724,14 @@ impl RejectViaOriginFrom<Rotor> for FlatPointAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Dipole {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -15056,6 +15832,14 @@ impl RejectViaOriginFrom<Rotor> for FlatPointAtOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for FlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> FlatPointAtOrigin {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15269,9 +16053,9 @@ impl RejectViaOriginFrom<RoundPointAtInfinity> for Flector {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for Flector {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15288,6 +16072,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Flector {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Flector {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15469,9 +16261,9 @@ impl RejectViaOriginFrom<RoundPoint> for FlectorAtInfinity {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for FlectorAtInfinity {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15480,6 +16272,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for FlectorAtInfinity {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15661,9 +16461,9 @@ impl RejectViaOriginFrom<RoundPoint> for Horizon {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15672,6 +16472,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Horizon {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15728,6 +16536,14 @@ impl RejectViaOriginFrom<Rotor> for Infinity {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -15892,6 +16708,14 @@ impl RejectViaOriginFrom<Rotor> for Line {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for Line {
+    type Output = Circle;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for Line {
     type Output = Circle;
 
@@ -16036,6 +16860,14 @@ impl RejectViaOriginFrom<Rotor> for LineAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for LineAtInfinity {
+    type Output = Circle;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Circle {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for LineAtInfinity {
     type Output = Circle;
 
@@ -16176,6 +17008,14 @@ impl RejectViaOriginFrom<Rotor> for LineAtOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for LineAtOrigin {
+    type Output = Circle;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Circle {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -16400,6 +17240,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Motor {
     type Output = AntiScalar;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Motor {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -16668,6 +17516,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -16752,6 +17608,14 @@ impl RejectViaOriginFrom<Rotor> for Origin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -16957,9 +17821,9 @@ impl RejectViaOriginFrom<RoundPointAtInfinity> for Plane {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for Plane {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -16976,6 +17840,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Plane {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Plane {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17168,6 +18040,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for PlaneAtOrigin {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for PlaneAtOrigin {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17388,6 +18268,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Rotor {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for Rotor {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for Rotor {
     type Output = MultiVector;
 
@@ -17484,6 +18372,14 @@ impl RejectViaOriginFrom<Rotor> for RoundPoint {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for RoundPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
@@ -17560,6 +18456,14 @@ impl RejectViaOriginFrom<Rotor> for RoundPointAtInfinity {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17648,6 +18552,14 @@ impl RejectViaOriginFrom<Rotor> for RoundPointAtOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17820,6 +18732,14 @@ impl RejectViaOriginFrom<Rotor> for RoundPointCarrierAspect {
     }
 }
 
+impl RejectViaOriginFrom<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = RoundPointAtOrigin;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Sphere> for RoundPointCarrierAspect {
     type Output = RoundPoint;
 
@@ -17837,6 +18757,254 @@ impl RejectViaOriginFrom<Transflector> for RoundPointCarrierAspect {
 }
 
 impl RejectViaOriginFrom<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Circle> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: Circle) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: CircleCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_via_origin_from(self, other: CircleWeight) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dipole> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: Dipole) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: DipoleCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_via_origin_from(self, other: DipoleWeight) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlatPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: FlatPoint) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlatPointAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_via_origin_from(self, other: FlatPointAtInfinity) -> Horizon {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlatPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reject_via_origin_from(self, other: FlatPointAtOrigin) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Horizon> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_via_origin_from(self, other: Horizon) -> Horizon {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Infinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_via_origin_from(self, other: Infinity) -> Horizon {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Line> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: Line) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<LineAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn reject_via_origin_from(self, other: LineAtInfinity) -> Horizon {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<LineAtOrigin> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: LineAtOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Origin> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_via_origin_from(self, other: Origin) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Plane> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: Plane) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<PlaneAtOrigin> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: PlaneAtOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<RoundPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: RoundPoint) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = Plane;
+
+    fn reject_via_origin_from(self, other: RoundPointAtInfinity) -> Plane {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: Sphere) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SphereWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn reject_via_origin_from(self, other: SphereWeight) -> SphereWeight {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Translator> for SpacialCurvature {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Translator) -> MultiVector {
@@ -17925,9 +19093,9 @@ impl RejectViaOriginFrom<FlatPointAtInfinity> for Sphere {
 }
 
 impl RejectViaOriginFrom<FlatPointAtOrigin> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: FlatPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: FlatPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18053,9 +19221,9 @@ impl RejectViaOriginFrom<RoundPointAtInfinity> for Sphere {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18072,6 +19240,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Sphere {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Sphere {
+    type Output = Sphere;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18261,9 +19437,17 @@ impl RejectViaOriginFrom<RoundPointAtInfinity> for SphereWeight {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18469,9 +19653,9 @@ impl RejectViaOriginFrom<RoundPointAtInfinity> for Transflector {
 }
 
 impl RejectViaOriginFrom<RoundPointAtOrigin> for Transflector {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18488,6 +19672,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Transflector {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Transflector {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18712,6 +19904,14 @@ impl RejectViaOriginFrom<RoundPointCarrierAspect> for Translator {
     type Output = AntiScalar;
 
     fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SpacialCurvature> for Translator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SpacialCurvature) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }

@@ -1260,6 +1260,18 @@ impl AntiDot<PlaneAtOrigin> for Flector {
     }
 }
 
+impl AntiDot<SpacialCurvature> for Flector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group1()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl AntiDot<Sphere> for Flector {
     type Output = AntiScalar;
 
@@ -1344,6 +1356,18 @@ impl AntiDot<MultiVector> for FlectorAtInfinity {
     }
 }
 
+impl AntiDot<SpacialCurvature> for FlectorAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl AntiDot<Sphere> for FlectorAtInfinity {
     type Output = AntiScalar;
 
@@ -1375,6 +1399,18 @@ impl AntiDot<MultiVector> for Horizon {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<SpacialCurvature> for Horizon {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[0],
             },
         }
     }
@@ -2285,6 +2321,18 @@ impl AntiDot<Scalar> for MultiVector {
     }
 }
 
+impl AntiDot<SpacialCurvature> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group10()[0] * other.group0()[1] - self.group10()[1] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl AntiDot<Sphere> for MultiVector {
     type Output = AntiScalar;
 
@@ -2444,6 +2492,18 @@ impl AntiDot<PlaneAtOrigin> for Plane {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<SpacialCurvature> for Plane {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[3] * other.group0()[0],
             },
         }
     }
@@ -3113,6 +3173,114 @@ impl AntiDot<Scalar> for Scalar {
     }
 }
 
+impl AntiDot<Flector> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Flector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<FlectorAtInfinity> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: FlectorAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<Horizon> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Horizon) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group10()[1] - self.group0()[1] * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<Plane> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Plane) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<SpacialCurvature> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<Sphere> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Sphere) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[1] - self.group0()[1] * other.group1()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<SphereWeight> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SphereWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<Transflector> for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Transflector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Flector> for Sphere {
     type Output = AntiScalar;
 
@@ -3182,6 +3350,18 @@ impl AntiDot<PlaneAtOrigin> for Sphere {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<SpacialCurvature> for Sphere {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[1] - self.group1()[1] * other.group0()[0],
             },
         }
     }
@@ -3280,6 +3460,18 @@ impl AntiDot<Plane> for SphereWeight {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<SpacialCurvature> for SphereWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[1],
             },
         }
     }
@@ -3394,6 +3586,18 @@ impl AntiDot<PlaneAtOrigin> for Transflector {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<SpacialCurvature> for Transflector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: SpacialCurvature) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group1()[3] * other.group0()[0],
             },
         }
     }
@@ -4783,6 +4987,18 @@ impl Dot<PlaneAtOrigin> for Flector {
     }
 }
 
+impl Dot<SpacialCurvature> for Flector {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl Dot<Sphere> for Flector {
     type Output = Scalar;
 
@@ -4868,6 +5084,18 @@ impl Dot<MultiVector> for FlectorAtInfinity {
     }
 }
 
+impl Dot<SpacialCurvature> for FlectorAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl Dot<Sphere> for FlectorAtInfinity {
     type Output = Scalar;
 
@@ -4899,6 +5127,18 @@ impl Dot<MultiVector> for Horizon {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl Dot<SpacialCurvature> for Horizon {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0() * other.group0()[0],
             },
         }
     }
@@ -5809,6 +6049,18 @@ impl Dot<Scalar> for MultiVector {
     }
 }
 
+impl Dot<SpacialCurvature> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group10()[0] * other.group0()[1] + self.group10()[1] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl Dot<Sphere> for MultiVector {
     type Output = Scalar;
 
@@ -5970,6 +6222,18 @@ impl Dot<PlaneAtOrigin> for Plane {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<SpacialCurvature> for Plane {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[3] * other.group0()[0],
             },
         }
     }
@@ -6639,6 +6903,114 @@ impl Dot<Scalar> for Scalar {
     }
 }
 
+impl Dot<Flector> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: Flector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<FlectorAtInfinity> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: FlectorAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Horizon> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: Horizon) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group10()[1] + self.group0()[1] * other.group10()[0],
+            },
+        }
+    }
+}
+
+impl Dot<Plane> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: Plane) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<SpacialCurvature> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[1] + self.group0()[1] * other.group0()[0],
+            },
+        }
+    }
+}
+
+impl Dot<Sphere> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: Sphere) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group1()[1] + self.group0()[1] * other.group1()[0],
+            },
+        }
+    }
+}
+
+impl Dot<SphereWeight> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: SphereWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[1] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<Transflector> for SpacialCurvature {
+    type Output = Scalar;
+
+    fn dot(self, other: Transflector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group1()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Flector> for Sphere {
     type Output = Scalar;
 
@@ -6708,6 +7080,18 @@ impl Dot<PlaneAtOrigin> for Sphere {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<SpacialCurvature> for Sphere {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group0()[1] + self.group1()[1] * other.group0()[0],
             },
         }
     }
@@ -6806,6 +7190,18 @@ impl Dot<Plane> for SphereWeight {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<SpacialCurvature> for SphereWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0() * other.group0()[1],
             },
         }
     }
@@ -6921,6 +7317,18 @@ impl Dot<PlaneAtOrigin> for Transflector {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<SpacialCurvature> for Transflector {
+    type Output = Scalar;
+
+    fn dot(self, other: SpacialCurvature) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[3] * other.group0()[0],
             },
         }
     }

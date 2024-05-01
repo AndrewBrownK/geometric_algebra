@@ -43,6 +43,7 @@ pub enum ExpressionContent<'a> {
     Swizzle(Box<Expression<'a>>, Vec<usize>),
     Gather(Box<Expression<'a>>, Vec<GatherData>),
     Constant(DataType<'a>, Vec<isize>),
+    ConstructVec(DataType<'a>, Vec<Expression<'a>>),
     SquareRoot(Box<Expression<'a>>),
     Add(Box<Expression<'a>>, Box<Expression<'a>>),
     Subtract(Box<Expression<'a>>, Box<Expression<'a>>),

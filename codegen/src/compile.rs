@@ -1251,17 +1251,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Square Root
-        // Why not impl Sqrt for Magnitude? Well...
-        //  - the choices of AstNode don't make it immediately easy. I mean it's possible, just annoying.
-        //  - The question of "how" to implement Sqrt begs for other issues... Initial idea was to sqrt the scalar
-        //    component and leave the antiscalar component. However this defies the symmetry of scalars and antiscalars.
-        //    Additionally, you can look at the impl of Add for Magnitude and realize, that is not accurate (or biased,
-        //    rather) to Scalars either. Magnitude + Magnitude is not the same result as Scalar + Scalar. This might
-        //    seem strange or incorrect at first glance, but again.... symmetry with antiscalars implies it shouldn't
-        //    be biased for scalars... and if we can component-wise "Add" Vectors and other MultiVectorClasses, then
-        //    why not AntiScalars and Magnitudes? So the "impl Add for Magnitude" could very well be correct in its
-        //    own special way, but in any case, this doesn't reeeeeaaallly make me comfortable enough to do a
-        //    component-wise Square Root, because we don't see component-wise Square Roots in other multi component things.
+        // See also DualNum
         let scalar_like = vec!["Scalar", "AntiScalar"];
         for param_a in registry.single_parameters() {
             let class_name = param_a.data_type.data_class_name();
@@ -1283,7 +1273,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 data_type_hint: Some(param_a.data_type.clone()),
                 content: ExpressionContent::InvokeClassMethod(param_a.multi_vector_class(), "Constructor", vec![(DataType::SimdVector(1), sqrt)]),
             };
-            let name = "Sqrt";
+            let mut name = "Sqrt";
+            if class_name == "AntiScalar" {
+                name = "AntiSqrt";
+            }
             let sqrt = single_expression_single_trait_impl(name, &param_a, construct);
             self.trait_impls.add_single_impl(name, param_a, sqrt);
         }
@@ -1390,6 +1383,127 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
+        Ok(())
+    }
+
+    pub fn dual_num_stuff<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) -> std::io::Result<()> {
+        let dual_num_param = registry.single_parameters().find(|it| it.multi_vector_class().class_name == "DualNum");
+        let dual_num_param = match dual_num_param {
+            None => return Ok(()),
+            Some(dnp) => dnp,
+        };
+        let var_param_a = Box::new(variable(&dual_num_param));
+        let assign_var_s = AstNode::VariableAssignment {
+            name: "s",
+            data_type: Some(DataType::SimdVector(1)),
+            expression: Box::new(Expression {
+                size: 1,
+                data_type_hint: Some(DataType::SimdVector(1)),
+                content: ExpressionContent::Gather(var_param_a.clone(), vec![GatherData::Usual(UsualGatherData {
+                    negate: false,
+                    group: 0,
+                    element: 0,
+                    group_size: 2,
+                })]),
+            }),
+        };
+        let assign_var_t = AstNode::VariableAssignment {
+            name: "t",
+            data_type: Some(DataType::SimdVector(1)),
+            expression: Box::new(Expression {
+                size: 1,
+                data_type_hint: Some(DataType::SimdVector(1)),
+                content: ExpressionContent::Gather(var_param_a.clone(), vec![GatherData::Usual(UsualGatherData {
+                    negate: false,
+                    group: 0,
+                    element: 1,
+                    group_size: 2,
+                })]),
+            }),
+        };
+        let var_s = Box::new(Expression {
+            size: 1,
+            data_type_hint: Some(DataType::SimdVector(1)),
+            content: ExpressionContent::Variable("s"),
+        });
+        let var_t = Box::new(Expression {
+            size: 1,
+            data_type_hint: Some(DataType::SimdVector(1)),
+            content: ExpressionContent::Variable("t"),
+        });
+
+
+        let mut construct_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            return Expression {
+                size: 1,
+                data_type_hint: Some(dual_num_param.data_type.clone()),
+                content: ExpressionContent::InvokeClassMethod(
+                    dual_num_param.multi_vector_class(), "Constructor", vec![
+                        (DataType::SimdVector(2), Expression {
+                            size: 2,
+                            data_type_hint: Some(DataType::SimdVector(2)),
+                            content: ExpressionContent::ConstructVec(DataType::SimdVector(2), vec![
+                                Expression {
+                                    size: 1,
+                                    data_type_hint: Some(DataType::SimdVector(1)),
+                                    content: a,
+                                },
+                                Expression {
+                                    size: 1,
+                                    data_type_hint: Some(DataType::SimdVector(1)),
+                                    content: b,
+                                },
+                            ]),
+                        }),
+                    ]),
+            };
+        };
+        let mut return_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            return AstNode::ReturnStatement {
+                expression: Box::new(construct_dual_num(a, b)),
+            };
+        };
+
+        // this trait impl is only for single argument traits (not power-of-n)
+        let mut dual_num_trait_impl = |name: &'static str, a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            let the_impl = AstNode::TraitImplementation {
+                result: Parameter { name, data_type: DataType::MultiVector(dual_num_param.multi_vector_class()) },
+                class: dual_num_param.multi_vector_class(),
+                parameters: vec![dual_num_param.clone()],
+                body: vec![
+                    assign_var_s.clone(),
+                    assign_var_t.clone(),
+                    return_dual_num(a, b),
+                ],
+            };
+            self.trait_impls.add_single_impl(name, dual_num_param.clone(), the_impl);
+        };
+
+        let mul_2 = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Multiply(
+                Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![2]),
+                }),
+                Box::new(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::SimdVector(1)),
+                    content: a,
+                }),
+            );
+        };
+
+        dual_num_trait_impl(
+            "Square",
+            ExpressionContent::Multiply(var_s.clone(), var_s.clone()),
+            mul_2(ExpressionContent::Multiply(var_s.clone(), var_t.clone())),
+        );
+        dual_num_trait_impl(
+            "AntiSquare",
+            mul_2(ExpressionContent::Multiply(var_s.clone(), var_t.clone())),
+            ExpressionContent::Multiply(var_t.clone(), var_t.clone()),
+        );
         Ok(())
     }
 
@@ -2641,6 +2755,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             if class.class_name == "Origin" && self.algebra.algebra_name().contains("rga") {
                 emitter.emit(&AstNode::TypeAlias("PointAtOrigin".to_string(), "Origin".to_string()))?;
             }
+            if class.class_name == "PointAtInfinity" {
+                emitter.emit(&AstNode::TypeAlias("Direction".to_string(), "PointAtInfinity".to_string()))?;
+            }
             if class.class_name == "Horizon" {
                 emitter.emit(&AstNode::TypeAlias("PlaneAtInfinity".to_string(), "Horizon".to_string()))?;
             }
@@ -3060,13 +3177,193 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_characteristic_features(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        // Sqrt, Grade, AntiGrade, Attitude, Carrier, CoCarrier, Container, Center, Partner, Inverse, AntiInverse
+        // Square, AntiSquare
+        // Inverse, AntiInverse
+        // Sqrt, AntiSqrt,
+        // InverseSqrt, AntiInverseSqrt
+        // Exp, AntiExp,
+        // Sine, AntiSine, Cosine, AntiCosine, Tangent, AntiTangent,
+        // Sinh, AntiSinh, Cosh, AntiCosh, Tanh, AntiTanh
+        // Grade, AntiGrade, Attitude,
+        // Carrier, CoCarrier, Container, Center, Partner
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Square".to_string(),
+            params: 1,
+            docs: "
+            Square (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiSquare".to_string(),
+            params: 1,
+            docs: "
+            Anti Square (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Inverse".to_string(),
+            params: 1,
+            docs: "
+            Inverse, as in `x^-1` (with respect to geometric product).
+            Useful to define the geometric quotient.
+            Not to be confused with the \"Point Inversion\" or \"Sphere Inversion\" operations.
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiInverse".to_string(),
+            params: 1,
+            docs: "
+            Anti Inverse, as in `x^-1` (with respect to geometric anti-product).
+            Useful to define the geometric anti-quotient.
+            Not to be confused with the \"Point Inversion\" or \"Sphere Inversion\" operations.
+            ".to_string(),
+        })?;
 
         emitter.emit(&AstNode::TraitDefinition {
             name: "Sqrt".to_string(),
             params: 1,
             docs: "
-            Square Root
+            Square Root (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiSqrt".to_string(),
+            params: 1,
+            docs: "
+            Anti Square Root (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "InverseSqrt".to_string(),
+            params: 1,
+            docs: "
+            Inverse Square Root (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiInverseSqrt".to_string(),
+            params: 1,
+            docs: "
+            Anti Inverse Square Root (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Exp".to_string(),
+            params: 1,
+            docs: "
+            Natural Exponentiation (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiExp".to_string(),
+            params: 1,
+            docs: "
+            Anti Natural Exponentiation (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Sine".to_string(),
+            params: 1,
+            docs: "
+            Sine (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiSine".to_string(),
+            params: 1,
+            docs: "
+            Anti Sine (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Cosine".to_string(),
+            params: 1,
+            docs: "
+            Cosine (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiCosine".to_string(),
+            params: 1,
+            docs: "
+            Anti Cosine (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Tangent".to_string(),
+            params: 1,
+            docs: "
+            Tangent (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiTangent".to_string(),
+            params: 1,
+            docs: "
+            Anti Tangent (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Sinh".to_string(),
+            params: 1,
+            docs: "
+            Hyperbolic Sine (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiSinh".to_string(),
+            params: 1,
+            docs: "
+            Anti Hyperbolic Sine (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Cosh".to_string(),
+            params: 1,
+            docs: "
+            Hyperbolic Cosine (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiCosh".to_string(),
+            params: 1,
+            docs: "
+            Anti Hyperbolic Cosine (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Tanh".to_string(),
+            params: 1,
+            docs: "
+            Hyperbolic Tangent (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiTanh".to_string(),
+            params: 1,
+            docs: "
+            Anti Hyperbolic Tangent (with respect to geometric anti-product)
             ".to_string(),
         })?;
 
@@ -3094,26 +3391,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             docs: "
             Attitude
             https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
-            ".to_string(),
-        })?;
-
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "Inverse".to_string(),
-            params: 1,
-            docs: "
-            Inverse, as in `x^-1` (with respect to geometric product).
-            Useful to define the geometric quotient.
-            Not to be confused with the \"Point Inversion\" or \"Sphere Inversion\" operations.
-            ".to_string(),
-        })?;
-
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "AntiInverse".to_string(),
-            params: 1,
-            docs: "
-            Inverse, as in `x^-1` (with respect to geometric anti-product).
-            Useful to define the geometric anti-quotient.
-            Not to be confused with the \"Point Inversion\" or \"Sphere Inversion\" operations.
             ".to_string(),
         })?;
 
@@ -3179,6 +3456,18 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         let trait_names = ["Inverse", "AntiInverse"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+
+        // todo power-of-n
+        let trait_names = [
+            "Square", "AntiSquare", /*"Inverse", "AntiInverse",*/
+            /*"Sqrt",*/ "AntiSqrt", "InverseSqrt", "AntiInverseSqrt",
+            "Exp", "AntiExp", "Sine", "AntiSine",
+            "Cosine", "AntiCosine", "Tangent", "AntiTangent",
+            "Sinh", "AntiSinh", "Cosh", "AntiCosh",
+            "Tanh", "AntiTanh"
+        ];
+        self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
+
         Ok(())
     }
 

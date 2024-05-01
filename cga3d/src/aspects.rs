@@ -207,6 +207,16 @@ impl Bulk for RoundPointAtOrigin {
     }
 }
 
+impl Bulk for SpacialCurvature {
+    type Output = Horizon;
+
+    fn bulk(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[1] },
+        }
+    }
+}
+
 impl Bulk for Sphere {
     type Output = Horizon;
 
@@ -495,6 +505,16 @@ impl RoundWeight for RoundPointCarrierAspect {
     fn round_weight(self) -> Origin {
         Origin {
             groups: OriginGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl RoundWeight for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn round_weight(self) -> SphereWeight {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: self.group0()[0] },
         }
     }
 }

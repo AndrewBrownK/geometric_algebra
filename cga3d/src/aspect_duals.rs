@@ -179,6 +179,14 @@ impl BulkDual for RoundPointAtOrigin {
     }
 }
 
+impl BulkDual for SpacialCurvature {
+    type Output = Origin;
+
+    fn bulk_dual(self) -> Origin {
+        self.bulk().complement()
+    }
+}
+
 impl BulkDual for Sphere {
     type Output = Origin;
 
@@ -327,6 +335,14 @@ impl RoundBulkDual for RoundPointAtOrigin {
     type Output = SphereWeight;
 
     fn round_bulk_dual(self) -> SphereWeight {
+        self.bulk().complement()
+    }
+}
+
+impl RoundBulkDual for SpacialCurvature {
+    type Output = Origin;
+
+    fn round_bulk_dual(self) -> Origin {
         self.bulk().complement()
     }
 }

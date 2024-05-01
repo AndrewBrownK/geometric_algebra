@@ -58,6 +58,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "CircleWeight:e423,e431,e412",
         "CircleCarrierAspect:e423,e431,e412,e321",
         "SphereWeight:e1234",
+        "SpacialCurvature:e1234,e3215",
 
 
         // Operator Objects
@@ -113,6 +114,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     let flat_basis = cga3d.parse("e5");
     let mut code_gen = CodeGenerator::new(cga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
+    code_gen.dual_num_stuff(&registry).unwrap();
     code_gen.basic_norms(&registry);
     code_gen.post_norm_universal_stuff(&registry, &sandwich_outputs);
     code_gen.round_features(flat_basis, &registry);

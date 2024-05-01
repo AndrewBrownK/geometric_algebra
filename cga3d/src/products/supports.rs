@@ -179,9 +179,9 @@ impl AntiSupport for RoundPointAtInfinity {
 }
 
 impl AntiSupport for RoundPointAtOrigin {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_support(self) -> Sphere {
+    fn anti_support(self) -> SpacialCurvature {
         self.wedge(Origin::one().complement().anti_wedge(self.dual()))
     }
 }
@@ -206,6 +206,14 @@ impl AntiSupport for Scalar {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
+        self.wedge(Origin::one().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_support(self) -> SpacialCurvature {
         self.wedge(Origin::one().complement().anti_wedge(self.dual()))
     }
 }
@@ -438,6 +446,14 @@ impl Support for RoundPointCarrierAspect {
     type Output = RoundPointCarrierAspect;
 
     fn support(self) -> RoundPointCarrierAspect {
+        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for SpacialCurvature {
+    type Output = RoundPointAtOrigin;
+
+    fn support(self) -> RoundPointAtOrigin {
         self.anti_wedge(Origin::one().wedge(self.anti_dual()))
     }
 }

@@ -450,14 +450,11 @@ impl AntiDual for RoundPointAtInfinity {
 }
 
 impl AntiDual for RoundPointAtOrigin {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_dual(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0(),
-            },
+    fn anti_dual(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: self.group0() },
         }
     }
 }
@@ -493,6 +490,18 @@ impl AntiDual for Scalar {
     fn anti_dual(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl AntiDual for SpacialCurvature {
+    type Output = RoundPointAtOrigin;
+
+    fn anti_dual(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() * Simd32x2::from(-1.0),
+            },
         }
     }
 }
@@ -945,6 +954,18 @@ impl AntiReversal for Scalar {
     }
 }
 
+impl AntiReversal for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_reversal(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for Sphere {
     type Output = Sphere;
 
@@ -1368,6 +1389,18 @@ impl Automorphism for Scalar {
     fn automorphism(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Automorphism for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn automorphism(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
         }
     }
 }
@@ -1799,13 +1832,12 @@ impl Complement for RoundPointAtInfinity {
 }
 
 impl Complement for RoundPointAtOrigin {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn complement(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: swizzle!(self.group0(), 1, 0),
+    fn complement(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: swizzle!(self.group0(), 1, 0),
             },
         }
     }
@@ -1837,6 +1869,18 @@ impl Complement for Scalar {
     fn complement(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Complement for SpacialCurvature {
+    type Output = RoundPointAtOrigin;
+
+    fn complement(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+            },
         }
     }
 }
@@ -2295,6 +2339,18 @@ impl Conjugation for Scalar {
     }
 }
 
+impl Conjugation for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn conjugation(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Conjugation for Sphere {
     type Output = Sphere;
 
@@ -2694,6 +2750,16 @@ impl DoubleComplement for Scalar {
     fn double_complement(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl DoubleComplement for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn double_complement(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: self.group0() },
         }
     }
 }
@@ -3126,13 +3192,12 @@ impl Dual for RoundPointAtInfinity {
 }
 
 impl Dual for RoundPointAtOrigin {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn dual(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0() * Simd32x2::from(-1.0),
+    fn dual(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -3167,6 +3232,16 @@ impl Dual for Scalar {
     fn dual(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for SpacialCurvature {
+    type Output = RoundPointAtOrigin;
+
+    fn dual(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -3615,6 +3690,18 @@ impl Reversal for Scalar {
     fn reversal(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Reversal for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn reversal(self) -> SpacialCurvature {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
         }
     }
 }

@@ -107,6 +107,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
     let mut code_gen = CodeGenerator::new(rga3d);
     code_gen.preamble_and_universal_traits(&registry).unwrap();
+    code_gen.dual_num_stuff(&registry).unwrap();
     code_gen.basic_norms(&registry);
     code_gen.post_norm_universal_stuff(&registry, &sandwich_outputs);
     code_gen.attitude_and_dependencies("Horizon", &registry);

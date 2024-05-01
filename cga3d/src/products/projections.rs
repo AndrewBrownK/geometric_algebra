@@ -389,14 +389,6 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for CircleBulk {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for CircleBulk {
-    type Output = Circle;
-
-    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Circle {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleBulk {
     type Output = CircleBulk;
 
@@ -1041,14 +1033,6 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for DipoleBulk {
     type Output = Dipole;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Dipole {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for DipoleBulk {
-    type Output = Dipole;
-
-    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1973,6 +1957,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Flector {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Flector {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Sphere> for Flector {
     type Output = Sphere;
 
@@ -2173,6 +2165,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlectorAtInfinity 
     }
 }
 
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for FlectorAtInfinity {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Sphere> for FlectorAtInfinity {
     type Output = Sphere;
 
@@ -2350,9 +2350,9 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for Horizon {
 }
 
 impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2369,6 +2369,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Horizon {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3229,6 +3237,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Motor {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Sphere> for Motor {
     type Output = AntiScalar;
 
@@ -3481,6 +3497,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3809,6 +3833,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Plane {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Plane {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4237,6 +4269,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Rotor {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Sphere> for Rotor {
     type Output = AntiScalar;
 
@@ -4637,14 +4677,6 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = RoundPointAtOrigin;
-
-    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointBulk {
     type Output = RoundPointBulk;
 
@@ -4781,6 +4813,254 @@ impl AntiProjectOrthogonallyOnto<Translator> for RoundPointCarrierAspect {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Circle> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleBulk> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleBulk> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleBulk) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleWeight) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> Horizon {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Horizon> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: Horizon) -> Horizon {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> Horizon {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> Horizon {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Circle> for Sphere {
     type Output = Sphere;
 
@@ -4790,9 +5070,9 @@ impl AntiProjectOrthogonallyOnto<Circle> for Sphere {
 }
 
 impl AntiProjectOrthogonallyOnto<CircleBulk> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: CircleBulk) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5013,6 +5293,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Sphere {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Sphere {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Sphere> for Sphere {
     type Output = Sphere;
 
@@ -5206,9 +5494,9 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for SphereWeight {
 }
 
 impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5225,6 +5513,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for SphereWeight {
     type Output = SphereWeight;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5449,6 +5745,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Transflector {
+    type Output = SpacialCurvature;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5681,6 +5985,14 @@ impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Translator {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SpacialCurvature> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: SpacialCurvature) -> AntiScalar {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -6049,14 +6361,6 @@ impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for CircleBulk {
     type Output = Circle;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointAtInfinity) -> Circle {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for CircleBulk {
-    type Output = Circle;
-
-    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -6705,14 +7009,6 @@ impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for DipoleBulk {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointAtInfinity) -> Dipole {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for DipoleBulk {
-    type Output = Dipole;
-
-    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7637,6 +7933,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Flector {
     }
 }
 
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Flector {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Sphere> for Flector {
     type Output = Sphere;
 
@@ -7837,6 +8141,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for FlectorAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for FlectorAtInfinity {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Sphere> for FlectorAtInfinity {
     type Output = Sphere;
 
@@ -8014,9 +8326,9 @@ impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for Horizon {
 }
 
 impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for Horizon {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8033,6 +8345,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Horizon {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8893,6 +9213,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Motor {
     }
 }
 
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Sphere> for Motor {
     type Output = AntiScalar;
 
@@ -9145,6 +9473,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -9473,6 +9809,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Plane {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Plane {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -9901,6 +10245,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Rotor {
     }
 }
 
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Sphere> for Rotor {
     type Output = AntiScalar;
 
@@ -10301,14 +10653,6 @@ impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = RoundPointAtOrigin;
-
-    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPointBulk {
     type Output = RoundPointBulk;
 
@@ -10445,6 +10789,254 @@ impl AntiProjectViaHorizonOnto<Translator> for RoundPointCarrierAspect {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Circle> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: Circle) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleBulk> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: CircleBulk) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: CircleCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_via_horizon_onto(self, other: CircleWeight) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dipole> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: Dipole) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleBulk> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleBulk) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleWeight) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlatPoint> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: FlatPoint) -> Plane {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlatPointAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_via_horizon_onto(self, other: FlatPointAtInfinity) -> Horizon {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Horizon> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_via_horizon_onto(self, other: Horizon) -> Horizon {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Infinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_via_horizon_onto(self, other: Infinity) -> Horizon {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Line> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> Horizon {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Origin> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_via_horizon_onto(self, other: Origin) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Plane> for SpacialCurvature {
+    type Output = Plane;
+
+    fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPoint> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPointAtInfinity) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPointBulk> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPointBulk) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn anti_project_via_horizon_onto(self, other: Sphere) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SphereWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn anti_project_via_horizon_onto(self, other: SphereWeight) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Translator> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Circle> for Sphere {
     type Output = Sphere;
 
@@ -10454,9 +11046,9 @@ impl AntiProjectViaHorizonOnto<Circle> for Sphere {
 }
 
 impl AntiProjectViaHorizonOnto<CircleBulk> for Sphere {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_project_via_horizon_onto(self, other: CircleBulk) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: CircleBulk) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10677,6 +11269,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Sphere {
     }
 }
 
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Sphere {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Sphere> for Sphere {
     type Output = Sphere;
 
@@ -10870,9 +11470,9 @@ impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for SphereWeight {
 }
 
 impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for SphereWeight {
-    type Output = Sphere;
+    type Output = SpacialCurvature;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10889,6 +11489,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for SphereWeight {
     type Output = SphereWeight;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> SphereWeight {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11113,6 +11721,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Transflector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Transflector {
+    type Output = SpacialCurvature;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11349,6 +11965,14 @@ impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Translator {
     }
 }
 
+impl AntiProjectViaHorizonOnto<SpacialCurvature> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: SpacialCurvature) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Sphere> for Translator {
     type Output = AntiScalar;
 
@@ -11493,6 +12117,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Circle {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Circle {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Circle {
     type Output = Circle;
 
@@ -11601,6 +12233,14 @@ impl ProjectOrthogonallyOnto<Rotor> for CircleBulk {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> CircleBulk {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -11733,6 +12373,14 @@ impl ProjectOrthogonallyOnto<Rotor> for CircleCarrierAspect {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for CircleCarrierAspect {
     type Output = Circle;
 
@@ -11849,6 +12497,14 @@ impl ProjectOrthogonallyOnto<Rotor> for CircleWeight {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for CircleWeight {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -12053,6 +12709,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Dipole {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Dipole {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Dipole {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Dipole {
     type Output = Dipole;
 
@@ -12201,6 +12865,14 @@ impl ProjectOrthogonallyOnto<Rotor> for DipoleBulk {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for DipoleBulk {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Dipole {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -12381,6 +13053,14 @@ impl ProjectOrthogonallyOnto<Rotor> for DipoleCarrierAspect {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Dipole {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for DipoleCarrierAspect {
     type Output = Dipole;
 
@@ -12537,6 +13217,14 @@ impl ProjectOrthogonallyOnto<Rotor> for DipoleWeight {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for DipoleWeight {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Dipole {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -12701,6 +13389,14 @@ impl ProjectOrthogonallyOnto<Rotor> for FlatPoint {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for FlatPoint {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Dipole {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for FlatPoint {
     type Output = Dipole;
 
@@ -12857,6 +13553,14 @@ impl ProjectOrthogonallyOnto<Rotor> for FlatPointAtInfinity {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Dipole {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -13173,6 +13877,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Flector {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Flector {
     type Output = MultiVector;
 
@@ -13333,6 +14045,14 @@ impl ProjectOrthogonallyOnto<Rotor> for FlectorAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -13401,6 +14121,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Horizon {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -13605,6 +14333,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for Infinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Infinity {
     type Output = RoundPoint;
 
@@ -13733,6 +14469,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Line {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Line {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Line {
     type Output = Circle;
 
@@ -13849,6 +14593,14 @@ impl ProjectOrthogonallyOnto<Rotor> for LineAtInfinity {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for LineAtInfinity {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -14089,6 +14841,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Motor {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Motor {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -14357,6 +15117,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -14573,6 +15341,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for Origin {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Origin {
     type Output = RoundPoint;
 
@@ -14649,6 +15425,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Plane {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Plane {
+    type Output = SpacialCurvature;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15109,6 +15893,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPoint {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
@@ -15337,6 +16129,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
     type Output = RoundPointCarrierAspect;
 
     fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPoint {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15581,6 +16381,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
@@ -15757,14 +16565,6 @@ impl ProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = RoundPointAtOrigin;
-
-    fn project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPointBulk {
     type Output = RoundPointBulk;
 
@@ -15777,6 +16577,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointBulk {
     type Output = RoundPointCarrierAspect;
 
     fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPoint {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16013,6 +16821,14 @@ impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointCarrierAspec
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for RoundPointCarrierAspect {
     type Output = RoundPoint;
 
@@ -16030,6 +16846,102 @@ impl ProjectOrthogonallyOnto<Transflector> for RoundPointCarrierAspect {
 }
 
 impl ProjectOrthogonallyOnto<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Horizon> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn project_orthogonally_onto(self, other: Horizon) -> Horizon {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Plane> for SpacialCurvature {
+    type Output = Plane;
+
+    fn project_orthogonally_onto(self, other: Plane) -> Plane {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn project_orthogonally_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SphereWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn project_orthogonally_onto(self, other: SphereWeight) -> SphereWeight {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for SpacialCurvature {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
@@ -16097,6 +17009,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Sphere {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Sphere {
+    type Output = SpacialCurvature;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16185,6 +17105,14 @@ impl ProjectOrthogonallyOnto<Rotor> for SphereWeight {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16341,6 +17269,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Transflector {
     }
 }
 
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Transflector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Sphere> for Transflector {
     type Output = MultiVector;
 
@@ -16457,6 +17393,14 @@ impl ProjectOrthogonallyOnto<Rotor> for Translator {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SpacialCurvature> for Translator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16613,6 +17557,14 @@ impl ProjectViaOriginOnto<Rotor> for Circle {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Circle {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Circle {
     type Output = Circle;
 
@@ -16721,6 +17673,14 @@ impl ProjectViaOriginOnto<Rotor> for CircleBulk {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for CircleBulk {
+    type Output = CircleBulk;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> CircleBulk {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -16853,6 +17813,14 @@ impl ProjectViaOriginOnto<Rotor> for CircleCarrierAspect {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for CircleCarrierAspect {
     type Output = Circle;
 
@@ -16969,6 +17937,14 @@ impl ProjectViaOriginOnto<Rotor> for CircleWeight {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for CircleWeight {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -17173,6 +18149,14 @@ impl ProjectViaOriginOnto<Rotor> for Dipole {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Dipole {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Dipole {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Dipole {
     type Output = Dipole;
 
@@ -17321,6 +18305,14 @@ impl ProjectViaOriginOnto<Rotor> for DipoleBulk {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for DipoleBulk {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Dipole {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -17501,6 +18493,14 @@ impl ProjectViaOriginOnto<Rotor> for DipoleCarrierAspect {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Dipole {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for DipoleCarrierAspect {
     type Output = Dipole;
 
@@ -17657,6 +18657,14 @@ impl ProjectViaOriginOnto<Rotor> for DipoleWeight {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for DipoleWeight {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Dipole {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -17821,6 +18829,14 @@ impl ProjectViaOriginOnto<Rotor> for FlatPoint {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for FlatPoint {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Dipole {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for FlatPoint {
     type Output = Dipole;
 
@@ -17977,6 +18993,14 @@ impl ProjectViaOriginOnto<Rotor> for FlatPointAtInfinity {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for FlatPointAtInfinity {
+    type Output = Dipole;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Dipole {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -18293,6 +19317,14 @@ impl ProjectViaOriginOnto<Rotor> for Flector {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Flector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Flector {
     type Output = MultiVector;
 
@@ -18453,6 +19485,14 @@ impl ProjectViaOriginOnto<Rotor> for FlectorAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -18521,6 +19561,14 @@ impl ProjectViaOriginOnto<Rotor> for Horizon {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for Horizon {
+    type Output = SpacialCurvature;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -18725,6 +19773,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for Infinity {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Infinity {
+    type Output = RoundPointAtOrigin;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Infinity {
     type Output = RoundPoint;
 
@@ -18853,6 +19909,14 @@ impl ProjectViaOriginOnto<Rotor> for Line {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Line {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Line {
     type Output = Circle;
 
@@ -18969,6 +20033,14 @@ impl ProjectViaOriginOnto<Rotor> for LineAtInfinity {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for LineAtInfinity {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -19209,6 +20281,14 @@ impl ProjectViaOriginOnto<Rotor> for Motor {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for Motor {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -19477,6 +20557,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
@@ -19693,6 +20781,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for Origin {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Origin {
+    type Output = RoundPointAtOrigin;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Origin {
     type Output = RoundPoint;
 
@@ -19769,6 +20865,14 @@ impl ProjectViaOriginOnto<Rotor> for Plane {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for Plane {
+    type Output = SpacialCurvature;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -20229,6 +21333,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPoint {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for RoundPoint {
+    type Output = RoundPoint;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
@@ -20457,6 +21569,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
     type Output = RoundPointCarrierAspect;
 
     fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointAtInfinity {
+    type Output = RoundPoint;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPoint {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -20701,6 +21821,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPointAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
@@ -20877,14 +22005,6 @@ impl ProjectViaOriginOnto<RoundPointAtInfinity> for RoundPointBulk {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = RoundPointAtOrigin;
-
-    fn project_via_origin_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<RoundPointBulk> for RoundPointBulk {
     type Output = RoundPointBulk;
 
@@ -20897,6 +22017,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointBulk {
     type Output = RoundPointCarrierAspect;
 
     fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointBulk {
+    type Output = RoundPoint;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPoint {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21133,6 +22261,14 @@ impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointCarrierAspect {
+    type Output = RoundPoint;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for RoundPointCarrierAspect {
     type Output = RoundPoint;
 
@@ -21150,6 +22286,102 @@ impl ProjectViaOriginOnto<Transflector> for RoundPointCarrierAspect {
 }
 
 impl ProjectViaOriginOnto<Translator> for RoundPointCarrierAspect {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<FlectorAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Horizon> for SpacialCurvature {
+    type Output = Horizon;
+
+    fn project_via_origin_onto(self, other: Horizon) -> Horizon {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<MultiVector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Plane> for SpacialCurvature {
+    type Output = Plane;
+
+    fn project_via_origin_onto(self, other: Plane) -> Plane {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Rotor> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for SpacialCurvature {
+    type Output = SpacialCurvature;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> SpacialCurvature {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Sphere> for SpacialCurvature {
+    type Output = Sphere;
+
+    fn project_via_origin_onto(self, other: Sphere) -> Sphere {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SphereWeight> for SpacialCurvature {
+    type Output = SphereWeight;
+
+    fn project_via_origin_onto(self, other: SphereWeight) -> SphereWeight {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Transflector> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for SpacialCurvature {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Translator) -> MultiVector {
@@ -21217,6 +22449,14 @@ impl ProjectViaOriginOnto<Rotor> for Sphere {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for Sphere {
+    type Output = SpacialCurvature;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21305,6 +22545,14 @@ impl ProjectViaOriginOnto<Rotor> for SphereWeight {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for SphereWeight {
+    type Output = SpacialCurvature;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> SpacialCurvature {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21461,6 +22709,14 @@ impl ProjectViaOriginOnto<Rotor> for Transflector {
     }
 }
 
+impl ProjectViaOriginOnto<SpacialCurvature> for Transflector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Sphere> for Transflector {
     type Output = MultiVector;
 
@@ -21577,6 +22833,14 @@ impl ProjectViaOriginOnto<Rotor> for Translator {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SpacialCurvature> for Translator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SpacialCurvature) -> Circle {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
