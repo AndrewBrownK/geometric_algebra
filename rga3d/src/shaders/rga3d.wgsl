@@ -18648,6 +18648,12 @@ fn translator__inverse(self_: Translator) -> Translator {
     return translator__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), translator__dot__translator(self_, self_)));
 }
 
+fn dual_num__anti_inverse_sqrt(self_: DualNum) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    return DualNum(vec2<f32>(-1.0 * s / (2.0 * t * sqrt(t)), 1.0 / sqrt(t)));
+}
+
 fn anti_scalar__anti_sqrt(self_: AntiScalar) -> AntiScalar {
     return AntiScalar(sqrt(self_.g0));
 }
@@ -18662,6 +18668,12 @@ fn dual_num__anti_square(self_: DualNum) -> DualNum {
     let s: f32 = self_.g0.x;
     let t: f32 = self_.g0.y;
     return DualNum(vec2<f32>(2.0 * s * t, t * t));
+}
+
+fn dual_num__inverse_sqrt(self_: DualNum) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    return DualNum(vec2<f32>(1.0 / sqrt(s), -1.0 * t / (2.0 * s * sqrt(s))));
 }
 
 fn dual_num__square(self_: DualNum) -> DualNum {

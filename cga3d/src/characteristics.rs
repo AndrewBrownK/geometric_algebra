@@ -2049,6 +2049,20 @@ impl Inverse for Translator {
     }
 }
 
+impl AntiInverseSqrt for DualNum {
+    type Output = DualNum;
+
+    fn anti_inverse_sqrt(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([-1.0 * s / (2.0 * t * t.sqrt()), 1.0 / t.sqrt()]),
+            },
+        }
+    }
+}
+
 impl AntiSqrt for AntiScalar {
     type Output = AntiScalar;
 
@@ -2082,6 +2096,20 @@ impl AntiSquare for DualNum {
         DualNum {
             groups: DualNumGroups {
                 g0: Simd32x2::from([2.0 * s * t, t * t]),
+            },
+        }
+    }
+}
+
+impl InverseSqrt for DualNum {
+    type Output = DualNum;
+
+    fn inverse_sqrt(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([1.0 / s.sqrt(), -1.0 * t / (2.0 * s * s.sqrt())]),
             },
         }
     }

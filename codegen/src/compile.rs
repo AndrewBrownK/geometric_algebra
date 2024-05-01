@@ -1563,6 +1563,16 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             divide(var_s.clone(), mul_2(sqrt(var_t.clone()))),
             sqrt(var_t.clone()),
         );
+        dual_num_trait_impl(
+            "InverseSqrt",
+            reciprocal(sqrt(var_s.clone())),
+            divide(negate(var_t.clone()), mul_2(multiply(var_s.clone(), sqrt(var_s.clone())))),
+        );
+        dual_num_trait_impl(
+            "AntiInverseSqrt",
+            divide(negate(var_s.clone()), mul_2(multiply(var_t.clone(), sqrt(var_t.clone())))),
+            reciprocal(sqrt(var_t.clone())),
+        );
         Ok(())
     }
 

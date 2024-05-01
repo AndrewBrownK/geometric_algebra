@@ -18648,6 +18648,12 @@ Translator translator__inverse(Translator self) {
     return translator__geometric_product__scalar(self, scalar__div__scalar(scalar__one(), translator__dot__translator(self, self)));
 }
 
+DualNum dual_num__anti_inverse_sqrt(DualNum self) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(-1.0 * s / (2.0 * t * sqrt(t)), 1.0 / sqrt(t)));
+}
+
 AntiScalar anti_scalar__anti_sqrt(AntiScalar self) {
     return AntiScalar(sqrt(self.g0));
 }
@@ -18662,6 +18668,12 @@ DualNum dual_num__anti_square(DualNum self) {
     float s = self.g0.x;
     float t = self.g0.y;
     return DualNum(vec2(2.0 * s * t, t * t));
+}
+
+DualNum dual_num__inverse_sqrt(DualNum self) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(1.0 / sqrt(s), -1.0 * t / (2.0 * s * sqrt(s))));
 }
 
 DualNum dual_num__square(DualNum self) {
