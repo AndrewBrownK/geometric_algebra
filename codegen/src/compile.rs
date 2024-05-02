@@ -1398,41 +1398,97 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     pub fn dual_num_stuff<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) -> std::io::Result<()> {
         let dual_num_param = registry.single_parameters().find(|it| it.multi_vector_class().class_name == "DualNum");
-        let dual_num_param = match dual_num_param {
-            None => return Ok(()),
-            Some(dnp) => dnp,
+        let scalar_param = registry.single_parameters().find(|it| it.multi_vector_class().class_name == "Scalar");
+        let anti_scalar_param = registry.single_parameters().find(|it| it.multi_vector_class().class_name == "AntiScalar");
+        let (dual_num_param, scalar_param, anti_scalar_param) = match (dual_num_param, scalar_param, anti_scalar_param) {
+            (Some(dnp), Some(sp), Some(asp)) => (dnp, sp, asp),
+            _ => return Ok(()),
         };
-        let var_param_a = Box::new(variable(&dual_num_param));
-        let assign_var_s = AstNode::VariableAssignment {
-            name: "s",
-            data_type: Some(DataType::SimdVector(1)),
-            expression: Box::new(Expression {
+
+        let float_expression = |a: ExpressionContent<'r>| {
+            Box::new(Expression {
                 size: 1,
                 data_type_hint: Some(DataType::SimdVector(1)),
-                content: ExpressionContent::Gather(var_param_a.clone(), vec![GatherData::Usual(UsualGatherData {
+                content: a,
+            })
+        };
+        let var_param_a = Box::new(variable(&dual_num_param));
+        let assign_float_var = |v: &'static str, a: ExpressionContent<'r>| {
+            return AstNode::VariableAssignment {
+                name: v,
+                data_type: Some(DataType::SimdVector(1)),
+                expression: float_expression(a)
+            }
+        };
+        let assign_var_s = assign_float_var(
+            "s",
+            ExpressionContent::Gather(
+                var_param_a.clone(),
+                vec![GatherData::Usual(UsualGatherData {
                     negate: false,
                     group: 0,
                     element: 0,
                     group_size: 2,
-                })]),
-            }),
-        };
-        let assign_var_t = AstNode::VariableAssignment {
-            name: "t",
-            data_type: Some(DataType::SimdVector(1)),
-            expression: Box::new(Expression {
-                size: 1,
-                data_type_hint: Some(DataType::SimdVector(1)),
-                content: ExpressionContent::Gather(var_param_a.clone(), vec![GatherData::Usual(UsualGatherData {
+                })]
+            ),
+        );
+        let assign_var_t = assign_float_var(
+            "t",
+            ExpressionContent::Gather(
+                var_param_a.clone(),
+                vec![GatherData::Usual(UsualGatherData {
                     negate: false,
                     group: 0,
                     element: 1,
                     group_size: 2,
-                })]),
-            }),
+                })]
+            ),
+        );
+
+        let access_scalar = ExpressionContent::Access(Box::new(variable(&scalar_param)), 0);
+        let access_anti_scalar = ExpressionContent::Access(Box::new(variable(&anti_scalar_param)), 0);
+
+        let mut construct_scalar = |a: ExpressionContent<'r>| {
+            return Expression {
+                size: 1,
+                data_type_hint: Some(scalar_param.data_type.clone()),
+                content: ExpressionContent::InvokeClassMethod(
+                    scalar_param.multi_vector_class(), "Constructor", vec![
+                        (DataType::SimdVector(1), Expression {
+                            size: 1,
+                            data_type_hint: Some(DataType::SimdVector(1)),
+                            content: ExpressionContent::ConstructVec(DataType::SimdVector(1), vec![
+                                Expression {
+                                    size: 1,
+                                    data_type_hint: Some(DataType::SimdVector(1)),
+                                    content: a,
+                                },
+                            ]),
+                        }),
+                    ]),
+            };
         };
-        let var_s = ExpressionContent::Variable("s");
-        let var_t = ExpressionContent::Variable("t");
+
+        let mut construct_anti_scalar = |a: ExpressionContent<'r>| {
+            return Expression {
+                size: 1,
+                data_type_hint: Some(anti_scalar_param.data_type.clone()),
+                content: ExpressionContent::InvokeClassMethod(
+                    anti_scalar_param.multi_vector_class(), "Constructor", vec![
+                        (DataType::SimdVector(1), Expression {
+                            size: 1,
+                            data_type_hint: Some(DataType::SimdVector(1)),
+                            content: ExpressionContent::ConstructVec(DataType::SimdVector(1), vec![
+                                Expression {
+                                    size: 1,
+                                    data_type_hint: Some(DataType::SimdVector(1)),
+                                    content: a,
+                                },
+                            ]),
+                        }),
+                    ]),
+            };
+        };
 
         let mut construct_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
             return Expression {
@@ -1459,6 +1515,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     ]),
             };
         };
+
+        let mut return_scalar = |a: ExpressionContent<'r>| {
+            return AstNode::ReturnStatement {
+                expression: Box::new(construct_scalar(a)),
+            };
+        };
+        let mut return_anti_scalar = |a: ExpressionContent<'r>| {
+            return AstNode::ReturnStatement {
+                expression: Box::new(construct_anti_scalar(a)),
+            };
+        };
         let mut return_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
             return AstNode::ReturnStatement {
                 expression: Box::new(construct_dual_num(a, b)),
@@ -1466,48 +1533,38 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         };
 
         // this trait impl is only for single argument traits (not power-of-n)
-        let mut dual_num_trait_impl = |name: &'static str, a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+        let mut dual_num_trait_impl = |name: &'static str, more_vars: Vec<AstNode<'r>>, a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            let mut body = vec![
+                assign_var_s.clone(),
+                assign_var_t.clone(),
+            ];
+            for more_var in more_vars {
+                body.push(more_var);
+            }
+            body.push(return_dual_num(a, b));
             let the_impl = AstNode::TraitImplementation {
                 result: Parameter { name, data_type: DataType::MultiVector(dual_num_param.multi_vector_class()) },
                 class: dual_num_param.multi_vector_class(),
                 parameters: vec![dual_num_param.clone()],
-                body: vec![
-                    assign_var_s.clone(),
-                    assign_var_t.clone(),
-                    return_dual_num(a, b),
-                ],
+                body,
             };
             self.trait_impls.add_single_impl(name, dual_num_param.clone(), the_impl);
         };
 
         let multiply = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
-            return ExpressionContent::Multiply(
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: a,
-                }),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: b,
-                }),
-            );
+            return ExpressionContent::Multiply(float_expression(a), float_expression(b));
+        };
+
+        let add = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            return ExpressionContent::Add(float_expression(a), float_expression(b));
+        };
+
+        let sub = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+            return ExpressionContent::Subtract(float_expression(a), float_expression(b));
         };
 
         let divide = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
-            return ExpressionContent::Divide(
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: a,
-                }),
-                Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: b,
-                }),
-            );
+            return ExpressionContent::Divide(float_expression(a), float_expression(b));
         };
 
         let reciprocal = |a: ExpressionContent<'r>| {
@@ -1516,29 +1573,72 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let mul_2 = |a: ExpressionContent<'r>| {
             return multiply(ExpressionContent::Constant(DataType::SimdVector(1), vec![2]), a);
         };
+        let one_plus = |a: ExpressionContent<'r>| {
+            return add(ExpressionContent::Constant(DataType::SimdVector(1), vec![1]), a);
+        };
+        let one_minus = |a: ExpressionContent<'r>| {
+            return sub(ExpressionContent::Constant(DataType::SimdVector(1), vec![1]), a);
+        };
         let negate = |a: ExpressionContent<'r>| {
             return multiply(ExpressionContent::Constant(DataType::SimdVector(1), vec![-1]), a);
         };
         let sqrt = |a: ExpressionContent<'r>| {
-            return ExpressionContent::SquareRoot(Box::new(Expression {
-                size: 1,
-                data_type_hint: Some(DataType::SimdVector(1)),
-                content: a,
-            }));
+            return ExpressionContent::SquareRoot(float_expression(a));
+        };
+        let exp = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Exp(float_expression(a));
+        };
+        let sin = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Sin(float_expression(a));
+        };
+        let cos = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Cos(float_expression(a));
+        };
+        let tan = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Tan(float_expression(a));
+        };
+        let sinh = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Sinh(float_expression(a));
+        };
+        let cosh = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Cosh(float_expression(a));
+        };
+        let tanh = |a: ExpressionContent<'r>| {
+            return ExpressionContent::Tanh(float_expression(a));
         };
 
-        dual_num_trait_impl(
-            "Square",
-            multiply(var_s.clone(), var_s.clone()),
-            mul_2(multiply(var_s.clone(), var_t.clone())),
-        );
-        dual_num_trait_impl(
-            "AntiSquare",
-            mul_2(multiply(var_s.clone(), var_t.clone())),
-            multiply(var_t.clone(), var_t.clone()),
-        );
+        let var_s = ExpressionContent::Variable("s");
+        let var_t = ExpressionContent::Variable("t");
+        let var_sqrt_s = ExpressionContent::Variable("sqrt_s");
+        let var_sqrt_t = ExpressionContent::Variable("sqrt_t");
+        let var_exp_s = ExpressionContent::Variable("exp_s");
+        let var_exp_t = ExpressionContent::Variable("exp_t");
+        let var_tan_s = ExpressionContent::Variable("tan_s");
+        let var_tan_t = ExpressionContent::Variable("tan_t");
+        let var_tanh_s = ExpressionContent::Variable("tanh_s");
+        let var_tanh_t = ExpressionContent::Variable("tanh_t");
+
+        // I don't like including "Square" and "AntiSquare" because you can just
+        // write a.wedge_dot(a) or a.anti_wedge_dot(a) instead, and I really don't think
+        // that is worth an entirely new trait. This is especially the case considering you
+        // could square literally any other geometric object as well (not just Scalars,
+        // AntiScalars, and DualNums), and then it gets incredibly tedious and bloated to
+        // include all impls for other objects too.
+
+        // dual_num_trait_impl(
+        //     "Square",
+        //     multiply(var_s.clone(), var_s.clone()),
+        //     mul_2(multiply(var_s.clone(), var_t.clone())),
+        // );
+        // dual_num_trait_impl(
+        //     "AntiSquare",
+        //     mul_2(multiply(var_s.clone(), var_t.clone())),
+        //     multiply(var_t.clone(), var_t.clone()),
+        // );
+
         dual_num_trait_impl(
             "Inverse",
+            vec![],
             reciprocal(var_s.clone()),
             divide(
                 negate(var_t.clone()),
@@ -1547,6 +1647,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         );
         dual_num_trait_impl(
             "AntiInverse",
+            vec![],
             divide(
                 negate(var_s.clone()),
                 multiply(var_t.clone(), var_t.clone())
@@ -1555,24 +1656,151 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         );
         dual_num_trait_impl(
             "Sqrt",
-            sqrt(var_s.clone()),
-            divide(var_t.clone(), mul_2(sqrt(var_s.clone()))),
+            vec![assign_float_var("sqrt_s", sqrt(var_s.clone()))],
+            var_sqrt_s.clone(),
+            divide(var_t.clone(), mul_2(var_sqrt_s.clone())),
         );
         dual_num_trait_impl(
             "AntiSqrt",
-            divide(var_s.clone(), mul_2(sqrt(var_t.clone()))),
-            sqrt(var_t.clone()),
+            vec![assign_float_var("sqrt_t", sqrt(var_t.clone()))],
+            divide(var_s.clone(), mul_2(var_sqrt_t.clone())),
+            var_sqrt_t.clone(),
         );
         dual_num_trait_impl(
             "InverseSqrt",
-            reciprocal(sqrt(var_s.clone())),
-            divide(negate(var_t.clone()), mul_2(multiply(var_s.clone(), sqrt(var_s.clone())))),
+            vec![assign_float_var("sqrt_s", sqrt(var_s.clone()))],
+            reciprocal(var_sqrt_s.clone()),
+            divide(negate(var_t.clone()), mul_2(multiply(var_s.clone(), var_sqrt_s.clone()))),
         );
         dual_num_trait_impl(
             "AntiInverseSqrt",
-            divide(negate(var_s.clone()), mul_2(multiply(var_t.clone(), sqrt(var_t.clone())))),
-            reciprocal(sqrt(var_t.clone())),
+            vec![assign_float_var("sqrt_t", sqrt(var_t.clone()))],
+            divide(negate(var_s.clone()), mul_2(multiply(var_t.clone(), var_sqrt_t.clone()))),
+            reciprocal(var_sqrt_t.clone()),
         );
+        dual_num_trait_impl(
+            "Exp",
+            vec![assign_float_var("exp_s", exp(var_s.clone()))],
+            var_exp_s.clone(),
+            multiply(var_t.clone(), var_exp_s.clone()),
+        );
+        dual_num_trait_impl(
+            "AntiExp",
+            vec![assign_float_var("exp_t", exp(var_t.clone()))],
+            multiply(var_s.clone(), var_exp_t.clone()),
+            var_exp_t.clone(),
+        );
+        dual_num_trait_impl(
+            "Sin",
+            vec![],
+            sin(var_s.clone()),
+            multiply(var_t.clone(), cos(var_s.clone())),
+        );
+        dual_num_trait_impl(
+            "AntiSin",
+            vec![],
+            multiply(var_s.clone(), cos(var_t.clone())),
+            sin(var_t.clone()),
+        );
+        dual_num_trait_impl(
+            "Cos",
+            vec![],
+            cos(var_s.clone()),
+            negate(multiply(var_t.clone(), sin(var_s.clone()))),
+        );
+        dual_num_trait_impl(
+            "AntiCos",
+            vec![],
+            negate(multiply(var_s.clone(), sin(var_t.clone()))),
+            cos(var_t.clone()),
+        );
+        dual_num_trait_impl(
+            "Tan",
+            vec![assign_float_var("tan_s", tan(var_s.clone()))],
+            var_tan_s.clone(),
+            multiply(var_t.clone(), one_plus(multiply(var_tan_s.clone(), var_tan_s.clone()))),
+        );
+        dual_num_trait_impl(
+            "AntiTan",
+            vec![assign_float_var("tan_t", tan(var_t.clone()))],
+            multiply(var_s.clone(), one_plus(multiply(var_tan_t.clone(), var_tan_t.clone()))),
+            var_tan_t.clone(),
+        );
+        dual_num_trait_impl(
+            "Sinh",
+            vec![],
+            sinh(var_s.clone()),
+            multiply(var_t.clone(), cosh(var_s.clone())),
+        );
+        dual_num_trait_impl(
+            "AntiSinh",
+            vec![],
+            multiply(var_s.clone(), cosh(var_t.clone())),
+            sinh(var_t.clone()),
+        );
+        dual_num_trait_impl(
+            "Cosh",
+            vec![],
+            cosh(var_s.clone()),
+            multiply(var_t.clone(), sinh(var_s.clone())),
+        );
+        dual_num_trait_impl(
+            "AntiCosh",
+            vec![],
+            multiply(var_s.clone(), sinh(var_t.clone())),
+            cosh(var_t.clone()),
+        );
+        dual_num_trait_impl(
+            "Tanh",
+            vec![assign_float_var("tanh_s", tanh(var_s.clone()))],
+            var_tanh_s.clone(),
+            multiply(var_t.clone(), one_minus(multiply(var_tanh_s.clone(), var_tanh_s.clone()))),
+        );
+        dual_num_trait_impl(
+            "AntiTanh",
+            vec![assign_float_var("tanh_t", tanh(var_t.clone()))],
+            multiply(var_s.clone(), one_minus(multiply(var_tanh_t.clone(), var_tanh_t.clone()))),
+            var_tanh_t.clone(),
+        );
+
+
+        let mut scalar_trait_impl = |name: &'static str, a: ExpressionContent<'r>| {
+            let the_impl = AstNode::TraitImplementation {
+                result: Parameter { name, data_type: DataType::MultiVector(scalar_param.multi_vector_class()) },
+                class: scalar_param.multi_vector_class(),
+                parameters: vec![scalar_param.clone()],
+                body: vec![return_scalar(a)],
+            };
+            self.trait_impls.add_single_impl(name, scalar_param.clone(), the_impl);
+        };
+        scalar_trait_impl("InverseSqrt", reciprocal(sqrt(access_scalar.clone())));
+        scalar_trait_impl("Exp", exp(access_scalar.clone()));
+        scalar_trait_impl("Sine", sin(access_scalar.clone()));
+        scalar_trait_impl("Cosine", cos(access_scalar.clone()));
+        scalar_trait_impl("Tangent", tan(access_scalar.clone()));
+        scalar_trait_impl("Sinh", sinh(access_scalar.clone()));
+        scalar_trait_impl("Cosh", cosh(access_scalar.clone()));
+        scalar_trait_impl("Tanh", tanh(access_scalar.clone()));
+
+
+        let mut anti_scalar_trait_impl = |name: &'static str, a: ExpressionContent<'r>| {
+            let the_impl = AstNode::TraitImplementation {
+                result: Parameter { name, data_type: DataType::MultiVector(anti_scalar_param.multi_vector_class()) },
+                class: anti_scalar_param.multi_vector_class(),
+                parameters: vec![anti_scalar_param.clone()],
+                body: vec![return_anti_scalar(a)],
+            };
+            self.trait_impls.add_single_impl(name, anti_scalar_param.clone(), the_impl);
+        };
+        anti_scalar_trait_impl("AntiInverseSqrt", reciprocal(sqrt(access_anti_scalar.clone())));
+        anti_scalar_trait_impl("AntiExp", exp(access_anti_scalar.clone()));
+        anti_scalar_trait_impl("AntiSine", sin(access_anti_scalar.clone()));
+        anti_scalar_trait_impl("AntiCosine", cos(access_anti_scalar.clone()));
+        anti_scalar_trait_impl("AntiTangent", tan(access_anti_scalar.clone()));
+        anti_scalar_trait_impl("AntiSinh", sinh(access_anti_scalar.clone()));
+        anti_scalar_trait_impl("AntiCosh", cosh(access_anti_scalar.clone()));
+        anti_scalar_trait_impl("AntiTanh", tanh(access_anti_scalar.clone()));
+
         Ok(())
     }
 
@@ -1612,9 +1840,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for param_a in registry.single_parameters() {
             let name = "WeightNorm";
             let _: Option<()> = try {
-                let dot = self.algebra.dialect().anti_dot_product.first()?;
-                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
-                let m = self.trait_impls.get_single_invocation("Sqrt", dot)?;
+                let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
+                let anti_dot = self.trait_impls.get_pair_invocation(anti_dot, variable(&param_a), variable(&param_a))?;
+                let m = self.trait_impls.get_single_invocation("AntiSqrt", anti_dot)?;
                 let bulk_norm = single_expression_single_trait_impl(name, &param_a, m);
                 self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
             };
@@ -3256,21 +3484,28 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // Grade, AntiGrade, Attitude,
         // Carrier, CoCarrier, Container, Center, Partner
 
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "Square".to_string(),
-            params: 1,
-            docs: "
-            Square (with respect to geometric product)
-            ".to_string(),
-        })?;
+        // I don't like including "Square" and "AntiSquare" because you can just
+        // write a.wedge_dot(a) or a.anti_wedge_dot(a) instead, and I really don't think
+        // that is worth an entirely new trait. This is especially the case considering you
+        // could square literally any other geometric object as well (not just Scalars,
+        // AntiScalars, and DualNums), and then it gets incredibly tedious and bloated to
+        // include all impls for other objects too.
 
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "AntiSquare".to_string(),
-            params: 1,
-            docs: "
-            Anti Square (with respect to geometric anti-product)
-            ".to_string(),
-        })?;
+        // emitter.emit(&AstNode::TraitDefinition {
+        //     name: "Square".to_string(),
+        //     params: 1,
+        //     docs: "
+        //     Square (with respect to geometric product)
+        //     ".to_string(),
+        // })?;
+        //
+        // emitter.emit(&AstNode::TraitDefinition {
+        //     name: "AntiSquare".to_string(),
+        //     params: 1,
+        //     docs: "
+        //     Anti Square (with respect to geometric anti-product)
+        //     ".to_string(),
+        // })?;
 
         emitter.emit(&AstNode::TraitDefinition {
             name: "Inverse".to_string(),
@@ -3341,7 +3576,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "Sine".to_string(),
+            name: "Sin".to_string(),
             params: 1,
             docs: "
             Sine (with respect to geometric product)
@@ -3349,15 +3584,16 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "AntiSine".to_string(),
+            name: "AntiSin".to_string(),
             params: 1,
             docs: "
             Anti Sine (with respect to geometric anti-product)
+            Be careful not to confuse with \"asin\" aka \"arcsin\" aka \"inverse sine\".
             ".to_string(),
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "Cosine".to_string(),
+            name: "Cos".to_string(),
             params: 1,
             docs: "
             Cosine (with respect to geometric product)
@@ -3365,15 +3601,16 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "AntiCosine".to_string(),
+            name: "AntiCos".to_string(),
             params: 1,
             docs: "
             Anti Cosine (with respect to geometric anti-product)
+            Be careful not to confuse with \"acos\" aka \"arccos\" aka \"inverse cosine\".
             ".to_string(),
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "Tangent".to_string(),
+            name: "Tan".to_string(),
             params: 1,
             docs: "
             Tangent (with respect to geometric product)
@@ -3381,10 +3618,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         })?;
 
         emitter.emit(&AstNode::TraitDefinition {
-            name: "AntiTangent".to_string(),
+            name: "AntiTan".to_string(),
             params: 1,
             docs: "
             Anti Tangent (with respect to geometric anti-product)
+            Be careful not to confuse with \"atan\" aka \"arctan\" aka \"inverse tangent\".
             ".to_string(),
         })?;
 
@@ -3401,6 +3639,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             params: 1,
             docs: "
             Anti Hyperbolic Sine (with respect to geometric anti-product)
+            Be careful not to confuse with \"asinh\" aka \"arcsinh\" aka \"inverse hyperbolic sine\".
             ".to_string(),
         })?;
 
@@ -3417,6 +3656,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             params: 1,
             docs: "
             Anti Hyperbolic Cosine (with respect to geometric anti-product)
+            Be careful not to confuse with \"acosh\" aka \"arccosh\" aka \"inverse hyperbolic cosine\".
             ".to_string(),
         })?;
 
@@ -3433,6 +3673,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             params: 1,
             docs: "
             Anti Hyperbolic Tangent (with respect to geometric anti-product)
+            Be careful not to confuse with \"atanh\" aka \"arctanh\" aka \"inverse hyperbolic tangent\".
             ".to_string(),
         })?;
 
@@ -3528,10 +3769,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // todo power-of-n
         let trait_names = [
-            "Square", "AntiSquare", /*"Inverse", "AntiInverse",*/
+            /*"Square", "AntiSquare",*/ /*"Inverse", "AntiInverse",*/
             /*"Sqrt",*/ "AntiSqrt", "InverseSqrt", "AntiInverseSqrt",
-            "Exp", "AntiExp", "Sine", "AntiSine",
-            "Cosine", "AntiCosine", "Tangent", "AntiTangent",
+            "Exp", "AntiExp", "Sin", "AntiSin",
+            "Cos", "AntiCos", "Tan", "AntiTan",
             "Sinh", "AntiSinh", "Cosh", "AntiCosh",
             "Tanh", "AntiTanh"
         ];

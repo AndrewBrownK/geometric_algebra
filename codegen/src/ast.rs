@@ -53,6 +53,13 @@ pub enum ExpressionContent<'a> {
     Equal(Box<Expression<'a>>, Box<Expression<'a>>),
     LogicAnd(Box<Expression<'a>>, Box<Expression<'a>>),
     BitShiftRight(Box<Expression<'a>>, Box<Expression<'a>>),
+    Exp(Box<Expression<'a>>),
+    Sin(Box<Expression<'a>>),
+    Cos(Box<Expression<'a>>),
+    Tan(Box<Expression<'a>>),
+    Sinh(Box<Expression<'a>>),
+    Cosh(Box<Expression<'a>>),
+    Tanh(Box<Expression<'a>>),
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]

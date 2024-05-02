@@ -38,6 +38,13 @@ pub trait CenterBulkNormSquared {
     fn center_bulk_norm_squared(self) -> Self::Output;
 }
 
+/// GeometricNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait GeometricNorm {
+    type Output;
+    fn geometric_norm(self) -> Self::Output;
+}
+
 /// UnitizedNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait UnitizedNorm {
@@ -50,6 +57,13 @@ pub trait UnitizedNorm {
 pub trait UnitizedNormSquared {
     type Output;
     fn unitized_norm_squared(self) -> Self::Output;
+}
+
+/// WeightNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait WeightNorm {
+    type Output;
+    fn weight_norm(self) -> Self::Output;
 }
 
 /// WeightNormSquared
@@ -728,6 +742,454 @@ impl WeightNormSquared for Translator {
 
     fn weight_norm_squared(self) -> AntiScalar {
         self.anti_dot(self)
+    }
+}
+
+impl WeightNorm for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Circle {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for CircleBulk {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for CircleCarrierAspect {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Dipole {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for DipoleBulk {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for DipoleCarrierAspect {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for DualNum {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for FlatPoint {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for FlatPointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Flector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Line {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for LineAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Motor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for MultiVector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Plane {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for PlaneAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Rotor {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for RoundPoint {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for RoundPointAtInfinity {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for RoundPointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for RoundPointBulk {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for RoundPointCarrierAspect {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Scalar {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for SpacialCurvature {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Sphere {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Transflector {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for Translator {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl GeometricNorm for AntiScalar {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Circle {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for CircleBulk {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Dipole {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for DipoleBulk {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for DipoleCarrierAspect {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for DualNum {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for FlatPoint {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for FlatPointAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Flector {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Line {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for LineAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Motor {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for MultiVector {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Plane {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for PlaneAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Rotor {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for RoundPoint {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for RoundPointAtInfinity {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for RoundPointAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for RoundPointBulk {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for RoundPointCarrierAspect {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Scalar {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for SpacialCurvature {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Sphere {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Transflector {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for Translator {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
     }
 }
 

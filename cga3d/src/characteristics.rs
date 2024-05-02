@@ -14,18 +14,6 @@ use crate::products::geometric::GeometricAntiProduct;
 use crate::products::geometric::GeometricProduct;
 use crate::*;
 
-/// Square (with respect to geometric product)
-pub trait Square {
-    type Output;
-    fn square(self) -> Self::Output;
-}
-
-/// Anti Square (with respect to geometric anti-product)
-pub trait AntiSquare {
-    type Output;
-    fn anti_square(self) -> Self::Output;
-}
-
 /// Inverse, as in `x^-1` (with respect to geometric product).
 /// Useful to define the geometric quotient.
 /// Not to be confused with the "Point Inversion" or "Sphere Inversion" operations.
@@ -79,39 +67,42 @@ pub trait AntiExp {
 }
 
 /// Sine (with respect to geometric product)
-pub trait Sine {
+pub trait Sin {
     type Output;
-    fn sine(self) -> Self::Output;
+    fn sin(self) -> Self::Output;
 }
 
 /// Anti Sine (with respect to geometric anti-product)
-pub trait AntiSine {
+/// Be careful not to confuse with "asin" aka "arcsin" aka "inverse sine".
+pub trait AntiSin {
     type Output;
-    fn anti_sine(self) -> Self::Output;
+    fn anti_sin(self) -> Self::Output;
 }
 
 /// Cosine (with respect to geometric product)
-pub trait Cosine {
+pub trait Cos {
     type Output;
-    fn cosine(self) -> Self::Output;
+    fn cos(self) -> Self::Output;
 }
 
 /// Anti Cosine (with respect to geometric anti-product)
-pub trait AntiCosine {
+/// Be careful not to confuse with "acos" aka "arccos" aka "inverse cosine".
+pub trait AntiCos {
     type Output;
-    fn anti_cosine(self) -> Self::Output;
+    fn anti_cos(self) -> Self::Output;
 }
 
 /// Tangent (with respect to geometric product)
-pub trait Tangent {
+pub trait Tan {
     type Output;
-    fn tangent(self) -> Self::Output;
+    fn tan(self) -> Self::Output;
 }
 
 /// Anti Tangent (with respect to geometric anti-product)
-pub trait AntiTangent {
+/// Be careful not to confuse with "atan" aka "arctan" aka "inverse tangent".
+pub trait AntiTan {
     type Output;
-    fn anti_tangent(self) -> Self::Output;
+    fn anti_tan(self) -> Self::Output;
 }
 
 /// Hyperbolic Sine (with respect to geometric product)
@@ -121,6 +112,7 @@ pub trait Sinh {
 }
 
 /// Anti Hyperbolic Sine (with respect to geometric anti-product)
+/// Be careful not to confuse with "asinh" aka "arcsinh" aka "inverse hyperbolic sine".
 pub trait AntiSinh {
     type Output;
     fn anti_sinh(self) -> Self::Output;
@@ -133,6 +125,7 @@ pub trait Cosh {
 }
 
 /// Anti Hyperbolic Cosine (with respect to geometric anti-product)
+/// Be careful not to confuse with "acosh" aka "arccosh" aka "inverse hyperbolic cosine".
 pub trait AntiCosh {
     type Output;
     fn anti_cosh(self) -> Self::Output;
@@ -145,6 +138,7 @@ pub trait Tanh {
 }
 
 /// Anti Hyperbolic Tangent (with respect to geometric anti-product)
+/// Be careful not to confuse with "atanh" aka "arctanh" aka "inverse hyperbolic tangent".
 pub trait AntiTanh {
     type Output;
     fn anti_tanh(self) -> Self::Output;
@@ -1179,9 +1173,10 @@ impl Sqrt for DualNum {
     fn sqrt(self) -> DualNum {
         let mut s: f32 = self.group0()[0];
         let mut t: f32 = self.group0()[1];
+        let mut sqrt_s: f32 = s.sqrt();
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([s.sqrt(), t / (2.0 * s.sqrt())]),
+                g0: Simd32x2::from([sqrt_s, t / (2.0 * sqrt_s)]),
             },
         }
     }
@@ -2049,15 +2044,127 @@ impl Inverse for Translator {
     }
 }
 
+impl AntiCos for DualNum {
+    type Output = DualNum;
+
+    fn anti_cos(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([-1.0 * s * f32::sin(t), f32::cos(t)]),
+            },
+        }
+    }
+}
+
+impl AntiCosh for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_cosh(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: f32::cosh(self.group0()) },
+        }
+    }
+}
+
+impl AntiCosh for DualNum {
+    type Output = DualNum;
+
+    fn anti_cosh(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * f32::sinh(t), f32::cosh(t)]),
+            },
+        }
+    }
+}
+
+impl AntiExp for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_exp(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: f32::exp(self.group0()) },
+        }
+    }
+}
+
+impl AntiExp for DualNum {
+    type Output = DualNum;
+
+    fn anti_exp(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut exp_t: f32 = f32::exp(t);
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * exp_t, exp_t]),
+            },
+        }
+    }
+}
+
+impl AntiInverseSqrt for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_inverse_sqrt(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: 1.0 / self.group0().sqrt() },
+        }
+    }
+}
+
 impl AntiInverseSqrt for DualNum {
     type Output = DualNum;
 
     fn anti_inverse_sqrt(self) -> DualNum {
         let mut s: f32 = self.group0()[0];
         let mut t: f32 = self.group0()[1];
+        let mut sqrt_t: f32 = t.sqrt();
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([-1.0 * s / (2.0 * t * t.sqrt()), 1.0 / t.sqrt()]),
+                g0: Simd32x2::from([-1.0 * s / (2.0 * t * sqrt_t), 1.0 / sqrt_t]),
+            },
+        }
+    }
+}
+
+impl AntiSin for DualNum {
+    type Output = DualNum;
+
+    fn anti_sin(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * f32::cos(t), f32::sin(t)]),
+            },
+        }
+    }
+}
+
+impl AntiSinh for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_sinh(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: f32::sinh(self.group0()) },
+        }
+    }
+}
+
+impl AntiSinh for DualNum {
+    type Output = DualNum;
+
+    fn anti_sinh(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * f32::cosh(t), f32::sinh(t)]),
             },
         }
     }
@@ -2079,24 +2186,114 @@ impl AntiSqrt for DualNum {
     fn anti_sqrt(self) -> DualNum {
         let mut s: f32 = self.group0()[0];
         let mut t: f32 = self.group0()[1];
+        let mut sqrt_t: f32 = t.sqrt();
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([s / (2.0 * t.sqrt()), t.sqrt()]),
+                g0: Simd32x2::from([s / (2.0 * sqrt_t), sqrt_t]),
             },
         }
     }
 }
 
-impl AntiSquare for DualNum {
+impl AntiTan for DualNum {
     type Output = DualNum;
 
-    fn anti_square(self) -> DualNum {
+    fn anti_tan(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut tan_t: f32 = f32::tan(t);
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * (1.0 + tan_t * tan_t), tan_t]),
+            },
+        }
+    }
+}
+
+impl AntiTanh for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_tanh(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: f32::tanh(self.group0()) },
+        }
+    }
+}
+
+impl AntiTanh for DualNum {
+    type Output = DualNum;
+
+    fn anti_tanh(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut tanh_t: f32 = f32::tanh(t);
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s * (1.0 - tanh_t * tanh_t), tanh_t]),
+            },
+        }
+    }
+}
+
+impl Cos for DualNum {
+    type Output = DualNum;
+
+    fn cos(self) -> DualNum {
         let mut s: f32 = self.group0()[0];
         let mut t: f32 = self.group0()[1];
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([2.0 * s * t, t * t]),
+                g0: Simd32x2::from([f32::cos(s), -1.0 * t * f32::sin(s)]),
             },
+        }
+    }
+}
+
+impl Cosh for DualNum {
+    type Output = DualNum;
+
+    fn cosh(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([f32::cosh(s), t * f32::sinh(s)]),
+            },
+        }
+    }
+}
+
+impl Cosh for Scalar {
+    type Output = Scalar;
+
+    fn cosh(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: f32::cosh(self.group0()) },
+        }
+    }
+}
+
+impl Exp for DualNum {
+    type Output = DualNum;
+
+    fn exp(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut exp_s: f32 = f32::exp(s);
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([exp_s, t * exp_s]),
+            },
+        }
+    }
+}
+
+impl Exp for Scalar {
+    type Output = Scalar;
+
+    fn exp(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: f32::exp(self.group0()) },
         }
     }
 }
@@ -2107,24 +2304,99 @@ impl InverseSqrt for DualNum {
     fn inverse_sqrt(self) -> DualNum {
         let mut s: f32 = self.group0()[0];
         let mut t: f32 = self.group0()[1];
+        let mut sqrt_s: f32 = s.sqrt();
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([1.0 / s.sqrt(), -1.0 * t / (2.0 * s * s.sqrt())]),
+                g0: Simd32x2::from([1.0 / sqrt_s, -1.0 * t / (2.0 * s * sqrt_s)]),
             },
         }
     }
 }
 
-impl Square for DualNum {
+impl InverseSqrt for Scalar {
+    type Output = Scalar;
+
+    fn inverse_sqrt(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: 1.0 / self.group0().sqrt() },
+        }
+    }
+}
+
+impl Sin for DualNum {
     type Output = DualNum;
 
-    fn square(self) -> DualNum {
+    fn sin(self) -> DualNum {
         let mut s: f32 = self.group0()[0];
         let mut t: f32 = self.group0()[1];
         DualNum {
             groups: DualNumGroups {
-                g0: Simd32x2::from([s * s, 2.0 * s * t]),
+                g0: Simd32x2::from([f32::sin(s), t * f32::cos(s)]),
             },
+        }
+    }
+}
+
+impl Sinh for DualNum {
+    type Output = DualNum;
+
+    fn sinh(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([f32::sinh(s), t * f32::cosh(s)]),
+            },
+        }
+    }
+}
+
+impl Sinh for Scalar {
+    type Output = Scalar;
+
+    fn sinh(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: f32::sinh(self.group0()) },
+        }
+    }
+}
+
+impl Tan for DualNum {
+    type Output = DualNum;
+
+    fn tan(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut tan_s: f32 = f32::tan(s);
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([tan_s, t * (1.0 + tan_s * tan_s)]),
+            },
+        }
+    }
+}
+
+impl Tanh for DualNum {
+    type Output = DualNum;
+
+    fn tanh(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut tanh_s: f32 = f32::tanh(s);
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([tanh_s, t * (1.0 - tanh_s * tanh_s)]),
+            },
+        }
+    }
+}
+
+impl Tanh for Scalar {
+    type Output = Scalar;
+
+    fn tanh(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: f32::tanh(self.group0()) },
         }
     }
 }

@@ -2227,6 +2227,294 @@ impl Sandwich<Translator> for Translator {
     }
 }
 
+impl PointInversion<Flector> for Point {
+    type Output = Flector;
+
+    fn point_inversion(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlectorAtInfinity> for Point {
+    type Output = FlectorAtInfinity;
+
+    fn point_inversion(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Horizon> for Point {
+    type Output = Horizon;
+
+    fn point_inversion(self, other: Horizon) -> Horizon {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Line> for Point {
+    type Output = Line;
+
+    fn point_inversion(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<LineAtInfinity> for Point {
+    type Output = LineAtInfinity;
+
+    fn point_inversion(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<LineAtOrigin> for Point {
+    type Output = LineAtOrigin;
+
+    fn point_inversion(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Motor> for Point {
+    type Output = Motor;
+
+    fn point_inversion(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<MultiVector> for Point {
+    type Output = MultiVector;
+
+    fn point_inversion(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<MultiVectorAtInfinity> for Point {
+    type Output = MultiVectorAtInfinity;
+
+    fn point_inversion(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<MultiVectorAtOrigin> for Point {
+    type Output = MultiVectorAtOrigin;
+
+    fn point_inversion(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Origin> for Point {
+    type Output = Origin;
+
+    fn point_inversion(self, other: Origin) -> Origin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Plane> for Point {
+    type Output = Plane;
+
+    fn point_inversion(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<PlaneAtOrigin> for Point {
+    type Output = PlaneAtOrigin;
+
+    fn point_inversion(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Point> for Point {
+    type Output = Point;
+
+    fn point_inversion(self, other: Point) -> Point {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<PointAtInfinity> for Point {
+    type Output = PointAtInfinity;
+
+    fn point_inversion(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Rotor> for Point {
+    type Output = Rotor;
+
+    fn point_inversion(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Transflector> for Point {
+    type Output = Transflector;
+
+    fn point_inversion(self, other: Transflector) -> Transflector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Translator> for Point {
+    type Output = Translator;
+
+    fn point_inversion(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Flector> for Plane {
+    type Output = Flector;
+
+    fn reflect(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<FlectorAtInfinity> for Plane {
+    type Output = FlectorAtInfinity;
+
+    fn reflect(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Horizon> for Plane {
+    type Output = Horizon;
+
+    fn reflect(self, other: Horizon) -> Horizon {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Line> for Plane {
+    type Output = Line;
+
+    fn reflect(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<LineAtInfinity> for Plane {
+    type Output = LineAtInfinity;
+
+    fn reflect(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<LineAtOrigin> for Plane {
+    type Output = LineAtOrigin;
+
+    fn reflect(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Motor> for Plane {
+    type Output = Motor;
+
+    fn reflect(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn reflect(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<MultiVectorAtInfinity> for Plane {
+    type Output = MultiVectorAtInfinity;
+
+    fn reflect(self, other: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<MultiVectorAtOrigin> for Plane {
+    type Output = MultiVectorAtOrigin;
+
+    fn reflect(self, other: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Origin> for Plane {
+    type Output = Origin;
+
+    fn reflect(self, other: Origin) -> Origin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Plane> for Plane {
+    type Output = Plane;
+
+    fn reflect(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<PlaneAtOrigin> for Plane {
+    type Output = PlaneAtOrigin;
+
+    fn reflect(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Point> for Plane {
+    type Output = Point;
+
+    fn reflect(self, other: Point) -> Point {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<PointAtInfinity> for Plane {
+    type Output = PointAtInfinity;
+
+    fn reflect(self, other: PointAtInfinity) -> PointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Rotor> for Plane {
+    type Output = Rotor;
+
+    fn reflect(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Transflector> for Plane {
+    type Output = Transflector;
+
+    fn reflect(self, other: Transflector) -> Transflector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Translator> for Plane {
+    type Output = Translator;
+
+    fn reflect(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl Rotate<Flector> for Rotor {
     type Output = Flector;
 

@@ -9179,6 +9179,550 @@ impl Sandwich<Translator> for Translator {
     }
 }
 
+impl PointInversion<Circle> for FlatPoint {
+    type Output = Circle;
+
+    fn point_inversion(self, other: Circle) -> Circle {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleBulk> for FlatPoint {
+    type Output = CircleBulk;
+
+    fn point_inversion(self, other: CircleBulk) -> CircleBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleCarrierAspect> for FlatPoint {
+    type Output = CircleCarrierAspect;
+
+    fn point_inversion(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleWeight> for FlatPoint {
+    type Output = CircleWeight;
+
+    fn point_inversion(self, other: CircleWeight) -> CircleWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Dipole> for FlatPoint {
+    type Output = Dipole;
+
+    fn point_inversion(self, other: Dipole) -> Dipole {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<DipoleBulk> for FlatPoint {
+    type Output = DipoleBulk;
+
+    fn point_inversion(self, other: DipoleBulk) -> DipoleBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<DipoleCarrierAspect> for FlatPoint {
+    type Output = DipoleCarrierAspect;
+
+    fn point_inversion(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<DipoleWeight> for FlatPoint {
+    type Output = DipoleWeight;
+
+    fn point_inversion(self, other: DipoleWeight) -> DipoleWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlatPoint> for FlatPoint {
+    type Output = FlatPoint;
+
+    fn point_inversion(self, other: FlatPoint) -> FlatPoint {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlatPointAtInfinity> for FlatPoint {
+    type Output = FlatPointAtInfinity;
+
+    fn point_inversion(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlatPointAtOrigin> for FlatPoint {
+    type Output = FlatPointAtOrigin;
+
+    fn point_inversion(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Flector> for FlatPoint {
+    type Output = Flector;
+
+    fn point_inversion(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<FlectorAtInfinity> for FlatPoint {
+    type Output = FlectorAtInfinity;
+
+    fn point_inversion(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Horizon> for FlatPoint {
+    type Output = Horizon;
+
+    fn point_inversion(self, other: Horizon) -> Horizon {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Infinity> for FlatPoint {
+    type Output = Infinity;
+
+    fn point_inversion(self, other: Infinity) -> Infinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Line> for FlatPoint {
+    type Output = Line;
+
+    fn point_inversion(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<LineAtInfinity> for FlatPoint {
+    type Output = LineAtInfinity;
+
+    fn point_inversion(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<LineAtOrigin> for FlatPoint {
+    type Output = LineAtOrigin;
+
+    fn point_inversion(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Motor> for FlatPoint {
+    type Output = Motor;
+
+    fn point_inversion(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<MultiVector> for FlatPoint {
+    type Output = MultiVector;
+
+    fn point_inversion(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Origin> for FlatPoint {
+    type Output = Origin;
+
+    fn point_inversion(self, other: Origin) -> Origin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Plane> for FlatPoint {
+    type Output = Plane;
+
+    fn point_inversion(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<PlaneAtOrigin> for FlatPoint {
+    type Output = PlaneAtOrigin;
+
+    fn point_inversion(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Rotor> for FlatPoint {
+    type Output = Rotor;
+
+    fn point_inversion(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPoint> for FlatPoint {
+    type Output = RoundPoint;
+
+    fn point_inversion(self, other: RoundPoint) -> RoundPoint {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointAtInfinity> for FlatPoint {
+    type Output = RoundPointAtInfinity;
+
+    fn point_inversion(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointAtOrigin> for FlatPoint {
+    type Output = RoundPointAtOrigin;
+
+    fn point_inversion(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointBulk> for FlatPoint {
+    type Output = RoundPointBulk;
+
+    fn point_inversion(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<RoundPointCarrierAspect> for FlatPoint {
+    type Output = RoundPointCarrierAspect;
+
+    fn point_inversion(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<SpacialCurvature> for FlatPoint {
+    type Output = SpacialCurvature;
+
+    fn point_inversion(self, other: SpacialCurvature) -> SpacialCurvature {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Sphere> for FlatPoint {
+    type Output = Sphere;
+
+    fn point_inversion(self, other: Sphere) -> Sphere {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<SphereWeight> for FlatPoint {
+    type Output = SphereWeight;
+
+    fn point_inversion(self, other: SphereWeight) -> SphereWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Transflector> for FlatPoint {
+    type Output = Transflector;
+
+    fn point_inversion(self, other: Transflector) -> Transflector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<Translator> for FlatPoint {
+    type Output = Translator;
+
+    fn point_inversion(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Circle> for Plane {
+    type Output = Circle;
+
+    fn reflect(self, other: Circle) -> Circle {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<CircleBulk> for Plane {
+    type Output = CircleBulk;
+
+    fn reflect(self, other: CircleBulk) -> CircleBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<CircleCarrierAspect> for Plane {
+    type Output = CircleCarrierAspect;
+
+    fn reflect(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<CircleWeight> for Plane {
+    type Output = CircleWeight;
+
+    fn reflect(self, other: CircleWeight) -> CircleWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Dipole> for Plane {
+    type Output = Dipole;
+
+    fn reflect(self, other: Dipole) -> Dipole {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<DipoleBulk> for Plane {
+    type Output = DipoleBulk;
+
+    fn reflect(self, other: DipoleBulk) -> DipoleBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<DipoleCarrierAspect> for Plane {
+    type Output = DipoleCarrierAspect;
+
+    fn reflect(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<DipoleWeight> for Plane {
+    type Output = DipoleWeight;
+
+    fn reflect(self, other: DipoleWeight) -> DipoleWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<FlatPoint> for Plane {
+    type Output = FlatPoint;
+
+    fn reflect(self, other: FlatPoint) -> FlatPoint {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<FlatPointAtInfinity> for Plane {
+    type Output = FlatPointAtInfinity;
+
+    fn reflect(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<FlatPointAtOrigin> for Plane {
+    type Output = FlatPointAtOrigin;
+
+    fn reflect(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Flector> for Plane {
+    type Output = Flector;
+
+    fn reflect(self, other: Flector) -> Flector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<FlectorAtInfinity> for Plane {
+    type Output = FlectorAtInfinity;
+
+    fn reflect(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Horizon> for Plane {
+    type Output = Horizon;
+
+    fn reflect(self, other: Horizon) -> Horizon {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Infinity> for Plane {
+    type Output = Infinity;
+
+    fn reflect(self, other: Infinity) -> Infinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Line> for Plane {
+    type Output = Line;
+
+    fn reflect(self, other: Line) -> Line {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<LineAtInfinity> for Plane {
+    type Output = LineAtInfinity;
+
+    fn reflect(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<LineAtOrigin> for Plane {
+    type Output = LineAtOrigin;
+
+    fn reflect(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Motor> for Plane {
+    type Output = Motor;
+
+    fn reflect(self, other: Motor) -> Motor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<MultiVector> for Plane {
+    type Output = MultiVector;
+
+    fn reflect(self, other: MultiVector) -> MultiVector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Origin> for Plane {
+    type Output = Origin;
+
+    fn reflect(self, other: Origin) -> Origin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Plane> for Plane {
+    type Output = Plane;
+
+    fn reflect(self, other: Plane) -> Plane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<PlaneAtOrigin> for Plane {
+    type Output = PlaneAtOrigin;
+
+    fn reflect(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Rotor> for Plane {
+    type Output = Rotor;
+
+    fn reflect(self, other: Rotor) -> Rotor {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<RoundPoint> for Plane {
+    type Output = RoundPoint;
+
+    fn reflect(self, other: RoundPoint) -> RoundPoint {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<RoundPointAtInfinity> for Plane {
+    type Output = RoundPointAtInfinity;
+
+    fn reflect(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<RoundPointAtOrigin> for Plane {
+    type Output = RoundPointAtOrigin;
+
+    fn reflect(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<RoundPointBulk> for Plane {
+    type Output = RoundPointBulk;
+
+    fn reflect(self, other: RoundPointBulk) -> RoundPointBulk {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<RoundPointCarrierAspect> for Plane {
+    type Output = RoundPointCarrierAspect;
+
+    fn reflect(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<SpacialCurvature> for Plane {
+    type Output = SpacialCurvature;
+
+    fn reflect(self, other: SpacialCurvature) -> SpacialCurvature {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Sphere> for Plane {
+    type Output = Sphere;
+
+    fn reflect(self, other: Sphere) -> Sphere {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<SphereWeight> for Plane {
+    type Output = SphereWeight;
+
+    fn reflect(self, other: SphereWeight) -> SphereWeight {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Transflector> for Plane {
+    type Output = Transflector;
+
+    fn reflect(self, other: Transflector) -> Transflector {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<Translator> for Plane {
+    type Output = Translator;
+
+    fn reflect(self, other: Translator) -> Translator {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl Rotate<Circle> for Rotor {
     type Output = Circle;
 

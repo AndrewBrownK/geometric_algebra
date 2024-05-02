@@ -159,17 +159,21 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
         },
         ExpressionContent::ConstructVec(data_type, values) => match data_type {
             DataType::SimdVector(size) => {
-                emit_data_type(collector, &DataType::SimdVector(*size))?;
-                collector.write_all(b"::from([")?;
-                let mut first = true;
-                for value in values {
-                    if !first {
-                        collector.write_all(b", ")?;
+                if *size == 1 && values.len() == 1 {
+                    emit_expression(collector, &values[0])?;
+                } else {
+                    emit_data_type(collector, &DataType::SimdVector(*size))?;
+                    collector.write_all(b"::from([")?;
+                    let mut first = true;
+                    for value in values {
+                        if !first {
+                            collector.write_all(b", ")?;
+                        }
+                        first = false;
+                        emit_expression(collector, value)?;
                     }
-                    first = false;
-                    emit_expression(collector, value)?;
+                    collector.write_all(b"])")?;
                 }
-                collector.write_all(b"])")?;
             }
             _ => unreachable!(),
         }
@@ -185,13 +189,37 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
         | ExpressionContent::Equal(lhs, rhs)
         | ExpressionContent::LogicAnd(lhs, rhs)
         | ExpressionContent::BitShiftRight(lhs, rhs) => {
-            emit_expression(collector, lhs)?;
+            let mut group_lhs = false;
             let mut group_rhs = false;
-            collector.write_all(match &expression.content {
-                ExpressionContent::Add(_, _) => b" + ",
-                ExpressionContent::Subtract(_, _) => b" - ",
-                ExpressionContent::Multiply(_, _) => b" * ",
-                ExpressionContent::Divide(_, r) => {
+            match &expression.content {
+                ExpressionContent::Subtract(_, r) => {
+                    group_rhs = match &r.content {
+                        ExpressionContent::Add(_, _) => true,
+                        ExpressionContent::Subtract(_, _) => true,
+                        _ => false,
+                    };
+                }
+                ExpressionContent::Multiply(l, r) => {
+                    group_lhs = match &l.content {
+                        ExpressionContent::Add(_, _) => true,
+                        ExpressionContent::Subtract(_, _) => true,
+                        ExpressionContent::Divide(_, _) => true,
+                        _ => false,
+                    };
+                    group_rhs = match &r.content {
+                        ExpressionContent::Add(_, _) => true,
+                        ExpressionContent::Subtract(_, _) => true,
+                        ExpressionContent::Divide(_, _) => true,
+                        _ => false,
+                    };
+                },
+                ExpressionContent::Divide(l, r) => {
+                    group_lhs = match &l.content {
+                        ExpressionContent::Add(_, _) => true,
+                        ExpressionContent::Subtract(_, _) => true,
+                        ExpressionContent::Divide(_, _) => true,
+                        _ => false,
+                    };
                     group_rhs = match &r.content {
                         ExpressionContent::Add(_, _) => true,
                         ExpressionContent::Subtract(_, _) => true,
@@ -199,8 +227,21 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                         ExpressionContent::Divide(_, _) => true,
                         _ => false,
                     };
-                    b" / "
                 },
+                _ => {}
+            }
+            if group_lhs {
+                collector.write_all(b"(")?;
+            }
+            emit_expression(collector, lhs)?;
+            if group_lhs {
+                collector.write_all(b")")?;
+            }
+            collector.write_all(match &expression.content {
+                ExpressionContent::Add(_, _) => b" + ",
+                ExpressionContent::Subtract(_, _) => b" - ",
+                ExpressionContent::Multiply(_, r) => b" * ",
+                ExpressionContent::Divide(_, r) => b" / ",
                 ExpressionContent::LessThan(_, _) => b" < ",
                 ExpressionContent::Equal(_, _) => b" == ",
                 ExpressionContent::LogicAnd(_, _) => b" & ",
@@ -214,6 +255,41 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             if group_rhs {
                 collector.write_all(b")")?;
             }
+        }
+        ExpressionContent::Exp(inner_expression) => {
+            collector.write_all(b"f32::exp(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
+        }
+        ExpressionContent::Sin(inner_expression) => {
+            collector.write_all(b"f32::sin(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
+        }
+        ExpressionContent::Cos(inner_expression) => {
+            collector.write_all(b"f32::cos(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
+        }
+        ExpressionContent::Tan(inner_expression) => {
+            collector.write_all(b"f32::tan(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
+        }
+        ExpressionContent::Sinh(inner_expression) => {
+            collector.write_all(b"f32::sinh(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
+        }
+        ExpressionContent::Cosh(inner_expression) => {
+            collector.write_all(b"f32::cosh(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
+        }
+        ExpressionContent::Tanh(inner_expression) => {
+            collector.write_all(b"f32::tanh(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b")")?;
         }
     }
     Ok(())

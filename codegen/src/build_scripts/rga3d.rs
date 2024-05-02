@@ -213,7 +213,7 @@ use crate::products::geometric::GeometricAntiProduct;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::characteristics::Sqrt;
+use crate::characteristics::*;
 use crate::products::dot::{AntiDot, Dot};",
     )?;
     code_gen.emit_norms(&mut emitter)?;
