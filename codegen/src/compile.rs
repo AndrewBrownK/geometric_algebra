@@ -1904,6 +1904,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(&mut self, registry: &'r MultiVectorClassRegistry) {
 
+        // TODO hardly any of these are getting emitted
+
         // TODO see page 197 of the book (and onward) for formulas to check against
 
         // It is not elaborated very much, but one can infer/detect a few things from the CGA poster.
@@ -2042,6 +2044,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     expression: Box::new(round_weight),
                 };
                 let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
+                // TODO cannot find Origin anti_dot Origin
+                // TODO IT'S TRUE.... ORIGIN ANTIDOT ORIGIN IS ZERO....
+                //  So I need to reformulate these round features entirely...
                 let rw_anti_dot_rw = self.trait_impls.get_pair_invocation(anti_dot, var_round_weight.clone(), var_round_weight)?;
                 let anti_dot_datatype = rw_anti_dot_rw.data_type_hint.clone()?;
 
@@ -2060,7 +2065,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 // Center Weight Norm
 
                 let bns = self.trait_impls.get_single_invocation(center_weight_norm_squared, variable(&param_a))?;
-                let sqrt = self.trait_impls.get_single_invocation("Sqrt", bns)?;
+                let sqrt = self.trait_impls.get_single_invocation("AntiSqrt", bns)?;
                 let the_impl = single_expression_single_trait_impl(center_weight_norm, &param_a, sqrt);
                 self.trait_impls.add_single_impl(center_weight_norm, param_a.clone(), the_impl);
 
@@ -2232,10 +2237,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(radius_weight_norm_squared, param_a.clone(), the_impl);
 
 
-                // Center Weight Norm
+                // Radius Weight Norm
 
                 let wns = self.trait_impls.get_single_invocation(radius_weight_norm_squared, variable(&param_a))?;
-                let sqrt = self.trait_impls.get_single_invocation("Sqrt", wns)?;
+                let sqrt = self.trait_impls.get_single_invocation("AntiSqrt", wns)?;
                 let the_impl = single_expression_single_trait_impl(radius_weight_norm, &param_a, sqrt);
                 self.trait_impls.add_single_impl(radius_weight_norm, param_a.clone(), the_impl);
 
@@ -2272,7 +2277,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_single_impl(radius_unitized_norm_squared, param_a.clone(), the_impl);
 
 
-                // Center Unitized Norm
+                // Radius Unitized Norm
 
                 let uns = self.trait_impls.get_single_invocation(radius_unitized_norm_squared, variable(&param_a))?;
                 let sqrt = Expression {
@@ -3758,7 +3763,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             })?;
         }
 
-        let trait_names = ["Sqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier"];
+        let trait_names = ["Sqrt", "AntiSqrt", "Grade", "AntiGrade", "Attitude", "Carrier", "CoCarrier"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         let trait_names = ["Container", "Center"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
@@ -3770,7 +3775,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // todo power-of-n
         let trait_names = [
             /*"Square", "AntiSquare",*/ /*"Inverse", "AntiInverse",*/
-            /*"Sqrt",*/ "AntiSqrt", "InverseSqrt", "AntiInverseSqrt",
+            /*"Sqrt", "AntiSqrt",*/ "InverseSqrt", "AntiInverseSqrt",
             "Exp", "AntiExp", "Sin", "AntiSin",
             "Cos", "AntiCos", "Tan", "AntiTan",
             "Sinh", "AntiSinh", "Cosh", "AntiCosh",
