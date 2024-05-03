@@ -235,6 +235,13 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 collector.write_all(b")")?;
             }
         }
+        ExpressionContent::Pow(inner_expression, power) => {
+            collector.write_all(b"pow(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b", ")?;
+            emit_expression(collector, power)?;
+            collector.write_all(b")")?;
+        }
         ExpressionContent::Exp(inner_expression) => {
             collector.write_all(b"exp(")?;
             emit_expression(collector, inner_expression)?;

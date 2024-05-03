@@ -18454,6 +18454,17 @@ int scalar__grade() {
     return 0;
 }
 
+AntiScalar anti_scalar__anti_sqrt(AntiScalar self) {
+    return AntiScalar(sqrt(self.g0));
+}
+
+DualNum dual_num__anti_sqrt(DualNum self) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    float sqrt_t = sqrt(t);
+    return DualNum(vec2(s / (2.0 * sqrt_t), sqrt_t));
+}
+
 Horizon anti_scalar__attitude(AntiScalar self) {
     return anti_scalar__anti_wedge__horizon(self, horizon__one());
 }
@@ -18687,6 +18698,16 @@ DualNum dual_num__anti_inverse_sqrt(DualNum self) {
     return DualNum(vec2(-1.0 * s / (2.0 * t * sqrt_t), 1.0 / sqrt_t));
 }
 
+AntiScalar anti_scalar__anti_pow(AntiScalar self, float other) {
+    return AntiScalar(pow(self.g0, other));
+}
+
+DualNum dual_num__anti_pow(DualNum self, float other) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(other * pow(t, other - 1.0) * s, pow(t, other)));
+}
+
 DualNum dual_num__anti_sin(DualNum self) {
     float s = self.g0.x;
     float t = self.g0.y;
@@ -18701,17 +18722,6 @@ DualNum dual_num__anti_sinh(DualNum self) {
     float s = self.g0.x;
     float t = self.g0.y;
     return DualNum(vec2(s * cosh(t), sinh(t)));
-}
-
-AntiScalar anti_scalar__anti_sqrt(AntiScalar self) {
-    return AntiScalar(sqrt(self.g0));
-}
-
-DualNum dual_num__anti_sqrt(DualNum self) {
-    float s = self.g0.x;
-    float t = self.g0.y;
-    float sqrt_t = sqrt(t);
-    return DualNum(vec2(s / (2.0 * sqrt_t), sqrt_t));
 }
 
 DualNum dual_num__anti_tan(DualNum self) {
@@ -18768,6 +18778,16 @@ DualNum dual_num__inverse_sqrt(DualNum self) {
 
 Scalar scalar__inverse_sqrt(Scalar self) {
     return Scalar(1.0 / sqrt(self.g0));
+}
+
+DualNum dual_num__pow(DualNum self, float other) {
+    float s = self.g0.x;
+    float t = self.g0.y;
+    return DualNum(vec2(pow(s, other), other * pow(s, other - 1.0) * t));
+}
+
+Scalar scalar__pow(Scalar self, float other) {
+    return Scalar(pow(self.g0, other));
 }
 
 DualNum dual_num__sin(DualNum self) {

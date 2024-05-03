@@ -1579,6 +1579,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let one_minus = |a: ExpressionContent<'r>| {
             return sub(ExpressionContent::Constant(DataType::SimdVector(1), vec![1]), a);
         };
+        let minus_one = |a: ExpressionContent<'r>| {
+            return sub(a, ExpressionContent::Constant(DataType::SimdVector(1), vec![1]));
+        };
         let negate = |a: ExpressionContent<'r>| {
             return multiply(ExpressionContent::Constant(DataType::SimdVector(1), vec![-1]), a);
         };
@@ -1605,6 +1608,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         };
         let tanh = |a: ExpressionContent<'r>| {
             return ExpressionContent::Tanh(float_expression(a));
+        };
+        let pow = |a: ExpressionContent<'r>, power: ExpressionContent<'r>| {
+            return ExpressionContent::Pow(float_expression(a), float_expression(power));
         };
 
         let var_s = ExpressionContent::Variable("s");
@@ -1763,6 +1769,40 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             var_tanh_t.clone(),
         );
 
+        let var_other = ExpressionContent::Variable("other");
+        self.trait_impls.add_single_impl("Pow", dual_num_param.clone(), AstNode::TraitImplementation {
+            result: Parameter { name: "Pow", data_type: DataType::MultiVector(dual_num_param.multi_vector_class()) },
+            class: dual_num_param.multi_vector_class(),
+            parameters: vec![dual_num_param.clone(), Parameter {
+                name: "other",
+                data_type: DataType::SimdVector(1),
+            }],
+            body: vec![
+                assign_var_s.clone(),
+                assign_var_t.clone(),
+                return_dual_num(
+                    pow(var_s.clone(), var_other.clone()),
+                    multiply(var_other.clone(), multiply(pow(var_s.clone(), minus_one(var_other.clone())), var_t.clone()))
+                )
+            ],
+        });
+        self.trait_impls.add_single_impl("AntiPow", dual_num_param.clone(), AstNode::TraitImplementation {
+            result: Parameter { name: "AntiPow", data_type: DataType::MultiVector(dual_num_param.multi_vector_class()) },
+            class: dual_num_param.multi_vector_class(),
+            parameters: vec![dual_num_param.clone(), Parameter {
+                name: "other",
+                data_type: DataType::SimdVector(1),
+            }],
+            body: vec![
+                assign_var_s.clone(),
+                assign_var_t.clone(),
+                return_dual_num(
+                    multiply(var_other.clone(), multiply(pow(var_t.clone(), minus_one(var_other.clone())), var_s.clone())),
+                    pow(var_t.clone(), var_other.clone()),
+                )
+            ],
+        });
+
 
         let mut scalar_trait_impl = |name: &'static str, a: ExpressionContent<'r>| {
             let the_impl = AstNode::TraitImplementation {
@@ -1781,6 +1821,15 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         scalar_trait_impl("Sinh", sinh(access_scalar.clone()));
         scalar_trait_impl("Cosh", cosh(access_scalar.clone()));
         scalar_trait_impl("Tanh", tanh(access_scalar.clone()));
+        self.trait_impls.add_single_impl("Pow", scalar_param.clone(), AstNode::TraitImplementation {
+            result: Parameter { name: "Pow", data_type: DataType::MultiVector(scalar_param.multi_vector_class()) },
+            class: scalar_param.multi_vector_class(),
+            parameters: vec![scalar_param.clone(), Parameter {
+                name: "other",
+                data_type: DataType::SimdVector(1),
+            }],
+            body: vec![return_scalar(pow(access_scalar.clone(), var_other.clone()))],
+        });
 
 
         let mut anti_scalar_trait_impl = |name: &'static str, a: ExpressionContent<'r>| {
@@ -1800,6 +1849,15 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         anti_scalar_trait_impl("AntiSinh", sinh(access_anti_scalar.clone()));
         anti_scalar_trait_impl("AntiCosh", cosh(access_anti_scalar.clone()));
         anti_scalar_trait_impl("AntiTanh", tanh(access_anti_scalar.clone()));
+        self.trait_impls.add_single_impl("AntiPow", anti_scalar_param.clone(), AstNode::TraitImplementation {
+            result: Parameter { name: "AntiPow", data_type: DataType::MultiVector(anti_scalar_param.multi_vector_class()) },
+            class: anti_scalar_param.multi_vector_class(),
+            parameters: vec![anti_scalar_param.clone(), Parameter {
+                name: "other",
+                data_type: DataType::SimdVector(1),
+            }],
+            body: vec![return_anti_scalar(pow(access_anti_scalar.clone(), var_other.clone()))],
+        });
 
         Ok(())
     }
@@ -3483,7 +3541,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // Inverse, AntiInverse
         // Sqrt, AntiSqrt,
         // InverseSqrt, AntiInverseSqrt
-        // Exp, AntiExp,
+        // Pow, AntiPow, Exp, AntiExp,
         // Sine, AntiSine, Cosine, AntiCosine, Tangent, AntiTangent,
         // Sinh, AntiSinh, Cosh, AntiCosh, Tanh, AntiTanh
         // Grade, AntiGrade, Attitude,
@@ -3561,6 +3619,22 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             params: 1,
             docs: "
             Anti Inverse Square Root (with respect to geometric anti-product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "Pow".to_string(),
+            params: 2,
+            docs: "
+            Self to the power of other (with respect to geometric product)
+            ".to_string(),
+        })?;
+
+        emitter.emit(&AstNode::TraitDefinition {
+            name: "AntiPow".to_string(),
+            params: 2,
+            docs: "
+            Self to the power of other (with respect to geometric anti-product)
             ".to_string(),
         })?;
 
@@ -3772,8 +3846,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let trait_names = ["Inverse", "AntiInverse"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
 
-        // todo power-of-n
         let trait_names = [
+            "Pow", "AntiPow",
             /*"Square", "AntiSquare",*/ /*"Inverse", "AntiInverse",*/
             /*"Sqrt", "AntiSqrt",*/ "InverseSqrt", "AntiInverseSqrt",
             "Exp", "AntiExp", "Sin", "AntiSin",

@@ -256,6 +256,13 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 collector.write_all(b")")?;
             }
         }
+        ExpressionContent::Pow(inner_expression, power) => {
+            collector.write_all(b"f32::powf(")?;
+            emit_expression(collector, inner_expression)?;
+            collector.write_all(b", ")?;
+            emit_expression(collector, power)?;
+            collector.write_all(b")")?;
+        }
         ExpressionContent::Exp(inner_expression) => {
             collector.write_all(b"f32::exp(")?;
             emit_expression(collector, inner_expression)?;
@@ -643,15 +650,17 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     collector.write_fmt(format_args!("impl {}<{}> for {}", result.name, result_type_name, parameters[0].multi_vector_class().class_name,))?
                 }
                 1 => collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?,
-                2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {
-                    collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?
-                }
-                2 => collector.write_fmt(format_args!(
-                    "impl {}<{}> for {}",
-                    result.name,
-                    parameters[1].multi_vector_class().class_name,
-                    class.class_name,
-                ))?,
+                2 => {
+                    collector.write_fmt(format_args!(
+                        "impl {}<",
+                        result.name,
+                    ))?;
+                    emit_data_type(collector, &parameters[1].data_type)?;
+                    collector.write_fmt(format_args!(
+                        "> for {}",
+                        class.class_name,
+                    ))?;
+                },
                 _ => unreachable!(),
             }
             collector.write_all(b" {\n")?;

@@ -53,6 +53,7 @@ pub enum ExpressionContent<'a> {
     Equal(Box<Expression<'a>>, Box<Expression<'a>>),
     LogicAnd(Box<Expression<'a>>, Box<Expression<'a>>),
     BitShiftRight(Box<Expression<'a>>, Box<Expression<'a>>),
+    Pow(Box<Expression<'a>>, Box<Expression<'a>>),
     Exp(Box<Expression<'a>>),
     Sin(Box<Expression<'a>>),
     Cos(Box<Expression<'a>>),

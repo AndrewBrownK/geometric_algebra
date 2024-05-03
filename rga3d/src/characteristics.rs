@@ -52,6 +52,18 @@ pub trait AntiInverseSqrt {
     fn anti_inverse_sqrt(self) -> Self::Output;
 }
 
+/// Self to the power of other (with respect to geometric product)
+pub trait Pow<T> {
+    type Output;
+    fn pow(self, other: T) -> Self::Output;
+}
+
+/// Self to the power of other (with respect to geometric anti-product)
+pub trait AntiPow<T> {
+    type Output;
+    fn anti_pow(self, other: T) -> Self::Output;
+}
+
 /// Natural Exponentiation (with respect to geometric product)
 pub trait Exp {
     type Output;
@@ -336,6 +348,31 @@ impl Grade for Scalar {
 
     fn grade() -> isize {
         0
+    }
+}
+
+impl AntiSqrt for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_sqrt(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0().sqrt() },
+        }
+    }
+}
+
+impl AntiSqrt for DualNum {
+    type Output = DualNum;
+
+    fn anti_sqrt(self) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        let mut sqrt_t: f32 = t.sqrt();
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([s / (2.0 * sqrt_t), sqrt_t]),
+            },
+        }
     }
 }
 
@@ -824,6 +861,32 @@ impl AntiInverseSqrt for DualNum {
     }
 }
 
+impl AntiPow<f32> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_pow(self, other: f32) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: f32::powf(self.group0(), other),
+            },
+        }
+    }
+}
+
+impl AntiPow<f32> for DualNum {
+    type Output = DualNum;
+
+    fn anti_pow(self, other: f32) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([other * f32::powf(t, other - 1.0) * s, f32::powf(t, other)]),
+            },
+        }
+    }
+}
+
 impl AntiSin for DualNum {
     type Output = DualNum;
 
@@ -857,31 +920,6 @@ impl AntiSinh for DualNum {
         DualNum {
             groups: DualNumGroups {
                 g0: Simd32x2::from([s * f32::cosh(t), f32::sinh(t)]),
-            },
-        }
-    }
-}
-
-impl AntiSqrt for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_sqrt(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0().sqrt() },
-        }
-    }
-}
-
-impl AntiSqrt for DualNum {
-    type Output = DualNum;
-
-    fn anti_sqrt(self) -> DualNum {
-        let mut s: f32 = self.group0()[0];
-        let mut t: f32 = self.group0()[1];
-        let mut sqrt_t: f32 = t.sqrt();
-        DualNum {
-            groups: DualNumGroups {
-                g0: Simd32x2::from([s / (2.0 * sqrt_t), sqrt_t]),
             },
         }
     }
@@ -1011,6 +1049,32 @@ impl InverseSqrt for Scalar {
     fn inverse_sqrt(self) -> Scalar {
         Scalar {
             groups: ScalarGroups { g0: 1.0 / self.group0().sqrt() },
+        }
+    }
+}
+
+impl Pow<f32> for DualNum {
+    type Output = DualNum;
+
+    fn pow(self, other: f32) -> DualNum {
+        let mut s: f32 = self.group0()[0];
+        let mut t: f32 = self.group0()[1];
+        DualNum {
+            groups: DualNumGroups {
+                g0: Simd32x2::from([f32::powf(s, other), other * f32::powf(s, other - 1.0) * t]),
+            },
+        }
+    }
+}
+
+impl Pow<f32> for Scalar {
+    type Output = Scalar;
+
+    fn pow(self, other: f32) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: f32::powf(self.group0(), other),
+            },
         }
     }
 }

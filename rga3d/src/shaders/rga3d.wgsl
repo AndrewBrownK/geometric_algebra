@@ -18454,6 +18454,17 @@ fn scalar__grade() -> i32 {
     return 0;
 }
 
+fn anti_scalar__anti_sqrt(self_: AntiScalar) -> AntiScalar {
+    return AntiScalar(sqrt(self_.g0));
+}
+
+fn dual_num__anti_sqrt(self_: DualNum) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    let sqrt_t: f32 = sqrt(t);
+    return DualNum(vec2<f32>(s / (2.0 * sqrt_t), sqrt_t));
+}
+
 fn anti_scalar__attitude(self_: AntiScalar) -> Horizon {
     return anti_scalar__anti_wedge__horizon(self_, horizon__one());
 }
@@ -18687,6 +18698,16 @@ fn dual_num__anti_inverse_sqrt(self_: DualNum) -> DualNum {
     return DualNum(vec2<f32>(-1.0 * s / (2.0 * t * sqrt_t), 1.0 / sqrt_t));
 }
 
+fn anti_scalar__anti_pow(self_: AntiScalar, other: f32) -> AntiScalar {
+    return AntiScalar(pow(self_.g0, other));
+}
+
+fn dual_num__anti_pow(self_: DualNum, other: f32) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    return DualNum(vec2<f32>(other * pow(t, other - 1.0) * s, pow(t, other)));
+}
+
 fn dual_num__anti_sin(self_: DualNum) -> DualNum {
     let s: f32 = self_.g0.x;
     let t: f32 = self_.g0.y;
@@ -18701,17 +18722,6 @@ fn dual_num__anti_sinh(self_: DualNum) -> DualNum {
     let s: f32 = self_.g0.x;
     let t: f32 = self_.g0.y;
     return DualNum(vec2<f32>(s * cosh(t), sinh(t)));
-}
-
-fn anti_scalar__anti_sqrt(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(sqrt(self_.g0));
-}
-
-fn dual_num__anti_sqrt(self_: DualNum) -> DualNum {
-    let s: f32 = self_.g0.x;
-    let t: f32 = self_.g0.y;
-    let sqrt_t: f32 = sqrt(t);
-    return DualNum(vec2<f32>(s / (2.0 * sqrt_t), sqrt_t));
 }
 
 fn dual_num__anti_tan(self_: DualNum) -> DualNum {
@@ -18768,6 +18778,16 @@ fn dual_num__inverse_sqrt(self_: DualNum) -> DualNum {
 
 fn scalar__inverse_sqrt(self_: Scalar) -> Scalar {
     return Scalar(1.0 / sqrt(self_.g0));
+}
+
+fn dual_num__pow(self_: DualNum, other: f32) -> DualNum {
+    let s: f32 = self_.g0.x;
+    let t: f32 = self_.g0.y;
+    return DualNum(vec2<f32>(pow(s, other), other * pow(s, other - 1.0) * t));
+}
+
+fn scalar__pow(self_: Scalar, other: f32) -> Scalar {
+    return Scalar(pow(self_.g0, other));
 }
 
 fn dual_num__sin(self_: DualNum) -> DualNum {
