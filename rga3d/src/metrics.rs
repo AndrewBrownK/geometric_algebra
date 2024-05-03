@@ -5,10 +5,11 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
-use crate::characteristics::Attitude;
+use crate::characteristics::{Attitude, Sqrt};
+use crate::involutions::AntiDual;
 use crate::norms::*;
-use crate::products::contractions::WeightContraction;
-use crate::products::exterior::Wedge;
+use crate::products::exterior::{AntiWedge, Wedge};
+use crate::products::geometric::{GeometricAntiProduct, GeometricProduct};
 use crate::products::projections::*;
 use crate::unitize::Unitize;
 use crate::*;
@@ -37,194 +38,194 @@ pub trait SineAngle<T> {
 }
 
 impl CosineAngle<Line> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Line) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<LineAtOrigin> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: LineAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Origin> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Origin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Point> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Point) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Line> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Line) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<LineAtOrigin> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: LineAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Origin> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Origin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Point> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Point) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Origin> for Origin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Origin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Point> for Origin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Point) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Line> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Line) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<LineAtOrigin> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: LineAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Origin> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Origin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Plane> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Plane) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Plane) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<PlaneAtOrigin> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: PlaneAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Point> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Point) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Line> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Line) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Line) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<LineAtOrigin> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: LineAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: LineAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Origin> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Origin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Plane> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Plane) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Plane) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<PlaneAtOrigin> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: PlaneAtOrigin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: PlaneAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Point> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).bulk_norm().group0()
+    fn cosine_angle(self, other: Point) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Origin> for Point {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Origin) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Origin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
 impl CosineAngle<Point> for Point {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn cosine_angle(self, other: Point) -> f32 {
-        self.unitize().weight_contraction(other.unitize()).group0()
+    fn cosine_angle(self, other: Point) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
@@ -1197,265 +1198,265 @@ impl Distance<Point> for Translator {
 }
 
 impl SineAngle<Line> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Line) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Line) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<LineAtOrigin> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: LineAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Origin> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Origin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Point> for Line {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Point) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Line> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Line) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Line) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<LineAtOrigin> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: LineAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Origin> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Origin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Point> for LineAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Point) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Origin> for Origin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Origin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Point> for Origin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Point) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Line> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Line) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Line) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<LineAtOrigin> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: LineAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Origin> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Origin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Plane> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Plane) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Plane) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<PlaneAtOrigin> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: PlaneAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Point> for Plane {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Point) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Line> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Line) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Line) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<LineAtOrigin> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: LineAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: LineAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Origin> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Origin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Plane> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Plane) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Plane) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<PlaneAtOrigin> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: PlaneAtOrigin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Point> for PlaneAtOrigin {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Point) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Origin> for Point {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Origin) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Origin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }
 
 impl SineAngle<Point> for Point {
-    type Output = f32;
+    type Output = DualNum;
 
-    fn sine_angle(self, other: Point) -> f32 {
-        let mut cos: f32 = self.cosine_angle(other);
-        let mut cos_squared: f32 = cos * cos;
-        let mut sub: f32 = 1.0 - cos_squared;
+    fn sine_angle(self, other: Point) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::one().sub(cos_squared);
         sub.sqrt()
     }
 }

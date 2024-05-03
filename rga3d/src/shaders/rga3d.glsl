@@ -31744,100 +31744,100 @@ Point transflector__support(Transflector self) {
     return transflector__anti_wedge__line_at_origin(self, origin__wedge__point_at_infinity(origin__one(), transflector__anti_dual(self)));
 }
 
-float line__cosine_angle__line(Line self, Line other) {
-    return line__weight_contraction__line(line__unitize(self), line__unitize(other)).g0;
+DualNum line__cosine_angle__line(Line self, Line other) {
+    return scalar__add__anti_scalar(line__anti_wedge__line_at_infinity(self, line__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(line__weight_norm(self), line__weight_norm(other)));
 }
 
-float line__cosine_angle__line_at_origin(Line self, LineAtOrigin other) {
-    return line__weight_contraction__line_at_origin(line__unitize(self), line_at_origin__unitize(other)).g0;
+DualNum line__cosine_angle__line_at_origin(Line self, LineAtOrigin other) {
+    return scalar__add__anti_scalar(line__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(line__weight_norm(self), line_at_origin__weight_norm(other)));
 }
 
-float line__cosine_angle__origin(Line self, Origin other) {
-    return point_at_infinity__bulk_norm(line__weight_contraction__origin(line__unitize(self), origin__unitize(other))).g0;
+DualNum line__cosine_angle__origin(Line self, Origin other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line__anti_wedge__horizon(self, origin__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(line__weight_norm(self), origin__weight_norm(other)));
 }
 
-float line__cosine_angle__point(Line self, Point other) {
-    return point_at_infinity__bulk_norm(line__weight_contraction__point(line__unitize(self), point__unitize(other))).g0;
+DualNum line__cosine_angle__point(Line self, Point other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line__anti_wedge__horizon(self, point__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(line__weight_norm(self), point__weight_norm(other)));
 }
 
-float line_at_origin__cosine_angle__line(LineAtOrigin self, Line other) {
-    return line_at_origin__weight_contraction__line(line_at_origin__unitize(self), line__unitize(other)).g0;
+DualNum line_at_origin__cosine_angle__line(LineAtOrigin self, Line other) {
+    return scalar__add__anti_scalar(line_at_origin__anti_wedge__line_at_infinity(self, line__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(line_at_origin__weight_norm(self), line__weight_norm(other)));
 }
 
-float line_at_origin__cosine_angle__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
-    return line_at_origin__weight_contraction__line_at_origin(line_at_origin__unitize(self), line_at_origin__unitize(other)).g0;
+DualNum line_at_origin__cosine_angle__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
+    return scalar__add__anti_scalar(line_at_origin__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(line_at_origin__weight_norm(self), line_at_origin__weight_norm(other)));
 }
 
-float line_at_origin__cosine_angle__origin(LineAtOrigin self, Origin other) {
-    return point_at_infinity__bulk_norm(line_at_origin__weight_contraction__origin(line_at_origin__unitize(self), origin__unitize(other))).g0;
+DualNum line_at_origin__cosine_angle__origin(LineAtOrigin self, Origin other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line_at_origin__anti_wedge__horizon(self, origin__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(line_at_origin__weight_norm(self), origin__weight_norm(other)));
 }
 
-float line_at_origin__cosine_angle__point(LineAtOrigin self, Point other) {
-    return point_at_infinity__bulk_norm(line_at_origin__weight_contraction__point(line_at_origin__unitize(self), point__unitize(other))).g0;
+DualNum line_at_origin__cosine_angle__point(LineAtOrigin self, Point other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line_at_origin__anti_wedge__horizon(self, point__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(line_at_origin__weight_norm(self), point__weight_norm(other)));
 }
 
-float origin__cosine_angle__origin(Origin self, Origin other) {
-    return origin__weight_contraction__origin(origin__unitize(self), origin__unitize(other)).g0;
+DualNum origin__cosine_angle__origin(Origin self, Origin other) {
+    return scalar__add__anti_scalar(origin__anti_wedge__horizon(self, origin__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(origin__weight_norm(self), origin__weight_norm(other)));
 }
 
-float origin__cosine_angle__point(Origin self, Point other) {
-    return origin__weight_contraction__point(origin__unitize(self), point__unitize(other)).g0;
+DualNum origin__cosine_angle__point(Origin self, Point other) {
+    return scalar__add__anti_scalar(origin__anti_wedge__horizon(self, point__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(origin__weight_norm(self), point__weight_norm(other)));
 }
 
-float plane__cosine_angle__line(Plane self, Line other) {
-    return point_at_infinity__bulk_norm(plane__weight_contraction__line(plane__unitize(self), line__unitize(other))).g0;
+DualNum plane__cosine_angle__line(Plane self, Line other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(plane__anti_wedge__line_at_infinity(self, line__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane__weight_norm(self), line__weight_norm(other)));
 }
 
-float plane__cosine_angle__line_at_origin(Plane self, LineAtOrigin other) {
-    return point_at_infinity__bulk_norm(plane__weight_contraction__line_at_origin(plane__unitize(self), line_at_origin__unitize(other))).g0;
+DualNum plane__cosine_angle__line_at_origin(Plane self, LineAtOrigin other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(plane__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane__weight_norm(self), line_at_origin__weight_norm(other)));
 }
 
-float plane__cosine_angle__origin(Plane self, Origin other) {
-    return line_at_infinity__bulk_norm(plane__weight_contraction__origin(plane__unitize(self), origin__unitize(other))).g0;
+DualNum plane__cosine_angle__origin(Plane self, Origin other) {
+    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__anti_wedge__horizon(self, origin__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane__weight_norm(self), origin__weight_norm(other)));
 }
 
-float plane__cosine_angle__plane(Plane self, Plane other) {
-    return plane__weight_contraction__plane(plane__unitize(self), plane__unitize(other)).g0;
+DualNum plane__cosine_angle__plane(Plane self, Plane other) {
+    return scalar__add__anti_scalar(plane__anti_wedge__point_at_infinity(self, plane__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(plane__weight_norm(self), plane__weight_norm(other)));
 }
 
-float plane__cosine_angle__plane_at_origin(Plane self, PlaneAtOrigin other) {
-    return plane__weight_contraction__plane_at_origin(plane__unitize(self), plane_at_origin__unitize(other)).g0;
+DualNum plane__cosine_angle__plane_at_origin(Plane self, PlaneAtOrigin other) {
+    return scalar__add__anti_scalar(plane__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(plane__weight_norm(self), plane_at_origin__weight_norm(other)));
 }
 
-float plane__cosine_angle__point(Plane self, Point other) {
-    return line_at_infinity__bulk_norm(plane__weight_contraction__point(plane__unitize(self), point__unitize(other))).g0;
+DualNum plane__cosine_angle__point(Plane self, Point other) {
+    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__anti_wedge__horizon(self, point__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane__weight_norm(self), point__weight_norm(other)));
 }
 
-float plane_at_origin__cosine_angle__line(PlaneAtOrigin self, Line other) {
-    return point_at_infinity__bulk_norm(plane_at_origin__weight_contraction__line(plane_at_origin__unitize(self), line__unitize(other))).g0;
+DualNum plane_at_origin__cosine_angle__line(PlaneAtOrigin self, Line other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(plane_at_origin__anti_wedge__line_at_infinity(self, line__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane_at_origin__weight_norm(self), line__weight_norm(other)));
 }
 
-float plane_at_origin__cosine_angle__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
-    return point_at_infinity__bulk_norm(plane_at_origin__weight_contraction__line_at_origin(plane_at_origin__unitize(self), line_at_origin__unitize(other))).g0;
+DualNum plane_at_origin__cosine_angle__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
+    return scalar__add__anti_scalar(point_at_infinity__bulk_norm(plane_at_origin__anti_wedge__line_at_infinity(self, line_at_origin__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane_at_origin__weight_norm(self), line_at_origin__weight_norm(other)));
 }
 
-float plane_at_origin__cosine_angle__origin(PlaneAtOrigin self, Origin other) {
-    return line_at_infinity__bulk_norm(plane_at_origin__weight_contraction__origin(plane_at_origin__unitize(self), origin__unitize(other))).g0;
+DualNum plane_at_origin__cosine_angle__origin(PlaneAtOrigin self, Origin other) {
+    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__anti_wedge__horizon(self, origin__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane_at_origin__weight_norm(self), origin__weight_norm(other)));
 }
 
-float plane_at_origin__cosine_angle__plane(PlaneAtOrigin self, Plane other) {
-    return plane_at_origin__weight_contraction__plane(plane_at_origin__unitize(self), plane__unitize(other)).g0;
+DualNum plane_at_origin__cosine_angle__plane(PlaneAtOrigin self, Plane other) {
+    return scalar__add__anti_scalar(plane_at_origin__anti_wedge__point_at_infinity(self, plane__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(plane_at_origin__weight_norm(self), plane__weight_norm(other)));
 }
 
-float plane_at_origin__cosine_angle__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
-    return plane_at_origin__weight_contraction__plane_at_origin(plane_at_origin__unitize(self), plane_at_origin__unitize(other)).g0;
+DualNum plane_at_origin__cosine_angle__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
+    return scalar__add__anti_scalar(plane_at_origin__anti_wedge__point_at_infinity(self, plane_at_origin__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(plane_at_origin__weight_norm(self), plane_at_origin__weight_norm(other)));
 }
 
-float plane_at_origin__cosine_angle__point(PlaneAtOrigin self, Point other) {
-    return line_at_infinity__bulk_norm(plane_at_origin__weight_contraction__point(plane_at_origin__unitize(self), point__unitize(other))).g0;
+DualNum plane_at_origin__cosine_angle__point(PlaneAtOrigin self, Point other) {
+    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__anti_wedge__horizon(self, point__anti_dual(other))), anti_scalar__geometric_anti_product__anti_scalar(plane_at_origin__weight_norm(self), point__weight_norm(other)));
 }
 
-float point__cosine_angle__origin(Point self, Origin other) {
-    return point__weight_contraction__origin(point__unitize(self), origin__unitize(other)).g0;
+DualNum point__cosine_angle__origin(Point self, Origin other) {
+    return scalar__add__anti_scalar(point__anti_wedge__horizon(self, origin__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(point__weight_norm(self), origin__weight_norm(other)));
 }
 
-float point__cosine_angle__point(Point self, Point other) {
-    return point__weight_contraction__point(point__unitize(self), point__unitize(other)).g0;
+DualNum point__cosine_angle__point(Point self, Point other) {
+    return scalar__add__anti_scalar(point__anti_wedge__horizon(self, point__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(point__weight_norm(self), point__weight_norm(other)));
 }
 
 DualNum anti_scalar__distance__multi_vector(AntiScalar self, MultiVector other) {
@@ -32324,171 +32324,171 @@ DualNum translator__distance__point(Translator self, Point other) {
     return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(translator__wedge__point(self, other))), translator__weight_norm(translator__wedge__scalar(self, point__attitude(other))));
 }
 
-float line__sine_angle__line(Line self, Line other) {
-    float cos = line__cosine_angle__line(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line__sine_angle__line(Line self, Line other) {
+    DualNum cos = line__cosine_angle__line(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line__sine_angle__line_at_origin(Line self, LineAtOrigin other) {
-    float cos = line__cosine_angle__line_at_origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line__sine_angle__line_at_origin(Line self, LineAtOrigin other) {
+    DualNum cos = line__cosine_angle__line_at_origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line__sine_angle__origin(Line self, Origin other) {
-    float cos = line__cosine_angle__origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line__sine_angle__origin(Line self, Origin other) {
+    DualNum cos = line__cosine_angle__origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line__sine_angle__point(Line self, Point other) {
-    float cos = line__cosine_angle__point(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line__sine_angle__point(Line self, Point other) {
+    DualNum cos = line__cosine_angle__point(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line_at_origin__sine_angle__line(LineAtOrigin self, Line other) {
-    float cos = line_at_origin__cosine_angle__line(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line_at_origin__sine_angle__line(LineAtOrigin self, Line other) {
+    DualNum cos = line_at_origin__cosine_angle__line(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line_at_origin__sine_angle__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
-    float cos = line_at_origin__cosine_angle__line_at_origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line_at_origin__sine_angle__line_at_origin(LineAtOrigin self, LineAtOrigin other) {
+    DualNum cos = line_at_origin__cosine_angle__line_at_origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line_at_origin__sine_angle__origin(LineAtOrigin self, Origin other) {
-    float cos = line_at_origin__cosine_angle__origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line_at_origin__sine_angle__origin(LineAtOrigin self, Origin other) {
+    DualNum cos = line_at_origin__cosine_angle__origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float line_at_origin__sine_angle__point(LineAtOrigin self, Point other) {
-    float cos = line_at_origin__cosine_angle__point(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum line_at_origin__sine_angle__point(LineAtOrigin self, Point other) {
+    DualNum cos = line_at_origin__cosine_angle__point(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float origin__sine_angle__origin(Origin self, Origin other) {
-    float cos = origin__cosine_angle__origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum origin__sine_angle__origin(Origin self, Origin other) {
+    DualNum cos = origin__cosine_angle__origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float origin__sine_angle__point(Origin self, Point other) {
-    float cos = origin__cosine_angle__point(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum origin__sine_angle__point(Origin self, Point other) {
+    DualNum cos = origin__cosine_angle__point(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane__sine_angle__line(Plane self, Line other) {
-    float cos = plane__cosine_angle__line(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane__sine_angle__line(Plane self, Line other) {
+    DualNum cos = plane__cosine_angle__line(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane__sine_angle__line_at_origin(Plane self, LineAtOrigin other) {
-    float cos = plane__cosine_angle__line_at_origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane__sine_angle__line_at_origin(Plane self, LineAtOrigin other) {
+    DualNum cos = plane__cosine_angle__line_at_origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane__sine_angle__origin(Plane self, Origin other) {
-    float cos = plane__cosine_angle__origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane__sine_angle__origin(Plane self, Origin other) {
+    DualNum cos = plane__cosine_angle__origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane__sine_angle__plane(Plane self, Plane other) {
-    float cos = plane__cosine_angle__plane(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane__sine_angle__plane(Plane self, Plane other) {
+    DualNum cos = plane__cosine_angle__plane(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane__sine_angle__plane_at_origin(Plane self, PlaneAtOrigin other) {
-    float cos = plane__cosine_angle__plane_at_origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane__sine_angle__plane_at_origin(Plane self, PlaneAtOrigin other) {
+    DualNum cos = plane__cosine_angle__plane_at_origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane__sine_angle__point(Plane self, Point other) {
-    float cos = plane__cosine_angle__point(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane__sine_angle__point(Plane self, Point other) {
+    DualNum cos = plane__cosine_angle__point(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane_at_origin__sine_angle__line(PlaneAtOrigin self, Line other) {
-    float cos = plane_at_origin__cosine_angle__line(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane_at_origin__sine_angle__line(PlaneAtOrigin self, Line other) {
+    DualNum cos = plane_at_origin__cosine_angle__line(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane_at_origin__sine_angle__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
-    float cos = plane_at_origin__cosine_angle__line_at_origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane_at_origin__sine_angle__line_at_origin(PlaneAtOrigin self, LineAtOrigin other) {
+    DualNum cos = plane_at_origin__cosine_angle__line_at_origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane_at_origin__sine_angle__origin(PlaneAtOrigin self, Origin other) {
-    float cos = plane_at_origin__cosine_angle__origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane_at_origin__sine_angle__origin(PlaneAtOrigin self, Origin other) {
+    DualNum cos = plane_at_origin__cosine_angle__origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane_at_origin__sine_angle__plane(PlaneAtOrigin self, Plane other) {
-    float cos = plane_at_origin__cosine_angle__plane(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane_at_origin__sine_angle__plane(PlaneAtOrigin self, Plane other) {
+    DualNum cos = plane_at_origin__cosine_angle__plane(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane_at_origin__sine_angle__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
-    float cos = plane_at_origin__cosine_angle__plane_at_origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane_at_origin__sine_angle__plane_at_origin(PlaneAtOrigin self, PlaneAtOrigin other) {
+    DualNum cos = plane_at_origin__cosine_angle__plane_at_origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float plane_at_origin__sine_angle__point(PlaneAtOrigin self, Point other) {
-    float cos = plane_at_origin__cosine_angle__point(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum plane_at_origin__sine_angle__point(PlaneAtOrigin self, Point other) {
+    DualNum cos = plane_at_origin__cosine_angle__point(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float point__sine_angle__origin(Point self, Origin other) {
-    float cos = point__cosine_angle__origin(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum point__sine_angle__origin(Point self, Origin other) {
+    DualNum cos = point__cosine_angle__origin(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 
-float point__sine_angle__point(Point self, Point other) {
-    float cos = point__cosine_angle__point(self, other);
-    float cos_squared = cos * cos;
-    float sub = 1.0 - cos_squared;
-    return sqrt(sub);
+DualNum point__sine_angle__point(Point self, Point other) {
+    DualNum cos = point__cosine_angle__point(self, other);
+    DualNum cos_squared = dual_num__geometric_product__dual_num(cos, cos);
+    DualNum sub = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    return dual_num__sqrt(sub);
 }
 

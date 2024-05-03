@@ -2851,23 +2851,30 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let _ = self.trait_impls.get_class_impl("Grade", param_b.multi_vector_class())?;
                 let a_grade = param_a.multi_vector_class().flat_basis().first()?.grade();
                 let b_grade = param_b.multi_vector_class().flat_basis().first()?.grade();
+                let n = self.algebra.anti_scalar_element().grade();
+                if a_grade == 0 || b_grade == 0 {
+                    continue
+                }
+                if a_grade == n || b_grade == n {
+                    continue
+                }
                 let same_grade = a_grade == b_grade;
 
-                // We can return a Scalar and ignore the HomogeneousMagnitude fluff if we Unitize up front
-                let a_unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
-                let b_unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_b))?;
-
-                // The actual cosine part of the definition
-                let mut exp = self.trait_impls.get_pair_invocation("WeightContraction", a_unitize, b_unitize)?;
+                let anti_dual_b = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
+                let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
+                let mut anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), anti_dual_b)?;
                 if !same_grade {
-                    exp = self.trait_impls.get_single_invocation("BulkNorm", exp)?;
+                    anti_wedge = self.trait_impls.get_single_invocation("BulkNorm", anti_wedge)?;
                 }
-                let raw_float = Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Access(Box::new(exp), 0),
-                };
-                let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, raw_float);
+
+                let wn_a = self.trait_impls.get_single_invocation("WeightNorm", variable(&param_a))?;
+                let wn_b = self.trait_impls.get_single_invocation("WeightNorm", variable(&param_b))?;
+                let anti_product = self.algebra.dialect().geometric_anti_product.first()?;
+                let wn = self.trait_impls.get_pair_invocation(anti_product, wn_a, wn_b)?;
+
+                let plus = self.trait_impls.get_pair_invocation("Add", anti_wedge, wn)?;
+
+                let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, plus);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, cosine);
             };
         }
@@ -2876,65 +2883,55 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "SineAngle";
             let _: Option<()> = try {
                 let cos = self.trait_impls.get_pair_invocation("CosineAngle", variable(&param_a), variable(&param_b))?;
-                let var_assign_cos = AstNode::VariableAssignment {
-                    name: "cos",
-                    data_type: Some(DataType::SimdVector(1)),
-                    expression: Box::new(cos),
+                let dual_num = match cos.data_type_hint {
+                    Some(DataType::MultiVector(dn)) => dn,
+                    _ => None?,
                 };
-                let var_cos = Box::new(Expression {
+                let var_cos = Expression {
                     size: 1,
                     content: ExpressionContent::Variable("cos"),
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                });
-                let one = Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![1])
-                });
-                let cos_squared = Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Multiply(var_cos.clone(), var_cos),
-                });
-                let var_assign_cos_squared = AstNode::VariableAssignment {
-                    name: "cos_squared",
-                    data_type: Some(DataType::SimdVector(1)),
-                    expression: cos_squared,
+                    data_type_hint: cos.data_type_hint.clone(),
                 };
-                let var_cos_squared = Box::new(Expression {
+                let var_assign_cos = AstNode::VariableAssignment {
+                    name: "cos",
+                    data_type: cos.data_type_hint.clone(),
+                    expression: Box::new(cos),
+                };
+                let one = self.trait_impls.get_class_invocation("One", dual_num)?;
+                let product = self.algebra.dialect().geometric_product.first()?;
+                let cos_squared = self.trait_impls.get_pair_invocation(product, var_cos.clone(), var_cos)?;
+                let var_cos_squared = Expression {
                     size: 1,
                     content: ExpressionContent::Variable("cos_squared"),
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                });
-                let sub = Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Subtract(one, var_cos_squared)
-                });
-                let var_assign_sub = AstNode::VariableAssignment {
-                    name: "sub",
-                    data_type: Some(DataType::SimdVector(1)),
-                    expression: sub,
+                    data_type_hint: cos_squared.data_type_hint.clone(),
                 };
-                let var_sub = Box::new(Expression {
+                let var_assign_cos_squared = AstNode::VariableAssignment {
+                    name: "cos_squared",
+                    data_type: cos_squared.data_type_hint.clone(),
+                    expression: Box::new(cos_squared),
+                };
+                let sub = self.trait_impls.get_pair_invocation("Sub", one, var_cos_squared)?;
+                let var_sub = Expression {
                     size: 1,
                     content: ExpressionContent::Variable("sub"),
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                });
-                let sqrt = Box::new(Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::SquareRoot(var_sub)
-                });
+                    data_type_hint: sub.data_type_hint.clone(),
+                };
+                let var_assign_sub = AstNode::VariableAssignment {
+                    name: "sub",
+                    data_type: sub.data_type_hint.clone(),
+                    expression: Box::new(sub),
+                };
+                let sqrt = self.trait_impls.get_single_invocation("Sqrt", var_sub)?;
+                let sqrt_type = sqrt.data_type_hint.clone()?;
                 let sine = AstNode::TraitImplementation {
-                    result: Parameter { name, data_type: DataType::SimdVector(1), },
+                    result: Parameter { name, data_type: sqrt_type, },
                     class: param_a.multi_vector_class(),
                     parameters: vec![param_a.clone(), param_b.clone()],
                     body: vec![
                         var_assign_cos,
                         var_assign_cos_squared,
                         var_assign_sub,
-                        AstNode::ReturnStatement { expression: sqrt },
+                        AstNode::ReturnStatement { expression: Box::new(sqrt) },
                     ],
                 };
                 self.trait_impls.add_pair_impl(name, param_a, param_b, sine);

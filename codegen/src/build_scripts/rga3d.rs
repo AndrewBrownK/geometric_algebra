@@ -305,13 +305,14 @@ use crate::involutions::*;",
     emitter.new_rust_collector(&file_path.join(Path::new("metrics")));
     emitter.emit_rust_preamble(
         "
-use crate::*;
-use crate::unitize::Unitize;
-use crate::products::exterior::Wedge;
-use crate::characteristics::Attitude;
-use crate::products::projections::*;
+use crate::characteristics::{Attitude, Sqrt};
 use crate::norms::*;
-use crate::products::contractions::WeightContraction;",
+use crate::products::exterior::{AntiWedge, Wedge};
+use crate::products::projections::*;
+use crate::unitize::Unitize;
+use crate::*;
+use crate::involutions::AntiDual;
+use crate::products::geometric::{GeometricAntiProduct, GeometricProduct};",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
