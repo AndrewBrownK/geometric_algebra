@@ -80,9 +80,9 @@ impl BulkContraction<DipoleCarrierAspect> for Circle {
 }
 
 impl BulkContraction<DipoleWeight> for Circle {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -223,10 +223,10 @@ impl BulkContraction<RoundPointBulk> for Circle {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Circle {
+impl BulkContraction<RoundPointOnOrigin> for Circle {
     type Output = Dipole;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.dual())
     }
 }
@@ -375,10 +375,10 @@ impl BulkContraction<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for CircleBulk {
+impl BulkContraction<RoundPointOnOrigin> for CircleBulk {
     type Output = DipoleBulk;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> DipoleBulk {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> DipoleBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -424,33 +424,33 @@ impl BulkContraction<CircleCarrierAspect> for CircleCarrierAspect {
 }
 
 impl BulkContraction<Dipole> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: Dipole) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: Dipole) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<DipoleBulk> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: DipoleBulk) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: DipoleBulk) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<DipoleCarrierAspect> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<FlatPoint> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -559,10 +559,10 @@ impl BulkContraction<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl BulkContraction<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.anti_wedge(other.dual())
     }
 }
@@ -600,9 +600,9 @@ impl BulkContraction<CircleCarrierAspect> for CircleWeight {
 }
 
 impl BulkContraction<Dipole> for CircleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: Dipole) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: Dipole) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -616,17 +616,17 @@ impl BulkContraction<DipoleBulk> for CircleWeight {
 }
 
 impl BulkContraction<DipoleCarrierAspect> for CircleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<FlatPoint> for CircleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -735,10 +735,10 @@ impl BulkContraction<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for CircleWeight {
+impl BulkContraction<RoundPointOnOrigin> for CircleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.anti_wedge(other.dual())
     }
 }
@@ -856,9 +856,9 @@ impl BulkContraction<MultiVector> for Dipole {
 }
 
 impl BulkContraction<Origin> for Dipole {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: Origin) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: Origin) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -903,10 +903,10 @@ impl BulkContraction<RoundPointBulk> for Dipole {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Dipole {
+impl BulkContraction<RoundPointOnOrigin> for Dipole {
     type Output = RoundPoint;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.anti_wedge(other.dual())
     }
 }
@@ -1023,10 +1023,10 @@ impl BulkContraction<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for DipoleBulk {
+impl BulkContraction<RoundPointOnOrigin> for DipoleBulk {
     type Output = RoundPointBulk;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPointBulk {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPointBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -1136,17 +1136,17 @@ impl BulkContraction<Rotor> for DipoleCarrierAspect {
 }
 
 impl BulkContraction<RoundPoint> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPoint) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<RoundPointAtInfinity> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPointAtInfinity) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointAtInfinity) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1160,17 +1160,17 @@ impl BulkContraction<RoundPointAtOrigin> for DipoleCarrierAspect {
 }
 
 impl BulkContraction<RoundPointBulk> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointBulk) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl BulkContraction<RoundPointOnOrigin> for DipoleCarrierAspect {
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1272,17 +1272,17 @@ impl BulkContraction<Rotor> for DipoleWeight {
 }
 
 impl BulkContraction<RoundPoint> for DipoleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPoint) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<RoundPointAtInfinity> for DipoleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPointAtInfinity) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointAtInfinity) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1303,10 +1303,10 @@ impl BulkContraction<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for DipoleWeight {
-    type Output = RoundPointCarrierAspect;
+impl BulkContraction<RoundPointOnOrigin> for DipoleWeight {
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1408,9 +1408,9 @@ impl BulkContraction<MultiVector> for FlatPoint {
 }
 
 impl BulkContraction<Origin> for FlatPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: Origin) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: Origin) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1455,10 +1455,10 @@ impl BulkContraction<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for FlatPoint {
+impl BulkContraction<RoundPointOnOrigin> for FlatPoint {
     type Output = RoundPoint;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.anti_wedge(other.dual())
     }
 }
@@ -1591,10 +1591,10 @@ impl BulkContraction<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl BulkContraction<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPointAtInfinity {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -1727,10 +1727,10 @@ impl BulkContraction<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl BulkContraction<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> RoundPointAtOrigin {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPointAtOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1776,9 +1776,9 @@ impl BulkContraction<CircleCarrierAspect> for Flector {
 }
 
 impl BulkContraction<CircleWeight> for Flector {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -1967,10 +1967,10 @@ impl BulkContraction<RoundPointBulk> for Flector {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Flector {
+impl BulkContraction<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -2175,10 +2175,10 @@ impl BulkContraction<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl BulkContraction<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -2383,10 +2383,10 @@ impl BulkContraction<RoundPointBulk> for Horizon {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Horizon {
+impl BulkContraction<RoundPointOnOrigin> for Horizon {
     type Output = Circle;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.dual())
     }
 }
@@ -2495,10 +2495,10 @@ impl BulkContraction<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Infinity {
+impl BulkContraction<RoundPointOnOrigin> for Infinity {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -2568,9 +2568,9 @@ impl BulkContraction<DipoleCarrierAspect> for Line {
 }
 
 impl BulkContraction<DipoleWeight> for Line {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -2703,10 +2703,10 @@ impl BulkContraction<RoundPointBulk> for Line {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Line {
+impl BulkContraction<RoundPointOnOrigin> for Line {
     type Output = Dipole;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.dual())
     }
 }
@@ -2879,10 +2879,10 @@ impl BulkContraction<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for LineAtInfinity {
+impl BulkContraction<RoundPointOnOrigin> for LineAtInfinity {
     type Output = Dipole;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.dual())
     }
 }
@@ -3071,10 +3071,10 @@ impl BulkContraction<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for LineAtOrigin {
+impl BulkContraction<RoundPointOnOrigin> for LineAtOrigin {
     type Output = Dipole;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.dual())
     }
 }
@@ -3319,10 +3319,10 @@ impl BulkContraction<RoundPointBulk> for Motor {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Motor {
+impl BulkContraction<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -3591,10 +3591,10 @@ impl BulkContraction<RoundPointBulk> for MultiVector {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for MultiVector {
+impl BulkContraction<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -3711,10 +3711,10 @@ impl BulkContraction<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Origin {
+impl BulkContraction<RoundPointOnOrigin> for Origin {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -3760,9 +3760,9 @@ impl BulkContraction<CircleCarrierAspect> for Plane {
 }
 
 impl BulkContraction<CircleWeight> for Plane {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -3951,10 +3951,10 @@ impl BulkContraction<RoundPointBulk> for Plane {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Plane {
+impl BulkContraction<RoundPointOnOrigin> for Plane {
     type Output = Circle;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.dual())
     }
 }
@@ -4207,10 +4207,10 @@ impl BulkContraction<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl BulkContraction<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Circle;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.dual())
     }
 }
@@ -4463,10 +4463,10 @@ impl BulkContraction<RoundPointBulk> for Rotor {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Rotor {
+impl BulkContraction<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -4599,10 +4599,10 @@ impl BulkContraction<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for RoundPoint {
+impl BulkContraction<RoundPointOnOrigin> for RoundPoint {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -4703,10 +4703,10 @@ impl BulkContraction<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl BulkContraction<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -4807,10 +4807,10 @@ impl BulkContraction<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl BulkContraction<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -4895,10 +4895,10 @@ impl BulkContraction<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for RoundPointBulk {
+impl BulkContraction<RoundPointOnOrigin> for RoundPointBulk {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -4919,7 +4919,7 @@ impl BulkContraction<Translator> for RoundPointBulk {
     }
 }
 
-impl BulkContraction<Flector> for RoundPointCarrierAspect {
+impl BulkContraction<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Flector) -> MultiVector {
@@ -4927,7 +4927,7 @@ impl BulkContraction<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl BulkContraction<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
@@ -4935,7 +4935,7 @@ impl BulkContraction<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<Infinity> for RoundPointCarrierAspect {
+impl BulkContraction<Infinity> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Infinity) -> Scalar {
@@ -4943,7 +4943,7 @@ impl BulkContraction<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<Motor> for RoundPointCarrierAspect {
+impl BulkContraction<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Motor) -> MultiVector {
@@ -4951,7 +4951,7 @@ impl BulkContraction<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<MultiVector> for RoundPointCarrierAspect {
+impl BulkContraction<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: MultiVector) -> MultiVector {
@@ -4959,7 +4959,7 @@ impl BulkContraction<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<Rotor> for RoundPointCarrierAspect {
+impl BulkContraction<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Rotor) -> MultiVector {
@@ -4967,7 +4967,7 @@ impl BulkContraction<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<RoundPoint> for RoundPointCarrierAspect {
+impl BulkContraction<RoundPoint> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: RoundPoint) -> Scalar {
@@ -4975,7 +4975,7 @@ impl BulkContraction<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl BulkContraction<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: RoundPointAtInfinity) -> Scalar {
@@ -4983,7 +4983,7 @@ impl BulkContraction<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl BulkContraction<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: RoundPointAtOrigin) -> Scalar {
@@ -4991,7 +4991,7 @@ impl BulkContraction<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<RoundPointBulk> for RoundPointCarrierAspect {
+impl BulkContraction<RoundPointBulk> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: RoundPointBulk) -> Scalar {
@@ -4999,15 +4999,15 @@ impl BulkContraction<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl BulkContraction<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = Scalar;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
 
-impl BulkContraction<Transflector> for RoundPointCarrierAspect {
+impl BulkContraction<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Transflector) -> MultiVector {
@@ -5015,7 +5015,7 @@ impl BulkContraction<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkContraction<Translator> for RoundPointCarrierAspect {
+impl BulkContraction<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Translator) -> MultiVector {
@@ -5223,10 +5223,10 @@ impl BulkContraction<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for SpacialCurvature {
+impl BulkContraction<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Circle;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.dual())
     }
 }
@@ -5296,9 +5296,9 @@ impl BulkContraction<CircleCarrierAspect> for Sphere {
 }
 
 impl BulkContraction<CircleWeight> for Sphere {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -5495,10 +5495,10 @@ impl BulkContraction<RoundPointBulk> for Sphere {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Sphere {
+impl BulkContraction<RoundPointOnOrigin> for Sphere {
     type Output = Circle;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.dual())
     }
 }
@@ -5544,9 +5544,9 @@ impl BulkContraction<Translator> for Sphere {
 }
 
 impl BulkContraction<Circle> for SphereWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: Circle) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: Circle) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -5560,9 +5560,9 @@ impl BulkContraction<CircleBulk> for SphereWeight {
 }
 
 impl BulkContraction<CircleCarrierAspect> for SphereWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -5640,9 +5640,9 @@ impl BulkContraction<Infinity> for SphereWeight {
 }
 
 impl BulkContraction<Line> for SphereWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: Line) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: Line) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -5719,10 +5719,10 @@ impl BulkContraction<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for SphereWeight {
+impl BulkContraction<RoundPointOnOrigin> for SphereWeight {
     type Output = CircleCarrierAspect;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.anti_wedge(other.dual())
     }
 }
@@ -5784,9 +5784,9 @@ impl BulkContraction<CircleCarrierAspect> for Transflector {
 }
 
 impl BulkContraction<CircleWeight> for Transflector {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn bulk_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn bulk_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -5975,10 +5975,10 @@ impl BulkContraction<RoundPointBulk> for Transflector {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Transflector {
+impl BulkContraction<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -6247,10 +6247,10 @@ impl BulkContraction<RoundPointBulk> for Translator {
     }
 }
 
-impl BulkContraction<RoundPointCarrierAspect> for Translator {
+impl BulkContraction<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn bulk_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -6352,9 +6352,9 @@ impl WeightContraction<DipoleCarrierAspect> for Circle {
 }
 
 impl WeightContraction<DipoleWeight> for Circle {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6495,10 +6495,10 @@ impl WeightContraction<RoundPointBulk> for Circle {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Circle {
+impl WeightContraction<RoundPointOnOrigin> for Circle {
     type Output = Dipole;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6647,10 +6647,10 @@ impl WeightContraction<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for CircleBulk {
+impl WeightContraction<RoundPointOnOrigin> for CircleBulk {
     type Output = DipoleBulk;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> DipoleBulk {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> DipoleBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6696,33 +6696,33 @@ impl WeightContraction<CircleCarrierAspect> for CircleCarrierAspect {
 }
 
 impl WeightContraction<Dipole> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: Dipole) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: Dipole) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<DipoleBulk> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: DipoleBulk) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: DipoleBulk) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<DipoleCarrierAspect> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<FlatPoint> for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6831,10 +6831,10 @@ impl WeightContraction<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl WeightContraction<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6872,9 +6872,9 @@ impl WeightContraction<CircleCarrierAspect> for CircleWeight {
 }
 
 impl WeightContraction<Dipole> for CircleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: Dipole) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: Dipole) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6888,17 +6888,17 @@ impl WeightContraction<DipoleBulk> for CircleWeight {
 }
 
 impl WeightContraction<DipoleCarrierAspect> for CircleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<FlatPoint> for CircleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7007,10 +7007,10 @@ impl WeightContraction<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for CircleWeight {
+impl WeightContraction<RoundPointOnOrigin> for CircleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7128,9 +7128,9 @@ impl WeightContraction<MultiVector> for Dipole {
 }
 
 impl WeightContraction<Origin> for Dipole {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: Origin) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: Origin) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7175,10 +7175,10 @@ impl WeightContraction<RoundPointBulk> for Dipole {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Dipole {
+impl WeightContraction<RoundPointOnOrigin> for Dipole {
     type Output = RoundPoint;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7295,10 +7295,10 @@ impl WeightContraction<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for DipoleBulk {
+impl WeightContraction<RoundPointOnOrigin> for DipoleBulk {
     type Output = RoundPointBulk;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPointBulk {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPointBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7408,17 +7408,17 @@ impl WeightContraction<Rotor> for DipoleCarrierAspect {
 }
 
 impl WeightContraction<RoundPoint> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPoint) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<RoundPointAtInfinity> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPointAtInfinity) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPointAtInfinity) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7432,17 +7432,17 @@ impl WeightContraction<RoundPointAtOrigin> for DipoleCarrierAspect {
 }
 
 impl WeightContraction<RoundPointBulk> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPointBulk) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl WeightContraction<RoundPointOnOrigin> for DipoleCarrierAspect {
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7544,17 +7544,17 @@ impl WeightContraction<Rotor> for DipoleWeight {
 }
 
 impl WeightContraction<RoundPoint> for DipoleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPoint) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPoint) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<RoundPointAtInfinity> for DipoleWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPointAtInfinity) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPointAtInfinity) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7575,10 +7575,10 @@ impl WeightContraction<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for DipoleWeight {
-    type Output = RoundPointCarrierAspect;
+impl WeightContraction<RoundPointOnOrigin> for DipoleWeight {
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7680,9 +7680,9 @@ impl WeightContraction<MultiVector> for FlatPoint {
 }
 
 impl WeightContraction<Origin> for FlatPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: Origin) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: Origin) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7727,10 +7727,10 @@ impl WeightContraction<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for FlatPoint {
+impl WeightContraction<RoundPointOnOrigin> for FlatPoint {
     type Output = RoundPoint;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7863,10 +7863,10 @@ impl WeightContraction<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl WeightContraction<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPointAtInfinity {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7999,10 +7999,10 @@ impl WeightContraction<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl WeightContraction<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> RoundPointAtOrigin {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPointAtOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8048,9 +8048,9 @@ impl WeightContraction<CircleCarrierAspect> for Flector {
 }
 
 impl WeightContraction<CircleWeight> for Flector {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8239,10 +8239,10 @@ impl WeightContraction<RoundPointBulk> for Flector {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Flector {
+impl WeightContraction<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8447,10 +8447,10 @@ impl WeightContraction<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl WeightContraction<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8655,10 +8655,10 @@ impl WeightContraction<RoundPointBulk> for Horizon {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Horizon {
+impl WeightContraction<RoundPointOnOrigin> for Horizon {
     type Output = Circle;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8767,10 +8767,10 @@ impl WeightContraction<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Infinity {
+impl WeightContraction<RoundPointOnOrigin> for Infinity {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8840,9 +8840,9 @@ impl WeightContraction<DipoleCarrierAspect> for Line {
 }
 
 impl WeightContraction<DipoleWeight> for Line {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8975,10 +8975,10 @@ impl WeightContraction<RoundPointBulk> for Line {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Line {
+impl WeightContraction<RoundPointOnOrigin> for Line {
     type Output = Dipole;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9151,10 +9151,10 @@ impl WeightContraction<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for LineAtInfinity {
+impl WeightContraction<RoundPointOnOrigin> for LineAtInfinity {
     type Output = Dipole;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9343,10 +9343,10 @@ impl WeightContraction<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for LineAtOrigin {
+impl WeightContraction<RoundPointOnOrigin> for LineAtOrigin {
     type Output = Dipole;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Dipole {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9591,10 +9591,10 @@ impl WeightContraction<RoundPointBulk> for Motor {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Motor {
+impl WeightContraction<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9863,10 +9863,10 @@ impl WeightContraction<RoundPointBulk> for MultiVector {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for MultiVector {
+impl WeightContraction<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9983,10 +9983,10 @@ impl WeightContraction<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Origin {
+impl WeightContraction<RoundPointOnOrigin> for Origin {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10032,9 +10032,9 @@ impl WeightContraction<CircleCarrierAspect> for Plane {
 }
 
 impl WeightContraction<CircleWeight> for Plane {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10223,10 +10223,10 @@ impl WeightContraction<RoundPointBulk> for Plane {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Plane {
+impl WeightContraction<RoundPointOnOrigin> for Plane {
     type Output = Circle;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10479,10 +10479,10 @@ impl WeightContraction<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl WeightContraction<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Circle;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10735,10 +10735,10 @@ impl WeightContraction<RoundPointBulk> for Rotor {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Rotor {
+impl WeightContraction<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10871,10 +10871,10 @@ impl WeightContraction<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for RoundPoint {
+impl WeightContraction<RoundPointOnOrigin> for RoundPoint {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10975,10 +10975,10 @@ impl WeightContraction<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl WeightContraction<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11079,10 +11079,10 @@ impl WeightContraction<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl WeightContraction<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11167,10 +11167,10 @@ impl WeightContraction<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for RoundPointBulk {
+impl WeightContraction<RoundPointOnOrigin> for RoundPointBulk {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11191,7 +11191,7 @@ impl WeightContraction<Translator> for RoundPointBulk {
     }
 }
 
-impl WeightContraction<Flector> for RoundPointCarrierAspect {
+impl WeightContraction<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Flector) -> MultiVector {
@@ -11199,7 +11199,7 @@ impl WeightContraction<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl WeightContraction<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
@@ -11207,7 +11207,7 @@ impl WeightContraction<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<Infinity> for RoundPointCarrierAspect {
+impl WeightContraction<Infinity> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Infinity) -> Scalar {
@@ -11215,7 +11215,7 @@ impl WeightContraction<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<Motor> for RoundPointCarrierAspect {
+impl WeightContraction<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Motor) -> MultiVector {
@@ -11223,7 +11223,7 @@ impl WeightContraction<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<MultiVector> for RoundPointCarrierAspect {
+impl WeightContraction<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: MultiVector) -> MultiVector {
@@ -11231,7 +11231,7 @@ impl WeightContraction<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<Rotor> for RoundPointCarrierAspect {
+impl WeightContraction<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Rotor) -> MultiVector {
@@ -11239,7 +11239,7 @@ impl WeightContraction<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<RoundPoint> for RoundPointCarrierAspect {
+impl WeightContraction<RoundPoint> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn weight_contraction(self, other: RoundPoint) -> Scalar {
@@ -11247,7 +11247,7 @@ impl WeightContraction<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl WeightContraction<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn weight_contraction(self, other: RoundPointAtInfinity) -> Scalar {
@@ -11255,7 +11255,7 @@ impl WeightContraction<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl WeightContraction<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn weight_contraction(self, other: RoundPointAtOrigin) -> Scalar {
@@ -11263,7 +11263,7 @@ impl WeightContraction<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<RoundPointBulk> for RoundPointCarrierAspect {
+impl WeightContraction<RoundPointBulk> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn weight_contraction(self, other: RoundPointBulk) -> Scalar {
@@ -11271,15 +11271,15 @@ impl WeightContraction<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl WeightContraction<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = Scalar;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
 
-impl WeightContraction<Transflector> for RoundPointCarrierAspect {
+impl WeightContraction<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Transflector) -> MultiVector {
@@ -11287,7 +11287,7 @@ impl WeightContraction<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightContraction<Translator> for RoundPointCarrierAspect {
+impl WeightContraction<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Translator) -> MultiVector {
@@ -11495,10 +11495,10 @@ impl WeightContraction<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for SpacialCurvature {
+impl WeightContraction<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Circle;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11568,9 +11568,9 @@ impl WeightContraction<CircleCarrierAspect> for Sphere {
 }
 
 impl WeightContraction<CircleWeight> for Sphere {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11767,10 +11767,10 @@ impl WeightContraction<RoundPointBulk> for Sphere {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Sphere {
+impl WeightContraction<RoundPointOnOrigin> for Sphere {
     type Output = Circle;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> Circle {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> Circle {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11816,9 +11816,9 @@ impl WeightContraction<Translator> for Sphere {
 }
 
 impl WeightContraction<Circle> for SphereWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: Circle) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: Circle) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11832,9 +11832,9 @@ impl WeightContraction<CircleBulk> for SphereWeight {
 }
 
 impl WeightContraction<CircleCarrierAspect> for SphereWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11912,9 +11912,9 @@ impl WeightContraction<Infinity> for SphereWeight {
 }
 
 impl WeightContraction<Line> for SphereWeight {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: Line) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: Line) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11991,10 +11991,10 @@ impl WeightContraction<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for SphereWeight {
+impl WeightContraction<RoundPointOnOrigin> for SphereWeight {
     type Output = CircleCarrierAspect;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12056,9 +12056,9 @@ impl WeightContraction<CircleCarrierAspect> for Transflector {
 }
 
 impl WeightContraction<CircleWeight> for Transflector {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn weight_contraction(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn weight_contraction(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12247,10 +12247,10 @@ impl WeightContraction<RoundPointBulk> for Transflector {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Transflector {
+impl WeightContraction<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12519,10 +12519,10 @@ impl WeightContraction<RoundPointBulk> for Translator {
     }
 }
 
-impl WeightContraction<RoundPointCarrierAspect> for Translator {
+impl WeightContraction<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn weight_contraction(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }

@@ -14,6 +14,8 @@ pub mod characteristics;
 pub mod involutions;
 pub mod metrics;
 pub mod norms;
+#[cfg(test)]
+pub mod test;
 pub mod unitize;
 pub mod products {
     pub mod contractions;
@@ -1490,6 +1492,81 @@ impl std::fmt::Debug for RoundPointAtOrigin {
 }
 
 #[derive(Clone, Copy)]
+struct RoundPointOnOriginGroups {
+    /// e1, e2, e3, e4
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union RoundPointOnOrigin {
+    groups: RoundPointOnOriginGroups,
+    /// e1, e2, e3, e4
+    elements: [f32; 4],
+}
+
+impl RoundPointOnOrigin {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e1: f32, e2: f32, e3: f32, e4: f32) -> Self {
+        Self { elements: [e1, e2, e3, e4] }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self {
+            groups: RoundPointOnOriginGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const ROUNDPOINTONORIGIN_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for RoundPointOnOrigin {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[ROUNDPOINTONORIGIN_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for RoundPointOnOrigin {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[ROUNDPOINTONORIGIN_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<RoundPointOnOrigin> for [f32; 4] {
+    fn from(vector: RoundPointOnOrigin) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for RoundPointOnOrigin {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for RoundPointOnOrigin {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("RoundPointOnOrigin")
+            .field("e1", &self[0])
+            .field("e2", &self[1])
+            .field("e3", &self[2])
+            .field("e4", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct RoundPointAtInfinityGroups {
     /// e1, e2, e3, e5
     g0: Simd32x4,
@@ -1630,81 +1707,6 @@ impl std::convert::From<[f32; 3]> for RoundPointBulk {
 impl std::fmt::Debug for RoundPointBulk {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         formatter.debug_struct("RoundPointBulk").field("e1", &self[0]).field("e2", &self[1]).field("e3", &self[2]).finish()
-    }
-}
-
-#[derive(Clone, Copy)]
-struct RoundPointCarrierAspectGroups {
-    /// e1, e2, e3, e4
-    g0: Simd32x4,
-}
-
-#[derive(Clone, Copy)]
-pub union RoundPointCarrierAspect {
-    groups: RoundPointCarrierAspectGroups,
-    /// e1, e2, e3, e4
-    elements: [f32; 4],
-}
-
-impl RoundPointCarrierAspect {
-    #[allow(clippy::too_many_arguments)]
-    pub const fn new(e1: f32, e2: f32, e3: f32, e4: f32) -> Self {
-        Self { elements: [e1, e2, e3, e4] }
-    }
-    pub const fn from_groups(g0: Simd32x4) -> Self {
-        Self {
-            groups: RoundPointCarrierAspectGroups { g0 },
-        }
-    }
-    #[inline(always)]
-    pub fn group0(&self) -> Simd32x4 {
-        unsafe { self.groups.g0 }
-    }
-    #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
-        unsafe { &mut self.groups.g0 }
-    }
-}
-
-const ROUNDPOINTCARRIERASPECT_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
-
-impl std::ops::Index<usize> for RoundPointCarrierAspect {
-    type Output = f32;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ROUNDPOINTCARRIERASPECT_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::ops::IndexMut<usize> for RoundPointCarrierAspect {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ROUNDPOINTCARRIERASPECT_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::convert::From<RoundPointCarrierAspect> for [f32; 4] {
-    fn from(vector: RoundPointCarrierAspect) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
-    }
-}
-
-impl std::convert::From<[f32; 4]> for RoundPointCarrierAspect {
-    fn from(array: [f32; 4]) -> Self {
-        Self {
-            elements: [array[0], array[1], array[2], array[3]],
-        }
-    }
-}
-
-impl std::fmt::Debug for RoundPointCarrierAspect {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("RoundPointCarrierAspect")
-            .field("e1", &self[0])
-            .field("e2", &self[1])
-            .field("e3", &self[2])
-            .field("e4", &self[3])
-            .finish()
     }
 }
 
@@ -3344,10 +3346,10 @@ impl One for RoundPointBulk {
     }
 }
 
-impl One for RoundPointCarrierAspect {
+impl One for RoundPointOnOrigin {
     fn one() -> Self {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups { g0: Simd32x4::from(0.0) },
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -3400,6 +3402,339 @@ impl One for Translator {
     fn one() -> Self {
         Translator {
             groups: TranslatorGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
+impl Unit for AntiScalar {
+    fn unit() -> Self {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for Circle {
+    fn unit() -> Self {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(1.0),
+                g1: Simd32x3::from(1.0),
+                g2: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for CircleBulk {
+    fn unit() -> Self {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for CircleCarrierAspect {
+    fn unit() -> Self {
+        CircleCarrierAspect {
+            groups: CircleCarrierAspectGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for CircleWeight {
+    fn unit() -> Self {
+        CircleWeight {
+            groups: CircleWeightGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Dipole {
+    fn unit() -> Self {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x3::from(1.0),
+                g2: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for DipoleBulk {
+    fn unit() -> Self {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for DipoleCarrierAspect {
+    fn unit() -> Self {
+        DipoleCarrierAspect {
+            groups: DipoleCarrierAspectGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for DipoleWeight {
+    fn unit() -> Self {
+        DipoleWeight {
+            groups: DipoleWeightGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for DualNum {
+    fn unit() -> Self {
+        DualNum {
+            groups: DualNumGroups { g0: Simd32x2::from(1.0) },
+        }
+    }
+}
+
+impl Unit for FlatPoint {
+    fn unit() -> Self {
+        FlatPoint {
+            groups: FlatPointGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for FlatPointAtInfinity {
+    fn unit() -> Self {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for FlatPointAtOrigin {
+    fn unit() -> Self {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for Flector {
+    fn unit() -> Self {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(1.0),
+                g1: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for FlectorAtInfinity {
+    fn unit() -> Self {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Horizon {
+    fn unit() -> Self {
+        Horizon {
+            groups: HorizonGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for Infinity {
+    fn unit() -> Self {
+        Infinity {
+            groups: InfinityGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for Line {
+    fn unit() -> Self {
+        Line {
+            groups: LineGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for LineAtInfinity {
+    fn unit() -> Self {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for LineAtOrigin {
+    fn unit() -> Self {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Motor {
+    fn unit() -> Self {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from(1.0),
+                g1: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for MultiVector {
+    fn unit() -> Self {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(1.0),
+                g1: Simd32x3::from(1.0),
+                g2: Simd32x2::from(1.0),
+                g3: Simd32x3::from(1.0),
+                g4: Simd32x3::from(1.0),
+                g5: Simd32x4::from(1.0),
+                g6: Simd32x4::from(1.0),
+                g7: Simd32x3::from(1.0),
+                g8: Simd32x3::from(1.0),
+                g9: Simd32x3::from(1.0),
+                g10: Simd32x2::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for Origin {
+    fn unit() -> Self {
+        Origin { groups: OriginGroups { g0: 1.0 } }
+    }
+}
+
+impl Unit for Plane {
+    fn unit() -> Self {
+        Plane {
+            groups: PlaneGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for PlaneAtOrigin {
+    fn unit() -> Self {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Rotor {
+    fn unit() -> Self {
+        Rotor {
+            groups: RotorGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for RoundPoint {
+    fn unit() -> Self {
+        RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x2::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for RoundPointAtInfinity {
+    fn unit() -> Self {
+        RoundPointAtInfinity {
+            groups: RoundPointAtInfinityGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for RoundPointAtOrigin {
+    fn unit() -> Self {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: Simd32x2::from(1.0) },
+        }
+    }
+}
+
+impl Unit for RoundPointBulk {
+    fn unit() -> Self {
+        RoundPointBulk {
+            groups: RoundPointBulkGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for RoundPointOnOrigin {
+    fn unit() -> Self {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Scalar {
+    fn unit() -> Self {
+        Scalar { groups: ScalarGroups { g0: 1.0 } }
+    }
+}
+
+impl Unit for SpacialCurvature {
+    fn unit() -> Self {
+        SpacialCurvature {
+            groups: SpacialCurvatureGroups { g0: Simd32x2::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Sphere {
+    fn unit() -> Self {
+        Sphere {
+            groups: SphereGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x2::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for SphereWeight {
+    fn unit() -> Self {
+        SphereWeight {
+            groups: SphereWeightGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for Transflector {
+    fn unit() -> Self {
+        Transflector {
+            groups: TransflectorGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for Translator {
+    fn unit() -> Self {
+        Translator {
+            groups: TranslatorGroups { g0: Simd32x4::from(1.0) },
         }
     }
 }
@@ -3677,10 +4012,10 @@ impl Zero for RoundPointBulk {
     }
 }
 
-impl Zero for RoundPointCarrierAspect {
+impl Zero for RoundPointOnOrigin {
     fn zero() -> Self {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups { g0: Simd32x4::from(0.0) },
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -4104,12 +4439,12 @@ impl Neg for RoundPointBulk {
     }
 }
 
-impl Neg for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Neg for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn neg(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn neg(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
@@ -4784,10 +5119,10 @@ impl Add<RoundPointBulk> for AntiScalar {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for AntiScalar {
+impl Add<RoundPointOnOrigin> for AntiScalar {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -5564,10 +5899,10 @@ impl Add<RoundPointBulk> for Circle {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Circle {
+impl Add<RoundPointOnOrigin> for Circle {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -6322,10 +6657,10 @@ impl Add<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for CircleBulk {
+impl Add<RoundPointOnOrigin> for CircleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7092,10 +7427,10 @@ impl Add<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl Add<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -7850,10 +8185,10 @@ impl Add<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for CircleWeight {
+impl Add<RoundPointOnOrigin> for CircleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -8650,10 +8985,10 @@ impl Add<RoundPointBulk> for Dipole {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Dipole {
+impl Add<RoundPointOnOrigin> for Dipole {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -9410,10 +9745,10 @@ impl Add<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for DipoleBulk {
+impl Add<RoundPointOnOrigin> for DipoleBulk {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10183,10 +10518,10 @@ impl Add<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl Add<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -10943,10 +11278,10 @@ impl Add<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for DipoleWeight {
+impl Add<RoundPointOnOrigin> for DipoleWeight {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -11749,10 +12084,10 @@ impl Add<RoundPointBulk> for DualNum {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for DualNum {
+impl Add<RoundPointOnOrigin> for DualNum {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -12470,10 +12805,10 @@ impl Add<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for FlatPoint {
+impl Add<RoundPointOnOrigin> for FlatPoint {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13172,10 +13507,10 @@ impl Add<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl Add<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -13876,10 +14211,10 @@ impl Add<RoundPointBulk> for FlatPointAtOrigin {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl Add<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -14657,10 +14992,10 @@ impl Add<RoundPointBulk> for Flector {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Flector {
+impl Add<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -15411,10 +15746,10 @@ impl Add<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl Add<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -16145,10 +16480,10 @@ impl Add<RoundPointBulk> for Horizon {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Horizon {
+impl Add<RoundPointOnOrigin> for Horizon {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -16868,10 +17203,10 @@ impl Add<RoundPointBulk> for Infinity {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Infinity {
+impl Add<RoundPointOnOrigin> for Infinity {
     type Output = RoundPoint;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -17605,10 +17940,10 @@ impl Add<RoundPointBulk> for Line {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Line {
+impl Add<RoundPointOnOrigin> for Line {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -18328,10 +18663,10 @@ impl Add<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for LineAtInfinity {
+impl Add<RoundPointOnOrigin> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -19049,10 +19384,10 @@ impl Add<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for LineAtOrigin {
+impl Add<RoundPointOnOrigin> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -19836,10 +20171,10 @@ impl Add<RoundPointBulk> for Motor {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Motor {
+impl Add<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -20827,10 +21162,10 @@ impl AddAssign<RoundPointBulk> for MultiVector {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for MultiVector {
+impl Add<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -20849,8 +21184,8 @@ impl Add<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
-impl AddAssign<RoundPointCarrierAspect> for MultiVector {
-    fn add_assign(&mut self, other: RoundPointCarrierAspect) {
+impl AddAssign<RoundPointOnOrigin> for MultiVector {
+    fn add_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -21620,23 +21955,23 @@ impl Add<RoundPointAtOrigin> for Origin {
 }
 
 impl Add<RoundPointBulk> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: RoundPointBulk) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl Add<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
             },
         }
@@ -22378,10 +22713,10 @@ impl Add<RoundPointBulk> for Plane {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Plane {
+impl Add<RoundPointOnOrigin> for Plane {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23087,10 +23422,10 @@ impl Add<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl Add<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -23826,10 +24161,10 @@ impl Add<RoundPointBulk> for Rotor {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Rotor {
+impl Add<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -24613,10 +24948,10 @@ impl AddAssign<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for RoundPoint {
+impl Add<RoundPointOnOrigin> for RoundPoint {
     type Output = RoundPoint;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -24626,8 +24961,8 @@ impl Add<RoundPointCarrierAspect> for RoundPoint {
     }
 }
 
-impl AddAssign<RoundPointCarrierAspect> for RoundPoint {
-    fn add_assign(&mut self, other: RoundPointCarrierAspect) {
+impl AddAssign<RoundPointOnOrigin> for RoundPoint {
+    fn add_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).add(other);
     }
 }
@@ -25385,10 +25720,10 @@ impl AddAssign<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl Add<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = RoundPoint;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -26151,10 +26486,10 @@ impl Add<RoundPointBulk> for RoundPointAtOrigin {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl Add<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -26771,11 +27106,11 @@ impl Add<MultiVector> for RoundPointBulk {
 }
 
 impl Add<Origin> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: Origin) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: Origin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
@@ -26904,12 +27239,12 @@ impl AddAssign<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl Add<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
             },
         }
@@ -27048,7 +27383,7 @@ impl Add<Translator> for RoundPointBulk {
     }
 }
 
-impl Add<AntiScalar> for RoundPointCarrierAspect {
+impl Add<AntiScalar> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: AntiScalar) -> MultiVector {
@@ -27070,7 +27405,7 @@ impl Add<AntiScalar> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Circle> for RoundPointCarrierAspect {
+impl Add<Circle> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Circle) -> MultiVector {
@@ -27092,7 +27427,7 @@ impl Add<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<CircleBulk> for RoundPointCarrierAspect {
+impl Add<CircleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: CircleBulk) -> MultiVector {
@@ -27114,7 +27449,7 @@ impl Add<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl Add<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: CircleCarrierAspect) -> MultiVector {
@@ -27136,7 +27471,7 @@ impl Add<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<CircleWeight> for RoundPointCarrierAspect {
+impl Add<CircleWeight> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: CircleWeight) -> MultiVector {
@@ -27158,7 +27493,7 @@ impl Add<CircleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Dipole> for RoundPointCarrierAspect {
+impl Add<Dipole> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Dipole) -> MultiVector {
@@ -27180,7 +27515,7 @@ impl Add<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<DipoleBulk> for RoundPointCarrierAspect {
+impl Add<DipoleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: DipoleBulk) -> MultiVector {
@@ -27202,7 +27537,7 @@ impl Add<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl Add<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -27224,7 +27559,7 @@ impl Add<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<DipoleWeight> for RoundPointCarrierAspect {
+impl Add<DipoleWeight> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: DipoleWeight) -> MultiVector {
@@ -27246,7 +27581,7 @@ impl Add<DipoleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<DualNum> for RoundPointCarrierAspect {
+impl Add<DualNum> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: DualNum) -> MultiVector {
@@ -27268,7 +27603,7 @@ impl Add<DualNum> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<FlatPoint> for RoundPointCarrierAspect {
+impl Add<FlatPoint> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: FlatPoint) -> MultiVector {
@@ -27290,7 +27625,7 @@ impl Add<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl Add<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -27312,7 +27647,7 @@ impl Add<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl Add<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -27334,7 +27669,7 @@ impl Add<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Flector> for RoundPointCarrierAspect {
+impl Add<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Flector) -> MultiVector {
@@ -27356,7 +27691,7 @@ impl Add<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl Add<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: FlectorAtInfinity) -> MultiVector {
@@ -27378,7 +27713,7 @@ impl Add<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Horizon> for RoundPointCarrierAspect {
+impl Add<Horizon> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Horizon) -> MultiVector {
@@ -27400,7 +27735,7 @@ impl Add<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Infinity> for RoundPointCarrierAspect {
+impl Add<Infinity> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn add(self, other: Infinity) -> RoundPoint {
@@ -27413,7 +27748,7 @@ impl Add<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Line> for RoundPointCarrierAspect {
+impl Add<Line> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Line) -> MultiVector {
@@ -27435,7 +27770,7 @@ impl Add<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<LineAtInfinity> for RoundPointCarrierAspect {
+impl Add<LineAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: LineAtInfinity) -> MultiVector {
@@ -27457,7 +27792,7 @@ impl Add<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<LineAtOrigin> for RoundPointCarrierAspect {
+impl Add<LineAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: LineAtOrigin) -> MultiVector {
@@ -27479,7 +27814,7 @@ impl Add<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Motor> for RoundPointCarrierAspect {
+impl Add<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Motor) -> MultiVector {
@@ -27501,7 +27836,7 @@ impl Add<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<MultiVector> for RoundPointCarrierAspect {
+impl Add<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: MultiVector) -> MultiVector {
@@ -27523,25 +27858,25 @@ impl Add<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Origin> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Add<Origin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: Origin) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: Origin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
 }
 
-impl AddAssign<Origin> for RoundPointCarrierAspect {
+impl AddAssign<Origin> for RoundPointOnOrigin {
     fn add_assign(&mut self, other: Origin) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<Plane> for RoundPointCarrierAspect {
+impl Add<Plane> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Plane) -> MultiVector {
@@ -27563,7 +27898,7 @@ impl Add<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl Add<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: PlaneAtOrigin) -> MultiVector {
@@ -27585,7 +27920,7 @@ impl Add<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Rotor> for RoundPointCarrierAspect {
+impl Add<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Rotor) -> MultiVector {
@@ -27607,7 +27942,7 @@ impl Add<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<RoundPoint> for RoundPointCarrierAspect {
+impl Add<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn add(self, other: RoundPoint) -> RoundPoint {
@@ -27620,7 +27955,7 @@ impl Add<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl Add<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn add(self, other: RoundPointAtInfinity) -> RoundPoint {
@@ -27633,7 +27968,7 @@ impl Add<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl Add<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn add(self, other: RoundPointAtOrigin) -> RoundPoint {
@@ -27646,43 +27981,43 @@ impl Add<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<RoundPointBulk> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Add<RoundPointBulk> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: RoundPointBulk) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
 }
 
-impl AddAssign<RoundPointBulk> for RoundPointCarrierAspect {
+impl AddAssign<RoundPointBulk> for RoundPointOnOrigin {
     fn add_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Add<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn add(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn add(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() + other.group0(),
             },
         }
     }
 }
 
-impl AddAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    fn add_assign(&mut self, other: RoundPointCarrierAspect) {
+impl AddAssign<RoundPointOnOrigin> for RoundPointOnOrigin {
+    fn add_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).add(other);
     }
 }
 
-impl Add<Scalar> for RoundPointCarrierAspect {
+impl Add<Scalar> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Scalar) -> MultiVector {
@@ -27704,7 +28039,7 @@ impl Add<Scalar> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<SpacialCurvature> for RoundPointCarrierAspect {
+impl Add<SpacialCurvature> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: SpacialCurvature) -> MultiVector {
@@ -27726,7 +28061,7 @@ impl Add<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Sphere> for RoundPointCarrierAspect {
+impl Add<Sphere> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Sphere) -> MultiVector {
@@ -27748,7 +28083,7 @@ impl Add<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<SphereWeight> for RoundPointCarrierAspect {
+impl Add<SphereWeight> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: SphereWeight) -> MultiVector {
@@ -27770,7 +28105,7 @@ impl Add<SphereWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Transflector> for RoundPointCarrierAspect {
+impl Add<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Transflector) -> MultiVector {
@@ -27792,7 +28127,7 @@ impl Add<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl Add<Translator> for RoundPointCarrierAspect {
+impl Add<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn add(self, other: Translator) -> MultiVector {
@@ -28454,10 +28789,10 @@ impl Add<RoundPointBulk> for Scalar {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Scalar {
+impl Add<RoundPointOnOrigin> for Scalar {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -29242,10 +29577,10 @@ impl Add<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for SpacialCurvature {
+impl Add<RoundPointOnOrigin> for SpacialCurvature {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -30030,10 +30365,10 @@ impl Add<RoundPointBulk> for Sphere {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Sphere {
+impl Add<RoundPointOnOrigin> for Sphere {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -30807,10 +31142,10 @@ impl Add<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for SphereWeight {
+impl Add<RoundPointOnOrigin> for SphereWeight {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -31556,10 +31891,10 @@ impl Add<RoundPointBulk> for Transflector {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Transflector {
+impl Add<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -32323,10 +32658,10 @@ impl Add<RoundPointBulk> for Translator {
     }
 }
 
-impl Add<RoundPointCarrierAspect> for Translator {
+impl Add<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn add(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -33032,20 +33367,20 @@ impl DivAssign<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Div<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Div<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn div(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn div(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() / other.group0(),
             },
         }
     }
 }
 
-impl DivAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    fn div_assign(&mut self, other: RoundPointCarrierAspect) {
+impl DivAssign<RoundPointOnOrigin> for RoundPointOnOrigin {
+    fn div_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).div(other);
     }
 }
@@ -33763,10 +34098,10 @@ impl Into<RoundPointBulk> for MultiVector {
     }
 }
 
-impl Into<RoundPointCarrierAspect> for MultiVector {
-    fn into(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+impl Into<RoundPointOnOrigin> for MultiVector {
+    fn into(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group2()[0]]),
             },
         }
@@ -33907,10 +34242,10 @@ impl Into<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl Into<RoundPointCarrierAspect> for RoundPoint {
-    fn into(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+impl Into<RoundPointOnOrigin> for RoundPoint {
+    fn into(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]]),
             },
         }
@@ -33951,7 +34286,7 @@ impl Into<Origin> for RoundPointAtOrigin {
     }
 }
 
-impl Into<Origin> for RoundPointCarrierAspect {
+impl Into<Origin> for RoundPointOnOrigin {
     fn into(self) -> Origin {
         Origin {
             groups: OriginGroups { g0: self.group0()[3] },
@@ -33959,7 +34294,7 @@ impl Into<Origin> for RoundPointCarrierAspect {
     }
 }
 
-impl Into<RoundPointBulk> for RoundPointCarrierAspect {
+impl Into<RoundPointBulk> for RoundPointOnOrigin {
     fn into(self) -> RoundPointBulk {
         RoundPointBulk {
             groups: RoundPointBulkGroups {
@@ -34648,20 +34983,20 @@ impl MulAssign<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Mul<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Mul<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn mul(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn mul(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() * other.group0(),
             },
         }
     }
 }
 
-impl MulAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    fn mul_assign(&mut self, other: RoundPointCarrierAspect) {
+impl MulAssign<RoundPointOnOrigin> for RoundPointOnOrigin {
+    fn mul_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).mul(other);
     }
 }
@@ -35374,10 +35709,10 @@ impl Sub<RoundPointBulk> for AntiScalar {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for AntiScalar {
+impl Sub<RoundPointOnOrigin> for AntiScalar {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()]),
@@ -36154,10 +36489,10 @@ impl Sub<RoundPointBulk> for Circle {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Circle {
+impl Sub<RoundPointOnOrigin> for Circle {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -36912,10 +37247,10 @@ impl Sub<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for CircleBulk {
+impl Sub<RoundPointOnOrigin> for CircleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -37682,10 +38017,10 @@ impl Sub<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl Sub<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -38440,10 +38775,10 @@ impl Sub<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for CircleWeight {
+impl Sub<RoundPointOnOrigin> for CircleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -39240,10 +39575,10 @@ impl Sub<RoundPointBulk> for Dipole {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Dipole {
+impl Sub<RoundPointOnOrigin> for Dipole {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40000,10 +40335,10 @@ impl Sub<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for DipoleBulk {
+impl Sub<RoundPointOnOrigin> for DipoleBulk {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -40773,10 +41108,10 @@ impl Sub<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl Sub<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -41533,10 +41868,10 @@ impl Sub<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for DipoleWeight {
+impl Sub<RoundPointOnOrigin> for DipoleWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -42339,10 +42674,10 @@ impl Sub<RoundPointBulk> for DualNum {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for DualNum {
+impl Sub<RoundPointOnOrigin> for DualNum {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -43060,10 +43395,10 @@ impl Sub<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for FlatPoint {
+impl Sub<RoundPointOnOrigin> for FlatPoint {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -43762,10 +44097,10 @@ impl Sub<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl Sub<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -44466,10 +44801,10 @@ impl Sub<RoundPointBulk> for FlatPointAtOrigin {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl Sub<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -45247,10 +45582,10 @@ impl Sub<RoundPointBulk> for Flector {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Flector {
+impl Sub<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46001,10 +46336,10 @@ impl Sub<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl Sub<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -46735,10 +47070,10 @@ impl Sub<RoundPointBulk> for Horizon {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Horizon {
+impl Sub<RoundPointOnOrigin> for Horizon {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -47458,10 +47793,10 @@ impl Sub<RoundPointBulk> for Infinity {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Infinity {
+impl Sub<RoundPointOnOrigin> for Infinity {
     type Output = RoundPoint;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -48195,10 +48530,10 @@ impl Sub<RoundPointBulk> for Line {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Line {
+impl Sub<RoundPointOnOrigin> for Line {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -48918,10 +49253,10 @@ impl Sub<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for LineAtInfinity {
+impl Sub<RoundPointOnOrigin> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -49639,10 +49974,10 @@ impl Sub<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for LineAtOrigin {
+impl Sub<RoundPointOnOrigin> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -50426,10 +50761,10 @@ impl Sub<RoundPointBulk> for Motor {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Motor {
+impl Sub<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -51417,10 +51752,10 @@ impl SubAssign<RoundPointBulk> for MultiVector {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for MultiVector {
+impl Sub<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
@@ -51439,8 +51774,8 @@ impl Sub<RoundPointCarrierAspect> for MultiVector {
     }
 }
 
-impl SubAssign<RoundPointCarrierAspect> for MultiVector {
-    fn sub_assign(&mut self, other: RoundPointCarrierAspect) {
+impl SubAssign<RoundPointOnOrigin> for MultiVector {
+    fn sub_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -52210,23 +52545,23 @@ impl Sub<RoundPointAtOrigin> for Origin {
 }
 
 impl Sub<RoundPointBulk> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: RoundPointBulk) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl Sub<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
             },
         }
@@ -52968,10 +53303,10 @@ impl Sub<RoundPointBulk> for Plane {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Plane {
+impl Sub<RoundPointOnOrigin> for Plane {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -53677,10 +54012,10 @@ impl Sub<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl Sub<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -54416,10 +54751,10 @@ impl Sub<RoundPointBulk> for Rotor {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Rotor {
+impl Sub<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),
@@ -55203,10 +55538,10 @@ impl SubAssign<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for RoundPoint {
+impl Sub<RoundPointOnOrigin> for RoundPoint {
     type Output = RoundPoint;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -55216,8 +55551,8 @@ impl Sub<RoundPointCarrierAspect> for RoundPoint {
     }
 }
 
-impl SubAssign<RoundPointCarrierAspect> for RoundPoint {
-    fn sub_assign(&mut self, other: RoundPointCarrierAspect) {
+impl SubAssign<RoundPointOnOrigin> for RoundPoint {
+    fn sub_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).sub(other);
     }
 }
@@ -55975,10 +56310,10 @@ impl SubAssign<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl Sub<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = RoundPoint;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -56741,10 +57076,10 @@ impl Sub<RoundPointBulk> for RoundPointAtOrigin {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl Sub<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPoint {
         RoundPoint {
             groups: RoundPointGroups {
                 g0: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
@@ -57361,11 +57696,11 @@ impl Sub<MultiVector> for RoundPointBulk {
 }
 
 impl Sub<Origin> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: Origin) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: Origin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
@@ -57494,12 +57829,12 @@ impl SubAssign<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl Sub<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
             },
         }
@@ -57638,7 +57973,7 @@ impl Sub<Translator> for RoundPointBulk {
     }
 }
 
-impl Sub<AntiScalar> for RoundPointCarrierAspect {
+impl Sub<AntiScalar> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: AntiScalar) -> MultiVector {
@@ -57660,7 +57995,7 @@ impl Sub<AntiScalar> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Circle> for RoundPointCarrierAspect {
+impl Sub<Circle> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Circle) -> MultiVector {
@@ -57682,7 +58017,7 @@ impl Sub<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<CircleBulk> for RoundPointCarrierAspect {
+impl Sub<CircleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: CircleBulk) -> MultiVector {
@@ -57704,7 +58039,7 @@ impl Sub<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl Sub<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: CircleCarrierAspect) -> MultiVector {
@@ -57726,7 +58061,7 @@ impl Sub<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<CircleWeight> for RoundPointCarrierAspect {
+impl Sub<CircleWeight> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: CircleWeight) -> MultiVector {
@@ -57748,7 +58083,7 @@ impl Sub<CircleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Dipole> for RoundPointCarrierAspect {
+impl Sub<Dipole> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Dipole) -> MultiVector {
@@ -57770,7 +58105,7 @@ impl Sub<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<DipoleBulk> for RoundPointCarrierAspect {
+impl Sub<DipoleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleBulk) -> MultiVector {
@@ -57792,7 +58127,7 @@ impl Sub<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl Sub<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -57814,7 +58149,7 @@ impl Sub<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<DipoleWeight> for RoundPointCarrierAspect {
+impl Sub<DipoleWeight> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: DipoleWeight) -> MultiVector {
@@ -57836,7 +58171,7 @@ impl Sub<DipoleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<DualNum> for RoundPointCarrierAspect {
+impl Sub<DualNum> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: DualNum) -> MultiVector {
@@ -57858,7 +58193,7 @@ impl Sub<DualNum> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<FlatPoint> for RoundPointCarrierAspect {
+impl Sub<FlatPoint> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPoint) -> MultiVector {
@@ -57880,7 +58215,7 @@ impl Sub<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl Sub<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
@@ -57902,7 +58237,7 @@ impl Sub<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl Sub<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -57924,7 +58259,7 @@ impl Sub<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Flector> for RoundPointCarrierAspect {
+impl Sub<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Flector) -> MultiVector {
@@ -57946,7 +58281,7 @@ impl Sub<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl Sub<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: FlectorAtInfinity) -> MultiVector {
@@ -57968,7 +58303,7 @@ impl Sub<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Horizon> for RoundPointCarrierAspect {
+impl Sub<Horizon> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Horizon) -> MultiVector {
@@ -57990,7 +58325,7 @@ impl Sub<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Infinity> for RoundPointCarrierAspect {
+impl Sub<Infinity> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn sub(self, other: Infinity) -> RoundPoint {
@@ -58003,7 +58338,7 @@ impl Sub<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Line> for RoundPointCarrierAspect {
+impl Sub<Line> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Line) -> MultiVector {
@@ -58025,7 +58360,7 @@ impl Sub<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<LineAtInfinity> for RoundPointCarrierAspect {
+impl Sub<LineAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtInfinity) -> MultiVector {
@@ -58047,7 +58382,7 @@ impl Sub<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<LineAtOrigin> for RoundPointCarrierAspect {
+impl Sub<LineAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: LineAtOrigin) -> MultiVector {
@@ -58069,7 +58404,7 @@ impl Sub<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Motor> for RoundPointCarrierAspect {
+impl Sub<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Motor) -> MultiVector {
@@ -58091,7 +58426,7 @@ impl Sub<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<MultiVector> for RoundPointCarrierAspect {
+impl Sub<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: MultiVector) -> MultiVector {
@@ -58113,25 +58448,25 @@ impl Sub<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Origin> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Sub<Origin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: Origin) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: Origin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
 }
 
-impl SubAssign<Origin> for RoundPointCarrierAspect {
+impl SubAssign<Origin> for RoundPointOnOrigin {
     fn sub_assign(&mut self, other: Origin) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<Plane> for RoundPointCarrierAspect {
+impl Sub<Plane> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Plane) -> MultiVector {
@@ -58153,7 +58488,7 @@ impl Sub<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl Sub<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: PlaneAtOrigin) -> MultiVector {
@@ -58175,7 +58510,7 @@ impl Sub<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Rotor> for RoundPointCarrierAspect {
+impl Sub<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Rotor) -> MultiVector {
@@ -58197,7 +58532,7 @@ impl Sub<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<RoundPoint> for RoundPointCarrierAspect {
+impl Sub<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn sub(self, other: RoundPoint) -> RoundPoint {
@@ -58210,7 +58545,7 @@ impl Sub<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl Sub<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn sub(self, other: RoundPointAtInfinity) -> RoundPoint {
@@ -58223,7 +58558,7 @@ impl Sub<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl Sub<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn sub(self, other: RoundPointAtOrigin) -> RoundPoint {
@@ -58236,43 +58571,43 @@ impl Sub<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<RoundPointBulk> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Sub<RoundPointBulk> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: RoundPointBulk) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
 }
 
-impl SubAssign<RoundPointBulk> for RoundPointCarrierAspect {
+impl SubAssign<RoundPointBulk> for RoundPointOnOrigin {
     fn sub_assign(&mut self, other: RoundPointBulk) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Sub<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn sub(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() - other.group0(),
             },
         }
     }
 }
 
-impl SubAssign<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    fn sub_assign(&mut self, other: RoundPointCarrierAspect) {
+impl SubAssign<RoundPointOnOrigin> for RoundPointOnOrigin {
+    fn sub_assign(&mut self, other: RoundPointOnOrigin) {
         *self = (*self).sub(other);
     }
 }
 
-impl Sub<Scalar> for RoundPointCarrierAspect {
+impl Sub<Scalar> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Scalar) -> MultiVector {
@@ -58294,7 +58629,7 @@ impl Sub<Scalar> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<SpacialCurvature> for RoundPointCarrierAspect {
+impl Sub<SpacialCurvature> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: SpacialCurvature) -> MultiVector {
@@ -58316,7 +58651,7 @@ impl Sub<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Sphere> for RoundPointCarrierAspect {
+impl Sub<Sphere> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Sphere) -> MultiVector {
@@ -58338,7 +58673,7 @@ impl Sub<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<SphereWeight> for RoundPointCarrierAspect {
+impl Sub<SphereWeight> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: SphereWeight) -> MultiVector {
@@ -58360,7 +58695,7 @@ impl Sub<SphereWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Transflector> for RoundPointCarrierAspect {
+impl Sub<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Transflector) -> MultiVector {
@@ -58382,7 +58717,7 @@ impl Sub<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl Sub<Translator> for RoundPointCarrierAspect {
+impl Sub<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn sub(self, other: Translator) -> MultiVector {
@@ -59044,10 +59379,10 @@ impl Sub<RoundPointBulk> for Scalar {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Scalar {
+impl Sub<RoundPointOnOrigin> for Scalar {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([self.group0(), 0.0]),
@@ -59832,10 +60167,10 @@ impl Sub<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for SpacialCurvature {
+impl Sub<RoundPointOnOrigin> for SpacialCurvature {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -60620,10 +60955,10 @@ impl Sub<RoundPointBulk> for Sphere {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Sphere {
+impl Sub<RoundPointOnOrigin> for Sphere {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -61397,10 +61732,10 @@ impl Sub<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for SphereWeight {
+impl Sub<RoundPointOnOrigin> for SphereWeight {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -62146,10 +62481,10 @@ impl Sub<RoundPointBulk> for Transflector {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Transflector {
+impl Sub<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from(0.0),
@@ -62913,10 +63248,10 @@ impl Sub<RoundPointBulk> for Translator {
     }
 }
 
-impl Sub<RoundPointCarrierAspect> for Translator {
+impl Sub<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn sub(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
                 g0: Simd32x2::from([0.0, self.group0()[3]]),

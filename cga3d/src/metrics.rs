@@ -149,10 +149,10 @@ impl CosineAngle<RoundPointBulk> for Circle {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for Circle {
+impl CosineAngle<RoundPointOnOrigin> for Circle {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -245,10 +245,10 @@ impl CosineAngle<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for CircleBulk {
+impl CosineAngle<RoundPointOnOrigin> for CircleBulk {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -349,10 +349,10 @@ impl CosineAngle<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl CosineAngle<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -429,10 +429,10 @@ impl CosineAngle<RoundPointBulk> for Dipole {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for Dipole {
+impl CosineAngle<RoundPointOnOrigin> for Dipole {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -493,10 +493,10 @@ impl CosineAngle<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for DipoleBulk {
+impl CosineAngle<RoundPointOnOrigin> for DipoleBulk {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -565,10 +565,10 @@ impl CosineAngle<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl CosineAngle<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -621,10 +621,10 @@ impl CosineAngle<RoundPointAtOrigin> for FlatPoint {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for FlatPoint {
+impl CosineAngle<RoundPointOnOrigin> for FlatPoint {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -677,10 +677,10 @@ impl CosineAngle<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl CosineAngle<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -781,10 +781,10 @@ impl CosineAngle<RoundPointBulk> for Line {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for Line {
+impl CosineAngle<RoundPointOnOrigin> for Line {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -885,10 +885,10 @@ impl CosineAngle<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for LineAtOrigin {
+impl CosineAngle<RoundPointOnOrigin> for LineAtOrigin {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1013,10 +1013,10 @@ impl CosineAngle<RoundPointBulk> for Plane {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for Plane {
+impl CosineAngle<RoundPointOnOrigin> for Plane {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1157,10 +1157,10 @@ impl CosineAngle<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl CosineAngle<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1205,10 +1205,10 @@ impl CosineAngle<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for RoundPoint {
+impl CosineAngle<RoundPointOnOrigin> for RoundPoint {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1245,10 +1245,10 @@ impl CosineAngle<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl CosineAngle<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1277,10 +1277,10 @@ impl CosineAngle<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl CosineAngle<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1309,15 +1309,15 @@ impl CosineAngle<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for RoundPointBulk {
+impl CosineAngle<RoundPointOnOrigin> for RoundPointBulk {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
-impl CosineAngle<RoundPoint> for RoundPointCarrierAspect {
+impl CosineAngle<RoundPoint> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn cosine_angle(self, other: RoundPoint) -> DualNum {
@@ -1325,7 +1325,7 @@ impl CosineAngle<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl CosineAngle<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl CosineAngle<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn cosine_angle(self, other: RoundPointAtInfinity) -> DualNum {
@@ -1333,7 +1333,7 @@ impl CosineAngle<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl CosineAngle<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl CosineAngle<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn cosine_angle(self, other: RoundPointAtOrigin) -> DualNum {
@@ -1341,7 +1341,7 @@ impl CosineAngle<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl CosineAngle<RoundPointBulk> for RoundPointCarrierAspect {
+impl CosineAngle<RoundPointBulk> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn cosine_angle(self, other: RoundPointBulk) -> DualNum {
@@ -1349,10 +1349,10 @@ impl CosineAngle<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl CosineAngle<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1461,10 +1461,10 @@ impl CosineAngle<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for SpacialCurvature {
+impl CosineAngle<RoundPointOnOrigin> for SpacialCurvature {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1613,10 +1613,10 @@ impl CosineAngle<RoundPointBulk> for Sphere {
     }
 }
 
-impl CosineAngle<RoundPointCarrierAspect> for Sphere {
+impl CosineAngle<RoundPointOnOrigin> for Sphere {
     type Output = DualNum;
 
-    fn cosine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1669,10 +1669,10 @@ impl Distance<RoundPointAtOrigin> for Circle {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for Circle {
+impl Distance<RoundPointOnOrigin> for Circle {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1709,10 +1709,10 @@ impl Distance<RoundPointAtOrigin> for CircleBulk {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for CircleBulk {
+impl Distance<RoundPointOnOrigin> for CircleBulk {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1749,10 +1749,10 @@ impl Distance<RoundPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl Distance<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1821,10 +1821,10 @@ impl Distance<RoundPointAtOrigin> for Dipole {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for Dipole {
+impl Distance<RoundPointOnOrigin> for Dipole {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1885,10 +1885,10 @@ impl Distance<RoundPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for DipoleBulk {
+impl Distance<RoundPointOnOrigin> for DipoleBulk {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1949,10 +1949,10 @@ impl Distance<RoundPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl Distance<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2061,10 +2061,10 @@ impl Distance<RoundPointAtOrigin> for DualNum {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for DualNum {
+impl Distance<RoundPointOnOrigin> for DualNum {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2341,10 +2341,10 @@ impl Distance<RoundPointAtOrigin> for MultiVector {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for MultiVector {
+impl Distance<RoundPointOnOrigin> for MultiVector {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2533,10 +2533,10 @@ impl Distance<RoundPointAtOrigin> for RoundPoint {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for RoundPoint {
+impl Distance<RoundPointOnOrigin> for RoundPoint {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2621,10 +2621,10 @@ impl Distance<RoundPointAtOrigin> for RoundPointAtInfinity {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl Distance<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2685,10 +2685,10 @@ impl Distance<RoundPoint> for RoundPointAtOrigin {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl Distance<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2773,15 +2773,15 @@ impl Distance<RoundPointAtOrigin> for RoundPointBulk {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for RoundPointBulk {
+impl Distance<RoundPointOnOrigin> for RoundPointBulk {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Circle> for RoundPointCarrierAspect {
+impl Distance<Circle> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: Circle) -> DualNum {
@@ -2789,7 +2789,7 @@ impl Distance<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl Distance<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: CircleCarrierAspect) -> DualNum {
@@ -2797,7 +2797,7 @@ impl Distance<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<CircleWeight> for RoundPointCarrierAspect {
+impl Distance<CircleWeight> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: CircleWeight) -> DualNum {
@@ -2805,7 +2805,7 @@ impl Distance<CircleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<Dipole> for RoundPointCarrierAspect {
+impl Distance<Dipole> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: Dipole) -> DualNum {
@@ -2813,7 +2813,7 @@ impl Distance<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl Distance<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: DipoleCarrierAspect) -> DualNum {
@@ -2821,7 +2821,7 @@ impl Distance<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<DipoleWeight> for RoundPointCarrierAspect {
+impl Distance<DipoleWeight> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: DipoleWeight) -> DualNum {
@@ -2829,7 +2829,7 @@ impl Distance<DipoleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<DualNum> for RoundPointCarrierAspect {
+impl Distance<DualNum> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: DualNum) -> DualNum {
@@ -2837,7 +2837,7 @@ impl Distance<DualNum> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<MultiVector> for RoundPointCarrierAspect {
+impl Distance<MultiVector> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: MultiVector) -> DualNum {
@@ -2845,7 +2845,7 @@ impl Distance<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<Origin> for RoundPointCarrierAspect {
+impl Distance<Origin> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: Origin) -> DualNum {
@@ -2853,7 +2853,7 @@ impl Distance<Origin> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<RoundPoint> for RoundPointCarrierAspect {
+impl Distance<RoundPoint> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: RoundPoint) -> DualNum {
@@ -2861,7 +2861,7 @@ impl Distance<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl Distance<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: RoundPointAtOrigin) -> DualNum {
@@ -2869,10 +2869,10 @@ impl Distance<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl Distance<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -2965,10 +2965,10 @@ impl Distance<RoundPointAtOrigin> for Scalar {
     }
 }
 
-impl Distance<RoundPointCarrierAspect> for Scalar {
+impl Distance<RoundPointOnOrigin> for Scalar {
     type Output = DualNum;
 
-    fn distance(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -3043,7 +3043,7 @@ impl SineAngle<Circle> for Circle {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3054,7 +3054,7 @@ impl SineAngle<CircleBulk> for Circle {
     fn sine_angle(self, other: CircleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3065,7 +3065,7 @@ impl SineAngle<CircleCarrierAspect> for Circle {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3076,7 +3076,7 @@ impl SineAngle<Dipole> for Circle {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3087,7 +3087,7 @@ impl SineAngle<DipoleBulk> for Circle {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3098,7 +3098,7 @@ impl SineAngle<DipoleCarrierAspect> for Circle {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3109,7 +3109,7 @@ impl SineAngle<FlatPoint> for Circle {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3120,7 +3120,7 @@ impl SineAngle<FlatPointAtOrigin> for Circle {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3131,7 +3131,7 @@ impl SineAngle<Line> for Circle {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3142,7 +3142,7 @@ impl SineAngle<LineAtOrigin> for Circle {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3153,7 +3153,7 @@ impl SineAngle<RoundPoint> for Circle {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3164,7 +3164,7 @@ impl SineAngle<RoundPointAtInfinity> for Circle {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3175,7 +3175,7 @@ impl SineAngle<RoundPointAtOrigin> for Circle {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3186,18 +3186,18 @@ impl SineAngle<RoundPointBulk> for Circle {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for Circle {
+impl SineAngle<RoundPointOnOrigin> for Circle {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3208,7 +3208,7 @@ impl SineAngle<Circle> for CircleBulk {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3219,7 +3219,7 @@ impl SineAngle<CircleBulk> for CircleBulk {
     fn sine_angle(self, other: CircleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3230,7 +3230,7 @@ impl SineAngle<CircleCarrierAspect> for CircleBulk {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3241,7 +3241,7 @@ impl SineAngle<Dipole> for CircleBulk {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3252,7 +3252,7 @@ impl SineAngle<DipoleBulk> for CircleBulk {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3263,7 +3263,7 @@ impl SineAngle<DipoleCarrierAspect> for CircleBulk {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3274,7 +3274,7 @@ impl SineAngle<FlatPoint> for CircleBulk {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3285,7 +3285,7 @@ impl SineAngle<Line> for CircleBulk {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3296,7 +3296,7 @@ impl SineAngle<RoundPoint> for CircleBulk {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3307,7 +3307,7 @@ impl SineAngle<RoundPointAtInfinity> for CircleBulk {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3318,18 +3318,18 @@ impl SineAngle<RoundPointBulk> for CircleBulk {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for CircleBulk {
+impl SineAngle<RoundPointOnOrigin> for CircleBulk {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3340,7 +3340,7 @@ impl SineAngle<Circle> for CircleCarrierAspect {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3351,7 +3351,7 @@ impl SineAngle<CircleBulk> for CircleCarrierAspect {
     fn sine_angle(self, other: CircleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3362,7 +3362,7 @@ impl SineAngle<CircleCarrierAspect> for CircleCarrierAspect {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3373,7 +3373,7 @@ impl SineAngle<Dipole> for CircleCarrierAspect {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3384,7 +3384,7 @@ impl SineAngle<DipoleBulk> for CircleCarrierAspect {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3395,7 +3395,7 @@ impl SineAngle<DipoleCarrierAspect> for CircleCarrierAspect {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3406,7 +3406,7 @@ impl SineAngle<FlatPoint> for CircleCarrierAspect {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3417,7 +3417,7 @@ impl SineAngle<Line> for CircleCarrierAspect {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3428,7 +3428,7 @@ impl SineAngle<RoundPoint> for CircleCarrierAspect {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3439,7 +3439,7 @@ impl SineAngle<RoundPointAtInfinity> for CircleCarrierAspect {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3450,7 +3450,7 @@ impl SineAngle<RoundPointAtOrigin> for CircleCarrierAspect {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3461,18 +3461,18 @@ impl SineAngle<RoundPointBulk> for CircleCarrierAspect {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl SineAngle<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3483,7 +3483,7 @@ impl SineAngle<Dipole> for Dipole {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3494,7 +3494,7 @@ impl SineAngle<DipoleBulk> for Dipole {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3505,7 +3505,7 @@ impl SineAngle<DipoleCarrierAspect> for Dipole {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3516,7 +3516,7 @@ impl SineAngle<FlatPoint> for Dipole {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3527,7 +3527,7 @@ impl SineAngle<FlatPointAtOrigin> for Dipole {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3538,7 +3538,7 @@ impl SineAngle<RoundPoint> for Dipole {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3549,7 +3549,7 @@ impl SineAngle<RoundPointAtInfinity> for Dipole {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3560,7 +3560,7 @@ impl SineAngle<RoundPointAtOrigin> for Dipole {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3571,18 +3571,18 @@ impl SineAngle<RoundPointBulk> for Dipole {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for Dipole {
+impl SineAngle<RoundPointOnOrigin> for Dipole {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3593,7 +3593,7 @@ impl SineAngle<Dipole> for DipoleBulk {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3604,7 +3604,7 @@ impl SineAngle<DipoleBulk> for DipoleBulk {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3615,7 +3615,7 @@ impl SineAngle<DipoleCarrierAspect> for DipoleBulk {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3626,7 +3626,7 @@ impl SineAngle<FlatPoint> for DipoleBulk {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3637,7 +3637,7 @@ impl SineAngle<RoundPoint> for DipoleBulk {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3648,7 +3648,7 @@ impl SineAngle<RoundPointAtInfinity> for DipoleBulk {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3659,18 +3659,18 @@ impl SineAngle<RoundPointBulk> for DipoleBulk {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for DipoleBulk {
+impl SineAngle<RoundPointOnOrigin> for DipoleBulk {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3681,7 +3681,7 @@ impl SineAngle<Dipole> for DipoleCarrierAspect {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3692,7 +3692,7 @@ impl SineAngle<DipoleBulk> for DipoleCarrierAspect {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3703,7 +3703,7 @@ impl SineAngle<DipoleCarrierAspect> for DipoleCarrierAspect {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3714,7 +3714,7 @@ impl SineAngle<FlatPoint> for DipoleCarrierAspect {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3725,7 +3725,7 @@ impl SineAngle<RoundPoint> for DipoleCarrierAspect {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3736,7 +3736,7 @@ impl SineAngle<RoundPointAtInfinity> for DipoleCarrierAspect {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3747,7 +3747,7 @@ impl SineAngle<RoundPointAtOrigin> for DipoleCarrierAspect {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3758,18 +3758,18 @@ impl SineAngle<RoundPointBulk> for DipoleCarrierAspect {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl SineAngle<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3780,7 +3780,7 @@ impl SineAngle<Dipole> for FlatPoint {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3791,7 +3791,7 @@ impl SineAngle<DipoleCarrierAspect> for FlatPoint {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3802,7 +3802,7 @@ impl SineAngle<FlatPoint> for FlatPoint {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3813,7 +3813,7 @@ impl SineAngle<FlatPointAtOrigin> for FlatPoint {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3824,7 +3824,7 @@ impl SineAngle<RoundPoint> for FlatPoint {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3835,18 +3835,18 @@ impl SineAngle<RoundPointAtOrigin> for FlatPoint {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for FlatPoint {
+impl SineAngle<RoundPointOnOrigin> for FlatPoint {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3857,7 +3857,7 @@ impl SineAngle<Dipole> for FlatPointAtOrigin {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3868,7 +3868,7 @@ impl SineAngle<DipoleCarrierAspect> for FlatPointAtOrigin {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3879,7 +3879,7 @@ impl SineAngle<FlatPoint> for FlatPointAtOrigin {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3890,7 +3890,7 @@ impl SineAngle<FlatPointAtOrigin> for FlatPointAtOrigin {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3901,7 +3901,7 @@ impl SineAngle<RoundPoint> for FlatPointAtOrigin {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3912,18 +3912,18 @@ impl SineAngle<RoundPointAtOrigin> for FlatPointAtOrigin {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl SineAngle<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3934,7 +3934,7 @@ impl SineAngle<Circle> for Line {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3945,7 +3945,7 @@ impl SineAngle<CircleCarrierAspect> for Line {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3956,7 +3956,7 @@ impl SineAngle<Dipole> for Line {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3967,7 +3967,7 @@ impl SineAngle<DipoleCarrierAspect> for Line {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3978,7 +3978,7 @@ impl SineAngle<FlatPoint> for Line {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -3989,7 +3989,7 @@ impl SineAngle<FlatPointAtOrigin> for Line {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4000,7 +4000,7 @@ impl SineAngle<Line> for Line {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4011,7 +4011,7 @@ impl SineAngle<LineAtOrigin> for Line {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4022,7 +4022,7 @@ impl SineAngle<RoundPoint> for Line {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4033,7 +4033,7 @@ impl SineAngle<RoundPointAtInfinity> for Line {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4044,7 +4044,7 @@ impl SineAngle<RoundPointAtOrigin> for Line {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4055,18 +4055,18 @@ impl SineAngle<RoundPointBulk> for Line {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for Line {
+impl SineAngle<RoundPointOnOrigin> for Line {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4077,7 +4077,7 @@ impl SineAngle<Circle> for LineAtOrigin {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4088,7 +4088,7 @@ impl SineAngle<CircleCarrierAspect> for LineAtOrigin {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4099,7 +4099,7 @@ impl SineAngle<Dipole> for LineAtOrigin {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4110,7 +4110,7 @@ impl SineAngle<DipoleCarrierAspect> for LineAtOrigin {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4121,7 +4121,7 @@ impl SineAngle<FlatPoint> for LineAtOrigin {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4132,7 +4132,7 @@ impl SineAngle<FlatPointAtOrigin> for LineAtOrigin {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4143,7 +4143,7 @@ impl SineAngle<Line> for LineAtOrigin {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4154,7 +4154,7 @@ impl SineAngle<LineAtOrigin> for LineAtOrigin {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4165,7 +4165,7 @@ impl SineAngle<RoundPoint> for LineAtOrigin {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4176,7 +4176,7 @@ impl SineAngle<RoundPointAtInfinity> for LineAtOrigin {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4187,7 +4187,7 @@ impl SineAngle<RoundPointAtOrigin> for LineAtOrigin {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4198,18 +4198,18 @@ impl SineAngle<RoundPointBulk> for LineAtOrigin {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for LineAtOrigin {
+impl SineAngle<RoundPointOnOrigin> for LineAtOrigin {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4220,7 +4220,7 @@ impl SineAngle<Circle> for Plane {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4231,7 +4231,7 @@ impl SineAngle<CircleCarrierAspect> for Plane {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4242,7 +4242,7 @@ impl SineAngle<Dipole> for Plane {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4253,7 +4253,7 @@ impl SineAngle<DipoleBulk> for Plane {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4264,7 +4264,7 @@ impl SineAngle<DipoleCarrierAspect> for Plane {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4275,7 +4275,7 @@ impl SineAngle<FlatPoint> for Plane {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4286,7 +4286,7 @@ impl SineAngle<FlatPointAtOrigin> for Plane {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4297,7 +4297,7 @@ impl SineAngle<Line> for Plane {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4308,7 +4308,7 @@ impl SineAngle<LineAtOrigin> for Plane {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4319,7 +4319,7 @@ impl SineAngle<Plane> for Plane {
     fn sine_angle(self, other: Plane) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4330,7 +4330,7 @@ impl SineAngle<PlaneAtOrigin> for Plane {
     fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4341,7 +4341,7 @@ impl SineAngle<RoundPoint> for Plane {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4352,7 +4352,7 @@ impl SineAngle<RoundPointAtInfinity> for Plane {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4363,7 +4363,7 @@ impl SineAngle<RoundPointAtOrigin> for Plane {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4374,18 +4374,18 @@ impl SineAngle<RoundPointBulk> for Plane {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for Plane {
+impl SineAngle<RoundPointOnOrigin> for Plane {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4396,7 +4396,7 @@ impl SineAngle<SpacialCurvature> for Plane {
     fn sine_angle(self, other: SpacialCurvature) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4407,7 +4407,7 @@ impl SineAngle<Sphere> for Plane {
     fn sine_angle(self, other: Sphere) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4418,7 +4418,7 @@ impl SineAngle<Circle> for PlaneAtOrigin {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4429,7 +4429,7 @@ impl SineAngle<CircleCarrierAspect> for PlaneAtOrigin {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4440,7 +4440,7 @@ impl SineAngle<Dipole> for PlaneAtOrigin {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4451,7 +4451,7 @@ impl SineAngle<DipoleBulk> for PlaneAtOrigin {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4462,7 +4462,7 @@ impl SineAngle<DipoleCarrierAspect> for PlaneAtOrigin {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4473,7 +4473,7 @@ impl SineAngle<FlatPoint> for PlaneAtOrigin {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4484,7 +4484,7 @@ impl SineAngle<FlatPointAtOrigin> for PlaneAtOrigin {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4495,7 +4495,7 @@ impl SineAngle<Line> for PlaneAtOrigin {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4506,7 +4506,7 @@ impl SineAngle<LineAtOrigin> for PlaneAtOrigin {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4517,7 +4517,7 @@ impl SineAngle<Plane> for PlaneAtOrigin {
     fn sine_angle(self, other: Plane) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4528,7 +4528,7 @@ impl SineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4539,7 +4539,7 @@ impl SineAngle<RoundPoint> for PlaneAtOrigin {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4550,7 +4550,7 @@ impl SineAngle<RoundPointAtInfinity> for PlaneAtOrigin {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4561,7 +4561,7 @@ impl SineAngle<RoundPointAtOrigin> for PlaneAtOrigin {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4572,18 +4572,18 @@ impl SineAngle<RoundPointBulk> for PlaneAtOrigin {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl SineAngle<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4594,7 +4594,7 @@ impl SineAngle<Sphere> for PlaneAtOrigin {
     fn sine_angle(self, other: Sphere) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4605,7 +4605,7 @@ impl SineAngle<RoundPoint> for RoundPoint {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4616,7 +4616,7 @@ impl SineAngle<RoundPointAtInfinity> for RoundPoint {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4627,7 +4627,7 @@ impl SineAngle<RoundPointAtOrigin> for RoundPoint {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4638,18 +4638,18 @@ impl SineAngle<RoundPointBulk> for RoundPoint {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for RoundPoint {
+impl SineAngle<RoundPointOnOrigin> for RoundPoint {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4660,7 +4660,7 @@ impl SineAngle<RoundPoint> for RoundPointAtInfinity {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4671,7 +4671,7 @@ impl SineAngle<RoundPointAtInfinity> for RoundPointAtInfinity {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4682,7 +4682,7 @@ impl SineAngle<RoundPointAtOrigin> for RoundPointAtInfinity {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4693,18 +4693,18 @@ impl SineAngle<RoundPointBulk> for RoundPointAtInfinity {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl SineAngle<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4715,7 +4715,7 @@ impl SineAngle<RoundPoint> for RoundPointAtOrigin {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4726,7 +4726,7 @@ impl SineAngle<RoundPointAtInfinity> for RoundPointAtOrigin {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4737,18 +4737,18 @@ impl SineAngle<RoundPointAtOrigin> for RoundPointAtOrigin {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl SineAngle<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4759,7 +4759,7 @@ impl SineAngle<RoundPoint> for RoundPointBulk {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4770,7 +4770,7 @@ impl SineAngle<RoundPointAtInfinity> for RoundPointBulk {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4781,73 +4781,73 @@ impl SineAngle<RoundPointBulk> for RoundPointBulk {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for RoundPointBulk {
+impl SineAngle<RoundPointOnOrigin> for RoundPointBulk {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPoint> for RoundPointCarrierAspect {
+impl SineAngle<RoundPoint> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl SineAngle<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl SineAngle<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointBulk> for RoundPointCarrierAspect {
+impl SineAngle<RoundPointBulk> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl SineAngle<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4858,7 +4858,7 @@ impl SineAngle<Circle> for SpacialCurvature {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4869,7 +4869,7 @@ impl SineAngle<CircleBulk> for SpacialCurvature {
     fn sine_angle(self, other: CircleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4880,7 +4880,7 @@ impl SineAngle<CircleCarrierAspect> for SpacialCurvature {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4891,7 +4891,7 @@ impl SineAngle<Dipole> for SpacialCurvature {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4902,7 +4902,7 @@ impl SineAngle<DipoleBulk> for SpacialCurvature {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4913,7 +4913,7 @@ impl SineAngle<DipoleCarrierAspect> for SpacialCurvature {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4924,7 +4924,7 @@ impl SineAngle<FlatPoint> for SpacialCurvature {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4935,7 +4935,7 @@ impl SineAngle<Line> for SpacialCurvature {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4946,7 +4946,7 @@ impl SineAngle<Plane> for SpacialCurvature {
     fn sine_angle(self, other: Plane) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4957,7 +4957,7 @@ impl SineAngle<RoundPoint> for SpacialCurvature {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4968,7 +4968,7 @@ impl SineAngle<RoundPointAtInfinity> for SpacialCurvature {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4979,7 +4979,7 @@ impl SineAngle<RoundPointAtOrigin> for SpacialCurvature {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -4990,18 +4990,18 @@ impl SineAngle<RoundPointBulk> for SpacialCurvature {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for SpacialCurvature {
+impl SineAngle<RoundPointOnOrigin> for SpacialCurvature {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5012,7 +5012,7 @@ impl SineAngle<SpacialCurvature> for SpacialCurvature {
     fn sine_angle(self, other: SpacialCurvature) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5023,7 +5023,7 @@ impl SineAngle<Sphere> for SpacialCurvature {
     fn sine_angle(self, other: Sphere) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5034,7 +5034,7 @@ impl SineAngle<Circle> for Sphere {
     fn sine_angle(self, other: Circle) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5045,7 +5045,7 @@ impl SineAngle<CircleBulk> for Sphere {
     fn sine_angle(self, other: CircleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5056,7 +5056,7 @@ impl SineAngle<CircleCarrierAspect> for Sphere {
     fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5067,7 +5067,7 @@ impl SineAngle<Dipole> for Sphere {
     fn sine_angle(self, other: Dipole) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5078,7 +5078,7 @@ impl SineAngle<DipoleBulk> for Sphere {
     fn sine_angle(self, other: DipoleBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5089,7 +5089,7 @@ impl SineAngle<DipoleCarrierAspect> for Sphere {
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5100,7 +5100,7 @@ impl SineAngle<FlatPoint> for Sphere {
     fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5111,7 +5111,7 @@ impl SineAngle<FlatPointAtOrigin> for Sphere {
     fn sine_angle(self, other: FlatPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5122,7 +5122,7 @@ impl SineAngle<Line> for Sphere {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5133,7 +5133,7 @@ impl SineAngle<LineAtOrigin> for Sphere {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5144,7 +5144,7 @@ impl SineAngle<Plane> for Sphere {
     fn sine_angle(self, other: Plane) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5155,7 +5155,7 @@ impl SineAngle<PlaneAtOrigin> for Sphere {
     fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5166,7 +5166,7 @@ impl SineAngle<RoundPoint> for Sphere {
     fn sine_angle(self, other: RoundPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5177,7 +5177,7 @@ impl SineAngle<RoundPointAtInfinity> for Sphere {
     fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5188,7 +5188,7 @@ impl SineAngle<RoundPointAtOrigin> for Sphere {
     fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5199,18 +5199,18 @@ impl SineAngle<RoundPointBulk> for Sphere {
     fn sine_angle(self, other: RoundPointBulk) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
 
-impl SineAngle<RoundPointCarrierAspect> for Sphere {
+impl SineAngle<RoundPointOnOrigin> for Sphere {
     type Output = DualNum;
 
-    fn sine_angle(self, other: RoundPointCarrierAspect) -> DualNum {
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5221,7 +5221,7 @@ impl SineAngle<SpacialCurvature> for Sphere {
     fn sine_angle(self, other: SpacialCurvature) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -5232,7 +5232,7 @@ impl SineAngle<Sphere> for Sphere {
     fn sine_angle(self, other: Sphere) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }

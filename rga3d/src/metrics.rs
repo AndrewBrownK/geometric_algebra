@@ -1203,7 +1203,7 @@ impl SineAngle<Line> for Line {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1214,7 +1214,7 @@ impl SineAngle<LineAtOrigin> for Line {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1225,7 +1225,7 @@ impl SineAngle<Origin> for Line {
     fn sine_angle(self, other: Origin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1236,7 +1236,7 @@ impl SineAngle<Point> for Line {
     fn sine_angle(self, other: Point) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1247,7 +1247,7 @@ impl SineAngle<Line> for LineAtOrigin {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1258,7 +1258,7 @@ impl SineAngle<LineAtOrigin> for LineAtOrigin {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1269,7 +1269,7 @@ impl SineAngle<Origin> for LineAtOrigin {
     fn sine_angle(self, other: Origin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1280,7 +1280,7 @@ impl SineAngle<Point> for LineAtOrigin {
     fn sine_angle(self, other: Point) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1291,7 +1291,7 @@ impl SineAngle<Origin> for Origin {
     fn sine_angle(self, other: Origin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1302,7 +1302,7 @@ impl SineAngle<Point> for Origin {
     fn sine_angle(self, other: Point) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1313,7 +1313,7 @@ impl SineAngle<Line> for Plane {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1324,7 +1324,7 @@ impl SineAngle<LineAtOrigin> for Plane {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1335,7 +1335,7 @@ impl SineAngle<Origin> for Plane {
     fn sine_angle(self, other: Origin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1346,7 +1346,7 @@ impl SineAngle<Plane> for Plane {
     fn sine_angle(self, other: Plane) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1357,7 +1357,7 @@ impl SineAngle<PlaneAtOrigin> for Plane {
     fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1368,7 +1368,7 @@ impl SineAngle<Point> for Plane {
     fn sine_angle(self, other: Point) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1379,7 +1379,7 @@ impl SineAngle<Line> for PlaneAtOrigin {
     fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1390,7 +1390,7 @@ impl SineAngle<LineAtOrigin> for PlaneAtOrigin {
     fn sine_angle(self, other: LineAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1401,7 +1401,7 @@ impl SineAngle<Origin> for PlaneAtOrigin {
     fn sine_angle(self, other: Origin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1412,7 +1412,7 @@ impl SineAngle<Plane> for PlaneAtOrigin {
     fn sine_angle(self, other: Plane) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1423,7 +1423,7 @@ impl SineAngle<PlaneAtOrigin> for PlaneAtOrigin {
     fn sine_angle(self, other: PlaneAtOrigin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1434,7 +1434,7 @@ impl SineAngle<Point> for PlaneAtOrigin {
     fn sine_angle(self, other: Point) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1445,7 +1445,7 @@ impl SineAngle<Origin> for Point {
     fn sine_angle(self, other: Origin) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }
@@ -1456,7 +1456,7 @@ impl SineAngle<Point> for Point {
     fn sine_angle(self, other: Point) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::one().sub(cos_squared);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
         sub.sqrt()
     }
 }

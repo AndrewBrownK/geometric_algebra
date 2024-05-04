@@ -201,10 +201,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for AntiScalar {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for AntiScalar {
-    type Output = RoundPointCarrierAspect;
+impl GeometricAntiQuotient<RoundPointOnOrigin> for AntiScalar {
+    type Output = RoundPointOnOrigin;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -425,10 +425,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Circle {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Circle {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Circle {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -649,10 +649,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for CircleBulk {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for CircleBulk {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -873,10 +873,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1097,10 +1097,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for CircleWeight {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for CircleWeight {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1321,10 +1321,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Dipole {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Dipole {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Dipole {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1545,10 +1545,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for DipoleBulk {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for DipoleBulk {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1769,10 +1769,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -1993,10 +1993,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for DipoleWeight {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for DipoleWeight {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2217,10 +2217,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for DualNum {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for DualNum {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for DualNum {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2441,10 +2441,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for FlatPoint {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for FlatPoint {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2665,10 +2665,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -2889,10 +2889,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for FlatPointAtOrigin {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3113,10 +3113,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Flector {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Flector {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3337,10 +3337,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3561,10 +3561,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Horizon {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Horizon {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Horizon {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -3785,10 +3785,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Infinity {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Infinity {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Infinity {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4009,10 +4009,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Line {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Line {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Line {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4233,10 +4233,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for LineAtInfinity {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4457,10 +4457,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for LineAtOrigin {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4681,10 +4681,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Motor {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Motor {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -4905,10 +4905,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for MultiVector {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for MultiVector {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5129,10 +5129,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Origin {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Origin {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Origin {
     type Output = CircleWeight;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> CircleWeight {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> CircleWeight {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5353,10 +5353,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Plane {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Plane {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Plane {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5577,10 +5577,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -5801,10 +5801,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Rotor {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Rotor {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6025,10 +6025,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for RoundPoint {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for RoundPoint {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6249,10 +6249,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6473,10 +6473,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for RoundPointAtOrigin {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6697,10 +6697,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for RoundPointBulk {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -6745,15 +6745,15 @@ impl GeometricAntiQuotient<Translator> for RoundPointBulk {
     }
 }
 
-impl GeometricAntiQuotient<AntiScalar> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl GeometricAntiQuotient<AntiScalar> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn geometric_anti_quotient(self, other: AntiScalar) -> RoundPointCarrierAspect {
+    fn geometric_anti_quotient(self, other: AntiScalar) -> RoundPointOnOrigin {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
 
-impl GeometricAntiQuotient<Circle> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Circle> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Circle) -> MultiVector {
@@ -6761,7 +6761,7 @@ impl GeometricAntiQuotient<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<CircleBulk> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<CircleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: CircleBulk) -> MultiVector {
@@ -6769,7 +6769,7 @@ impl GeometricAntiQuotient<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: CircleCarrierAspect) -> MultiVector {
@@ -6777,7 +6777,7 @@ impl GeometricAntiQuotient<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Dipole> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Dipole> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Dipole) -> MultiVector {
@@ -6785,7 +6785,7 @@ impl GeometricAntiQuotient<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<DipoleBulk> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<DipoleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: DipoleBulk) -> MultiVector {
@@ -6793,7 +6793,7 @@ impl GeometricAntiQuotient<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -6801,7 +6801,7 @@ impl GeometricAntiQuotient<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<DualNum> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<DualNum> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
@@ -6809,7 +6809,7 @@ impl GeometricAntiQuotient<DualNum> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<FlatPoint> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<FlatPoint> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: FlatPoint) -> MultiVector {
@@ -6817,7 +6817,7 @@ impl GeometricAntiQuotient<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -6825,7 +6825,7 @@ impl GeometricAntiQuotient<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Flector> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Flector) -> MultiVector {
@@ -6833,7 +6833,7 @@ impl GeometricAntiQuotient<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Line> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Line> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Line) -> MultiVector {
@@ -6841,7 +6841,7 @@ impl GeometricAntiQuotient<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<LineAtOrigin> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<LineAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: LineAtOrigin) -> MultiVector {
@@ -6849,7 +6849,7 @@ impl GeometricAntiQuotient<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Motor> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Motor) -> MultiVector {
@@ -6857,7 +6857,7 @@ impl GeometricAntiQuotient<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<MultiVector> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
@@ -6865,7 +6865,7 @@ impl GeometricAntiQuotient<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Plane> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Plane> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Plane) -> MultiVector {
@@ -6873,7 +6873,7 @@ impl GeometricAntiQuotient<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: PlaneAtOrigin) -> MultiVector {
@@ -6881,7 +6881,7 @@ impl GeometricAntiQuotient<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
@@ -6889,7 +6889,7 @@ impl GeometricAntiQuotient<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPoint> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<RoundPoint> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: RoundPoint) -> MultiVector {
@@ -6897,7 +6897,7 @@ impl GeometricAntiQuotient<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -6905,7 +6905,7 @@ impl GeometricAntiQuotient<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -6913,7 +6913,7 @@ impl GeometricAntiQuotient<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointBulk> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<RoundPointBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: RoundPointBulk) -> MultiVector {
@@ -6921,15 +6921,15 @@ impl GeometricAntiQuotient<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
 
-impl GeometricAntiQuotient<Scalar> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Scalar> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn geometric_anti_quotient(self, other: Scalar) -> Sphere {
@@ -6937,7 +6937,7 @@ impl GeometricAntiQuotient<Scalar> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<SpacialCurvature> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<SpacialCurvature> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: SpacialCurvature) -> MultiVector {
@@ -6945,7 +6945,7 @@ impl GeometricAntiQuotient<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Sphere> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Sphere> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
@@ -6953,7 +6953,7 @@ impl GeometricAntiQuotient<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Transflector> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
@@ -6961,7 +6961,7 @@ impl GeometricAntiQuotient<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricAntiQuotient<Translator> for RoundPointCarrierAspect {
+impl GeometricAntiQuotient<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
@@ -7145,10 +7145,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Scalar {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Scalar {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Scalar {
     type Output = Sphere;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> Sphere {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -7369,10 +7369,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for SpacialCurvature {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for SpacialCurvature {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -7593,10 +7593,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Sphere {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Sphere {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Sphere {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -7817,10 +7817,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for SphereWeight {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for SphereWeight {
     type Output = DipoleWeight;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> DipoleWeight {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> DipoleWeight {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -8041,10 +8041,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Transflector {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Transflector {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -8265,10 +8265,10 @@ impl GeometricAntiQuotient<RoundPointBulk> for Translator {
     }
 }
 
-impl GeometricAntiQuotient<RoundPointCarrierAspect> for Translator {
+impl GeometricAntiQuotient<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn geometric_anti_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_anti_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_anti_product(other.anti_inverse())
     }
 }
@@ -8489,10 +8489,10 @@ impl GeometricQuotient<RoundPointBulk> for AntiScalar {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for AntiScalar {
+impl GeometricQuotient<RoundPointOnOrigin> for AntiScalar {
     type Output = Sphere;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> Sphere {
         self.geometric_product(other.inverse())
     }
 }
@@ -8713,10 +8713,10 @@ impl GeometricQuotient<RoundPointBulk> for Circle {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Circle {
+impl GeometricQuotient<RoundPointOnOrigin> for Circle {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -8937,10 +8937,10 @@ impl GeometricQuotient<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for CircleBulk {
+impl GeometricQuotient<RoundPointOnOrigin> for CircleBulk {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -9161,10 +9161,10 @@ impl GeometricQuotient<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl GeometricQuotient<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -9385,10 +9385,10 @@ impl GeometricQuotient<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for CircleWeight {
+impl GeometricQuotient<RoundPointOnOrigin> for CircleWeight {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -9609,10 +9609,10 @@ impl GeometricQuotient<RoundPointBulk> for Dipole {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Dipole {
+impl GeometricQuotient<RoundPointOnOrigin> for Dipole {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -9833,10 +9833,10 @@ impl GeometricQuotient<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for DipoleBulk {
+impl GeometricQuotient<RoundPointOnOrigin> for DipoleBulk {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10057,10 +10057,10 @@ impl GeometricQuotient<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl GeometricQuotient<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10281,10 +10281,10 @@ impl GeometricQuotient<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for DipoleWeight {
+impl GeometricQuotient<RoundPointOnOrigin> for DipoleWeight {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10505,10 +10505,10 @@ impl GeometricQuotient<RoundPointBulk> for DualNum {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for DualNum {
+impl GeometricQuotient<RoundPointOnOrigin> for DualNum {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10729,10 +10729,10 @@ impl GeometricQuotient<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for FlatPoint {
+impl GeometricQuotient<RoundPointOnOrigin> for FlatPoint {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -10953,10 +10953,10 @@ impl GeometricQuotient<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl GeometricQuotient<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11177,10 +11177,10 @@ impl GeometricQuotient<RoundPointBulk> for FlatPointAtOrigin {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl GeometricQuotient<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11401,10 +11401,10 @@ impl GeometricQuotient<RoundPointBulk> for Flector {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Flector {
+impl GeometricQuotient<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11625,10 +11625,10 @@ impl GeometricQuotient<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl GeometricQuotient<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -11849,10 +11849,10 @@ impl GeometricQuotient<RoundPointBulk> for Horizon {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Horizon {
+impl GeometricQuotient<RoundPointOnOrigin> for Horizon {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12073,10 +12073,10 @@ impl GeometricQuotient<RoundPointBulk> for Infinity {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Infinity {
+impl GeometricQuotient<RoundPointOnOrigin> for Infinity {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12297,10 +12297,10 @@ impl GeometricQuotient<RoundPointBulk> for Line {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Line {
+impl GeometricQuotient<RoundPointOnOrigin> for Line {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12521,10 +12521,10 @@ impl GeometricQuotient<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for LineAtInfinity {
+impl GeometricQuotient<RoundPointOnOrigin> for LineAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12745,10 +12745,10 @@ impl GeometricQuotient<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for LineAtOrigin {
+impl GeometricQuotient<RoundPointOnOrigin> for LineAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -12969,10 +12969,10 @@ impl GeometricQuotient<RoundPointBulk> for Motor {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Motor {
+impl GeometricQuotient<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13193,10 +13193,10 @@ impl GeometricQuotient<RoundPointBulk> for MultiVector {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for MultiVector {
+impl GeometricQuotient<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13417,10 +13417,10 @@ impl GeometricQuotient<RoundPointBulk> for Origin {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Origin {
+impl GeometricQuotient<RoundPointOnOrigin> for Origin {
     type Output = DipoleWeight;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> DipoleWeight {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> DipoleWeight {
         self.geometric_product(other.inverse())
     }
 }
@@ -13641,10 +13641,10 @@ impl GeometricQuotient<RoundPointBulk> for Plane {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Plane {
+impl GeometricQuotient<RoundPointOnOrigin> for Plane {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -13865,10 +13865,10 @@ impl GeometricQuotient<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl GeometricQuotient<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14089,10 +14089,10 @@ impl GeometricQuotient<RoundPointBulk> for Rotor {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Rotor {
+impl GeometricQuotient<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14313,10 +14313,10 @@ impl GeometricQuotient<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for RoundPoint {
+impl GeometricQuotient<RoundPointOnOrigin> for RoundPoint {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14537,10 +14537,10 @@ impl GeometricQuotient<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl GeometricQuotient<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14761,10 +14761,10 @@ impl GeometricQuotient<RoundPointBulk> for RoundPointAtOrigin {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl GeometricQuotient<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -14985,10 +14985,10 @@ impl GeometricQuotient<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for RoundPointBulk {
+impl GeometricQuotient<RoundPointOnOrigin> for RoundPointBulk {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -15033,7 +15033,7 @@ impl GeometricQuotient<Translator> for RoundPointBulk {
     }
 }
 
-impl GeometricQuotient<AntiScalar> for RoundPointCarrierAspect {
+impl GeometricQuotient<AntiScalar> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn geometric_quotient(self, other: AntiScalar) -> Sphere {
@@ -15041,7 +15041,7 @@ impl GeometricQuotient<AntiScalar> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Circle> for RoundPointCarrierAspect {
+impl GeometricQuotient<Circle> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Circle) -> MultiVector {
@@ -15049,7 +15049,7 @@ impl GeometricQuotient<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<CircleBulk> for RoundPointCarrierAspect {
+impl GeometricQuotient<CircleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: CircleBulk) -> MultiVector {
@@ -15057,7 +15057,7 @@ impl GeometricQuotient<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl GeometricQuotient<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: CircleCarrierAspect) -> MultiVector {
@@ -15065,7 +15065,7 @@ impl GeometricQuotient<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Dipole> for RoundPointCarrierAspect {
+impl GeometricQuotient<Dipole> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Dipole) -> MultiVector {
@@ -15073,7 +15073,7 @@ impl GeometricQuotient<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<DipoleBulk> for RoundPointCarrierAspect {
+impl GeometricQuotient<DipoleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: DipoleBulk) -> MultiVector {
@@ -15081,7 +15081,7 @@ impl GeometricQuotient<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl GeometricQuotient<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: DipoleCarrierAspect) -> MultiVector {
@@ -15089,7 +15089,7 @@ impl GeometricQuotient<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<DualNum> for RoundPointCarrierAspect {
+impl GeometricQuotient<DualNum> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: DualNum) -> MultiVector {
@@ -15097,7 +15097,7 @@ impl GeometricQuotient<DualNum> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<FlatPoint> for RoundPointCarrierAspect {
+impl GeometricQuotient<FlatPoint> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: FlatPoint) -> MultiVector {
@@ -15105,7 +15105,7 @@ impl GeometricQuotient<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl GeometricQuotient<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: FlatPointAtOrigin) -> MultiVector {
@@ -15113,7 +15113,7 @@ impl GeometricQuotient<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Flector> for RoundPointCarrierAspect {
+impl GeometricQuotient<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Flector) -> MultiVector {
@@ -15121,7 +15121,7 @@ impl GeometricQuotient<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Line> for RoundPointCarrierAspect {
+impl GeometricQuotient<Line> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Line) -> MultiVector {
@@ -15129,7 +15129,7 @@ impl GeometricQuotient<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<LineAtOrigin> for RoundPointCarrierAspect {
+impl GeometricQuotient<LineAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: LineAtOrigin) -> MultiVector {
@@ -15137,7 +15137,7 @@ impl GeometricQuotient<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Motor> for RoundPointCarrierAspect {
+impl GeometricQuotient<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Motor) -> MultiVector {
@@ -15145,7 +15145,7 @@ impl GeometricQuotient<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<MultiVector> for RoundPointCarrierAspect {
+impl GeometricQuotient<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: MultiVector) -> MultiVector {
@@ -15153,7 +15153,7 @@ impl GeometricQuotient<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Plane> for RoundPointCarrierAspect {
+impl GeometricQuotient<Plane> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Plane) -> MultiVector {
@@ -15161,7 +15161,7 @@ impl GeometricQuotient<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl GeometricQuotient<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: PlaneAtOrigin) -> MultiVector {
@@ -15169,7 +15169,7 @@ impl GeometricQuotient<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Rotor> for RoundPointCarrierAspect {
+impl GeometricQuotient<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Rotor) -> MultiVector {
@@ -15177,7 +15177,7 @@ impl GeometricQuotient<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPoint> for RoundPointCarrierAspect {
+impl GeometricQuotient<RoundPoint> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: RoundPoint) -> MultiVector {
@@ -15185,7 +15185,7 @@ impl GeometricQuotient<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl GeometricQuotient<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: RoundPointAtInfinity) -> MultiVector {
@@ -15193,7 +15193,7 @@ impl GeometricQuotient<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl GeometricQuotient<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: RoundPointAtOrigin) -> MultiVector {
@@ -15201,7 +15201,7 @@ impl GeometricQuotient<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPointBulk> for RoundPointCarrierAspect {
+impl GeometricQuotient<RoundPointBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: RoundPointBulk) -> MultiVector {
@@ -15209,23 +15209,23 @@ impl GeometricQuotient<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl GeometricQuotient<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
 
-impl GeometricQuotient<Scalar> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl GeometricQuotient<Scalar> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn geometric_quotient(self, other: Scalar) -> RoundPointCarrierAspect {
+    fn geometric_quotient(self, other: Scalar) -> RoundPointOnOrigin {
         self.geometric_product(other.inverse())
     }
 }
 
-impl GeometricQuotient<SpacialCurvature> for RoundPointCarrierAspect {
+impl GeometricQuotient<SpacialCurvature> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: SpacialCurvature) -> MultiVector {
@@ -15233,7 +15233,7 @@ impl GeometricQuotient<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Sphere> for RoundPointCarrierAspect {
+impl GeometricQuotient<Sphere> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
@@ -15241,7 +15241,7 @@ impl GeometricQuotient<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Transflector> for RoundPointCarrierAspect {
+impl GeometricQuotient<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Transflector) -> MultiVector {
@@ -15249,7 +15249,7 @@ impl GeometricQuotient<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl GeometricQuotient<Translator> for RoundPointCarrierAspect {
+impl GeometricQuotient<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Translator) -> MultiVector {
@@ -15433,10 +15433,10 @@ impl GeometricQuotient<RoundPointBulk> for Scalar {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Scalar {
-    type Output = RoundPointCarrierAspect;
+impl GeometricQuotient<RoundPointOnOrigin> for Scalar {
+    type Output = RoundPointOnOrigin;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.geometric_product(other.inverse())
     }
 }
@@ -15657,10 +15657,10 @@ impl GeometricQuotient<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for SpacialCurvature {
+impl GeometricQuotient<RoundPointOnOrigin> for SpacialCurvature {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -15881,10 +15881,10 @@ impl GeometricQuotient<RoundPointBulk> for Sphere {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Sphere {
+impl GeometricQuotient<RoundPointOnOrigin> for Sphere {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -16105,10 +16105,10 @@ impl GeometricQuotient<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for SphereWeight {
+impl GeometricQuotient<RoundPointOnOrigin> for SphereWeight {
     type Output = CircleWeight;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> CircleWeight {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> CircleWeight {
         self.geometric_product(other.inverse())
     }
 }
@@ -16329,10 +16329,10 @@ impl GeometricQuotient<RoundPointBulk> for Transflector {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Transflector {
+impl GeometricQuotient<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }
@@ -16553,10 +16553,10 @@ impl GeometricQuotient<RoundPointBulk> for Translator {
     }
 }
 
-impl GeometricQuotient<RoundPointCarrierAspect> for Translator {
+impl GeometricQuotient<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn geometric_quotient(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn geometric_quotient(self, other: RoundPointOnOrigin) -> MultiVector {
         self.geometric_product(other.inverse())
     }
 }

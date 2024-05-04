@@ -30,7 +30,7 @@ impl AntiSupport for DualNum {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -38,7 +38,7 @@ impl AntiSupport for Flector {
     type Output = MultiVector;
 
     fn anti_support(self) -> MultiVector {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -46,7 +46,7 @@ impl AntiSupport for FlectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn anti_support(self) -> MultiVectorAtInfinity {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -54,7 +54,7 @@ impl AntiSupport for Horizon {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -62,7 +62,7 @@ impl AntiSupport for Line {
     type Output = Plane;
 
     fn anti_support(self) -> Plane {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -70,7 +70,7 @@ impl AntiSupport for LineAtInfinity {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -78,7 +78,7 @@ impl AntiSupport for Motor {
     type Output = Plane;
 
     fn anti_support(self) -> Plane {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -86,7 +86,7 @@ impl AntiSupport for MultiVector {
     type Output = MultiVector;
 
     fn anti_support(self) -> MultiVector {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -94,7 +94,7 @@ impl AntiSupport for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn anti_support(self) -> MultiVectorAtInfinity {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -102,7 +102,7 @@ impl AntiSupport for Plane {
     type Output = Plane;
 
     fn anti_support(self) -> Plane {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -110,7 +110,7 @@ impl AntiSupport for Point {
     type Output = Plane;
 
     fn anti_support(self) -> Plane {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -118,7 +118,7 @@ impl AntiSupport for PointAtInfinity {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -126,7 +126,7 @@ impl AntiSupport for Scalar {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -134,7 +134,7 @@ impl AntiSupport for Transflector {
     type Output = MultiVector;
 
     fn anti_support(self) -> MultiVector {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -142,7 +142,7 @@ impl AntiSupport for Translator {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
-        self.wedge(Origin::one().right_complement().anti_wedge(self.dual()))
+        self.wedge(Origin::unit().right_complement().anti_wedge(self.dual()))
     }
 }
 
@@ -150,7 +150,7 @@ impl Support for Flector {
     type Output = Flector;
 
     fn support(self) -> Flector {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -158,7 +158,7 @@ impl Support for Line {
     type Output = Point;
 
     fn support(self) -> Point {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -166,7 +166,7 @@ impl Support for LineAtOrigin {
     type Output = Origin;
 
     fn support(self) -> Origin {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -174,7 +174,7 @@ impl Support for Motor {
     type Output = MultiVector;
 
     fn support(self) -> MultiVector {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -182,7 +182,7 @@ impl Support for MultiVector {
     type Output = MultiVector;
 
     fn support(self) -> MultiVector {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -190,7 +190,7 @@ impl Support for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
     fn support(self) -> MultiVectorAtOrigin {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -198,7 +198,7 @@ impl Support for Origin {
     type Output = Origin;
 
     fn support(self) -> Origin {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -206,7 +206,7 @@ impl Support for Plane {
     type Output = Point;
 
     fn support(self) -> Point {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -214,7 +214,7 @@ impl Support for PlaneAtOrigin {
     type Output = Origin;
 
     fn support(self) -> Origin {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -222,7 +222,7 @@ impl Support for Point {
     type Output = Point;
 
     fn support(self) -> Point {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -230,7 +230,7 @@ impl Support for Rotor {
     type Output = MultiVectorAtOrigin;
 
     fn support(self) -> MultiVectorAtOrigin {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
@@ -238,6 +238,6 @@ impl Support for Transflector {
     type Output = Point;
 
     fn support(self) -> Point {
-        self.anti_wedge(Origin::one().wedge(self.anti_dual()))
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }

@@ -43,14 +43,105 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Circle:e423,e431,e412,e321|e415,e425,e435|e235,e315,e125",
         "Sphere:e4235,e4315,e4125|e1234,e3215",
 
-        "Infinity:e5",
+        // TODO infinity is interesting when you consider different SpacialCurvatures
+        //  In a positively curved space, e5 is not infinitely far away, it is "the most distant
+        //  point away from the origin". Consider by analogy rga3d... What is the difference between
+        //  cga3d's "Infinity" and rga3d's "PointAtInfinity" or "Horizon"? An e4 with a coefficient
+        //  but not other basis elements beside it is always the Origin. So what is e4+e5, and
+        //  then e5? Does it even translate into rga3d at all? Well, perhaps that brings us
+        //  to RoundPointAtOrigin.
+        // TODO maybe the correct starting point to think through it is....
+        //  The equivalence classes of a vector in rga3d... it's one dimensional
+        //  But the equivalence classes of a vector in cga3d is fundamentally two dimensional
+        //  Because of the cone where e- and e+ cancel out. This is further reinforced when you
+        //  consider that a FlatPoint forfeits 1/2 of it's equivalence class dimensions by always
+        //  being aligned with e5.
+        //  So assume you have a RoundPoint of zero radius... it traces a parabola (p^2)/2
+        //  on the e1 e5 plane (assuming p is along e1 for this example). In rga3d, there are only
+        //  two meaningful coefficients for e4: zero and non-zero. All non-zero coefficients to e4
+        //  might as well mean the same thing. But I feel like it's not as simple in cga3d.
+        //  So taking this zero-radius round point along e1 (that traces a parabola), we can slide
+        //  along the equivalence class of e4 however we want, and it stays a parabola, unless we
+        //  break the equivalence by hard setting e4 to zero. Then it is no longer a parabola,
+        //  but indeed, a line along e5. But it's still on the cone. So there's still an equivalence
+        //  class here, but it is narrowed to one dimension, that being e5. So a round point with
+        //  zero-radius and zero-e4 and non-zero-e5 is.... well... it's a point at infinity...
+        //  but it's infinity because e4 is zero, not because e5 is non-zero. So what is e5 actually
+        //  doing here? It's interacting with the radius, yeah? 0*e4 + e5 might be infinity, but
+        //  it's not infinity in any particular direction if we don't also have e1, e2, or e3. So
+        //  that's why it's weird. It's infinity "but where?". Hence the contrast with
+        //  PointAtInfinity and Horizon.
+        //  Let's approach from the other side. non-zero e4, and zero e5. If p is zero, then radius
+        //  is zero. So e4 is quite plainly the Origin with zero radius. But then if p is non-zero,
+        //  but e5 is still zero? (p^2) is almost certainly positive. So (r^2) must be negative.
+        //  That would be an imaginary radius the same size as the position. In other words...
+        //  The round point is still touching the origin I think. Indeed.... the flat bulk of a
+        //  RoundPoint is the e5 component. Hence we now rename "RoundPointCarrierAspect" to
+        //  "RoundPointTouchingOrigin". Come to think of it, maybe this gives us a hint how to
+        //  figure out the meaning of 0*e4 + 0*e5, by looking at "RoundPointBulk". That's a RoundBulk.
+        //  (It's a slightly risky rename, but going to call "RoundPointTouchingOrigin"
+        //   "RoundPointOnOrigin" instead. The "on" vs "at" distinction is subtle, but I
+        //   think it makes distinguishable sense at the semantic level (RIP victims of dyslexia)
+        //   The full word "Touching" is just a bit cumbersome.).
+        //  Alright... so now we know what a RoundPointOnOrigin is, and how to hard zero e4 to
+        //  jump equivalence classes..... so what does that mean for RoundPointBulk?
+        //  Well... it's a point at infinity... but with a round radius of imaginary infinity.
+        //  Apparently. Bisecting space at the origin. So... actually, the amount of space that is
+        //  zero distance from this thing is quite astounding.
+        //
+        // TODO I've been thinking through it with dipoles, since you can grasp the e4 and e5
+        //  dimensions perfectly well with a 1 dimensional dipole. So imagine a dipole centered
+        //  on p=(0,0,0) and in the direction of n=e1 with some non-zero radius. The only
+        //  resulting components are e41 and e15. With a real radius, it intersects the cones.
+        //  With an imaginary radius, it doesn't. It is very easy to imagine e41 and e15, and how
+        //  they add together, and how they intersect the horosphere. So with this in mind we can
+        //  see what "rotating" the bivector between e4 and e5 actually means. And so perhaps this
+        //  gives us a new insight. Tentatively.... e4 is not merely the "Origin", and e5 is not
+        //  merely "Infinity". e4 is "CenterOrigin" and e5 is "RadiusInfinity". Since imagining
+        //  bivectors is so easy, this goes for FlatPoints as well. The closer a bivector is aligned
+        //  to e5, the closer its radius is to infinity. The closer a bivector is aligned to e4,
+        //  the closer its center is aligned to the origin. This actually makes even more sense
+        //  when you imagine taking a raw rga3d point and say MULTIPLY THAT BY INFINITE RADIUS and
+        //  it just works... However keep in mind.... the radius doesn't get multiplied into e5
+        //  directly.... it is the radius squared that gets put into the e5 term.... in other words,
+        //  the reciprocal of gaussian curvature. Aha.... called Gaussian radius. Lovely.
+        //
+        // TODO okay! So here's another thought.... For a moment I was considering renaming "Origin"
+        //  to "CenterOrigin" in contrast to "RadiusInfinity"... however I don't think "CenterOrigin"
+        //  is quite an effective/accurate name yet. It's more accurate to call it "PositionOrigin"
+        //  or, yet again, just plain old "Origin". This is because something can have a center on
+        //  the origin without actually overlapping e4, like a dipole centered on the origin with
+        //  any non-zero radius. The closer the dipole gets to the origin (by distance of its
+        //  endpoints, not its center), the closer it gets to overlapping e4.
+        //
+        // TODO another idea to help analysis.... forget the e1 axis entirely. We have such a good
+        //  grip on Dipoles and FlatPoints now. What happens if we ignore the e1 dimension completely
+        //  and just focus on how the bivectors (that are now vectors, perhaps?) meet into the e45
+        //  bivector. FlatPoints become "raw infinite radius" without any spacial positioning
+        //  (unless they were on the origin already). A dipole with (at least) one endpoint on
+        //  the origin becomes synonymous with the origin. A dipole that is not centered on the
+        //  origin, but puts the origin somewhere between its endpoints, will meet e45 as a vector
+        //  angled somewhere between e4 and e5, the angle depending mostly on the radius of the
+        //  dipole and partially on the distance to the origin. Then there are dipoles not centered
+        //  on the origin but also have both endpoints to one side of the origin. These do not
+        //  intersect the e45 bivector at all. Or rather, their meets are imaginary, not real. There
+        //  is arguably one more type of bivector intersection/meet with e45... that being...
+        //  e+ join e1 without any e- component. Well... that's just an imaginary radius dipole. So,
+        //  whatever that means.
+        //
+        // TODO something to keep in mind is once we start using non-flat curvatures (like
+        //  spherically curved space) then e5 will no longer be "InfinityRadius". It will instead
+        //  be "MaximumRadius". So that's something to keep in mind.
+        //
+        "Infinity:e5", // TODO hint to not lose track in above todo: considering rename of e5 from "Infinity" to something else
         "Origin:e4",
         "RoundPointAtOrigin:e4,e5",
+        "RoundPointOnOrigin:e1,e2,e3,e4",
+        // TODO RoundPointAtInfinity is extremely weird, can't be sure yet if it actually works
         "RoundPointAtInfinity:e1,e2,e3,e5",
 
         // TODO can I get more interesting/intuitive names for these?
         "RoundPointBulk:e1,e2,e3",
-        "RoundPointCarrierAspect:e1,e2,e3,e4",
         "DipoleBulk:e23,e31,e12",
         "DipoleWeight:e41,e42,e43",
         "DipoleCarrierAspect:e41,e42,e43|e23,e31,e12",
@@ -144,6 +235,8 @@ pub mod unitize;
 pub mod norms;
 pub mod characteristics;
 pub mod metrics;
+#[cfg(test)]
+pub mod test;
 pub mod products {
     pub mod geometric;
     pub mod exterior;

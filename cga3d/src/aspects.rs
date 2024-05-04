@@ -369,7 +369,7 @@ impl RoundBulk for RoundPointBulk {
     }
 }
 
-impl RoundBulk for RoundPointCarrierAspect {
+impl RoundBulk for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn round_bulk(self) -> RoundPointBulk {
@@ -499,7 +499,7 @@ impl RoundWeight for RoundPointAtOrigin {
     }
 }
 
-impl RoundWeight for RoundPointCarrierAspect {
+impl RoundWeight for RoundPointOnOrigin {
     type Output = Origin;
 
     fn round_weight(self) -> Origin {

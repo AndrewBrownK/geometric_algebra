@@ -245,10 +245,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Circle {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Circle {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Circle {
     type Output = Circle;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -397,10 +397,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for CircleBulk {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for CircleBulk {
     type Output = CircleCarrierAspect;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -581,10 +581,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -757,10 +757,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for CircleWeight {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for CircleWeight {
     type Output = CircleCarrierAspect;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -925,10 +925,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Dipole {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Dipole {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Dipole {
     type Output = Dipole;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1045,10 +1045,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for DipoleBulk {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1189,10 +1189,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1325,10 +1325,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for DipoleWeight {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1469,10 +1469,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlatPoint {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for FlatPoint {
     type Output = Dipole;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1605,10 +1605,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1725,10 +1725,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1949,10 +1949,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Flector {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Flector {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2157,10 +2157,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2365,10 +2365,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Horizon {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Horizon {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Horizon {
     type Output = Sphere;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2477,10 +2477,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Infinity {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2669,10 +2669,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Line {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Line {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Line {
     type Output = Circle;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2845,10 +2845,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for LineAtInfinity {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for LineAtInfinity {
     type Output = Circle;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3005,10 +3005,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for LineAtOrigin {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for LineAtOrigin {
     type Output = Circle;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3229,10 +3229,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Motor {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Motor {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3493,10 +3493,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for MultiVector {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for MultiVector {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3613,10 +3613,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3829,10 +3829,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Plane {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Plane {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Plane {
     type Output = Sphere;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4037,10 +4037,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4261,10 +4261,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Rotor {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Rotor {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4389,10 +4389,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPoint {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4493,10 +4493,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointAtInfinity {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4597,10 +4597,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4685,10 +4685,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4709,7 +4709,7 @@ impl AntiProjectOrthogonallyOnto<Translator> for RoundPointBulk {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Flector> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
@@ -4717,7 +4717,7 @@ impl AntiProjectOrthogonallyOnto<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
@@ -4725,7 +4725,7 @@ impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointCarrierAspect 
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Infinity> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<Infinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_project_orthogonally_onto(self, other: Infinity) -> Infinity {
@@ -4733,7 +4733,7 @@ impl AntiProjectOrthogonallyOnto<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Motor> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
@@ -4741,7 +4741,7 @@ impl AntiProjectOrthogonallyOnto<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
@@ -4749,7 +4749,7 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
@@ -4757,7 +4757,7 @@ impl AntiProjectOrthogonallyOnto<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
@@ -4765,7 +4765,7 @@ impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
@@ -4773,7 +4773,7 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointCarrierAspe
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -4781,7 +4781,7 @@ impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointCarrierAspect
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_project_orthogonally_onto(self, other: RoundPointBulk) -> RoundPointBulk {
@@ -4789,15 +4789,15 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
@@ -4805,7 +4805,7 @@ impl AntiProjectOrthogonallyOnto<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Translator> for RoundPointCarrierAspect {
+impl AntiProjectOrthogonallyOnto<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
@@ -5013,10 +5013,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for SpacialCurvature {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Sphere;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5285,10 +5285,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Sphere {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Sphere {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Sphere {
     type Output = Sphere;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5509,10 +5509,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for SphereWeight {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for SphereWeight {
     type Output = SphereWeight;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> SphereWeight {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> SphereWeight {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5741,10 +5741,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Transflector {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Transflector {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5981,10 +5981,10 @@ impl AntiProjectOrthogonallyOnto<RoundPointBulk> for Translator {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<RoundPointCarrierAspect> for Translator {
+impl AntiProjectOrthogonallyOnto<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -6221,10 +6221,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Circle {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Circle {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Circle {
     type Output = Circle;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -6373,10 +6373,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for CircleBulk {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for CircleBulk {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for CircleBulk {
     type Output = CircleCarrierAspect;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -6557,10 +6557,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -6733,10 +6733,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for CircleWeight {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for CircleWeight {
     type Output = CircleCarrierAspect;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -6901,10 +6901,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Dipole {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Dipole {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Dipole {
     type Output = Dipole;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7021,10 +7021,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for DipoleBulk {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7165,10 +7165,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7301,10 +7301,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for DipoleWeight {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7445,10 +7445,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for FlatPoint {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for FlatPoint {
     type Output = Dipole;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7581,10 +7581,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7701,10 +7701,10 @@ impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for FlatPointAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Dipole {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -7925,10 +7925,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Flector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Flector {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8133,10 +8133,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8341,10 +8341,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Horizon {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Horizon {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Horizon {
     type Output = Sphere;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8453,10 +8453,10 @@ impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Infinity {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8645,10 +8645,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Line {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Line {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Line {
     type Output = Circle;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8821,10 +8821,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for LineAtInfinity {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for LineAtInfinity {
     type Output = Circle;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -8981,10 +8981,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for LineAtOrigin {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for LineAtOrigin {
     type Output = Circle;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Circle {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -9205,10 +9205,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Motor {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Motor {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Motor {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -9469,10 +9469,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for MultiVector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for MultiVector {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -9589,10 +9589,10 @@ impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -9805,10 +9805,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Plane {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Plane {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Plane {
     type Output = Sphere;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10013,10 +10013,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10237,10 +10237,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Rotor {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Rotor {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Rotor {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10365,10 +10365,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for RoundPoint {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10469,10 +10469,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for RoundPointAtInfinity {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10573,10 +10573,10 @@ impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10661,10 +10661,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10685,7 +10685,7 @@ impl AntiProjectViaHorizonOnto<Translator> for RoundPointBulk {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Flector> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
@@ -10693,7 +10693,7 @@ impl AntiProjectViaHorizonOnto<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: FlectorAtInfinity) -> MultiVector {
@@ -10701,7 +10701,7 @@ impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Infinity> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<Infinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_project_via_horizon_onto(self, other: Infinity) -> Infinity {
@@ -10709,7 +10709,7 @@ impl AntiProjectViaHorizonOnto<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Motor> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
@@ -10717,7 +10717,7 @@ impl AntiProjectViaHorizonOnto<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<MultiVector> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
@@ -10725,7 +10725,7 @@ impl AntiProjectViaHorizonOnto<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
@@ -10733,7 +10733,7 @@ impl AntiProjectViaHorizonOnto<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPoint> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> RoundPoint {
@@ -10741,7 +10741,7 @@ impl AntiProjectViaHorizonOnto<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
@@ -10749,7 +10749,7 @@ impl AntiProjectViaHorizonOnto<RoundPointAtInfinity> for RoundPointCarrierAspect
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -10757,7 +10757,7 @@ impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_project_via_horizon_onto(self, other: RoundPointBulk) -> RoundPointBulk {
@@ -10765,15 +10765,15 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
 
-impl AntiProjectViaHorizonOnto<Transflector> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
@@ -10781,7 +10781,7 @@ impl AntiProjectViaHorizonOnto<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Translator> for RoundPointCarrierAspect {
+impl AntiProjectViaHorizonOnto<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
@@ -10989,10 +10989,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for SpacialCurvature {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for SpacialCurvature {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Sphere;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11261,10 +11261,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Sphere {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Sphere {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Sphere {
     type Output = Sphere;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> Sphere {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11485,10 +11485,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for SphereWeight {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for SphereWeight {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for SphereWeight {
     type Output = SphereWeight;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> SphereWeight {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> SphereWeight {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11717,10 +11717,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Transflector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Transflector {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11957,10 +11957,10 @@ impl AntiProjectViaHorizonOnto<RoundPointBulk> for Translator {
     }
 }
 
-impl AntiProjectViaHorizonOnto<RoundPointCarrierAspect> for Translator {
+impl AntiProjectViaHorizonOnto<RoundPointOnOrigin> for Translator {
     type Output = MultiVector;
 
-    fn anti_project_via_horizon_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_project_via_horizon_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -14174,9 +14174,9 @@ impl ProjectOrthogonallyOnto<Circle> for Infinity {
 }
 
 impl ProjectOrthogonallyOnto<CircleCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -14198,9 +14198,9 @@ impl ProjectOrthogonallyOnto<Dipole> for Infinity {
 }
 
 impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -14325,10 +14325,10 @@ impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for Infinity {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15109,10 +15109,10 @@ impl ProjectOrthogonallyOnto<RoundPointBulk> for MultiVector {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for MultiVector {
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15166,9 +15166,9 @@ impl ProjectOrthogonallyOnto<Circle> for Origin {
 }
 
 impl ProjectOrthogonallyOnto<CircleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15182,9 +15182,9 @@ impl ProjectOrthogonallyOnto<Dipole> for Origin {
 }
 
 impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15333,10 +15333,10 @@ impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15678,17 +15678,17 @@ impl ProjectOrthogonallyOnto<CircleBulk> for RoundPoint {
 }
 
 impl ProjectOrthogonallyOnto<CircleCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
 impl ProjectOrthogonallyOnto<CircleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15710,17 +15710,17 @@ impl ProjectOrthogonallyOnto<DipoleBulk> for RoundPoint {
 }
 
 impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
 impl ProjectOrthogonallyOnto<DipoleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15885,10 +15885,10 @@ impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPoint {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15910,9 +15910,9 @@ impl ProjectOrthogonallyOnto<Sphere> for RoundPoint {
 }
 
 impl ProjectOrthogonallyOnto<SphereWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: SphereWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15950,17 +15950,17 @@ impl ProjectOrthogonallyOnto<CircleBulk> for RoundPointAtInfinity {
 }
 
 impl ProjectOrthogonallyOnto<CircleCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
 impl ProjectOrthogonallyOnto<CircleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -15982,17 +15982,17 @@ impl ProjectOrthogonallyOnto<DipoleBulk> for RoundPointAtInfinity {
 }
 
 impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
 impl ProjectOrthogonallyOnto<DipoleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16125,10 +16125,10 @@ impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointAtInfinity {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16150,9 +16150,9 @@ impl ProjectOrthogonallyOnto<Sphere> for RoundPointAtInfinity {
 }
 
 impl ProjectOrthogonallyOnto<SphereWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: SphereWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16182,9 +16182,9 @@ impl ProjectOrthogonallyOnto<Circle> for RoundPointAtOrigin {
 }
 
 impl ProjectOrthogonallyOnto<CircleCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16206,9 +16206,9 @@ impl ProjectOrthogonallyOnto<Dipole> for RoundPointAtOrigin {
 }
 
 impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16373,10 +16373,10 @@ impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16438,9 +16438,9 @@ impl ProjectOrthogonallyOnto<CircleBulk> for RoundPointBulk {
 }
 
 impl ProjectOrthogonallyOnto<CircleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16462,9 +16462,9 @@ impl ProjectOrthogonallyOnto<DipoleBulk> for RoundPointBulk {
 }
 
 impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16573,10 +16573,10 @@ impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -16613,7 +16613,7 @@ impl ProjectOrthogonallyOnto<Translator> for RoundPointBulk {
     }
 }
 
-impl ProjectOrthogonallyOnto<Circle> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Circle> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Circle) -> RoundPoint {
@@ -16621,7 +16621,7 @@ impl ProjectOrthogonallyOnto<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<CircleBulk> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<CircleBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn project_orthogonally_onto(self, other: CircleBulk) -> RoundPointBulk {
@@ -16629,15 +16629,15 @@ impl ProjectOrthogonallyOnto<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<CircleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<CircleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
-impl ProjectOrthogonallyOnto<Dipole> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Dipole> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Dipole) -> RoundPoint {
@@ -16645,7 +16645,7 @@ impl ProjectOrthogonallyOnto<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<DipoleBulk> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<DipoleBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn project_orthogonally_onto(self, other: DipoleBulk) -> RoundPointBulk {
@@ -16653,15 +16653,15 @@ impl ProjectOrthogonallyOnto<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<DipoleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
-impl ProjectOrthogonallyOnto<FlatPoint> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<FlatPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: FlatPoint) -> RoundPoint {
@@ -16669,7 +16669,7 @@ impl ProjectOrthogonallyOnto<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_orthogonally_onto(self, other: FlatPointAtInfinity) -> Infinity {
@@ -16677,7 +16677,7 @@ impl ProjectOrthogonallyOnto<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = Origin;
 
     fn project_orthogonally_onto(self, other: FlatPointAtOrigin) -> Origin {
@@ -16685,7 +16685,7 @@ impl ProjectOrthogonallyOnto<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Flector> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
@@ -16693,7 +16693,7 @@ impl ProjectOrthogonallyOnto<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
@@ -16701,7 +16701,7 @@ impl ProjectOrthogonallyOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Horizon> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Horizon> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_orthogonally_onto(self, other: Horizon) -> Infinity {
@@ -16709,7 +16709,7 @@ impl ProjectOrthogonallyOnto<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Infinity> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Infinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_orthogonally_onto(self, other: Infinity) -> Infinity {
@@ -16717,7 +16717,7 @@ impl ProjectOrthogonallyOnto<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Line> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Line> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Line) -> RoundPoint {
@@ -16725,7 +16725,7 @@ impl ProjectOrthogonallyOnto<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<LineAtInfinity> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<LineAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_orthogonally_onto(self, other: LineAtInfinity) -> Infinity {
@@ -16733,15 +16733,15 @@ impl ProjectOrthogonallyOnto<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<LineAtOrigin> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<LineAtOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: LineAtOrigin) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: LineAtOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
-impl ProjectOrthogonallyOnto<Motor> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
@@ -16749,7 +16749,7 @@ impl ProjectOrthogonallyOnto<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<MultiVector> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
@@ -16757,7 +16757,7 @@ impl ProjectOrthogonallyOnto<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Plane> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Plane> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Plane) -> RoundPoint {
@@ -16765,15 +16765,15 @@ impl ProjectOrthogonallyOnto<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<PlaneAtOrigin> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
@@ -16781,7 +16781,7 @@ impl ProjectOrthogonallyOnto<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPoint> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
@@ -16789,7 +16789,7 @@ impl ProjectOrthogonallyOnto<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn project_orthogonally_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
@@ -16797,7 +16797,7 @@ impl ProjectOrthogonallyOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn project_orthogonally_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -16805,7 +16805,7 @@ impl ProjectOrthogonallyOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn project_orthogonally_onto(self, other: RoundPointBulk) -> RoundPointBulk {
@@ -16813,15 +16813,15 @@ impl ProjectOrthogonallyOnto<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectOrthogonallyOnto<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_orthogonally_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_orthogonally_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
 
-impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: SpacialCurvature) -> RoundPoint {
@@ -16829,7 +16829,7 @@ impl ProjectOrthogonallyOnto<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Sphere> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Sphere> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Sphere) -> RoundPoint {
@@ -16837,7 +16837,7 @@ impl ProjectOrthogonallyOnto<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Transflector> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
@@ -16845,7 +16845,7 @@ impl ProjectOrthogonallyOnto<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectOrthogonallyOnto<Translator> for RoundPointCarrierAspect {
+impl ProjectOrthogonallyOnto<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
@@ -19614,9 +19614,9 @@ impl ProjectViaOriginOnto<Circle> for Infinity {
 }
 
 impl ProjectViaOriginOnto<CircleCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -19638,9 +19638,9 @@ impl ProjectViaOriginOnto<Dipole> for Infinity {
 }
 
 impl ProjectViaOriginOnto<DipoleCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -19765,10 +19765,10 @@ impl ProjectViaOriginOnto<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for Infinity {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for Infinity {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -20549,10 +20549,10 @@ impl ProjectViaOriginOnto<RoundPointBulk> for MultiVector {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for MultiVector {
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -20606,9 +20606,9 @@ impl ProjectViaOriginOnto<Circle> for Origin {
 }
 
 impl ProjectViaOriginOnto<CircleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -20622,9 +20622,9 @@ impl ProjectViaOriginOnto<Dipole> for Origin {
 }
 
 impl ProjectViaOriginOnto<DipoleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -20773,10 +20773,10 @@ impl ProjectViaOriginOnto<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21118,17 +21118,17 @@ impl ProjectViaOriginOnto<CircleBulk> for RoundPoint {
 }
 
 impl ProjectViaOriginOnto<CircleCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
 impl ProjectViaOriginOnto<CircleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21150,17 +21150,17 @@ impl ProjectViaOriginOnto<DipoleBulk> for RoundPoint {
 }
 
 impl ProjectViaOriginOnto<DipoleCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
 impl ProjectViaOriginOnto<DipoleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21325,10 +21325,10 @@ impl ProjectViaOriginOnto<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for RoundPoint {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21350,9 +21350,9 @@ impl ProjectViaOriginOnto<Sphere> for RoundPoint {
 }
 
 impl ProjectViaOriginOnto<SphereWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: SphereWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21390,17 +21390,17 @@ impl ProjectViaOriginOnto<CircleBulk> for RoundPointAtInfinity {
 }
 
 impl ProjectViaOriginOnto<CircleCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
 impl ProjectViaOriginOnto<CircleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21422,17 +21422,17 @@ impl ProjectViaOriginOnto<DipoleBulk> for RoundPointAtInfinity {
 }
 
 impl ProjectViaOriginOnto<DipoleCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
 impl ProjectViaOriginOnto<DipoleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21565,10 +21565,10 @@ impl ProjectViaOriginOnto<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for RoundPointAtInfinity {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21590,9 +21590,9 @@ impl ProjectViaOriginOnto<Sphere> for RoundPointAtInfinity {
 }
 
 impl ProjectViaOriginOnto<SphereWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: SphereWeight) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: SphereWeight) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21622,9 +21622,9 @@ impl ProjectViaOriginOnto<Circle> for RoundPointAtOrigin {
 }
 
 impl ProjectViaOriginOnto<CircleCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21646,9 +21646,9 @@ impl ProjectViaOriginOnto<Dipole> for RoundPointAtOrigin {
 }
 
 impl ProjectViaOriginOnto<DipoleCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21813,10 +21813,10 @@ impl ProjectViaOriginOnto<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointAtOrigin {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21878,9 +21878,9 @@ impl ProjectViaOriginOnto<CircleBulk> for RoundPointBulk {
 }
 
 impl ProjectViaOriginOnto<CircleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -21902,9 +21902,9 @@ impl ProjectViaOriginOnto<DipoleBulk> for RoundPointBulk {
 }
 
 impl ProjectViaOriginOnto<DipoleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -22013,10 +22013,10 @@ impl ProjectViaOriginOnto<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -22053,7 +22053,7 @@ impl ProjectViaOriginOnto<Translator> for RoundPointBulk {
     }
 }
 
-impl ProjectViaOriginOnto<Circle> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Circle> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Circle) -> RoundPoint {
@@ -22061,7 +22061,7 @@ impl ProjectViaOriginOnto<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<CircleBulk> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<CircleBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn project_via_origin_onto(self, other: CircleBulk) -> RoundPointBulk {
@@ -22069,15 +22069,15 @@ impl ProjectViaOriginOnto<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<CircleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<CircleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
-impl ProjectViaOriginOnto<Dipole> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Dipole> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Dipole) -> RoundPoint {
@@ -22085,7 +22085,7 @@ impl ProjectViaOriginOnto<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<DipoleBulk> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<DipoleBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn project_via_origin_onto(self, other: DipoleBulk) -> RoundPointBulk {
@@ -22093,15 +22093,15 @@ impl ProjectViaOriginOnto<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<DipoleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<DipoleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
-impl ProjectViaOriginOnto<FlatPoint> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<FlatPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: FlatPoint) -> RoundPoint {
@@ -22109,7 +22109,7 @@ impl ProjectViaOriginOnto<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_via_origin_onto(self, other: FlatPointAtInfinity) -> Infinity {
@@ -22117,7 +22117,7 @@ impl ProjectViaOriginOnto<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = Origin;
 
     fn project_via_origin_onto(self, other: FlatPointAtOrigin) -> Origin {
@@ -22125,7 +22125,7 @@ impl ProjectViaOriginOnto<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Flector> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Flector) -> MultiVector {
@@ -22133,7 +22133,7 @@ impl ProjectViaOriginOnto<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: FlectorAtInfinity) -> MultiVector {
@@ -22141,7 +22141,7 @@ impl ProjectViaOriginOnto<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Horizon> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Horizon> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_via_origin_onto(self, other: Horizon) -> Infinity {
@@ -22149,7 +22149,7 @@ impl ProjectViaOriginOnto<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Infinity> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Infinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_via_origin_onto(self, other: Infinity) -> Infinity {
@@ -22157,7 +22157,7 @@ impl ProjectViaOriginOnto<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Line> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Line> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Line) -> RoundPoint {
@@ -22165,7 +22165,7 @@ impl ProjectViaOriginOnto<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<LineAtInfinity> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<LineAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn project_via_origin_onto(self, other: LineAtInfinity) -> Infinity {
@@ -22173,15 +22173,15 @@ impl ProjectViaOriginOnto<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<LineAtOrigin> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<LineAtOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: LineAtOrigin) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: LineAtOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
-impl ProjectViaOriginOnto<Motor> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Motor) -> MultiVector {
@@ -22189,7 +22189,7 @@ impl ProjectViaOriginOnto<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<MultiVector> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
@@ -22197,7 +22197,7 @@ impl ProjectViaOriginOnto<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Plane> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Plane> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Plane) -> RoundPoint {
@@ -22205,15 +22205,15 @@ impl ProjectViaOriginOnto<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<PlaneAtOrigin> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<PlaneAtOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: PlaneAtOrigin) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: PlaneAtOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
@@ -22221,7 +22221,7 @@ impl ProjectViaOriginOnto<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPoint> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: RoundPoint) -> RoundPoint {
@@ -22229,7 +22229,7 @@ impl ProjectViaOriginOnto<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn project_via_origin_onto(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
@@ -22237,7 +22237,7 @@ impl ProjectViaOriginOnto<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn project_via_origin_onto(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -22245,7 +22245,7 @@ impl ProjectViaOriginOnto<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointBulk> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<RoundPointBulk> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn project_via_origin_onto(self, other: RoundPointBulk) -> RoundPointBulk {
@@ -22253,15 +22253,15 @@ impl ProjectViaOriginOnto<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl ProjectViaOriginOnto<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn project_via_origin_onto(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn project_via_origin_onto(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
 
-impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: SpacialCurvature) -> RoundPoint {
@@ -22269,7 +22269,7 @@ impl ProjectViaOriginOnto<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Sphere> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Sphere> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Sphere) -> RoundPoint {
@@ -22277,7 +22277,7 @@ impl ProjectViaOriginOnto<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Transflector> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
@@ -22285,7 +22285,7 @@ impl ProjectViaOriginOnto<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl ProjectViaOriginOnto<Translator> for RoundPointCarrierAspect {
+impl ProjectViaOriginOnto<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Translator) -> MultiVector {

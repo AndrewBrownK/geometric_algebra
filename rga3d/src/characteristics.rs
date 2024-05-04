@@ -380,7 +380,7 @@ impl Attitude for AntiScalar {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -388,7 +388,7 @@ impl Attitude for DualNum {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -396,7 +396,7 @@ impl Attitude for Flector {
     type Output = MultiVectorAtInfinity;
 
     fn attitude(self) -> MultiVectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -404,7 +404,7 @@ impl Attitude for Line {
     type Output = PointAtInfinity;
 
     fn attitude(self) -> PointAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -412,7 +412,7 @@ impl Attitude for LineAtOrigin {
     type Output = PointAtInfinity;
 
     fn attitude(self) -> PointAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -420,7 +420,7 @@ impl Attitude for Motor {
     type Output = FlectorAtInfinity;
 
     fn attitude(self) -> FlectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -428,7 +428,7 @@ impl Attitude for MultiVector {
     type Output = MultiVectorAtInfinity;
 
     fn attitude(self) -> MultiVectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -436,7 +436,7 @@ impl Attitude for MultiVectorAtOrigin {
     type Output = MultiVectorAtInfinity;
 
     fn attitude(self) -> MultiVectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -444,7 +444,7 @@ impl Attitude for Origin {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -452,7 +452,7 @@ impl Attitude for Plane {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -460,7 +460,7 @@ impl Attitude for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -468,7 +468,7 @@ impl Attitude for Point {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -476,7 +476,7 @@ impl Attitude for Rotor {
     type Output = FlectorAtInfinity;
 
     fn attitude(self) -> FlectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -484,7 +484,7 @@ impl Attitude for Transflector {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -492,7 +492,7 @@ impl Attitude for Translator {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -525,7 +525,7 @@ impl AntiInverse for AntiScalar {
     type Output = AntiScalar;
 
     fn anti_inverse(self) -> AntiScalar {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -547,7 +547,7 @@ impl AntiInverse for Flector {
     type Output = Flector;
 
     fn anti_inverse(self) -> Flector {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -555,7 +555,7 @@ impl AntiInverse for Line {
     type Output = Line;
 
     fn anti_inverse(self) -> Line {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -563,7 +563,7 @@ impl AntiInverse for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn anti_inverse(self) -> LineAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -571,7 +571,7 @@ impl AntiInverse for Motor {
     type Output = Motor;
 
     fn anti_inverse(self) -> Motor {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -579,7 +579,7 @@ impl AntiInverse for MultiVector {
     type Output = MultiVector;
 
     fn anti_inverse(self) -> MultiVector {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -587,7 +587,7 @@ impl AntiInverse for MultiVectorAtOrigin {
     type Output = MultiVectorAtOrigin;
 
     fn anti_inverse(self) -> MultiVectorAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -595,7 +595,7 @@ impl AntiInverse for Origin {
     type Output = Origin;
 
     fn anti_inverse(self) -> Origin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -603,7 +603,7 @@ impl AntiInverse for Plane {
     type Output = Plane;
 
     fn anti_inverse(self) -> Plane {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -611,7 +611,7 @@ impl AntiInverse for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn anti_inverse(self) -> PlaneAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -619,7 +619,7 @@ impl AntiInverse for Point {
     type Output = Point;
 
     fn anti_inverse(self) -> Point {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -627,7 +627,7 @@ impl AntiInverse for Rotor {
     type Output = Rotor;
 
     fn anti_inverse(self) -> Rotor {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -635,7 +635,7 @@ impl AntiInverse for Transflector {
     type Output = Transflector;
 
     fn anti_inverse(self) -> Transflector {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -643,7 +643,7 @@ impl AntiInverse for Translator {
     type Output = Translator;
 
     fn anti_inverse(self) -> Translator {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -665,7 +665,7 @@ impl Inverse for Flector {
     type Output = Flector;
 
     fn inverse(self) -> Flector {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -673,7 +673,7 @@ impl Inverse for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn inverse(self) -> FlectorAtInfinity {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -681,7 +681,7 @@ impl Inverse for Horizon {
     type Output = Horizon;
 
     fn inverse(self) -> Horizon {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -689,7 +689,7 @@ impl Inverse for Line {
     type Output = Line;
 
     fn inverse(self) -> Line {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -697,7 +697,7 @@ impl Inverse for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn inverse(self) -> LineAtInfinity {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -705,7 +705,7 @@ impl Inverse for Motor {
     type Output = Motor;
 
     fn inverse(self) -> Motor {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -713,7 +713,7 @@ impl Inverse for MultiVector {
     type Output = MultiVector;
 
     fn inverse(self) -> MultiVector {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -721,7 +721,7 @@ impl Inverse for MultiVectorAtInfinity {
     type Output = MultiVectorAtInfinity;
 
     fn inverse(self) -> MultiVectorAtInfinity {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -729,7 +729,7 @@ impl Inverse for Plane {
     type Output = Plane;
 
     fn inverse(self) -> Plane {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -737,7 +737,7 @@ impl Inverse for Point {
     type Output = Point;
 
     fn inverse(self) -> Point {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -745,7 +745,7 @@ impl Inverse for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn inverse(self) -> PointAtInfinity {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -753,7 +753,7 @@ impl Inverse for Scalar {
     type Output = Scalar;
 
     fn inverse(self) -> Scalar {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -761,7 +761,7 @@ impl Inverse for Transflector {
     type Output = Transflector;
 
     fn inverse(self) -> Transflector {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -769,7 +769,7 @@ impl Inverse for Translator {
     type Output = Translator;
 
     fn inverse(self) -> Translator {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 

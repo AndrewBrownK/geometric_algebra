@@ -172,10 +172,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Circle {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Circle {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Circle {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -252,10 +252,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for CircleBulk {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for CircleBulk {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for CircleBulk {
     type Output = CircleCarrierAspect;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -356,10 +356,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -460,10 +460,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for CircleWeight {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for CircleWeight {
     type Output = CircleCarrierAspect;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -676,10 +676,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Dipole {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Dipole {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Dipole {
     type Output = Dipole;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -828,10 +828,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for DipoleBulk {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1004,10 +1004,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1164,10 +1164,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for DipoleWeight {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1300,10 +1300,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for FlatPoint {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for FlatPoint {
     type Output = Dipole;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1412,10 +1412,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1500,10 +1500,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for FlatPointAtOrigin {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1620,10 +1620,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Flector {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Flector {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1732,10 +1732,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1772,10 +1772,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Horizon {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Horizon {
     type Output = Sphere;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1892,10 +1892,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Infinity {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Infinity {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Infinity {
     type Output = RoundPoint;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2004,10 +2004,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Line {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Line {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Line {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2084,10 +2084,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for LineAtInfinity {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for LineAtInfinity {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2148,10 +2148,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for LineAtOrigin {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for LineAtOrigin {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2236,10 +2236,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Motor {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Motor {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Motor {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2468,10 +2468,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for MultiVector {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for MultiVector {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2533,9 +2533,9 @@ impl AntiRejectOrthogonallyFrom<CircleBulk> for Origin {
 }
 
 impl AntiRejectOrthogonallyFrom<CircleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2557,9 +2557,9 @@ impl AntiRejectOrthogonallyFrom<DipoleBulk> for Origin {
 }
 
 impl AntiRejectOrthogonallyFrom<DipoleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2684,10 +2684,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Origin {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2772,10 +2772,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Plane {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Plane {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Plane {
     type Output = Sphere;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2812,10 +2812,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2876,10 +2876,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Rotor {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Rotor {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Rotor {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2909,9 +2909,9 @@ impl AntiRejectOrthogonallyFrom<CircleCarrierAspect> for RoundPoint {
 }
 
 impl AntiRejectOrthogonallyFrom<CircleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2941,9 +2941,9 @@ impl AntiRejectOrthogonallyFrom<DipoleCarrierAspect> for RoundPoint {
 }
 
 impl AntiRejectOrthogonallyFrom<DipoleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3045,9 +3045,9 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for RoundPoint {
 }
 
 impl AntiRejectOrthogonallyFrom<Origin> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: Origin) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: Origin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3108,10 +3108,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPoint {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for RoundPoint {
     type Output = RoundPoint;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3181,9 +3181,9 @@ impl AntiRejectOrthogonallyFrom<CircleCarrierAspect> for RoundPointAtInfinity {
 }
 
 impl AntiRejectOrthogonallyFrom<CircleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3213,9 +3213,9 @@ impl AntiRejectOrthogonallyFrom<DipoleCarrierAspect> for RoundPointAtInfinity {
 }
 
 impl AntiRejectOrthogonallyFrom<DipoleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3285,9 +3285,9 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for RoundPointAtInfinity {
 }
 
 impl AntiRejectOrthogonallyFrom<Origin> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: Origin) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: Origin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3348,10 +3348,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = RoundPoint;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3588,10 +3588,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for RoundPointAtOrigin {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3645,9 +3645,9 @@ impl AntiRejectOrthogonallyFrom<Circle> for RoundPointBulk {
 }
 
 impl AntiRejectOrthogonallyFrom<CircleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3669,9 +3669,9 @@ impl AntiRejectOrthogonallyFrom<DipoleBulk> for RoundPointBulk {
 }
 
 impl AntiRejectOrthogonallyFrom<DipoleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3796,10 +3796,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3828,7 +3828,7 @@ impl AntiRejectOrthogonallyFrom<Translator> for RoundPointBulk {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Circle> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Circle> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: Circle) -> RoundPoint {
@@ -3836,7 +3836,7 @@ impl AntiRejectOrthogonallyFrom<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<CircleBulk> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<CircleBulk> for RoundPointOnOrigin {
     type Output = Origin;
 
     fn anti_reject_orthogonally_from(self, other: CircleBulk) -> Origin {
@@ -3844,15 +3844,15 @@ impl AntiRejectOrthogonallyFrom<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<CircleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<CircleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Dipole> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Dipole> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: Dipole) -> RoundPoint {
@@ -3860,23 +3860,23 @@ impl AntiRejectOrthogonallyFrom<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<DipoleBulk> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<DipoleBulk> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: DipoleBulk) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: DipoleBulk) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
 
-impl AntiRejectOrthogonallyFrom<DipoleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<DipoleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
 
-impl AntiRejectOrthogonallyFrom<FlatPoint> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<FlatPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: FlatPoint) -> RoundPoint {
@@ -3884,7 +3884,7 @@ impl AntiRejectOrthogonallyFrom<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_orthogonally_from(self, other: FlatPointAtInfinity) -> Infinity {
@@ -3892,7 +3892,7 @@ impl AntiRejectOrthogonallyFrom<FlatPointAtInfinity> for RoundPointCarrierAspect
     }
 }
 
-impl AntiRejectOrthogonallyFrom<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_reject_orthogonally_from(self, other: FlatPointAtOrigin) -> RoundPointBulk {
@@ -3900,7 +3900,7 @@ impl AntiRejectOrthogonallyFrom<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Flector> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: Flector) -> MultiVector {
@@ -3908,7 +3908,7 @@ impl AntiRejectOrthogonallyFrom<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: FlectorAtInfinity) -> MultiVector {
@@ -3916,7 +3916,7 @@ impl AntiRejectOrthogonallyFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Horizon> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Horizon> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_orthogonally_from(self, other: Horizon) -> Infinity {
@@ -3924,7 +3924,7 @@ impl AntiRejectOrthogonallyFrom<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Infinity> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Infinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_orthogonally_from(self, other: Infinity) -> Infinity {
@@ -3932,7 +3932,7 @@ impl AntiRejectOrthogonallyFrom<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Line> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Line> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: Line) -> RoundPoint {
@@ -3940,7 +3940,7 @@ impl AntiRejectOrthogonallyFrom<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<LineAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<LineAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_orthogonally_from(self, other: LineAtInfinity) -> Infinity {
@@ -3948,7 +3948,7 @@ impl AntiRejectOrthogonallyFrom<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<LineAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<LineAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_reject_orthogonally_from(self, other: LineAtOrigin) -> RoundPointBulk {
@@ -3956,7 +3956,7 @@ impl AntiRejectOrthogonallyFrom<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Motor> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: Motor) -> MultiVector {
@@ -3964,7 +3964,7 @@ impl AntiRejectOrthogonallyFrom<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<MultiVector> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
@@ -3972,7 +3972,7 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Plane> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Plane> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn anti_reject_orthogonally_from(self, other: Plane) -> RoundPointAtInfinity {
@@ -3980,7 +3980,7 @@ impl AntiRejectOrthogonallyFrom<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_reject_orthogonally_from(self, other: PlaneAtOrigin) -> RoundPointBulk {
@@ -3988,7 +3988,7 @@ impl AntiRejectOrthogonallyFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Rotor> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: Rotor) -> MultiVector {
@@ -3996,7 +3996,7 @@ impl AntiRejectOrthogonallyFrom<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPoint> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: RoundPoint) -> RoundPoint {
@@ -4004,7 +4004,7 @@ impl AntiRejectOrthogonallyFrom<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: RoundPointAtInfinity) -> RoundPoint {
@@ -4012,7 +4012,7 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtInfinity> for RoundPointCarrierAspec
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> RoundPoint {
@@ -4020,23 +4020,23 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for RoundPointCarrierAspect 
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointBulk> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<RoundPointBulk> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointBulk) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
 
-impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
@@ -4044,7 +4044,7 @@ impl AntiRejectOrthogonallyFrom<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Sphere> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Sphere> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: Sphere) -> RoundPoint {
@@ -4052,7 +4052,7 @@ impl AntiRejectOrthogonallyFrom<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Transflector> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: Transflector) -> MultiVector {
@@ -4060,7 +4060,7 @@ impl AntiRejectOrthogonallyFrom<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Translator> for RoundPointCarrierAspect {
+impl AntiRejectOrthogonallyFrom<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_orthogonally_from(self, other: Translator) -> MultiVector {
@@ -4116,10 +4116,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for SpacialCurvature {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for SpacialCurvature {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Sphere;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4180,10 +4180,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Sphere {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Sphere {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Sphere {
     type Output = Sphere;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4332,10 +4332,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Transflector {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Transflector {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4412,10 +4412,10 @@ impl AntiRejectOrthogonallyFrom<RoundPointBulk> for Translator {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<RoundPointCarrierAspect> for Translator {
+impl AntiRejectOrthogonallyFrom<RoundPointOnOrigin> for Translator {
     type Output = Circle;
 
-    fn anti_reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4548,10 +4548,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Circle {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Circle {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Circle {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -4628,10 +4628,10 @@ impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for CircleBulk {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for CircleBulk {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for CircleBulk {
     type Output = CircleCarrierAspect;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -4732,10 +4732,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for CircleCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for CircleCarrierAspect {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -4836,10 +4836,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for CircleWeight {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for CircleWeight {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for CircleWeight {
     type Output = CircleCarrierAspect;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> CircleCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> CircleCarrierAspect {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5052,10 +5052,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Dipole {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Dipole {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Dipole {
     type Output = Dipole;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5204,10 +5204,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for DipoleBulk {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for DipoleBulk {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for DipoleBulk {
     type Output = DipoleCarrierAspect;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5380,10 +5380,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for DipoleCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for DipoleCarrierAspect {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5540,10 +5540,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for DipoleWeight {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for DipoleWeight {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for DipoleWeight {
     type Output = DipoleCarrierAspect;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> DipoleCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> DipoleCarrierAspect {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5676,10 +5676,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for FlatPoint {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for FlatPoint {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for FlatPoint {
     type Output = Dipole;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5788,10 +5788,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for FlatPointAtInfinity {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for FlatPointAtInfinity {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for FlatPointAtInfinity {
     type Output = Dipole;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5876,10 +5876,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for FlatPointAtOrigin {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for FlatPointAtOrigin {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for FlatPointAtOrigin {
     type Output = Dipole;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Dipole {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Dipole {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -5996,10 +5996,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Flector {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Flector {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Flector {
     type Output = MultiVector;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6108,10 +6108,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for FlectorAtInfinity {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = MultiVector;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6148,10 +6148,10 @@ impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Horizon {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Horizon {
     type Output = Sphere;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6268,10 +6268,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Infinity {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Infinity {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Infinity {
     type Output = RoundPoint;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6380,10 +6380,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Line {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Line {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Line {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6460,10 +6460,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for LineAtInfinity {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for LineAtInfinity {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for LineAtInfinity {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6524,10 +6524,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for LineAtOrigin {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for LineAtOrigin {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for LineAtOrigin {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6612,10 +6612,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Motor {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Motor {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Motor {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6844,10 +6844,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for MultiVector {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for MultiVector {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6909,9 +6909,9 @@ impl AntiRejectViaHorizonFrom<CircleBulk> for Origin {
 }
 
 impl AntiRejectViaHorizonFrom<CircleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -6933,9 +6933,9 @@ impl AntiRejectViaHorizonFrom<DipoleBulk> for Origin {
 }
 
 impl AntiRejectViaHorizonFrom<DipoleCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7060,10 +7060,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Origin {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Origin {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Origin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7148,10 +7148,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Plane {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Plane {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Plane {
     type Output = Sphere;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7188,10 +7188,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7252,10 +7252,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Rotor {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Rotor {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Rotor {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7285,9 +7285,9 @@ impl AntiRejectViaHorizonFrom<CircleCarrierAspect> for RoundPoint {
 }
 
 impl AntiRejectViaHorizonFrom<CircleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7317,9 +7317,9 @@ impl AntiRejectViaHorizonFrom<DipoleCarrierAspect> for RoundPoint {
 }
 
 impl AntiRejectViaHorizonFrom<DipoleWeight> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7421,9 +7421,9 @@ impl AntiRejectViaHorizonFrom<MultiVector> for RoundPoint {
 }
 
 impl AntiRejectViaHorizonFrom<Origin> for RoundPoint {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: Origin) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: Origin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7484,10 +7484,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPoint {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for RoundPoint {
     type Output = RoundPoint;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7557,9 +7557,9 @@ impl AntiRejectViaHorizonFrom<CircleCarrierAspect> for RoundPointAtInfinity {
 }
 
 impl AntiRejectViaHorizonFrom<CircleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: CircleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: CircleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7589,9 +7589,9 @@ impl AntiRejectViaHorizonFrom<DipoleCarrierAspect> for RoundPointAtInfinity {
 }
 
 impl AntiRejectViaHorizonFrom<DipoleWeight> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: DipoleWeight) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: DipoleWeight) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7661,9 +7661,9 @@ impl AntiRejectViaHorizonFrom<MultiVector> for RoundPointAtInfinity {
 }
 
 impl AntiRejectViaHorizonFrom<Origin> for RoundPointAtInfinity {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: Origin) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: Origin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7724,10 +7724,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = RoundPoint;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -7964,10 +7964,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for RoundPointAtOrigin {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPoint {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPoint {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8021,9 +8021,9 @@ impl AntiRejectViaHorizonFrom<Circle> for RoundPointBulk {
 }
 
 impl AntiRejectViaHorizonFrom<CircleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8045,9 +8045,9 @@ impl AntiRejectViaHorizonFrom<DipoleBulk> for RoundPointBulk {
 }
 
 impl AntiRejectViaHorizonFrom<DipoleCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8172,10 +8172,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointBulk {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for RoundPointBulk {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8204,7 +8204,7 @@ impl AntiRejectViaHorizonFrom<Translator> for RoundPointBulk {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Circle> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Circle> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: Circle) -> RoundPoint {
@@ -8212,7 +8212,7 @@ impl AntiRejectViaHorizonFrom<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<CircleBulk> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<CircleBulk> for RoundPointOnOrigin {
     type Output = Origin;
 
     fn anti_reject_via_horizon_from(self, other: CircleBulk) -> Origin {
@@ -8220,15 +8220,15 @@ impl AntiRejectViaHorizonFrom<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<CircleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<CircleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: CircleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: CircleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
 
-impl AntiRejectViaHorizonFrom<Dipole> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Dipole> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: Dipole) -> RoundPoint {
@@ -8236,23 +8236,23 @@ impl AntiRejectViaHorizonFrom<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<DipoleBulk> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<DipoleBulk> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: DipoleBulk) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: DipoleBulk) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
 
-impl AntiRejectViaHorizonFrom<DipoleCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<DipoleCarrierAspect> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: DipoleCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: DipoleCarrierAspect) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
 
-impl AntiRejectViaHorizonFrom<FlatPoint> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<FlatPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: FlatPoint) -> RoundPoint {
@@ -8260,7 +8260,7 @@ impl AntiRejectViaHorizonFrom<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_via_horizon_from(self, other: FlatPointAtInfinity) -> Infinity {
@@ -8268,7 +8268,7 @@ impl AntiRejectViaHorizonFrom<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_reject_via_horizon_from(self, other: FlatPointAtOrigin) -> RoundPointBulk {
@@ -8276,7 +8276,7 @@ impl AntiRejectViaHorizonFrom<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Flector> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: Flector) -> MultiVector {
@@ -8284,7 +8284,7 @@ impl AntiRejectViaHorizonFrom<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: FlectorAtInfinity) -> MultiVector {
@@ -8292,7 +8292,7 @@ impl AntiRejectViaHorizonFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Horizon> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Horizon> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_via_horizon_from(self, other: Horizon) -> Infinity {
@@ -8300,7 +8300,7 @@ impl AntiRejectViaHorizonFrom<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Infinity> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Infinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_via_horizon_from(self, other: Infinity) -> Infinity {
@@ -8308,7 +8308,7 @@ impl AntiRejectViaHorizonFrom<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Line> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Line> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: Line) -> RoundPoint {
@@ -8316,7 +8316,7 @@ impl AntiRejectViaHorizonFrom<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<LineAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<LineAtInfinity> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn anti_reject_via_horizon_from(self, other: LineAtInfinity) -> Infinity {
@@ -8324,7 +8324,7 @@ impl AntiRejectViaHorizonFrom<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<LineAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<LineAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_reject_via_horizon_from(self, other: LineAtOrigin) -> RoundPointBulk {
@@ -8332,7 +8332,7 @@ impl AntiRejectViaHorizonFrom<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Motor> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: Motor) -> MultiVector {
@@ -8340,7 +8340,7 @@ impl AntiRejectViaHorizonFrom<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<MultiVector> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: MultiVector) -> MultiVector {
@@ -8348,7 +8348,7 @@ impl AntiRejectViaHorizonFrom<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Plane> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Plane> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn anti_reject_via_horizon_from(self, other: Plane) -> RoundPointAtInfinity {
@@ -8356,7 +8356,7 @@ impl AntiRejectViaHorizonFrom<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn anti_reject_via_horizon_from(self, other: PlaneAtOrigin) -> RoundPointBulk {
@@ -8364,7 +8364,7 @@ impl AntiRejectViaHorizonFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Rotor> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: Rotor) -> MultiVector {
@@ -8372,7 +8372,7 @@ impl AntiRejectViaHorizonFrom<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPoint> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<RoundPoint> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: RoundPoint) -> RoundPoint {
@@ -8380,7 +8380,7 @@ impl AntiRejectViaHorizonFrom<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: RoundPointAtInfinity) -> RoundPoint {
@@ -8388,7 +8388,7 @@ impl AntiRejectViaHorizonFrom<RoundPointAtInfinity> for RoundPointCarrierAspect 
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> RoundPoint {
@@ -8396,23 +8396,23 @@ impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointBulk> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<RoundPointBulk> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointBulk) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointBulk) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> RoundPointCarrierAspect {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
 
-impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_reject_via_horizon_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
@@ -8420,7 +8420,7 @@ impl AntiRejectViaHorizonFrom<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Sphere> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Sphere> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: Sphere) -> RoundPoint {
@@ -8428,7 +8428,7 @@ impl AntiRejectViaHorizonFrom<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Transflector> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: Transflector) -> MultiVector {
@@ -8436,7 +8436,7 @@ impl AntiRejectViaHorizonFrom<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Translator> for RoundPointCarrierAspect {
+impl AntiRejectViaHorizonFrom<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn anti_reject_via_horizon_from(self, other: Translator) -> MultiVector {
@@ -8492,10 +8492,10 @@ impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for SpacialCurvature {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for SpacialCurvature {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Sphere;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8556,10 +8556,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Sphere {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Sphere {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Sphere {
     type Output = Sphere;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8708,10 +8708,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Transflector {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Transflector {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Transflector {
     type Output = MultiVector;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8788,10 +8788,10 @@ impl AntiRejectViaHorizonFrom<RoundPointBulk> for Translator {
     }
 }
 
-impl AntiRejectViaHorizonFrom<RoundPointCarrierAspect> for Translator {
+impl AntiRejectViaHorizonFrom<RoundPointOnOrigin> for Translator {
     type Output = Circle;
 
-    fn anti_reject_via_horizon_from(self, other: RoundPointCarrierAspect) -> Circle {
+    fn anti_reject_via_horizon_from(self, other: RoundPointOnOrigin) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -10492,10 +10492,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Flector {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Flector {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Flector {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10692,10 +10692,10 @@ impl RejectOrthogonallyFrom<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -10892,10 +10892,10 @@ impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Horizon {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Horizon {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -11660,10 +11660,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Motor {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Motor {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Motor {
     type Output = AntiScalar;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -11932,10 +11932,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for MultiVector {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for MultiVector {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12260,10 +12260,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Plane {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Plane {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Plane {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12460,10 +12460,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -12684,10 +12684,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Rotor {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Rotor {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Rotor {
     type Output = AntiScalar;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -13092,7 +13092,7 @@ impl RejectOrthogonallyFrom<Translator> for RoundPointBulk {
     }
 }
 
-impl RejectOrthogonallyFrom<Flector> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Flector) -> MultiVector {
@@ -13100,7 +13100,7 @@ impl RejectOrthogonallyFrom<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: FlectorAtInfinity) -> MultiVector {
@@ -13108,7 +13108,7 @@ impl RejectOrthogonallyFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Horizon> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Horizon> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn reject_orthogonally_from(self, other: Horizon) -> Infinity {
@@ -13116,7 +13116,7 @@ impl RejectOrthogonallyFrom<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Motor> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Motor) -> MultiVector {
@@ -13124,7 +13124,7 @@ impl RejectOrthogonallyFrom<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<MultiVector> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
@@ -13132,7 +13132,7 @@ impl RejectOrthogonallyFrom<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Plane> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Plane> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn reject_orthogonally_from(self, other: Plane) -> RoundPointAtInfinity {
@@ -13140,7 +13140,7 @@ impl RejectOrthogonallyFrom<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn reject_orthogonally_from(self, other: PlaneAtOrigin) -> RoundPointBulk {
@@ -13148,7 +13148,7 @@ impl RejectOrthogonallyFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
@@ -13156,7 +13156,7 @@ impl RejectOrthogonallyFrom<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn reject_orthogonally_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
@@ -13164,7 +13164,7 @@ impl RejectOrthogonallyFrom<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Sphere> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Sphere> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn reject_orthogonally_from(self, other: Sphere) -> RoundPoint {
@@ -13172,7 +13172,7 @@ impl RejectOrthogonallyFrom<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Transflector> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
@@ -13180,7 +13180,7 @@ impl RejectOrthogonallyFrom<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectOrthogonallyFrom<Translator> for RoundPointCarrierAspect {
+impl RejectOrthogonallyFrom<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
@@ -13388,10 +13388,10 @@ impl RejectOrthogonallyFrom<RoundPointAtOrigin> for SpacialCurvature {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for SpacialCurvature {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -13660,10 +13660,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Sphere {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Sphere {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Sphere {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -14092,10 +14092,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Transflector {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Transflector {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Transflector {
     type Output = Sphere;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -14324,10 +14324,10 @@ impl RejectOrthogonallyFrom<RoundPointBulk> for Translator {
     }
 }
 
-impl RejectOrthogonallyFrom<RoundPointCarrierAspect> for Translator {
+impl RejectOrthogonallyFrom<RoundPointOnOrigin> for Translator {
     type Output = AntiScalar;
 
-    fn reject_orthogonally_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn reject_orthogonally_from(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -16068,10 +16068,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Flector {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Flector {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Flector {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -16268,10 +16268,10 @@ impl RejectViaOriginFrom<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for FlectorAtInfinity {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for FlectorAtInfinity {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -16468,10 +16468,10 @@ impl RejectViaOriginFrom<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Horizon {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Horizon {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17236,10 +17236,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Motor {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Motor {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Motor {
     type Output = AntiScalar;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17508,10 +17508,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for MultiVector {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for MultiVector {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -17836,10 +17836,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Plane {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Plane {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Plane {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18036,10 +18036,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for PlaneAtOrigin {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for PlaneAtOrigin {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for PlaneAtOrigin {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18260,10 +18260,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Rotor {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Rotor {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Rotor {
     type Output = AntiScalar;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -18668,7 +18668,7 @@ impl RejectViaOriginFrom<Translator> for RoundPointBulk {
     }
 }
 
-impl RejectViaOriginFrom<Flector> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Flector) -> MultiVector {
@@ -18676,7 +18676,7 @@ impl RejectViaOriginFrom<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: FlectorAtInfinity) -> MultiVector {
@@ -18684,7 +18684,7 @@ impl RejectViaOriginFrom<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Horizon> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Horizon> for RoundPointOnOrigin {
     type Output = Infinity;
 
     fn reject_via_origin_from(self, other: Horizon) -> Infinity {
@@ -18692,7 +18692,7 @@ impl RejectViaOriginFrom<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Motor> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Motor) -> MultiVector {
@@ -18700,7 +18700,7 @@ impl RejectViaOriginFrom<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<MultiVector> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: MultiVector) -> MultiVector {
@@ -18708,7 +18708,7 @@ impl RejectViaOriginFrom<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Plane> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Plane> for RoundPointOnOrigin {
     type Output = RoundPointAtInfinity;
 
     fn reject_via_origin_from(self, other: Plane) -> RoundPointAtInfinity {
@@ -18716,7 +18716,7 @@ impl RejectViaOriginFrom<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = RoundPointBulk;
 
     fn reject_via_origin_from(self, other: PlaneAtOrigin) -> RoundPointBulk {
@@ -18724,7 +18724,7 @@ impl RejectViaOriginFrom<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
@@ -18732,7 +18732,7 @@ impl RejectViaOriginFrom<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<SpacialCurvature> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<SpacialCurvature> for RoundPointOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn reject_via_origin_from(self, other: SpacialCurvature) -> RoundPointAtOrigin {
@@ -18740,7 +18740,7 @@ impl RejectViaOriginFrom<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Sphere> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Sphere> for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn reject_via_origin_from(self, other: Sphere) -> RoundPoint {
@@ -18748,7 +18748,7 @@ impl RejectViaOriginFrom<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Transflector> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
@@ -18756,7 +18756,7 @@ impl RejectViaOriginFrom<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl RejectViaOriginFrom<Translator> for RoundPointCarrierAspect {
+impl RejectViaOriginFrom<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Translator) -> MultiVector {
@@ -18964,10 +18964,10 @@ impl RejectViaOriginFrom<RoundPointAtOrigin> for SpacialCurvature {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for SpacialCurvature {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for SpacialCurvature {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -19236,10 +19236,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Sphere {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Sphere {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Sphere {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -19668,10 +19668,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Transflector {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Transflector {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Transflector {
     type Output = Sphere;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> Sphere {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> Sphere {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -19900,10 +19900,10 @@ impl RejectViaOriginFrom<RoundPointBulk> for Translator {
     }
 }
 
-impl RejectViaOriginFrom<RoundPointCarrierAspect> for Translator {
+impl RejectViaOriginFrom<RoundPointOnOrigin> for Translator {
     type Output = AntiScalar;
 
-    fn reject_via_origin_from(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn reject_via_origin_from(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.anti_wedge(other).wedge(other.dual())
     }
 }

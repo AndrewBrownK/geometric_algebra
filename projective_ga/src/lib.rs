@@ -14,3 +14,8 @@ pub trait Zero {
 pub trait One {
     fn one() -> Self;
 }
+
+/// All elements set to `1.0`
+pub trait Unit {
+    fn unit() -> Self;
+}

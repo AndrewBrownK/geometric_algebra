@@ -1488,10 +1488,10 @@ impl AntiDot<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for Infinity {
+impl AntiDot<RoundPointOnOrigin> for Infinity {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group0()[3],
@@ -2297,10 +2297,10 @@ impl AntiDot<RoundPointBulk> for MultiVector {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for MultiVector {
+impl AntiDot<RoundPointOnOrigin> for MultiVector {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2] + self.group2()[1] * other.group0()[3],
@@ -2813,10 +2813,10 @@ impl AntiDot<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for RoundPoint {
+impl AntiDot<RoundPointOnOrigin> for RoundPoint {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group1()[1] * other.group0()[3],
@@ -2897,10 +2897,10 @@ impl AntiDot<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl AntiDot<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
@@ -2981,10 +2981,10 @@ impl AntiDot<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl AntiDot<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[1] * other.group0()[3],
@@ -3041,10 +3041,10 @@ impl AntiDot<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for RoundPointBulk {
+impl AntiDot<RoundPointOnOrigin> for RoundPointBulk {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -3053,7 +3053,7 @@ impl AntiDot<RoundPointCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl AntiDot<Infinity> for RoundPointCarrierAspect {
+impl AntiDot<Infinity> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: Infinity) -> AntiScalar {
@@ -3065,7 +3065,7 @@ impl AntiDot<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<MultiVector> for RoundPointCarrierAspect {
+impl AntiDot<MultiVector> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: MultiVector) -> AntiScalar {
@@ -3077,7 +3077,7 @@ impl AntiDot<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<RoundPoint> for RoundPointCarrierAspect {
+impl AntiDot<RoundPoint> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: RoundPoint) -> AntiScalar {
@@ -3089,7 +3089,7 @@ impl AntiDot<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl AntiDot<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: RoundPointAtInfinity) -> AntiScalar {
@@ -3101,7 +3101,7 @@ impl AntiDot<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl AntiDot<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: RoundPointAtOrigin) -> AntiScalar {
@@ -3113,7 +3113,7 @@ impl AntiDot<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<RoundPointBulk> for RoundPointCarrierAspect {
+impl AntiDot<RoundPointBulk> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: RoundPointBulk) -> AntiScalar {
@@ -3125,10 +3125,10 @@ impl AntiDot<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl AntiDot<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl AntiDot<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
-    fn anti_dot(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn anti_dot(self, other: RoundPointOnOrigin) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
@@ -5216,10 +5216,10 @@ impl Dot<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for Infinity {
+impl Dot<RoundPointOnOrigin> for Infinity {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0()[3],
@@ -6025,10 +6025,10 @@ impl Dot<RoundPointBulk> for MultiVector {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for MultiVector {
+impl Dot<RoundPointOnOrigin> for MultiVector {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] - self.group2()[1] * other.group0()[3],
@@ -6543,10 +6543,10 @@ impl Dot<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for RoundPoint {
+impl Dot<RoundPointOnOrigin> for RoundPoint {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group1()[1] * other.group0()[3],
@@ -6627,10 +6627,10 @@ impl Dot<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl Dot<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
@@ -6711,10 +6711,10 @@ impl Dot<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl Dot<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[1] * other.group0()[3],
@@ -6771,10 +6771,10 @@ impl Dot<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for RoundPointBulk {
+impl Dot<RoundPointOnOrigin> for RoundPointBulk {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
@@ -6783,7 +6783,7 @@ impl Dot<RoundPointCarrierAspect> for RoundPointBulk {
     }
 }
 
-impl Dot<Infinity> for RoundPointCarrierAspect {
+impl Dot<Infinity> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn dot(self, other: Infinity) -> Scalar {
@@ -6795,7 +6795,7 @@ impl Dot<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<MultiVector> for RoundPointCarrierAspect {
+impl Dot<MultiVector> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn dot(self, other: MultiVector) -> Scalar {
@@ -6807,7 +6807,7 @@ impl Dot<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<RoundPoint> for RoundPointCarrierAspect {
+impl Dot<RoundPoint> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn dot(self, other: RoundPoint) -> Scalar {
@@ -6819,7 +6819,7 @@ impl Dot<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl Dot<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn dot(self, other: RoundPointAtInfinity) -> Scalar {
@@ -6831,7 +6831,7 @@ impl Dot<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl Dot<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn dot(self, other: RoundPointAtOrigin) -> Scalar {
@@ -6843,7 +6843,7 @@ impl Dot<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<RoundPointBulk> for RoundPointCarrierAspect {
+impl Dot<RoundPointBulk> for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn dot(self, other: RoundPointBulk) -> Scalar {
@@ -6855,10 +6855,10 @@ impl Dot<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl Dot<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl Dot<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = Scalar;
 
-    fn dot(self, other: RoundPointCarrierAspect) -> Scalar {
+    fn dot(self, other: RoundPointOnOrigin) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],

@@ -277,6 +277,7 @@ impl MultiVectorClass {
         let (scalar_value, other_values) = match name {
             "Zero" => (0, 0),
             "One" => (1, 0),
+            "Unit" => (1, 1),
             _ => unreachable!(),
         };
         let mut body = Vec::new();
@@ -1220,7 +1221,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // Constants
         for param_a in registry.single_parameters() {
             let class_a = param_a.multi_vector_class();
-            for name in &["Zero", "One"] {
+            for name in &["Zero", "One", "Unit"] {
                 let ast_node = class_a.constant(name);
                 if ast_node != AstNode::None {
                     self.trait_impls.add_class_impl(name, param_a.multi_vector_class(), ast_node);
@@ -1344,7 +1345,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dot = self.algebra.dialect().dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
                 let scalar_type = registry.classes.iter().find(|it| it.class_name == "Scalar")?;
-                let one = self.trait_impls.get_class_invocation("One", scalar_type)?;
+                let one = self.trait_impls.get_class_invocation("Unit", scalar_type)?;
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
                 let product = self.algebra.dialect().geometric_product.first()?;
                 let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
@@ -1360,7 +1361,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dot = self.algebra.dialect().anti_dot_product.first()?;
                 let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
                 let scalar_type = registry.classes.iter().find(|it| it.class_name == "AntiScalar")?;
-                let one = self.trait_impls.get_class_invocation("One", scalar_type)?;
+                let one = self.trait_impls.get_class_invocation("Unit", scalar_type)?;
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
                 let product = self.algebra.dialect().geometric_anti_product.first()?;
                 let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
@@ -1962,6 +1963,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(&mut self, registry: &'r MultiVectorClassRegistry) {
 
+        // TODO here
         // TODO hardly any of these are getting emitted
 
         // TODO see page 197 of the book (and onward) for formulas to check against
@@ -1982,7 +1984,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // rga3d poster: https://projectivegeometricalgebra.org/projgeomalg.pdf
         // cga3d poster: https://projectivegeometricalgebra.org/confgeomalg.pdf
         // In the "Norms" section of rga3d you can see the double bars denoting absolute value,
-        // one for bulk, one for norm, the "geometric" combination of both, and then
+        // one for bulk, one for weight, the "geometric" combination of both, and then
         // the little hat denoting unitization by projecting onto the plane where e4 = 1.
         // So the norms in the cga poster are apparently/obviously doing the same thing, but
         // with less elaboration. It is clear that the formulas are listing the unitized/projected
@@ -2767,7 +2769,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "Support";
             let _: Option<()> = try {
                 let origin = origin.clone()?;
-                let origin = self.trait_impls.get_class_invocation("One", origin)?;
+                let origin = self.trait_impls.get_class_invocation("Unit", origin)?;
                 let ad = self.trait_impls.get_single_invocation("AntiDual", variable(&param_a))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, origin, ad)?;
@@ -2782,7 +2784,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "AntiSupport";
             let _: Option<()> = try {
                 let origin = origin.clone()?;
-                let origin = self.trait_impls.get_class_invocation("One", origin)?;
+                let origin = self.trait_impls.get_class_invocation("Unit", origin)?;
                 let origin_right_complement = self.trait_impls.get_single_invocation("RightComplement", origin.clone());
                 let origin_complement = self.trait_impls.get_single_invocation("Complement", origin);
                 let origin_complement = origin_right_complement.or(origin_complement)?;
@@ -2897,7 +2899,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     data_type: cos.data_type_hint.clone(),
                     expression: Box::new(cos),
                 };
-                let one = self.trait_impls.get_class_invocation("One", dual_num)?;
+                let one = self.trait_impls.get_class_invocation("Unit", dual_num)?;
                 let product = self.algebra.dialect().geometric_product.first()?;
                 let cos_squared = self.trait_impls.get_pair_invocation(product, var_cos.clone(), var_cos)?;
                 let var_cos_squared = Expression {
@@ -2981,9 +2983,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "Attitude";
             let _: Option<()> = try {
                 let horizon = registry.classes.iter().find(|it| it.class_name == horizon_class_name)?;
-                let one = self.trait_impls.get_class_invocation("One", horizon)?;
+                let unit = self.trait_impls.get_class_invocation("Unit", horizon)?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
-                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), one)?;
+                let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), unit)?;
                 let attitude = single_expression_single_trait_impl(name, &param_a, anti_wedge);
 
                 self.trait_impls.add_single_impl(name, param_a.clone(), attitude);
@@ -3021,7 +3023,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
             let one_infinity: Option<Expression> = try {
                 let infinity = registry.classes.iter().find(|it| it.class_name == "Infinity")?;
-                let one_infinity = self.trait_impls.get_class_invocation("One", infinity)?;
+                let one_infinity = self.trait_impls.get_class_invocation("Unit", infinity)?;
                 one_infinity
             };
             let one_infinity = match one_infinity {
@@ -3125,7 +3127,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // External Traits
-        let trait_names = ["Zero", "One", "Neg", "Into", "Add", "Sub", "Mul", "Div"];
+        let trait_names = ["Zero", "One", "Unit", "Neg", "Into", "Add", "Sub", "Mul", "Div"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }

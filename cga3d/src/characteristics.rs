@@ -411,7 +411,7 @@ impl AntiGrade for RoundPointBulk {
     }
 }
 
-impl AntiGrade for RoundPointCarrierAspect {
+impl AntiGrade for RoundPointOnOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -643,7 +643,7 @@ impl Grade for RoundPointBulk {
     }
 }
 
-impl Grade for RoundPointCarrierAspect {
+impl Grade for RoundPointOnOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -712,7 +712,7 @@ impl Attitude for AntiScalar {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -720,7 +720,7 @@ impl Attitude for Circle {
     type Output = Dipole;
 
     fn attitude(self) -> Dipole {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -728,7 +728,7 @@ impl Attitude for CircleCarrierAspect {
     type Output = DipoleBulk;
 
     fn attitude(self) -> DipoleBulk {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -736,7 +736,7 @@ impl Attitude for CircleWeight {
     type Output = DipoleBulk;
 
     fn attitude(self) -> DipoleBulk {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -744,7 +744,7 @@ impl Attitude for Dipole {
     type Output = RoundPointAtInfinity;
 
     fn attitude(self) -> RoundPointAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -752,7 +752,7 @@ impl Attitude for DipoleCarrierAspect {
     type Output = RoundPointBulk;
 
     fn attitude(self) -> RoundPointBulk {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -760,7 +760,7 @@ impl Attitude for DipoleWeight {
     type Output = RoundPointBulk;
 
     fn attitude(self) -> RoundPointBulk {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -768,7 +768,7 @@ impl Attitude for DualNum {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -776,7 +776,7 @@ impl Attitude for FlatPoint {
     type Output = Infinity;
 
     fn attitude(self) -> Infinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -784,7 +784,7 @@ impl Attitude for FlatPointAtOrigin {
     type Output = Infinity;
 
     fn attitude(self) -> Infinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -792,7 +792,7 @@ impl Attitude for Flector {
     type Output = MultiVector;
 
     fn attitude(self) -> MultiVector {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -800,7 +800,7 @@ impl Attitude for Line {
     type Output = FlatPointAtInfinity;
 
     fn attitude(self) -> FlatPointAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -808,7 +808,7 @@ impl Attitude for LineAtOrigin {
     type Output = FlatPointAtInfinity;
 
     fn attitude(self) -> FlatPointAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -816,7 +816,7 @@ impl Attitude for Motor {
     type Output = FlectorAtInfinity;
 
     fn attitude(self) -> FlectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -824,7 +824,7 @@ impl Attitude for MultiVector {
     type Output = MultiVector;
 
     fn attitude(self) -> MultiVector {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -832,7 +832,7 @@ impl Attitude for Origin {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -840,7 +840,7 @@ impl Attitude for Plane {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -848,7 +848,7 @@ impl Attitude for PlaneAtOrigin {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -856,7 +856,7 @@ impl Attitude for Rotor {
     type Output = FlectorAtInfinity;
 
     fn attitude(self) -> FlectorAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -864,7 +864,7 @@ impl Attitude for RoundPoint {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -872,15 +872,15 @@ impl Attitude for RoundPointAtOrigin {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
-impl Attitude for RoundPointCarrierAspect {
+impl Attitude for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -888,7 +888,7 @@ impl Attitude for SpacialCurvature {
     type Output = CircleBulk;
 
     fn attitude(self) -> CircleBulk {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -896,7 +896,7 @@ impl Attitude for Sphere {
     type Output = Circle;
 
     fn attitude(self) -> Circle {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -904,7 +904,7 @@ impl Attitude for SphereWeight {
     type Output = CircleBulk;
 
     fn attitude(self) -> CircleBulk {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -912,7 +912,7 @@ impl Attitude for Transflector {
     type Output = LineAtInfinity;
 
     fn attitude(self) -> LineAtInfinity {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -920,7 +920,7 @@ impl Attitude for Translator {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
-        self.anti_wedge(Horizon::one())
+        self.anti_wedge(Horizon::unit())
     }
 }
 
@@ -928,7 +928,7 @@ impl Carrier for Circle {
     type Output = Plane;
 
     fn carrier(self) -> Plane {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -936,7 +936,7 @@ impl Carrier for CircleBulk {
     type Output = Horizon;
 
     fn carrier(self) -> Horizon {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -944,7 +944,7 @@ impl Carrier for CircleCarrierAspect {
     type Output = Plane;
 
     fn carrier(self) -> Plane {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -952,7 +952,7 @@ impl Carrier for CircleWeight {
     type Output = PlaneAtOrigin;
 
     fn carrier(self) -> PlaneAtOrigin {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -960,7 +960,7 @@ impl Carrier for Dipole {
     type Output = Line;
 
     fn carrier(self) -> Line {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -968,7 +968,7 @@ impl Carrier for DipoleBulk {
     type Output = LineAtInfinity;
 
     fn carrier(self) -> LineAtInfinity {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -976,7 +976,7 @@ impl Carrier for DipoleCarrierAspect {
     type Output = Line;
 
     fn carrier(self) -> Line {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -984,7 +984,7 @@ impl Carrier for DipoleWeight {
     type Output = LineAtOrigin;
 
     fn carrier(self) -> LineAtOrigin {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -992,7 +992,7 @@ impl Carrier for DualNum {
     type Output = Infinity;
 
     fn carrier(self) -> Infinity {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1000,7 +1000,7 @@ impl Carrier for MultiVector {
     type Output = MultiVector;
 
     fn carrier(self) -> MultiVector {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1008,7 +1008,7 @@ impl Carrier for Origin {
     type Output = FlatPointAtOrigin;
 
     fn carrier(self) -> FlatPointAtOrigin {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1016,7 +1016,7 @@ impl Carrier for RoundPoint {
     type Output = FlatPoint;
 
     fn carrier(self) -> FlatPoint {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1024,7 +1024,7 @@ impl Carrier for RoundPointAtInfinity {
     type Output = FlatPointAtInfinity;
 
     fn carrier(self) -> FlatPointAtInfinity {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1032,7 +1032,7 @@ impl Carrier for RoundPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn carrier(self) -> FlatPointAtOrigin {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1040,15 +1040,15 @@ impl Carrier for RoundPointBulk {
     type Output = FlatPointAtInfinity;
 
     fn carrier(self) -> FlatPointAtInfinity {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
-impl Carrier for RoundPointCarrierAspect {
+impl Carrier for RoundPointOnOrigin {
     type Output = FlatPoint;
 
     fn carrier(self) -> FlatPoint {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1056,7 +1056,7 @@ impl Carrier for Scalar {
     type Output = Infinity;
 
     fn carrier(self) -> Infinity {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1064,7 +1064,7 @@ impl Carrier for SpacialCurvature {
     type Output = AntiScalar;
 
     fn carrier(self) -> AntiScalar {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1072,7 +1072,7 @@ impl Carrier for Sphere {
     type Output = AntiScalar;
 
     fn carrier(self) -> AntiScalar {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1080,7 +1080,7 @@ impl Carrier for SphereWeight {
     type Output = AntiScalar;
 
     fn carrier(self) -> AntiScalar {
-        self.wedge(Infinity::one())
+        self.wedge(Infinity::unit())
     }
 }
 
@@ -1088,7 +1088,7 @@ impl CoCarrier for Circle {
     type Output = Line;
 
     fn co_carrier(self) -> Line {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1096,7 +1096,7 @@ impl CoCarrier for CircleCarrierAspect {
     type Output = Line;
 
     fn co_carrier(self) -> Line {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1104,7 +1104,7 @@ impl CoCarrier for CircleWeight {
     type Output = LineAtOrigin;
 
     fn co_carrier(self) -> LineAtOrigin {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1112,7 +1112,7 @@ impl CoCarrier for Dipole {
     type Output = Plane;
 
     fn co_carrier(self) -> Plane {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1120,7 +1120,7 @@ impl CoCarrier for DipoleCarrierAspect {
     type Output = Plane;
 
     fn co_carrier(self) -> Plane {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1128,7 +1128,7 @@ impl CoCarrier for DipoleWeight {
     type Output = PlaneAtOrigin;
 
     fn co_carrier(self) -> PlaneAtOrigin {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1136,7 +1136,7 @@ impl CoCarrier for DualNum {
     type Output = Infinity;
 
     fn co_carrier(self) -> Infinity {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1144,7 +1144,7 @@ impl CoCarrier for MultiVector {
     type Output = MultiVector;
 
     fn co_carrier(self) -> MultiVector {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1152,7 +1152,7 @@ impl CoCarrier for Origin {
     type Output = AntiScalar;
 
     fn co_carrier(self) -> AntiScalar {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1160,7 +1160,7 @@ impl CoCarrier for RoundPoint {
     type Output = AntiScalar;
 
     fn co_carrier(self) -> AntiScalar {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1168,15 +1168,15 @@ impl CoCarrier for RoundPointAtOrigin {
     type Output = AntiScalar;
 
     fn co_carrier(self) -> AntiScalar {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
-impl CoCarrier for RoundPointCarrierAspect {
+impl CoCarrier for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn co_carrier(self) -> AntiScalar {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1184,7 +1184,7 @@ impl CoCarrier for SpacialCurvature {
     type Output = FlatPointAtOrigin;
 
     fn co_carrier(self) -> FlatPointAtOrigin {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1192,7 +1192,7 @@ impl CoCarrier for Sphere {
     type Output = FlatPoint;
 
     fn co_carrier(self) -> FlatPoint {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1200,7 +1200,7 @@ impl CoCarrier for SphereWeight {
     type Output = FlatPointAtOrigin;
 
     fn co_carrier(self) -> FlatPointAtOrigin {
-        self.anti_dual().wedge(Infinity::one())
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1238,9 +1238,9 @@ impl Center for Circle {
 }
 
 impl Center for CircleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn center(self) -> RoundPointCarrierAspect {
+    fn center(self) -> RoundPointOnOrigin {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1262,9 +1262,9 @@ impl Center for Dipole {
 }
 
 impl Center for DipoleCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn center(self) -> RoundPointCarrierAspect {
+    fn center(self) -> RoundPointOnOrigin {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1317,10 +1317,10 @@ impl Center for RoundPointAtOrigin {
     }
 }
 
-impl Center for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Center for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn center(self) -> RoundPointCarrierAspect {
+    fn center(self) -> RoundPointOnOrigin {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1469,7 +1469,7 @@ impl Container for RoundPointBulk {
     }
 }
 
-impl Container for RoundPointCarrierAspect {
+impl Container for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
@@ -1589,7 +1589,7 @@ impl Partner for RoundPointAtOrigin {
     }
 }
 
-impl Partner for RoundPointCarrierAspect {
+impl Partner for RoundPointOnOrigin {
     type Output = RoundPoint;
 
     fn partner(self) -> RoundPoint {
@@ -1625,7 +1625,7 @@ impl AntiInverse for AntiScalar {
     type Output = AntiScalar;
 
     fn anti_inverse(self) -> AntiScalar {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1633,7 +1633,7 @@ impl AntiInverse for Circle {
     type Output = Circle;
 
     fn anti_inverse(self) -> Circle {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1641,7 +1641,7 @@ impl AntiInverse for CircleBulk {
     type Output = CircleBulk;
 
     fn anti_inverse(self) -> CircleBulk {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1649,7 +1649,7 @@ impl AntiInverse for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
     fn anti_inverse(self) -> CircleCarrierAspect {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1657,7 +1657,7 @@ impl AntiInverse for Dipole {
     type Output = Dipole;
 
     fn anti_inverse(self) -> Dipole {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1665,7 +1665,7 @@ impl AntiInverse for DipoleBulk {
     type Output = DipoleBulk;
 
     fn anti_inverse(self) -> DipoleBulk {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1673,7 +1673,7 @@ impl AntiInverse for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
     fn anti_inverse(self) -> DipoleCarrierAspect {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1695,7 +1695,7 @@ impl AntiInverse for FlatPoint {
     type Output = FlatPoint;
 
     fn anti_inverse(self) -> FlatPoint {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1703,7 +1703,7 @@ impl AntiInverse for FlatPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn anti_inverse(self) -> FlatPointAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1711,7 +1711,7 @@ impl AntiInverse for Flector {
     type Output = Flector;
 
     fn anti_inverse(self) -> Flector {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1719,7 +1719,7 @@ impl AntiInverse for Line {
     type Output = Line;
 
     fn anti_inverse(self) -> Line {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1727,7 +1727,7 @@ impl AntiInverse for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn anti_inverse(self) -> LineAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1735,7 +1735,7 @@ impl AntiInverse for Motor {
     type Output = Motor;
 
     fn anti_inverse(self) -> Motor {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1743,7 +1743,7 @@ impl AntiInverse for MultiVector {
     type Output = MultiVector;
 
     fn anti_inverse(self) -> MultiVector {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1751,7 +1751,7 @@ impl AntiInverse for Plane {
     type Output = Plane;
 
     fn anti_inverse(self) -> Plane {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1759,7 +1759,7 @@ impl AntiInverse for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn anti_inverse(self) -> PlaneAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1767,7 +1767,7 @@ impl AntiInverse for Rotor {
     type Output = Rotor;
 
     fn anti_inverse(self) -> Rotor {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1775,7 +1775,7 @@ impl AntiInverse for RoundPoint {
     type Output = RoundPoint;
 
     fn anti_inverse(self) -> RoundPoint {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1783,7 +1783,7 @@ impl AntiInverse for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
     fn anti_inverse(self) -> RoundPointAtInfinity {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1791,7 +1791,7 @@ impl AntiInverse for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_inverse(self) -> RoundPointAtOrigin {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1799,15 +1799,15 @@ impl AntiInverse for RoundPointBulk {
     type Output = RoundPointBulk;
 
     fn anti_inverse(self) -> RoundPointBulk {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
-impl AntiInverse for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiInverse for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_inverse(self) -> RoundPointCarrierAspect {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+    fn anti_inverse(self) -> RoundPointOnOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1815,7 +1815,7 @@ impl AntiInverse for Scalar {
     type Output = Scalar;
 
     fn anti_inverse(self) -> Scalar {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1823,7 +1823,7 @@ impl AntiInverse for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn anti_inverse(self) -> SpacialCurvature {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1831,7 +1831,7 @@ impl AntiInverse for Sphere {
     type Output = Sphere;
 
     fn anti_inverse(self) -> Sphere {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1839,7 +1839,7 @@ impl AntiInverse for Transflector {
     type Output = Transflector;
 
     fn anti_inverse(self) -> Transflector {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1847,7 +1847,7 @@ impl AntiInverse for Translator {
     type Output = Translator;
 
     fn anti_inverse(self) -> Translator {
-        self.geometric_anti_product(AntiScalar::one().div(self.anti_dot(self)))
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1855,7 +1855,7 @@ impl Inverse for AntiScalar {
     type Output = AntiScalar;
 
     fn inverse(self) -> AntiScalar {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1863,7 +1863,7 @@ impl Inverse for Circle {
     type Output = Circle;
 
     fn inverse(self) -> Circle {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1871,7 +1871,7 @@ impl Inverse for CircleBulk {
     type Output = CircleBulk;
 
     fn inverse(self) -> CircleBulk {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1879,7 +1879,7 @@ impl Inverse for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
     fn inverse(self) -> CircleCarrierAspect {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1887,7 +1887,7 @@ impl Inverse for Dipole {
     type Output = Dipole;
 
     fn inverse(self) -> Dipole {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1895,7 +1895,7 @@ impl Inverse for DipoleBulk {
     type Output = DipoleBulk;
 
     fn inverse(self) -> DipoleBulk {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1903,7 +1903,7 @@ impl Inverse for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
     fn inverse(self) -> DipoleCarrierAspect {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1925,7 +1925,7 @@ impl Inverse for FlatPoint {
     type Output = FlatPoint;
 
     fn inverse(self) -> FlatPoint {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1933,7 +1933,7 @@ impl Inverse for FlatPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn inverse(self) -> FlatPointAtOrigin {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1941,7 +1941,7 @@ impl Inverse for Flector {
     type Output = Flector;
 
     fn inverse(self) -> Flector {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1949,7 +1949,7 @@ impl Inverse for Line {
     type Output = Line;
 
     fn inverse(self) -> Line {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1957,7 +1957,7 @@ impl Inverse for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn inverse(self) -> LineAtOrigin {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1965,7 +1965,7 @@ impl Inverse for Motor {
     type Output = Motor;
 
     fn inverse(self) -> Motor {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1973,7 +1973,7 @@ impl Inverse for MultiVector {
     type Output = MultiVector;
 
     fn inverse(self) -> MultiVector {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1981,7 +1981,7 @@ impl Inverse for Plane {
     type Output = Plane;
 
     fn inverse(self) -> Plane {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1989,7 +1989,7 @@ impl Inverse for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn inverse(self) -> PlaneAtOrigin {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -1997,7 +1997,7 @@ impl Inverse for Rotor {
     type Output = Rotor;
 
     fn inverse(self) -> Rotor {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2005,7 +2005,7 @@ impl Inverse for RoundPoint {
     type Output = RoundPoint;
 
     fn inverse(self) -> RoundPoint {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2013,7 +2013,7 @@ impl Inverse for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
     fn inverse(self) -> RoundPointAtInfinity {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2021,7 +2021,7 @@ impl Inverse for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn inverse(self) -> RoundPointAtOrigin {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2029,15 +2029,15 @@ impl Inverse for RoundPointBulk {
     type Output = RoundPointBulk;
 
     fn inverse(self) -> RoundPointBulk {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
-impl Inverse for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Inverse for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn inverse(self) -> RoundPointCarrierAspect {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+    fn inverse(self) -> RoundPointOnOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2045,7 +2045,7 @@ impl Inverse for Scalar {
     type Output = Scalar;
 
     fn inverse(self) -> Scalar {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2053,7 +2053,7 @@ impl Inverse for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn inverse(self) -> SpacialCurvature {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2061,7 +2061,7 @@ impl Inverse for Sphere {
     type Output = Sphere;
 
     fn inverse(self) -> Sphere {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2069,7 +2069,7 @@ impl Inverse for Transflector {
     type Output = Transflector;
 
     fn inverse(self) -> Transflector {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
@@ -2077,7 +2077,7 @@ impl Inverse for Translator {
     type Output = Translator;
 
     fn inverse(self) -> Translator {
-        self.geometric_product(Scalar::one().div(self.dot(self)))
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 

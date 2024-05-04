@@ -249,7 +249,7 @@ impl BulkNormSquared for RoundPointBulk {
     }
 }
 
-impl BulkNormSquared for RoundPointCarrierAspect {
+impl BulkNormSquared for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -473,7 +473,7 @@ impl BulkNorm for RoundPointBulk {
     }
 }
 
-impl BulkNorm for RoundPointCarrierAspect {
+impl BulkNorm for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -697,7 +697,7 @@ impl WeightNormSquared for RoundPointBulk {
     }
 }
 
-impl WeightNormSquared for RoundPointCarrierAspect {
+impl WeightNormSquared for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -921,7 +921,7 @@ impl WeightNorm for RoundPointBulk {
     }
 }
 
-impl WeightNorm for RoundPointCarrierAspect {
+impl WeightNorm for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -1145,7 +1145,7 @@ impl GeometricNorm for RoundPointBulk {
     }
 }
 
-impl GeometricNorm for RoundPointCarrierAspect {
+impl GeometricNorm for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1369,7 +1369,7 @@ impl UnitizedNormSquared for RoundPointBulk {
     }
 }
 
-impl UnitizedNormSquared for RoundPointCarrierAspect {
+impl UnitizedNormSquared for RoundPointOnOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1593,7 +1593,7 @@ impl UnitizedNorm for RoundPointBulk {
     }
 }
 
-impl UnitizedNorm for RoundPointCarrierAspect {
+impl UnitizedNorm for RoundPointOnOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {

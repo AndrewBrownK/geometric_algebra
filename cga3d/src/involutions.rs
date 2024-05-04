@@ -471,7 +471,7 @@ impl AntiDual for RoundPointBulk {
     }
 }
 
-impl AntiDual for RoundPointCarrierAspect {
+impl AntiDual for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn anti_dual(self) -> Sphere {
@@ -934,12 +934,12 @@ impl AntiReversal for RoundPointBulk {
     }
 }
 
-impl AntiReversal for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl AntiReversal for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn anti_reversal(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups { g0: self.group0() },
+    fn anti_reversal(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -1371,12 +1371,12 @@ impl Automorphism for RoundPointBulk {
     }
 }
 
-impl Automorphism for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Automorphism for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn automorphism(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn automorphism(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
@@ -1764,11 +1764,11 @@ impl Complement for Origin {
 }
 
 impl Complement for Plane {
-    type Output = RoundPointCarrierAspect;
+    type Output = RoundPointOnOrigin;
 
-    fn complement(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups { g0: self.group0() },
+    fn complement(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -1853,7 +1853,7 @@ impl Complement for RoundPointBulk {
     }
 }
 
-impl Complement for RoundPointCarrierAspect {
+impl Complement for RoundPointOnOrigin {
     type Output = Plane;
 
     fn complement(self) -> Plane {
@@ -2317,12 +2317,12 @@ impl Conjugation for RoundPointBulk {
     }
 }
 
-impl Conjugation for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Conjugation for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn conjugation(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups {
+    fn conjugation(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
@@ -2734,12 +2734,12 @@ impl DoubleComplement for RoundPointBulk {
     }
 }
 
-impl DoubleComplement for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl DoubleComplement for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn double_complement(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups { g0: self.group0() },
+    fn double_complement(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -3213,7 +3213,7 @@ impl Dual for RoundPointBulk {
     }
 }
 
-impl Dual for RoundPointCarrierAspect {
+impl Dual for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn dual(self) -> Sphere {
@@ -3674,12 +3674,12 @@ impl Reversal for RoundPointBulk {
     }
 }
 
-impl Reversal for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Reversal for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn reversal(self) -> RoundPointCarrierAspect {
-        RoundPointCarrierAspect {
-            groups: RoundPointCarrierAspectGroups { g0: self.group0() },
+    fn reversal(self) -> RoundPointOnOrigin {
+        RoundPointOnOrigin {
+            groups: RoundPointOnOriginGroups { g0: self.group0() },
         }
     }
 }

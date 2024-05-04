@@ -1948,6 +1948,196 @@ impl One for Translator {
     }
 }
 
+impl Unit for AntiScalar {
+    fn unit() -> Self {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for DualNum {
+    fn unit() -> Self {
+        DualNum {
+            groups: DualNumGroups { g0: Simd32x2::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Flector {
+    fn unit() -> Self {
+        Flector {
+            groups: FlectorGroups {
+                g0: Simd32x4::from(1.0),
+                g1: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for FlectorAtInfinity {
+    fn unit() -> Self {
+        FlectorAtInfinity {
+            groups: FlectorAtInfinityGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Horizon {
+    fn unit() -> Self {
+        Horizon {
+            groups: HorizonGroups { g0: 1.0 },
+        }
+    }
+}
+
+impl Unit for Line {
+    fn unit() -> Self {
+        Line {
+            groups: LineGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for LineAtInfinity {
+    fn unit() -> Self {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for LineAtOrigin {
+    fn unit() -> Self {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Motor {
+    fn unit() -> Self {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from(1.0),
+                g1: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for MultiVector {
+    fn unit() -> Self {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(1.0),
+                g1: Simd32x4::from(1.0),
+                g2: Simd32x3::from(1.0),
+                g3: Simd32x3::from(1.0),
+                g4: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for MultiVectorAtInfinity {
+    fn unit() -> Self {
+        MultiVectorAtInfinity {
+            groups: MultiVectorAtInfinityGroups {
+                g0: Simd32x2::from(1.0),
+                g1: Simd32x3::from(1.0),
+                g2: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for MultiVectorAtOrigin {
+    fn unit() -> Self {
+        MultiVectorAtOrigin {
+            groups: MultiVectorAtOriginGroups {
+                g0: Simd32x2::from(1.0),
+                g1: Simd32x3::from(1.0),
+                g2: Simd32x3::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for Origin {
+    fn unit() -> Self {
+        Origin { groups: OriginGroups { g0: 1.0 } }
+    }
+}
+
+impl Unit for Plane {
+    fn unit() -> Self {
+        Plane {
+            groups: PlaneGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for PlaneAtOrigin {
+    fn unit() -> Self {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Point {
+    fn unit() -> Self {
+        Point {
+            groups: PointGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for PointAtInfinity {
+    fn unit() -> Self {
+        PointAtInfinity {
+            groups: PointAtInfinityGroups { g0: Simd32x3::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Rotor {
+    fn unit() -> Self {
+        Rotor {
+            groups: RotorGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
+impl Unit for Scalar {
+    fn unit() -> Self {
+        Scalar { groups: ScalarGroups { g0: 1.0 } }
+    }
+}
+
+impl Unit for Transflector {
+    fn unit() -> Self {
+        Transflector {
+            groups: TransflectorGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for Translator {
+    fn unit() -> Self {
+        Translator {
+            groups: TranslatorGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
 impl Zero for AntiScalar {
     fn zero() -> Self {
         AntiScalar {

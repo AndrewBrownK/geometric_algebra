@@ -280,10 +280,10 @@ impl Unitize for RoundPointBulk {
     }
 }
 
-impl Unitize for RoundPointCarrierAspect {
-    type Output = RoundPointCarrierAspect;
+impl Unitize for RoundPointOnOrigin {
+    type Output = RoundPointOnOrigin;
 
-    fn unitize(self) -> RoundPointCarrierAspect {
+    fn unitize(self) -> RoundPointOnOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

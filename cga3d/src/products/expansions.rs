@@ -2423,10 +2423,10 @@ impl BulkExpansion<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for Infinity {
+impl BulkExpansion<RoundPointOnOrigin> for Infinity {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -3207,10 +3207,10 @@ impl BulkExpansion<RoundPointBulk> for MultiVector {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for MultiVector {
+impl BulkExpansion<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other.dual())
     }
 }
@@ -3431,10 +3431,10 @@ impl BulkExpansion<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for Origin {
+impl BulkExpansion<RoundPointOnOrigin> for Origin {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -3983,10 +3983,10 @@ impl BulkExpansion<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for RoundPoint {
+impl BulkExpansion<RoundPointOnOrigin> for RoundPoint {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -4247,10 +4247,10 @@ impl BulkExpansion<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl BulkExpansion<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -4495,10 +4495,10 @@ impl BulkExpansion<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl BulkExpansion<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -4735,10 +4735,10 @@ impl BulkExpansion<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for RoundPointBulk {
+impl BulkExpansion<RoundPointOnOrigin> for RoundPointBulk {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
@@ -4783,7 +4783,7 @@ impl BulkExpansion<Translator> for RoundPointBulk {
     }
 }
 
-impl BulkExpansion<Circle> for RoundPointCarrierAspect {
+impl BulkExpansion<Circle> for RoundPointOnOrigin {
     type Output = Circle;
 
     fn bulk_expansion(self, other: Circle) -> Circle {
@@ -4791,7 +4791,7 @@ impl BulkExpansion<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<CircleBulk> for RoundPointCarrierAspect {
+impl BulkExpansion<CircleBulk> for RoundPointOnOrigin {
     type Output = LineAtOrigin;
 
     fn bulk_expansion(self, other: CircleBulk) -> LineAtOrigin {
@@ -4799,7 +4799,7 @@ impl BulkExpansion<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl BulkExpansion<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = Circle;
 
     fn bulk_expansion(self, other: CircleCarrierAspect) -> Circle {
@@ -4807,7 +4807,7 @@ impl BulkExpansion<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<CircleWeight> for RoundPointCarrierAspect {
+impl BulkExpansion<CircleWeight> for RoundPointOnOrigin {
     type Output = CircleWeight;
 
     fn bulk_expansion(self, other: CircleWeight) -> CircleWeight {
@@ -4815,7 +4815,7 @@ impl BulkExpansion<CircleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Dipole> for RoundPointCarrierAspect {
+impl BulkExpansion<Dipole> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn bulk_expansion(self, other: Dipole) -> Sphere {
@@ -4823,7 +4823,7 @@ impl BulkExpansion<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<DipoleBulk> for RoundPointCarrierAspect {
+impl BulkExpansion<DipoleBulk> for RoundPointOnOrigin {
     type Output = PlaneAtOrigin;
 
     fn bulk_expansion(self, other: DipoleBulk) -> PlaneAtOrigin {
@@ -4831,7 +4831,7 @@ impl BulkExpansion<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl BulkExpansion<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn bulk_expansion(self, other: DipoleCarrierAspect) -> Sphere {
@@ -4839,7 +4839,7 @@ impl BulkExpansion<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<DipoleWeight> for RoundPointCarrierAspect {
+impl BulkExpansion<DipoleWeight> for RoundPointOnOrigin {
     type Output = SphereWeight;
 
     fn bulk_expansion(self, other: DipoleWeight) -> SphereWeight {
@@ -4847,7 +4847,7 @@ impl BulkExpansion<DipoleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<FlatPoint> for RoundPointCarrierAspect {
+impl BulkExpansion<FlatPoint> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn bulk_expansion(self, other: FlatPoint) -> Sphere {
@@ -4855,7 +4855,7 @@ impl BulkExpansion<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl BulkExpansion<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = Plane;
 
     fn bulk_expansion(self, other: FlatPointAtInfinity) -> Plane {
@@ -4863,7 +4863,7 @@ impl BulkExpansion<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl BulkExpansion<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = SphereWeight;
 
     fn bulk_expansion(self, other: FlatPointAtOrigin) -> SphereWeight {
@@ -4871,7 +4871,7 @@ impl BulkExpansion<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Flector> for RoundPointCarrierAspect {
+impl BulkExpansion<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Flector) -> MultiVector {
@@ -4879,7 +4879,7 @@ impl BulkExpansion<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl BulkExpansion<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: FlectorAtInfinity) -> MultiVector {
@@ -4887,7 +4887,7 @@ impl BulkExpansion<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Horizon> for RoundPointCarrierAspect {
+impl BulkExpansion<Horizon> for RoundPointOnOrigin {
     type Output = FlatPoint;
 
     fn bulk_expansion(self, other: Horizon) -> FlatPoint {
@@ -4895,7 +4895,7 @@ impl BulkExpansion<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Infinity> for RoundPointCarrierAspect {
+impl BulkExpansion<Infinity> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: Infinity) -> AntiScalar {
@@ -4903,7 +4903,7 @@ impl BulkExpansion<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Line> for RoundPointCarrierAspect {
+impl BulkExpansion<Line> for RoundPointOnOrigin {
     type Output = Circle;
 
     fn bulk_expansion(self, other: Line) -> Circle {
@@ -4911,7 +4911,7 @@ impl BulkExpansion<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<LineAtInfinity> for RoundPointCarrierAspect {
+impl BulkExpansion<LineAtInfinity> for RoundPointOnOrigin {
     type Output = Line;
 
     fn bulk_expansion(self, other: LineAtInfinity) -> Line {
@@ -4919,7 +4919,7 @@ impl BulkExpansion<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<LineAtOrigin> for RoundPointCarrierAspect {
+impl BulkExpansion<LineAtOrigin> for RoundPointOnOrigin {
     type Output = CircleCarrierAspect;
 
     fn bulk_expansion(self, other: LineAtOrigin) -> CircleCarrierAspect {
@@ -4927,7 +4927,7 @@ impl BulkExpansion<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Motor> for RoundPointCarrierAspect {
+impl BulkExpansion<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Motor) -> MultiVector {
@@ -4935,7 +4935,7 @@ impl BulkExpansion<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<MultiVector> for RoundPointCarrierAspect {
+impl BulkExpansion<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: MultiVector) -> MultiVector {
@@ -4943,7 +4943,7 @@ impl BulkExpansion<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Plane> for RoundPointCarrierAspect {
+impl BulkExpansion<Plane> for RoundPointOnOrigin {
     type Output = Dipole;
 
     fn bulk_expansion(self, other: Plane) -> Dipole {
@@ -4951,7 +4951,7 @@ impl BulkExpansion<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl BulkExpansion<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = DipoleCarrierAspect;
 
     fn bulk_expansion(self, other: PlaneAtOrigin) -> DipoleCarrierAspect {
@@ -4959,7 +4959,7 @@ impl BulkExpansion<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Rotor> for RoundPointCarrierAspect {
+impl BulkExpansion<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Rotor) -> MultiVector {
@@ -4967,7 +4967,7 @@ impl BulkExpansion<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<RoundPoint> for RoundPointCarrierAspect {
+impl BulkExpansion<RoundPoint> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPoint) -> AntiScalar {
@@ -4975,7 +4975,7 @@ impl BulkExpansion<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl BulkExpansion<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPointAtInfinity) -> AntiScalar {
@@ -4983,7 +4983,7 @@ impl BulkExpansion<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl BulkExpansion<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPointAtOrigin) -> AntiScalar {
@@ -4991,7 +4991,7 @@ impl BulkExpansion<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<RoundPointBulk> for RoundPointCarrierAspect {
+impl BulkExpansion<RoundPointBulk> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn bulk_expansion(self, other: RoundPointBulk) -> AntiScalar {
@@ -4999,15 +4999,15 @@ impl BulkExpansion<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl BulkExpansion<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
-    fn bulk_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn bulk_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.dual())
     }
 }
 
-impl BulkExpansion<SpacialCurvature> for RoundPointCarrierAspect {
+impl BulkExpansion<SpacialCurvature> for RoundPointOnOrigin {
     type Output = Dipole;
 
     fn bulk_expansion(self, other: SpacialCurvature) -> Dipole {
@@ -5015,7 +5015,7 @@ impl BulkExpansion<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Sphere> for RoundPointCarrierAspect {
+impl BulkExpansion<Sphere> for RoundPointOnOrigin {
     type Output = Dipole;
 
     fn bulk_expansion(self, other: Sphere) -> Dipole {
@@ -5023,7 +5023,7 @@ impl BulkExpansion<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<SphereWeight> for RoundPointCarrierAspect {
+impl BulkExpansion<SphereWeight> for RoundPointOnOrigin {
     type Output = DipoleWeight;
 
     fn bulk_expansion(self, other: SphereWeight) -> DipoleWeight {
@@ -5031,7 +5031,7 @@ impl BulkExpansion<SphereWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Transflector> for RoundPointCarrierAspect {
+impl BulkExpansion<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Transflector) -> MultiVector {
@@ -5039,7 +5039,7 @@ impl BulkExpansion<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl BulkExpansion<Translator> for RoundPointCarrierAspect {
+impl BulkExpansion<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn bulk_expansion(self, other: Translator) -> MultiVector {
@@ -8031,10 +8031,10 @@ impl WeightExpansion<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for Infinity {
+impl WeightExpansion<RoundPointOnOrigin> for Infinity {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -8815,10 +8815,10 @@ impl WeightExpansion<RoundPointBulk> for MultiVector {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for MultiVector {
+impl WeightExpansion<RoundPointOnOrigin> for MultiVector {
     type Output = MultiVector;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> MultiVector {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -9039,10 +9039,10 @@ impl WeightExpansion<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for Origin {
+impl WeightExpansion<RoundPointOnOrigin> for Origin {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -9591,10 +9591,10 @@ impl WeightExpansion<RoundPointBulk> for RoundPoint {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for RoundPoint {
+impl WeightExpansion<RoundPointOnOrigin> for RoundPoint {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -9855,10 +9855,10 @@ impl WeightExpansion<RoundPointBulk> for RoundPointAtInfinity {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for RoundPointAtInfinity {
+impl WeightExpansion<RoundPointOnOrigin> for RoundPointAtInfinity {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -10103,10 +10103,10 @@ impl WeightExpansion<RoundPointAtOrigin> for RoundPointAtOrigin {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for RoundPointAtOrigin {
+impl WeightExpansion<RoundPointOnOrigin> for RoundPointAtOrigin {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -10343,10 +10343,10 @@ impl WeightExpansion<RoundPointBulk> for RoundPointBulk {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for RoundPointBulk {
+impl WeightExpansion<RoundPointOnOrigin> for RoundPointBulk {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
@@ -10391,7 +10391,7 @@ impl WeightExpansion<Translator> for RoundPointBulk {
     }
 }
 
-impl WeightExpansion<Circle> for RoundPointCarrierAspect {
+impl WeightExpansion<Circle> for RoundPointOnOrigin {
     type Output = Circle;
 
     fn weight_expansion(self, other: Circle) -> Circle {
@@ -10399,7 +10399,7 @@ impl WeightExpansion<Circle> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<CircleBulk> for RoundPointCarrierAspect {
+impl WeightExpansion<CircleBulk> for RoundPointOnOrigin {
     type Output = LineAtOrigin;
 
     fn weight_expansion(self, other: CircleBulk) -> LineAtOrigin {
@@ -10407,7 +10407,7 @@ impl WeightExpansion<CircleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<CircleCarrierAspect> for RoundPointCarrierAspect {
+impl WeightExpansion<CircleCarrierAspect> for RoundPointOnOrigin {
     type Output = Circle;
 
     fn weight_expansion(self, other: CircleCarrierAspect) -> Circle {
@@ -10415,7 +10415,7 @@ impl WeightExpansion<CircleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<CircleWeight> for RoundPointCarrierAspect {
+impl WeightExpansion<CircleWeight> for RoundPointOnOrigin {
     type Output = CircleWeight;
 
     fn weight_expansion(self, other: CircleWeight) -> CircleWeight {
@@ -10423,7 +10423,7 @@ impl WeightExpansion<CircleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Dipole> for RoundPointCarrierAspect {
+impl WeightExpansion<Dipole> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn weight_expansion(self, other: Dipole) -> Sphere {
@@ -10431,7 +10431,7 @@ impl WeightExpansion<Dipole> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<DipoleBulk> for RoundPointCarrierAspect {
+impl WeightExpansion<DipoleBulk> for RoundPointOnOrigin {
     type Output = PlaneAtOrigin;
 
     fn weight_expansion(self, other: DipoleBulk) -> PlaneAtOrigin {
@@ -10439,7 +10439,7 @@ impl WeightExpansion<DipoleBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<DipoleCarrierAspect> for RoundPointCarrierAspect {
+impl WeightExpansion<DipoleCarrierAspect> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn weight_expansion(self, other: DipoleCarrierAspect) -> Sphere {
@@ -10447,7 +10447,7 @@ impl WeightExpansion<DipoleCarrierAspect> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<DipoleWeight> for RoundPointCarrierAspect {
+impl WeightExpansion<DipoleWeight> for RoundPointOnOrigin {
     type Output = SphereWeight;
 
     fn weight_expansion(self, other: DipoleWeight) -> SphereWeight {
@@ -10455,7 +10455,7 @@ impl WeightExpansion<DipoleWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<FlatPoint> for RoundPointCarrierAspect {
+impl WeightExpansion<FlatPoint> for RoundPointOnOrigin {
     type Output = Sphere;
 
     fn weight_expansion(self, other: FlatPoint) -> Sphere {
@@ -10463,7 +10463,7 @@ impl WeightExpansion<FlatPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<FlatPointAtInfinity> for RoundPointCarrierAspect {
+impl WeightExpansion<FlatPointAtInfinity> for RoundPointOnOrigin {
     type Output = Plane;
 
     fn weight_expansion(self, other: FlatPointAtInfinity) -> Plane {
@@ -10471,7 +10471,7 @@ impl WeightExpansion<FlatPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<FlatPointAtOrigin> for RoundPointCarrierAspect {
+impl WeightExpansion<FlatPointAtOrigin> for RoundPointOnOrigin {
     type Output = SphereWeight;
 
     fn weight_expansion(self, other: FlatPointAtOrigin) -> SphereWeight {
@@ -10479,7 +10479,7 @@ impl WeightExpansion<FlatPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Flector> for RoundPointCarrierAspect {
+impl WeightExpansion<Flector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Flector) -> MultiVector {
@@ -10487,7 +10487,7 @@ impl WeightExpansion<Flector> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<FlectorAtInfinity> for RoundPointCarrierAspect {
+impl WeightExpansion<FlectorAtInfinity> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: FlectorAtInfinity) -> MultiVector {
@@ -10495,7 +10495,7 @@ impl WeightExpansion<FlectorAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Horizon> for RoundPointCarrierAspect {
+impl WeightExpansion<Horizon> for RoundPointOnOrigin {
     type Output = FlatPoint;
 
     fn weight_expansion(self, other: Horizon) -> FlatPoint {
@@ -10503,7 +10503,7 @@ impl WeightExpansion<Horizon> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Infinity> for RoundPointCarrierAspect {
+impl WeightExpansion<Infinity> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: Infinity) -> AntiScalar {
@@ -10511,7 +10511,7 @@ impl WeightExpansion<Infinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Line> for RoundPointCarrierAspect {
+impl WeightExpansion<Line> for RoundPointOnOrigin {
     type Output = Circle;
 
     fn weight_expansion(self, other: Line) -> Circle {
@@ -10519,7 +10519,7 @@ impl WeightExpansion<Line> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<LineAtInfinity> for RoundPointCarrierAspect {
+impl WeightExpansion<LineAtInfinity> for RoundPointOnOrigin {
     type Output = Line;
 
     fn weight_expansion(self, other: LineAtInfinity) -> Line {
@@ -10527,7 +10527,7 @@ impl WeightExpansion<LineAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<LineAtOrigin> for RoundPointCarrierAspect {
+impl WeightExpansion<LineAtOrigin> for RoundPointOnOrigin {
     type Output = CircleCarrierAspect;
 
     fn weight_expansion(self, other: LineAtOrigin) -> CircleCarrierAspect {
@@ -10535,7 +10535,7 @@ impl WeightExpansion<LineAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Motor> for RoundPointCarrierAspect {
+impl WeightExpansion<Motor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Motor) -> MultiVector {
@@ -10543,7 +10543,7 @@ impl WeightExpansion<Motor> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<MultiVector> for RoundPointCarrierAspect {
+impl WeightExpansion<MultiVector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: MultiVector) -> MultiVector {
@@ -10551,7 +10551,7 @@ impl WeightExpansion<MultiVector> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Plane> for RoundPointCarrierAspect {
+impl WeightExpansion<Plane> for RoundPointOnOrigin {
     type Output = Dipole;
 
     fn weight_expansion(self, other: Plane) -> Dipole {
@@ -10559,7 +10559,7 @@ impl WeightExpansion<Plane> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<PlaneAtOrigin> for RoundPointCarrierAspect {
+impl WeightExpansion<PlaneAtOrigin> for RoundPointOnOrigin {
     type Output = DipoleCarrierAspect;
 
     fn weight_expansion(self, other: PlaneAtOrigin) -> DipoleCarrierAspect {
@@ -10567,7 +10567,7 @@ impl WeightExpansion<PlaneAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Rotor> for RoundPointCarrierAspect {
+impl WeightExpansion<Rotor> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Rotor) -> MultiVector {
@@ -10575,7 +10575,7 @@ impl WeightExpansion<Rotor> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<RoundPoint> for RoundPointCarrierAspect {
+impl WeightExpansion<RoundPoint> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPoint) -> AntiScalar {
@@ -10583,7 +10583,7 @@ impl WeightExpansion<RoundPoint> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<RoundPointAtInfinity> for RoundPointCarrierAspect {
+impl WeightExpansion<RoundPointAtInfinity> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPointAtInfinity) -> AntiScalar {
@@ -10591,7 +10591,7 @@ impl WeightExpansion<RoundPointAtInfinity> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<RoundPointAtOrigin> for RoundPointCarrierAspect {
+impl WeightExpansion<RoundPointAtOrigin> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPointAtOrigin) -> AntiScalar {
@@ -10599,7 +10599,7 @@ impl WeightExpansion<RoundPointAtOrigin> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<RoundPointBulk> for RoundPointCarrierAspect {
+impl WeightExpansion<RoundPointBulk> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_expansion(self, other: RoundPointBulk) -> AntiScalar {
@@ -10607,15 +10607,15 @@ impl WeightExpansion<RoundPointBulk> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<RoundPointCarrierAspect> for RoundPointCarrierAspect {
+impl WeightExpansion<RoundPointOnOrigin> for RoundPointOnOrigin {
     type Output = AntiScalar;
 
-    fn weight_expansion(self, other: RoundPointCarrierAspect) -> AntiScalar {
+    fn weight_expansion(self, other: RoundPointOnOrigin) -> AntiScalar {
         self.wedge(other.anti_dual())
     }
 }
 
-impl WeightExpansion<SpacialCurvature> for RoundPointCarrierAspect {
+impl WeightExpansion<SpacialCurvature> for RoundPointOnOrigin {
     type Output = Dipole;
 
     fn weight_expansion(self, other: SpacialCurvature) -> Dipole {
@@ -10623,7 +10623,7 @@ impl WeightExpansion<SpacialCurvature> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Sphere> for RoundPointCarrierAspect {
+impl WeightExpansion<Sphere> for RoundPointOnOrigin {
     type Output = Dipole;
 
     fn weight_expansion(self, other: Sphere) -> Dipole {
@@ -10631,7 +10631,7 @@ impl WeightExpansion<Sphere> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<SphereWeight> for RoundPointCarrierAspect {
+impl WeightExpansion<SphereWeight> for RoundPointOnOrigin {
     type Output = DipoleWeight;
 
     fn weight_expansion(self, other: SphereWeight) -> DipoleWeight {
@@ -10639,7 +10639,7 @@ impl WeightExpansion<SphereWeight> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Transflector> for RoundPointCarrierAspect {
+impl WeightExpansion<Transflector> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Transflector) -> MultiVector {
@@ -10647,7 +10647,7 @@ impl WeightExpansion<Transflector> for RoundPointCarrierAspect {
     }
 }
 
-impl WeightExpansion<Translator> for RoundPointCarrierAspect {
+impl WeightExpansion<Translator> for RoundPointOnOrigin {
     type Output = MultiVector;
 
     fn weight_expansion(self, other: Translator) -> MultiVector {

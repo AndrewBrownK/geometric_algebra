@@ -218,6 +218,90 @@ fn translator__one() -> Translator {
     return Translator(vec4<f32>(0.0));
 }
 
+fn anti_scalar__unit() -> AntiScalar {
+    return AntiScalar(1.0);
+}
+
+fn dual_num__unit() -> DualNum {
+    return DualNum(vec2<f32>(1.0));
+}
+
+fn flector__unit() -> Flector {
+    return Flector(vec4<f32>(1.0), vec4<f32>(1.0));
+}
+
+fn flector_at_infinity__unit() -> FlectorAtInfinity {
+    return FlectorAtInfinity(vec4<f32>(1.0));
+}
+
+fn horizon__unit() -> Horizon {
+    return Horizon(1.0);
+}
+
+fn line__unit() -> Line {
+    return Line(vec3<f32>(1.0), vec3<f32>(1.0));
+}
+
+fn line_at_infinity__unit() -> LineAtInfinity {
+    return LineAtInfinity(vec3<f32>(1.0));
+}
+
+fn line_at_origin__unit() -> LineAtOrigin {
+    return LineAtOrigin(vec3<f32>(1.0));
+}
+
+fn motor__unit() -> Motor {
+    return Motor(vec4<f32>(1.0), vec3<f32>(1.0));
+}
+
+fn multi_vector__unit() -> MultiVector {
+    return MultiVector(vec2<f32>(1.0), vec4<f32>(1.0), vec3<f32>(1.0), vec3<f32>(1.0), vec4<f32>(1.0));
+}
+
+fn multi_vector_at_infinity__unit() -> MultiVectorAtInfinity {
+    return MultiVectorAtInfinity(vec2<f32>(1.0), vec3<f32>(1.0), vec3<f32>(1.0));
+}
+
+fn multi_vector_at_origin__unit() -> MultiVectorAtOrigin {
+    return MultiVectorAtOrigin(vec2<f32>(1.0), vec3<f32>(1.0), vec3<f32>(1.0));
+}
+
+fn origin__unit() -> Origin {
+    return Origin(1.0);
+}
+
+fn plane__unit() -> Plane {
+    return Plane(vec4<f32>(1.0));
+}
+
+fn plane_at_origin__unit() -> PlaneAtOrigin {
+    return PlaneAtOrigin(vec3<f32>(1.0));
+}
+
+fn point__unit() -> Point {
+    return Point(vec4<f32>(1.0));
+}
+
+fn point_at_infinity__unit() -> PointAtInfinity {
+    return PointAtInfinity(vec3<f32>(1.0));
+}
+
+fn rotor__unit() -> Rotor {
+    return Rotor(vec4<f32>(1.0));
+}
+
+fn scalar__unit() -> Scalar {
+    return Scalar(1.0);
+}
+
+fn transflector__unit() -> Transflector {
+    return Transflector(vec3<f32>(1.0), vec4<f32>(1.0));
+}
+
+fn translator__unit() -> Translator {
+    return Translator(vec4<f32>(1.0));
+}
+
 fn anti_scalar__zero() -> AntiScalar {
     return AntiScalar(0.0);
 }
@@ -18466,63 +18550,63 @@ fn dual_num__anti_sqrt(self_: DualNum) -> DualNum {
 }
 
 fn anti_scalar__attitude(self_: AntiScalar) -> Horizon {
-    return anti_scalar__anti_wedge__horizon(self_, horizon__one());
+    return anti_scalar__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn dual_num__attitude(self_: DualNum) -> Horizon {
-    return dual_num__anti_wedge__horizon(self_, horizon__one());
+    return dual_num__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn flector__attitude(self_: Flector) -> MultiVectorAtInfinity {
-    return flector__anti_wedge__horizon(self_, horizon__one());
+    return flector__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn line__attitude(self_: Line) -> PointAtInfinity {
-    return line__anti_wedge__horizon(self_, horizon__one());
+    return line__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn line_at_origin__attitude(self_: LineAtOrigin) -> PointAtInfinity {
-    return line_at_origin__anti_wedge__horizon(self_, horizon__one());
+    return line_at_origin__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn motor__attitude(self_: Motor) -> FlectorAtInfinity {
-    return motor__anti_wedge__horizon(self_, horizon__one());
+    return motor__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn multi_vector__attitude(self_: MultiVector) -> MultiVectorAtInfinity {
-    return multi_vector__anti_wedge__horizon(self_, horizon__one());
+    return multi_vector__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn multi_vector_at_origin__attitude(self_: MultiVectorAtOrigin) -> MultiVectorAtInfinity {
-    return multi_vector_at_origin__anti_wedge__horizon(self_, horizon__one());
+    return multi_vector_at_origin__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn origin__attitude(self_: Origin) -> Scalar {
-    return origin__anti_wedge__horizon(self_, horizon__one());
+    return origin__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn plane__attitude(self_: Plane) -> LineAtInfinity {
-    return plane__anti_wedge__horizon(self_, horizon__one());
+    return plane__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn plane_at_origin__attitude(self_: PlaneAtOrigin) -> LineAtInfinity {
-    return plane_at_origin__anti_wedge__horizon(self_, horizon__one());
+    return plane_at_origin__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn point__attitude(self_: Point) -> Scalar {
-    return point__anti_wedge__horizon(self_, horizon__one());
+    return point__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn rotor__attitude(self_: Rotor) -> FlectorAtInfinity {
-    return rotor__anti_wedge__horizon(self_, horizon__one());
+    return rotor__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn transflector__attitude(self_: Transflector) -> LineAtInfinity {
-    return transflector__anti_wedge__horizon(self_, horizon__one());
+    return transflector__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn translator__attitude(self_: Translator) -> Horizon {
-    return translator__anti_wedge__horizon(self_, horizon__one());
+    return translator__anti_wedge__horizon(self_, horizon__unit());
 }
 
 fn dual_num__sqrt(self_: DualNum) -> DualNum {
@@ -18537,7 +18621,7 @@ fn scalar__sqrt(self_: Scalar) -> Scalar {
 }
 
 fn anti_scalar__anti_inverse(self_: AntiScalar) -> AntiScalar {
-    return anti_scalar__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), anti_scalar__anti_dot__anti_scalar(self_, self_)));
+    return anti_scalar__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), anti_scalar__anti_dot__anti_scalar(self_, self_)));
 }
 
 fn dual_num__anti_inverse(self_: DualNum) -> DualNum {
@@ -18547,55 +18631,55 @@ fn dual_num__anti_inverse(self_: DualNum) -> DualNum {
 }
 
 fn flector__anti_inverse(self_: Flector) -> Flector {
-    return flector__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), flector__anti_dot__flector(self_, self_)));
+    return flector__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), flector__anti_dot__flector(self_, self_)));
 }
 
 fn line__anti_inverse(self_: Line) -> Line {
-    return line__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), line__anti_dot__line(self_, self_)));
+    return line__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), line__anti_dot__line(self_, self_)));
 }
 
 fn line_at_origin__anti_inverse(self_: LineAtOrigin) -> LineAtOrigin {
-    return line_at_origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), line_at_origin__anti_dot__line_at_origin(self_, self_)));
+    return line_at_origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), line_at_origin__anti_dot__line_at_origin(self_, self_)));
 }
 
 fn motor__anti_inverse(self_: Motor) -> Motor {
-    return motor__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), motor__anti_dot__motor(self_, self_)));
+    return motor__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), motor__anti_dot__motor(self_, self_)));
 }
 
 fn multi_vector__anti_inverse(self_: MultiVector) -> MultiVector {
-    return multi_vector__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), multi_vector__anti_dot__multi_vector(self_, self_)));
+    return multi_vector__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), multi_vector__anti_dot__multi_vector(self_, self_)));
 }
 
 fn multi_vector_at_origin__anti_inverse(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return multi_vector_at_origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), multi_vector_at_origin__anti_dot__multi_vector_at_origin(self_, self_)));
+    return multi_vector_at_origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), multi_vector_at_origin__anti_dot__multi_vector_at_origin(self_, self_)));
 }
 
 fn origin__anti_inverse(self_: Origin) -> Origin {
-    return origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), origin__anti_dot__origin(self_, self_)));
+    return origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), origin__anti_dot__origin(self_, self_)));
 }
 
 fn plane__anti_inverse(self_: Plane) -> Plane {
-    return plane__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), plane__anti_dot__plane(self_, self_)));
+    return plane__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), plane__anti_dot__plane(self_, self_)));
 }
 
 fn plane_at_origin__anti_inverse(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return plane_at_origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), plane_at_origin__anti_dot__plane_at_origin(self_, self_)));
+    return plane_at_origin__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), plane_at_origin__anti_dot__plane_at_origin(self_, self_)));
 }
 
 fn point__anti_inverse(self_: Point) -> Point {
-    return point__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), point__anti_dot__point(self_, self_)));
+    return point__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), point__anti_dot__point(self_, self_)));
 }
 
 fn rotor__anti_inverse(self_: Rotor) -> Rotor {
-    return rotor__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), rotor__anti_dot__rotor(self_, self_)));
+    return rotor__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), rotor__anti_dot__rotor(self_, self_)));
 }
 
 fn transflector__anti_inverse(self_: Transflector) -> Transflector {
-    return transflector__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), transflector__anti_dot__transflector(self_, self_)));
+    return transflector__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), transflector__anti_dot__transflector(self_, self_)));
 }
 
 fn translator__anti_inverse(self_: Translator) -> Translator {
-    return translator__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__one(), translator__anti_dot__translator(self_, self_)));
+    return translator__geometric_anti_product__anti_scalar(self_, anti_scalar__div__anti_scalar(anti_scalar__unit(), translator__anti_dot__translator(self_, self_)));
 }
 
 fn dual_num__inverse(self_: DualNum) -> DualNum {
@@ -18605,59 +18689,59 @@ fn dual_num__inverse(self_: DualNum) -> DualNum {
 }
 
 fn flector__inverse(self_: Flector) -> Flector {
-    return flector__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), flector__dot__flector(self_, self_)));
+    return flector__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), flector__dot__flector(self_, self_)));
 }
 
 fn flector_at_infinity__inverse(self_: FlectorAtInfinity) -> FlectorAtInfinity {
-    return flector_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), flector_at_infinity__dot__flector_at_infinity(self_, self_)));
+    return flector_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), flector_at_infinity__dot__flector_at_infinity(self_, self_)));
 }
 
 fn horizon__inverse(self_: Horizon) -> Horizon {
-    return horizon__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), horizon__dot__horizon(self_, self_)));
+    return horizon__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), horizon__dot__horizon(self_, self_)));
 }
 
 fn line__inverse(self_: Line) -> Line {
-    return line__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), line__dot__line(self_, self_)));
+    return line__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), line__dot__line(self_, self_)));
 }
 
 fn line_at_infinity__inverse(self_: LineAtInfinity) -> LineAtInfinity {
-    return line_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), line_at_infinity__dot__line_at_infinity(self_, self_)));
+    return line_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), line_at_infinity__dot__line_at_infinity(self_, self_)));
 }
 
 fn motor__inverse(self_: Motor) -> Motor {
-    return motor__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), motor__dot__motor(self_, self_)));
+    return motor__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), motor__dot__motor(self_, self_)));
 }
 
 fn multi_vector__inverse(self_: MultiVector) -> MultiVector {
-    return multi_vector__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), multi_vector__dot__multi_vector(self_, self_)));
+    return multi_vector__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), multi_vector__dot__multi_vector(self_, self_)));
 }
 
 fn multi_vector_at_infinity__inverse(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
-    return multi_vector_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), multi_vector_at_infinity__dot__multi_vector_at_infinity(self_, self_)));
+    return multi_vector_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), multi_vector_at_infinity__dot__multi_vector_at_infinity(self_, self_)));
 }
 
 fn plane__inverse(self_: Plane) -> Plane {
-    return plane__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), plane__dot__plane(self_, self_)));
+    return plane__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), plane__dot__plane(self_, self_)));
 }
 
 fn point__inverse(self_: Point) -> Point {
-    return point__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), point__dot__point(self_, self_)));
+    return point__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), point__dot__point(self_, self_)));
 }
 
 fn point_at_infinity__inverse(self_: PointAtInfinity) -> PointAtInfinity {
-    return point_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), point_at_infinity__dot__point_at_infinity(self_, self_)));
+    return point_at_infinity__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), point_at_infinity__dot__point_at_infinity(self_, self_)));
 }
 
 fn scalar__inverse(self_: Scalar) -> Scalar {
-    return scalar__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), scalar__dot__scalar(self_, self_)));
+    return scalar__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), scalar__dot__scalar(self_, self_)));
 }
 
 fn transflector__inverse(self_: Transflector) -> Transflector {
-    return transflector__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), transflector__dot__transflector(self_, self_)));
+    return transflector__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), transflector__dot__transflector(self_, self_)));
 }
 
 fn translator__inverse(self_: Translator) -> Translator {
-    return translator__geometric_product__scalar(self_, scalar__div__scalar(scalar__one(), translator__dot__translator(self_, self_)));
+    return translator__geometric_product__scalar(self_, scalar__div__scalar(scalar__unit(), translator__dot__translator(self_, self_)));
 }
 
 fn dual_num__anti_cos(self_: DualNum) -> DualNum {
@@ -31637,111 +31721,111 @@ fn translator__reject_via_origin_from__translator(self_: Translator, other: Tran
 }
 
 fn dual_num__anti_support(self_: DualNum) -> Horizon {
-    return dual_num__wedge__horizon(self_, horizon__anti_wedge__anti_scalar(origin__right_complement(origin__one()), dual_num__dual(self_)));
+    return dual_num__wedge__horizon(self_, horizon__anti_wedge__anti_scalar(origin__right_complement(origin__unit()), dual_num__dual(self_)));
 }
 
 fn flector__anti_support(self_: Flector) -> MultiVector {
-    return flector__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__flector(origin__right_complement(origin__one()), flector__dual(self_)));
+    return flector__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__flector(origin__right_complement(origin__unit()), flector__dual(self_)));
 }
 
 fn flector_at_infinity__anti_support(self_: FlectorAtInfinity) -> MultiVectorAtInfinity {
-    return flector_at_infinity__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__flector(origin__right_complement(origin__one()), flector_at_infinity__dual(self_)));
+    return flector_at_infinity__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__flector(origin__right_complement(origin__unit()), flector_at_infinity__dual(self_)));
 }
 
 fn horizon__anti_support(self_: Horizon) -> Horizon {
-    return horizon__wedge__scalar(self_, horizon__anti_wedge__origin(origin__right_complement(origin__one()), horizon__dual(self_)));
+    return horizon__wedge__scalar(self_, horizon__anti_wedge__origin(origin__right_complement(origin__unit()), horizon__dual(self_)));
 }
 
 fn line__anti_support(self_: Line) -> Plane {
-    return line__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__one()), line__dual(self_)));
+    return line__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__unit()), line__dual(self_)));
 }
 
 fn line_at_infinity__anti_support(self_: LineAtInfinity) -> Horizon {
-    return line_at_infinity__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__one()), line_at_infinity__dual(self_)));
+    return line_at_infinity__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__unit()), line_at_infinity__dual(self_)));
 }
 
 fn motor__anti_support(self_: Motor) -> Plane {
-    return motor__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__one()), motor__dual(self_)));
+    return motor__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__unit()), motor__dual(self_)));
 }
 
 fn multi_vector__anti_support(self_: MultiVector) -> MultiVector {
-    return multi_vector__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__multi_vector_at_origin(origin__right_complement(origin__one()), multi_vector__dual(self_)));
+    return multi_vector__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__multi_vector_at_origin(origin__right_complement(origin__unit()), multi_vector__dual(self_)));
 }
 
 fn multi_vector_at_infinity__anti_support(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
-    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__multi_vector_at_origin(origin__right_complement(origin__one()), multi_vector_at_infinity__dual(self_)));
+    return multi_vector_at_infinity__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__multi_vector_at_origin(origin__right_complement(origin__unit()), multi_vector_at_infinity__dual(self_)));
 }
 
 fn plane__anti_support(self_: Plane) -> Plane {
-    return plane__wedge__scalar(self_, horizon__anti_wedge__origin(origin__right_complement(origin__one()), plane__dual(self_)));
+    return plane__wedge__scalar(self_, horizon__anti_wedge__origin(origin__right_complement(origin__unit()), plane__dual(self_)));
 }
 
 fn point__anti_support(self_: Point) -> Plane {
-    return point__wedge__line_at_infinity(self_, horizon__anti_wedge__plane_at_origin(origin__right_complement(origin__one()), point__dual(self_)));
+    return point__wedge__line_at_infinity(self_, horizon__anti_wedge__plane_at_origin(origin__right_complement(origin__unit()), point__dual(self_)));
 }
 
 fn point_at_infinity__anti_support(self_: PointAtInfinity) -> Horizon {
-    return point_at_infinity__wedge__line_at_infinity(self_, horizon__anti_wedge__plane_at_origin(origin__right_complement(origin__one()), point_at_infinity__dual(self_)));
+    return point_at_infinity__wedge__line_at_infinity(self_, horizon__anti_wedge__plane_at_origin(origin__right_complement(origin__unit()), point_at_infinity__dual(self_)));
 }
 
 fn scalar__anti_support(self_: Scalar) -> Horizon {
-    return scalar__wedge__horizon(self_, horizon__anti_wedge__anti_scalar(origin__right_complement(origin__one()), scalar__dual(self_)));
+    return scalar__wedge__horizon(self_, horizon__anti_wedge__anti_scalar(origin__right_complement(origin__unit()), scalar__dual(self_)));
 }
 
 fn transflector__anti_support(self_: Transflector) -> MultiVector {
-    return transflector__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__flector(origin__right_complement(origin__one()), transflector__dual(self_)));
+    return transflector__wedge__multi_vector_at_infinity(self_, horizon__anti_wedge__flector(origin__right_complement(origin__unit()), transflector__dual(self_)));
 }
 
 fn translator__anti_support(self_: Translator) -> Horizon {
-    return translator__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__one()), translator__dual(self_)));
+    return translator__wedge__point_at_infinity(self_, horizon__anti_wedge__line_at_origin(origin__right_complement(origin__unit()), translator__dual(self_)));
 }
 
 fn flector__support(self_: Flector) -> Flector {
-    return flector__anti_wedge__rotor(self_, origin__wedge__flector_at_infinity(origin__one(), flector__anti_dual(self_)));
+    return flector__anti_wedge__rotor(self_, origin__wedge__flector_at_infinity(origin__unit(), flector__anti_dual(self_)));
 }
 
 fn line__support(self_: Line) -> Point {
-    return line__anti_wedge__plane_at_origin(self_, origin__wedge__line_at_infinity(origin__one(), line__anti_dual(self_)));
+    return line__anti_wedge__plane_at_origin(self_, origin__wedge__line_at_infinity(origin__unit(), line__anti_dual(self_)));
 }
 
 fn line_at_origin__support(self_: LineAtOrigin) -> Origin {
-    return line_at_origin__anti_wedge__plane_at_origin(self_, origin__wedge__line_at_infinity(origin__one(), line_at_origin__anti_dual(self_)));
+    return line_at_origin__anti_wedge__plane_at_origin(self_, origin__wedge__line_at_infinity(origin__unit(), line_at_origin__anti_dual(self_)));
 }
 
 fn motor__support(self_: Motor) -> MultiVector {
-    return motor__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__one(), motor__anti_dual(self_)));
+    return motor__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__unit(), motor__anti_dual(self_)));
 }
 
 fn multi_vector__support(self_: MultiVector) -> MultiVector {
-    return multi_vector__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__one(), multi_vector__anti_dual(self_)));
+    return multi_vector__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__unit(), multi_vector__anti_dual(self_)));
 }
 
 fn multi_vector_at_origin__support(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__one(), multi_vector_at_origin__anti_dual(self_)));
+    return multi_vector_at_origin__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__unit(), multi_vector_at_origin__anti_dual(self_)));
 }
 
 fn origin__support(self_: Origin) -> Origin {
-    return origin__anti_wedge__anti_scalar(self_, origin__wedge__horizon(origin__one(), origin__anti_dual(self_)));
+    return origin__anti_wedge__anti_scalar(self_, origin__wedge__horizon(origin__unit(), origin__anti_dual(self_)));
 }
 
 fn plane__support(self_: Plane) -> Point {
-    return plane__anti_wedge__line_at_origin(self_, origin__wedge__point_at_infinity(origin__one(), plane__anti_dual(self_)));
+    return plane__anti_wedge__line_at_origin(self_, origin__wedge__point_at_infinity(origin__unit(), plane__anti_dual(self_)));
 }
 
 fn plane_at_origin__support(self_: PlaneAtOrigin) -> Origin {
-    return plane_at_origin__anti_wedge__line_at_origin(self_, origin__wedge__point_at_infinity(origin__one(), plane_at_origin__anti_dual(self_)));
+    return plane_at_origin__anti_wedge__line_at_origin(self_, origin__wedge__point_at_infinity(origin__unit(), plane_at_origin__anti_dual(self_)));
 }
 
 fn point__support(self_: Point) -> Point {
-    return point__anti_wedge__anti_scalar(self_, origin__wedge__horizon(origin__one(), point__anti_dual(self_)));
+    return point__anti_wedge__anti_scalar(self_, origin__wedge__horizon(origin__unit(), point__anti_dual(self_)));
 }
 
 fn rotor__support(self_: Rotor) -> MultiVectorAtOrigin {
-    return rotor__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__one(), rotor__anti_dual(self_)));
+    return rotor__anti_wedge__multi_vector_at_origin(self_, origin__wedge__multi_vector_at_infinity(origin__unit(), rotor__anti_dual(self_)));
 }
 
 fn transflector__support(self_: Transflector) -> Point {
-    return transflector__anti_wedge__line_at_origin(self_, origin__wedge__point_at_infinity(origin__one(), transflector__anti_dual(self_)));
+    return transflector__anti_wedge__line_at_origin(self_, origin__wedge__point_at_infinity(origin__unit(), transflector__anti_dual(self_)));
 }
 
 fn line__cosine_angle__line(self_: Line, other: Line) -> DualNum {
@@ -32327,168 +32411,168 @@ fn translator__distance__point(self_: Translator, other: Point) -> DualNum {
 fn line__sine_angle__line(self_: Line, other: Line) -> DualNum {
     let cos: DualNum = line__cosine_angle__line(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line__sine_angle__line_at_origin(self_: Line, other: LineAtOrigin) -> DualNum {
     let cos: DualNum = line__cosine_angle__line_at_origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line__sine_angle__origin(self_: Line, other: Origin) -> DualNum {
     let cos: DualNum = line__cosine_angle__origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line__sine_angle__point(self_: Line, other: Point) -> DualNum {
     let cos: DualNum = line__cosine_angle__point(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line_at_origin__sine_angle__line(self_: LineAtOrigin, other: Line) -> DualNum {
     let cos: DualNum = line_at_origin__cosine_angle__line(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line_at_origin__sine_angle__line_at_origin(self_: LineAtOrigin, other: LineAtOrigin) -> DualNum {
     let cos: DualNum = line_at_origin__cosine_angle__line_at_origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line_at_origin__sine_angle__origin(self_: LineAtOrigin, other: Origin) -> DualNum {
     let cos: DualNum = line_at_origin__cosine_angle__origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn line_at_origin__sine_angle__point(self_: LineAtOrigin, other: Point) -> DualNum {
     let cos: DualNum = line_at_origin__cosine_angle__point(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn origin__sine_angle__origin(self_: Origin, other: Origin) -> DualNum {
     let cos: DualNum = origin__cosine_angle__origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn origin__sine_angle__point(self_: Origin, other: Point) -> DualNum {
     let cos: DualNum = origin__cosine_angle__point(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane__sine_angle__line(self_: Plane, other: Line) -> DualNum {
     let cos: DualNum = plane__cosine_angle__line(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane__sine_angle__line_at_origin(self_: Plane, other: LineAtOrigin) -> DualNum {
     let cos: DualNum = plane__cosine_angle__line_at_origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane__sine_angle__origin(self_: Plane, other: Origin) -> DualNum {
     let cos: DualNum = plane__cosine_angle__origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane__sine_angle__plane(self_: Plane, other: Plane) -> DualNum {
     let cos: DualNum = plane__cosine_angle__plane(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane__sine_angle__plane_at_origin(self_: Plane, other: PlaneAtOrigin) -> DualNum {
     let cos: DualNum = plane__cosine_angle__plane_at_origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane__sine_angle__point(self_: Plane, other: Point) -> DualNum {
     let cos: DualNum = plane__cosine_angle__point(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane_at_origin__sine_angle__line(self_: PlaneAtOrigin, other: Line) -> DualNum {
     let cos: DualNum = plane_at_origin__cosine_angle__line(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane_at_origin__sine_angle__line_at_origin(self_: PlaneAtOrigin, other: LineAtOrigin) -> DualNum {
     let cos: DualNum = plane_at_origin__cosine_angle__line_at_origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane_at_origin__sine_angle__origin(self_: PlaneAtOrigin, other: Origin) -> DualNum {
     let cos: DualNum = plane_at_origin__cosine_angle__origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane_at_origin__sine_angle__plane(self_: PlaneAtOrigin, other: Plane) -> DualNum {
     let cos: DualNum = plane_at_origin__cosine_angle__plane(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane_at_origin__sine_angle__plane_at_origin(self_: PlaneAtOrigin, other: PlaneAtOrigin) -> DualNum {
     let cos: DualNum = plane_at_origin__cosine_angle__plane_at_origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn plane_at_origin__sine_angle__point(self_: PlaneAtOrigin, other: Point) -> DualNum {
     let cos: DualNum = plane_at_origin__cosine_angle__point(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn point__sine_angle__origin(self_: Point, other: Origin) -> DualNum {
     let cos: DualNum = point__cosine_angle__origin(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
 fn point__sine_angle__point(self_: Point, other: Point) -> DualNum {
     let cos: DualNum = point__cosine_angle__point(self_, other);
     let cos_squared: DualNum = dual_num__geometric_product__dual_num(cos, cos);
-    let sub: DualNum = dual_num__sub__dual_num(dual_num__one(), cos_squared);
+    let sub: DualNum = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
     return dual_num__sqrt(sub);
 }
 
