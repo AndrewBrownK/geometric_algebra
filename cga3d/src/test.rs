@@ -1,10 +1,13 @@
-use crate::characteristics::{AntiSqrt, Attitude};
+use crate::characteristics::{AntiSqrt, Attitude, Sqrt};
 use crate::metrics::Distance;
 use crate::norms::{BulkNorm, UnitizedNorm, WeightNorm};
-use crate::products::dot::AntiDot;
-use crate::products::exterior::Wedge;
-use crate::{FlatPoint, Origin, RoundPoint, RoundPointOnOrigin};
+use crate::products::dot::{AntiDot, Dot};
+use crate::products::exterior::{Meet, Wedge};
+use crate::{FlatPoint, Horizon, Infinity, Origin, RoundPoint, RoundPointOnOrigin};
 use std::ops::Add;
+use projective_ga::Unit;
+use crate::products::geometric::WedgeDot;
+use crate::unitize::Unitize;
 
 #[test]
 fn round_point_distances() {
@@ -30,7 +33,7 @@ fn round_point_distances() {
 
     // RoundPoint with real radius
     // 3, 0, 0 (radius of real 3)
-    let a = RoundPoint::new(3.0, 0.0, 0.0, 1.0, 9.0);
+    let a = RoundPoint::new(3.0, 0.0, 0.0, 1.0, 4.5);
     // If you do the above with a radius of imaginary 3, you get an imaginary distance for all results.
 
     // RoundPoints with zero radius
@@ -51,31 +54,9 @@ fn round_point_distances() {
     let k = RoundPoint::new(6.0, 0.0, 0.0, 1.0, 18.0);
 
     for some_point in vec![b, c, d, e, f, g, h, i, j, k] {
-        // println!("Self {a:?}");
-        // println!("Other {some_point:?}");
-
-        let bulk_wedge = a.wedge(some_point);
-        let weight_attitude = some_point.attitude();
-        // println!("Bulk Wedge {bulk_wedge:?}");
-        // println!("Weight Attitude {weight_attitude:?}");
-
-        let bulk_attitude = bulk_wedge.attitude();
-        let weight_wedge = a.wedge(weight_attitude);
-        // println!("Bulk Attitude {bulk_attitude:?}");
-
-        // println!("{weight_wedge:?}");
-        let weight_anti_dot = weight_wedge.anti_dot(weight_wedge);
-        // println!("{weight_anti_dot:?}");
-        let weight_part = weight_anti_dot.anti_sqrt();
-        // println!("{weight_part:?}");
-
-        // println!("Bulk Part {bulk_part:?}");
-        let bulk_part = bulk_attitude.bulk_norm();
-        let distance = bulk_part.add(weight_part);
-        // let distance = distance.unitized_norm();
-
-        // let distance = a.distance(some_point).unitized_norm();
-        println!("RoundPoint distance is {distance:?}");
+        let diff = a - some_point;
+        let distance = diff.dot(diff).sqrt();
+        // println!("RoundPoint distance is {distance:?}");
     }
 
     // 3, 0, 0
@@ -92,8 +73,19 @@ fn round_point_distances() {
     let j = FlatPoint::new(5.0, 0.0, 0.0, 1.0);
     let k = FlatPoint::new(6.0, 0.0, 0.0, 1.0);
 
-    for some_point in vec![b, c, d, e, f, g, h, i, j, k] {
-        let distance = a.distance(some_point).unitized_norm();
-        println!("FlatPoint distance is {distance}");
+    for mut some_point in vec![b, c, d, e, f, g, h, i, j, k] {
+
+        // TODO.... apparently.... FlatPoints have an imaginary weight norm?
+        //  FlatPoint.anti_dot(FlatPoint) is negative, which then we have to take square root
+        //  to find the weight norm.... So any attempt to unitize (requiring division by weight norm)
+        //  results in NaN...
+        println!("some_point before: {some_point:?}");
+        some_point = some_point.unitize();
+        println!("some_point after: {some_point:?}");
+
+        let round_a = some_point.meet(Horizon::unit());
+        println!("Conversion of some_point: {round_a:?}");
+        // let distance = a.distance(some_point).unitized_norm();
+        // println!("FlatPoint distance is {distance}");
     }
 }

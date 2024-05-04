@@ -3034,6 +3034,48 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 self.trait_impls.add_pair_impl(name, param_a, param_b, ed);
             };
         }
+
+        //TODO speculation on distance formula for CGA
+        // It seems very difficult
+        // The pattern used in RGA doesn't seem to translate well...
+        // that being bulk_norm(att(wedge(a,b)))/bulk_norm(wedge(att(a), att(b)))
+        // It just gets kind of incomprehensible when trying to consider that with circles or whatever
+        // So..... lets try new ideas. Here are a few starting ingredients..
+        // - It is tempting to look at the carrier geometry and be tempted to use it. But I don't
+        //   think it can be used directly, because it is too extensive on round objects.
+        // - However there IS a generalized pattern that might be useful.... take the container,
+        //   and take the carrier, and meet them. That is always the object itself. The container
+        //   is always a sphere. And it should be easy enough to make a formula for the distance
+        //   between spheres. That makes a first aproximation of distance. So if you can somehow
+        //   factor in the meet with a carrier too, the true distance between objects can't be
+        //   far off.
+        // - I want to assume (but haven't tested yet) that RoundPoints with zero radius accurately
+        //   obey euclidean distance already. Subtract, dot, square root. If this turns out to be
+        //   true, then it might also be true for RoundPoints with a radius as well. After such
+        //   is proven, it might be possible to get the distance of FlatPoints by converting them
+        //   into RoundPoints first. (More on that in a bit.) However the downside is, extending
+        //   this train of thought to dipoles is less encouraging, because it seems weird to create
+        //   two RoundPoints and then check all combinations of distance and return the min or
+        //   whatever. It might work for Dipoles, but really starts falling apart if we try to
+        //   carry the pattern to circles, or ask ourselves about signed distances.
+        // - Obviously (or maybe not so obvious to outside readers) I want to take SpacialCurvature
+        //   as a parameter for distance formulas. It was my intention to use dynamic
+        //   SpacialCurvature all along, but I think it's kind of uncanny and interesting that
+        //   the rga3d distance formula using attitudes has an implicit usage of a flat Horizon.
+        //   (Horizon is the flat variant of SpacialCurvature.) I think a great place to start here
+        //   is converting FlatPoints into RoundPoints (with zero radius) using SpacialCurvature,
+        //   where the resulting RoundPoint gives accurate distances.
+
+        //TODO so.... let's start digging.
+        // - How do we convert a FlatPoint into a RoundPoint (zero radius) using a Horizon or
+        //   SpacialCurvature? It is an intuitive first step to perform a meet on the FlatPoint and
+        //   Horizon, but this only returns an Infinity (an e5). This might be a non-starter, or it
+        //   might just be incomplete. NOTABLY... A FlatPoint meeting a SphereWeight is a
+        //   RoundPointOnOrigin, which is a full RoundPoint except the e5 element. So if we add these
+        //   together, we get a full RoundPoint... and wouldn't you know it, SphereWeight + Horizon
+        //   = SpacialCurvature anyway. Well... that's sure cute. But we need to be able to get
+        //   a full and proper RoundPoint (zero radius) even when all we have is a Horizon.
+
     }
 
     pub fn round_features<'s>(&'s mut self, flat_basis: BasisElement, registry: &'r MultiVectorClassRegistry) {
