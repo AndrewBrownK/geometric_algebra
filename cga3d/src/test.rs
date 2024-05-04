@@ -1,10 +1,10 @@
 use crate::characteristics::{AntiSqrt, Attitude};
 use crate::metrics::Distance;
 use crate::norms::{BulkNorm, UnitizedNorm, WeightNorm};
+use crate::products::dot::AntiDot;
 use crate::products::exterior::Wedge;
 use crate::{FlatPoint, Origin, RoundPoint, RoundPointOnOrigin};
 use std::ops::Add;
-use crate::products::dot::AntiDot;
 
 #[test]
 fn round_point_distances() {
@@ -35,6 +35,10 @@ fn round_point_distances() {
 
     // RoundPoints with zero radius
 
+    // TODO none of the distances measured here care about the e5 parameter
+    //  So the distance formula is measuring the distance between the centers of each
+    //  RoundPoint, and not considering the radius.
+
     // -3, 0, 0
     let b = RoundPoint::new(-3.0, 0.0, 0.0, 1.0, 4.5);
     // -2, 0, 0
@@ -50,11 +54,11 @@ fn round_point_distances() {
     // 3, 0, 0
     let h = RoundPoint::new(3.0, 0.0, 0.0, 1.0, 4.5);
     // 4, 0, 0
-    let i = RoundPoint::new(4.0, 0.0, 0.0, 1.0, 4.5);
+    let i = RoundPoint::new(4.0, 0.0, 0.0, 1.0, 8.0);
     // 5, 0, 0
-    let j = RoundPoint::new(5.0, 0.0, 0.0, 1.0, 4.5);
+    let j = RoundPoint::new(5.0, 0.0, 0.0, 1.0, 12.5);
     // 6, 0, 0
-    let k = RoundPoint::new(6.0, 0.0, 0.0, 1.0, 4.5);
+    let k = RoundPoint::new(6.0, 0.0, 0.0, 1.0, 18.0);
 
     for some_point in vec![b, c, d, e, f, g, h, i, j, k] {
         // println!("Self {a:?}");

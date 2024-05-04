@@ -2996,14 +2996,35 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
             let name = "Distance";
             let _: Option<()> = try {
+                let _ = self.trait_impls.get_class_invocation("Grade", param_a.multi_vector_class())?;
+                let _ = self.trait_impls.get_class_invocation("Grade", param_b.multi_vector_class())?;
+                let grade_a = param_a.multi_vector_class().flat_basis().first()?.grade();
+                let grade_b = param_b.multi_vector_class().flat_basis().first()?.grade();
+                let anti_scalar_grade = self.algebra.anti_scalar_element().grade();
+                if grade_a == 0 || grade_b == 0 {
+                    continue;
+                }
+                if grade_a == anti_scalar_grade || grade_b == anti_scalar_grade {
+                    continue;
+                }
+
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
-                let bulk_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), variable(&param_b))?;
-                let bulk_attitude = self.trait_impls.get_single_invocation("Attitude", bulk_wedge)?;
+                let anti_wedge_name = self.algebra.dialect().exterior_anti_product.first()?;
+                let bulk_term = if grade_a + grade_b == anti_scalar_grade {
+                    self.trait_impls.get_pair_invocation(anti_wedge_name,  variable(&param_a), variable(&param_b))?
+                } else {
+                    let bulk_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), variable(&param_b))?;
+                    let bulk_attitude = self.trait_impls.get_single_invocation("Attitude", bulk_wedge)?;
+                    self.trait_impls.get_single_invocation("BulkNorm", bulk_attitude)?
+                };
+
                 let weight_attitude = self.trait_impls.get_single_invocation("Attitude", variable(&param_b))?;
                 let weight_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), weight_attitude)?;
-                let bulk_norm = self.trait_impls.get_single_invocation("BulkNorm", bulk_attitude)?;
+
+
                 let weight_norm = self.trait_impls.get_single_invocation("WeightNorm", weight_wedge)?;
-                let add = self.trait_impls.get_pair_invocation("Add", bulk_norm, weight_norm)?;
+
+                let add = self.trait_impls.get_pair_invocation("Add", bulk_term, weight_norm)?;
                 let ed = single_expression_pair_trait_impl(name, &param_a, &param_b, add);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, ed);
             };

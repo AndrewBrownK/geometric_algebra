@@ -31924,108 +31924,12 @@ fn point__cosine_angle__point(self_: Point, other: Point) -> DualNum {
     return scalar__add__anti_scalar(point__anti_wedge__horizon(self_, point__anti_dual(other)), anti_scalar__geometric_anti_product__anti_scalar(point__weight_norm(self_), point__weight_norm(other)));
 }
 
-fn anti_scalar__distance__multi_vector(self_: AntiScalar, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(anti_scalar__wedge__multi_vector(self_, other))), anti_scalar__weight_norm(anti_scalar__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn dual_num__distance__flector(self_: DualNum, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(flector__attitude(dual_num__wedge__flector(self_, other))), multi_vector__weight_norm(dual_num__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn dual_num__distance__multi_vector(self_: DualNum, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(dual_num__wedge__multi_vector(self_, other))), multi_vector__weight_norm(dual_num__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn dual_num__distance__multi_vector_at_origin(self_: DualNum, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(dual_num__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(dual_num__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
-fn dual_num__distance__origin(self_: DualNum, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(scalar__bulk_norm(origin__attitude(dual_num__wedge__origin(self_, other))), dual_num__weight_norm(dual_num__wedge__scalar(self_, origin__attitude(other))));
-}
-
-fn dual_num__distance__point(self_: DualNum, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(scalar__bulk_norm(point__attitude(dual_num__wedge__point(self_, other))), dual_num__weight_norm(dual_num__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn flector__distance__dual_num(self_: Flector, other: DualNum) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(flector__attitude(flector__wedge__dual_num(self_, other))), anti_scalar__weight_norm(flector__wedge__horizon(self_, dual_num__attitude(other))));
-}
-
-fn flector__distance__flector(self_: Flector, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(flector__wedge__flector(self_, other))), multi_vector__weight_norm(flector__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn flector__distance__line(self_: Flector, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(flector__wedge__line(self_, other))), motor__weight_norm(flector__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn flector__distance__line_at_origin(self_: Flector, other: LineAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(flector__wedge__line_at_origin(self_, other))), motor__weight_norm(flector__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
-}
-
-fn flector__distance__motor(self_: Flector, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(flector__wedge__motor(self_, other))), motor__weight_norm(flector__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn flector__distance__multi_vector(self_: Flector, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(flector__wedge__multi_vector(self_, other))), multi_vector__weight_norm(flector__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn flector__distance__multi_vector_at_origin(self_: Flector, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(flector__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(flector__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
-fn flector__distance__origin(self_: Flector, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(rotor__attitude(flector__wedge__origin(self_, other))), flector__weight_norm(flector__wedge__scalar(self_, origin__attitude(other))));
-}
-
-fn flector__distance__plane(self_: Flector, other: Plane) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(flector__wedge__plane(self_, other))), plane__weight_norm(flector__wedge__line_at_infinity(self_, plane__attitude(other))));
-}
-
-fn flector__distance__plane_at_origin(self_: Flector, other: PlaneAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(flector__wedge__plane_at_origin(self_, other))), plane__weight_norm(flector__wedge__line_at_infinity(self_, plane_at_origin__attitude(other))));
-}
-
-fn flector__distance__point(self_: Flector, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(flector__wedge__point(self_, other))), flector__weight_norm(flector__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn flector__distance__rotor(self_: Flector, other: Rotor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(flector__wedge__rotor(self_, other))), motor__weight_norm(flector__wedge__flector_at_infinity(self_, rotor__attitude(other))));
-}
-
-fn flector__distance__transflector(self_: Flector, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(flector__wedge__transflector(self_, other))), plane__weight_norm(flector__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn flector__distance__translator(self_: Flector, other: Translator) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(flector__wedge__translator(self_, other))), anti_scalar__weight_norm(flector__wedge__horizon(self_, translator__attitude(other))));
-}
-
-fn line__distance__flector(self_: Line, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(line__wedge__flector(self_, other))), multi_vector__weight_norm(line__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
 fn line__distance__line(self_: Line, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(line__wedge__line(self_, other))), plane__weight_norm(line__wedge__point_at_infinity(self_, line__attitude(other))));
+    return scalar__add__anti_scalar(line__anti_wedge__line(self_, other), plane__weight_norm(line__wedge__point_at_infinity(self_, line__attitude(other))));
 }
 
 fn line__distance__line_at_origin(self_: Line, other: LineAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(line__wedge__line_at_origin(self_, other))), plane__weight_norm(line__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
-}
-
-fn line__distance__motor(self_: Line, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(line__wedge__motor(self_, other))), plane__weight_norm(line__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn line__distance__multi_vector(self_: Line, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(line__wedge__multi_vector(self_, other))), multi_vector__weight_norm(line__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn line__distance__multi_vector_at_origin(self_: Line, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(line__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(line__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
+    return scalar__add__anti_scalar(line__anti_wedge__line_at_origin(self_, other), plane__weight_norm(line__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
 }
 
 fn line__distance__origin(self_: Line, other: Origin) -> DualNum {
@@ -32036,248 +31940,36 @@ fn line__distance__point(self_: Line, other: Point) -> DualNum {
     return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(line__wedge__point(self_, other))), line__weight_norm(line__wedge__scalar(self_, point__attitude(other))));
 }
 
-fn line__distance__rotor(self_: Line, other: Rotor) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(line__wedge__rotor(self_, other))), plane__weight_norm(line__wedge__flector_at_infinity(self_, rotor__attitude(other))));
-}
-
-fn line__distance__transflector(self_: Line, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(line__wedge__transflector(self_, other))), anti_scalar__weight_norm(line__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn line_at_origin__distance__flector(self_: LineAtOrigin, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(line_at_origin__wedge__flector(self_, other))), multi_vector_at_origin__weight_norm(line_at_origin__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
 fn line_at_origin__distance__line(self_: LineAtOrigin, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(line_at_origin__wedge__line(self_, other))), plane_at_origin__weight_norm(line_at_origin__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn line_at_origin__distance__motor(self_: LineAtOrigin, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(line_at_origin__wedge__motor(self_, other))), plane_at_origin__weight_norm(line_at_origin__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn line_at_origin__distance__multi_vector(self_: LineAtOrigin, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(line_at_origin__wedge__multi_vector(self_, other))), multi_vector_at_origin__weight_norm(line_at_origin__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
+    return scalar__add__anti_scalar(line_at_origin__anti_wedge__line(self_, other), plane_at_origin__weight_norm(line_at_origin__wedge__point_at_infinity(self_, line__attitude(other))));
 }
 
 fn line_at_origin__distance__point(self_: LineAtOrigin, other: Point) -> DualNum {
     return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(line_at_origin__wedge__point(self_, other))), line_at_origin__weight_norm(line_at_origin__wedge__scalar(self_, point__attitude(other))));
 }
 
-fn line_at_origin__distance__transflector(self_: LineAtOrigin, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(line_at_origin__wedge__transflector(self_, other))), anti_scalar__weight_norm(line_at_origin__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn motor__distance__flector(self_: Motor, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(motor__wedge__flector(self_, other))), multi_vector__weight_norm(motor__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn motor__distance__line(self_: Motor, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(motor__wedge__line(self_, other))), plane__weight_norm(motor__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn motor__distance__line_at_origin(self_: Motor, other: LineAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(motor__wedge__line_at_origin(self_, other))), plane__weight_norm(motor__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
-}
-
-fn motor__distance__motor(self_: Motor, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(motor__wedge__motor(self_, other))), plane__weight_norm(motor__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn motor__distance__multi_vector(self_: Motor, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(motor__wedge__multi_vector(self_, other))), multi_vector__weight_norm(motor__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn motor__distance__multi_vector_at_origin(self_: Motor, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(motor__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(motor__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
-fn motor__distance__origin(self_: Motor, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(motor__wedge__origin(self_, other))), motor__weight_norm(motor__wedge__scalar(self_, origin__attitude(other))));
-}
-
-fn motor__distance__point(self_: Motor, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(motor__wedge__point(self_, other))), motor__weight_norm(motor__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn motor__distance__rotor(self_: Motor, other: Rotor) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(motor__wedge__rotor(self_, other))), plane__weight_norm(motor__wedge__flector_at_infinity(self_, rotor__attitude(other))));
-}
-
-fn motor__distance__transflector(self_: Motor, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(motor__wedge__transflector(self_, other))), anti_scalar__weight_norm(motor__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn multi_vector__distance__anti_scalar(self_: MultiVector, other: AntiScalar) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(multi_vector__wedge__anti_scalar(self_, other))), multi_vector__weight_norm(multi_vector__wedge__horizon(self_, anti_scalar__attitude(other))));
-}
-
-fn multi_vector__distance__dual_num(self_: MultiVector, other: DualNum) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__dual_num(self_, other))), multi_vector__weight_norm(multi_vector__wedge__horizon(self_, dual_num__attitude(other))));
-}
-
-fn multi_vector__distance__flector(self_: MultiVector, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__flector(self_, other))), multi_vector__weight_norm(multi_vector__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn multi_vector__distance__line(self_: MultiVector, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__line(self_, other))), multi_vector__weight_norm(multi_vector__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn multi_vector__distance__line_at_origin(self_: MultiVector, other: LineAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector__wedge__line_at_origin(self_, other))), multi_vector__weight_norm(multi_vector__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
-}
-
-fn multi_vector__distance__motor(self_: MultiVector, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__motor(self_, other))), multi_vector__weight_norm(multi_vector__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn multi_vector__distance__multi_vector(self_: MultiVector, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__multi_vector(self_, other))), multi_vector__weight_norm(multi_vector__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn multi_vector__distance__multi_vector_at_origin(self_: MultiVector, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(multi_vector__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
-fn multi_vector__distance__origin(self_: MultiVector, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector__wedge__origin(self_, other))), multi_vector__weight_norm(multi_vector__wedge__scalar(self_, origin__attitude(other))));
-}
-
-fn multi_vector__distance__plane(self_: MultiVector, other: Plane) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__plane(self_, other))), multi_vector__weight_norm(multi_vector__wedge__line_at_infinity(self_, plane__attitude(other))));
-}
-
-fn multi_vector__distance__plane_at_origin(self_: MultiVector, other: PlaneAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector__wedge__plane_at_origin(self_, other))), multi_vector__weight_norm(multi_vector__wedge__line_at_infinity(self_, plane_at_origin__attitude(other))));
-}
-
-fn multi_vector__distance__point(self_: MultiVector, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__point(self_, other))), multi_vector__weight_norm(multi_vector__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn multi_vector__distance__rotor(self_: MultiVector, other: Rotor) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector__wedge__rotor(self_, other))), multi_vector__weight_norm(multi_vector__wedge__flector_at_infinity(self_, rotor__attitude(other))));
-}
-
-fn multi_vector__distance__transflector(self_: MultiVector, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__transflector(self_, other))), multi_vector__weight_norm(multi_vector__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn multi_vector__distance__translator(self_: MultiVector, other: Translator) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(multi_vector__wedge__translator(self_, other))), multi_vector__weight_norm(multi_vector__wedge__horizon(self_, translator__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__dual_num(self_: MultiVectorAtOrigin, other: DualNum) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__dual_num(self_, other))), anti_scalar__weight_norm(multi_vector_at_origin__wedge__horizon(self_, dual_num__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__flector(self_: MultiVectorAtOrigin, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__flector(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__line(self_: MultiVectorAtOrigin, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__line(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__motor(self_: MultiVectorAtOrigin, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__motor(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__multi_vector(self_: MultiVectorAtOrigin, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__multi_vector(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__plane(self_: MultiVectorAtOrigin, other: Plane) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(multi_vector_at_origin__wedge__plane(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__line_at_infinity(self_, plane__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__point(self_: MultiVectorAtOrigin, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__point(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__transflector(self_: MultiVectorAtOrigin, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__transflector(self_, other))), multi_vector_at_origin__weight_norm(multi_vector_at_origin__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn multi_vector_at_origin__distance__translator(self_: MultiVectorAtOrigin, other: Translator) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(multi_vector_at_origin__wedge__translator(self_, other))), anti_scalar__weight_norm(multi_vector_at_origin__wedge__horizon(self_, translator__attitude(other))));
-}
-
-fn origin__distance__dual_num(self_: Origin, other: DualNum) -> DualNum {
-    return scalar__add__anti_scalar(scalar__bulk_norm(origin__attitude(origin__wedge__dual_num(self_, other))), anti_scalar__weight_norm(origin__wedge__horizon(self_, dual_num__attitude(other))));
-}
-
-fn origin__distance__flector(self_: Origin, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(rotor__attitude(origin__wedge__flector(self_, other))), multi_vector_at_origin__weight_norm(origin__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
 fn origin__distance__line(self_: Origin, other: Line) -> DualNum {
     return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(origin__wedge__line(self_, other))), line_at_origin__weight_norm(origin__wedge__point_at_infinity(self_, line__attitude(other))));
 }
 
-fn origin__distance__motor(self_: Origin, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(origin__wedge__motor(self_, other))), rotor__weight_norm(origin__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn origin__distance__multi_vector(self_: Origin, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(origin__wedge__multi_vector(self_, other))), multi_vector_at_origin__weight_norm(origin__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
 fn origin__distance__plane(self_: Origin, other: Plane) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(origin__wedge__plane(self_, other))), plane_at_origin__weight_norm(origin__wedge__line_at_infinity(self_, plane__attitude(other))));
+    return scalar__add__anti_scalar(origin__anti_wedge__plane(self_, other), plane_at_origin__weight_norm(origin__wedge__line_at_infinity(self_, plane__attitude(other))));
 }
 
 fn origin__distance__point(self_: Origin, other: Point) -> DualNum {
     return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line_at_origin__attitude(origin__wedge__point(self_, other))), origin__weight_norm(origin__wedge__scalar(self_, point__attitude(other))));
 }
 
-fn origin__distance__transflector(self_: Origin, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(rotor__attitude(origin__wedge__transflector(self_, other))), plane_at_origin__weight_norm(origin__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn origin__distance__translator(self_: Origin, other: Translator) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(origin__wedge__translator(self_, other))), anti_scalar__weight_norm(origin__wedge__horizon(self_, translator__attitude(other))));
-}
-
-fn plane__distance__flector(self_: Plane, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(plane__wedge__flector(self_, other))), multi_vector__weight_norm(plane__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn plane__distance__multi_vector(self_: Plane, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(plane__wedge__multi_vector(self_, other))), multi_vector__weight_norm(plane__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn plane__distance__multi_vector_at_origin(self_: Plane, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(plane__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(plane__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
 fn plane__distance__origin(self_: Plane, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(plane__wedge__origin(self_, other))), plane__weight_norm(plane__wedge__scalar(self_, origin__attitude(other))));
+    return scalar__add__anti_scalar(plane__anti_wedge__origin(self_, other), plane__weight_norm(plane__wedge__scalar(self_, origin__attitude(other))));
 }
 
 fn plane__distance__point(self_: Plane, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(plane__wedge__point(self_, other))), plane__weight_norm(plane__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn plane_at_origin__distance__flector(self_: PlaneAtOrigin, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(plane_at_origin__wedge__flector(self_, other))), multi_vector_at_origin__weight_norm(plane_at_origin__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn plane_at_origin__distance__multi_vector(self_: PlaneAtOrigin, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(plane_at_origin__wedge__multi_vector(self_, other))), multi_vector_at_origin__weight_norm(plane_at_origin__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
+    return scalar__add__anti_scalar(plane__anti_wedge__point(self_, other), plane__weight_norm(plane__wedge__scalar(self_, point__attitude(other))));
 }
 
 fn plane_at_origin__distance__point(self_: PlaneAtOrigin, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(plane_at_origin__wedge__point(self_, other))), plane_at_origin__weight_norm(plane_at_origin__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn point__distance__dual_num(self_: Point, other: DualNum) -> DualNum {
-    return scalar__add__anti_scalar(scalar__bulk_norm(point__attitude(point__wedge__dual_num(self_, other))), anti_scalar__weight_norm(point__wedge__horizon(self_, dual_num__attitude(other))));
-}
-
-fn point__distance__flector(self_: Point, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(point__wedge__flector(self_, other))), multi_vector__weight_norm(point__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
+    return scalar__add__anti_scalar(plane_at_origin__anti_wedge__point(self_, other), plane_at_origin__weight_norm(plane_at_origin__wedge__scalar(self_, point__attitude(other))));
 }
 
 fn point__distance__line(self_: Point, other: Line) -> DualNum {
@@ -32288,124 +31980,20 @@ fn point__distance__line_at_origin(self_: Point, other: LineAtOrigin) -> DualNum
     return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(point__wedge__line_at_origin(self_, other))), line__weight_norm(point__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
 }
 
-fn point__distance__motor(self_: Point, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(point__wedge__motor(self_, other))), motor__weight_norm(point__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn point__distance__multi_vector(self_: Point, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(point__wedge__multi_vector(self_, other))), multi_vector__weight_norm(point__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn point__distance__multi_vector_at_origin(self_: Point, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(point__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(point__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
 fn point__distance__origin(self_: Point, other: Origin) -> DualNum {
     return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line_at_origin__attitude(point__wedge__origin(self_, other))), point__weight_norm(point__wedge__scalar(self_, origin__attitude(other))));
 }
 
 fn point__distance__plane(self_: Point, other: Plane) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(point__wedge__plane(self_, other))), plane__weight_norm(point__wedge__line_at_infinity(self_, plane__attitude(other))));
+    return scalar__add__anti_scalar(point__anti_wedge__plane(self_, other), plane__weight_norm(point__wedge__line_at_infinity(self_, plane__attitude(other))));
 }
 
 fn point__distance__plane_at_origin(self_: Point, other: PlaneAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(point__wedge__plane_at_origin(self_, other))), plane__weight_norm(point__wedge__line_at_infinity(self_, plane_at_origin__attitude(other))));
+    return scalar__add__anti_scalar(point__anti_wedge__plane_at_origin(self_, other), plane__weight_norm(point__wedge__line_at_infinity(self_, plane_at_origin__attitude(other))));
 }
 
 fn point__distance__point(self_: Point, other: Point) -> DualNum {
     return scalar__add__anti_scalar(point_at_infinity__bulk_norm(line__attitude(point__wedge__point(self_, other))), point__weight_norm(point__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn point__distance__rotor(self_: Point, other: Rotor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(point__wedge__rotor(self_, other))), motor__weight_norm(point__wedge__flector_at_infinity(self_, rotor__attitude(other))));
-}
-
-fn point__distance__transflector(self_: Point, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(point__wedge__transflector(self_, other))), plane__weight_norm(point__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn point__distance__translator(self_: Point, other: Translator) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(point__wedge__translator(self_, other))), anti_scalar__weight_norm(point__wedge__horizon(self_, translator__attitude(other))));
-}
-
-fn rotor__distance__flector(self_: Rotor, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(rotor__wedge__flector(self_, other))), multi_vector_at_origin__weight_norm(rotor__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn rotor__distance__line(self_: Rotor, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(rotor__wedge__line(self_, other))), plane_at_origin__weight_norm(rotor__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn rotor__distance__motor(self_: Rotor, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(horizon__bulk_norm(anti_scalar__attitude(rotor__wedge__motor(self_, other))), plane_at_origin__weight_norm(rotor__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn rotor__distance__multi_vector(self_: Rotor, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(rotor__wedge__multi_vector(self_, other))), multi_vector_at_origin__weight_norm(rotor__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn rotor__distance__point(self_: Rotor, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(rotor__wedge__point(self_, other))), rotor__weight_norm(rotor__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn rotor__distance__transflector(self_: Rotor, other: Transflector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(rotor__wedge__transflector(self_, other))), anti_scalar__weight_norm(rotor__wedge__line_at_infinity(self_, transflector__attitude(other))));
-}
-
-fn transflector__distance__flector(self_: Transflector, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(transflector__wedge__flector(self_, other))), multi_vector__weight_norm(transflector__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn transflector__distance__line(self_: Transflector, other: Line) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(transflector__wedge__line(self_, other))), translator__weight_norm(transflector__wedge__point_at_infinity(self_, line__attitude(other))));
-}
-
-fn transflector__distance__line_at_origin(self_: Transflector, other: LineAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(transflector__wedge__line_at_origin(self_, other))), translator__weight_norm(transflector__wedge__point_at_infinity(self_, line_at_origin__attitude(other))));
-}
-
-fn transflector__distance__motor(self_: Transflector, other: Motor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(transflector__wedge__motor(self_, other))), translator__weight_norm(transflector__wedge__flector_at_infinity(self_, motor__attitude(other))));
-}
-
-fn transflector__distance__multi_vector(self_: Transflector, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(transflector__wedge__multi_vector(self_, other))), multi_vector__weight_norm(transflector__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn transflector__distance__multi_vector_at_origin(self_: Transflector, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(transflector__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(transflector__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
-fn transflector__distance__origin(self_: Transflector, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(rotor__attitude(transflector__wedge__origin(self_, other))), transflector__weight_norm(transflector__wedge__scalar(self_, origin__attitude(other))));
-}
-
-fn transflector__distance__point(self_: Transflector, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(flector_at_infinity__bulk_norm(motor__attitude(transflector__wedge__point(self_, other))), transflector__weight_norm(transflector__wedge__scalar(self_, point__attitude(other))));
-}
-
-fn transflector__distance__rotor(self_: Transflector, other: Rotor) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(transflector__wedge__rotor(self_, other))), translator__weight_norm(transflector__wedge__flector_at_infinity(self_, rotor__attitude(other))));
-}
-
-fn translator__distance__flector(self_: Translator, other: Flector) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(translator__wedge__flector(self_, other))), multi_vector__weight_norm(translator__wedge__multi_vector_at_infinity(self_, flector__attitude(other))));
-}
-
-fn translator__distance__multi_vector(self_: Translator, other: MultiVector) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector__attitude(translator__wedge__multi_vector(self_, other))), multi_vector__weight_norm(translator__wedge__multi_vector_at_infinity(self_, multi_vector__attitude(other))));
-}
-
-fn translator__distance__multi_vector_at_origin(self_: Translator, other: MultiVectorAtOrigin) -> DualNum {
-    return scalar__add__anti_scalar(multi_vector_at_infinity__bulk_norm(multi_vector_at_origin__attitude(translator__wedge__multi_vector_at_origin(self_, other))), multi_vector__weight_norm(translator__wedge__multi_vector_at_infinity(self_, multi_vector_at_origin__attitude(other))));
-}
-
-fn translator__distance__origin(self_: Translator, other: Origin) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane_at_origin__attitude(translator__wedge__origin(self_, other))), translator__weight_norm(translator__wedge__scalar(self_, origin__attitude(other))));
-}
-
-fn translator__distance__point(self_: Translator, other: Point) -> DualNum {
-    return scalar__add__anti_scalar(line_at_infinity__bulk_norm(plane__attitude(translator__wedge__point(self_, other))), translator__weight_norm(translator__wedge__scalar(self_, point__attitude(other))));
 }
 
 fn line__sine_angle__line(self_: Line, other: Line) -> DualNum {

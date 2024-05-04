@@ -1637,11 +1637,43 @@ impl CosineAngle<Sphere> for Sphere {
     }
 }
 
-impl Distance<MultiVector> for Circle {
+impl Distance<Dipole> for Circle {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<DipoleCarrierAspect> for Circle {
+    type Output = DualNum;
+
+    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<DipoleWeight> for Circle {
+    type Output = DualNum;
+
+    fn distance(self, other: DipoleWeight) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<FlatPoint> for Circle {
+    type Output = DualNum;
+
+    fn distance(self, other: FlatPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<FlatPointAtOrigin> for Circle {
+    type Output = DualNum;
+
+    fn distance(self, other: FlatPointAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -1673,14 +1705,6 @@ impl Distance<RoundPointOnOrigin> for Circle {
     type Output = DualNum;
 
     fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for CircleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1717,11 +1741,27 @@ impl Distance<RoundPointOnOrigin> for CircleBulk {
     }
 }
 
-impl Distance<MultiVector> for CircleCarrierAspect {
+impl Distance<Dipole> for CircleCarrierAspect {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<FlatPoint> for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn distance(self, other: FlatPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<FlatPointAtOrigin> for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn distance(self, other: FlatPointAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -1757,11 +1797,43 @@ impl Distance<RoundPointOnOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Distance<MultiVector> for CircleWeight {
+impl Distance<Dipole> for CircleWeight {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<FlatPoint> for CircleWeight {
+    type Output = DualNum;
+
+    fn distance(self, other: FlatPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Circle> for Dipole {
+    type Output = DualNum;
+
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<CircleCarrierAspect> for Dipole {
+    type Output = DualNum;
+
+    fn distance(self, other: CircleCarrierAspect) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<CircleWeight> for Dipole {
+    type Output = DualNum;
+
+    fn distance(self, other: CircleWeight) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -1789,11 +1861,19 @@ impl Distance<DipoleWeight> for Dipole {
     }
 }
 
-impl Distance<MultiVector> for Dipole {
+impl Distance<Line> for Dipole {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Line) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<LineAtOrigin> for Dipole {
+    type Output = DualNum;
+
+    fn distance(self, other: LineAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -1829,6 +1909,14 @@ impl Distance<RoundPointOnOrigin> for Dipole {
     }
 }
 
+impl Distance<Circle> for DipoleBulk {
+    type Output = DualNum;
+
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Dipole> for DipoleBulk {
     type Output = DualNum;
 
@@ -1849,14 +1937,6 @@ impl Distance<DipoleWeight> for DipoleBulk {
     type Output = DualNum;
 
     fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
     }
 }
@@ -1893,6 +1973,14 @@ impl Distance<RoundPointOnOrigin> for DipoleBulk {
     }
 }
 
+impl Distance<Circle> for DipoleCarrierAspect {
+    type Output = DualNum;
+
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Dipole> for DipoleCarrierAspect {
     type Output = DualNum;
 
@@ -1917,11 +2005,19 @@ impl Distance<DipoleWeight> for DipoleCarrierAspect {
     }
 }
 
-impl Distance<MultiVector> for DipoleCarrierAspect {
+impl Distance<Line> for DipoleCarrierAspect {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Line) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<LineAtOrigin> for DipoleCarrierAspect {
+    type Output = DualNum;
+
+    fn distance(self, other: LineAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -1957,6 +2053,14 @@ impl Distance<RoundPointOnOrigin> for DipoleCarrierAspect {
     }
 }
 
+impl Distance<Circle> for DipoleWeight {
+    type Output = DualNum;
+
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
 impl Distance<Dipole> for DipoleWeight {
     type Output = DualNum;
 
@@ -1965,427 +2069,107 @@ impl Distance<Dipole> for DipoleWeight {
     }
 }
 
-impl Distance<MultiVector> for DipoleWeight {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: Flector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SpacialCurvature> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: SpacialCurvature) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SphereWeight> for DualNum {
-    type Output = DualNum;
-
-    fn distance(self, other: SphereWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for FlatPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for FlatPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for FlatPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Flector {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for FlectorAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Horizon {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Infinity {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Line {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for LineAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for LineAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Motor {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DualNum> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: DualNum) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPoint> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPointAtOrigin> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: Flector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for MultiVector {
+impl Distance<Line> for DipoleWeight {
     type Output = DualNum;
 
     fn distance(self, other: Line) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<LineAtOrigin> for MultiVector {
+impl Distance<Circle> for FlatPoint {
     type Output = DualNum;
 
-    fn distance(self, other: LineAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Motor> for MultiVector {
+impl Distance<CircleCarrierAspect> for FlatPoint {
     type Output = DualNum;
 
-    fn distance(self, other: Motor) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: CircleCarrierAspect) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for MultiVector {
+impl Distance<CircleWeight> for FlatPoint {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: CircleWeight) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Origin> for MultiVector {
+impl Distance<Circle> for FlatPointAtInfinity {
     type Output = DualNum;
 
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Plane> for MultiVector {
+impl Distance<Circle> for FlatPointAtOrigin {
     type Output = DualNum;
 
-    fn distance(self, other: Plane) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Circle) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<PlaneAtOrigin> for MultiVector {
+impl Distance<CircleCarrierAspect> for FlatPointAtOrigin {
     type Output = DualNum;
 
-    fn distance(self, other: PlaneAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: CircleCarrierAspect) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Rotor> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: Rotor) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SpacialCurvature> for MultiVector {
-    type Output = DualNum;
-
-    fn distance(self, other: SpacialCurvature) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for MultiVector {
+impl Distance<Sphere> for Infinity {
     type Output = DualNum;
 
     fn distance(self, other: Sphere) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<SphereWeight> for MultiVector {
+impl Distance<Dipole> for Line {
     type Output = DualNum;
 
-    fn distance(self, other: SphereWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Transflector> for MultiVector {
+impl Distance<DipoleCarrierAspect> for Line {
     type Output = DualNum;
 
-    fn distance(self, other: Transflector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<Translator> for MultiVector {
+impl Distance<DipoleWeight> for Line {
     type Output = DualNum;
 
-    fn distance(self, other: Translator) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: DipoleWeight) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Dipole> for LineAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<DipoleCarrierAspect> for LineAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2405,43 +2189,67 @@ impl Distance<Dipole> for Origin {
     }
 }
 
-impl Distance<DualNum> for Origin {
+impl Distance<Plane> for Origin {
     type Output = DualNum;
 
-    fn distance(self, other: DualNum) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Plane) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for Origin {
+impl Distance<Sphere> for Origin {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Sphere) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for Plane {
+impl Distance<Origin> for Plane {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Origin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for PlaneAtOrigin {
+impl Distance<RoundPoint> for Plane {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: RoundPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for Rotor {
+impl Distance<RoundPointAtOrigin> for Plane {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<RoundPointOnOrigin> for Plane {
+    type Output = DualNum;
+
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<RoundPoint> for PlaneAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: RoundPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<RoundPointOnOrigin> for PlaneAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2493,27 +2301,27 @@ impl Distance<DipoleWeight> for RoundPoint {
     }
 }
 
-impl Distance<DualNum> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: DualNum) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Origin> for RoundPoint {
     type Output = DualNum;
 
     fn distance(self, other: Origin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Plane> for RoundPoint {
+    type Output = DualNum;
+
+    fn distance(self, other: Plane) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<PlaneAtOrigin> for RoundPoint {
+    type Output = DualNum;
+
+    fn distance(self, other: PlaneAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2538,6 +2346,30 @@ impl Distance<RoundPointOnOrigin> for RoundPoint {
 
     fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<SpacialCurvature> for RoundPoint {
+    type Output = DualNum;
+
+    fn distance(self, other: SpacialCurvature) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Sphere> for RoundPoint {
+    type Output = DualNum;
+
+    fn distance(self, other: Sphere) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<SphereWeight> for RoundPoint {
+    type Output = DualNum;
+
+    fn distance(self, other: SphereWeight) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2589,14 +2421,6 @@ impl Distance<DipoleWeight> for RoundPointAtInfinity {
     }
 }
 
-impl Distance<MultiVector> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Origin> for RoundPointAtInfinity {
     type Output = DualNum;
 
@@ -2626,6 +2450,14 @@ impl Distance<RoundPointOnOrigin> for RoundPointAtInfinity {
 
     fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Sphere> for RoundPointAtInfinity {
+    type Output = DualNum;
+
+    fn distance(self, other: Sphere) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2661,19 +2493,11 @@ impl Distance<DipoleCarrierAspect> for RoundPointAtOrigin {
     }
 }
 
-impl Distance<DualNum> for RoundPointAtOrigin {
+impl Distance<Plane> for RoundPointAtOrigin {
     type Output = DualNum;
 
-    fn distance(self, other: DualNum) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Plane) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2690,6 +2514,30 @@ impl Distance<RoundPointOnOrigin> for RoundPointAtOrigin {
 
     fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<SpacialCurvature> for RoundPointAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: SpacialCurvature) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Sphere> for RoundPointAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: Sphere) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<SphereWeight> for RoundPointAtOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: SphereWeight) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2741,14 +2589,6 @@ impl Distance<DipoleWeight> for RoundPointBulk {
     }
 }
 
-impl Distance<MultiVector> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Origin> for RoundPointBulk {
     type Output = DualNum;
 
@@ -2778,6 +2618,14 @@ impl Distance<RoundPointOnOrigin> for RoundPointBulk {
 
     fn distance(self, other: RoundPointOnOrigin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Sphere> for RoundPointBulk {
+    type Output = DualNum;
+
+    fn distance(self, other: Sphere) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2829,27 +2677,27 @@ impl Distance<DipoleWeight> for RoundPointOnOrigin {
     }
 }
 
-impl Distance<DualNum> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: DualNum) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl Distance<Origin> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: Origin) -> DualNum {
         self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<Plane> for RoundPointOnOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: Plane) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<PlaneAtOrigin> for RoundPointOnOrigin {
+    type Output = DualNum;
+
+    fn distance(self, other: PlaneAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
@@ -2877,163 +2725,75 @@ impl Distance<RoundPointOnOrigin> for RoundPointOnOrigin {
     }
 }
 
-impl Distance<Circle> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Flector> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: Flector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<MultiVector> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SpacialCurvature> for Scalar {
-    type Output = DualNum;
-
-    fn distance(self, other: SpacialCurvature) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for Scalar {
+impl Distance<Sphere> for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn distance(self, other: Sphere) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<SphereWeight> for Scalar {
+impl Distance<Origin> for SpacialCurvature {
     type Output = DualNum;
 
-    fn distance(self, other: SphereWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Origin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for SpacialCurvature {
+impl Distance<RoundPoint> for SpacialCurvature {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: RoundPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for Sphere {
+impl Distance<RoundPointAtOrigin> for SpacialCurvature {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for SphereWeight {
+impl Distance<RoundPointOnOrigin> for SpacialCurvature {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for Transflector {
+impl Distance<Origin> for Sphere {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: Origin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
-impl Distance<MultiVector> for Translator {
+impl Distance<RoundPoint> for Sphere {
     type Output = DualNum;
 
-    fn distance(self, other: MultiVector) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
+    fn distance(self, other: RoundPoint) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<RoundPointAtOrigin> for Sphere {
+    type Output = DualNum;
+
+    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
+    }
+}
+
+impl Distance<RoundPointOnOrigin> for Sphere {
+    type Output = DualNum;
+
+    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
+        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
     }
 }
 
