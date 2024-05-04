@@ -94,6 +94,18 @@ impl AntiDual for Circle {
     }
 }
 
+impl AntiDual for CircleAtInfinity {
+    type Output = FlatPoint;
+
+    fn anti_dual(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: swizzle!(self.group0(), 1, 2, 3, 0) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiDual for CircleBulk {
     type Output = FlatPointAtOrigin;
 
@@ -139,6 +151,19 @@ impl AntiDual for Dipole {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -self.group2()[3]]),
                 g1: self.group1(),
                 g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl AntiDual for DipoleAtInfinity {
+    type Output = Line;
+
+    fn anti_dual(self) -> Line {
+        Line {
+            groups: LineGroups {
+                g0: self.group0(),
+                g1: self.group1(),
             },
         }
     }
@@ -191,14 +216,12 @@ impl AntiDual for DualNum {
 }
 
 impl AntiDual for FlatPoint {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn anti_dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+    fn anti_dual(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: swizzle!(self.group0(), 3, 0, 1, 2) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
             },
         }
     }
@@ -289,14 +312,13 @@ impl AntiDual for Infinity {
 }
 
 impl AntiDual for Line {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn anti_dual(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0() * Simd32x3::from(-1.0),
-                g2: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
+    fn anti_dual(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -597,6 +619,18 @@ impl AntiReversal for Circle {
     }
 }
 
+impl AntiReversal for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn anti_reversal(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl AntiReversal for CircleBulk {
     type Output = CircleBulk;
 
@@ -640,6 +674,19 @@ impl AntiReversal for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn anti_reversal(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1038,6 +1085,18 @@ impl Automorphism for Circle {
     }
 }
 
+impl Automorphism for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn automorphism(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Automorphism for CircleBulk {
     type Output = CircleBulk;
 
@@ -1081,6 +1140,19 @@ impl Automorphism for Dipole {
                 g0: self.group0(),
                 g1: self.group1(),
                 g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl Automorphism for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn automorphism(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1(),
             },
         }
     }
@@ -1477,6 +1549,20 @@ impl Complement for Circle {
     }
 }
 
+impl Complement for CircleAtInfinity {
+    type Output = Dipole;
+
+    fn complement(self) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from([-self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[0]]),
+            },
+        }
+    }
+}
+
 impl Complement for CircleBulk {
     type Output = FlatPointAtOrigin;
 
@@ -1520,6 +1606,20 @@ impl Complement for Dipole {
                 g0: self.group2() * Simd32x4::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for DipoleAtInfinity {
+    type Output = Circle;
+
+    fn complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
+                g1: self.group0() * Simd32x3::from(-1.0),
+                g2: Simd32x3::from(0.0),
             },
         }
     }
@@ -1976,6 +2076,18 @@ impl Conjugation for Circle {
     }
 }
 
+impl Conjugation for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn conjugation(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl Conjugation for CircleBulk {
     type Output = CircleBulk;
 
@@ -2019,6 +2131,19 @@ impl Conjugation for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn conjugation(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -2423,6 +2548,16 @@ impl DoubleComplement for Circle {
     }
 }
 
+impl DoubleComplement for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn double_complement(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups { g0: self.group0() },
+        }
+    }
+}
+
 impl DoubleComplement for CircleBulk {
     type Output = CircleBulk;
 
@@ -2462,6 +2597,19 @@ impl DoubleComplement for Dipole {
                 g0: self.group0(),
                 g1: self.group1(),
                 g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl DoubleComplement for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn double_complement(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1(),
             },
         }
     }
@@ -2834,6 +2982,18 @@ impl Dual for Circle {
     }
 }
 
+impl Dual for CircleAtInfinity {
+    type Output = FlatPoint;
+
+    fn dual(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: swizzle!(self.group0(), 1, 2, 3, 0) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Dual for CircleBulk {
     type Output = FlatPointAtOrigin;
 
@@ -2877,6 +3037,19 @@ impl Dual for Dipole {
                 g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], self.group2()[3]]),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl Dual for DipoleAtInfinity {
+    type Output = Line;
+
+    fn dual(self) -> Line {
+        Line {
+            groups: LineGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -2933,14 +3106,12 @@ impl Dual for DualNum {
 }
 
 impl Dual for FlatPoint {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+    fn dual(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: swizzle!(self.group0(), 3, 0, 1, 2) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
             },
         }
     }
@@ -3033,14 +3204,13 @@ impl Dual for Infinity {
 }
 
 impl Dual for Line {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn dual(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0(),
-                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+    fn dual(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1(),
             },
         }
     }
@@ -3337,6 +3507,18 @@ impl Reversal for Circle {
     }
 }
 
+impl Reversal for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn reversal(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Reversal for CircleBulk {
     type Output = CircleBulk;
 
@@ -3380,6 +3562,19 @@ impl Reversal for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn reversal(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }

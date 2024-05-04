@@ -59,7 +59,23 @@ impl BulkDual for Circle {
     }
 }
 
+impl BulkDual for CircleAtInfinity {
+    type Output = DipoleWeight;
+
+    fn bulk_dual(self) -> DipoleWeight {
+        self.bulk().complement()
+    }
+}
+
 impl BulkDual for Dipole {
+    type Output = CircleWeight;
+
+    fn bulk_dual(self) -> CircleWeight {
+        self.bulk().complement()
+    }
+}
+
+impl BulkDual for DipoleAtInfinity {
     type Output = CircleWeight;
 
     fn bulk_dual(self) -> CircleWeight {
@@ -219,7 +235,23 @@ impl RoundBulkDual for Circle {
     }
 }
 
+impl RoundBulkDual for CircleAtInfinity {
+    type Output = DipoleWeight;
+
+    fn round_bulk_dual(self) -> DipoleWeight {
+        self.bulk().complement()
+    }
+}
+
 impl RoundBulkDual for Dipole {
+    type Output = CircleWeight;
+
+    fn round_bulk_dual(self) -> CircleWeight {
+        self.bulk().complement()
+    }
+}
+
+impl RoundBulkDual for DipoleAtInfinity {
     type Output = CircleWeight;
 
     fn round_bulk_dual(self) -> CircleWeight {

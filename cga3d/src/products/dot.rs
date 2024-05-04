@@ -113,6 +113,18 @@ impl AntiDot<Circle> for Circle {
     }
 }
 
+impl AntiDot<CircleAtInfinity> for Circle {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3] + self.group0()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl AntiDot<CircleBulk> for Circle {
     type Output = AntiScalar;
 
@@ -251,6 +263,78 @@ impl AntiDot<Translator> for Circle {
     }
 }
 
+impl AntiDot<Circle> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Circle) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[3] - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleAtInfinity> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleBulk> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleBulk) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleCarrierAspect) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[3] - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleWeight> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0()[0] - self.group0()[2] * other.group0()[1] - self.group0()[3] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group6()[3] - self.group0()[1] * other.group6()[0] - self.group0()[2] * other.group6()[1] - self.group0()[3] * other.group6()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Circle> for CircleBulk {
     type Output = AntiScalar;
 
@@ -258,6 +342,18 @@ impl AntiDot<Circle> for CircleBulk {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleAtInfinity> for CircleBulk {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()[0],
             },
         }
     }
@@ -306,6 +402,18 @@ impl AntiDot<Circle> for CircleCarrierAspect {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3] + self.group0()[3] * other.group0()[0],
             },
         }
     }
@@ -407,6 +515,18 @@ impl AntiDot<Circle> for CircleWeight {
     }
 }
 
+impl AntiDot<CircleAtInfinity> for CircleWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[1] - self.group0()[1] * other.group0()[2] - self.group0()[2] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for CircleWeight {
     type Output = AntiScalar;
 
@@ -483,6 +603,23 @@ impl AntiDot<Dipole> for Dipole {
                     + self.group2()[1] * other.group0()[1]
                     + self.group2()[2] * other.group0()[2]
                     - self.group2()[3] * other.group2()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleAtInfinity> for Dipole {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0]
+                    + self.group0()[1] * other.group1()[1]
+                    + self.group0()[2] * other.group1()[2]
+                    + self.group1()[0] * other.group0()[0]
+                    + self.group1()[1] * other.group0()[1]
+                    + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -622,6 +759,93 @@ impl AntiDot<Transflector> for Dipole {
     }
 }
 
+impl AntiDot<Dipole> for DipoleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dipole) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0]
+                    + self.group0()[1] * other.group1()[1]
+                    + self.group0()[2] * other.group1()[2]
+                    + self.group1()[0] * other.group0()[0]
+                    + self.group1()[1] * other.group0()[1]
+                    + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleBulk> for DipoleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleBulk) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleCarrierAspect) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0]
+                    + self.group0()[1] * other.group1()[1]
+                    + self.group0()[2] * other.group1()[2]
+                    + self.group1()[0] * other.group0()[0]
+                    + self.group1()[1] * other.group0()[1]
+                    + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleWeight> for DipoleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleWeight) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for DipoleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group4()[0]
+                    + self.group0()[1] * other.group4()[1]
+                    + self.group0()[2] * other.group4()[2]
+                    + self.group1()[0] * other.group3()[0]
+                    + self.group1()[1] * other.group3()[1]
+                    + self.group1()[2] * other.group3()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Dipole> for DipoleBulk {
     type Output = AntiScalar;
 
@@ -629,6 +853,18 @@ impl AntiDot<Dipole> for DipoleBulk {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleAtInfinity> for DipoleBulk {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -682,6 +918,23 @@ impl AntiDot<Dipole> for DipoleCarrierAspect {
                     + self.group1()[0] * other.group1()[0]
                     + self.group1()[1] * other.group1()[1]
                     + self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0]
+                    + self.group0()[1] * other.group1()[1]
+                    + self.group0()[2] * other.group1()[2]
+                    + self.group1()[0] * other.group0()[0]
+                    + self.group1()[1] * other.group0()[1]
+                    + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -795,6 +1048,18 @@ impl AntiDot<Dipole> for DipoleWeight {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleAtInfinity> for DipoleWeight {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -1899,6 +2164,18 @@ impl AntiDot<Circle> for MultiVector {
     }
 }
 
+impl AntiDot<CircleAtInfinity> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group6()[0] * other.group0()[1] - self.group6()[1] * other.group0()[2] - self.group6()[2] * other.group0()[3] + self.group6()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl AntiDot<CircleBulk> for MultiVector {
     type Output = AntiScalar;
 
@@ -1951,6 +2228,23 @@ impl AntiDot<Dipole> for MultiVector {
                     + self.group5()[1] * other.group0()[1]
                     + self.group5()[2] * other.group0()[2]
                     - self.group5()[3] * other.group2()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<DipoleAtInfinity> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DipoleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group3()[0] * other.group1()[0]
+                    + self.group3()[1] * other.group1()[1]
+                    + self.group3()[2] * other.group1()[2]
+                    + self.group4()[0] * other.group0()[0]
+                    + self.group4()[1] * other.group0()[1]
+                    + self.group4()[2] * other.group0()[2],
             },
         }
     }
@@ -3837,6 +4131,18 @@ impl Dot<Circle> for Circle {
     }
 }
 
+impl Dot<CircleAtInfinity> for Circle {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[1] + self.group0()[1] * other.group0()[2] + self.group0()[2] * other.group0()[3] - self.group0()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl Dot<CircleBulk> for Circle {
     type Output = Scalar;
 
@@ -3973,6 +4279,78 @@ impl Dot<Translator> for Circle {
     }
 }
 
+impl Dot<Circle> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Circle) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[3] + self.group0()[1] * other.group0()[0] + self.group0()[2] * other.group0()[1] + self.group0()[3] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<CircleAtInfinity> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0],
+            },
+        }
+    }
+}
+
+impl Dot<CircleBulk> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleBulk) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleCarrierAspect) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[3] + self.group0()[1] * other.group0()[0] + self.group0()[2] * other.group0()[1] + self.group0()[3] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<CircleWeight> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[1] * other.group0()[0] + self.group0()[2] * other.group0()[1] + self.group0()[3] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group6()[3] + self.group0()[1] * other.group6()[0] + self.group0()[2] * other.group6()[1] + self.group0()[3] * other.group6()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Circle> for CircleBulk {
     type Output = Scalar;
 
@@ -3980,6 +4358,18 @@ impl Dot<Circle> for CircleBulk {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<CircleAtInfinity> for CircleBulk {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[0],
             },
         }
     }
@@ -4028,6 +4418,18 @@ impl Dot<Circle> for CircleCarrierAspect {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2] - self.group0()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[1] + self.group0()[1] * other.group0()[2] + self.group0()[2] * other.group0()[3] - self.group0()[3] * other.group0()[0],
             },
         }
     }
@@ -4129,6 +4531,18 @@ impl Dot<Circle> for CircleWeight {
     }
 }
 
+impl Dot<CircleAtInfinity> for CircleWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group0()[1] + self.group0()[1] * other.group0()[2] + self.group0()[2] * other.group0()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for CircleWeight {
     type Output = Scalar;
 
@@ -4206,6 +4620,24 @@ impl Dot<Dipole> for Dipole {
                     - self.group2()[1] * other.group0()[1]
                     - self.group2()[2] * other.group0()[2]
                     + self.group2()[3] * other.group2()[3],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleAtInfinity> for Dipole {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group1()[0]
+                    - self.group0()[1] * other.group1()[1]
+                    - self.group0()[2] * other.group1()[2]
+                    - self.group1()[0] * other.group0()[0]
+                    - self.group1()[1] * other.group0()[1]
+                    - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -4347,6 +4779,96 @@ impl Dot<Transflector> for Dipole {
     }
 }
 
+impl Dot<Dipole> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Dipole) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group1()[0]
+                    - self.group0()[1] * other.group1()[1]
+                    - self.group0()[2] * other.group1()[2]
+                    - self.group1()[0] * other.group0()[0]
+                    - self.group1()[1] * other.group0()[1]
+                    - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleBulk> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleBulk) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleCarrierAspect) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group1()[0]
+                    - self.group0()[1] * other.group1()[1]
+                    - self.group0()[2] * other.group1()[2]
+                    - self.group1()[0] * other.group0()[0]
+                    - self.group1()[1] * other.group0()[1]
+                    - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleWeight> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleWeight) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group4()[0]
+                    - self.group0()[1] * other.group4()[1]
+                    - self.group0()[2] * other.group4()[2]
+                    - self.group1()[0] * other.group3()[0]
+                    - self.group1()[1] * other.group3()[1]
+                    - self.group1()[2] * other.group3()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Dipole> for DipoleBulk {
     type Output = Scalar;
 
@@ -4354,6 +4876,18 @@ impl Dot<Dipole> for DipoleBulk {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleAtInfinity> for DipoleBulk {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -4408,6 +4942,24 @@ impl Dot<Dipole> for DipoleCarrierAspect {
                     - self.group1()[0] * other.group1()[0]
                     - self.group1()[1] * other.group1()[1]
                     - self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group1()[0]
+                    - self.group0()[1] * other.group1()[1]
+                    - self.group0()[2] * other.group1()[2]
+                    - self.group1()[0] * other.group0()[0]
+                    - self.group1()[1] * other.group0()[1]
+                    - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -4522,6 +5074,18 @@ impl Dot<Dipole> for DipoleWeight {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleAtInfinity> for DipoleWeight {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
             },
         }
     }
@@ -5624,6 +6188,18 @@ impl Dot<Circle> for MultiVector {
     }
 }
 
+impl Dot<CircleAtInfinity> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group6()[0] * other.group0()[1] + self.group6()[1] * other.group0()[2] + self.group6()[2] * other.group0()[3] - self.group6()[3] * other.group0()[0],
+            },
+        }
+    }
+}
+
 impl Dot<CircleBulk> for MultiVector {
     type Output = Scalar;
 
@@ -5677,6 +6253,24 @@ impl Dot<Dipole> for MultiVector {
                     - self.group5()[1] * other.group0()[1]
                     - self.group5()[2] * other.group0()[2]
                     + self.group5()[3] * other.group2()[3],
+            },
+        }
+    }
+}
+
+impl Dot<DipoleAtInfinity> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: DipoleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0
+                    - self.group3()[0] * other.group1()[0]
+                    - self.group3()[1] * other.group1()[1]
+                    - self.group3()[2] * other.group1()[2]
+                    - self.group4()[0] * other.group0()[0]
+                    - self.group4()[1] * other.group0()[1]
+                    - self.group4()[2] * other.group0()[2],
             },
         }
     }

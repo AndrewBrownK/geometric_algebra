@@ -1642,6 +1642,172 @@ impl std::fmt::Debug for RoundPointAtInfinity {
 }
 
 #[derive(Clone, Copy)]
+struct DipoleAtInfinityGroups {
+    /// e23, -e13, e12
+    g0: Simd32x3,
+    /// e15, e25, e35
+    g1: Simd32x3,
+}
+
+#[derive(Clone, Copy)]
+pub union DipoleAtInfinity {
+    groups: DipoleAtInfinityGroups,
+    /// e23, -e13, e12, 0, e15, e25, e35, 0
+    elements: [f32; 8],
+}
+
+impl DipoleAtInfinity {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e23: f32, neg_e13: f32, e12: f32, e15: f32, e25: f32, e35: f32) -> Self {
+        Self {
+            elements: [e23, neg_e13, e12, 0.0, e15, e25, e35, 0.0],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x3, g1: Simd32x3) -> Self {
+        Self {
+            groups: DipoleAtInfinityGroups { g0, g1 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x3 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x3 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g1 }
+    }
+}
+
+const DIPOLEATINFINITY_INDEX_REMAP: [usize; 6] = [0, 1, 2, 4, 5, 6];
+
+impl std::ops::Index<usize> for DipoleAtInfinity {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[DIPOLEATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for DipoleAtInfinity {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[DIPOLEATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<DipoleAtInfinity> for [f32; 6] {
+    fn from(vector: DipoleAtInfinity) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5], vector.elements[6]] }
+    }
+}
+
+impl std::convert::From<[f32; 6]> for DipoleAtInfinity {
+    fn from(array: [f32; 6]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], 0.0, array[3], array[4], array[5], 0.0],
+        }
+    }
+}
+
+impl std::fmt::Debug for DipoleAtInfinity {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("DipoleAtInfinity")
+            .field("e23", &self[0])
+            .field("-e13", &self[1])
+            .field("e12", &self[2])
+            .field("e15", &self[3])
+            .field("e25", &self[4])
+            .field("e35", &self[5])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
+struct CircleAtInfinityGroups {
+    /// -e123, e235, -e135, e125
+    g0: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union CircleAtInfinity {
+    groups: CircleAtInfinityGroups,
+    /// -e123, e235, -e135, e125
+    elements: [f32; 4],
+}
+
+impl CircleAtInfinity {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(neg_e123: f32, e235: f32, neg_e135: f32, e125: f32) -> Self {
+        Self {
+            elements: [neg_e123, e235, neg_e135, e125],
+        }
+    }
+    pub const fn from_groups(g0: Simd32x4) -> Self {
+        Self {
+            groups: CircleAtInfinityGroups { g0 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> Simd32x4 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g0 }
+    }
+}
+
+const CIRCLEATINFINITY_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
+
+impl std::ops::Index<usize> for CircleAtInfinity {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[CIRCLEATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for CircleAtInfinity {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[CIRCLEATINFINITY_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<CircleAtInfinity> for [f32; 4] {
+    fn from(vector: CircleAtInfinity) -> Self {
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
+    }
+}
+
+impl std::convert::From<[f32; 4]> for CircleAtInfinity {
+    fn from(array: [f32; 4]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3]],
+        }
+    }
+}
+
+impl std::fmt::Debug for CircleAtInfinity {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("CircleAtInfinity")
+            .field("-e123", &self[0])
+            .field("e235", &self[1])
+            .field("-e135", &self[2])
+            .field("e125", &self[3])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct RoundPointBulkGroups {
     /// e1, e2, e3
     g0: Simd32x3,
@@ -3093,6 +3259,14 @@ impl One for Circle {
     }
 }
 
+impl One for CircleAtInfinity {
+    fn one() -> Self {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl One for CircleBulk {
     fn one() -> Self {
         CircleBulk {
@@ -3124,6 +3298,17 @@ impl One for Dipole {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl One for DipoleAtInfinity {
+    fn one() -> Self {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(0.0),
             },
         }
     }
@@ -3426,6 +3611,14 @@ impl Unit for Circle {
     }
 }
 
+impl Unit for CircleAtInfinity {
+    fn unit() -> Self {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups { g0: Simd32x4::from(1.0) },
+        }
+    }
+}
+
 impl Unit for CircleBulk {
     fn unit() -> Self {
         CircleBulk {
@@ -3457,6 +3650,17 @@ impl Unit for Dipole {
                 g0: Simd32x3::from(1.0),
                 g1: Simd32x3::from(1.0),
                 g2: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
+impl Unit for DipoleAtInfinity {
+    fn unit() -> Self {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: Simd32x3::from(1.0),
+                g1: Simd32x3::from(1.0),
             },
         }
     }
@@ -3759,6 +3963,14 @@ impl Zero for Circle {
     }
 }
 
+impl Zero for CircleAtInfinity {
+    fn zero() -> Self {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups { g0: Simd32x4::from(0.0) },
+        }
+    }
+}
+
 impl Zero for CircleBulk {
     fn zero() -> Self {
         CircleBulk {
@@ -3790,6 +4002,17 @@ impl Zero for Dipole {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl Zero for DipoleAtInfinity {
+    fn zero() -> Self {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(0.0),
             },
         }
     }
@@ -4096,6 +4319,18 @@ impl Neg for Circle {
     }
 }
 
+impl Neg for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn neg(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
 impl Neg for CircleBulk {
     type Output = CircleBulk;
 
@@ -4139,6 +4374,19 @@ impl Neg for Dipole {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn neg(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4561,6 +4809,28 @@ impl Add<Circle> for AntiScalar {
     }
 }
 
+impl Add<CircleAtInfinity> for AntiScalar {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for AntiScalar {
     type Output = MultiVector;
 
@@ -4639,6 +4909,28 @@ impl Add<Dipole> for AntiScalar {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for AntiScalar {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -5295,6 +5587,26 @@ impl AddAssign<Circle> for Circle {
     }
 }
 
+impl Add<CircleAtInfinity> for Circle {
+    type Output = Circle;
+
+    fn add(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: self.group1(),
+                g2: self.group2() + Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleAtInfinity> for Circle {
+    fn add_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<CircleBulk> for Circle {
     type Output = Circle;
 
@@ -5367,6 +5679,28 @@ impl Add<Dipole> for Circle {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: self.group0(),
+                g7: self.group1(),
+                g8: self.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Circle {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: self.group0(),
                 g7: self.group1(),
                 g8: self.group2(),
@@ -6053,6 +6387,812 @@ impl Add<Translator> for Circle {
     }
 }
 
+impl Add<AntiScalar> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiScalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Circle> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn add(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) + other.group0(),
+                g1: other.group1(),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<CircleAtInfinity> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn add(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleAtInfinity> for CircleAtInfinity {
+    fn add_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleBulk> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn add(self, other: CircleBulk) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() + Simd32x4::from([other.group0(), 0.0, 0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleBulk> for CircleAtInfinity {
+    fn add_assign(&mut self, other: CircleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn add(self, other: CircleCarrierAspect) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) + other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<CircleWeight> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn add(self, other: CircleWeight) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Dipole> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: other.group1(),
+                g5: other.group2(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleBulk> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleCarrierAspect> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: other.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleWeight> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DualNum> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<FlatPoint> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: other.group0(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: other.group0(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<FlectorAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Horizon> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Line> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn add(self, other: Line) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<LineAtInfinity> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn add(self, other: LineAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() + Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtInfinity> for CircleAtInfinity {
+    fn add_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtOrigin> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn add(self, other: LineAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Motor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) + other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) + other.group6(),
+                g7: other.group7(),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) + other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Plane> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<PlaneAtOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPoint> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: other.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointOnOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Scalar> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Sphere> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: other.group0(),
+                g10: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<SphereWeight> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SphereWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Transflector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<AntiScalar> for CircleBulk {
     type Output = MultiVector;
 
@@ -6084,6 +7224,18 @@ impl Add<Circle> for CircleBulk {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
                 g1: other.group1(),
                 g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<CircleAtInfinity> for CircleBulk {
+    type Output = CircleAtInfinity;
+
+    fn add(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([self.group0(), 0.0, 0.0, 0.0]) + other.group0(),
             },
         }
     }
@@ -6143,6 +7295,28 @@ impl Add<Dipole> for CircleBulk {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for CircleBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -6410,14 +7584,12 @@ impl Add<Line> for CircleBulk {
 }
 
 impl Add<LineAtInfinity> for CircleBulk {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn add(self, other: LineAtInfinity) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: other.group0(),
+    fn add(self, other: LineAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([self.group0(), 0.0, 0.0, 0.0]) + Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -6847,6 +8019,20 @@ impl Add<Circle> for CircleCarrierAspect {
     }
 }
 
+impl Add<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn add(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
@@ -6913,6 +8099,28 @@ impl Add<Dipole> for CircleCarrierAspect {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: self.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: self.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -7617,6 +8825,20 @@ impl Add<Circle> for CircleWeight {
     }
 }
 
+impl Add<CircleAtInfinity> for CircleWeight {
+    type Output = Circle;
+
+    fn add(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for CircleWeight {
     type Output = CircleCarrierAspect;
 
@@ -7671,6 +8893,28 @@ impl Add<Dipole> for CircleWeight {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for CircleWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -8383,6 +9627,28 @@ impl Add<Circle> for Dipole {
     }
 }
 
+impl Add<CircleAtInfinity> for Dipole {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: self.group2(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Dipole {
     type Output = MultiVector;
 
@@ -8465,6 +9731,26 @@ impl Add<Dipole> for Dipole {
 
 impl AddAssign<Dipole> for Dipole {
     fn add_assign(&mut self, other: Dipole) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleAtInfinity> for Dipole {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleAtInfinity> for Dipole {
+    fn add_assign(&mut self, other: DipoleAtInfinity) {
         *self = (*self).add(other);
     }
 }
@@ -9139,6 +10425,815 @@ impl Add<Translator> for Dipole {
     }
 }
 
+impl Add<AntiScalar> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiScalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Circle> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: other.group0(),
+                g7: other.group1(),
+                g8: other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<CircleAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<CircleBulk> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<CircleCarrierAspect> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: other.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<CircleWeight> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dipole> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn add(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn add(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleAtInfinity> for DipoleAtInfinity {
+    fn add_assign(&mut self, other: DipoleAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleBulk> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn add(self, other: DipoleBulk) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleBulk> for DipoleAtInfinity {
+    fn add_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleCarrierAspect) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleWeight> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleWeight) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<DualNum> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<FlatPoint> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn add(self, other: FlatPoint) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtInfinity> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn add(self, other: FlatPointAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+            },
+        }
+    }
+}
+
+impl AddAssign<FlatPointAtInfinity> for DipoleAtInfinity {
+    fn add_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<FlatPointAtOrigin> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn add(self, other: FlatPointAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<FlectorAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Horizon> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Line> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: other.group0(),
+                g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<LineAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<LineAtOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: LineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Motor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<MultiVector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: self.group0() + other.group4(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group5(),
+                g6: other.group6(),
+                g7: other.group7(),
+                g8: other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Plane> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<PlaneAtOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPoint> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: other.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointBulk> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointOnOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Scalar> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<SpacialCurvature> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<Sphere> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: other.group0(),
+                g10: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<SphereWeight> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: SphereWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Transflector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<AntiScalar> for DipoleBulk {
     type Output = MultiVector;
 
@@ -9176,6 +11271,28 @@ impl Add<Circle> for DipoleBulk {
                 g6: other.group0(),
                 g7: other.group1(),
                 g8: other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<CircleAtInfinity> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -9263,6 +11380,19 @@ impl Add<Dipole> for DipoleBulk {
     }
 }
 
+impl Add<DipoleAtInfinity> for DipoleBulk {
+    type Output = DipoleAtInfinity;
+
+    fn add(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+            },
+        }
+    }
+}
+
 impl Add<DipoleBulk> for DipoleBulk {
     type Output = DipoleBulk;
 
@@ -9344,14 +11474,13 @@ impl Add<FlatPoint> for DipoleBulk {
 }
 
 impl Add<FlatPointAtInfinity> for DipoleBulk {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn add(self, other: FlatPointAtInfinity) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0(),
-                g2: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn add(self, other: FlatPointAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: other.group0(),
             },
         }
     }
@@ -9943,6 +12072,28 @@ impl Add<Circle> for DipoleCarrierAspect {
     }
 }
 
+impl Add<CircleAtInfinity> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for DipoleCarrierAspect {
     type Output = MultiVector;
 
@@ -10018,6 +12169,20 @@ impl Add<Dipole> for DipoleCarrierAspect {
                 g0: self.group0() + other.group0(),
                 g1: self.group1() + other.group1(),
                 g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -10716,6 +12881,28 @@ impl Add<Circle> for DipoleWeight {
     }
 }
 
+impl Add<CircleAtInfinity> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for DipoleWeight {
     type Output = MultiVector;
 
@@ -10791,6 +12978,20 @@ impl Add<Dipole> for DipoleWeight {
                 g0: self.group0() + other.group0(),
                 g1: other.group1(),
                 g2: other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for DipoleWeight {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -11472,6 +13673,28 @@ impl Add<Circle> for DualNum {
     }
 }
 
+impl Add<CircleAtInfinity> for DualNum {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for DualNum {
     type Output = MultiVector;
 
@@ -11550,6 +13773,28 @@ impl Add<Dipole> for DualNum {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for DualNum {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -12278,6 +14523,28 @@ impl Add<Circle> for FlatPoint {
     }
 }
 
+impl Add<CircleAtInfinity> for FlatPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for FlatPoint {
     type Output = MultiVector;
 
@@ -12353,6 +14620,20 @@ impl Add<Dipole> for FlatPoint {
                 g0: other.group0(),
                 g1: other.group1(),
                 g2: self.group0() + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for FlatPoint {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: other.group0(),
+                g2: self.group0() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -12994,6 +15275,28 @@ impl Add<Circle> for FlatPointAtInfinity {
     }
 }
 
+impl Add<CircleAtInfinity> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -13074,15 +15377,27 @@ impl Add<Dipole> for FlatPointAtInfinity {
     }
 }
 
-impl Add<DipoleBulk> for FlatPointAtInfinity {
-    type Output = Dipole;
+impl Add<DipoleAtInfinity> for FlatPointAtInfinity {
+    type Output = DipoleAtInfinity;
 
-    fn add(self, other: DipoleBulk) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: other.group0(),
-                g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+    fn add(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleBulk> for FlatPointAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn add(self, other: DipoleBulk) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: other.group0(),
+                g1: self.group0(),
             },
         }
     }
@@ -13696,6 +16011,28 @@ impl Add<Circle> for FlatPointAtOrigin {
     }
 }
 
+impl Add<CircleAtInfinity> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for FlatPointAtOrigin {
     type Output = MultiVector;
 
@@ -13771,6 +16108,20 @@ impl Add<Dipole> for FlatPointAtOrigin {
                 g0: other.group0(),
                 g1: other.group1(),
                 g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group2(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn add(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: other.group0(),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -14400,6 +16751,28 @@ impl Add<Circle> for Flector {
     }
 }
 
+impl Add<CircleAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Flector {
     type Output = MultiVector;
 
@@ -14478,6 +16851,28 @@ impl Add<Dipole> for Flector {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: self.group0() + other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: self.group0() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -15187,6 +17582,28 @@ impl Add<Circle> for FlectorAtInfinity {
     }
 }
 
+impl Add<CircleAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -15265,6 +17682,28 @@ impl Add<Dipole> for FlectorAtInfinity {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -15935,6 +18374,28 @@ impl Add<Circle> for Horizon {
     }
 }
 
+impl Add<CircleAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Horizon {
     type Output = MultiVector;
 
@@ -16013,6 +18474,28 @@ impl Add<Dipole> for Horizon {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -16640,6 +19123,28 @@ impl Add<Circle> for Infinity {
     }
 }
 
+impl Add<CircleAtInfinity> for Infinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Infinity {
     type Output = MultiVector;
 
@@ -16718,6 +19223,28 @@ impl Add<Dipole> for Infinity {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Infinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -17375,6 +19902,20 @@ impl Add<Circle> for Line {
     }
 }
 
+impl Add<CircleAtInfinity> for Line {
+    type Output = Circle;
+
+    fn add(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Line {
     type Output = Circle;
 
@@ -17429,6 +19970,28 @@ impl Add<Dipole> for Line {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Line {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: self.group0(),
                 g8: self.group1(),
@@ -18111,15 +20674,25 @@ impl Add<Circle> for LineAtInfinity {
     }
 }
 
-impl Add<CircleBulk> for LineAtInfinity {
-    type Output = Circle;
+impl Add<CircleAtInfinity> for LineAtInfinity {
+    type Output = CircleAtInfinity;
 
-    fn add(self, other: CircleBulk) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: self.group0(),
+    fn add(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([0.0, self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<CircleBulk> for LineAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn add(self, other: CircleBulk) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([0.0, self.group0()[0], self.group0()[1], self.group0()[2]]) + Simd32x4::from([other.group0(), 0.0, 0.0, 0.0]),
             },
         }
     }
@@ -18165,6 +20738,28 @@ impl Add<Dipole> for LineAtInfinity {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: self.group0(),
@@ -18833,6 +21428,20 @@ impl Add<Circle> for LineAtOrigin {
     }
 }
 
+impl Add<CircleAtInfinity> for LineAtOrigin {
+    type Output = Circle;
+
+    fn add(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for LineAtOrigin {
     type Output = Circle;
 
@@ -18887,6 +21496,28 @@ impl Add<Dipole> for LineAtOrigin {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: self.group0(),
                 g8: Simd32x3::from(0.0),
@@ -19570,6 +22201,28 @@ impl Add<Circle> for Motor {
     }
 }
 
+impl Add<CircleAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group1() + Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Motor {
     type Output = MultiVector;
 
@@ -19648,6 +22301,28 @@ impl Add<Dipole> for Motor {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g8: self.group1(),
@@ -20378,6 +23053,34 @@ impl AddAssign<Circle> for MultiVector {
     }
 }
 
+impl Add<CircleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: self.group7(),
+                g8: self.group8() + Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleAtInfinity> for MultiVector {
+    fn add_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
 impl Add<CircleBulk> for MultiVector {
     type Output = MultiVector;
 
@@ -20486,6 +23189,34 @@ impl Add<Dipole> for MultiVector {
 
 impl AddAssign<Dipole> for MultiVector {
     fn add_assign(&mut self, other: Dipole) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<DipoleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4() + other.group0(),
+                g5: self.group5() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<DipoleAtInfinity> for MultiVector {
+    fn add_assign(&mut self, other: DipoleAtInfinity) {
         *self = (*self).add(other);
     }
 }
@@ -21402,6 +24133,28 @@ impl Add<Circle> for Origin {
     }
 }
 
+impl Add<CircleAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Origin {
     type Output = MultiVector;
 
@@ -21480,6 +24233,28 @@ impl Add<Dipole> for Origin {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -22154,6 +24929,28 @@ impl Add<Circle> for Plane {
     }
 }
 
+impl Add<CircleAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Plane {
     type Output = MultiVector;
 
@@ -22232,6 +25029,28 @@ impl Add<Dipole> for Plane {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -22875,6 +25694,28 @@ impl Add<Circle> for PlaneAtOrigin {
     }
 }
 
+impl Add<CircleAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: self.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -22953,6 +25794,28 @@ impl Add<Dipole> for PlaneAtOrigin {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -23580,6 +26443,28 @@ impl Add<Circle> for Rotor {
     }
 }
 
+impl Add<CircleAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Rotor {
     type Output = MultiVector;
 
@@ -23658,6 +26543,28 @@ impl Add<Dipole> for Rotor {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g8: Simd32x3::from(0.0),
@@ -24350,6 +27257,28 @@ impl Add<Circle> for RoundPoint {
     }
 }
 
+impl Add<CircleAtInfinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for RoundPoint {
     type Output = MultiVector;
 
@@ -24428,6 +27357,28 @@ impl Add<Dipole> for RoundPoint {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -25143,6 +28094,28 @@ impl Add<Circle> for RoundPointAtInfinity {
     }
 }
 
+impl Add<CircleAtInfinity> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for RoundPointAtInfinity {
     type Output = MultiVector;
 
@@ -25221,6 +28194,28 @@ impl Add<Dipole> for RoundPointAtInfinity {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -25909,6 +28904,28 @@ impl Add<Circle> for RoundPointAtOrigin {
     }
 }
 
+impl Add<CircleAtInfinity> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for RoundPointAtOrigin {
     type Output = MultiVector;
 
@@ -25987,6 +29004,28 @@ impl Add<Dipole> for RoundPointAtOrigin {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -26675,6 +29714,28 @@ impl Add<Circle> for RoundPointBulk {
     }
 }
 
+impl Add<CircleAtInfinity> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for RoundPointBulk {
     type Output = MultiVector;
 
@@ -26753,6 +29814,28 @@ impl Add<Dipole> for RoundPointBulk {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -27427,6 +30510,28 @@ impl Add<Circle> for RoundPointOnOrigin {
     }
 }
 
+impl Add<CircleAtInfinity> for RoundPointOnOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
@@ -27505,6 +30610,28 @@ impl Add<Dipole> for RoundPointOnOrigin {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for RoundPointOnOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -28183,6 +31310,28 @@ impl Add<Circle> for Scalar {
     }
 }
 
+impl Add<CircleAtInfinity> for Scalar {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Scalar {
     type Output = MultiVector;
 
@@ -28261,6 +31410,28 @@ impl Add<Dipole> for Scalar {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Scalar {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -28983,6 +32154,28 @@ impl Add<Circle> for SpacialCurvature {
     }
 }
 
+impl Add<CircleAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for SpacialCurvature {
     type Output = MultiVector;
 
@@ -29061,6 +32254,28 @@ impl Add<Dipole> for SpacialCurvature {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -29758,6 +32973,28 @@ impl Add<Circle> for Sphere {
     }
 }
 
+impl Add<CircleAtInfinity> for Sphere {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: self.group0(),
+                g10: self.group1(),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Sphere {
     type Output = MultiVector;
 
@@ -29836,6 +33073,28 @@ impl Add<Dipole> for Sphere {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group0(),
+                g10: self.group1(),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Sphere {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -30554,6 +33813,28 @@ impl Add<Circle> for SphereWeight {
     }
 }
 
+impl Add<CircleAtInfinity> for SphereWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for SphereWeight {
     type Output = MultiVector;
 
@@ -30632,6 +33913,28 @@ impl Add<Dipole> for SphereWeight {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for SphereWeight {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -31317,6 +34620,28 @@ impl Add<Circle> for Transflector {
     }
 }
 
+impl Add<CircleAtInfinity> for Transflector {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Transflector {
     type Output = MultiVector;
 
@@ -31395,6 +34720,28 @@ impl Add<Dipole> for Transflector {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Transflector {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -32082,6 +35429,28 @@ impl Add<Circle> for Translator {
     }
 }
 
+impl Add<CircleAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn add(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<CircleBulk> for Translator {
     type Output = MultiVector;
 
@@ -32160,6 +35529,28 @@ impl Add<Dipole> for Translator {
                 g3: other.group0(),
                 g4: other.group1(),
                 g5: other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
@@ -32846,6 +36237,24 @@ impl DivAssign<Circle> for Circle {
     }
 }
 
+impl Div<CircleAtInfinity> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn div(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() / other.group0(),
+            },
+        }
+    }
+}
+
+impl DivAssign<CircleAtInfinity> for CircleAtInfinity {
+    fn div_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).div(other);
+    }
+}
+
 impl Div<CircleBulk> for CircleBulk {
     type Output = CircleBulk;
 
@@ -32916,6 +36325,25 @@ impl Div<Dipole> for Dipole {
 
 impl DivAssign<Dipole> for Dipole {
     fn div_assign(&mut self, other: Dipole) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn div(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
+            },
+        }
+    }
+}
+
+impl DivAssign<DipoleAtInfinity> for DipoleAtInfinity {
+    fn div_assign(&mut self, other: DipoleAtInfinity) {
         *self = (*self).div(other);
     }
 }
@@ -33495,6 +36923,16 @@ impl DivAssign<Translator> for Translator {
     }
 }
 
+impl Into<CircleAtInfinity> for Circle {
+    fn into(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([self.group0()[3], self.group2()[0], self.group2()[1], self.group2()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<CircleBulk> for Circle {
     fn into(self) -> CircleBulk {
         CircleBulk {
@@ -33548,6 +36986,24 @@ impl Into<LineAtOrigin> for Circle {
     }
 }
 
+impl Into<CircleBulk> for CircleAtInfinity {
+    fn into(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
+impl Into<LineAtInfinity> for CircleAtInfinity {
+    fn into(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Into<CircleBulk> for CircleCarrierAspect {
     fn into(self) -> CircleBulk {
         CircleBulk {
@@ -33561,6 +37017,17 @@ impl Into<CircleWeight> for CircleCarrierAspect {
         CircleWeight {
             groups: CircleWeightGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<DipoleAtInfinity> for Dipole {
+    fn into(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group1(),
+                g1: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
             },
         }
     }
@@ -33615,6 +37082,22 @@ impl Into<FlatPointAtOrigin> for Dipole {
     fn into(self) -> FlatPointAtOrigin {
         FlatPointAtOrigin {
             groups: FlatPointAtOriginGroups { g0: self.group2()[3] },
+        }
+    }
+}
+
+impl Into<DipoleBulk> for DipoleAtInfinity {
+    fn into(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<FlatPointAtInfinity> for DipoleAtInfinity {
+    fn into(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups { g0: self.group1() },
         }
     }
 }
@@ -33851,6 +37334,16 @@ impl Into<Circle> for MultiVector {
     }
 }
 
+impl Into<CircleAtInfinity> for MultiVector {
+    fn into(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([self.group6()[3], self.group8()[0], self.group8()[1], self.group8()[2]]),
+            },
+        }
+    }
+}
+
 impl Into<CircleBulk> for MultiVector {
     fn into(self) -> CircleBulk {
         CircleBulk {
@@ -33884,6 +37377,17 @@ impl Into<Dipole> for MultiVector {
                 g0: self.group3(),
                 g1: self.group4(),
                 g2: self.group5(),
+            },
+        }
+    }
+}
+
+impl Into<DipoleAtInfinity> for MultiVector {
+    fn into(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group4(),
+                g1: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]),
             },
         }
     }
@@ -34462,6 +37966,24 @@ impl MulAssign<Circle> for Circle {
     }
 }
 
+impl Mul<CircleAtInfinity> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn mul(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl MulAssign<CircleAtInfinity> for CircleAtInfinity {
+    fn mul_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).mul(other);
+    }
+}
+
 impl Mul<CircleBulk> for CircleBulk {
     type Output = CircleBulk;
 
@@ -34532,6 +38054,25 @@ impl Mul<Dipole> for Dipole {
 
 impl MulAssign<Dipole> for Dipole {
     fn mul_assign(&mut self, other: Dipole) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn mul(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+            },
+        }
+    }
+}
+
+impl MulAssign<DipoleAtInfinity> for DipoleAtInfinity {
+    fn mul_assign(&mut self, other: DipoleAtInfinity) {
         *self = (*self).mul(other);
     }
 }
@@ -35151,6 +38692,28 @@ impl Sub<Circle> for AntiScalar {
     }
 }
 
+impl Sub<CircleAtInfinity> for AntiScalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for AntiScalar {
     type Output = MultiVector;
 
@@ -35229,6 +38792,28 @@ impl Sub<Dipole> for AntiScalar {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for AntiScalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -35885,6 +39470,26 @@ impl SubAssign<Circle> for Circle {
     }
 }
 
+impl Sub<CircleAtInfinity> for Circle {
+    type Output = Circle;
+
+    fn sub(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: self.group1(),
+                g2: self.group2() - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleAtInfinity> for Circle {
+    fn sub_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<CircleBulk> for Circle {
     type Output = Circle;
 
@@ -35957,6 +39562,28 @@ impl Sub<Dipole> for Circle {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: self.group0(),
+                g7: self.group1(),
+                g8: self.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Circle {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: self.group0(),
                 g7: self.group1(),
                 g8: self.group2(),
@@ -36643,6 +40270,812 @@ impl Sub<Translator> for Circle {
     }
 }
 
+impl Sub<AntiScalar> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiScalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Circle> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn sub(self, other: Circle) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleAtInfinity> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn sub(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleAtInfinity> for CircleAtInfinity {
+    fn sub_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleBulk> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn sub(self, other: CircleBulk) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() - Simd32x4::from([other.group0(), 0.0, 0.0, 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleBulk> for CircleAtInfinity {
+    fn sub_assign(&mut self, other: CircleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn sub(self, other: CircleCarrierAspect) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) - other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<CircleWeight> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn sub(self, other: CircleWeight) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Dipole> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleBulk> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleWeight> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DualNum> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPoint> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - other.group0(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - other.group0(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<FlectorAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Horizon> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Line> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn sub(self, other: Line) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtInfinity> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn sub(self, other: LineAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() - Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtInfinity> for CircleAtInfinity {
+    fn sub_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtOrigin> for CircleAtInfinity {
+    type Output = Circle;
+
+    fn sub(self, other: LineAtOrigin) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Motor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x4::from(0.0) - other.group5(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Plane> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<PlaneAtOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0) - other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPoint> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0) - other.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - other.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointOnOrigin> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Scalar> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Sphere> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0) - other.group0(),
+                g10: Simd32x2::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<SphereWeight> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SphereWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Transflector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<AntiScalar> for CircleBulk {
     type Output = MultiVector;
 
@@ -36674,6 +41107,18 @@ impl Sub<Circle> for CircleBulk {
                 g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: Simd32x3::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleAtInfinity> for CircleBulk {
+    type Output = CircleAtInfinity;
+
+    fn sub(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([self.group0(), 0.0, 0.0, 0.0]) - other.group0(),
             },
         }
     }
@@ -36733,6 +41178,28 @@ impl Sub<Dipole> for CircleBulk {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for CircleBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -37000,14 +41467,12 @@ impl Sub<Line> for CircleBulk {
 }
 
 impl Sub<LineAtInfinity> for CircleBulk {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn sub(self, other: LineAtInfinity) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x3::from(0.0) - other.group0(),
+    fn sub(self, other: LineAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([self.group0(), 0.0, 0.0, 0.0]) - Simd32x4::from([0.0, other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -37437,6 +41902,20 @@ impl Sub<Circle> for CircleCarrierAspect {
     }
 }
 
+impl Sub<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = Circle;
+
+    fn sub(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
@@ -37503,6 +41982,28 @@ impl Sub<Dipole> for CircleCarrierAspect {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: self.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for CircleCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: self.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -38207,6 +42708,20 @@ impl Sub<Circle> for CircleWeight {
     }
 }
 
+impl Sub<CircleAtInfinity> for CircleWeight {
+    type Output = Circle;
+
+    fn sub(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for CircleWeight {
     type Output = CircleCarrierAspect;
 
@@ -38261,6 +42776,28 @@ impl Sub<Dipole> for CircleWeight {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for CircleWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -38973,6 +43510,28 @@ impl Sub<Circle> for Dipole {
     }
 }
 
+impl Sub<CircleAtInfinity> for Dipole {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: self.group2(),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Dipole {
     type Output = MultiVector;
 
@@ -39055,6 +43614,26 @@ impl Sub<Dipole> for Dipole {
 
 impl SubAssign<Dipole> for Dipole {
     fn sub_assign(&mut self, other: Dipole) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Dipole {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleAtInfinity> for Dipole {
+    fn sub_assign(&mut self, other: DipoleAtInfinity) {
         *self = (*self).sub(other);
     }
 }
@@ -39729,6 +44308,815 @@ impl Sub<Translator> for Dipole {
     }
 }
 
+impl Sub<AntiScalar> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiScalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Circle> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Circle) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - other.group0(),
+                g7: Simd32x3::from(0.0) - other.group1(),
+                g8: Simd32x3::from(0.0) - other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<CircleAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<CircleBulk> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<CircleCarrierAspect> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleCarrierAspect) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - other.group0(),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<CircleWeight> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dipole> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn sub(self, other: Dipole) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn sub(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleAtInfinity> for DipoleAtInfinity {
+    fn sub_assign(&mut self, other: DipoleAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleBulk> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn sub(self, other: DipoleBulk) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleBulk> for DipoleAtInfinity {
+    fn sub_assign(&mut self, other: DipoleBulk) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleCarrierAspect) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleWeight> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleWeight) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<DualNum> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPoint> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn sub(self, other: FlatPoint) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn sub(self, other: FlatPointAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+            },
+        }
+    }
+}
+
+impl SubAssign<FlatPointAtInfinity> for DipoleAtInfinity {
+    fn sub_assign(&mut self, other: FlatPointAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for DipoleAtInfinity {
+    type Output = Dipole;
+
+    fn sub(self, other: FlatPointAtOrigin) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group0(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<FlectorAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Horizon> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Line> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Line) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - other.group0(),
+                g8: Simd32x3::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: LineAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - other.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<LineAtOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: LineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - other.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Motor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Motor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<MultiVector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x3::from(0.0) - other.group3(),
+                g4: self.group0() - other.group4(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group5(),
+                g6: Simd32x4::from(0.0) - other.group6(),
+                g7: Simd32x3::from(0.0) - other.group7(),
+                g8: Simd32x3::from(0.0) - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Plane> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<PlaneAtOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Rotor) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPoint> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0) - other.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - other.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointBulk> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointBulk) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointOnOrigin> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Scalar> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<SpacialCurvature> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SpacialCurvature) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<Sphere> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - other.group0(),
+                g10: Simd32x2::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<SphereWeight> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: SphereWeight) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Transflector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Translator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<AntiScalar> for DipoleBulk {
     type Output = MultiVector;
 
@@ -39766,6 +45154,28 @@ impl Sub<Circle> for DipoleBulk {
                 g6: Simd32x4::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0) - other.group1(),
                 g8: Simd32x3::from(0.0) - other.group2(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<CircleAtInfinity> for DipoleBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -39853,6 +45263,19 @@ impl Sub<Dipole> for DipoleBulk {
     }
 }
 
+impl Sub<DipoleAtInfinity> for DipoleBulk {
+    type Output = DipoleAtInfinity;
+
+    fn sub(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<DipoleBulk> for DipoleBulk {
     type Output = DipoleBulk;
 
@@ -39934,14 +45357,13 @@ impl Sub<FlatPoint> for DipoleBulk {
 }
 
 impl Sub<FlatPointAtInfinity> for DipoleBulk {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn sub(self, other: FlatPointAtInfinity) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group0(),
-                g2: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+    fn sub(self, other: FlatPointAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
             },
         }
     }
@@ -40533,6 +45955,28 @@ impl Sub<Circle> for DipoleCarrierAspect {
     }
 }
 
+impl Sub<CircleAtInfinity> for DipoleCarrierAspect {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: self.group1(),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for DipoleCarrierAspect {
     type Output = MultiVector;
 
@@ -40608,6 +46052,20 @@ impl Sub<Dipole> for DipoleCarrierAspect {
                 g0: self.group0() - other.group0(),
                 g1: self.group1() - other.group1(),
                 g2: Simd32x4::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -41306,6 +46764,28 @@ impl Sub<Circle> for DipoleWeight {
     }
 }
 
+impl Sub<CircleAtInfinity> for DipoleWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for DipoleWeight {
     type Output = MultiVector;
 
@@ -41381,6 +46861,20 @@ impl Sub<Dipole> for DipoleWeight {
                 g0: self.group0() - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: Simd32x4::from(0.0) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for DipoleWeight {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -42062,6 +47556,28 @@ impl Sub<Circle> for DualNum {
     }
 }
 
+impl Sub<CircleAtInfinity> for DualNum {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for DualNum {
     type Output = MultiVector;
 
@@ -42140,6 +47656,28 @@ impl Sub<Dipole> for DualNum {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for DualNum {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -42868,6 +48406,28 @@ impl Sub<Circle> for FlatPoint {
     }
 }
 
+impl Sub<CircleAtInfinity> for FlatPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for FlatPoint {
     type Output = MultiVector;
 
@@ -42943,6 +48503,20 @@ impl Sub<Dipole> for FlatPoint {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: self.group0() - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for FlatPoint {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: self.group0() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -43584,6 +49158,28 @@ impl Sub<Circle> for FlatPointAtInfinity {
     }
 }
 
+impl Sub<CircleAtInfinity> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -43664,15 +49260,27 @@ impl Sub<Dipole> for FlatPointAtInfinity {
     }
 }
 
-impl Sub<DipoleBulk> for FlatPointAtInfinity {
-    type Output = Dipole;
+impl Sub<DipoleAtInfinity> for FlatPointAtInfinity {
+    type Output = DipoleAtInfinity;
 
-    fn sub(self, other: DipoleBulk) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x3::from(0.0) - other.group0(),
-                g2: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+    fn sub(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0() - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleBulk> for FlatPointAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn sub(self, other: DipoleBulk) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: Simd32x3::from(0.0) - other.group0(),
+                g1: self.group0(),
             },
         }
     }
@@ -44286,6 +49894,28 @@ impl Sub<Circle> for FlatPointAtOrigin {
     }
 }
 
+impl Sub<CircleAtInfinity> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for FlatPointAtOrigin {
     type Output = MultiVector;
 
@@ -44361,6 +49991,20 @@ impl Sub<Dipole> for FlatPointAtOrigin {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x3::from(0.0) - other.group1(),
                 g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group2(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for FlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn sub(self, other: DipoleAtInfinity) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -44990,6 +50634,28 @@ impl Sub<Circle> for Flector {
     }
 }
 
+impl Sub<CircleAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Flector {
     type Output = MultiVector;
 
@@ -45068,6 +50734,28 @@ impl Sub<Dipole> for Flector {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: self.group0() - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Flector {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: self.group0() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -45777,6 +51465,28 @@ impl Sub<Circle> for FlectorAtInfinity {
     }
 }
 
+impl Sub<CircleAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -45855,6 +51565,28 @@ impl Sub<Dipole> for FlectorAtInfinity {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -46525,6 +52257,28 @@ impl Sub<Circle> for Horizon {
     }
 }
 
+impl Sub<CircleAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Horizon {
     type Output = MultiVector;
 
@@ -46603,6 +52357,28 @@ impl Sub<Dipole> for Horizon {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Horizon {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -47230,6 +53006,28 @@ impl Sub<Circle> for Infinity {
     }
 }
 
+impl Sub<CircleAtInfinity> for Infinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Infinity {
     type Output = MultiVector;
 
@@ -47308,6 +53106,28 @@ impl Sub<Dipole> for Infinity {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Infinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -47965,6 +53785,20 @@ impl Sub<Circle> for Line {
     }
 }
 
+impl Sub<CircleAtInfinity> for Line {
+    type Output = Circle;
+
+    fn sub(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Line {
     type Output = Circle;
 
@@ -48019,6 +53853,28 @@ impl Sub<Dipole> for Line {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Line {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: self.group0(),
                 g8: self.group1(),
@@ -48701,15 +54557,25 @@ impl Sub<Circle> for LineAtInfinity {
     }
 }
 
-impl Sub<CircleBulk> for LineAtInfinity {
-    type Output = Circle;
+impl Sub<CircleAtInfinity> for LineAtInfinity {
+    type Output = CircleAtInfinity;
 
-    fn sub(self, other: CircleBulk) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: self.group0(),
+    fn sub(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([0.0, self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<CircleBulk> for LineAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn sub(self, other: CircleBulk) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: Simd32x4::from([0.0, self.group0()[0], self.group0()[1], self.group0()[2]]) - Simd32x4::from([other.group0(), 0.0, 0.0, 0.0]),
             },
         }
     }
@@ -48755,6 +54621,28 @@ impl Sub<Dipole> for LineAtInfinity {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: self.group0(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: self.group0(),
@@ -49423,6 +55311,20 @@ impl Sub<Circle> for LineAtOrigin {
     }
 }
 
+impl Sub<CircleAtInfinity> for LineAtOrigin {
+    type Output = Circle;
+
+    fn sub(self, other: CircleAtInfinity) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for LineAtOrigin {
     type Output = Circle;
 
@@ -49477,6 +55379,28 @@ impl Sub<Dipole> for LineAtOrigin {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: self.group0(),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: self.group0(),
                 g8: Simd32x3::from(0.0),
@@ -50160,6 +56084,28 @@ impl Sub<Circle> for Motor {
     }
 }
 
+impl Sub<CircleAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group1() - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Motor {
     type Output = MultiVector;
 
@@ -50238,6 +56184,28 @@ impl Sub<Dipole> for Motor {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g8: self.group1(),
@@ -50968,6 +56936,34 @@ impl SubAssign<Circle> for MultiVector {
     }
 }
 
+impl Sub<CircleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: self.group7(),
+                g8: self.group8() - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleAtInfinity> for MultiVector {
+    fn sub_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
 impl Sub<CircleBulk> for MultiVector {
     type Output = MultiVector;
 
@@ -51076,6 +57072,34 @@ impl Sub<Dipole> for MultiVector {
 
 impl SubAssign<Dipole> for MultiVector {
     fn sub_assign(&mut self, other: Dipole) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<DipoleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4() - other.group0(),
+                g5: self.group5() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+                g6: self.group6(),
+                g7: self.group7(),
+                g8: self.group8(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<DipoleAtInfinity> for MultiVector {
+    fn sub_assign(&mut self, other: DipoleAtInfinity) {
         *self = (*self).sub(other);
     }
 }
@@ -51992,6 +58016,28 @@ impl Sub<Circle> for Origin {
     }
 }
 
+impl Sub<CircleAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Origin {
     type Output = MultiVector;
 
@@ -52070,6 +58116,28 @@ impl Sub<Dipole> for Origin {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Origin {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -52744,6 +58812,28 @@ impl Sub<Circle> for Plane {
     }
 }
 
+impl Sub<CircleAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Plane {
     type Output = MultiVector;
 
@@ -52822,6 +58912,28 @@ impl Sub<Dipole> for Plane {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Plane {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -53465,6 +59577,28 @@ impl Sub<Circle> for PlaneAtOrigin {
     }
 }
 
+impl Sub<CircleAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: self.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -53543,6 +59677,28 @@ impl Sub<Dipole> for PlaneAtOrigin {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -54170,6 +60326,28 @@ impl Sub<Circle> for Rotor {
     }
 }
 
+impl Sub<CircleAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Rotor {
     type Output = MultiVector;
 
@@ -54248,6 +60426,28 @@ impl Sub<Dipole> for Rotor {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g8: Simd32x3::from(0.0),
@@ -54940,6 +61140,28 @@ impl Sub<Circle> for RoundPoint {
     }
 }
 
+impl Sub<CircleAtInfinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for RoundPoint {
     type Output = MultiVector;
 
@@ -55018,6 +61240,28 @@ impl Sub<Dipole> for RoundPoint {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for RoundPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -55733,6 +61977,28 @@ impl Sub<Circle> for RoundPointAtInfinity {
     }
 }
 
+impl Sub<CircleAtInfinity> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for RoundPointAtInfinity {
     type Output = MultiVector;
 
@@ -55811,6 +62077,28 @@ impl Sub<Dipole> for RoundPointAtInfinity {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for RoundPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -56499,6 +62787,28 @@ impl Sub<Circle> for RoundPointAtOrigin {
     }
 }
 
+impl Sub<CircleAtInfinity> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for RoundPointAtOrigin {
     type Output = MultiVector;
 
@@ -56577,6 +62887,28 @@ impl Sub<Dipole> for RoundPointAtOrigin {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -57265,6 +63597,28 @@ impl Sub<Circle> for RoundPointBulk {
     }
 }
 
+impl Sub<CircleAtInfinity> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for RoundPointBulk {
     type Output = MultiVector;
 
@@ -57343,6 +63697,28 @@ impl Sub<Dipole> for RoundPointBulk {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for RoundPointBulk {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -58017,6 +64393,28 @@ impl Sub<Circle> for RoundPointOnOrigin {
     }
 }
 
+impl Sub<CircleAtInfinity> for RoundPointOnOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for RoundPointOnOrigin {
     type Output = MultiVector;
 
@@ -58095,6 +64493,28 @@ impl Sub<Dipole> for RoundPointOnOrigin {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for RoundPointOnOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -58773,6 +65193,28 @@ impl Sub<Circle> for Scalar {
     }
 }
 
+impl Sub<CircleAtInfinity> for Scalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Scalar {
     type Output = MultiVector;
 
@@ -58851,6 +65293,28 @@ impl Sub<Dipole> for Scalar {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Scalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -59573,6 +66037,28 @@ impl Sub<Circle> for SpacialCurvature {
     }
 }
 
+impl Sub<CircleAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for SpacialCurvature {
     type Output = MultiVector;
 
@@ -59651,6 +66137,28 @@ impl Sub<Dipole> for SpacialCurvature {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for SpacialCurvature {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -60348,6 +66856,28 @@ impl Sub<Circle> for Sphere {
     }
 }
 
+impl Sub<CircleAtInfinity> for Sphere {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: self.group0(),
+                g10: self.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Sphere {
     type Output = MultiVector;
 
@@ -60426,6 +66956,28 @@ impl Sub<Dipole> for Sphere {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: self.group0(),
+                g10: self.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Sphere {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -61144,6 +67696,28 @@ impl Sub<Circle> for SphereWeight {
     }
 }
 
+impl Sub<CircleAtInfinity> for SphereWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for SphereWeight {
     type Output = MultiVector;
 
@@ -61222,6 +67796,28 @@ impl Sub<Dipole> for SphereWeight {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for SphereWeight {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -61907,6 +68503,28 @@ impl Sub<Circle> for Transflector {
     }
 }
 
+impl Sub<CircleAtInfinity> for Transflector {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Transflector {
     type Output = MultiVector;
 
@@ -61985,6 +68603,28 @@ impl Sub<Dipole> for Transflector {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from(0.0),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Transflector {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from(0.0),
@@ -62672,6 +69312,28 @@ impl Sub<Circle> for Translator {
     }
 }
 
+impl Sub<CircleAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn sub(self, other: CircleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x4::from(0.0),
+                g6: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[0]]),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<CircleBulk> for Translator {
     type Output = MultiVector;
 
@@ -62750,6 +69412,28 @@ impl Sub<Dipole> for Translator {
                 g3: Simd32x3::from(0.0) - other.group0(),
                 g4: Simd32x3::from(0.0) - other.group1(),
                 g5: Simd32x4::from(0.0) - other.group2(),
+                g6: Simd32x4::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()[3]]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x3::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
                 g6: Simd32x4::from(0.0),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),

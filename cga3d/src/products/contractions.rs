@@ -31,6 +31,14 @@ impl BulkContraction<Circle> for Circle {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Circle {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Circle {
     type Output = Scalar;
 
@@ -63,6 +71,14 @@ impl BulkContraction<Dipole> for Circle {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for Circle {
+    type Output = RoundPoint;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> RoundPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for Circle {
     type Output = RoundPoint;
 
@@ -88,9 +104,9 @@ impl BulkContraction<DipoleWeight> for Circle {
 }
 
 impl BulkContraction<FlatPoint> for Circle {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPoint {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -128,9 +144,9 @@ impl BulkContraction<FlectorAtInfinity> for Circle {
 }
 
 impl BulkContraction<Infinity> for Circle {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: Infinity) -> Dipole {
+    fn bulk_contraction(self, other: Infinity) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -247,10 +263,202 @@ impl BulkContraction<Translator> for Circle {
     }
 }
 
+impl BulkContraction<Circle> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Circle) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<CircleAtInfinity> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<CircleBulk> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleBulk) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleCarrierAspect) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<CircleWeight> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleWeight) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Dipole> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: Dipole) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleBulk> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: DipoleBulk) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleCarrierAspect> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: DipoleCarrierAspect) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleWeight> for CircleAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: DipoleWeight) -> RoundPointBulk {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Flector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Motor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Origin> for CircleAtInfinity {
+    type Output = DipoleBulk;
+
+    fn bulk_contraction(self, other: Origin) -> DipoleBulk {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Rotor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPoint> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPoint) -> DipoleAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointAtInfinity> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPointAtInfinity) -> DipoleAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointAtOrigin> for CircleAtInfinity {
+    type Output = DipoleBulk;
+
+    fn bulk_contraction(self, other: RoundPointAtOrigin) -> DipoleBulk {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointBulk> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPointBulk) -> DipoleAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointOnOrigin> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> DipoleAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Transflector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Translator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<Circle> for CircleBulk {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Circle) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<CircleAtInfinity> for CircleBulk {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -279,6 +487,14 @@ impl BulkContraction<Dipole> for CircleBulk {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for CircleBulk {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> RoundPointBulk {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for CircleBulk {
     type Output = RoundPointBulk;
 
@@ -295,14 +511,6 @@ impl BulkContraction<DipoleCarrierAspect> for CircleBulk {
     }
 }
 
-impl BulkContraction<FlatPoint> for CircleBulk {
-    type Output = RoundPointBulk;
-
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPointBulk {
-        self.anti_wedge(other.dual())
-    }
-}
-
 impl BulkContraction<Flector> for CircleBulk {
     type Output = MultiVector;
 
@@ -315,14 +523,6 @@ impl BulkContraction<FlectorAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.dual())
-    }
-}
-
-impl BulkContraction<Line> for CircleBulk {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: Line) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -407,6 +607,14 @@ impl BulkContraction<Circle> for CircleCarrierAspect {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for CircleCarrierAspect {
     type Output = Scalar;
 
@@ -431,6 +639,14 @@ impl BulkContraction<Dipole> for CircleCarrierAspect {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for CircleCarrierAspect {
+    type Output = RoundPointOnOrigin;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> RoundPointOnOrigin {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for CircleCarrierAspect {
     type Output = RoundPointOnOrigin;
 
@@ -448,9 +664,9 @@ impl BulkContraction<DipoleCarrierAspect> for CircleCarrierAspect {
 }
 
 impl BulkContraction<FlatPoint> for CircleCarrierAspect {
-    type Output = RoundPointOnOrigin;
+    type Output = RoundPointBulk;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -591,6 +807,14 @@ impl BulkContraction<Circle> for CircleWeight {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for CircleWeight {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleCarrierAspect> for CircleWeight {
     type Output = Scalar;
 
@@ -603,6 +827,14 @@ impl BulkContraction<Dipole> for CircleWeight {
     type Output = RoundPointOnOrigin;
 
     fn bulk_contraction(self, other: Dipole) -> RoundPointOnOrigin {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for CircleWeight {
+    type Output = RoundPointOnOrigin;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> RoundPointOnOrigin {
         self.anti_wedge(other.dual())
     }
 }
@@ -624,9 +856,9 @@ impl BulkContraction<DipoleCarrierAspect> for CircleWeight {
 }
 
 impl BulkContraction<FlatPoint> for CircleWeight {
-    type Output = RoundPointOnOrigin;
+    type Output = RoundPointBulk;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -763,6 +995,14 @@ impl BulkContraction<Dipole> for Dipole {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for Dipole {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -927,10 +1167,162 @@ impl BulkContraction<Translator> for Dipole {
     }
 }
 
+impl BulkContraction<Dipole> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleBulk> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleBulk) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleCarrierAspect) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleWeight> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleWeight) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Flector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<FlectorAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Motor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<MultiVector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Origin> for DipoleAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: Origin) -> RoundPointBulk {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Rotor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPoint> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPoint) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointAtInfinity> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointAtOrigin> for DipoleAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn bulk_contraction(self, other: RoundPointAtOrigin) -> RoundPointBulk {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointBulk> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPointBulk) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<RoundPointOnOrigin> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> RoundPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Transflector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<Translator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<Dipole> for DipoleBulk {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for DipoleBulk {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -947,14 +1339,6 @@ impl BulkContraction<DipoleCarrierAspect> for DipoleBulk {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: DipoleCarrierAspect) -> Scalar {
-        self.anti_wedge(other.dual())
-    }
-}
-
-impl BulkContraction<FlatPoint> for DipoleBulk {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: FlatPoint) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -1051,6 +1435,14 @@ impl BulkContraction<Dipole> for DipoleCarrierAspect {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -1195,6 +1587,14 @@ impl BulkContraction<Dipole> for DipoleWeight {
     type Output = Scalar;
 
     fn bulk_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for DipoleWeight {
+    type Output = Scalar;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -1503,14 +1903,6 @@ impl BulkContraction<DipoleWeight> for FlatPointAtInfinity {
     }
 }
 
-impl BulkContraction<FlatPoint> for FlatPointAtInfinity {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: FlatPoint) -> Scalar {
-        self.anti_wedge(other.dual())
-    }
-}
-
 impl BulkContraction<Flector> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -1759,6 +2151,14 @@ impl BulkContraction<Circle> for Flector {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Flector {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Flector {
     type Output = Infinity;
 
@@ -1787,6 +2187,14 @@ impl BulkContraction<Dipole> for Flector {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for Flector {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
         self.anti_wedge(other.dual())
     }
 }
@@ -1864,9 +2272,9 @@ impl BulkContraction<Infinity> for Flector {
 }
 
 impl BulkContraction<Line> for Flector {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: Line) -> RoundPoint {
+    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2023,6 +2431,14 @@ impl BulkContraction<Circle> for FlectorAtInfinity {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for FlectorAtInfinity {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for FlectorAtInfinity {
     type Output = Infinity;
 
@@ -2055,6 +2471,14 @@ impl BulkContraction<Dipole> for FlectorAtInfinity {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for FlectorAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> FlatPointAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for FlectorAtInfinity {
     type Output = FlatPointAtInfinity;
 
@@ -2079,14 +2503,6 @@ impl BulkContraction<DipoleWeight> for FlectorAtInfinity {
     }
 }
 
-impl BulkContraction<FlatPoint> for FlectorAtInfinity {
-    type Output = MultiVector;
-
-    fn bulk_contraction(self, other: FlatPoint) -> MultiVector {
-        self.anti_wedge(other.dual())
-    }
-}
-
 impl BulkContraction<Flector> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -2099,14 +2515,6 @@ impl BulkContraction<FlectorAtInfinity> for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.dual())
-    }
-}
-
-impl BulkContraction<Line> for FlectorAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2231,6 +2639,14 @@ impl BulkContraction<Circle> for Horizon {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Horizon {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Horizon {
     type Output = Infinity;
 
@@ -2256,9 +2672,17 @@ impl BulkContraction<CircleWeight> for Horizon {
 }
 
 impl BulkContraction<Dipole> for Horizon {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: Dipole) -> Dipole {
+    fn bulk_contraction(self, other: Dipole) -> DipoleAtInfinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for Horizon {
+    type Output = FlatPointAtInfinity;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> FlatPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2272,9 +2696,9 @@ impl BulkContraction<DipoleBulk> for Horizon {
 }
 
 impl BulkContraction<DipoleCarrierAspect> for Horizon {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: DipoleCarrierAspect) -> Dipole {
+    fn bulk_contraction(self, other: DipoleCarrierAspect) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2283,14 +2707,6 @@ impl BulkContraction<DipoleWeight> for Horizon {
     type Output = DipoleBulk;
 
     fn bulk_contraction(self, other: DipoleWeight) -> DipoleBulk {
-        self.anti_wedge(other.dual())
-    }
-}
-
-impl BulkContraction<FlatPoint> for Horizon {
-    type Output = Dipole;
-
-    fn bulk_contraction(self, other: FlatPoint) -> Dipole {
         self.anti_wedge(other.dual())
     }
 }
@@ -2307,14 +2723,6 @@ impl BulkContraction<FlectorAtInfinity> for Horizon {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.dual())
-    }
-}
-
-impl BulkContraction<Line> for Horizon {
-    type Output = RoundPointAtInfinity;
-
-    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2352,9 +2760,9 @@ impl BulkContraction<Rotor> for Horizon {
 }
 
 impl BulkContraction<RoundPoint> for Horizon {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn bulk_contraction(self, other: RoundPoint) -> Circle {
+    fn bulk_contraction(self, other: RoundPoint) -> CircleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2384,9 +2792,9 @@ impl BulkContraction<RoundPointBulk> for Horizon {
 }
 
 impl BulkContraction<RoundPointOnOrigin> for Horizon {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Circle {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> CircleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2551,6 +2959,14 @@ impl BulkContraction<Dipole> for Line {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for Line {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for Line {
     type Output = Infinity;
 
@@ -2576,9 +2992,9 @@ impl BulkContraction<DipoleWeight> for Line {
 }
 
 impl BulkContraction<FlatPoint> for Line {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPoint {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2759,6 +3175,14 @@ impl BulkContraction<Dipole> for LineAtInfinity {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for LineAtInfinity {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for LineAtInfinity {
     type Output = Infinity;
 
@@ -2783,14 +3207,6 @@ impl BulkContraction<DipoleWeight> for LineAtInfinity {
     }
 }
 
-impl BulkContraction<FlatPoint> for LineAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
-        self.anti_wedge(other.dual())
-    }
-}
-
 impl BulkContraction<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -2803,14 +3219,6 @@ impl BulkContraction<FlectorAtInfinity> for LineAtInfinity {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.dual())
-    }
-}
-
-impl BulkContraction<Line> for LineAtInfinity {
-    type Output = Scalar;
-
-    fn bulk_contraction(self, other: Line) -> Scalar {
         self.anti_wedge(other.dual())
     }
 }
@@ -2848,9 +3256,9 @@ impl BulkContraction<Rotor> for LineAtInfinity {
 }
 
 impl BulkContraction<RoundPoint> for LineAtInfinity {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: RoundPoint) -> Dipole {
+    fn bulk_contraction(self, other: RoundPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2880,9 +3288,9 @@ impl BulkContraction<RoundPointBulk> for LineAtInfinity {
 }
 
 impl BulkContraction<RoundPointOnOrigin> for LineAtInfinity {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: RoundPointOnOrigin) -> Dipole {
+    fn bulk_contraction(self, other: RoundPointOnOrigin) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -2927,6 +3335,14 @@ impl BulkContraction<Dipole> for LineAtOrigin {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for LineAtOrigin {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleCarrierAspect> for LineAtOrigin {
     type Output = RoundPoint;
 
@@ -2944,9 +3360,9 @@ impl BulkContraction<DipoleWeight> for LineAtOrigin {
 }
 
 impl BulkContraction<FlatPoint> for LineAtOrigin {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> RoundPoint {
+    fn bulk_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -3103,6 +3519,14 @@ impl BulkContraction<Circle> for Motor {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Motor {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Motor {
     type Output = FlatPointAtOrigin;
 
@@ -3131,6 +3555,14 @@ impl BulkContraction<Dipole> for Motor {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -3375,6 +3807,14 @@ impl BulkContraction<Circle> for MultiVector {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for MultiVector {
     type Output = MultiVector;
 
@@ -3403,6 +3843,14 @@ impl BulkContraction<Dipole> for MultiVector {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -3743,6 +4191,14 @@ impl BulkContraction<Circle> for Plane {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Plane {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Plane {
     type Output = Infinity;
 
@@ -3775,6 +4231,14 @@ impl BulkContraction<Dipole> for Plane {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for Plane {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for Plane {
     type Output = FlatPoint;
 
@@ -3800,9 +4264,9 @@ impl BulkContraction<DipoleWeight> for Plane {
 }
 
 impl BulkContraction<FlatPoint> for Plane {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> Dipole {
+    fn bulk_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -3848,9 +4312,9 @@ impl BulkContraction<Infinity> for Plane {
 }
 
 impl BulkContraction<Line> for Plane {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: Line) -> RoundPoint {
+    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -4007,6 +4471,14 @@ impl BulkContraction<Circle> for PlaneAtOrigin {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for PlaneAtOrigin {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleCarrierAspect> for PlaneAtOrigin {
     type Output = RoundPoint;
 
@@ -4027,6 +4499,14 @@ impl BulkContraction<Dipole> for PlaneAtOrigin {
     type Output = Dipole;
 
     fn bulk_contraction(self, other: Dipole) -> Dipole {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for PlaneAtOrigin {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
         self.anti_wedge(other.dual())
     }
 }
@@ -4056,9 +4536,9 @@ impl BulkContraction<DipoleWeight> for PlaneAtOrigin {
 }
 
 impl BulkContraction<FlatPoint> for PlaneAtOrigin {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> Dipole {
+    fn bulk_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -4104,9 +4584,9 @@ impl BulkContraction<Infinity> for PlaneAtOrigin {
 }
 
 impl BulkContraction<Line> for PlaneAtOrigin {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: Line) -> RoundPoint {
+    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -4247,6 +4727,14 @@ impl BulkContraction<Circle> for Rotor {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Rotor {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Rotor {
     type Output = FlatPointAtOrigin;
 
@@ -4275,6 +4763,14 @@ impl BulkContraction<Dipole> for Rotor {
     type Output = MultiVector;
 
     fn bulk_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
+impl BulkContraction<DipoleAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> MultiVector {
         self.anti_wedge(other.dual())
     }
 }
@@ -5031,6 +5527,14 @@ impl BulkContraction<Circle> for SpacialCurvature {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for SpacialCurvature {
+    type Output = RoundPoint;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> RoundPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for SpacialCurvature {
     type Output = RoundPointAtOrigin;
 
@@ -5063,6 +5567,14 @@ impl BulkContraction<Dipole> for SpacialCurvature {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for SpacialCurvature {
+    type Output = Dipole;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Dipole {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for SpacialCurvature {
     type Output = Dipole;
 
@@ -5088,9 +5600,9 @@ impl BulkContraction<DipoleWeight> for SpacialCurvature {
 }
 
 impl BulkContraction<FlatPoint> for SpacialCurvature {
-    type Output = Dipole;
+    type Output = DipoleBulk;
 
-    fn bulk_contraction(self, other: FlatPoint) -> Dipole {
+    fn bulk_contraction(self, other: FlatPoint) -> DipoleBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -5136,9 +5648,9 @@ impl BulkContraction<Infinity> for SpacialCurvature {
 }
 
 impl BulkContraction<Line> for SpacialCurvature {
-    type Output = RoundPoint;
+    type Output = RoundPointBulk;
 
-    fn bulk_contraction(self, other: Line) -> RoundPoint {
+    fn bulk_contraction(self, other: Line) -> RoundPointBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -5279,6 +5791,14 @@ impl BulkContraction<Circle> for Sphere {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Sphere {
+    type Output = RoundPoint;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> RoundPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Sphere {
     type Output = RoundPointAtOrigin;
 
@@ -5311,6 +5831,14 @@ impl BulkContraction<Dipole> for Sphere {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for Sphere {
+    type Output = Dipole;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> Dipole {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for Sphere {
     type Output = Dipole;
 
@@ -5336,17 +5864,17 @@ impl BulkContraction<DipoleWeight> for Sphere {
 }
 
 impl BulkContraction<FlatPoint> for Sphere {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> Dipole {
+    fn bulk_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<FlatPointAtInfinity> for Sphere {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPointAtInfinity) -> Dipole {
+    fn bulk_contraction(self, other: FlatPointAtInfinity) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -5384,17 +5912,17 @@ impl BulkContraction<Horizon> for Sphere {
 }
 
 impl BulkContraction<Infinity> for Sphere {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn bulk_contraction(self, other: Infinity) -> Circle {
+    fn bulk_contraction(self, other: Infinity) -> CircleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
 
 impl BulkContraction<Line> for Sphere {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: Line) -> RoundPoint {
+    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -5551,6 +6079,14 @@ impl BulkContraction<Circle> for SphereWeight {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for SphereWeight {
+    type Output = RoundPointOnOrigin;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> RoundPointOnOrigin {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for SphereWeight {
     type Output = Origin;
 
@@ -5575,6 +6111,14 @@ impl BulkContraction<Dipole> for SphereWeight {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for SphereWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> DipoleCarrierAspect {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for SphereWeight {
     type Output = DipoleWeight;
 
@@ -5592,9 +6136,9 @@ impl BulkContraction<DipoleCarrierAspect> for SphereWeight {
 }
 
 impl BulkContraction<FlatPoint> for SphereWeight {
-    type Output = DipoleCarrierAspect;
+    type Output = DipoleBulk;
 
-    fn bulk_contraction(self, other: FlatPoint) -> DipoleCarrierAspect {
+    fn bulk_contraction(self, other: FlatPoint) -> DipoleBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -5640,9 +6184,9 @@ impl BulkContraction<Infinity> for SphereWeight {
 }
 
 impl BulkContraction<Line> for SphereWeight {
-    type Output = RoundPointOnOrigin;
+    type Output = RoundPointBulk;
 
-    fn bulk_contraction(self, other: Line) -> RoundPointOnOrigin {
+    fn bulk_contraction(self, other: Line) -> RoundPointBulk {
         self.anti_wedge(other.dual())
     }
 }
@@ -5767,6 +6311,14 @@ impl BulkContraction<Circle> for Transflector {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Transflector {
+    type Output = Infinity;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Transflector {
     type Output = Infinity;
 
@@ -5799,6 +6351,14 @@ impl BulkContraction<Dipole> for Transflector {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for Transflector {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for Transflector {
     type Output = FlatPoint;
 
@@ -5824,9 +6384,9 @@ impl BulkContraction<DipoleWeight> for Transflector {
 }
 
 impl BulkContraction<FlatPoint> for Transflector {
-    type Output = MultiVector;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> MultiVector {
+    fn bulk_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -5872,9 +6432,9 @@ impl BulkContraction<Infinity> for Transflector {
 }
 
 impl BulkContraction<Line> for Transflector {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn bulk_contraction(self, other: Line) -> RoundPoint {
+    fn bulk_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -6031,6 +6591,14 @@ impl BulkContraction<Circle> for Translator {
     }
 }
 
+impl BulkContraction<CircleAtInfinity> for Translator {
+    type Output = FlatPoint;
+
+    fn bulk_contraction(self, other: CircleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<CircleBulk> for Translator {
     type Output = FlatPointAtOrigin;
 
@@ -6063,6 +6631,14 @@ impl BulkContraction<Dipole> for Translator {
     }
 }
 
+impl BulkContraction<DipoleAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn bulk_contraction(self, other: DipoleAtInfinity) -> MultiVector {
+        self.anti_wedge(other.dual())
+    }
+}
+
 impl BulkContraction<DipoleBulk> for Translator {
     type Output = MultiVector;
 
@@ -6088,9 +6664,9 @@ impl BulkContraction<DipoleWeight> for Translator {
 }
 
 impl BulkContraction<FlatPoint> for Translator {
-    type Output = MultiVector;
+    type Output = CircleAtInfinity;
 
-    fn bulk_contraction(self, other: FlatPoint) -> MultiVector {
+    fn bulk_contraction(self, other: FlatPoint) -> CircleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -6144,9 +6720,9 @@ impl BulkContraction<Infinity> for Translator {
 }
 
 impl BulkContraction<Line> for Translator {
-    type Output = MultiVector;
+    type Output = DipoleAtInfinity;
 
-    fn bulk_contraction(self, other: Line) -> MultiVector {
+    fn bulk_contraction(self, other: Line) -> DipoleAtInfinity {
         self.anti_wedge(other.dual())
     }
 }
@@ -6303,6 +6879,14 @@ impl WeightContraction<Circle> for Circle {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Circle {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Circle {
     type Output = Scalar;
 
@@ -6335,6 +6919,14 @@ impl WeightContraction<Dipole> for Circle {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for Circle {
+    type Output = RoundPoint;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> RoundPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for Circle {
     type Output = RoundPoint;
 
@@ -6360,9 +6952,9 @@ impl WeightContraction<DipoleWeight> for Circle {
 }
 
 impl WeightContraction<FlatPoint> for Circle {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPoint {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6400,9 +6992,9 @@ impl WeightContraction<FlectorAtInfinity> for Circle {
 }
 
 impl WeightContraction<Infinity> for Circle {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: Infinity) -> Dipole {
+    fn weight_contraction(self, other: Infinity) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6519,10 +7111,202 @@ impl WeightContraction<Translator> for Circle {
     }
 }
 
+impl WeightContraction<Circle> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Circle) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<CircleAtInfinity> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<CircleBulk> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleBulk) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleCarrierAspect) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<CircleWeight> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleWeight) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Dipole> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: Dipole) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleBulk> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: DipoleBulk) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleCarrierAspect> for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: DipoleCarrierAspect) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleWeight> for CircleAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn weight_contraction(self, other: DipoleWeight) -> RoundPointBulk {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Flector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<FlectorAtInfinity> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Motor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Origin> for CircleAtInfinity {
+    type Output = DipoleBulk;
+
+    fn weight_contraction(self, other: Origin) -> DipoleBulk {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPoint> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn weight_contraction(self, other: RoundPoint) -> DipoleAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointAtInfinity> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn weight_contraction(self, other: RoundPointAtInfinity) -> DipoleAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointAtOrigin> for CircleAtInfinity {
+    type Output = DipoleBulk;
+
+    fn weight_contraction(self, other: RoundPointAtOrigin) -> DipoleBulk {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointBulk> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn weight_contraction(self, other: RoundPointBulk) -> DipoleAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointOnOrigin> for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> DipoleAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Transflector> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Translator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<Circle> for CircleBulk {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Circle) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<CircleAtInfinity> for CircleBulk {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6551,6 +7335,14 @@ impl WeightContraction<Dipole> for CircleBulk {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for CircleBulk {
+    type Output = RoundPointBulk;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> RoundPointBulk {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for CircleBulk {
     type Output = RoundPointBulk;
 
@@ -6567,14 +7359,6 @@ impl WeightContraction<DipoleCarrierAspect> for CircleBulk {
     }
 }
 
-impl WeightContraction<FlatPoint> for CircleBulk {
-    type Output = RoundPointBulk;
-
-    fn weight_contraction(self, other: FlatPoint) -> RoundPointBulk {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl WeightContraction<Flector> for CircleBulk {
     type Output = MultiVector;
 
@@ -6587,14 +7371,6 @@ impl WeightContraction<FlectorAtInfinity> for CircleBulk {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl WeightContraction<Line> for CircleBulk {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Line) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6679,6 +7455,14 @@ impl WeightContraction<Circle> for CircleCarrierAspect {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for CircleCarrierAspect {
     type Output = Scalar;
 
@@ -6703,6 +7487,14 @@ impl WeightContraction<Dipole> for CircleCarrierAspect {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for CircleCarrierAspect {
+    type Output = RoundPointOnOrigin;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> RoundPointOnOrigin {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for CircleCarrierAspect {
     type Output = RoundPointOnOrigin;
 
@@ -6720,9 +7512,9 @@ impl WeightContraction<DipoleCarrierAspect> for CircleCarrierAspect {
 }
 
 impl WeightContraction<FlatPoint> for CircleCarrierAspect {
-    type Output = RoundPointOnOrigin;
+    type Output = RoundPointBulk;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6863,6 +7655,14 @@ impl WeightContraction<Circle> for CircleWeight {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for CircleWeight {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleCarrierAspect> for CircleWeight {
     type Output = Scalar;
 
@@ -6875,6 +7675,14 @@ impl WeightContraction<Dipole> for CircleWeight {
     type Output = RoundPointOnOrigin;
 
     fn weight_contraction(self, other: Dipole) -> RoundPointOnOrigin {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for CircleWeight {
+    type Output = RoundPointOnOrigin;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> RoundPointOnOrigin {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -6896,9 +7704,9 @@ impl WeightContraction<DipoleCarrierAspect> for CircleWeight {
 }
 
 impl WeightContraction<FlatPoint> for CircleWeight {
-    type Output = RoundPointOnOrigin;
+    type Output = RoundPointBulk;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPointOnOrigin {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7035,6 +7843,14 @@ impl WeightContraction<Dipole> for Dipole {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for Dipole {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7199,10 +8015,162 @@ impl WeightContraction<Translator> for Dipole {
     }
 }
 
+impl WeightContraction<Dipole> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleBulk> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleBulk) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleCarrierAspect) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleWeight> for DipoleAtInfinity {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleWeight) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Flector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<FlectorAtInfinity> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Motor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<MultiVector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Origin> for DipoleAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn weight_contraction(self, other: Origin) -> RoundPointBulk {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Rotor> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPoint> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: RoundPoint) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointAtInfinity> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointAtOrigin> for DipoleAtInfinity {
+    type Output = RoundPointBulk;
+
+    fn weight_contraction(self, other: RoundPointAtOrigin) -> RoundPointBulk {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointBulk> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: RoundPointBulk) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<RoundPointOnOrigin> for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> RoundPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Transflector> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<Translator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<Dipole> for DipoleBulk {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for DipoleBulk {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7219,14 +8187,6 @@ impl WeightContraction<DipoleCarrierAspect> for DipoleBulk {
     type Output = Scalar;
 
     fn weight_contraction(self, other: DipoleCarrierAspect) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl WeightContraction<FlatPoint> for DipoleBulk {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: FlatPoint) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7323,6 +8283,14 @@ impl WeightContraction<Dipole> for DipoleCarrierAspect {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7467,6 +8435,14 @@ impl WeightContraction<Dipole> for DipoleWeight {
     type Output = Scalar;
 
     fn weight_contraction(self, other: Dipole) -> Scalar {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for DipoleWeight {
+    type Output = Scalar;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -7775,14 +8751,6 @@ impl WeightContraction<DipoleWeight> for FlatPointAtInfinity {
     }
 }
 
-impl WeightContraction<FlatPoint> for FlatPointAtInfinity {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: FlatPoint) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl WeightContraction<Flector> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -8031,6 +8999,14 @@ impl WeightContraction<Circle> for Flector {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Flector {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Flector {
     type Output = Infinity;
 
@@ -8059,6 +9035,14 @@ impl WeightContraction<Dipole> for Flector {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for Flector {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8136,9 +9120,9 @@ impl WeightContraction<Infinity> for Flector {
 }
 
 impl WeightContraction<Line> for Flector {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: Line) -> RoundPoint {
+    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8295,6 +9279,14 @@ impl WeightContraction<Circle> for FlectorAtInfinity {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for FlectorAtInfinity {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for FlectorAtInfinity {
     type Output = Infinity;
 
@@ -8327,6 +9319,14 @@ impl WeightContraction<Dipole> for FlectorAtInfinity {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for FlectorAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> FlatPointAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for FlectorAtInfinity {
     type Output = FlatPointAtInfinity;
 
@@ -8351,14 +9351,6 @@ impl WeightContraction<DipoleWeight> for FlectorAtInfinity {
     }
 }
 
-impl WeightContraction<FlatPoint> for FlectorAtInfinity {
-    type Output = MultiVector;
-
-    fn weight_contraction(self, other: FlatPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl WeightContraction<Flector> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -8371,14 +9363,6 @@ impl WeightContraction<FlectorAtInfinity> for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl WeightContraction<Line> for FlectorAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8503,6 +9487,14 @@ impl WeightContraction<Circle> for Horizon {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Horizon {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Horizon {
     type Output = Infinity;
 
@@ -8528,9 +9520,17 @@ impl WeightContraction<CircleWeight> for Horizon {
 }
 
 impl WeightContraction<Dipole> for Horizon {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: Dipole) -> Dipole {
+    fn weight_contraction(self, other: Dipole) -> DipoleAtInfinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for Horizon {
+    type Output = FlatPointAtInfinity;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> FlatPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8544,9 +9544,9 @@ impl WeightContraction<DipoleBulk> for Horizon {
 }
 
 impl WeightContraction<DipoleCarrierAspect> for Horizon {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: DipoleCarrierAspect) -> Dipole {
+    fn weight_contraction(self, other: DipoleCarrierAspect) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8555,14 +9555,6 @@ impl WeightContraction<DipoleWeight> for Horizon {
     type Output = DipoleBulk;
 
     fn weight_contraction(self, other: DipoleWeight) -> DipoleBulk {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl WeightContraction<FlatPoint> for Horizon {
-    type Output = Dipole;
-
-    fn weight_contraction(self, other: FlatPoint) -> Dipole {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8579,14 +9571,6 @@ impl WeightContraction<FlectorAtInfinity> for Horizon {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl WeightContraction<Line> for Horizon {
-    type Output = RoundPointAtInfinity;
-
-    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8624,9 +9608,9 @@ impl WeightContraction<Rotor> for Horizon {
 }
 
 impl WeightContraction<RoundPoint> for Horizon {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn weight_contraction(self, other: RoundPoint) -> Circle {
+    fn weight_contraction(self, other: RoundPoint) -> CircleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8656,9 +9640,9 @@ impl WeightContraction<RoundPointBulk> for Horizon {
 }
 
 impl WeightContraction<RoundPointOnOrigin> for Horizon {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn weight_contraction(self, other: RoundPointOnOrigin) -> Circle {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> CircleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -8823,6 +9807,14 @@ impl WeightContraction<Dipole> for Line {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for Line {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for Line {
     type Output = Infinity;
 
@@ -8848,9 +9840,9 @@ impl WeightContraction<DipoleWeight> for Line {
 }
 
 impl WeightContraction<FlatPoint> for Line {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPoint {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9031,6 +10023,14 @@ impl WeightContraction<Dipole> for LineAtInfinity {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for LineAtInfinity {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for LineAtInfinity {
     type Output = Infinity;
 
@@ -9055,14 +10055,6 @@ impl WeightContraction<DipoleWeight> for LineAtInfinity {
     }
 }
 
-impl WeightContraction<FlatPoint> for LineAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn weight_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl WeightContraction<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -9075,14 +10067,6 @@ impl WeightContraction<FlectorAtInfinity> for LineAtInfinity {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: FlectorAtInfinity) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl WeightContraction<Line> for LineAtInfinity {
-    type Output = Scalar;
-
-    fn weight_contraction(self, other: Line) -> Scalar {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9120,9 +10104,9 @@ impl WeightContraction<Rotor> for LineAtInfinity {
 }
 
 impl WeightContraction<RoundPoint> for LineAtInfinity {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: RoundPoint) -> Dipole {
+    fn weight_contraction(self, other: RoundPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9152,9 +10136,9 @@ impl WeightContraction<RoundPointBulk> for LineAtInfinity {
 }
 
 impl WeightContraction<RoundPointOnOrigin> for LineAtInfinity {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: RoundPointOnOrigin) -> Dipole {
+    fn weight_contraction(self, other: RoundPointOnOrigin) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9199,6 +10183,14 @@ impl WeightContraction<Dipole> for LineAtOrigin {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for LineAtOrigin {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleCarrierAspect> for LineAtOrigin {
     type Output = RoundPoint;
 
@@ -9216,9 +10208,9 @@ impl WeightContraction<DipoleWeight> for LineAtOrigin {
 }
 
 impl WeightContraction<FlatPoint> for LineAtOrigin {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> RoundPoint {
+    fn weight_contraction(self, other: FlatPoint) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9375,6 +10367,14 @@ impl WeightContraction<Circle> for Motor {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Motor {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Motor {
     type Output = FlatPointAtOrigin;
 
@@ -9403,6 +10403,14 @@ impl WeightContraction<Dipole> for Motor {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for Motor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -9647,6 +10655,14 @@ impl WeightContraction<Circle> for MultiVector {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for MultiVector {
     type Output = MultiVector;
 
@@ -9675,6 +10691,14 @@ impl WeightContraction<Dipole> for MultiVector {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for MultiVector {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10015,6 +11039,14 @@ impl WeightContraction<Circle> for Plane {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Plane {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Plane {
     type Output = Infinity;
 
@@ -10047,6 +11079,14 @@ impl WeightContraction<Dipole> for Plane {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for Plane {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for Plane {
     type Output = FlatPoint;
 
@@ -10072,9 +11112,9 @@ impl WeightContraction<DipoleWeight> for Plane {
 }
 
 impl WeightContraction<FlatPoint> for Plane {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> Dipole {
+    fn weight_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10120,9 +11160,9 @@ impl WeightContraction<Infinity> for Plane {
 }
 
 impl WeightContraction<Line> for Plane {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: Line) -> RoundPoint {
+    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10279,6 +11319,14 @@ impl WeightContraction<Circle> for PlaneAtOrigin {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for PlaneAtOrigin {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleCarrierAspect> for PlaneAtOrigin {
     type Output = RoundPoint;
 
@@ -10299,6 +11347,14 @@ impl WeightContraction<Dipole> for PlaneAtOrigin {
     type Output = Dipole;
 
     fn weight_contraction(self, other: Dipole) -> Dipole {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for PlaneAtOrigin {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10328,9 +11384,9 @@ impl WeightContraction<DipoleWeight> for PlaneAtOrigin {
 }
 
 impl WeightContraction<FlatPoint> for PlaneAtOrigin {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> Dipole {
+    fn weight_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10376,9 +11432,9 @@ impl WeightContraction<Infinity> for PlaneAtOrigin {
 }
 
 impl WeightContraction<Line> for PlaneAtOrigin {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: Line) -> RoundPoint {
+    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -10519,6 +11575,14 @@ impl WeightContraction<Circle> for Rotor {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Rotor {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Rotor {
     type Output = FlatPointAtOrigin;
 
@@ -10547,6 +11611,14 @@ impl WeightContraction<Dipole> for Rotor {
     type Output = MultiVector;
 
     fn weight_contraction(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
+impl WeightContraction<DipoleAtInfinity> for Rotor {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11303,6 +12375,14 @@ impl WeightContraction<Circle> for SpacialCurvature {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for SpacialCurvature {
+    type Output = RoundPoint;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> RoundPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for SpacialCurvature {
     type Output = RoundPointAtOrigin;
 
@@ -11335,6 +12415,14 @@ impl WeightContraction<Dipole> for SpacialCurvature {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for SpacialCurvature {
+    type Output = Dipole;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Dipole {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for SpacialCurvature {
     type Output = Dipole;
 
@@ -11360,9 +12448,9 @@ impl WeightContraction<DipoleWeight> for SpacialCurvature {
 }
 
 impl WeightContraction<FlatPoint> for SpacialCurvature {
-    type Output = Dipole;
+    type Output = DipoleBulk;
 
-    fn weight_contraction(self, other: FlatPoint) -> Dipole {
+    fn weight_contraction(self, other: FlatPoint) -> DipoleBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11408,9 +12496,9 @@ impl WeightContraction<Infinity> for SpacialCurvature {
 }
 
 impl WeightContraction<Line> for SpacialCurvature {
-    type Output = RoundPoint;
+    type Output = RoundPointBulk;
 
-    fn weight_contraction(self, other: Line) -> RoundPoint {
+    fn weight_contraction(self, other: Line) -> RoundPointBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11551,6 +12639,14 @@ impl WeightContraction<Circle> for Sphere {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Sphere {
+    type Output = RoundPoint;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> RoundPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Sphere {
     type Output = RoundPointAtOrigin;
 
@@ -11583,6 +12679,14 @@ impl WeightContraction<Dipole> for Sphere {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for Sphere {
+    type Output = Dipole;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> Dipole {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for Sphere {
     type Output = Dipole;
 
@@ -11608,17 +12712,17 @@ impl WeightContraction<DipoleWeight> for Sphere {
 }
 
 impl WeightContraction<FlatPoint> for Sphere {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> Dipole {
+    fn weight_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<FlatPointAtInfinity> for Sphere {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: FlatPointAtInfinity) -> Dipole {
+    fn weight_contraction(self, other: FlatPointAtInfinity) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11656,17 +12760,17 @@ impl WeightContraction<Horizon> for Sphere {
 }
 
 impl WeightContraction<Infinity> for Sphere {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn weight_contraction(self, other: Infinity) -> Circle {
+    fn weight_contraction(self, other: Infinity) -> CircleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
 
 impl WeightContraction<Line> for Sphere {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: Line) -> RoundPoint {
+    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11823,6 +12927,14 @@ impl WeightContraction<Circle> for SphereWeight {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for SphereWeight {
+    type Output = RoundPointOnOrigin;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> RoundPointOnOrigin {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for SphereWeight {
     type Output = Origin;
 
@@ -11847,6 +12959,14 @@ impl WeightContraction<Dipole> for SphereWeight {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for SphereWeight {
+    type Output = DipoleCarrierAspect;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> DipoleCarrierAspect {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for SphereWeight {
     type Output = DipoleWeight;
 
@@ -11864,9 +12984,9 @@ impl WeightContraction<DipoleCarrierAspect> for SphereWeight {
 }
 
 impl WeightContraction<FlatPoint> for SphereWeight {
-    type Output = DipoleCarrierAspect;
+    type Output = DipoleBulk;
 
-    fn weight_contraction(self, other: FlatPoint) -> DipoleCarrierAspect {
+    fn weight_contraction(self, other: FlatPoint) -> DipoleBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -11912,9 +13032,9 @@ impl WeightContraction<Infinity> for SphereWeight {
 }
 
 impl WeightContraction<Line> for SphereWeight {
-    type Output = RoundPointOnOrigin;
+    type Output = RoundPointBulk;
 
-    fn weight_contraction(self, other: Line) -> RoundPointOnOrigin {
+    fn weight_contraction(self, other: Line) -> RoundPointBulk {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12039,6 +13159,14 @@ impl WeightContraction<Circle> for Transflector {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Transflector {
+    type Output = Infinity;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> Infinity {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Transflector {
     type Output = Infinity;
 
@@ -12071,6 +13199,14 @@ impl WeightContraction<Dipole> for Transflector {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for Transflector {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for Transflector {
     type Output = FlatPoint;
 
@@ -12096,9 +13232,9 @@ impl WeightContraction<DipoleWeight> for Transflector {
 }
 
 impl WeightContraction<FlatPoint> for Transflector {
-    type Output = MultiVector;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> MultiVector {
+    fn weight_contraction(self, other: FlatPoint) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12144,9 +13280,9 @@ impl WeightContraction<Infinity> for Transflector {
 }
 
 impl WeightContraction<Line> for Transflector {
-    type Output = RoundPoint;
+    type Output = RoundPointAtInfinity;
 
-    fn weight_contraction(self, other: Line) -> RoundPoint {
+    fn weight_contraction(self, other: Line) -> RoundPointAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12303,6 +13439,14 @@ impl WeightContraction<Circle> for Translator {
     }
 }
 
+impl WeightContraction<CircleAtInfinity> for Translator {
+    type Output = FlatPoint;
+
+    fn weight_contraction(self, other: CircleAtInfinity) -> FlatPoint {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<CircleBulk> for Translator {
     type Output = FlatPointAtOrigin;
 
@@ -12335,6 +13479,14 @@ impl WeightContraction<Dipole> for Translator {
     }
 }
 
+impl WeightContraction<DipoleAtInfinity> for Translator {
+    type Output = MultiVector;
+
+    fn weight_contraction(self, other: DipoleAtInfinity) -> MultiVector {
+        self.anti_wedge(other.anti_dual())
+    }
+}
+
 impl WeightContraction<DipoleBulk> for Translator {
     type Output = MultiVector;
 
@@ -12360,9 +13512,9 @@ impl WeightContraction<DipoleWeight> for Translator {
 }
 
 impl WeightContraction<FlatPoint> for Translator {
-    type Output = MultiVector;
+    type Output = CircleAtInfinity;
 
-    fn weight_contraction(self, other: FlatPoint) -> MultiVector {
+    fn weight_contraction(self, other: FlatPoint) -> CircleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -12416,9 +13568,9 @@ impl WeightContraction<Infinity> for Translator {
 }
 
 impl WeightContraction<Line> for Translator {
-    type Output = MultiVector;
+    type Output = DipoleAtInfinity;
 
-    fn weight_contraction(self, other: Line) -> MultiVector {
+    fn weight_contraction(self, other: Line) -> DipoleAtInfinity {
         self.anti_wedge(other.anti_dual())
     }
 }

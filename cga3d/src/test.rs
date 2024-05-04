@@ -39,25 +39,15 @@ fn round_point_distances() {
     //  So the distance formula is measuring the distance between the centers of each
     //  RoundPoint, and not considering the radius.
 
-    // -3, 0, 0
     let b = RoundPoint::new(-3.0, 0.0, 0.0, 1.0, 4.5);
-    // -2, 0, 0
     let c = RoundPoint::new(-2.0, 0.0, 0.0, 1.0, 2.0);
-    // -1, 0, 0
     let d = RoundPoint::new(-1.0, 0.0, 0.0, 1.0, 0.5);
-    // 0, 0, 0
     let e = RoundPoint::new(0.0, 0.0, 0.0, 1.0, 0.0);
-    // 1, 0, 0
     let f = RoundPoint::new(1.0, 0.0, 0.0, 1.0, 0.5);
-    // 2, 0, 0
     let g = RoundPoint::new(2.0, 0.0, 0.0, 1.0, 2.0);
-    // 3, 0, 0
     let h = RoundPoint::new(3.0, 0.0, 0.0, 1.0, 4.5);
-    // 4, 0, 0
     let i = RoundPoint::new(4.0, 0.0, 0.0, 1.0, 8.0);
-    // 5, 0, 0
     let j = RoundPoint::new(5.0, 0.0, 0.0, 1.0, 12.5);
-    // 6, 0, 0
     let k = RoundPoint::new(6.0, 0.0, 0.0, 1.0, 18.0);
 
     for some_point in vec![b, c, d, e, f, g, h, i, j, k] {
@@ -91,23 +81,19 @@ fn round_point_distances() {
     // 3, 0, 0
     let a = FlatPoint::new(3.0, 0.0, 0.0, 1.0);
 
-    // -3, 0, 0
     let b = FlatPoint::new(-3.0, 0.0, 0.0, 1.0);
-    // -2, 0, 0
     let c = FlatPoint::new(-2.0, 0.0, 0.0, 1.0);
-    // -1, 0, 0
     let d = FlatPoint::new(-1.0, 0.0, 0.0, 1.0);
-    // 0, 0, 0
     let e = FlatPoint::new(0.0, 0.0, 0.0, 1.0);
-    // 1, 0, 0
     let f = FlatPoint::new(1.0, 0.0, 0.0, 1.0);
-    // 2, 0, 0
     let g = FlatPoint::new(2.0, 0.0, 0.0, 1.0);
-    // 3, 0, 0
     let h = FlatPoint::new(3.0, 0.0, 0.0, 1.0);
+    let i = FlatPoint::new(4.0, 0.0, 0.0, 1.0);
+    let j = FlatPoint::new(5.0, 0.0, 0.0, 1.0);
+    let k = FlatPoint::new(6.0, 0.0, 0.0, 1.0);
 
-    // for some_point in vec![b, c, d, e, f, g, h] {
-    //     let distance = a.distance(some_point).unitized_norm();
-    //     println!("FlatPoint distance is {distance}");
-    // }
+    for some_point in vec![b, c, d, e, f, g, h, i, j, k] {
+        let distance = a.distance(some_point).unitized_norm();
+        println!("FlatPoint distance is {distance}");
+    }
 }

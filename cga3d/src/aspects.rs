@@ -49,6 +49,18 @@ impl Bulk for Circle {
     }
 }
 
+impl Bulk for CircleAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Bulk for Dipole {
     type Output = FlatPointAtInfinity;
 
@@ -57,6 +69,16 @@ impl Bulk for Dipole {
             groups: FlatPointAtInfinityGroups {
                 g0: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
             },
+        }
+    }
+}
+
+impl Bulk for DipoleAtInfinity {
+    type Output = FlatPointAtInfinity;
+
+    fn bulk(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups { g0: self.group1() },
         }
     }
 }
@@ -261,6 +283,16 @@ impl RoundBulk for Circle {
     }
 }
 
+impl RoundBulk for CircleAtInfinity {
+    type Output = CircleBulk;
+
+    fn round_bulk(self) -> CircleBulk {
+        CircleBulk {
+            groups: CircleBulkGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
 impl RoundBulk for CircleBulk {
     type Output = CircleBulk;
 
@@ -285,6 +317,16 @@ impl RoundBulk for Dipole {
     fn round_bulk(self) -> DipoleBulk {
         DipoleBulk {
             groups: DipoleBulkGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl RoundBulk for DipoleAtInfinity {
+    type Output = DipoleBulk;
+
+    fn round_bulk(self) -> DipoleBulk {
+        DipoleBulk {
+            groups: DipoleBulkGroups { g0: self.group0() },
         }
     }
 }

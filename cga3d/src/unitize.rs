@@ -40,6 +40,18 @@ impl Unitize for Circle {
     }
 }
 
+impl Unitize for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn unitize(self) -> CircleAtInfinity {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for CircleBulk {
     type Output = CircleBulk;
 
@@ -68,6 +80,18 @@ impl Unitize for Dipole {
     type Output = Dipole;
 
     fn unitize(self) -> Dipole {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn unitize(self) -> DipoleAtInfinity {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

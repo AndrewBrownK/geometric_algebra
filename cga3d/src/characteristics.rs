@@ -235,6 +235,14 @@ impl AntiGrade for Circle {
     }
 }
 
+impl AntiGrade for CircleAtInfinity {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        2
+    }
+}
+
 impl AntiGrade for CircleBulk {
     type Output = isize;
 
@@ -260,6 +268,14 @@ impl AntiGrade for CircleWeight {
 }
 
 impl AntiGrade for Dipole {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        3
+    }
+}
+
+impl AntiGrade for DipoleAtInfinity {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -467,6 +483,14 @@ impl Grade for Circle {
     }
 }
 
+impl Grade for CircleAtInfinity {
+    type Output = isize;
+
+    fn grade() -> isize {
+        3
+    }
+}
+
 impl Grade for CircleBulk {
     type Output = isize;
 
@@ -492,6 +516,14 @@ impl Grade for CircleWeight {
 }
 
 impl Grade for Dipole {
+    type Output = isize;
+
+    fn grade() -> isize {
+        2
+    }
+}
+
+impl Grade for DipoleAtInfinity {
     type Output = isize;
 
     fn grade() -> isize {
@@ -717,9 +749,9 @@ impl Attitude for AntiScalar {
 }
 
 impl Attitude for Circle {
-    type Output = Dipole;
+    type Output = DipoleAtInfinity;
 
-    fn attitude(self) -> Dipole {
+    fn attitude(self) -> DipoleAtInfinity {
         self.anti_wedge(Horizon::unit())
     }
 }
@@ -893,9 +925,9 @@ impl Attitude for SpacialCurvature {
 }
 
 impl Attitude for Sphere {
-    type Output = Circle;
+    type Output = CircleAtInfinity;
 
-    fn attitude(self) -> Circle {
+    fn attitude(self) -> CircleAtInfinity {
         self.anti_wedge(Horizon::unit())
     }
 }
@@ -932,6 +964,14 @@ impl Carrier for Circle {
     }
 }
 
+impl Carrier for CircleAtInfinity {
+    type Output = Horizon;
+
+    fn carrier(self) -> Horizon {
+        self.wedge(Infinity::unit())
+    }
+}
+
 impl Carrier for CircleBulk {
     type Output = Horizon;
 
@@ -960,6 +1000,14 @@ impl Carrier for Dipole {
     type Output = Line;
 
     fn carrier(self) -> Line {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for DipoleAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn carrier(self) -> LineAtInfinity {
         self.wedge(Infinity::unit())
     }
 }
@@ -1357,6 +1405,14 @@ impl Container for Circle {
     }
 }
 
+impl Container for CircleAtInfinity {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
 impl Container for CircleBulk {
     type Output = Horizon;
 
@@ -1385,6 +1441,14 @@ impl Container for Dipole {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for DipoleAtInfinity {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1637,6 +1701,14 @@ impl AntiInverse for Circle {
     }
 }
 
+impl AntiInverse for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn anti_inverse(self) -> CircleAtInfinity {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
 impl AntiInverse for CircleBulk {
     type Output = CircleBulk;
 
@@ -1657,6 +1729,14 @@ impl AntiInverse for Dipole {
     type Output = Dipole;
 
     fn anti_inverse(self) -> Dipole {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn anti_inverse(self) -> DipoleAtInfinity {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -1867,6 +1947,14 @@ impl Inverse for Circle {
     }
 }
 
+impl Inverse for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn inverse(self) -> CircleAtInfinity {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
 impl Inverse for CircleBulk {
     type Output = CircleBulk;
 
@@ -1887,6 +1975,14 @@ impl Inverse for Dipole {
     type Output = Dipole;
 
     fn inverse(self) -> Dipole {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn inverse(self) -> DipoleAtInfinity {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }

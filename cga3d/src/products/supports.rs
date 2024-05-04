@@ -34,6 +34,14 @@ impl AntiSupport for Circle {
     }
 }
 
+impl AntiSupport for CircleAtInfinity {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
 impl AntiSupport for CircleBulk {
     type Output = Horizon;
 
@@ -62,6 +70,14 @@ impl AntiSupport for Dipole {
     type Output = Sphere;
 
     fn anti_support(self) -> Sphere {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for DipoleAtInfinity {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -98,14 +114,6 @@ impl AntiSupport for DualNum {
     }
 }
 
-impl AntiSupport for FlatPoint {
-    type Output = Plane;
-
-    fn anti_support(self) -> Plane {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
 impl AntiSupport for Flector {
     type Output = MultiVector;
 
@@ -118,14 +126,6 @@ impl AntiSupport for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn anti_support(self) -> MultiVector {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
-impl AntiSupport for Line {
-    type Output = Plane;
-
-    fn anti_support(self) -> Plane {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -266,6 +266,14 @@ impl Support for Circle {
     }
 }
 
+impl Support for CircleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn support(self) -> RoundPointAtInfinity {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
 impl Support for CircleCarrierAspect {
     type Output = RoundPointOnOrigin;
 
@@ -278,6 +286,14 @@ impl Support for Dipole {
     type Output = RoundPoint;
 
     fn support(self) -> RoundPoint {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for DipoleAtInfinity {
+    type Output = RoundPointAtInfinity;
+
+    fn support(self) -> RoundPointAtInfinity {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }

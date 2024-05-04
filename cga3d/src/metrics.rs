@@ -45,6 +45,14 @@ impl CosineAngle<Circle> for Circle {
     }
 }
 
+impl CosineAngle<CircleAtInfinity> for Circle {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<CircleBulk> for Circle {
     type Output = DualNum;
 
@@ -65,6 +73,14 @@ impl CosineAngle<Dipole> for Circle {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for Circle {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -157,10 +173,122 @@ impl CosineAngle<RoundPointOnOrigin> for Circle {
     }
 }
 
+impl CosineAngle<Circle> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: Circle) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<CircleAtInfinity> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<CircleBulk> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleBulk) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleCarrierAspect) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<Dipole> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleBulk> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleBulk) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPoint> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPoint) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointBulk> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointBulk) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointOnOrigin> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<Circle> for CircleBulk {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Circle) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<CircleAtInfinity> for CircleBulk {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -189,6 +317,14 @@ impl CosineAngle<Dipole> for CircleBulk {
     }
 }
 
+impl CosineAngle<DipoleAtInfinity> for CircleBulk {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<DipoleBulk> for CircleBulk {
     type Output = DualNum;
 
@@ -202,22 +338,6 @@ impl CosineAngle<DipoleCarrierAspect> for CircleBulk {
 
     fn cosine_angle(self, other: DipoleCarrierAspect) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<FlatPoint> for CircleBulk {
-    type Output = DualNum;
-
-    fn cosine_angle(self, other: FlatPoint) -> DualNum {
-        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<Line> for CircleBulk {
-    type Output = DualNum;
-
-    fn cosine_angle(self, other: Line) -> DualNum {
-        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
 
@@ -261,6 +381,14 @@ impl CosineAngle<Circle> for CircleCarrierAspect {
     }
 }
 
+impl CosineAngle<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<CircleBulk> for CircleCarrierAspect {
     type Output = DualNum;
 
@@ -281,6 +409,14 @@ impl CosineAngle<Dipole> for CircleCarrierAspect {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -365,6 +501,14 @@ impl CosineAngle<Dipole> for Dipole {
     }
 }
 
+impl CosineAngle<DipoleAtInfinity> for Dipole {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<DipoleBulk> for Dipole {
     type Output = DualNum;
 
@@ -437,10 +581,90 @@ impl CosineAngle<RoundPointOnOrigin> for Dipole {
     }
 }
 
+impl CosineAngle<Dipole> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleBulk> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleBulk) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleCarrierAspect) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPoint> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPoint) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointAtInfinity> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointAtOrigin> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointAtOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointBulk> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointBulk) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<RoundPointOnOrigin> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: RoundPointOnOrigin) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<Dipole> for DipoleBulk {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for DipoleBulk {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -457,14 +681,6 @@ impl CosineAngle<DipoleCarrierAspect> for DipoleBulk {
     type Output = DualNum;
 
     fn cosine_angle(self, other: DipoleCarrierAspect) -> DualNum {
-        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
-    }
-}
-
-impl CosineAngle<FlatPoint> for DipoleBulk {
-    type Output = DualNum;
-
-    fn cosine_angle(self, other: FlatPoint) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -505,6 +721,14 @@ impl CosineAngle<Dipole> for DipoleCarrierAspect {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -917,6 +1141,14 @@ impl CosineAngle<Dipole> for Plane {
     }
 }
 
+impl CosineAngle<DipoleAtInfinity> for Plane {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<DipoleBulk> for Plane {
     type Output = DualNum;
 
@@ -1057,6 +1289,14 @@ impl CosineAngle<Dipole> for PlaneAtOrigin {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for PlaneAtOrigin {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1365,6 +1605,14 @@ impl CosineAngle<Circle> for SpacialCurvature {
     }
 }
 
+impl CosineAngle<CircleAtInfinity> for SpacialCurvature {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<CircleBulk> for SpacialCurvature {
     type Output = DualNum;
 
@@ -1385,6 +1633,14 @@ impl CosineAngle<Dipole> for SpacialCurvature {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for SpacialCurvature {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1493,6 +1749,14 @@ impl CosineAngle<Circle> for Sphere {
     }
 }
 
+impl CosineAngle<CircleAtInfinity> for Sphere {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: CircleAtInfinity) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
 impl CosineAngle<CircleBulk> for Sphere {
     type Output = DualNum;
 
@@ -1513,6 +1777,14 @@ impl CosineAngle<Dipole> for Sphere {
     type Output = DualNum;
 
     fn cosine_angle(self, other: Dipole) -> DualNum {
+        self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
+    }
+}
+
+impl CosineAngle<DipoleAtInfinity> for Sphere {
+    type Output = DualNum;
+
+    fn cosine_angle(self, other: DipoleAtInfinity) -> DualNum {
         self.anti_wedge(other.anti_dual()).bulk_norm().add(self.weight_norm().geometric_anti_product(other.weight_norm()))
     }
 }
@@ -1637,1170 +1909,21 @@ impl CosineAngle<Sphere> for Sphere {
     }
 }
 
-impl Distance<Dipole> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPoint> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPointAtOrigin> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPointAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for Circle {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for CircleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for CircleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for CircleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for CircleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPoint> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPointAtOrigin> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPointAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for CircleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for CircleWeight {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<FlatPoint> for CircleWeight {
-    type Output = DualNum;
-
-    fn distance(self, other: FlatPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: Line) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<LineAtOrigin> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: LineAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for Dipole {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for DipoleBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: Line) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<LineAtOrigin> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: LineAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for DipoleCarrierAspect {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for DipoleWeight {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for DipoleWeight {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Line> for DipoleWeight {
-    type Output = DualNum;
-
-    fn distance(self, other: Line) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for FlatPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for FlatPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for FlatPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for FlatPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for FlatPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for FlatPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for Infinity {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for Line {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for Line {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for Line {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for LineAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for LineAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for Origin {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for Origin {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Plane> for Origin {
-    type Output = DualNum;
-
-    fn distance(self, other: Plane) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for Origin {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for Plane {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for Plane {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for Plane {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for Plane {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for PlaneAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for PlaneAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Plane> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: Plane) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<PlaneAtOrigin> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: PlaneAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SpacialCurvature> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: SpacialCurvature) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SphereWeight> for RoundPoint {
-    type Output = DualNum;
-
-    fn distance(self, other: SphereWeight) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Plane> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Plane) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SpacialCurvature> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: SpacialCurvature) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<SphereWeight> for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: SphereWeight) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for RoundPointBulk {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Circle> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Circle) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleCarrierAspect> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<CircleWeight> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: CircleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Dipole> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Dipole) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleCarrierAspect> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleCarrierAspect) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<DipoleWeight> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: DipoleWeight) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Plane> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Plane) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<PlaneAtOrigin> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: PlaneAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.wedge(other).attitude().bulk_norm().add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Sphere> for RoundPointOnOrigin {
-    type Output = DualNum;
-
-    fn distance(self, other: Sphere) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for SpacialCurvature {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for SpacialCurvature {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for SpacialCurvature {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for SpacialCurvature {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<Origin> for Sphere {
-    type Output = DualNum;
-
-    fn distance(self, other: Origin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPoint> for Sphere {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPoint) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointAtOrigin> for Sphere {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointAtOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
-impl Distance<RoundPointOnOrigin> for Sphere {
-    type Output = DualNum;
-
-    fn distance(self, other: RoundPointOnOrigin) -> DualNum {
-        self.anti_wedge(other).add(self.wedge(other.attitude()).weight_norm())
-    }
-}
-
 impl SineAngle<Circle> for Circle {
     type Output = DualNum;
 
     fn sine_angle(self, other: Circle) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleAtInfinity> for Circle {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -2834,6 +1957,17 @@ impl SineAngle<Dipole> for Circle {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for Circle {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -2962,10 +2096,164 @@ impl SineAngle<RoundPointOnOrigin> for Circle {
     }
 }
 
+impl SineAngle<Circle> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: Circle) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleAtInfinity> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleBulk> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleBulk) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleCarrierAspect> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleCarrierAspect) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<Dipole> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulk> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleBulk) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPoint) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulk> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointBulk) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointOnOrigin> for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Circle> for CircleBulk {
     type Output = DualNum;
 
     fn sine_angle(self, other: Circle) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<CircleAtInfinity> for CircleBulk {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -3006,6 +2294,17 @@ impl SineAngle<Dipole> for CircleBulk {
     }
 }
 
+impl SineAngle<DipoleAtInfinity> for CircleBulk {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<DipoleBulk> for CircleBulk {
     type Output = DualNum;
 
@@ -3021,28 +2320,6 @@ impl SineAngle<DipoleCarrierAspect> for CircleBulk {
     type Output = DualNum;
 
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
-        let mut cos: DualNum = self.cosine_angle(other);
-        let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<FlatPoint> for CircleBulk {
-    type Output = DualNum;
-
-    fn sine_angle(self, other: FlatPoint) -> DualNum {
-        let mut cos: DualNum = self.cosine_angle(other);
-        let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<Line> for CircleBulk {
-    type Output = DualNum;
-
-    fn sine_angle(self, other: Line) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -3105,6 +2382,17 @@ impl SineAngle<Circle> for CircleCarrierAspect {
     }
 }
 
+impl SineAngle<CircleAtInfinity> for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<CircleBulk> for CircleCarrierAspect {
     type Output = DualNum;
 
@@ -3131,6 +2419,17 @@ impl SineAngle<Dipole> for CircleCarrierAspect {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for CircleCarrierAspect {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -3248,6 +2547,17 @@ impl SineAngle<Dipole> for Dipole {
     }
 }
 
+impl SineAngle<DipoleAtInfinity> for Dipole {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<DipoleBulk> for Dipole {
     type Output = DualNum;
 
@@ -3347,10 +2657,120 @@ impl SineAngle<RoundPointOnOrigin> for Dipole {
     }
 }
 
+impl SineAngle<Dipole> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleBulk> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleBulk) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleCarrierAspect> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPoint> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPoint) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtInfinity> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointAtOrigin> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointAtOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointBulk> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointBulk) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<RoundPointOnOrigin> for DipoleAtInfinity {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: RoundPointOnOrigin) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<Dipole> for DipoleBulk {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for DipoleBulk {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -3373,17 +2793,6 @@ impl SineAngle<DipoleCarrierAspect> for DipoleBulk {
     type Output = DualNum;
 
     fn sine_angle(self, other: DipoleCarrierAspect) -> DualNum {
-        let mut cos: DualNum = self.cosine_angle(other);
-        let mut cos_squared: DualNum = cos.geometric_product(cos);
-        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
-        sub.sqrt()
-    }
-}
-
-impl SineAngle<FlatPoint> for DipoleBulk {
-    type Output = DualNum;
-
-    fn sine_angle(self, other: FlatPoint) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -3439,6 +2848,17 @@ impl SineAngle<Dipole> for DipoleCarrierAspect {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for DipoleCarrierAspect {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -4007,6 +3427,17 @@ impl SineAngle<Dipole> for Plane {
     }
 }
 
+impl SineAngle<DipoleAtInfinity> for Plane {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<DipoleBulk> for Plane {
     type Output = DualNum;
 
@@ -4198,6 +3629,17 @@ impl SineAngle<Dipole> for PlaneAtOrigin {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for PlaneAtOrigin {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -4623,6 +4065,17 @@ impl SineAngle<Circle> for SpacialCurvature {
     }
 }
 
+impl SineAngle<CircleAtInfinity> for SpacialCurvature {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<CircleBulk> for SpacialCurvature {
     type Output = DualNum;
 
@@ -4649,6 +4102,17 @@ impl SineAngle<Dipole> for SpacialCurvature {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for SpacialCurvature {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);
@@ -4799,6 +4263,17 @@ impl SineAngle<Circle> for Sphere {
     }
 }
 
+impl SineAngle<CircleAtInfinity> for Sphere {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: CircleAtInfinity) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
 impl SineAngle<CircleBulk> for Sphere {
     type Output = DualNum;
 
@@ -4825,6 +4300,17 @@ impl SineAngle<Dipole> for Sphere {
     type Output = DualNum;
 
     fn sine_angle(self, other: Dipole) -> DualNum {
+        let mut cos: DualNum = self.cosine_angle(other);
+        let mut cos_squared: DualNum = cos.geometric_product(cos);
+        let mut sub: DualNum = DualNum::unit().sub(cos_squared);
+        sub.sqrt()
+    }
+}
+
+impl SineAngle<DipoleAtInfinity> for Sphere {
+    type Output = DualNum;
+
+    fn sine_angle(self, other: DipoleAtInfinity) -> DualNum {
         let mut cos: DualNum = self.cosine_angle(other);
         let mut cos_squared: DualNum = cos.geometric_product(cos);
         let mut sub: DualNum = DualNum::unit().sub(cos_squared);

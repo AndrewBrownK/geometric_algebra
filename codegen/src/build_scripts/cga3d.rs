@@ -140,6 +140,23 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         // TODO RoundPointAtInfinity is extremely weird, can't be sure yet if it actually works
         "RoundPointAtInfinity:e1,e2,e3,e5",
 
+        // TODO I found/noticed this object as the Attitude of a Circle.
+        //  The carrier line is a LineAtInfinity. Therefore both its center
+        //  and its endpoints are in infinity. This makes me wonder if there should
+        //  be yet another (third) conjunctive distinction. "at" is centered on something,
+        //  "on" is zero distance from something, and "in" could be both at and on at the same
+        //  time. Because you could very well imagine a DipoleOnInfinity (well I guess that is
+        //  just FlatPoints) or a Dipole centered on infinity but with a finite endpoint.... maybe..
+        //  So I don't know exactly how many variants I'll need. I'll just start wit this
+        //  and see where it takes me. I do like the "In" conjunction as it relates to the carrier
+        //  though.
+        "DipoleAtInfinity:e23,e31,e12|e15,e25,e35",
+
+        // TODO CircleAtInfinity is similar story to DipoleAtInfinity, discovered as
+        //  Attitude of Sphere
+        "CircleAtInfinity:e321,e235,e315,e125",
+
+
         // TODO can I get more interesting/intuitive names for these?
         "RoundPointBulk:e1,e2,e3",
         "DipoleBulk:e23,e31,e12",

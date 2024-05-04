@@ -89,6 +89,14 @@ impl BulkNormSquared for Circle {
     }
 }
 
+impl BulkNormSquared for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for CircleBulk {
     type Output = Scalar;
 
@@ -106,6 +114,14 @@ impl BulkNormSquared for CircleCarrierAspect {
 }
 
 impl BulkNormSquared for Dipole {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for DipoleAtInfinity {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -313,6 +329,14 @@ impl BulkNorm for Circle {
     }
 }
 
+impl BulkNorm for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
 impl BulkNorm for CircleBulk {
     type Output = Scalar;
 
@@ -330,6 +354,14 @@ impl BulkNorm for CircleCarrierAspect {
 }
 
 impl BulkNorm for Dipole {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for DipoleAtInfinity {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -537,6 +569,14 @@ impl WeightNormSquared for Circle {
     }
 }
 
+impl WeightNormSquared for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
 impl WeightNormSquared for CircleBulk {
     type Output = AntiScalar;
 
@@ -554,6 +594,14 @@ impl WeightNormSquared for CircleCarrierAspect {
 }
 
 impl WeightNormSquared for Dipole {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for DipoleAtInfinity {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -761,6 +809,14 @@ impl WeightNorm for Circle {
     }
 }
 
+impl WeightNorm for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
 impl WeightNorm for CircleBulk {
     type Output = AntiScalar;
 
@@ -778,6 +834,14 @@ impl WeightNorm for CircleCarrierAspect {
 }
 
 impl WeightNorm for Dipole {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for DipoleAtInfinity {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -985,6 +1049,14 @@ impl GeometricNorm for Circle {
     }
 }
 
+impl GeometricNorm for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
 impl GeometricNorm for CircleBulk {
     type Output = DualNum;
 
@@ -1002,6 +1074,14 @@ impl GeometricNorm for CircleCarrierAspect {
 }
 
 impl GeometricNorm for Dipole {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for DipoleAtInfinity {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1209,6 +1289,14 @@ impl UnitizedNormSquared for Circle {
     }
 }
 
+impl UnitizedNormSquared for CircleAtInfinity {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedNormSquared for CircleBulk {
     type Output = f32;
 
@@ -1226,6 +1314,14 @@ impl UnitizedNormSquared for CircleCarrierAspect {
 }
 
 impl UnitizedNormSquared for Dipole {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for DipoleAtInfinity {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1433,6 +1529,14 @@ impl UnitizedNorm for Circle {
     }
 }
 
+impl UnitizedNorm for CircleAtInfinity {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
 impl UnitizedNorm for CircleBulk {
     type Output = f32;
 
@@ -1450,6 +1554,14 @@ impl UnitizedNorm for CircleCarrierAspect {
 }
 
 impl UnitizedNorm for Dipole {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for DipoleAtInfinity {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {

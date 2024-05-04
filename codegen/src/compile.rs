@@ -2994,6 +2994,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         for (param_a, param_b) in registry.pair_parameters() {
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
+
+            // No distance formula in CGA yet
+            // https://twitter.com/EricLengyel/status/1786624195402813549
+            if self.algebra.algebra_name().starts_with("cga") { continue }
+
             let name = "Distance";
             let _: Option<()> = try {
                 let _ = self.trait_impls.get_class_invocation("Grade", param_a.multi_vector_class())?;
