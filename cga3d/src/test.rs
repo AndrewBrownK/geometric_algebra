@@ -88,3 +88,48 @@ fn round_point_distances() {
         // println!("FlatPoint distance is {distance}");
     }
 }
+
+fn distance_speculation() {
+    // assume we can calculate distance between two RoundPoints
+    // assume we can calculate distance between two Spheres
+    // Assume we can calculate distance between RoundPoint and Sphere
+
+    // The remaining combinations necessary...
+    // - Dipole and RoundPoint
+    // - Dipole and Dipole
+    // - Dipole and Circle
+    // - Dipole and Sphere
+    // - Circle and RoundPoint
+    // - Circle and Circle
+    // - Circle and Sphere
+
+    // So the strategy is this... use geometric operations to create a RoundPoint of zero radius
+    // on the object that is closest to the other object being compared. If we do this from
+    // one side, then that solves the following:
+    // - Dipole and RoundPoint
+    // - Dipole and Sphere
+    // - Circle and RoundPoint
+    // - Circle and Sphere
+
+    // The above has the slightly awkward caveat of imaginary radius objects. So watch out for that.
+
+    // After that however, we still have these remaining cases that can get awkward if they are
+    // parallel or skew.
+    // - Dipole and Dipole
+    // - Dipole and Circle
+    // - Circle and Circle
+
+    // Anyway... more on creating a RoundPoint on a Dipole|Circle closest to RoundPoint|Sphere...
+    // Take the RoundPoint|Sphere and take its center (which is itself a RoundPoint).
+    // Force the Center (RoundPoint) radius to zero.
+    // Then take the carrier of the other Dipole|Circle (which will be a Line|Plane), and
+    // orthogonally project the earlier mentioned Center (RoundPoint) onto it.
+    // Then orthogonally project the Center (RoundPoint) again, but this time onto the Container of
+    // the Dipole|Circle. In fact... you might not need the Container at all... assuming these
+    // impls actually work and don't have anything funky about them:
+    // - impl ProjectOrthogonallyOnto<Dipole> for RoundPoint
+    // - impl ProjectOrthogonallyOnto<Circle> for RoundPoint
+    // Even better if those projections work accurately for Dipole|Circle of imaginary radius.
+
+
+}
