@@ -2016,6 +2016,10 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // ...unless I convert to Center anyway...
 
         for param_a in registry.single_parameters() {
+
+            // TODO according to page 204-205, the conformal conjugate might be useful in defining
+            //  the distance between the origin and the center position
+
             let center = match self.trait_impls.get_single_invocation("Center", variable(&param_a)) {
                 None => continue,
                 Some(c) => c

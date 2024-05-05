@@ -2357,7 +2357,7 @@ impl Neg for Flector {
         Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2391,7 +2391,7 @@ impl Neg for Line {
     fn neg(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -2416,7 +2416,7 @@ impl Neg for LineAtOrigin {
     fn neg(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -2428,7 +2428,7 @@ impl Neg for Motor {
     fn neg(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -2443,9 +2443,9 @@ impl Neg for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0() * Simd32x2::from(-1.0),
                 g1: self.group1() * Simd32x4::from(-1.0),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
-                g4: self.group4() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g4: self.group4() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2472,8 +2472,8 @@ impl Neg for MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: self.group0() * Simd32x2::from(-1.0),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -2495,7 +2495,7 @@ impl Neg for Plane {
     fn neg(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2507,7 +2507,7 @@ impl Neg for PlaneAtOrigin {
     fn neg(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -2543,7 +2543,7 @@ impl Neg for Rotor {
     fn neg(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2566,7 +2566,7 @@ impl Neg for Transflector {
         Transflector {
             groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }

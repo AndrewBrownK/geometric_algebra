@@ -252,7 +252,7 @@ impl AntiReversal for Flector {
         Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
-                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g1: self.group1(),
             },
         }
     }
@@ -286,7 +286,7 @@ impl AntiReversal for Line {
     fn anti_reversal(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -311,7 +311,7 @@ impl AntiReversal for LineAtOrigin {
     fn anti_reversal(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -323,7 +323,7 @@ impl AntiReversal for Motor {
     fn anti_reversal(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -338,9 +338,9 @@ impl AntiReversal for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x4::from(-1.0),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
-                g4: self.group4() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g4: self.group4(),
             },
         }
     }
@@ -367,8 +367,8 @@ impl AntiReversal for MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2(),
             },
         }
     }
@@ -389,9 +389,7 @@ impl AntiReversal for Plane {
 
     fn anti_reversal(self) -> Plane {
         Plane {
-            groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
-            },
+            groups: PlaneGroups { g0: self.group0() },
         }
     }
 }
@@ -401,9 +399,7 @@ impl AntiReversal for PlaneAtOrigin {
 
     fn anti_reversal(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
-            },
+            groups: PlaneAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -438,7 +434,7 @@ impl AntiReversal for Rotor {
     fn anti_reversal(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -461,7 +457,7 @@ impl AntiReversal for Transflector {
         Transflector {
             groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g1: self.group1(),
             },
         }
     }
@@ -506,7 +502,7 @@ impl Automorphism for Flector {
         Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -540,7 +536,7 @@ impl Automorphism for Line {
     fn automorphism(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0(),
                 g1: self.group1(),
             },
         }
@@ -562,9 +558,7 @@ impl Automorphism for LineAtOrigin {
 
     fn automorphism(self) -> LineAtOrigin {
         LineAtOrigin {
-            groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
-            },
+            groups: LineAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -575,7 +569,7 @@ impl Automorphism for Motor {
     fn automorphism(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0(),
                 g1: self.group1(),
             },
         }
@@ -590,9 +584,9 @@ impl Automorphism for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x4::from(-1.0),
-                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g2: self.group2(),
                 g3: self.group3(),
-                g4: self.group4() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g4: self.group4() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -619,8 +613,8 @@ impl Automorphism for MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
-                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g1: self.group1(),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -642,7 +636,7 @@ impl Automorphism for Plane {
     fn automorphism(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -654,7 +648,7 @@ impl Automorphism for PlaneAtOrigin {
     fn automorphism(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -689,9 +683,7 @@ impl Automorphism for Rotor {
 
     fn automorphism(self) -> Rotor {
         Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
-            },
+            groups: RotorGroups { g0: self.group0() },
         }
     }
 }
@@ -713,7 +705,7 @@ impl Automorphism for Transflector {
         Transflector {
             groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -756,7 +748,7 @@ impl Conjugation for Flector {
         Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
-                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g1: self.group1(),
             },
         }
     }
@@ -790,7 +782,7 @@ impl Conjugation for Line {
     fn conjugation(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -815,7 +807,7 @@ impl Conjugation for LineAtOrigin {
     fn conjugation(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -827,7 +819,7 @@ impl Conjugation for Motor {
     fn conjugation(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -842,9 +834,9 @@ impl Conjugation for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x4::from(-1.0),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
-                g4: self.group4() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g4: self.group4(),
             },
         }
     }
@@ -871,8 +863,8 @@ impl Conjugation for MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2(),
             },
         }
     }
@@ -893,9 +885,7 @@ impl Conjugation for Plane {
 
     fn conjugation(self) -> Plane {
         Plane {
-            groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
-            },
+            groups: PlaneGroups { g0: self.group0() },
         }
     }
 }
@@ -905,9 +895,7 @@ impl Conjugation for PlaneAtOrigin {
 
     fn conjugation(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
-            },
+            groups: PlaneAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -942,7 +930,7 @@ impl Conjugation for Rotor {
     fn conjugation(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -965,7 +953,7 @@ impl Conjugation for Transflector {
         Transflector {
             groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g1: self.group1(),
             },
         }
     }
@@ -1695,7 +1683,7 @@ impl Reversal for Flector {
         Flector {
             groups: FlectorGroups {
                 g0: self.group0(),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1729,7 +1717,7 @@ impl Reversal for Line {
     fn reversal(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -1754,7 +1742,7 @@ impl Reversal for LineAtOrigin {
     fn reversal(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1766,7 +1754,7 @@ impl Reversal for Motor {
     fn reversal(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
@@ -1781,9 +1769,9 @@ impl Reversal for MultiVector {
             groups: MultiVectorGroups {
                 g0: self.group0(),
                 g1: self.group1(),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g2: self.group2() * Simd32x3::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
-                g4: self.group4() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g4: self.group4() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1810,8 +1798,8 @@ impl Reversal for MultiVectorAtOrigin {
         MultiVectorAtOrigin {
             groups: MultiVectorAtOriginGroups {
                 g0: self.group0(),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g2: self.group2() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1833,7 +1821,7 @@ impl Reversal for Plane {
     fn reversal(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1845,7 +1833,7 @@ impl Reversal for PlaneAtOrigin {
     fn reversal(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1877,7 +1865,7 @@ impl Reversal for Rotor {
     fn reversal(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -1900,7 +1888,7 @@ impl Reversal for Transflector {
         Transflector {
             groups: TransflectorGroups {
                 g0: self.group0(),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }

@@ -4300,7 +4300,7 @@ impl Neg for AntiScalar {
 
     fn neg(self) -> AntiScalar {
         AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
+            groups: AntiScalarGroups { g0: -self.group0() },
         }
     }
 }
@@ -4311,9 +4311,9 @@ impl Neg for Circle {
     fn neg(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g1: self.group1() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g2: self.group2() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4325,7 +4325,7 @@ impl Neg for CircleAtInfinity {
     fn neg(self) -> CircleAtInfinity {
         CircleAtInfinity {
             groups: CircleAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4347,7 +4347,7 @@ impl Neg for CircleCarrierAspect {
     fn neg(self) -> CircleCarrierAspect {
         CircleCarrierAspect {
             groups: CircleCarrierAspectGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4359,7 +4359,7 @@ impl Neg for CircleWeight {
     fn neg(self) -> CircleWeight {
         CircleWeight {
             groups: CircleWeightGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4435,7 +4435,7 @@ impl Neg for DualNum {
     fn neg(self) -> DualNum {
         DualNum {
             groups: DualNumGroups {
-                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g0: self.group0() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -4482,7 +4482,7 @@ impl Neg for Flector {
         Flector {
             groups: FlectorGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4494,7 +4494,7 @@ impl Neg for FlectorAtInfinity {
     fn neg(self) -> FlectorAtInfinity {
         FlectorAtInfinity {
             groups: FlectorAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4505,7 +4505,7 @@ impl Neg for Horizon {
 
     fn neg(self) -> Horizon {
         Horizon {
-            groups: HorizonGroups { g0: self.group0() },
+            groups: HorizonGroups { g0: -self.group0() },
         }
     }
 }
@@ -4526,8 +4526,8 @@ impl Neg for Line {
     fn neg(self) -> Line {
         Line {
             groups: LineGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4539,7 +4539,7 @@ impl Neg for LineAtInfinity {
     fn neg(self) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4551,7 +4551,7 @@ impl Neg for LineAtOrigin {
     fn neg(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4563,8 +4563,8 @@ impl Neg for Motor {
     fn neg(self) -> Motor {
         Motor {
             groups: MotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
-                g1: self.group1() * Simd32x3::from([-1.0, 1.0, -1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4576,17 +4576,17 @@ impl Neg for MultiVector {
     fn neg(self) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g0: self.group0() * Simd32x2::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x2::from(-1.0),
                 g3: self.group3() * Simd32x3::from(-1.0),
                 g4: self.group4() * Simd32x3::from(-1.0),
                 g5: self.group5() * Simd32x4::from(-1.0),
-                g6: self.group6() * Simd32x4::from([1.0, -1.0, 1.0, -1.0]),
-                g7: self.group7() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g8: self.group8() * Simd32x3::from([-1.0, 1.0, -1.0]),
-                g9: self.group9() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g10: self.group10() * Simd32x2::from([-1.0, 1.0]),
+                g6: self.group6() * Simd32x4::from(-1.0),
+                g7: self.group7() * Simd32x3::from(-1.0),
+                g8: self.group8() * Simd32x3::from(-1.0),
+                g9: self.group9() * Simd32x3::from(-1.0),
+                g10: self.group10() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -4608,7 +4608,7 @@ impl Neg for Plane {
     fn neg(self) -> Plane {
         Plane {
             groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4620,7 +4620,7 @@ impl Neg for PlaneAtOrigin {
     fn neg(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -4632,7 +4632,7 @@ impl Neg for Rotor {
     fn neg(self) -> Rotor {
         Rotor {
             groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4715,7 +4715,7 @@ impl Neg for SpacialCurvature {
     fn neg(self) -> SpacialCurvature {
         SpacialCurvature {
             groups: SpacialCurvatureGroups {
-                g0: self.group0() * Simd32x2::from([-1.0, 1.0]),
+                g0: self.group0() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -4727,8 +4727,8 @@ impl Neg for Sphere {
     fn neg(self) -> Sphere {
         Sphere {
             groups: SphereGroups {
-                g0: self.group0() * Simd32x3::from([1.0, -1.0, 1.0]),
-                g1: self.group1() * Simd32x2::from([-1.0, 1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x2::from(-1.0),
             },
         }
     }
@@ -4751,7 +4751,7 @@ impl Neg for Transflector {
         Transflector {
             groups: TransflectorGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from([1.0, -1.0, 1.0, 1.0]),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -4763,7 +4763,7 @@ impl Neg for Translator {
     fn neg(self) -> Translator {
         Translator {
             groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, 1.0, -1.0, 1.0]),
+                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }

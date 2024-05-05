@@ -395,7 +395,7 @@ fn dual_num__neg(self_: DualNum) -> DualNum {
 }
 
 fn flector__neg(self_: Flector) -> Flector {
-    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
 }
 
 fn flector_at_infinity__neg(self_: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -407,7 +407,7 @@ fn horizon__neg(self_: Horizon) -> Horizon {
 }
 
 fn line__neg(self_: Line) -> Line {
-    return Line(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0));
+    return Line(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn line_at_infinity__neg(self_: LineAtInfinity) -> LineAtInfinity {
@@ -415,15 +415,15 @@ fn line_at_infinity__neg(self_: LineAtInfinity) -> LineAtInfinity {
 }
 
 fn line_at_origin__neg(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn motor__neg(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0), self_.g1 * vec3<f32>(-1.0));
+    return Motor(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn multi_vector__neg(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0 * vec2<f32>(-1.0), self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(-1.0, 1.0, -1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return MultiVector(self_.g0 * vec2<f32>(-1.0), self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec4<f32>(-1.0));
 }
 
 fn multi_vector_at_infinity__neg(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -431,7 +431,7 @@ fn multi_vector_at_infinity__neg(self_: MultiVectorAtInfinity) -> MultiVectorAtI
 }
 
 fn multi_vector_at_origin__neg(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0), self_.g2 * vec3<f32>(1.0, -1.0, 1.0));
+    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0), self_.g1 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0));
 }
 
 fn origin__neg(self_: Origin) -> Origin {
@@ -439,11 +439,11 @@ fn origin__neg(self_: Origin) -> Origin {
 }
 
 fn plane__neg(self_: Plane) -> Plane {
-    return Plane(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Plane(self_.g0 * vec4<f32>(-1.0));
 }
 
 fn plane_at_origin__neg(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0 * vec3<f32>(1.0, -1.0, 1.0));
+    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn point__neg(self_: Point) -> Point {
@@ -455,7 +455,7 @@ fn point_at_infinity__neg(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor__neg(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, -1.0));
+    return Rotor(self_.g0 * vec4<f32>(-1.0));
 }
 
 fn scalar__neg(self_: Scalar) -> Scalar {
@@ -463,7 +463,7 @@ fn scalar__neg(self_: Scalar) -> Scalar {
 }
 
 fn transflector__neg(self_: Transflector) -> Transflector {
-    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
 }
 
 fn translator__neg(self_: Translator) -> Translator {
@@ -17571,7 +17571,7 @@ fn dual_num__anti_reversal(self_: DualNum) -> DualNum {
 }
 
 fn flector__anti_reversal(self_: Flector) -> Flector {
-    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1);
 }
 
 fn flector_at_infinity__anti_reversal(self_: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -17583,7 +17583,7 @@ fn horizon__anti_reversal(self_: Horizon) -> Horizon {
 }
 
 fn line__anti_reversal(self_: Line) -> Line {
-    return Line(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0));
+    return Line(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn line_at_infinity__anti_reversal(self_: LineAtInfinity) -> LineAtInfinity {
@@ -17591,15 +17591,15 @@ fn line_at_infinity__anti_reversal(self_: LineAtInfinity) -> LineAtInfinity {
 }
 
 fn line_at_origin__anti_reversal(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn motor__anti_reversal(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0));
+    return Motor(self_.g0 * vec4<f32>(-1.0, -1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn multi_vector__anti_reversal(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0, self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(-1.0, 1.0, -1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return MultiVector(self_.g0, self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4);
 }
 
 fn multi_vector_at_infinity__anti_reversal(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -17607,7 +17607,7 @@ fn multi_vector_at_infinity__anti_reversal(self_: MultiVectorAtInfinity) -> Mult
 }
 
 fn multi_vector_at_origin__anti_reversal(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0), self_.g2 * vec3<f32>(-1.0, 1.0, -1.0));
+    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1 * vec3<f32>(-1.0), self_.g2);
 }
 
 fn origin__anti_reversal(self_: Origin) -> Origin {
@@ -17615,11 +17615,11 @@ fn origin__anti_reversal(self_: Origin) -> Origin {
 }
 
 fn plane__anti_reversal(self_: Plane) -> Plane {
-    return Plane(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Plane(self_.g0);
 }
 
 fn plane_at_origin__anti_reversal(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0));
+    return PlaneAtOrigin(self_.g0);
 }
 
 fn point__anti_reversal(self_: Point) -> Point {
@@ -17631,7 +17631,7 @@ fn point_at_infinity__anti_reversal(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor__anti_reversal(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Rotor(self_.g0 * vec4<f32>(-1.0, -1.0, -1.0, 1.0));
 }
 
 fn scalar__anti_reversal(self_: Scalar) -> Scalar {
@@ -17639,7 +17639,7 @@ fn scalar__anti_reversal(self_: Scalar) -> Scalar {
 }
 
 fn transflector__anti_reversal(self_: Transflector) -> Transflector {
-    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1);
 }
 
 fn translator__anti_reversal(self_: Translator) -> Translator {
@@ -17655,7 +17655,7 @@ fn dual_num__automorphism(self_: DualNum) -> DualNum {
 }
 
 fn flector__automorphism(self_: Flector) -> Flector {
-    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
 }
 
 fn flector_at_infinity__automorphism(self_: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -17667,7 +17667,7 @@ fn horizon__automorphism(self_: Horizon) -> Horizon {
 }
 
 fn line__automorphism(self_: Line) -> Line {
-    return Line(self_.g0 * vec3<f32>(1.0, -1.0, 1.0), self_.g1);
+    return Line(self_.g0, self_.g1);
 }
 
 fn line_at_infinity__automorphism(self_: LineAtInfinity) -> LineAtInfinity {
@@ -17675,15 +17675,15 @@ fn line_at_infinity__automorphism(self_: LineAtInfinity) -> LineAtInfinity {
 }
 
 fn line_at_origin__automorphism(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0 * vec3<f32>(1.0, -1.0, 1.0));
+    return LineAtOrigin(self_.g0);
 }
 
 fn motor__automorphism(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0), self_.g1);
+    return Motor(self_.g0, self_.g1);
 }
 
 fn multi_vector__automorphism(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0, self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(1.0, -1.0, 1.0), self_.g3, self_.g4 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return MultiVector(self_.g0, self_.g1 * vec4<f32>(-1.0), self_.g2, self_.g3, self_.g4 * vec4<f32>(-1.0));
 }
 
 fn multi_vector_at_infinity__automorphism(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -17691,7 +17691,7 @@ fn multi_vector_at_infinity__automorphism(self_: MultiVectorAtInfinity) -> Multi
 }
 
 fn multi_vector_at_origin__automorphism(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1 * vec3<f32>(1.0, -1.0, 1.0), self_.g2 * vec3<f32>(1.0, -1.0, 1.0));
+    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1, self_.g2 * vec3<f32>(-1.0));
 }
 
 fn origin__automorphism(self_: Origin) -> Origin {
@@ -17699,11 +17699,11 @@ fn origin__automorphism(self_: Origin) -> Origin {
 }
 
 fn plane__automorphism(self_: Plane) -> Plane {
-    return Plane(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Plane(self_.g0 * vec4<f32>(-1.0));
 }
 
 fn plane_at_origin__automorphism(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0 * vec3<f32>(1.0, -1.0, 1.0));
+    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn point__automorphism(self_: Point) -> Point {
@@ -17715,7 +17715,7 @@ fn point_at_infinity__automorphism(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor__automorphism(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, 1.0));
+    return Rotor(self_.g0);
 }
 
 fn scalar__automorphism(self_: Scalar) -> Scalar {
@@ -17723,7 +17723,7 @@ fn scalar__automorphism(self_: Scalar) -> Scalar {
 }
 
 fn transflector__automorphism(self_: Transflector) -> Transflector {
-    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0));
 }
 
 fn translator__automorphism(self_: Translator) -> Translator {
@@ -17739,7 +17739,7 @@ fn dual_num__conjugation(self_: DualNum) -> DualNum {
 }
 
 fn flector__conjugation(self_: Flector) -> Flector {
-    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Flector(self_.g0 * vec4<f32>(-1.0), self_.g1);
 }
 
 fn flector_at_infinity__conjugation(self_: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -17751,7 +17751,7 @@ fn horizon__conjugation(self_: Horizon) -> Horizon {
 }
 
 fn line__conjugation(self_: Line) -> Line {
-    return Line(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0));
+    return Line(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn line_at_infinity__conjugation(self_: LineAtInfinity) -> LineAtInfinity {
@@ -17759,15 +17759,15 @@ fn line_at_infinity__conjugation(self_: LineAtInfinity) -> LineAtInfinity {
 }
 
 fn line_at_origin__conjugation(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn motor__conjugation(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0));
+    return Motor(self_.g0 * vec4<f32>(-1.0, -1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn multi_vector__conjugation(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0, self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(-1.0, 1.0, -1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return MultiVector(self_.g0, self_.g1 * vec4<f32>(-1.0), self_.g2 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4);
 }
 
 fn multi_vector_at_infinity__conjugation(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -17775,7 +17775,7 @@ fn multi_vector_at_infinity__conjugation(self_: MultiVectorAtInfinity) -> MultiV
 }
 
 fn multi_vector_at_origin__conjugation(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1 * vec3<f32>(-1.0, 1.0, -1.0), self_.g2 * vec3<f32>(-1.0, 1.0, -1.0));
+    return MultiVectorAtOrigin(self_.g0 * vec2<f32>(-1.0, 1.0), self_.g1 * vec3<f32>(-1.0), self_.g2);
 }
 
 fn origin__conjugation(self_: Origin) -> Origin {
@@ -17783,11 +17783,11 @@ fn origin__conjugation(self_: Origin) -> Origin {
 }
 
 fn plane__conjugation(self_: Plane) -> Plane {
-    return Plane(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Plane(self_.g0);
 }
 
 fn plane_at_origin__conjugation(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0));
+    return PlaneAtOrigin(self_.g0);
 }
 
 fn point__conjugation(self_: Point) -> Point {
@@ -17799,7 +17799,7 @@ fn point_at_infinity__conjugation(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor__conjugation(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Rotor(self_.g0 * vec4<f32>(-1.0, -1.0, -1.0, 1.0));
 }
 
 fn scalar__conjugation(self_: Scalar) -> Scalar {
@@ -17807,7 +17807,7 @@ fn scalar__conjugation(self_: Scalar) -> Scalar {
 }
 
 fn transflector__conjugation(self_: Transflector) -> Transflector {
-    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Transflector(self_.g0 * vec3<f32>(-1.0), self_.g1);
 }
 
 fn translator__conjugation(self_: Translator) -> Translator {
@@ -18051,7 +18051,7 @@ fn dual_num__reversal(self_: DualNum) -> DualNum {
 }
 
 fn flector__reversal(self_: Flector) -> Flector {
-    return Flector(self_.g0, self_.g1 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Flector(self_.g0, self_.g1 * vec4<f32>(-1.0));
 }
 
 fn flector_at_infinity__reversal(self_: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -18063,7 +18063,7 @@ fn horizon__reversal(self_: Horizon) -> Horizon {
 }
 
 fn line__reversal(self_: Line) -> Line {
-    return Line(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0), self_.g1 * vec3<f32>(-1.0));
+    return Line(self_.g0 * vec3<f32>(-1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn line_at_infinity__reversal(self_: LineAtInfinity) -> LineAtInfinity {
@@ -18071,15 +18071,15 @@ fn line_at_infinity__reversal(self_: LineAtInfinity) -> LineAtInfinity {
 }
 
 fn line_at_origin__reversal(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn motor__reversal(self_: Motor) -> Motor {
-    return Motor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0));
+    return Motor(self_.g0 * vec4<f32>(-1.0, -1.0, -1.0, 1.0), self_.g1 * vec3<f32>(-1.0));
 }
 
 fn multi_vector__reversal(self_: MultiVector) -> MultiVector {
-    return MultiVector(self_.g0, self_.g1, self_.g2 * vec3<f32>(-1.0, 1.0, -1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return MultiVector(self_.g0, self_.g1, self_.g2 * vec3<f32>(-1.0), self_.g3 * vec3<f32>(-1.0), self_.g4 * vec4<f32>(-1.0));
 }
 
 fn multi_vector_at_infinity__reversal(self_: MultiVectorAtInfinity) -> MultiVectorAtInfinity {
@@ -18087,7 +18087,7 @@ fn multi_vector_at_infinity__reversal(self_: MultiVectorAtInfinity) -> MultiVect
 }
 
 fn multi_vector_at_origin__reversal(self_: MultiVectorAtOrigin) -> MultiVectorAtOrigin {
-    return MultiVectorAtOrigin(self_.g0, self_.g1 * vec3<f32>(-1.0, 1.0, -1.0), self_.g2 * vec3<f32>(1.0, -1.0, 1.0));
+    return MultiVectorAtOrigin(self_.g0, self_.g1 * vec3<f32>(-1.0), self_.g2 * vec3<f32>(-1.0));
 }
 
 fn origin__reversal(self_: Origin) -> Origin {
@@ -18095,11 +18095,11 @@ fn origin__reversal(self_: Origin) -> Origin {
 }
 
 fn plane__reversal(self_: Plane) -> Plane {
-    return Plane(self_.g0 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Plane(self_.g0 * vec4<f32>(-1.0));
 }
 
 fn plane_at_origin__reversal(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0 * vec3<f32>(1.0, -1.0, 1.0));
+    return PlaneAtOrigin(self_.g0 * vec3<f32>(-1.0));
 }
 
 fn point__reversal(self_: Point) -> Point {
@@ -18111,7 +18111,7 @@ fn point_at_infinity__reversal(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor__reversal(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0 * vec4<f32>(-1.0, 1.0, -1.0, 1.0));
+    return Rotor(self_.g0 * vec4<f32>(-1.0, -1.0, -1.0, 1.0));
 }
 
 fn scalar__reversal(self_: Scalar) -> Scalar {
@@ -18119,7 +18119,7 @@ fn scalar__reversal(self_: Scalar) -> Scalar {
 }
 
 fn transflector__reversal(self_: Transflector) -> Transflector {
-    return Transflector(self_.g0, self_.g1 * vec4<f32>(1.0, -1.0, 1.0, -1.0));
+    return Transflector(self_.g0, self_.g1 * vec4<f32>(-1.0));
 }
 
 fn translator__reversal(self_: Translator) -> Translator {

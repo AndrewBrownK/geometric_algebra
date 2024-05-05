@@ -395,7 +395,7 @@ DualNum dual_num__neg(DualNum self) {
 }
 
 Flector flector__neg(Flector self) {
-    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(-1.0));
 }
 
 FlectorAtInfinity flector_at_infinity__neg(FlectorAtInfinity self) {
@@ -407,7 +407,7 @@ Horizon horizon__neg(Horizon self) {
 }
 
 Line line__neg(Line self) {
-    return Line(self.g0 * vec3(-1.0, 1.0, -1.0), self.g1 * vec3(-1.0));
+    return Line(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0));
 }
 
 LineAtInfinity line_at_infinity__neg(LineAtInfinity self) {
@@ -415,15 +415,15 @@ LineAtInfinity line_at_infinity__neg(LineAtInfinity self) {
 }
 
 LineAtOrigin line_at_origin__neg(LineAtOrigin self) {
-    return LineAtOrigin(self.g0 * vec3(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Motor motor__neg(Motor self) {
-    return Motor(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0), self.g1 * vec3(-1.0));
+    return Motor(self.g0 * vec4(-1.0), self.g1 * vec3(-1.0));
 }
 
 MultiVector multi_vector__neg(MultiVector self) {
-    return MultiVector(self.g0 * vec2(-1.0), self.g1 * vec4(-1.0), self.g2 * vec3(-1.0, 1.0, -1.0), self.g3 * vec3(-1.0), self.g4 * vec4(1.0, -1.0, 1.0, -1.0));
+    return MultiVector(self.g0 * vec2(-1.0), self.g1 * vec4(-1.0), self.g2 * vec3(-1.0), self.g3 * vec3(-1.0), self.g4 * vec4(-1.0));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__neg(MultiVectorAtInfinity self) {
@@ -431,7 +431,7 @@ MultiVectorAtInfinity multi_vector_at_infinity__neg(MultiVectorAtInfinity self) 
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__neg(MultiVectorAtOrigin self) {
-    return MultiVectorAtOrigin(self.g0 * vec2(-1.0), self.g1 * vec3(-1.0, 1.0, -1.0), self.g2 * vec3(1.0, -1.0, 1.0));
+    return MultiVectorAtOrigin(self.g0 * vec2(-1.0), self.g1 * vec3(-1.0), self.g2 * vec3(-1.0));
 }
 
 Origin origin__neg(Origin self) {
@@ -439,11 +439,11 @@ Origin origin__neg(Origin self) {
 }
 
 Plane plane__neg(Plane self) {
-    return Plane(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Plane(self.g0 * vec4(-1.0));
 }
 
 PlaneAtOrigin plane_at_origin__neg(PlaneAtOrigin self) {
-    return PlaneAtOrigin(self.g0 * vec3(1.0, -1.0, 1.0));
+    return PlaneAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Point point__neg(Point self) {
@@ -455,7 +455,7 @@ PointAtInfinity point_at_infinity__neg(PointAtInfinity self) {
 }
 
 Rotor rotor__neg(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, 1.0, -1.0, -1.0));
+    return Rotor(self.g0 * vec4(-1.0));
 }
 
 Scalar scalar__neg(Scalar self) {
@@ -463,7 +463,7 @@ Scalar scalar__neg(Scalar self) {
 }
 
 Transflector transflector__neg(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(-1.0));
 }
 
 Translator translator__neg(Translator self) {
@@ -17571,7 +17571,7 @@ DualNum dual_num__anti_reversal(DualNum self) {
 }
 
 Flector flector__anti_reversal(Flector self) {
-    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Flector(self.g0 * vec4(-1.0), self.g1);
 }
 
 FlectorAtInfinity flector_at_infinity__anti_reversal(FlectorAtInfinity self) {
@@ -17583,7 +17583,7 @@ Horizon horizon__anti_reversal(Horizon self) {
 }
 
 Line line__anti_reversal(Line self) {
-    return Line(self.g0 * vec3(-1.0, 1.0, -1.0), self.g1 * vec3(-1.0));
+    return Line(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0));
 }
 
 LineAtInfinity line_at_infinity__anti_reversal(LineAtInfinity self) {
@@ -17591,15 +17591,15 @@ LineAtInfinity line_at_infinity__anti_reversal(LineAtInfinity self) {
 }
 
 LineAtOrigin line_at_origin__anti_reversal(LineAtOrigin self) {
-    return LineAtOrigin(self.g0 * vec3(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Motor motor__anti_reversal(Motor self) {
-    return Motor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
+    return Motor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
 }
 
 MultiVector multi_vector__anti_reversal(MultiVector self) {
-    return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2 * vec3(-1.0, 1.0, -1.0), self.g3 * vec3(-1.0), self.g4 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2 * vec3(-1.0), self.g3 * vec3(-1.0), self.g4);
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__anti_reversal(MultiVectorAtInfinity self) {
@@ -17607,7 +17607,7 @@ MultiVectorAtInfinity multi_vector_at_infinity__anti_reversal(MultiVectorAtInfin
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__anti_reversal(MultiVectorAtOrigin self) {
-    return MultiVectorAtOrigin(self.g0 * vec2(-1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0), self.g2 * vec3(-1.0, 1.0, -1.0));
+    return MultiVectorAtOrigin(self.g0 * vec2(-1.0, 1.0), self.g1 * vec3(-1.0), self.g2);
 }
 
 Origin origin__anti_reversal(Origin self) {
@@ -17615,11 +17615,11 @@ Origin origin__anti_reversal(Origin self) {
 }
 
 Plane plane__anti_reversal(Plane self) {
-    return Plane(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Plane(self.g0);
 }
 
 PlaneAtOrigin plane_at_origin__anti_reversal(PlaneAtOrigin self) {
-    return PlaneAtOrigin(self.g0 * vec3(-1.0, 1.0, -1.0));
+    return PlaneAtOrigin(self.g0);
 }
 
 Point point__anti_reversal(Point self) {
@@ -17631,7 +17631,7 @@ PointAtInfinity point_at_infinity__anti_reversal(PointAtInfinity self) {
 }
 
 Rotor rotor__anti_reversal(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Rotor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
 Scalar scalar__anti_reversal(Scalar self) {
@@ -17639,7 +17639,7 @@ Scalar scalar__anti_reversal(Scalar self) {
 }
 
 Transflector transflector__anti_reversal(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Transflector(self.g0 * vec3(-1.0), self.g1);
 }
 
 Translator translator__anti_reversal(Translator self) {
@@ -17655,7 +17655,7 @@ DualNum dual_num__automorphism(DualNum self) {
 }
 
 Flector flector__automorphism(Flector self) {
-    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(-1.0));
 }
 
 FlectorAtInfinity flector_at_infinity__automorphism(FlectorAtInfinity self) {
@@ -17667,7 +17667,7 @@ Horizon horizon__automorphism(Horizon self) {
 }
 
 Line line__automorphism(Line self) {
-    return Line(self.g0 * vec3(1.0, -1.0, 1.0), self.g1);
+    return Line(self.g0, self.g1);
 }
 
 LineAtInfinity line_at_infinity__automorphism(LineAtInfinity self) {
@@ -17675,15 +17675,15 @@ LineAtInfinity line_at_infinity__automorphism(LineAtInfinity self) {
 }
 
 LineAtOrigin line_at_origin__automorphism(LineAtOrigin self) {
-    return LineAtOrigin(self.g0 * vec3(1.0, -1.0, 1.0));
+    return LineAtOrigin(self.g0);
 }
 
 Motor motor__automorphism(Motor self) {
-    return Motor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0), self.g1);
+    return Motor(self.g0, self.g1);
 }
 
 MultiVector multi_vector__automorphism(MultiVector self) {
-    return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2 * vec3(1.0, -1.0, 1.0), self.g3, self.g4 * vec4(1.0, -1.0, 1.0, -1.0));
+    return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2, self.g3, self.g4 * vec4(-1.0));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__automorphism(MultiVectorAtInfinity self) {
@@ -17691,7 +17691,7 @@ MultiVectorAtInfinity multi_vector_at_infinity__automorphism(MultiVectorAtInfini
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__automorphism(MultiVectorAtOrigin self) {
-    return MultiVectorAtOrigin(self.g0 * vec2(-1.0, 1.0), self.g1 * vec3(1.0, -1.0, 1.0), self.g2 * vec3(1.0, -1.0, 1.0));
+    return MultiVectorAtOrigin(self.g0 * vec2(-1.0, 1.0), self.g1, self.g2 * vec3(-1.0));
 }
 
 Origin origin__automorphism(Origin self) {
@@ -17699,11 +17699,11 @@ Origin origin__automorphism(Origin self) {
 }
 
 Plane plane__automorphism(Plane self) {
-    return Plane(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Plane(self.g0 * vec4(-1.0));
 }
 
 PlaneAtOrigin plane_at_origin__automorphism(PlaneAtOrigin self) {
-    return PlaneAtOrigin(self.g0 * vec3(1.0, -1.0, 1.0));
+    return PlaneAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Point point__automorphism(Point self) {
@@ -17715,7 +17715,7 @@ PointAtInfinity point_at_infinity__automorphism(PointAtInfinity self) {
 }
 
 Rotor rotor__automorphism(Rotor self) {
-    return Rotor(self.g0 * vec4(1.0, -1.0, 1.0, 1.0));
+    return Rotor(self.g0);
 }
 
 Scalar scalar__automorphism(Scalar self) {
@@ -17723,7 +17723,7 @@ Scalar scalar__automorphism(Scalar self) {
 }
 
 Transflector transflector__automorphism(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(-1.0));
 }
 
 Translator translator__automorphism(Translator self) {
@@ -17739,7 +17739,7 @@ DualNum dual_num__conjugation(DualNum self) {
 }
 
 Flector flector__conjugation(Flector self) {
-    return Flector(self.g0 * vec4(-1.0), self.g1 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Flector(self.g0 * vec4(-1.0), self.g1);
 }
 
 FlectorAtInfinity flector_at_infinity__conjugation(FlectorAtInfinity self) {
@@ -17751,7 +17751,7 @@ Horizon horizon__conjugation(Horizon self) {
 }
 
 Line line__conjugation(Line self) {
-    return Line(self.g0 * vec3(-1.0, 1.0, -1.0), self.g1 * vec3(-1.0));
+    return Line(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0));
 }
 
 LineAtInfinity line_at_infinity__conjugation(LineAtInfinity self) {
@@ -17759,15 +17759,15 @@ LineAtInfinity line_at_infinity__conjugation(LineAtInfinity self) {
 }
 
 LineAtOrigin line_at_origin__conjugation(LineAtOrigin self) {
-    return LineAtOrigin(self.g0 * vec3(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Motor motor__conjugation(Motor self) {
-    return Motor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
+    return Motor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
 }
 
 MultiVector multi_vector__conjugation(MultiVector self) {
-    return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2 * vec3(-1.0, 1.0, -1.0), self.g3 * vec3(-1.0), self.g4 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return MultiVector(self.g0, self.g1 * vec4(-1.0), self.g2 * vec3(-1.0), self.g3 * vec3(-1.0), self.g4);
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__conjugation(MultiVectorAtInfinity self) {
@@ -17775,7 +17775,7 @@ MultiVectorAtInfinity multi_vector_at_infinity__conjugation(MultiVectorAtInfinit
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__conjugation(MultiVectorAtOrigin self) {
-    return MultiVectorAtOrigin(self.g0 * vec2(-1.0, 1.0), self.g1 * vec3(-1.0, 1.0, -1.0), self.g2 * vec3(-1.0, 1.0, -1.0));
+    return MultiVectorAtOrigin(self.g0 * vec2(-1.0, 1.0), self.g1 * vec3(-1.0), self.g2);
 }
 
 Origin origin__conjugation(Origin self) {
@@ -17783,11 +17783,11 @@ Origin origin__conjugation(Origin self) {
 }
 
 Plane plane__conjugation(Plane self) {
-    return Plane(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Plane(self.g0);
 }
 
 PlaneAtOrigin plane_at_origin__conjugation(PlaneAtOrigin self) {
-    return PlaneAtOrigin(self.g0 * vec3(-1.0, 1.0, -1.0));
+    return PlaneAtOrigin(self.g0);
 }
 
 Point point__conjugation(Point self) {
@@ -17799,7 +17799,7 @@ PointAtInfinity point_at_infinity__conjugation(PointAtInfinity self) {
 }
 
 Rotor rotor__conjugation(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Rotor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
 Scalar scalar__conjugation(Scalar self) {
@@ -17807,7 +17807,7 @@ Scalar scalar__conjugation(Scalar self) {
 }
 
 Transflector transflector__conjugation(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Transflector(self.g0 * vec3(-1.0), self.g1);
 }
 
 Translator translator__conjugation(Translator self) {
@@ -18051,7 +18051,7 @@ DualNum dual_num__reversal(DualNum self) {
 }
 
 Flector flector__reversal(Flector self) {
-    return Flector(self.g0, self.g1 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Flector(self.g0, self.g1 * vec4(-1.0));
 }
 
 FlectorAtInfinity flector_at_infinity__reversal(FlectorAtInfinity self) {
@@ -18063,7 +18063,7 @@ Horizon horizon__reversal(Horizon self) {
 }
 
 Line line__reversal(Line self) {
-    return Line(self.g0 * vec3(-1.0, 1.0, -1.0), self.g1 * vec3(-1.0));
+    return Line(self.g0 * vec3(-1.0), self.g1 * vec3(-1.0));
 }
 
 LineAtInfinity line_at_infinity__reversal(LineAtInfinity self) {
@@ -18071,15 +18071,15 @@ LineAtInfinity line_at_infinity__reversal(LineAtInfinity self) {
 }
 
 LineAtOrigin line_at_origin__reversal(LineAtOrigin self) {
-    return LineAtOrigin(self.g0 * vec3(-1.0, 1.0, -1.0));
+    return LineAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Motor motor__reversal(Motor self) {
-    return Motor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
+    return Motor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0), self.g1 * vec3(-1.0));
 }
 
 MultiVector multi_vector__reversal(MultiVector self) {
-    return MultiVector(self.g0, self.g1, self.g2 * vec3(-1.0, 1.0, -1.0), self.g3 * vec3(-1.0), self.g4 * vec4(1.0, -1.0, 1.0, -1.0));
+    return MultiVector(self.g0, self.g1, self.g2 * vec3(-1.0), self.g3 * vec3(-1.0), self.g4 * vec4(-1.0));
 }
 
 MultiVectorAtInfinity multi_vector_at_infinity__reversal(MultiVectorAtInfinity self) {
@@ -18087,7 +18087,7 @@ MultiVectorAtInfinity multi_vector_at_infinity__reversal(MultiVectorAtInfinity s
 }
 
 MultiVectorAtOrigin multi_vector_at_origin__reversal(MultiVectorAtOrigin self) {
-    return MultiVectorAtOrigin(self.g0, self.g1 * vec3(-1.0, 1.0, -1.0), self.g2 * vec3(1.0, -1.0, 1.0));
+    return MultiVectorAtOrigin(self.g0, self.g1 * vec3(-1.0), self.g2 * vec3(-1.0));
 }
 
 Origin origin__reversal(Origin self) {
@@ -18095,11 +18095,11 @@ Origin origin__reversal(Origin self) {
 }
 
 Plane plane__reversal(Plane self) {
-    return Plane(self.g0 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Plane(self.g0 * vec4(-1.0));
 }
 
 PlaneAtOrigin plane_at_origin__reversal(PlaneAtOrigin self) {
-    return PlaneAtOrigin(self.g0 * vec3(1.0, -1.0, 1.0));
+    return PlaneAtOrigin(self.g0 * vec3(-1.0));
 }
 
 Point point__reversal(Point self) {
@@ -18111,7 +18111,7 @@ PointAtInfinity point_at_infinity__reversal(PointAtInfinity self) {
 }
 
 Rotor rotor__reversal(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, 1.0, -1.0, 1.0));
+    return Rotor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
 Scalar scalar__reversal(Scalar self) {
@@ -18119,7 +18119,7 @@ Scalar scalar__reversal(Scalar self) {
 }
 
 Transflector transflector__reversal(Transflector self) {
-    return Transflector(self.g0, self.g1 * vec4(1.0, -1.0, 1.0, -1.0));
+    return Transflector(self.g0, self.g1 * vec4(-1.0));
 }
 
 Translator translator__reversal(Translator self) {

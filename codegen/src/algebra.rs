@@ -73,7 +73,7 @@ impl Involution {
 
     pub fn negated<F>(&self, grade_negation: F) -> Self
     where
-        F: Fn(usize) -> bool,
+        F: Fn(usize, BasisElementIndex) -> bool,
     {
         Self {
             terms: self
@@ -81,7 +81,7 @@ impl Involution {
                 .iter()
                 .map(|(key, value)| {
                     let mut element = value.clone();
-                    element.set_coefficient(if grade_negation(value.grade()) { -1 } else { 1 });
+                    element.set_coefficient(element.coefficient * if grade_negation(value.grade(), element.index) { -1 } else { 1 });
                     (key.clone(), element)
                 })
                 .collect(),
@@ -126,21 +126,21 @@ impl Involution {
         let involution = Self::identity(algebra);
         let dimensions = algebra.anti_scalar_element().grade();
         let mut result = vec![
-            ("Neg", involution.negated(|_grade| true), ""),
+            ("Neg", involution.negated(|_grade, _| true), ""),
             (
                 "Automorphism",
-                involution.negated(|grade| grade % 2 == 1),
+                involution.negated(|grade, _| grade % 2 == 1),
                 "\nNegates elements with `grade % 2 == 1`\n\nAlso called main involution",
             ),
-            ("Conjugation", involution.negated(|grade| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
+            ("Conjugation", involution.negated(|grade, _| (grade + 3) % 4 < 2), "\nNegates elements with `(grade + 3) % 4 < 2`"),
             (
                 "Reversal",
-                involution.negated(|grade| grade % 4 >= 2),
+                involution.negated(|grade, _| grade % 4 >= 2),
                 "\nNegates elements with `grade % 4 >= 2`\n\nAlso called transpose\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Reverses",
             ),
             (
                 "AntiReversal",
-                involution.negated(|grade| {
+                involution.negated(|grade, _| {
                     let anti_grade = dimensions - grade;
                     anti_grade % 4 >= 2
                 }),
@@ -179,6 +179,16 @@ impl Involution {
                 "Complement",
                 involution.right_complement(algebra),
                 "\nComplement\nhttps://rigidgeometricalgebra.org/wiki/index.php?title=Complements",
+            ));
+        }
+        if algebra.algebra_name().starts_with("cga") {
+            let infinity = (1 as BasisElementIndex) << (dimensions - 1);
+            result.push((
+                "ConformalConjugate",
+                involution.negated(|grade, index| {
+                    (index & infinity) == infinity
+                }),
+                "\nConformal Conjugates\nSee chapter 4.5.4 of the book (page 204).",
             ));
         }
 
