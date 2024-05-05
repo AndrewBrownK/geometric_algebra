@@ -2571,6 +2571,58 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // if we don't manually exclude these at some point.
         let non_objects = ["Scalar", "AntiScalar", "DualNum"];
 
+
+        // See book for lots of elaboration on expansion/contraction
+        // (but no mention of contraction in CGA for some reason?)
+        // In particular, you could construct left vs right variants of these interior products,
+        // but we don't really need them.
+        let contraction_expansion_stuff =
+            if self.algebra.is_degenerate() {
+                vec![
+                    ("BulkContraction", "Dual", "AntiWedge"),
+                    ("WeightContraction", "AntiDual", "AntiWedge"),
+                    ("BulkExpansion", "Dual", "Wedge"),
+                    ("WeightExpansion", "AntiDual", "Wedge"),
+                ]
+            } else {
+                // Question... how do we know to use Dual or AntiDual in these?
+                // Well both Dual and AntiDual are defined in terms of RightComplement.
+                // But as mentioned in previous comment and chapter 2.13 of book (page 85),
+                // we are only going to bother with right interior products and ignore left
+                // interior products. So self.algebra.has_multiple_complements() is not a concern.
+                // So any other differences of concern between Dual and AntiDual?
+                // Well in a degenerate metric, one corresponds to Bulk, and other corresponds
+                // to bulk. But we already checked for that above.
+                // We split up bulk/weight variants of contractions/expansions because
+                // Dual is (Right)BulkDual, and AntiDual is (Right)WeightDual (regardless of
+                // Left or Right shenanigans).
+                // So... all that said... if the metric is not degenerate, then Dual and AntiDual
+                // are practically the same, just negatives of one another. So we could use either
+                // Dual or AntiDual here in the non-degenerate side.
+                // So pertaining to Expansion, AntiDual is chosen to "appear consistent with RGA
+                // weight expansion" apparently. But there's no mention of contraction, so who
+                // knows (or cares?) for that.
+                vec![
+                    ("Contraction", "AntiDual", "AntiWedge"),
+                    ("Expansion", "AntiDual", "Wedge"),
+                ]
+            };
+        for (name, dual, product) in contraction_expansion_stuff {
+            for (param_a, param_b) in registry.pair_parameters() {
+                let a_name = param_a.multi_vector_class().class_name.as_str();
+                let b_name = param_b.multi_vector_class().class_name.as_str();
+                if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
+                    continue;
+                }
+                let _: Option<()> = try {
+                    let rbd = self.trait_impls.get_single_invocation(dual, variable(&param_b))?;
+                    let aw = self.trait_impls.get_pair_invocation(product, variable(&param_a), rbd)?;
+                    let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
+                    self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
+                };
+            }
+        }
+
         // In the future it might also not be a bad idea to restrict to objects of uniform grade.
         // However I'm not overly worried about that yet. Projecting to and from Flectors and Motors
         // may be weird at first glance, but maybe projecting to and from MultiVector isn't, and
@@ -2590,28 +2642,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         // though, because maybe there is special effects on the weight when these happen, and
         // I shouldn't just assume that is useless/insignificant.
 
-        // TODO check CGA against expansions from page 217 onward
-        let contraction_expansion_stuff = [
-            ("BulkContraction", "Dual", "AntiWedge"),
-            ("WeightContraction", "AntiDual", "AntiWedge"),
-            ("BulkExpansion", "Dual", "Wedge"),
-            ("WeightExpansion", "AntiDual", "Wedge"),
-        ];
-        for (name, dual, product) in contraction_expansion_stuff {
-            for (param_a, param_b) in registry.pair_parameters() {
-                let a_name = param_a.multi_vector_class().class_name.as_str();
-                let b_name = param_b.multi_vector_class().class_name.as_str();
-                if non_objects.contains(&a_name) || non_objects.contains(&b_name) {
-                    continue;
-                }
-                let _: Option<()> = try {
-                    let rbd = self.trait_impls.get_single_invocation(dual, variable(&param_b))?;
-                    let aw = self.trait_impls.get_pair_invocation(product, variable(&param_a), rbd)?;
-                    let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
-                    self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
-                };
-            }
-        }
 
         for (param_a, param_b) in registry.pair_parameters() {
             let a_name = param_a.multi_vector_class().class_name.as_str();
@@ -3506,49 +3536,67 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_contractions(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let trait_names = ["BulkContraction", "WeightContraction"];
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "BulkContraction".to_string(),
-            params: 2,
-            docs: "
-            Bulk Contraction (Interior Product)
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
-        "
-            .to_string(),
-        })?;
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "WeightContraction".to_string(),
-            params: 2,
-            docs: "
-            Weight Contraction (Interior Product)
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
-        "
-            .to_string(),
-        })?;
+        if self.algebra.is_degenerate() {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "BulkContraction".to_string(),
+                params: 2,
+                docs: "
+                Bulk Contraction (Interior Product)
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+                ".to_string(),
+            })?;
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "WeightContraction".to_string(),
+                params: 2,
+                docs: "
+                Weight Contraction (Interior Product)
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+                ".to_string(),
+            })?;
+        } else {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Contraction".to_string(),
+                params: 2,
+                docs: "
+                Contraction (Interior Product)
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+                ".to_string(),
+            })?;
+        }
+        let trait_names = ["BulkContraction", "WeightContraction", "Contraction"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }
 
     pub fn emit_expansions(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        let trait_names = ["BulkExpansion", "WeightExpansion"];
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "BulkExpansion".to_string(),
-            params: 2,
-            docs: "
-            Bulk Expansion (Interior Product)
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
-        "
-            .to_string(),
-        })?;
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "WeightExpansion".to_string(),
-            params: 2,
-            docs: "
-            Weight Expansion (Interior Product)
-            https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
-        "
-            .to_string(),
-        })?;
+        if self.algebra.is_degenerate() {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "BulkExpansion".to_string(),
+                params: 2,
+                docs: "
+                Bulk Expansion (Interior Product)
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+                ".to_string(),
+            })?;
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "WeightExpansion".to_string(),
+                params: 2,
+                docs: "
+                Weight Expansion (Interior Product)
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+                ".to_string(),
+            })?;
+        } else {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Expansion".to_string(),
+                params: 2,
+                docs: "
+                Expansion (Interior Product)
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Interior_products
+                ".to_string(),
+            })?;
+        }
+        let trait_names = ["BulkExpansion", "WeightExpansion", "Expansion"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }

@@ -3,11 +3,11 @@ use crate::metrics::Distance;
 use crate::norms::{BulkNorm, UnitizedNorm, WeightNorm};
 use crate::products::dot::{AntiDot, Dot};
 use crate::products::exterior::{Meet, Wedge};
-use crate::{FlatPoint, Horizon, Infinity, Origin, RoundPoint, RoundPointOnOrigin};
-use std::ops::Add;
-use projective_ga::Unit;
 use crate::products::geometric::WedgeDot;
 use crate::unitize::Unitize;
+use crate::{FlatPoint, Horizon, Infinity, Origin, RoundPoint, RoundPointOnOrigin};
+use projective_ga::Unit;
+use std::ops::Add;
 
 #[test]
 fn round_point_distances() {
@@ -74,7 +74,6 @@ fn round_point_distances() {
     let k = FlatPoint::new(6.0, 0.0, 0.0, 1.0);
 
     for mut some_point in vec![b, c, d, e, f, g, h, i, j, k] {
-
         // TODO.... apparently.... FlatPoints have an imaginary weight norm?
         //  FlatPoint.anti_dot(FlatPoint) is negative, which then we have to take square root
         //  to find the weight norm.... So any attempt to unitize (requiring division by weight norm)
