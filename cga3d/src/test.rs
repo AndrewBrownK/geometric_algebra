@@ -162,4 +162,26 @@ fn distance_speculation() {
     // I'm really aching to see some 3d visualizations. Maybe it's time to start
     // developing a "CGA Playground" demo. Even without all the fundamentals (like Distance)
     // figured out yet.
+
+    // Another crazy example...
+    // 2 circles on xy plane
+    // a has radius 10
+    // b has radius 9
+    // translate b along z axis so its carrier is at z = 1
+    // then rotate b so its carrier is the xz plane instead of the xy plane
+    // hm
+    // I think the above example, and also concentric circles, demonstrate something.
+    // Sometimes the closest point between two objects is not a point after all.
+    // Sometimes the closest "point" is actually a dipole, a circle itself, or even a sphere in
+    // the case of concentric spheres. Even non-concentric spheres, if overlapping, meet as a
+    // circle at the point of overlap ("point" of zero distance, aka the "closest points" of the
+    // objects).
+    // So what I think this means is... you have to solve this bottom-up. Higher dimensional objects
+    // might be closest to other objects via ANY of the lower dimensional options. So start with
+    // getting distances between RoundPoints... then RoundPoints and Dipoles... then Dipoles and
+    // Dipoles.. then Circles and RoundPoints, Dipoles, and lastly Circles... so on.
+
+    // Hmmmm... speaking of meets... you can very well take the meet operation on two objects
+    // that aren't actually touching... you just get an imaginary result if they're not touching..
+    // so.. maybe the distance has been encoded in the result of the meet this entire time?
 }
