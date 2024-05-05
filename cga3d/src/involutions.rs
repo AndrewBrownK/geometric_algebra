@@ -606,9 +606,7 @@ impl AntiReversal for AntiScalar {
     type Output = AntiScalar;
 
     fn anti_reversal(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -740,9 +738,7 @@ impl AntiReversal for DualNum {
     type Output = DualNum;
 
     fn anti_reversal(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -809,9 +805,7 @@ impl AntiReversal for Horizon {
     type Output = Horizon;
 
     fn anti_reversal(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -819,9 +813,7 @@ impl AntiReversal for Infinity {
     type Output = Infinity;
 
     fn anti_reversal(self) -> Infinity {
-        Infinity {
-            groups: InfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -901,9 +893,7 @@ impl AntiReversal for Origin {
     type Output = Origin;
 
     fn anti_reversal(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -911,9 +901,7 @@ impl AntiReversal for Plane {
     type Output = Plane;
 
     fn anti_reversal(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -921,9 +909,7 @@ impl AntiReversal for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn anti_reversal(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -943,12 +929,7 @@ impl AntiReversal for RoundPoint {
     type Output = RoundPoint;
 
     fn anti_reversal(self) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -956,9 +937,7 @@ impl AntiReversal for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
     fn anti_reversal(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -966,9 +945,7 @@ impl AntiReversal for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_reversal(self) -> RoundPointAtOrigin {
-        RoundPointAtOrigin {
-            groups: RoundPointAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -976,9 +953,7 @@ impl AntiReversal for RoundPointBulk {
     type Output = RoundPointBulk;
 
     fn anti_reversal(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -986,9 +961,7 @@ impl AntiReversal for RoundPointOnOrigin {
     type Output = RoundPointOnOrigin;
 
     fn anti_reversal(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -996,9 +969,7 @@ impl AntiReversal for Scalar {
     type Output = Scalar;
 
     fn anti_reversal(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1006,9 +977,7 @@ impl AntiReversal for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn anti_reversal(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1016,12 +985,7 @@ impl AntiReversal for Sphere {
     type Output = Sphere;
 
     fn anti_reversal(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1029,9 +993,7 @@ impl AntiReversal for SphereWeight {
     type Output = SphereWeight;
 
     fn anti_reversal(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1134,13 +1096,7 @@ impl Automorphism for Dipole {
     type Output = Dipole;
 
     fn automorphism(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-            },
-        }
+        self
     }
 }
 
@@ -1148,12 +1104,7 @@ impl Automorphism for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
     fn automorphism(self) -> DipoleAtInfinity {
-        DipoleAtInfinity {
-            groups: DipoleAtInfinityGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1161,9 +1112,7 @@ impl Automorphism for DipoleBulk {
     type Output = DipoleBulk;
 
     fn automorphism(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1171,12 +1120,7 @@ impl Automorphism for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
     fn automorphism(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1184,9 +1128,7 @@ impl Automorphism for DipoleWeight {
     type Output = DipoleWeight;
 
     fn automorphism(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1206,9 +1148,7 @@ impl Automorphism for FlatPoint {
     type Output = FlatPoint;
 
     fn automorphism(self) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1216,9 +1156,7 @@ impl Automorphism for FlatPointAtInfinity {
     type Output = FlatPointAtInfinity;
 
     fn automorphism(self) -> FlatPointAtInfinity {
-        FlatPointAtInfinity {
-            groups: FlatPointAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1226,9 +1164,7 @@ impl Automorphism for FlatPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn automorphism(self) -> FlatPointAtOrigin {
-        FlatPointAtOrigin {
-            groups: FlatPointAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1236,12 +1172,7 @@ impl Automorphism for Flector {
     type Output = Flector;
 
     fn automorphism(self) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1249,9 +1180,7 @@ impl Automorphism for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn automorphism(self) -> FlectorAtInfinity {
-        FlectorAtInfinity {
-            groups: FlectorAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1259,9 +1188,7 @@ impl Automorphism for Horizon {
     type Output = Horizon;
 
     fn automorphism(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1361,9 +1288,7 @@ impl Automorphism for Plane {
     type Output = Plane;
 
     fn automorphism(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1371,9 +1296,7 @@ impl Automorphism for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn automorphism(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1454,9 +1377,7 @@ impl Automorphism for Scalar {
     type Output = Scalar;
 
     fn automorphism(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1464,9 +1385,7 @@ impl Automorphism for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn automorphism(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1474,12 +1393,7 @@ impl Automorphism for Sphere {
     type Output = Sphere;
 
     fn automorphism(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1487,9 +1401,7 @@ impl Automorphism for SphereWeight {
     type Output = SphereWeight;
 
     fn automorphism(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1497,12 +1409,7 @@ impl Automorphism for Transflector {
     type Output = Transflector;
 
     fn automorphism(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -2085,9 +1992,7 @@ impl ConformalConjugate for CircleBulk {
     type Output = CircleBulk;
 
     fn conformal_conjugate(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2095,9 +2000,7 @@ impl ConformalConjugate for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
     fn conformal_conjugate(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2105,9 +2008,7 @@ impl ConformalConjugate for CircleWeight {
     type Output = CircleWeight;
 
     fn conformal_conjugate(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2142,9 +2043,7 @@ impl ConformalConjugate for DipoleBulk {
     type Output = DipoleBulk;
 
     fn conformal_conjugate(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2152,12 +2051,7 @@ impl ConformalConjugate for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
     fn conformal_conjugate(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -2165,9 +2059,7 @@ impl ConformalConjugate for DipoleWeight {
     type Output = DipoleWeight;
 
     fn conformal_conjugate(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2338,9 +2230,7 @@ impl ConformalConjugate for Origin {
     type Output = Origin;
 
     fn conformal_conjugate(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2421,9 +2311,7 @@ impl ConformalConjugate for RoundPointBulk {
     type Output = RoundPointBulk;
 
     fn conformal_conjugate(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2431,9 +2319,7 @@ impl ConformalConjugate for RoundPointOnOrigin {
     type Output = RoundPointOnOrigin;
 
     fn conformal_conjugate(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2441,9 +2327,7 @@ impl ConformalConjugate for Scalar {
     type Output = Scalar;
 
     fn conformal_conjugate(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2476,9 +2360,7 @@ impl ConformalConjugate for SphereWeight {
     type Output = SphereWeight;
 
     fn conformal_conjugate(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2521,13 +2403,7 @@ impl Conjugation for Circle {
     type Output = Circle;
 
     fn conjugation(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-            },
-        }
+        self
     }
 }
 
@@ -2535,9 +2411,7 @@ impl Conjugation for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
     fn conjugation(self) -> CircleAtInfinity {
-        CircleAtInfinity {
-            groups: CircleAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2545,9 +2419,7 @@ impl Conjugation for CircleBulk {
     type Output = CircleBulk;
 
     fn conjugation(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2555,9 +2427,7 @@ impl Conjugation for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
     fn conjugation(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2565,9 +2435,7 @@ impl Conjugation for CircleWeight {
     type Output = CircleWeight;
 
     fn conjugation(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2710,9 +2578,7 @@ impl Conjugation for Horizon {
     type Output = Horizon;
 
     fn conjugation(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2730,12 +2596,7 @@ impl Conjugation for Line {
     type Output = Line;
 
     fn conjugation(self) -> Line {
-        Line {
-            groups: LineGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -2743,9 +2604,7 @@ impl Conjugation for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn conjugation(self) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2753,9 +2612,7 @@ impl Conjugation for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn conjugation(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2808,9 +2665,7 @@ impl Conjugation for Plane {
     type Output = Plane;
 
     fn conjugation(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2818,9 +2673,7 @@ impl Conjugation for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn conjugation(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2901,9 +2754,7 @@ impl Conjugation for Scalar {
     type Output = Scalar;
 
     fn conjugation(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2911,9 +2762,7 @@ impl Conjugation for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn conjugation(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2921,12 +2770,7 @@ impl Conjugation for Sphere {
     type Output = Sphere;
 
     fn conjugation(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -2934,9 +2778,7 @@ impl Conjugation for SphereWeight {
     type Output = SphereWeight;
 
     fn conjugation(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2969,9 +2811,7 @@ impl DoubleComplement for AntiScalar {
     type Output = AntiScalar;
 
     fn double_complement(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -2979,13 +2819,7 @@ impl DoubleComplement for Circle {
     type Output = Circle;
 
     fn double_complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-            },
-        }
+        self
     }
 }
 
@@ -2993,9 +2827,7 @@ impl DoubleComplement for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
     fn double_complement(self) -> CircleAtInfinity {
-        CircleAtInfinity {
-            groups: CircleAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3003,9 +2835,7 @@ impl DoubleComplement for CircleBulk {
     type Output = CircleBulk;
 
     fn double_complement(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3013,9 +2843,7 @@ impl DoubleComplement for CircleCarrierAspect {
     type Output = CircleCarrierAspect;
 
     fn double_complement(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3023,9 +2851,7 @@ impl DoubleComplement for CircleWeight {
     type Output = CircleWeight;
 
     fn double_complement(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3033,13 +2859,7 @@ impl DoubleComplement for Dipole {
     type Output = Dipole;
 
     fn double_complement(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-            },
-        }
+        self
     }
 }
 
@@ -3047,12 +2867,7 @@ impl DoubleComplement for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
     fn double_complement(self) -> DipoleAtInfinity {
-        DipoleAtInfinity {
-            groups: DipoleAtInfinityGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3060,9 +2875,7 @@ impl DoubleComplement for DipoleBulk {
     type Output = DipoleBulk;
 
     fn double_complement(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3070,12 +2883,7 @@ impl DoubleComplement for DipoleCarrierAspect {
     type Output = DipoleCarrierAspect;
 
     fn double_complement(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3083,9 +2891,7 @@ impl DoubleComplement for DipoleWeight {
     type Output = DipoleWeight;
 
     fn double_complement(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3093,9 +2899,7 @@ impl DoubleComplement for DualNum {
     type Output = DualNum;
 
     fn double_complement(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3103,9 +2907,7 @@ impl DoubleComplement for FlatPoint {
     type Output = FlatPoint;
 
     fn double_complement(self) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3113,9 +2915,7 @@ impl DoubleComplement for FlatPointAtInfinity {
     type Output = FlatPointAtInfinity;
 
     fn double_complement(self) -> FlatPointAtInfinity {
-        FlatPointAtInfinity {
-            groups: FlatPointAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3123,9 +2923,7 @@ impl DoubleComplement for FlatPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn double_complement(self) -> FlatPointAtOrigin {
-        FlatPointAtOrigin {
-            groups: FlatPointAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3133,12 +2931,7 @@ impl DoubleComplement for Flector {
     type Output = Flector;
 
     fn double_complement(self) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3146,9 +2939,7 @@ impl DoubleComplement for FlectorAtInfinity {
     type Output = FlectorAtInfinity;
 
     fn double_complement(self) -> FlectorAtInfinity {
-        FlectorAtInfinity {
-            groups: FlectorAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3156,9 +2947,7 @@ impl DoubleComplement for Horizon {
     type Output = Horizon;
 
     fn double_complement(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3166,9 +2955,7 @@ impl DoubleComplement for Infinity {
     type Output = Infinity;
 
     fn double_complement(self) -> Infinity {
-        Infinity {
-            groups: InfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3176,12 +2963,7 @@ impl DoubleComplement for Line {
     type Output = Line;
 
     fn double_complement(self) -> Line {
-        Line {
-            groups: LineGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3189,9 +2971,7 @@ impl DoubleComplement for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn double_complement(self) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3199,9 +2979,7 @@ impl DoubleComplement for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn double_complement(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3209,12 +2987,7 @@ impl DoubleComplement for Motor {
     type Output = Motor;
 
     fn double_complement(self) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3222,21 +2995,7 @@ impl DoubleComplement for MultiVector {
     type Output = MultiVector;
 
     fn double_complement(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5(),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
+        self
     }
 }
 
@@ -3244,9 +3003,7 @@ impl DoubleComplement for Origin {
     type Output = Origin;
 
     fn double_complement(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3254,9 +3011,7 @@ impl DoubleComplement for Plane {
     type Output = Plane;
 
     fn double_complement(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3264,9 +3019,7 @@ impl DoubleComplement for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn double_complement(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3274,9 +3027,7 @@ impl DoubleComplement for Rotor {
     type Output = Rotor;
 
     fn double_complement(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3284,12 +3035,7 @@ impl DoubleComplement for RoundPoint {
     type Output = RoundPoint;
 
     fn double_complement(self) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3297,9 +3043,7 @@ impl DoubleComplement for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
     fn double_complement(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3307,9 +3051,7 @@ impl DoubleComplement for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn double_complement(self) -> RoundPointAtOrigin {
-        RoundPointAtOrigin {
-            groups: RoundPointAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3317,9 +3059,7 @@ impl DoubleComplement for RoundPointBulk {
     type Output = RoundPointBulk;
 
     fn double_complement(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3327,9 +3067,7 @@ impl DoubleComplement for RoundPointOnOrigin {
     type Output = RoundPointOnOrigin;
 
     fn double_complement(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3337,9 +3075,7 @@ impl DoubleComplement for Scalar {
     type Output = Scalar;
 
     fn double_complement(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3347,9 +3083,7 @@ impl DoubleComplement for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn double_complement(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3357,12 +3091,7 @@ impl DoubleComplement for Sphere {
     type Output = Sphere;
 
     fn double_complement(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3370,9 +3099,7 @@ impl DoubleComplement for SphereWeight {
     type Output = SphereWeight;
 
     fn double_complement(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3380,12 +3107,7 @@ impl DoubleComplement for Transflector {
     type Output = Transflector;
 
     fn double_complement(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -3393,9 +3115,7 @@ impl DoubleComplement for Translator {
     type Output = Translator;
 
     fn double_complement(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -3928,9 +3648,7 @@ impl Reversal for AntiScalar {
     type Output = AntiScalar;
 
     fn reversal(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4062,9 +3780,7 @@ impl Reversal for DualNum {
     type Output = DualNum;
 
     fn reversal(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4131,9 +3847,7 @@ impl Reversal for Horizon {
     type Output = Horizon;
 
     fn reversal(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4141,9 +3855,7 @@ impl Reversal for Infinity {
     type Output = Infinity;
 
     fn reversal(self) -> Infinity {
-        Infinity {
-            groups: InfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4223,9 +3935,7 @@ impl Reversal for Origin {
     type Output = Origin;
 
     fn reversal(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4233,9 +3943,7 @@ impl Reversal for Plane {
     type Output = Plane;
 
     fn reversal(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4243,9 +3951,7 @@ impl Reversal for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn reversal(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4265,12 +3971,7 @@ impl Reversal for RoundPoint {
     type Output = RoundPoint;
 
     fn reversal(self) -> RoundPoint {
-        RoundPoint {
-            groups: RoundPointGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -4278,9 +3979,7 @@ impl Reversal for RoundPointAtInfinity {
     type Output = RoundPointAtInfinity;
 
     fn reversal(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4288,9 +3987,7 @@ impl Reversal for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn reversal(self) -> RoundPointAtOrigin {
-        RoundPointAtOrigin {
-            groups: RoundPointAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4298,9 +3995,7 @@ impl Reversal for RoundPointBulk {
     type Output = RoundPointBulk;
 
     fn reversal(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4308,9 +4003,7 @@ impl Reversal for RoundPointOnOrigin {
     type Output = RoundPointOnOrigin;
 
     fn reversal(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4318,9 +4011,7 @@ impl Reversal for Scalar {
     type Output = Scalar;
 
     fn reversal(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4328,9 +4019,7 @@ impl Reversal for SpacialCurvature {
     type Output = SpacialCurvature;
 
     fn reversal(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -4338,12 +4027,7 @@ impl Reversal for Sphere {
     type Output = Sphere;
 
     fn reversal(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -4351,9 +4035,7 @@ impl Reversal for SphereWeight {
     type Output = SphereWeight;
 
     fn reversal(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
-        }
+        self
     }
 }
 

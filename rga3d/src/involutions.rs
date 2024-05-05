@@ -229,9 +229,7 @@ impl AntiReversal for AntiScalar {
     type Output = AntiScalar;
 
     fn anti_reversal(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -239,9 +237,7 @@ impl AntiReversal for DualNum {
     type Output = DualNum;
 
     fn anti_reversal(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -274,9 +270,7 @@ impl AntiReversal for Horizon {
     type Output = Horizon;
 
     fn anti_reversal(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -388,9 +382,7 @@ impl AntiReversal for Plane {
     type Output = Plane;
 
     fn anti_reversal(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -398,9 +390,7 @@ impl AntiReversal for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn anti_reversal(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -444,9 +434,7 @@ impl AntiReversal for Scalar {
     type Output = Scalar;
 
     fn anti_reversal(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -479,9 +467,7 @@ impl Automorphism for AntiScalar {
     type Output = AntiScalar;
 
     fn automorphism(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -489,9 +475,7 @@ impl Automorphism for DualNum {
     type Output = DualNum;
 
     fn automorphism(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -534,12 +518,7 @@ impl Automorphism for Line {
     type Output = Line;
 
     fn automorphism(self) -> Line {
-        Line {
-            groups: LineGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -547,9 +526,7 @@ impl Automorphism for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn automorphism(self) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -557,9 +534,7 @@ impl Automorphism for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn automorphism(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -567,12 +542,7 @@ impl Automorphism for Motor {
     type Output = Motor;
 
     fn automorphism(self) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -682,9 +652,7 @@ impl Automorphism for Rotor {
     type Output = Rotor;
 
     fn automorphism(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -692,9 +660,7 @@ impl Automorphism for Scalar {
     type Output = Scalar;
 
     fn automorphism(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -715,9 +681,7 @@ impl Automorphism for Translator {
     type Output = Translator;
 
     fn automorphism(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -725,9 +689,7 @@ impl Conjugation for AntiScalar {
     type Output = AntiScalar;
 
     fn conjugation(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -735,9 +697,7 @@ impl Conjugation for DualNum {
     type Output = DualNum;
 
     fn conjugation(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -770,9 +730,7 @@ impl Conjugation for Horizon {
     type Output = Horizon;
 
     fn conjugation(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -884,9 +842,7 @@ impl Conjugation for Plane {
     type Output = Plane;
 
     fn conjugation(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -894,9 +850,7 @@ impl Conjugation for PlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn conjugation(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -940,9 +894,7 @@ impl Conjugation for Scalar {
     type Output = Scalar;
 
     fn conjugation(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -975,9 +927,7 @@ impl DoubleComplement for AntiScalar {
     type Output = AntiScalar;
 
     fn double_complement(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -985,9 +935,7 @@ impl DoubleComplement for DualNum {
     type Output = DualNum;
 
     fn double_complement(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1030,12 +978,7 @@ impl DoubleComplement for Line {
     type Output = Line;
 
     fn double_complement(self) -> Line {
-        Line {
-            groups: LineGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1043,9 +986,7 @@ impl DoubleComplement for LineAtInfinity {
     type Output = LineAtInfinity;
 
     fn double_complement(self) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1053,9 +994,7 @@ impl DoubleComplement for LineAtOrigin {
     type Output = LineAtOrigin;
 
     fn double_complement(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1063,12 +1002,7 @@ impl DoubleComplement for Motor {
     type Output = Motor;
 
     fn double_complement(self) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-            },
-        }
+        self
     }
 }
 
@@ -1178,9 +1112,7 @@ impl DoubleComplement for Rotor {
     type Output = Rotor;
 
     fn double_complement(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1188,9 +1120,7 @@ impl DoubleComplement for Scalar {
     type Output = Scalar;
 
     fn double_complement(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1211,9 +1141,7 @@ impl DoubleComplement for Translator {
     type Output = Translator;
 
     fn double_complement(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1660,9 +1588,7 @@ impl Reversal for AntiScalar {
     type Output = AntiScalar;
 
     fn reversal(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1670,9 +1596,7 @@ impl Reversal for DualNum {
     type Output = DualNum;
 
     fn reversal(self) -> DualNum {
-        DualNum {
-            groups: DualNumGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1809,9 +1733,7 @@ impl Reversal for Origin {
     type Output = Origin;
 
     fn reversal(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1843,9 +1765,7 @@ impl Reversal for Point {
     type Output = Point;
 
     fn reversal(self) -> Point {
-        Point {
-            groups: PointGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1853,9 +1773,7 @@ impl Reversal for PointAtInfinity {
     type Output = PointAtInfinity;
 
     fn reversal(self) -> PointAtInfinity {
-        PointAtInfinity {
-            groups: PointAtInfinityGroups { g0: self.group0() },
-        }
+        self
     }
 }
 
@@ -1875,9 +1793,7 @@ impl Reversal for Scalar {
     type Output = Scalar;
 
     fn reversal(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
+        self
     }
 }
 

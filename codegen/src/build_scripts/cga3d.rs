@@ -228,7 +228,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
     code_gen.round_features(flat_basis, &registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies("Horizon", &registry);
-    // TODO conjugates, page 204
     // TODO impose constraints on page 235
 
     let mut file_path = Path::new("src/").to_path_buf();

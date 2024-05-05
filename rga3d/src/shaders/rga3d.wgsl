@@ -17563,11 +17563,11 @@ fn transflector__anti_dual(self_: Transflector) -> PointAtInfinity {
 }
 
 fn anti_scalar__anti_reversal(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return self_;
 }
 
 fn dual_num__anti_reversal(self_: DualNum) -> DualNum {
-    return DualNum(self_.g0);
+    return self_;
 }
 
 fn flector__anti_reversal(self_: Flector) -> Flector {
@@ -17579,7 +17579,7 @@ fn flector_at_infinity__anti_reversal(self_: FlectorAtInfinity) -> FlectorAtInfi
 }
 
 fn horizon__anti_reversal(self_: Horizon) -> Horizon {
-    return Horizon(self_.g0);
+    return self_;
 }
 
 fn line__anti_reversal(self_: Line) -> Line {
@@ -17615,11 +17615,11 @@ fn origin__anti_reversal(self_: Origin) -> Origin {
 }
 
 fn plane__anti_reversal(self_: Plane) -> Plane {
-    return Plane(self_.g0);
+    return self_;
 }
 
 fn plane_at_origin__anti_reversal(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0);
+    return self_;
 }
 
 fn point__anti_reversal(self_: Point) -> Point {
@@ -17635,7 +17635,7 @@ fn rotor__anti_reversal(self_: Rotor) -> Rotor {
 }
 
 fn scalar__anti_reversal(self_: Scalar) -> Scalar {
-    return Scalar(self_.g0);
+    return self_;
 }
 
 fn transflector__anti_reversal(self_: Transflector) -> Transflector {
@@ -17647,11 +17647,11 @@ fn translator__anti_reversal(self_: Translator) -> Translator {
 }
 
 fn anti_scalar__automorphism(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return self_;
 }
 
 fn dual_num__automorphism(self_: DualNum) -> DualNum {
-    return DualNum(self_.g0);
+    return self_;
 }
 
 fn flector__automorphism(self_: Flector) -> Flector {
@@ -17667,19 +17667,19 @@ fn horizon__automorphism(self_: Horizon) -> Horizon {
 }
 
 fn line__automorphism(self_: Line) -> Line {
-    return Line(self_.g0, self_.g1);
+    return self_;
 }
 
 fn line_at_infinity__automorphism(self_: LineAtInfinity) -> LineAtInfinity {
-    return LineAtInfinity(self_.g0);
+    return self_;
 }
 
 fn line_at_origin__automorphism(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0);
+    return self_;
 }
 
 fn motor__automorphism(self_: Motor) -> Motor {
-    return Motor(self_.g0, self_.g1);
+    return self_;
 }
 
 fn multi_vector__automorphism(self_: MultiVector) -> MultiVector {
@@ -17715,11 +17715,11 @@ fn point_at_infinity__automorphism(self_: PointAtInfinity) -> PointAtInfinity {
 }
 
 fn rotor__automorphism(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0);
+    return self_;
 }
 
 fn scalar__automorphism(self_: Scalar) -> Scalar {
-    return Scalar(self_.g0);
+    return self_;
 }
 
 fn transflector__automorphism(self_: Transflector) -> Transflector {
@@ -17727,15 +17727,15 @@ fn transflector__automorphism(self_: Transflector) -> Transflector {
 }
 
 fn translator__automorphism(self_: Translator) -> Translator {
-    return Translator(self_.g0);
+    return self_;
 }
 
 fn anti_scalar__conjugation(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return self_;
 }
 
 fn dual_num__conjugation(self_: DualNum) -> DualNum {
-    return DualNum(self_.g0);
+    return self_;
 }
 
 fn flector__conjugation(self_: Flector) -> Flector {
@@ -17747,7 +17747,7 @@ fn flector_at_infinity__conjugation(self_: FlectorAtInfinity) -> FlectorAtInfini
 }
 
 fn horizon__conjugation(self_: Horizon) -> Horizon {
-    return Horizon(self_.g0);
+    return self_;
 }
 
 fn line__conjugation(self_: Line) -> Line {
@@ -17783,11 +17783,11 @@ fn origin__conjugation(self_: Origin) -> Origin {
 }
 
 fn plane__conjugation(self_: Plane) -> Plane {
-    return Plane(self_.g0);
+    return self_;
 }
 
 fn plane_at_origin__conjugation(self_: PlaneAtOrigin) -> PlaneAtOrigin {
-    return PlaneAtOrigin(self_.g0);
+    return self_;
 }
 
 fn point__conjugation(self_: Point) -> Point {
@@ -17803,7 +17803,7 @@ fn rotor__conjugation(self_: Rotor) -> Rotor {
 }
 
 fn scalar__conjugation(self_: Scalar) -> Scalar {
-    return Scalar(self_.g0);
+    return self_;
 }
 
 fn transflector__conjugation(self_: Transflector) -> Transflector {
@@ -17815,11 +17815,11 @@ fn translator__conjugation(self_: Translator) -> Translator {
 }
 
 fn anti_scalar__double_complement(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return self_;
 }
 
 fn dual_num__double_complement(self_: DualNum) -> DualNum {
-    return DualNum(self_.g0);
+    return self_;
 }
 
 fn flector__double_complement(self_: Flector) -> Flector {
@@ -17835,19 +17835,19 @@ fn horizon__double_complement(self_: Horizon) -> Horizon {
 }
 
 fn line__double_complement(self_: Line) -> Line {
-    return Line(self_.g0, self_.g1);
+    return self_;
 }
 
 fn line_at_infinity__double_complement(self_: LineAtInfinity) -> LineAtInfinity {
-    return LineAtInfinity(self_.g0);
+    return self_;
 }
 
 fn line_at_origin__double_complement(self_: LineAtOrigin) -> LineAtOrigin {
-    return LineAtOrigin(self_.g0);
+    return self_;
 }
 
 fn motor__double_complement(self_: Motor) -> Motor {
-    return Motor(self_.g0, self_.g1);
+    return self_;
 }
 
 fn multi_vector__double_complement(self_: MultiVector) -> MultiVector {
@@ -17883,11 +17883,11 @@ fn point_at_infinity__double_complement(self_: PointAtInfinity) -> PointAtInfini
 }
 
 fn rotor__double_complement(self_: Rotor) -> Rotor {
-    return Rotor(self_.g0);
+    return self_;
 }
 
 fn scalar__double_complement(self_: Scalar) -> Scalar {
-    return Scalar(self_.g0);
+    return self_;
 }
 
 fn transflector__double_complement(self_: Transflector) -> Transflector {
@@ -17895,7 +17895,7 @@ fn transflector__double_complement(self_: Transflector) -> Transflector {
 }
 
 fn translator__double_complement(self_: Translator) -> Translator {
-    return Translator(self_.g0);
+    return self_;
 }
 
 fn dual_num__dual(self_: DualNum) -> AntiScalar {
@@ -18043,11 +18043,11 @@ fn translator__left_complement(self_: Translator) -> MultiVector {
 }
 
 fn anti_scalar__reversal(self_: AntiScalar) -> AntiScalar {
-    return AntiScalar(self_.g0);
+    return self_;
 }
 
 fn dual_num__reversal(self_: DualNum) -> DualNum {
-    return DualNum(self_.g0);
+    return self_;
 }
 
 fn flector__reversal(self_: Flector) -> Flector {
@@ -18091,7 +18091,7 @@ fn multi_vector_at_origin__reversal(self_: MultiVectorAtOrigin) -> MultiVectorAt
 }
 
 fn origin__reversal(self_: Origin) -> Origin {
-    return Origin(self_.g0);
+    return self_;
 }
 
 fn plane__reversal(self_: Plane) -> Plane {
@@ -18103,11 +18103,11 @@ fn plane_at_origin__reversal(self_: PlaneAtOrigin) -> PlaneAtOrigin {
 }
 
 fn point__reversal(self_: Point) -> Point {
-    return Point(self_.g0);
+    return self_;
 }
 
 fn point_at_infinity__reversal(self_: PointAtInfinity) -> PointAtInfinity {
-    return PointAtInfinity(self_.g0);
+    return self_;
 }
 
 fn rotor__reversal(self_: Rotor) -> Rotor {
@@ -18115,7 +18115,7 @@ fn rotor__reversal(self_: Rotor) -> Rotor {
 }
 
 fn scalar__reversal(self_: Scalar) -> Scalar {
-    return Scalar(self_.g0);
+    return self_;
 }
 
 fn transflector__reversal(self_: Transflector) -> Transflector {

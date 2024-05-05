@@ -342,7 +342,8 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
     let mut body = Vec::new();
     let mut base_index = 0;
     let mut all_zeroes = true;
-    for result_group in result_class.grouped_basis.iter() {
+    let mut is_identity = result_class == parameter_a.multi_vector_class();
+    for (result_group_index, result_group) in result_class.grouped_basis.iter().enumerate() {
         let size = result_group.len();
         let mut a_group_index = None;
         let mut factors = vec![];
@@ -355,6 +356,7 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
             };
             if in_element.coefficient == 0 || out_element.coefficient == 0 {
                 factors.push(0);
+                is_identity = false;
                 a_indices.push(GatherData::RawZero);
                 continue 'for_index_in_group;
             }
@@ -363,6 +365,7 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
             let index_in_a = match index_in_a {
                 None => {
                     factors.push(0);
+                    is_identity = false;
                     a_indices.push(GatherData::RawZero);
                     continue 'for_index_in_group;
                 },
@@ -377,6 +380,12 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
             }
             let negate = false;
             factors.push(coefficient);
+            if coefficient != 1 {
+                is_identity = false;
+            }
+            if group != result_group_index || element != a_indices.len() {
+                is_identity = false;
+            }
             a_indices.push(GatherData::Usual(UsualGatherData {
                 negate,
                 group,
@@ -413,6 +422,16 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
     if all_zeroes {
         return AstNode::None;
     }
+    let return_expr =
+        if is_identity {
+            variable(&parameter_a)
+        } else {
+            Expression {
+                size: 1,
+                content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
+                data_type_hint: Some(DataType::MultiVector(result_class)),
+            }
+        };
     AstNode::TraitImplementation {
         result: Parameter {
             name,
@@ -420,13 +439,7 @@ pub fn derive_involution<'a>(name: &'static str, involution: &Involution, parame
         },
         class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
-        body: vec![AstNode::ReturnStatement {
-            expression: Box::new(Expression {
-                size: 1,
-                content: ExpressionContent::InvokeClassMethod(result_class, "Constructor", body),
-                data_type_hint: Some(DataType::MultiVector(result_class)),
-            }),
-        }],
+        body: vec![AstNode::ReturnStatement { expression: Box::new(return_expr), }],
     }
 }
 
@@ -1250,7 +1263,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         }
 
         // Involutions
-        // TODO double check involutions, particularly reverses and anti-reverses for CGA
         let involutions = Involution::involutions(&self.algebra);
         for param_a in registry.single_parameters() {
             for (name, involution, _) in involutions.iter() {
