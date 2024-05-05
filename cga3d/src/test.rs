@@ -131,5 +131,35 @@ fn distance_speculation() {
     // - impl ProjectOrthogonallyOnto<Circle> for RoundPoint
     // Even better if those projections work accurately for Dipole|Circle of imaginary radius.
 
+    // So what about the potentially skew/parallel cases?
+    // Assuming for starters that these round objects are really round, and not infinite radius flat.
+    // You can still try the above technique and see what happens. Each dipole has a center, each
+    // circle has a center. Consecutive orthogonal projections, and bam you've got closest points.
+    // But then what about the parallel/skew case?
+    // Let's start with parallel circles because there is fewer degrees of freedom for degenerate
+    // cases like this. There's only one way for circles to be parallel, but lots of ways for
+    // dipoles to be parallel or skew.
 
+    // Well... huh... when I first started attempting to create this technique, I was imagining
+    // somehow creating a RoundPoint by meeting the carriers of both sides... but it's actually
+    // kind of hard to figure out how to create a RoundPoint that way, and so then I suggested
+    // using the center operation... but meeting parallel carriers goes to infinity, which is the
+    // awkward part, but orthogonally projecting a's center onto b's carrier is not awkward at all.
+    // For parallel circles, it works quite easily in fact. Still though... it's not perfect...
+
+    // Imagine you have two concentric circles. One has twice the radius of the other.
+    // They are on the xy plane. now take the smaller concentric circle, and translate it along the
+    // z axis. And then finally, translate it slightly on the x axis (so the circles are no longer
+    // concentric). Viewed from z=infinity, one circle should look like it's inside the other circle.
+    // So.... now we try to find the distance between them. Take the center of one of the circles,
+    // and project it onto the other's carrier, and then project onto the object. This gives us
+    // the closest point on the bigger circle, but the furthest point on the smaller circle.
+    // So how do we fix that?
+    // Well... I have a hunch... since we're taking the centers anyway... there might be some
+    // insight or manipulating we can do with the relative positioning and relative radii of the
+    // two centers.
+
+    // I'm really aching to see some 3d visualizations. Maybe it's time to start
+    // developing a "CGA Playground" demo. Even without all the fundamentals (like Distance)
+    // figured out yet.
 }
