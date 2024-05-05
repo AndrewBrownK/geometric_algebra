@@ -1,4 +1,4 @@
 [workspace]
 resolver = "2"
 
-members = ["codegen", "rga3d", "cga3d"]
+members = ["codegen", "rga3d", "cga3d", "demos"]
