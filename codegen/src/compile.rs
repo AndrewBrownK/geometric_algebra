@@ -3124,10 +3124,22 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     }
 
-    pub fn round_features<'s>(&'s mut self, flat_basis: BasisElement, registry: &'r MultiVectorClassRegistry) {
+    pub fn round_features<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
+
+        let one_infinity: Option<(Expression, BasisElementIndex)> = try {
+            let infinity = registry.classes.iter().find(|it| it.class_name == "Infinity")?;
+            let index = infinity.flat_basis().first()?.index;
+            let one_infinity = self.trait_impls.get_class_invocation("Unit", infinity)?;
+            (one_infinity, index)
+        };
+        let (one_infinity, infinity_index) = match one_infinity {
+            None => return,
+            Some(it) => it
+        };
+
         for param_a in registry.single_parameters() {
             let is_all_flat = param_a.multi_vector_class().flat_basis().iter().all(|it| {
-                flat_basis.index == (flat_basis.index & it.index)
+                infinity_index == (infinity_index & it.index)
             });
             if is_all_flat {
                 continue;
@@ -3135,15 +3147,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
             // The object is round
 
-            let one_infinity: Option<Expression> = try {
-                let infinity = registry.classes.iter().find(|it| it.class_name == "Infinity")?;
-                let one_infinity = self.trait_impls.get_class_invocation("Unit", infinity)?;
-                one_infinity
-            };
-            let one_infinity = match one_infinity {
-                None => continue,
-                Some(it) => it
-            };
 
 
             // TODO a lot of these have "simpler" more direct implementations per object
@@ -3194,7 +3197,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         for param_a in registry.single_parameters() {
             let is_all_flat = param_a.multi_vector_class().flat_basis().iter().all(|it| {
-                flat_basis.index == (flat_basis.index & it.index)
+                infinity_index == (infinity_index & it.index)
             });
             if is_all_flat {
                 continue;
