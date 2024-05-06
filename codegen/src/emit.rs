@@ -112,14 +112,14 @@ impl<W: Write> Emitter<W> {
     pub fn emit_shader_preamble(&mut self, algebra_name: &str) -> std::io::Result<()> {
         if self.actually_emit {
             if let Some(gc) = &mut self.glsl_collector {
-                gc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
-
                 // TODO test if this kind of directive works same in glsl as wgsl
                 gc.write_fmt(format_args!("#define_import_path {algebra_name}\n\n"))?;
+
+                gc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
             }
             if let Some(wc) = &mut self.wgsl_collector {
-                wc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
                 wc.write_fmt(format_args!("#define_import_path {algebra_name}\n\n"))?;
+                wc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;
             }
         }
         Ok(())

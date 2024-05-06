@@ -18,6 +18,10 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     let mut glsl_file = std::fs::File::open(glsl_file_name).unwrap();
     let mut glsl_contents = String::new();
     glsl_file.read_to_string(&mut glsl_contents).unwrap();
+
+    // Trim the naga_oil directive off the front
+    let naga_oil_directive = format!("#define_import_path {algebra_name}\n\n");
+    glsl_contents.replace_range(0..naga_oil_directive.len(), "");
     // Append a dummy entry point
     glsl_contents.push_str("\nvoid main() {}");
 
@@ -51,6 +55,9 @@ pub fn validate_wgsl(algebra_name: &str, file_path: PathBuf) {
     let mut wgsl_file = std::fs::File::open(wgsl_file_name).unwrap();
     let mut wgsl_contents = String::new();
     wgsl_file.read_to_string(&mut wgsl_contents).unwrap();
+    // Trim the naga_oil directive off the front
+    let naga_oil_directive = format!("#define_import_path {algebra_name}\n\n");
+    wgsl_contents.replace_range(0..naga_oil_directive.len(), "");
 
     // Parse and validate the naga module
     let module = match wgsl_frontend.parse(wgsl_contents.as_str()) {

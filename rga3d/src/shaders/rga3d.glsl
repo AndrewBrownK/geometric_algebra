@@ -1,11 +1,11 @@
+#define_import_path rga3d
+
 //
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
 // https://github.com/AndrewBrownK/projective_ga/
 //
-
-#define_import_path rga3d
 
 struct Scalar {
     // 1

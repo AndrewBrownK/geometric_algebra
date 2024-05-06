@@ -1,11 +1,11 @@
+#define_import_path cga3d_min
+
 //
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.
 // https://github.com/AndrewBrownK/projective_ga/
 //
-
-#define_import_path cga3d_min
 
 struct Scalar {
     // 1
