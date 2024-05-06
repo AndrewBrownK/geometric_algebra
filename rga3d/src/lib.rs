@@ -14,6 +14,7 @@ pub mod characteristics;
 pub mod involutions;
 pub mod metrics;
 pub mod norms;
+pub mod shaders;
 pub mod unitize;
 pub mod products {
     pub mod contractions;

@@ -72,29 +72,15 @@ impl App {
         let window_size = window.inner_size();
 
 
-
-        let mut composer = Composer::default();
-        let wgsl_lib_path = "cga3d_min/src/shaders/cga3d_min.wgsl";
-        let wgsl_lib = fs::read_to_string(wgsl_lib_path).unwrap();
-        composer.add_composable_module(ComposableModuleDescriptor {
-            source: wgsl_lib.as_str(),
-            file_path: wgsl_lib_path,
-            ..Default::default()
-        }).unwrap();
-
-
         let wgsl_entry_path = "examples/src/shader.wgsl";
         let wgsl_entry = fs::read_to_string(wgsl_entry_path).unwrap();
-        let mut naga_module = composer.make_naga_module(NagaModuleDescriptor {
+        let naga_module_descriptor = NagaModuleDescriptor {
             source: wgsl_entry.as_str(),
             file_path: wgsl_entry_path,
             ..Default::default()
-        }).unwrap();
-        let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
-        for ep in naga_module.entry_points.iter() {
-            pruner.add_entrypoint(ep, HashMap::new(), Some(PartReq::All));
-        }
-        naga_module = pruner.rewrite();
+        };
+
+        let naga_module = cga3d_min::shaders::wgsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
 
 
 

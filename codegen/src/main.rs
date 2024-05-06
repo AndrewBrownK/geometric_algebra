@@ -8,6 +8,7 @@ mod compile;
 mod emit;
 mod impls;
 mod validate;
+mod shader_support;
 
 mod build_scripts {
     pub mod cga;

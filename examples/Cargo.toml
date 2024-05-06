@@ -15,7 +15,7 @@ env_logger = "0.11.3"
 wasm-bindgen-futures = "0.4.42"
 tracing = "0.1.40"
 pollster = "0.3.0"
-cga3d_min = { path = "../cga3d_min" }
+cga3d_min = { path = "../cga3d_min", features = ["include-wgsl-src"] }
 
 # naga_oil limits the version of wgpu and naga we can use
 naga_oil = { version = "0.13.0", features = ["prune"] }

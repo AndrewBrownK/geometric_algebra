@@ -98,7 +98,7 @@ impl<W: Write> Emitter<W> {
         Ok(())
     }
 
-    pub fn emit_rust_preamble(&mut self, preamble: &'static str) -> std::io::Result<()> {
+    pub fn emit_rust_preamble(&mut self, preamble: &str) -> std::io::Result<()> {
         if self.actually_emit {
             if let Some(rc) = &mut self.rust_collector {
                 rc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;

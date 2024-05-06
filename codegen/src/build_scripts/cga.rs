@@ -6,6 +6,7 @@ use crate::algebra::dialect::Dialect;
 use crate::algebra::{GeometricAlgebraTrait, MultiVectorClassRegistry, read_multi_vector_from_str};
 use crate::compile::CodeGenerator;
 use crate::emit::Emitter;
+use crate::shader_support::emit_shader_support;
 
 pub fn cga_script(
     path_prefix: &str,
@@ -60,6 +61,7 @@ pub mod unitize;
 pub mod norms;
 pub mod characteristics;
 pub mod metrics;
+pub mod shaders;
 #[cfg(test)]
 pub mod test;
 pub mod products {
@@ -241,6 +243,7 @@ use crate::products::geometric::*;",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 
+    emit_shader_support(&mut emitter, &file_path, &code_gen.algebra.name)?;
     emitter.end_with_rust_fmt();
 
     // GLSL validation can stack overflow when ran in a build script (requires fix in Naga).
