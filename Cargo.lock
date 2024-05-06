@@ -305,6 +305,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "cga3d_min"
+version = "0.3.0"
+dependencies = [
+ "projective_ga",
+]
+
+[[package]]
 name = "codegen"
 version = "0.3.0"
 dependencies = [

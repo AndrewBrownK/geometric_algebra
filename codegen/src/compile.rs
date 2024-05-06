@@ -1047,7 +1047,8 @@ pub fn derive_grade<'a>(name: &'static str, parameter_a: &Parameter<'a>, grade: 
     }
 }
 
-pub fn derive_bulk_or_weight<'a>(
+pub fn derive_bulk_or_weight<'a, GA: GeometricAlgebraTrait>(
+    algebra: &GA,
     name: &'static str,
     parameter_a: &Parameter<'a>,
     projective_basis: &BasisElement,
@@ -1083,6 +1084,9 @@ pub fn derive_bulk_or_weight<'a>(
     // If nothing else, the starting class should always suffice.
 
     let mut result_class = registry.get_at_least(&result_signature);
+    if algebra.algebra_name().contains("min") {
+        result_class = Some(parameter_a.multi_vector_class());
+    }
     let result_class = result_class.unwrap_or_else(|| parameter_a.multi_vector_class());
 
     let result_flat_basis = result_class.flat_basis();
@@ -1095,7 +1099,11 @@ pub fn derive_bulk_or_weight<'a>(
         let (factors, a_indices): (Vec<_>, Vec<_>) = (0..size)
             .map(|index_in_group| {
                 let result_element = &result_flat_basis[base_index + index_in_group];
-                let index_in_a = parameter_a.multi_vector_class().flat_basis().iter().position(|a_element| a_element == result_element).unwrap();
+                let index_in_a = parameter_a.multi_vector_class().flat_basis().iter().position(|a_element| a_element == result_element);
+                let index_in_a = match index_in_a {
+                    Some(iia) => iia,
+                    None => return (0, GatherData::RawZero),
+                };
                 let scalar = if result_signature.contains(&result_element.index) { 1isize } else { 0isize };
                 let (group, element) = parameter_a.multi_vector_class().index_in_group(index_in_a);
                 let group_size = parameter_a.multi_vector_class().grouped_basis[group].len();
@@ -2518,24 +2526,24 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             None
         };
         for param_a in registry.single_parameters() {
-            let bulk = derive_bulk_or_weight("Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, registry);
+            let bulk = derive_bulk_or_weight(&self.algebra, "Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, registry);
             if bulk != AstNode::None {
                 self.trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
             }
 
-            let weight = derive_bulk_or_weight("Weight", &param_a, &projective_basis, true, flat_basis.clone(), true, registry);
+            let weight = derive_bulk_or_weight(&self.algebra, "Weight", &param_a, &projective_basis, true, flat_basis.clone(), true, registry);
             if weight != AstNode::None {
                 self.trait_impls.add_single_impl("Weight", param_a.clone(), weight);
             }
 
             if self.algebra.algebra_name().contains("cga") {
 
-                let round_bulk = derive_bulk_or_weight("RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, registry);
+                let round_bulk = derive_bulk_or_weight(&self.algebra, "RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, registry);
                 if round_bulk != AstNode::None {
                     self.trait_impls.add_single_impl("RoundBulk", param_a.clone(), round_bulk);
                 }
 
-                let round_weight = derive_bulk_or_weight("RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, registry);
+                let round_weight = derive_bulk_or_weight(&self.algebra, "RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, registry);
                 if round_weight != AstNode::None {
                     self.trait_impls.add_single_impl("RoundWeight", param_a, round_weight);
                 }

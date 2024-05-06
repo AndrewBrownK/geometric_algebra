@@ -1,0 +1,13 @@
+[package]
+name = "cga3d_min"
+version = "0.3.0"
+authors = ["Alexander Meißner <AlexanderMeissner@gmx.net>", "Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
+description = "Generate(d) custom libraries for geometric algebras"
+repository = "https://github.com/AndrewBrownK/projective_ga/"
+keywords = ["math", "simd", "vector", "geometric-algebra", "geometry"]
+license = "MIT"
+edition = "2021"
+publish = false
+
+[dependencies]
+projective_ga = { path = "../projective_ga" }
