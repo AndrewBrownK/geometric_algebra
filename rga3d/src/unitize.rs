@@ -6,7 +6,7 @@
 //
 
 use crate::norms::WeightNorm;
-use crate::products::geometric::GeometricProduct;
+use crate::products::geometric::*;
 use crate::*;
 
 /// Unitization

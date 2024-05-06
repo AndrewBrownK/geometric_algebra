@@ -6,7 +6,7 @@
 //
 
 use crate::involutions::*;
-use crate::products::exterior::AntiWedge;
+use crate::products::exterior::*;
 use crate::*;
 
 /// Bulk Contraction (Interior Product)

@@ -8,8 +8,8 @@
 use crate::characteristics::{Attitude, Sqrt};
 use crate::involutions::AntiDual;
 use crate::norms::*;
-use crate::products::exterior::{AntiWedge, Wedge};
-use crate::products::geometric::{GeometricAntiProduct, GeometricProduct};
+use crate::products::exterior::*;
+use crate::products::geometric::*;
 use crate::products::projections::*;
 use crate::unitize::Unitize;
 use crate::*;

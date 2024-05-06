@@ -6,7 +6,7 @@
 //
 
 use crate::involutions::AntiReversal;
-use crate::products::geometric::GeometricAntiProduct;
+use crate::products::geometric::*;
 use crate::unitize::Unitize;
 use crate::*;
 

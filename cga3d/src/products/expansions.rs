@@ -6,7 +6,7 @@
 //
 
 use crate::involutions::*;
-use crate::products::exterior::Wedge;
+use crate::products::exterior::*;
 use crate::*;
 
 /// Expansion (Interior Product)

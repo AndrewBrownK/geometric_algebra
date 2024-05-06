@@ -10,9 +10,14 @@ publish = false
 
 [dependencies]
 winit = "0.30.0"
-wgpu = "0.20.0"
 wasm-bindgen = "0.2.92"
 env_logger = "0.11.3"
 wasm-bindgen-futures = "0.4.42"
 tracing = "0.1.40"
 pollster = "0.3.0"
+cga3d_min = { path = "../cga3d_min" }
+
+# naga_oil limits the version of wgpu and naga we can use
+naga_oil = { version = "0.13.0", features = ["prune"] }
+naga = "0.19.2"
+wgpu = { version = "0.19.4", features = ["naga-ir"] }

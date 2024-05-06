@@ -38,6 +38,7 @@ pub fn cga_script(
     code_gen.attitude_and_dependencies("Horizon", &registry);
     // TODO impose constraints on page 235
 
+
     let mut file_path = Path::new("src/").to_path_buf();
     if !path_prefix.is_empty() {
         file_path = Path::new(path_prefix).join(file_path);
@@ -45,7 +46,7 @@ pub fn cga_script(
     let file_path = file_path;
 
     let mut emitter = Emitter::new(actually_emit, &file_path, "lib", name);
-    emitter.emit_shader_preamble()?;
+    emitter.emit_shader_preamble(&code_gen.algebra.name)?;
 
     emitter.emit_rust_preamble(
         "
@@ -101,7 +102,7 @@ use crate::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::geometric::GeometricProduct;",
+use crate::products::geometric::*;",
     )?;
     code_gen.emit_component_wise_aspects(&mut emitter)?;
 
@@ -129,12 +130,9 @@ use crate::involutions::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::exterior::AntiWedge;
-use crate::products::exterior::Wedge;
-use crate::products::dot::Dot;
-use crate::products::dot::AntiDot;
-use crate::products::geometric::GeometricProduct;
-use crate::products::geometric::GeometricAntiProduct;
+use crate::products::exterior::*;
+use crate::products::dot::*;
+use crate::products::geometric::*;
 use crate::involutions::*;",
     )?;
     code_gen.emit_characteristic_features(&mut emitter)?;
@@ -145,7 +143,7 @@ use crate::involutions::*;",
 use crate::*;
 use crate::characteristics::*;
 use crate::aspects::*;
-use crate::products::dot::{AntiDot, Dot};",
+use crate::products::dot::*;",
     )?;
     code_gen.emit_norms(&mut emitter)?;
 
@@ -154,7 +152,7 @@ use crate::products::dot::{AntiDot, Dot};",
         "
 use crate::*;
 use crate::norms::WeightNorm;
-use crate::products::geometric::GeometricProduct;",
+use crate::products::geometric::*;",
     )?;
     code_gen.emit_unitize(&mut emitter)?;
 
@@ -164,7 +162,7 @@ use crate::products::geometric::GeometricProduct;",
 use crate::*;
 use crate::unitize::Unitize;
 use crate::involutions::AntiReversal;
-use crate::products::geometric::GeometricAntiProduct;",
+use crate::products::geometric::*;",
     )?;
     code_gen.emit_isometries(&mut emitter)?;
 
@@ -174,8 +172,7 @@ use crate::products::geometric::GeometricAntiProduct;",
 use crate::*;
 use crate::characteristics::Inverse;
 use crate::characteristics::AntiInverse;
-use crate::products::geometric::GeometricAntiProduct;
-use crate::products::geometric::GeometricProduct;",
+use crate::products::geometric::*;",
     )?;
     code_gen.emit_quotients(&mut emitter)?;
 
@@ -184,7 +181,7 @@ use crate::products::geometric::GeometricProduct;",
         "
 use crate::*;
 use crate::involutions::*;
-use crate::products::exterior::AntiWedge;",
+use crate::products::exterior::*;",
     )?;
     code_gen.emit_contractions(&mut emitter)?;
 
@@ -193,7 +190,7 @@ use crate::products::exterior::AntiWedge;",
         "
 use crate::*;
 use crate::involutions::*;
-use crate::products::exterior::Wedge;",
+use crate::products::exterior::*;",
     )?;
     code_gen.emit_expansions(&mut emitter)?;
 
@@ -201,8 +198,7 @@ use crate::products::exterior::Wedge;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::exterior::Wedge;
-use crate::products::exterior::AntiWedge;
+use crate::products::exterior::*;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
 use crate::involutions::*;",
@@ -213,8 +209,7 @@ use crate::involutions::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::exterior::Wedge;
-use crate::products::exterior::AntiWedge;
+use crate::products::exterior::*;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
 use crate::involutions::*;",
@@ -225,8 +220,7 @@ use crate::involutions::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::products::exterior::Wedge;
-use crate::products::exterior::AntiWedge;
+use crate::products::exterior::*;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
 use crate::involutions::*;",
@@ -238,12 +232,12 @@ use crate::involutions::*;",
         "
 use crate::characteristics::{Attitude, Sqrt};
 use crate::norms::*;
-use crate::products::exterior::{AntiWedge, Wedge};
+use crate::products::exterior::*;
 use crate::products::projections::*;
 use crate::unitize::Unitize;
 use crate::*;
 use crate::involutions::AntiDual;
-use crate::products::geometric::{GeometricAntiProduct, GeometricProduct};",
+use crate::products::geometric::*;",
     )?;
     code_gen.emit_metric_operations(&mut emitter)?;
 

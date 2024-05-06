@@ -8,8 +8,7 @@
 use crate::involutions::*;
 use crate::products::contractions::*;
 use crate::products::expansions::*;
-use crate::products::exterior::AntiWedge;
-use crate::products::exterior::Wedge;
+use crate::products::exterior::*;
 use crate::*;
 
 /// Support

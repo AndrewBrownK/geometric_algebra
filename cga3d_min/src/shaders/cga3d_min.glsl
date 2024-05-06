@@ -5,6 +5,8 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
+#define_import_path cga3d_min
+
 struct Scalar {
     // 1
     float g0;

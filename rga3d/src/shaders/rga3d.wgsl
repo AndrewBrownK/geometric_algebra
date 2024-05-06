@@ -5,6 +5,8 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
+#define_import_path rga3d
+
 struct Scalar {
     // 1
      g0: f32,

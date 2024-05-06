@@ -7,7 +7,7 @@
 
 use crate::aspects::*;
 use crate::characteristics::*;
-use crate::products::dot::{AntiDot, Dot};
+use crate::products::dot::*;
 use crate::*;
 
 /// BulkNorm

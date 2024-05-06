@@ -7,8 +7,7 @@
 
 use crate::characteristics::AntiInverse;
 use crate::characteristics::Inverse;
-use crate::products::geometric::GeometricAntiProduct;
-use crate::products::geometric::GeometricProduct;
+use crate::products::geometric::*;
 use crate::*;
 
 /// The Geometric Quotient between `a` and `b` is the geometric product between `a` and `b^-1` (the inverse of `b`).

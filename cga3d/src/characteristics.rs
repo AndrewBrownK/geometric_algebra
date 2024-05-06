@@ -6,12 +6,9 @@
 //
 
 use crate::involutions::*;
-use crate::products::dot::AntiDot;
-use crate::products::dot::Dot;
-use crate::products::exterior::AntiWedge;
-use crate::products::exterior::Wedge;
-use crate::products::geometric::GeometricAntiProduct;
-use crate::products::geometric::GeometricProduct;
+use crate::products::dot::*;
+use crate::products::exterior::*;
+use crate::products::geometric::*;
 use crate::*;
 
 /// Inverse, as in `x^-1` (with respect to geometric product).

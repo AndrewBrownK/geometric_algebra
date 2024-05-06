@@ -5,7 +5,7 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
-use crate::products::geometric::GeometricProduct;
+use crate::products::geometric::*;
 use crate::*;
 
 /// The Bulk of an object usually describes the object's relationship with the origin.

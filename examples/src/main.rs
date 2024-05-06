@@ -1,7 +1,12 @@
 use std::borrow::Cow;
+use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::Debug;
+use std::fs;
+use std::io::Read;
 
+use naga_oil::compose::{ComposableModuleDescriptor, Composer, NagaModuleDescriptor};
+use naga_oil::prune::PartReq;
 use wgpu::{Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
@@ -66,10 +71,38 @@ impl App {
         let (device, queue) = adapter.request_device(&Default::default(), None).await.unwrap();
         let window_size = window.inner_size();
 
+
+
+        let mut composer = Composer::default();
+        let wgsl_lib_path = "cga3d_min/src/shaders/cga3d_min.wgsl";
+        let wgsl_lib = fs::read_to_string(wgsl_lib_path).unwrap();
+        composer.add_composable_module(ComposableModuleDescriptor {
+            source: wgsl_lib.as_str(),
+            file_path: wgsl_lib_path,
+            ..Default::default()
+        }).unwrap();
+
+
+        let wgsl_entry_path = "examples/src/shader.wgsl";
+        let wgsl_entry = fs::read_to_string(wgsl_entry_path).unwrap();
+        let mut naga_module = composer.make_naga_module(NagaModuleDescriptor {
+            source: wgsl_entry.as_str(),
+            file_path: wgsl_entry_path,
+            ..Default::default()
+        }).unwrap();
+        let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
+        for ep in naga_module.entry_points.iter() {
+            pruner.add_entrypoint(ep, HashMap::new(), Some(PartReq::All));
+        }
+        naga_module = pruner.rewrite();
+
+
+
         // Load the shaders from disk
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
-            source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!("shader.wgsl"))),
+            // source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!("shader.wgsl"))),
+            source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),
         });
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -88,12 +121,10 @@ impl App {
                 module: &shader,
                 entry_point: "vs_main",
                 buffers: &[],
-                compilation_options: Default::default(),
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
                 entry_point: "fs_main",
-                compilation_options: Default::default(),
                 targets: &[Some(swapchain_format.into())],
             }),
             primitive: wgpu::PrimitiveState::default(),
