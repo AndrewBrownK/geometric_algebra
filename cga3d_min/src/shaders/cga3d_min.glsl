@@ -78,26 +78,9 @@ struct Motor {
     vec3 g1;
 };
 
-struct Rotor {
-    // -e145, -e245, -e345, e12345
-    vec4 g0;
-};
-
-struct Translator {
-    // e235, -e135, e125, e12345
-    vec4 g0;
-};
-
 struct Flector {
     // e15, e25, e35, e45
     vec4 g0;
-    // e2345, -e1345, e1245, -e1235
-    vec4 g1;
-};
-
-struct Transflector {
-    // e15, e25, e35
-    vec3 g0;
     // e2345, -e1345, e1245, -e1235
     vec4 g1;
 };
@@ -167,10 +150,6 @@ Plane plane__one() {
     return Plane(vec4(0.0));
 }
 
-Rotor rotor__one() {
-    return Rotor(vec4(0.0));
-}
-
 RoundPoint round_point__one() {
     return RoundPoint(vec3(0.0), vec2(0.0));
 }
@@ -181,14 +160,6 @@ Scalar scalar__one() {
 
 Sphere sphere__one() {
     return Sphere(vec3(0.0), vec2(0.0));
-}
-
-Transflector transflector__one() {
-    return Transflector(vec3(0.0), vec4(0.0));
-}
-
-Translator translator__one() {
-    return Translator(vec4(0.0));
 }
 
 AntiScalar anti_scalar__unit() {
@@ -231,10 +202,6 @@ Plane plane__unit() {
     return Plane(vec4(1.0));
 }
 
-Rotor rotor__unit() {
-    return Rotor(vec4(1.0));
-}
-
 RoundPoint round_point__unit() {
     return RoundPoint(vec3(1.0), vec2(1.0));
 }
@@ -245,14 +212,6 @@ Scalar scalar__unit() {
 
 Sphere sphere__unit() {
     return Sphere(vec3(1.0), vec2(1.0));
-}
-
-Transflector transflector__unit() {
-    return Transflector(vec3(1.0), vec4(1.0));
-}
-
-Translator translator__unit() {
-    return Translator(vec4(1.0));
 }
 
 AntiScalar anti_scalar__zero() {
@@ -295,10 +254,6 @@ Plane plane__zero() {
     return Plane(vec4(0.0));
 }
 
-Rotor rotor__zero() {
-    return Rotor(vec4(0.0));
-}
-
 RoundPoint round_point__zero() {
     return RoundPoint(vec3(0.0), vec2(0.0));
 }
@@ -309,14 +264,6 @@ Scalar scalar__zero() {
 
 Sphere sphere__zero() {
     return Sphere(vec3(0.0), vec2(0.0));
-}
-
-Transflector transflector__zero() {
-    return Transflector(vec3(0.0), vec4(0.0));
-}
-
-Translator translator__zero() {
-    return Translator(vec4(0.0));
 }
 
 AntiScalar anti_scalar__neg(AntiScalar self) {
@@ -359,10 +306,6 @@ Plane plane__neg(Plane self) {
     return Plane(self.g0 * vec4(-1.0));
 }
 
-Rotor rotor__neg(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0));
-}
-
 RoundPoint round_point__neg(RoundPoint self) {
     return RoundPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
@@ -373,14 +316,6 @@ Scalar scalar__neg(Scalar self) {
 
 Sphere sphere__neg(Sphere self) {
     return Sphere(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
-}
-
-Transflector transflector__neg(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(-1.0));
-}
-
-Translator translator__neg(Translator self) {
-    return Translator(self.g0 * vec4(-1.0));
 }
 
 AntiScalar anti_scalar__add__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -423,10 +358,6 @@ MultiVector anti_scalar__add__plane(AntiScalar self, Plane other) {
     return MultiVector(vec2(0.0, self.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-Rotor anti_scalar__add__rotor(AntiScalar self, Rotor other) {
-    return Rotor(vec4(0.0, 0.0, 0.0, self.g0) + other.g0);
-}
-
 MultiVector anti_scalar__add__round_point(AntiScalar self, RoundPoint other) {
     return MultiVector(vec2(0.0, self.g0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -437,14 +368,6 @@ DualNum anti_scalar__add__scalar(AntiScalar self, Scalar other) {
 
 MultiVector anti_scalar__add__sphere(AntiScalar self, Sphere other) {
     return MultiVector(vec2(0.0, self.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), other.g0, other.g1);
-}
-
-MultiVector anti_scalar__add__transflector(AntiScalar self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Translator anti_scalar__add__translator(AntiScalar self, Translator other) {
-    return Translator(vec4(0.0, 0.0, 0.0, self.g0) + other.g0);
 }
 
 MultiVector circle__add__anti_scalar(Circle self, AntiScalar other) {
@@ -487,10 +410,6 @@ MultiVector circle__add__plane(Circle self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2, vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-MultiVector circle__add__rotor(Circle self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1 + vec3(other.g0.x, other.g0.y, other.g0.z), self.g2, vec3(0.0), vec2(0.0));
-}
-
 MultiVector circle__add__round_point(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2, vec3(0.0), vec2(0.0));
 }
@@ -501,14 +420,6 @@ MultiVector circle__add__scalar(Circle self, Scalar other) {
 
 MultiVector circle__add__sphere(Circle self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2, other.g0, other.g1);
-}
-
-MultiVector circle__add__transflector(Circle self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g0, self.g1, self.g2, vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-MultiVector circle__add__translator(Circle self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2 + vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector dipole__add__anti_scalar(Dipole self, AntiScalar other) {
@@ -551,10 +462,6 @@ MultiVector dipole__add__plane(Dipole self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-MultiVector dipole__add__rotor(Dipole self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dipole__add__round_point(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -565,14 +472,6 @@ MultiVector dipole__add__scalar(Dipole self, Scalar other) {
 
 MultiVector dipole__add__sphere(Dipole self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0), other.g0, other.g1);
-}
-
-MultiVector dipole__add__transflector(Dipole self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2 + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-MultiVector dipole__add__translator(Dipole self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 DualNum dual_num__add__anti_scalar(DualNum self, AntiScalar other) {
@@ -615,10 +514,6 @@ MultiVector dual_num__add__plane(DualNum self, Plane other) {
     return MultiVector(self.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-MultiVector dual_num__add__rotor(DualNum self, Rotor other) {
-    return MultiVector(self.g0 + vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dual_num__add__round_point(DualNum self, RoundPoint other) {
     return MultiVector(self.g0, other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -629,14 +524,6 @@ DualNum dual_num__add__scalar(DualNum self, Scalar other) {
 
 MultiVector dual_num__add__sphere(DualNum self, Sphere other) {
     return MultiVector(self.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), other.g0, other.g1);
-}
-
-MultiVector dual_num__add__transflector(DualNum self, Transflector other) {
-    return MultiVector(self.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-MultiVector dual_num__add__translator(DualNum self, Translator other) {
-    return MultiVector(self.g0 + vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector flat_point__add__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -679,10 +566,6 @@ Flector flat_point__add__plane(FlatPoint self, Plane other) {
     return Flector(self.g0, other.g0);
 }
 
-MultiVector flat_point__add__rotor(FlatPoint self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector flat_point__add__round_point(FlatPoint self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -693,14 +576,6 @@ MultiVector flat_point__add__scalar(FlatPoint self, Scalar other) {
 
 MultiVector flat_point__add__sphere(FlatPoint self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), other.g0, other.g1);
-}
-
-Flector flat_point__add__transflector(FlatPoint self, Transflector other) {
-    return Flector(self.g0 + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), other.g1);
-}
-
-MultiVector flat_point__add__translator(FlatPoint self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector flector__add__anti_scalar(Flector self, AntiScalar other) {
@@ -743,10 +618,6 @@ Flector flector__add__plane(Flector self, Plane other) {
     return Flector(self.g0, self.g1 + other.g0);
 }
 
-MultiVector flector__add__rotor(Flector self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
 MultiVector flector__add__round_point(Flector self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
 }
@@ -757,14 +628,6 @@ MultiVector flector__add__scalar(Flector self, Scalar other) {
 
 MultiVector flector__add__sphere(Flector self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) + other.g0, vec2(0.0, self.g1.w) + other.g1);
-}
-
-Flector flector__add__transflector(Flector self, Transflector other) {
-    return Flector(self.g0 + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g1 + other.g1);
-}
-
-MultiVector flector__add__translator(Flector self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
 }
 
 Motor line__add__anti_scalar(Line self, AntiScalar other) {
@@ -807,10 +670,6 @@ MultiVector line__add__plane(Line self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0, self.g1, vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-Motor line__add__rotor(Line self, Rotor other) {
-    return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) + other.g0, self.g1);
-}
-
 MultiVector line__add__round_point(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0, self.g1, vec3(0.0), vec2(0.0));
 }
@@ -821,14 +680,6 @@ MultiVector line__add__scalar(Line self, Scalar other) {
 
 MultiVector line__add__sphere(Line self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0, self.g1, other.g0, other.g1);
-}
-
-MultiVector line__add__transflector(Line self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), self.g0, self.g1, vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Motor line__add__translator(Line self, Translator other) {
-    return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) + vec4(0.0, 0.0, 0.0, other.g0.w), self.g1 + vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 Motor motor__add__anti_scalar(Motor self, AntiScalar other) {
@@ -871,10 +722,6 @@ MultiVector motor__add__plane(Motor self, Plane other) {
     return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-Motor motor__add__rotor(Motor self, Rotor other) {
-    return Motor(self.g0 + other.g0, self.g1);
-}
-
 MultiVector motor__add__round_point(Motor self, RoundPoint other) {
     return MultiVector(vec2(0.0, self.g0.w), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(0.0), vec2(0.0));
 }
@@ -885,14 +732,6 @@ MultiVector motor__add__scalar(Motor self, Scalar other) {
 
 MultiVector motor__add__sphere(Motor self, Sphere other) {
     return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, other.g0, other.g1);
-}
-
-MultiVector motor__add__transflector(Motor self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Motor motor__add__translator(Motor self, Translator other) {
-    return Motor(self.g0 + vec4(0.0, 0.0, 0.0, other.g0.w), self.g1 + vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 MultiVector multi_vector__add__anti_scalar(MultiVector self, AntiScalar other) {
@@ -935,10 +774,6 @@ MultiVector multi_vector__add__plane(MultiVector self, Plane other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 + vec3(other.g0.x, other.g0.y, other.g0.z), self.g10 + vec2(0.0, other.g0.w));
 }
 
-MultiVector multi_vector__add__rotor(MultiVector self, Rotor other) {
-    return MultiVector(self.g0 + vec2(0.0, other.g0.w), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7 + vec3(other.g0.x, other.g0.y, other.g0.z), self.g8, self.g9, self.g10);
-}
-
 MultiVector multi_vector__add__round_point(MultiVector self, RoundPoint other) {
     return MultiVector(self.g0, self.g1 + other.g0, self.g2 + other.g1, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10);
 }
@@ -949,14 +784,6 @@ MultiVector multi_vector__add__scalar(MultiVector self, Scalar other) {
 
 MultiVector multi_vector__add__sphere(MultiVector self, Sphere other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 + other.g0, self.g10 + other.g1);
-}
-
-MultiVector multi_vector__add__transflector(MultiVector self, Transflector other) {
-    return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5 + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g6, self.g7, self.g8, self.g9 + vec3(other.g1.x, other.g1.y, other.g1.z), self.g10 + vec2(0.0, other.g1.w));
-}
-
-MultiVector multi_vector__add__translator(MultiVector self, Translator other) {
-    return MultiVector(self.g0 + vec2(0.0, other.g0.w), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8 + vec3(other.g0.x, other.g0.y, other.g0.z), self.g9, self.g10);
 }
 
 MultiVector plane__add__anti_scalar(Plane self, AntiScalar other) {
@@ -999,10 +826,6 @@ Plane plane__add__plane(Plane self, Plane other) {
     return Plane(self.g0 + other.g0);
 }
 
-MultiVector plane__add__rotor(Plane self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
-}
-
 MultiVector plane__add__round_point(Plane self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
 }
@@ -1013,78 +836,6 @@ MultiVector plane__add__scalar(Plane self, Scalar other) {
 
 Sphere plane__add__sphere(Plane self, Sphere other) {
     return Sphere(vec3(self.g0.x, self.g0.y, self.g0.z) + other.g0, vec2(0.0, self.g0.w) + other.g1);
-}
-
-Transflector plane__add__transflector(Plane self, Transflector other) {
-    return Transflector(other.g0, self.g0 + other.g1);
-}
-
-MultiVector plane__add__translator(Plane self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
-}
-
-Rotor rotor__add__anti_scalar(Rotor self, AntiScalar other) {
-    return Rotor(self.g0 + vec4(0.0, 0.0, 0.0, other.g0));
-}
-
-MultiVector rotor__add__circle(Rotor self, Circle other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g1, other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__add__dipole(Rotor self, Dipole other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), other.g0, other.g1, other.g2, vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__add__dual_num(Rotor self, DualNum other) {
-    return MultiVector(vec2(0.0, self.g0.w) + other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__add__flat_point(Rotor self, FlatPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), other.g0, vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__add__flector(Rotor self, Flector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), other.g0, vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Motor rotor__add__line(Rotor self, Line other) {
-    return Motor(self.g0 + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), other.g1);
-}
-
-Motor rotor__add__motor(Rotor self, Motor other) {
-    return Motor(self.g0 + other.g0, other.g1);
-}
-
-MultiVector rotor__add__multi_vector(Rotor self, MultiVector other) {
-    return MultiVector(vec2(0.0, self.g0.w) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g7, other.g8, other.g9, other.g10);
-}
-
-MultiVector rotor__add__plane(Rotor self, Plane other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
-}
-
-Rotor rotor__add__rotor(Rotor self, Rotor other) {
-    return Rotor(self.g0 + other.g0);
-}
-
-MultiVector rotor__add__round_point(Rotor self, RoundPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__add__scalar(Rotor self, Scalar other) {
-    return MultiVector(vec2(0.0, self.g0.w) + vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__add__sphere(Rotor self, Sphere other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), other.g0, other.g1);
-}
-
-MultiVector rotor__add__transflector(Rotor self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Motor rotor__add__translator(Rotor self, Translator other) {
-    return Motor(self.g0 + vec4(0.0, 0.0, 0.0, other.g0.w), vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 MultiVector round_point__add__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -1127,10 +878,6 @@ MultiVector round_point__add__plane(RoundPoint self, Plane other) {
     return MultiVector(vec2(0.0), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-MultiVector round_point__add__rotor(RoundPoint self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 RoundPoint round_point__add__round_point(RoundPoint self, RoundPoint other) {
     return RoundPoint(self.g0 + other.g0, self.g1 + other.g1);
 }
@@ -1141,14 +888,6 @@ MultiVector round_point__add__scalar(RoundPoint self, Scalar other) {
 
 MultiVector round_point__add__sphere(RoundPoint self, Sphere other) {
     return MultiVector(vec2(0.0), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), other.g0, other.g1);
-}
-
-MultiVector round_point__add__transflector(RoundPoint self, Transflector other) {
-    return MultiVector(vec2(0.0), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-MultiVector round_point__add__translator(RoundPoint self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 DualNum scalar__add__anti_scalar(Scalar self, AntiScalar other) {
@@ -1191,10 +930,6 @@ MultiVector scalar__add__plane(Scalar self, Plane other) {
     return MultiVector(vec2(self.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
 }
 
-MultiVector scalar__add__rotor(Scalar self, Rotor other) {
-    return MultiVector(vec2(self.g0, 0.0) + vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector scalar__add__round_point(Scalar self, RoundPoint other) {
     return MultiVector(vec2(self.g0, 0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -1205,14 +940,6 @@ Scalar scalar__add__scalar(Scalar self, Scalar other) {
 
 MultiVector scalar__add__sphere(Scalar self, Sphere other) {
     return MultiVector(vec2(self.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), other.g0, other.g1);
-}
-
-MultiVector scalar__add__transflector(Scalar self, Transflector other) {
-    return MultiVector(vec2(self.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-MultiVector scalar__add__translator(Scalar self, Translator other) {
-    return MultiVector(vec2(self.g0, 0.0) + vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector sphere__add__anti_scalar(Sphere self, AntiScalar other) {
@@ -1255,10 +982,6 @@ Sphere sphere__add__plane(Sphere self, Plane other) {
     return Sphere(self.g0 + vec3(other.g0.x, other.g0.y, other.g0.z), self.g1 + vec2(0.0, other.g0.w));
 }
 
-MultiVector sphere__add__rotor(Sphere self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), self.g0, self.g1);
-}
-
 MultiVector sphere__add__round_point(Sphere self, RoundPoint other) {
     return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0, self.g1);
 }
@@ -1269,142 +992,6 @@ MultiVector sphere__add__scalar(Sphere self, Scalar other) {
 
 Sphere sphere__add__sphere(Sphere self, Sphere other) {
     return Sphere(self.g0 + other.g0, self.g1 + other.g1);
-}
-
-MultiVector sphere__add__transflector(Sphere self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 + vec3(other.g1.x, other.g1.y, other.g1.z), self.g1 + vec2(0.0, other.g1.w));
-}
-
-MultiVector sphere__add__translator(Sphere self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), self.g0, self.g1);
-}
-
-MultiVector transflector__add__anti_scalar(Transflector self, AntiScalar other) {
-    return MultiVector(vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__circle(Transflector self, Circle other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), other.g0, other.g1, other.g2, vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__dipole(Transflector self, Dipole other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), other.g0, other.g1, vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) + other.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__dual_num(Transflector self, DualNum other) {
-    return MultiVector(other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-Flector transflector__add__flat_point(Transflector self, FlatPoint other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) + other.g0, self.g1);
-}
-
-Flector transflector__add__flector(Transflector self, Flector other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) + other.g0, self.g1 + other.g1);
-}
-
-MultiVector transflector__add__line(Transflector self, Line other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), other.g0, other.g1, vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__motor(Transflector self, Motor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), other.g1, vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__multi_vector(Transflector self, MultiVector other) {
-    return MultiVector(other.g0, other.g1, other.g2, other.g3, other.g4, vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) + other.g5, other.g6, other.g7, other.g8, vec3(self.g1.x, self.g1.y, self.g1.z) + other.g9, vec2(0.0, self.g1.w) + other.g10);
-}
-
-Transflector transflector__add__plane(Transflector self, Plane other) {
-    return Transflector(self.g0, self.g1 + other.g0);
-}
-
-MultiVector transflector__add__rotor(Transflector self, Rotor other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__round_point(Transflector self, RoundPoint other) {
-    return MultiVector(vec2(0.0), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__scalar(Transflector self, Scalar other) {
-    return MultiVector(vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__add__sphere(Transflector self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) + other.g0, vec2(0.0, self.g1.w) + other.g1);
-}
-
-Transflector transflector__add__transflector(Transflector self, Transflector other) {
-    return Transflector(self.g0 + other.g0, self.g1 + other.g1);
-}
-
-MultiVector transflector__add__translator(Transflector self, Translator other) {
-    return MultiVector(vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-Translator translator__add__anti_scalar(Translator self, AntiScalar other) {
-    return Translator(self.g0 + vec4(0.0, 0.0, 0.0, other.g0));
-}
-
-MultiVector translator__add__circle(Translator self, Circle other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), other.g0, other.g1, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__add__dipole(Translator self, Dipole other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), other.g0, other.g1, other.g2, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__add__dual_num(Translator self, DualNum other) {
-    return MultiVector(vec2(0.0, self.g0.w) + other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__add__flat_point(Translator self, FlatPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), other.g0, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__add__flector(Translator self, Flector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), other.g0, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Motor translator__add__line(Translator self, Line other) {
-    return Motor(vec4(0.0, 0.0, 0.0, self.g0.w) + vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) + other.g1);
-}
-
-Motor translator__add__motor(Translator self, Motor other) {
-    return Motor(vec4(0.0, 0.0, 0.0, self.g0.w) + other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g1);
-}
-
-MultiVector translator__add__multi_vector(Translator self, MultiVector other) {
-    return MultiVector(vec2(0.0, self.g0.w) + other.g0, other.g1, other.g2, other.g3, other.g4, other.g5, other.g6, other.g7, vec3(self.g0.x, self.g0.y, self.g0.z) + other.g8, other.g9, other.g10);
-}
-
-MultiVector translator__add__plane(Translator self, Plane other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0, other.g0.w));
-}
-
-Motor translator__add__rotor(Translator self, Rotor other) {
-    return Motor(vec4(0.0, 0.0, 0.0, self.g0.w) + other.g0, vec3(self.g0.x, self.g0.y, self.g0.z));
-}
-
-MultiVector translator__add__round_point(Translator self, RoundPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), other.g0, other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__add__scalar(Translator self, Scalar other) {
-    return MultiVector(vec2(0.0, self.g0.w) + vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__add__sphere(Translator self, Sphere other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), other.g0, other.g1);
-}
-
-MultiVector translator__add__transflector(Translator self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0, other.g1.w));
-}
-
-Translator translator__add__translator(Translator self, Translator other) {
-    return Translator(self.g0 + other.g0);
 }
 
 AntiScalar anti_scalar__div__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -1447,10 +1034,6 @@ Plane plane__div__plane(Plane self, Plane other) {
     return Plane(self.g0 / other.g0);
 }
 
-Rotor rotor__div__rotor(Rotor self, Rotor other) {
-    return Rotor(self.g0 / other.g0);
-}
-
 RoundPoint round_point__div__round_point(RoundPoint self, RoundPoint other) {
     return RoundPoint(self.g0 / other.g0, self.g1 / other.g1);
 }
@@ -1461,14 +1044,6 @@ Scalar scalar__div__scalar(Scalar self, Scalar other) {
 
 Sphere sphere__div__sphere(Sphere self, Sphere other) {
     return Sphere(self.g0 / other.g0, self.g1 / other.g1);
-}
-
-Transflector transflector__div__transflector(Transflector self, Transflector other) {
-    return Transflector(self.g0 / other.g0, self.g1 / other.g1);
-}
-
-Translator translator__div__translator(Translator self, Translator other) {
-    return Translator(self.g0 / other.g0);
 }
 
 Line circle__into__line(Circle self) {
@@ -1495,24 +1070,12 @@ Plane flector__into__plane(Flector self) {
     return Plane(self.g1);
 }
 
-Transflector flector__into__transflector(Flector self) {
-    return Transflector(vec3(self.g0.x, self.g0.y, self.g0.z), self.g1);
-}
-
 AntiScalar motor__into__anti_scalar(Motor self) {
     return AntiScalar(self.g0.w);
 }
 
 Line motor__into__line(Motor self) {
     return Line(vec3(self.g0.x, self.g0.y, self.g0.z), self.g1);
-}
-
-Rotor motor__into__rotor(Motor self) {
-    return Rotor(self.g0);
-}
-
-Translator motor__into__translator(Motor self) {
-    return Translator(vec4(self.g1.x, self.g1.y, self.g1.z, self.g0.w));
 }
 
 AntiScalar multi_vector__into__anti_scalar(MultiVector self) {
@@ -1551,10 +1114,6 @@ Plane multi_vector__into__plane(MultiVector self) {
     return Plane(vec4(self.g9.x, self.g9.y, self.g9.z, self.g10.y));
 }
 
-Rotor multi_vector__into__rotor(MultiVector self) {
-    return Rotor(vec4(self.g7.x, self.g7.y, self.g7.z, self.g0.y));
-}
-
 RoundPoint multi_vector__into__round_point(MultiVector self) {
     return RoundPoint(self.g1, self.g2);
 }
@@ -1567,28 +1126,8 @@ Sphere multi_vector__into__sphere(MultiVector self) {
     return Sphere(self.g9, self.g10);
 }
 
-Transflector multi_vector__into__transflector(MultiVector self) {
-    return Transflector(vec3(self.g5.x, self.g5.y, self.g5.z), vec4(self.g9.x, self.g9.y, self.g9.z, self.g10.y));
-}
-
-Translator multi_vector__into__translator(MultiVector self) {
-    return Translator(vec4(self.g8.x, self.g8.y, self.g8.z, self.g0.y));
-}
-
-AntiScalar rotor__into__anti_scalar(Rotor self) {
-    return AntiScalar(self.g0.w);
-}
-
 Plane sphere__into__plane(Sphere self) {
     return Plane(vec4(self.g0.x, self.g0.y, self.g0.z, self.g1.y));
-}
-
-Plane transflector__into__plane(Transflector self) {
-    return Plane(self.g1);
-}
-
-AntiScalar translator__into__anti_scalar(Translator self) {
-    return AntiScalar(self.g0.w);
 }
 
 AntiScalar anti_scalar__mul__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -1631,10 +1170,6 @@ Plane plane__mul__plane(Plane self, Plane other) {
     return Plane(self.g0 * other.g0);
 }
 
-Rotor rotor__mul__rotor(Rotor self, Rotor other) {
-    return Rotor(self.g0 * other.g0);
-}
-
 RoundPoint round_point__mul__round_point(RoundPoint self, RoundPoint other) {
     return RoundPoint(self.g0 * other.g0, self.g1 * other.g1);
 }
@@ -1645,14 +1180,6 @@ Scalar scalar__mul__scalar(Scalar self, Scalar other) {
 
 Sphere sphere__mul__sphere(Sphere self, Sphere other) {
     return Sphere(self.g0 * other.g0, self.g1 * other.g1);
-}
-
-Transflector transflector__mul__transflector(Transflector self, Transflector other) {
-    return Transflector(self.g0 * other.g0, self.g1 * other.g1);
-}
-
-Translator translator__mul__translator(Translator self, Translator other) {
-    return Translator(self.g0 * other.g0);
 }
 
 AntiScalar anti_scalar__sub__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -1695,10 +1222,6 @@ MultiVector anti_scalar__sub__plane(AntiScalar self, Plane other) {
     return MultiVector(vec2(0.0, self.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-Rotor anti_scalar__sub__rotor(AntiScalar self, Rotor other) {
-    return Rotor(vec4(0.0, 0.0, 0.0, self.g0) - other.g0);
-}
-
 MultiVector anti_scalar__sub__round_point(AntiScalar self, RoundPoint other) {
     return MultiVector(vec2(0.0, self.g0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -1709,14 +1232,6 @@ DualNum anti_scalar__sub__scalar(AntiScalar self, Scalar other) {
 
 MultiVector anti_scalar__sub__sphere(AntiScalar self, Sphere other) {
     return MultiVector(vec2(0.0, self.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector anti_scalar__sub__transflector(AntiScalar self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Translator anti_scalar__sub__translator(AntiScalar self, Translator other) {
-    return Translator(vec4(0.0, 0.0, 0.0, self.g0) - other.g0);
 }
 
 MultiVector circle__sub__anti_scalar(Circle self, AntiScalar other) {
@@ -1759,10 +1274,6 @@ MultiVector circle__sub__plane(Circle self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2, vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-MultiVector circle__sub__rotor(Circle self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g2, vec3(0.0), vec2(0.0));
-}
-
 MultiVector circle__sub__round_point(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2, vec3(0.0), vec2(0.0));
 }
@@ -1773,14 +1284,6 @@ MultiVector circle__sub__scalar(Circle self, Scalar other) {
 
 MultiVector circle__sub__sphere(Circle self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2, vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector circle__sub__transflector(Circle self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g0, self.g1, self.g2, vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-MultiVector circle__sub__translator(Circle self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), self.g0, self.g1, self.g2 - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector dipole__sub__anti_scalar(Dipole self, AntiScalar other) {
@@ -1823,10 +1326,6 @@ MultiVector dipole__sub__plane(Dipole self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-MultiVector dipole__sub__rotor(Dipole self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dipole__sub__round_point(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -1837,14 +1336,6 @@ MultiVector dipole__sub__scalar(Dipole self, Scalar other) {
 
 MultiVector dipole__sub__sphere(Dipole self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector dipole__sub__transflector(Dipole self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2 - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-MultiVector dipole__sub__translator(Dipole self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), self.g0, self.g1, self.g2, vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 DualNum dual_num__sub__anti_scalar(DualNum self, AntiScalar other) {
@@ -1887,10 +1378,6 @@ MultiVector dual_num__sub__plane(DualNum self, Plane other) {
     return MultiVector(self.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-MultiVector dual_num__sub__rotor(DualNum self, Rotor other) {
-    return MultiVector(self.g0 - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dual_num__sub__round_point(DualNum self, RoundPoint other) {
     return MultiVector(self.g0, vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -1901,14 +1388,6 @@ DualNum dual_num__sub__scalar(DualNum self, Scalar other) {
 
 MultiVector dual_num__sub__sphere(DualNum self, Sphere other) {
     return MultiVector(self.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector dual_num__sub__transflector(DualNum self, Transflector other) {
-    return MultiVector(self.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-MultiVector dual_num__sub__translator(DualNum self, Translator other) {
-    return MultiVector(self.g0 - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector flat_point__sub__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -1951,10 +1430,6 @@ Flector flat_point__sub__plane(FlatPoint self, Plane other) {
     return Flector(self.g0, vec4(0.0) - other.g0);
 }
 
-MultiVector flat_point__sub__rotor(FlatPoint self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector flat_point__sub__round_point(FlatPoint self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -1965,14 +1440,6 @@ MultiVector flat_point__sub__scalar(FlatPoint self, Scalar other) {
 
 MultiVector flat_point__sub__sphere(FlatPoint self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-Flector flat_point__sub__transflector(FlatPoint self, Transflector other) {
-    return Flector(self.g0 - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0) - other.g1);
-}
-
-MultiVector flat_point__sub__translator(FlatPoint self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector flector__sub__anti_scalar(Flector self, AntiScalar other) {
@@ -2015,10 +1482,6 @@ Flector flector__sub__plane(Flector self, Plane other) {
     return Flector(self.g0, self.g1 - other.g0);
 }
 
-MultiVector flector__sub__rotor(Flector self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
 MultiVector flector__sub__round_point(Flector self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
 }
@@ -2029,14 +1492,6 @@ MultiVector flector__sub__scalar(Flector self, Scalar other) {
 
 MultiVector flector__sub__sphere(Flector self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) - other.g0, vec2(0.0, self.g1.w) - other.g1);
-}
-
-Flector flector__sub__transflector(Flector self, Transflector other) {
-    return Flector(self.g0 - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g1 - other.g1);
-}
-
-MultiVector flector__sub__translator(Flector self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0, vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
 }
 
 Motor line__sub__anti_scalar(Line self, AntiScalar other) {
@@ -2079,10 +1534,6 @@ MultiVector line__sub__plane(Line self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0, self.g1, vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-Motor line__sub__rotor(Line self, Rotor other) {
-    return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) - other.g0, self.g1);
-}
-
 MultiVector line__sub__round_point(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0, self.g1, vec3(0.0), vec2(0.0));
 }
@@ -2093,14 +1544,6 @@ MultiVector line__sub__scalar(Line self, Scalar other) {
 
 MultiVector line__sub__sphere(Line self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0, self.g1, vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector line__sub__transflector(Line self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), self.g0, self.g1, vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Motor line__sub__translator(Line self, Translator other) {
-    return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) - vec4(0.0, 0.0, 0.0, other.g0.w), self.g1 - vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 Motor motor__sub__anti_scalar(Motor self, AntiScalar other) {
@@ -2143,10 +1586,6 @@ MultiVector motor__sub__plane(Motor self, Plane other) {
     return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-Motor motor__sub__rotor(Motor self, Rotor other) {
-    return Motor(self.g0 - other.g0, self.g1);
-}
-
 MultiVector motor__sub__round_point(Motor self, RoundPoint other) {
     return MultiVector(vec2(0.0, self.g0.w), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(0.0), vec2(0.0));
 }
@@ -2157,14 +1596,6 @@ MultiVector motor__sub__scalar(Motor self, Scalar other) {
 
 MultiVector motor__sub__sphere(Motor self, Sphere other) {
     return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector motor__sub__transflector(Motor self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), self.g1, vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Motor motor__sub__translator(Motor self, Translator other) {
-    return Motor(self.g0 - vec4(0.0, 0.0, 0.0, other.g0.w), self.g1 - vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 MultiVector multi_vector__sub__anti_scalar(MultiVector self, AntiScalar other) {
@@ -2207,10 +1638,6 @@ MultiVector multi_vector__sub__plane(MultiVector self, Plane other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g10 - vec2(0.0, other.g0.w));
 }
 
-MultiVector multi_vector__sub__rotor(MultiVector self, Rotor other) {
-    return MultiVector(self.g0 - vec2(0.0, other.g0.w), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g8, self.g9, self.g10);
-}
-
 MultiVector multi_vector__sub__round_point(MultiVector self, RoundPoint other) {
     return MultiVector(self.g0, self.g1 - other.g0, self.g2 - other.g1, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9, self.g10);
 }
@@ -2221,14 +1648,6 @@ MultiVector multi_vector__sub__scalar(MultiVector self, Scalar other) {
 
 MultiVector multi_vector__sub__sphere(MultiVector self, Sphere other) {
     return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8, self.g9 - other.g0, self.g10 - other.g1);
-}
-
-MultiVector multi_vector__sub__transflector(MultiVector self, Transflector other) {
-    return MultiVector(self.g0, self.g1, self.g2, self.g3, self.g4, self.g5 - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g6, self.g7, self.g8, self.g9 - vec3(other.g1.x, other.g1.y, other.g1.z), self.g10 - vec2(0.0, other.g1.w));
-}
-
-MultiVector multi_vector__sub__translator(MultiVector self, Translator other) {
-    return MultiVector(self.g0 - vec2(0.0, other.g0.w), self.g1, self.g2, self.g3, self.g4, self.g5, self.g6, self.g7, self.g8 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g9, self.g10);
 }
 
 MultiVector plane__sub__anti_scalar(Plane self, AntiScalar other) {
@@ -2271,10 +1690,6 @@ Plane plane__sub__plane(Plane self, Plane other) {
     return Plane(self.g0 - other.g0);
 }
 
-MultiVector plane__sub__rotor(Plane self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
-}
-
 MultiVector plane__sub__round_point(Plane self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
 }
@@ -2285,78 +1700,6 @@ MultiVector plane__sub__scalar(Plane self, Scalar other) {
 
 Sphere plane__sub__sphere(Plane self, Sphere other) {
     return Sphere(vec3(self.g0.x, self.g0.y, self.g0.z) - other.g0, vec2(0.0, self.g0.w) - other.g1);
-}
-
-Transflector plane__sub__transflector(Plane self, Transflector other) {
-    return Transflector(vec3(0.0) - other.g0, self.g0 - other.g1);
-}
-
-MultiVector plane__sub__translator(Plane self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
-}
-
-Rotor rotor__sub__anti_scalar(Rotor self, AntiScalar other) {
-    return Rotor(self.g0 - vec4(0.0, 0.0, 0.0, other.g0));
-}
-
-MultiVector rotor__sub__circle(Rotor self, Circle other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g1, vec3(0.0) - other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__sub__dipole(Rotor self, Dipole other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0) - other.g0, vec3(0.0) - other.g1, vec4(0.0) - other.g2, vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__sub__dual_num(Rotor self, DualNum other) {
-    return MultiVector(vec2(0.0, self.g0.w) - other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__sub__flat_point(Rotor self, FlatPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - other.g0, vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__sub__flector(Rotor self, Flector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - other.g0, vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Motor rotor__sub__line(Rotor self, Line other) {
-    return Motor(self.g0 - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(0.0) - other.g1);
-}
-
-Motor rotor__sub__motor(Rotor self, Motor other) {
-    return Motor(self.g0 - other.g0, vec3(0.0) - other.g1);
-}
-
-MultiVector rotor__sub__multi_vector(Rotor self, MultiVector other) {
-    return MultiVector(vec2(0.0, self.g0.w) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec3(0.0) - other.g3, vec3(0.0) - other.g4, vec4(0.0) - other.g5, vec4(0.0) - other.g6, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g7, vec3(0.0) - other.g8, vec3(0.0) - other.g9, vec2(0.0) - other.g10);
-}
-
-MultiVector rotor__sub__plane(Rotor self, Plane other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
-}
-
-Rotor rotor__sub__rotor(Rotor self, Rotor other) {
-    return Rotor(self.g0 - other.g0);
-}
-
-MultiVector rotor__sub__round_point(Rotor self, RoundPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__sub__scalar(Rotor self, Scalar other) {
-    return MultiVector(vec2(0.0, self.g0.w) - vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__sub__sphere(Rotor self, Sphere other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector rotor__sub__transflector(Rotor self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Motor rotor__sub__translator(Rotor self, Translator other) {
-    return Motor(self.g0 - vec4(0.0, 0.0, 0.0, other.g0.w), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 MultiVector round_point__sub__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -2399,10 +1742,6 @@ MultiVector round_point__sub__plane(RoundPoint self, Plane other) {
     return MultiVector(vec2(0.0), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-MultiVector round_point__sub__rotor(RoundPoint self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 RoundPoint round_point__sub__round_point(RoundPoint self, RoundPoint other) {
     return RoundPoint(self.g0 - other.g0, self.g1 - other.g1);
 }
@@ -2413,14 +1752,6 @@ MultiVector round_point__sub__scalar(RoundPoint self, Scalar other) {
 
 MultiVector round_point__sub__sphere(RoundPoint self, Sphere other) {
     return MultiVector(vec2(0.0), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector round_point__sub__transflector(RoundPoint self, Transflector other) {
-    return MultiVector(vec2(0.0), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-MultiVector round_point__sub__translator(RoundPoint self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), self.g0, self.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 DualNum scalar__sub__anti_scalar(Scalar self, AntiScalar other) {
@@ -2463,10 +1794,6 @@ MultiVector scalar__sub__plane(Scalar self, Plane other) {
     return MultiVector(vec2(self.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
 }
 
-MultiVector scalar__sub__rotor(Scalar self, Rotor other) {
-    return MultiVector(vec2(self.g0, 0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector scalar__sub__round_point(Scalar self, RoundPoint other) {
     return MultiVector(vec2(self.g0, 0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -2477,14 +1804,6 @@ Scalar scalar__sub__scalar(Scalar self, Scalar other) {
 
 MultiVector scalar__sub__sphere(Scalar self, Sphere other) {
     return MultiVector(vec2(self.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector scalar__sub__transflector(Scalar self, Transflector other) {
-    return MultiVector(vec2(self.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-MultiVector scalar__sub__translator(Scalar self, Translator other) {
-    return MultiVector(vec2(self.g0, 0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 MultiVector sphere__sub__anti_scalar(Sphere self, AntiScalar other) {
@@ -2527,10 +1846,6 @@ Sphere sphere__sub__plane(Sphere self, Plane other) {
     return Sphere(self.g0 - vec3(other.g0.x, other.g0.y, other.g0.z), self.g1 - vec2(0.0, other.g0.w));
 }
 
-MultiVector sphere__sub__rotor(Sphere self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), self.g0, self.g1);
-}
-
 MultiVector sphere__sub__round_point(Sphere self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0, self.g1);
 }
@@ -2541,142 +1856,6 @@ MultiVector sphere__sub__scalar(Sphere self, Scalar other) {
 
 Sphere sphere__sub__sphere(Sphere self, Sphere other) {
     return Sphere(self.g0 - other.g0, self.g1 - other.g1);
-}
-
-MultiVector sphere__sub__transflector(Sphere self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 - vec3(other.g1.x, other.g1.y, other.g1.z), self.g1 - vec2(0.0, other.g1.w));
-}
-
-MultiVector sphere__sub__translator(Sphere self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), self.g0, self.g1);
-}
-
-MultiVector transflector__sub__anti_scalar(Transflector self, AntiScalar other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__circle(Transflector self, Circle other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0) - other.g0, vec3(0.0) - other.g1, vec3(0.0) - other.g2, vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__dipole(Transflector self, Dipole other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - other.g0, vec3(0.0) - other.g1, vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) - other.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__dual_num(Transflector self, DualNum other) {
-    return MultiVector(vec2(0.0) - other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-Flector transflector__sub__flat_point(Transflector self, FlatPoint other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) - other.g0, self.g1);
-}
-
-Flector transflector__sub__flector(Transflector self, Flector other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) - other.g0, self.g1 - other.g1);
-}
-
-MultiVector transflector__sub__line(Transflector self, Line other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0) - other.g0, vec3(0.0) - other.g1, vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__motor(Transflector self, Motor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0) - other.g1, vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__multi_vector(Transflector self, MultiVector other) {
-    return MultiVector(vec2(0.0) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec3(0.0) - other.g3, vec3(0.0) - other.g4, vec4(self.g0.x, self.g0.y, self.g0.z, 0.0) - other.g5, vec4(0.0) - other.g6, vec3(0.0) - other.g7, vec3(0.0) - other.g8, vec3(self.g1.x, self.g1.y, self.g1.z) - other.g9, vec2(0.0, self.g1.w) - other.g10);
-}
-
-Transflector transflector__sub__plane(Transflector self, Plane other) {
-    return Transflector(self.g0, self.g1 - other.g0);
-}
-
-MultiVector transflector__sub__rotor(Transflector self, Rotor other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__round_point(Transflector self, RoundPoint other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__scalar(Transflector self, Scalar other) {
-    return MultiVector(vec2(0.0) - vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-MultiVector transflector__sub__sphere(Transflector self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) - other.g0, vec2(0.0, self.g1.w) - other.g1);
-}
-
-Transflector transflector__sub__transflector(Transflector self, Transflector other) {
-    return Transflector(self.g0 - other.g0, self.g1 - other.g1);
-}
-
-MultiVector transflector__sub__translator(Transflector self, Translator other) {
-    return MultiVector(vec2(0.0) - vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w));
-}
-
-Translator translator__sub__anti_scalar(Translator self, AntiScalar other) {
-    return Translator(self.g0 - vec4(0.0, 0.0, 0.0, other.g0));
-}
-
-MultiVector translator__sub__circle(Translator self, Circle other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - other.g0, vec3(0.0) - other.g1, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__sub__dipole(Translator self, Dipole other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0) - other.g0, vec3(0.0) - other.g1, vec4(0.0) - other.g2, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__sub__dual_num(Translator self, DualNum other) {
-    return MultiVector(vec2(0.0, self.g0.w) - other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__sub__flat_point(Translator self, FlatPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - other.g0, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__sub__flector(Translator self, Flector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - other.g0, vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Motor translator__sub__line(Translator self, Line other) {
-    return Motor(vec4(0.0, 0.0, 0.0, self.g0.w) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) - other.g1);
-}
-
-Motor translator__sub__motor(Translator self, Motor other) {
-    return Motor(vec4(0.0, 0.0, 0.0, self.g0.w) - other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g1);
-}
-
-MultiVector translator__sub__multi_vector(Translator self, MultiVector other) {
-    return MultiVector(vec2(0.0, self.g0.w) - other.g0, vec3(0.0) - other.g1, vec2(0.0) - other.g2, vec3(0.0) - other.g3, vec3(0.0) - other.g4, vec4(0.0) - other.g5, vec4(0.0) - other.g6, vec3(0.0) - other.g7, vec3(self.g0.x, self.g0.y, self.g0.z) - other.g8, vec3(0.0) - other.g9, vec2(0.0) - other.g10);
-}
-
-MultiVector translator__sub__plane(Translator self, Plane other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0) - vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - vec2(0.0, other.g0.w));
-}
-
-Motor translator__sub__rotor(Translator self, Rotor other) {
-    return Motor(vec4(0.0, 0.0, 0.0, self.g0.w) - other.g0, vec3(self.g0.x, self.g0.y, self.g0.z));
-}
-
-MultiVector translator__sub__round_point(Translator self, RoundPoint other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0) - other.g0, vec2(0.0) - other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__sub__scalar(Translator self, Scalar other) {
-    return MultiVector(vec2(0.0, self.g0.w) - vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__sub__sphere(Translator self, Sphere other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0) - other.g0, vec2(0.0) - other.g1);
-}
-
-MultiVector translator__sub__transflector(Translator self, Transflector other) {
-    return MultiVector(vec2(0.0, self.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0) - vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec3(0.0) - vec3(other.g1.x, other.g1.y, other.g1.z), vec2(0.0) - vec2(0.0, other.g1.w));
-}
-
-Translator translator__sub__translator(Translator self, Translator other) {
-    return Translator(self.g0 - other.g0);
 }
 
 AntiScalar anti_scalar__anti_wedge_dot__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -2719,10 +1898,6 @@ Plane anti_scalar__anti_wedge_dot__plane(AntiScalar self, Plane other) {
     return Plane(vec4(self.g0) * other.g0);
 }
 
-Rotor anti_scalar__anti_wedge_dot__rotor(AntiScalar self, Rotor other) {
-    return Rotor(vec4(self.g0) * other.g0);
-}
-
 RoundPoint anti_scalar__anti_wedge_dot__round_point(AntiScalar self, RoundPoint other) {
     return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
@@ -2733,14 +1908,6 @@ Scalar anti_scalar__anti_wedge_dot__scalar(AntiScalar self, Scalar other) {
 
 Sphere anti_scalar__anti_wedge_dot__sphere(AntiScalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
-}
-
-Transflector anti_scalar__anti_wedge_dot__transflector(AntiScalar self, Transflector other) {
-    return Transflector(vec3(self.g0) * other.g0, vec4(self.g0) * other.g1);
-}
-
-Translator anti_scalar__anti_wedge_dot__translator(AntiScalar self, Translator other) {
-    return Translator(vec4(self.g0) * other.g0);
 }
 
 Circle circle__anti_wedge_dot__anti_scalar(Circle self, AntiScalar other) {
@@ -2783,10 +1950,6 @@ MultiVector circle__anti_wedge_dot__plane(Circle self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g1.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z, self.g0.w) * vec2(other.g0.z, other.g0.w) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector circle__anti_wedge_dot__rotor(Circle self, Rotor other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g0.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0), vec3(self.g1.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(self.g2.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 MultiVector circle__anti_wedge_dot__round_point(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g0.w) * other.g0 + self.g2 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
@@ -2797,14 +1960,6 @@ Dipole circle__anti_wedge_dot__scalar(Circle self, Scalar other) {
 
 MultiVector circle__anti_wedge_dot__sphere(Circle self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0 + self.g2 * vec3(other.g1.x), vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector circle__anti_wedge_dot__transflector(Circle self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4(self.g1.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, -other.g1.x) + vec4(self.g1.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, -other.g1.y) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g2.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g2.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g2.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z, self.g0.w) * vec2(other.g1.z, other.g1.w) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.x) * vec2(0.0, -other.g1.x) + vec2(self.g2.y) * vec2(0.0, -other.g1.y) + vec2(self.g2.z) * vec2(0.0, -other.g1.z));
-}
-
-MultiVector circle__anti_wedge_dot__translator(Circle self, Translator other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, other.g0.z) + vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, other.g0.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g0.w), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g2 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
 }
 
 Dipole dipole__anti_wedge_dot__anti_scalar(Dipole self, AntiScalar other) {
@@ -2847,10 +2002,6 @@ MultiVector dipole__anti_wedge_dot__plane(Dipole self, Plane other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z), vec3(0.0) - self.g0 * vec3(other.g0.w) - vec3(self.g2.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0) - self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector dipole__anti_wedge_dot__rotor(Dipole self, Rotor other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g0.x, 0.0) + vec2(self.g1.y) * vec2(-other.g0.y, 0.0) + vec2(self.g1.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(self.g1.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec4(self.g2.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g2.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g2.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z));
-}
-
 MultiVector dipole__anti_wedge_dot__round_point(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, other.g0.z) + vec4(self.g2.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g2.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g2.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(1.0, -1.0));
 }
@@ -2861,14 +2012,6 @@ Circle dipole__anti_wedge_dot__scalar(Dipole self, Scalar other) {
 
 MultiVector dipole__anti_wedge_dot__sphere(Dipole self, Sphere other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(-other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, -other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, -other.g1.x, -other.g0.z), vec3(0.0) - self.g0 * vec3(other.g1.y) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, vec3(0.0) - self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector dipole__anti_wedge_dot__transflector(Dipole self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(self.g0.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) + vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.x) + vec2(self.g2.y) * vec2(0.0, other.g1.y) + vec2(self.g2.z) * vec2(0.0, other.g1.z) + vec2(self.g2.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g1.z), vec3(self.g0.x) * vec3(-other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, -other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, -other.g1.w) - vec3(self.g2.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g1.x) * vec3(-other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, -other.g1.w, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, -other.g1.w) + vec3(self.g2.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g2.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g2.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g2.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector dipole__anti_wedge_dot__translator(Dipole self, Translator other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g0.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + self.g2.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g2.w) * other.g0 * vec4(-1.0, -1.0, -1.0, 1.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
 DualNum dual_num__anti_wedge_dot__anti_scalar(DualNum self, AntiScalar other) {
@@ -2911,10 +2054,6 @@ MultiVector dual_num__anti_wedge_dot__plane(DualNum self, Plane other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.y) * vec2(0.0, other.g0.w));
 }
 
-MultiVector dual_num__anti_wedge_dot__rotor(DualNum self, Rotor other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dual_num__anti_wedge_dot__round_point(DualNum self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
 }
@@ -2925,14 +2064,6 @@ DualNum dual_num__anti_wedge_dot__scalar(DualNum self, Scalar other) {
 
 MultiVector dual_num__anti_wedge_dot__sphere(DualNum self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * other.g0, vec2(0.0) - vec2(self.g0.x) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
-}
-
-MultiVector dual_num__anti_wedge_dot__transflector(DualNum self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, -other.g1.w), vec3(0.0), vec3(0.0), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x) * other.g0, vec3(self.g0.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.y) * vec2(0.0, other.g1.w));
-}
-
-MultiVector dual_num__anti_wedge_dot__translator(DualNum self, Translator other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 FlatPoint flat_point__anti_wedge_dot__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -2951,16 +2082,16 @@ MultiVector flat_point__anti_wedge_dot__dual_num(FlatPoint self, DualNum other) 
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0 * vec4(other.g0.y), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, other.g0.x), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec3(0.0), vec2(0.0));
 }
 
-Translator flat_point__anti_wedge_dot__flat_point(FlatPoint self, FlatPoint other) {
-    return Translator(self.g0.xyzx * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0) + vec4(self.g0.w) * other.g0 * vec4(1.0, 1.0, 1.0, -1.0));
+Motor flat_point__anti_wedge_dot__flat_point(FlatPoint self, FlatPoint other) {
+    return Motor(vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 MultiVector flat_point__anti_wedge_dot__flector(FlatPoint self, Flector other) {
     return MultiVector(vec2(self.g0.w) * vec2(0.0, -other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.x) * vec3(-other.g0.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, -other.g0.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, -other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-Transflector flat_point__anti_wedge_dot__line(FlatPoint self, Line other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * other.g1, vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z));
+Flector flat_point__anti_wedge_dot__line(FlatPoint self, Line other) {
+    return Flector(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z));
 }
 
 Flector flat_point__anti_wedge_dot__motor(FlatPoint self, Motor other) {
@@ -2975,10 +2106,6 @@ MultiVector flat_point__anti_wedge_dot__plane(FlatPoint self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-Flector flat_point__anti_wedge_dot__rotor(FlatPoint self, Rotor other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g0.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
 MultiVector flat_point__anti_wedge_dot__round_point(FlatPoint self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(1.0, -1.0));
 }
@@ -2989,14 +2116,6 @@ Circle flat_point__anti_wedge_dot__scalar(FlatPoint self, Scalar other) {
 
 MultiVector flat_point__anti_wedge_dot__sphere(FlatPoint self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector flat_point__anti_wedge_dot__transflector(FlatPoint self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-FlatPoint flat_point__anti_wedge_dot__translator(FlatPoint self, Translator other) {
-    return FlatPoint(self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
 Flector flector__anti_wedge_dot__anti_scalar(Flector self, AntiScalar other) {
@@ -3039,10 +2158,6 @@ MultiVector flector__anti_wedge_dot__plane(Flector self, Plane other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-Flector flector__anti_wedge_dot__rotor(Flector self, Rotor other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g0.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g1.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0) + vec4(self.g1.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g1.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0));
-}
-
 MultiVector flector__anti_wedge_dot__round_point(Flector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + self.g1.xyzx * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(1.0, -1.0));
 }
@@ -3053,14 +2168,6 @@ MultiVector flector__anti_wedge_dot__scalar(Flector self, Scalar other) {
 
 MultiVector flector__anti_wedge_dot__sphere(Flector self, Sphere other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g1.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g1 * vec4(other.g1.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.y) - vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector flector__anti_wedge_dot__transflector(Flector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Flector flector__anti_wedge_dot__translator(Flector self, Translator other) {
-    return Flector(self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0 * vec4(-1.0, -1.0, -1.0, 1.0) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(self.g1.x) * vec4(other.g0.w, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g0.w, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g0.w, other.g0.z) + vec4(self.g1.w) * vec4(0.0, 0.0, 0.0, other.g0.w));
 }
 
 Line line__anti_wedge_dot__anti_scalar(Line self, AntiScalar other) {
@@ -3079,8 +2186,8 @@ MultiVector line__anti_wedge_dot__dual_num(Line self, DualNum other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), self.g0 * vec3(other.g0.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4(0.0), self.g0 * vec3(other.g0.y), self.g1 * vec3(other.g0.y), vec3(0.0), vec2(0.0));
 }
 
-Transflector line__anti_wedge_dot__flat_point(Line self, FlatPoint other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g0.w), vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z));
+Flector line__anti_wedge_dot__flat_point(Line self, FlatPoint other) {
+    return Flector(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0), vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z));
 }
 
 Flector line__anti_wedge_dot__flector(Line self, Flector other) {
@@ -3103,10 +2210,6 @@ Flector line__anti_wedge_dot__plane(Line self, Plane other) {
     return Flector(vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z));
 }
 
-MultiVector line__anti_wedge_dot__rotor(Line self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(self.g1.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 MultiVector line__anti_wedge_dot__round_point(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
@@ -3117,14 +2220,6 @@ Dipole line__anti_wedge_dot__scalar(Line self, Scalar other) {
 
 MultiVector line__anti_wedge_dot__sphere(Line self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g1.x), self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
-}
-
-Flector line__anti_wedge_dot__transflector(Line self, Transflector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g1.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g1.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g1.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g1.z));
-}
-
-MultiVector line__anti_wedge_dot__translator(Line self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g1 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
 }
 
 Motor motor__anti_wedge_dot__anti_scalar(Motor self, AntiScalar other) {
@@ -3167,10 +2262,6 @@ Flector motor__anti_wedge_dot__plane(Motor self, Plane other) {
     return Flector(vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * other.g0 + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z));
 }
 
-MultiVector motor__anti_wedge_dot__rotor(Motor self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 MultiVector motor__anti_wedge_dot__round_point(Motor self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g0 + self.g1 * vec3(other.g1.x), vec2(self.g0.w) * other.g1 + vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g1 * vec3(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
@@ -3181,14 +2272,6 @@ MultiVector motor__anti_wedge_dot__scalar(Motor self, Scalar other) {
 
 MultiVector motor__anti_wedge_dot__sphere(Motor self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g0 - self.g1 * vec3(other.g1.x), vec2(self.g0.w) * other.g1 + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
-}
-
-Flector motor__anti_wedge_dot__transflector(Motor self, Transflector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g1.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g1.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g1.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, -other.g0.z) + vec4(self.g0.w) * other.g1 + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g1.z));
-}
-
-MultiVector motor__anti_wedge_dot__translator(Motor self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
 }
 
 MultiVector multi_vector__anti_wedge_dot__anti_scalar(MultiVector self, AntiScalar other) {
@@ -3231,10 +2314,6 @@ MultiVector multi_vector__anti_wedge_dot__plane(MultiVector self, Plane other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(other.g0.w, 0.0) + vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, -other.g0.w), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g3 * vec3(other.g0.w) + vec3(self.g4.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g4.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g4.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.w) + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * vec2(0.0, other.g0.w), vec3(0.0) - vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0.w) - vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g2.y, self.g2.y, self.g2.y, self.g2.x) * other.g0 + vec4(self.g7.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g10.x) * other.g0, vec3(0.0) - self.g3 * vec3(other.g0.w) - vec3(self.g5.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - self.g4 * vec3(other.g0.w) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g9 * vec3(other.g0.w) - vec3(self.g10.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0.w) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.y) * vec2(0.0, other.g0.w) + vec2(self.g6.x) * vec2(other.g0.x, 0.0) + vec2(self.g6.y) * vec2(other.g0.y, 0.0) + vec2(self.g6.z, self.g6.w) * vec2(other.g0.z, other.g0.w) + vec2(self.g8.x) * vec2(0.0, -other.g0.x) + vec2(self.g8.y) * vec2(0.0, -other.g0.y) + vec2(self.g8.z) * vec2(0.0, -other.g0.z));
 }
 
-MultiVector multi_vector__anti_wedge_dot__rotor(MultiVector self, Rotor other) {
-    return MultiVector(self.g0 * vec2(other.g0.w) + vec2(self.g4.x) * vec2(-other.g0.x, 0.0) + vec2(self.g4.y) * vec2(-other.g0.y, 0.0) + vec2(self.g4.z) * vec2(-other.g0.z, 0.0) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z), vec3(self.g1.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g0.w) + vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g2 * vec2(other.g0.w) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g8.x) * vec2(0.0, -other.g0.x) + vec2(self.g8.y) * vec2(0.0, -other.g0.y) + vec2(self.g8.z) * vec2(0.0, -other.g0.z), vec3(self.g3.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g4.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g4.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g4.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec4(self.g5.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g5.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g5.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0) + vec4(self.g9.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g9.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g9.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g10.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g2.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g6.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g6.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g6.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g7.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(self.g2.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g8.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g8.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g8.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(self.g5.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g9.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, -other.g0.x) + vec2(self.g5.y) * vec2(0.0, -other.g0.y) + vec2(self.g5.z) * vec2(0.0, -other.g0.z) + self.g10 * vec2(other.g0.w));
-}
-
 MultiVector multi_vector__anti_wedge_dot__round_point(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.y) + vec2(self.g2.y) * vec2(0.0, other.g1.x) + vec2(self.g9.x) * vec2(other.g0.x, 0.0) + vec2(self.g9.y) * vec2(other.g0.y, 0.0) + vec2(self.g9.z) * vec2(other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(self.g0.y) * other.g0 - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g8 * vec3(other.g1.x), vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g4 * vec3(other.g1.x) + self.g9 * vec3(other.g1.x) + vec3(self.g10.x) * other.g0, self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g4.x) * vec4(other.g1.y, 0.0, 0.0, other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.y, 0.0, other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.y, other.g0.z) + vec4(self.g5.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g5.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g5.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g10.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g2.x) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4(self.g2.y) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g6.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g6.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g6.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g7.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g6.w) * other.g0 + self.g8 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) - vec3(self.g2.y) * other.g0 + self.g7 * vec3(other.g1.y) + vec3(self.g8.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g8.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g8.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(1.0, -1.0));
 }
@@ -3245,14 +2324,6 @@ MultiVector multi_vector__anti_wedge_dot__scalar(MultiVector self, Scalar other)
 
 MultiVector multi_vector__anti_wedge_dot__sphere(MultiVector self, Sphere other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(other.g1.y, 0.0) + vec2(self.g2.y) * vec2(other.g1.x, 0.0) + vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, -other.g1.y) + vec2(self.g10.y) * vec2(0.0, -other.g1.x), vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g4.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g4.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(0.0) - vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0) - self.g1 * vec3(other.g1.x) - vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g7 * vec3(other.g1.x), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) - vec3(self.g6.w) * other.g0 + self.g8 * vec3(other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.x) + vec4(self.g7.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(-other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, -other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, -other.g1.x, -other.g0.z) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g10.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g10.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(0.0) - self.g3 * vec3(other.g1.y) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0) - self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g9 * vec3(other.g1.y) - vec3(self.g10.y) * other.g0, vec3(self.g0.y) * other.g0 + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(other.g0.x, 0.0) + vec2(self.g6.y) * vec2(other.g0.y, 0.0) + vec2(self.g6.z) * vec2(other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, -other.g0.x) + vec2(self.g8.y) * vec2(0.0, -other.g0.y) + vec2(self.g8.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector multi_vector__anti_wedge_dot__transflector(MultiVector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g1.x, 0.0) + vec2(self.g1.y) * vec2(other.g1.y, 0.0) + vec2(self.g1.z) * vec2(other.g1.z, 0.0) + vec2(self.g2.x) * vec2(other.g1.w, 0.0) + vec2(self.g3.x) * vec2(0.0, other.g0.x) + vec2(self.g3.y) * vec2(0.0, other.g0.y) + vec2(self.g3.z) * vec2(0.0, other.g0.z) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g9.x) * vec2(0.0, other.g1.x) + vec2(self.g9.y) * vec2(0.0, other.g1.y) + vec2(self.g9.z) * vec2(0.0, other.g1.z) + vec2(self.g10.x) * vec2(0.0, -other.g1.w), vec3(self.g0.x) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g3.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) + vec3(self.g4.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g4.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g4.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g10.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g1.w) + vec2(self.g3.x) * vec2(-other.g1.x, 0.0) + vec2(self.g3.y) * vec2(-other.g1.y, 0.0) + vec2(self.g3.z) * vec2(-other.g1.z, 0.0) + vec2(self.g4.x) * vec2(0.0, other.g0.x) + vec2(self.g4.y) * vec2(0.0, other.g0.y) + vec2(self.g4.z) * vec2(0.0, other.g0.z) + vec2(self.g5.x) * vec2(0.0, other.g1.x) + vec2(self.g5.y) * vec2(0.0, other.g1.y) + vec2(self.g5.z) * vec2(0.0, other.g1.z) + vec2(self.g5.w) * vec2(0.0, other.g1.w) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z), vec3(0.0) - vec3(self.g2.x) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g6.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g6.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g6.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g6.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g1.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, 0.0) + vec4(self.g2.y, self.g2.y, self.g2.y, self.g2.x) * other.g1 + vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g6.wwwz * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g0.z) + vec4(self.g7.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, -other.g1.x) + vec4(self.g7.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, -other.g1.y) + vec4(self.g7.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g8.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g8.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g8.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, -other.g1.z, other.g1.y, -other.g0.x) + vec4(self.g3.y) * vec4(other.g1.z, 0.0, -other.g1.x, -other.g0.y) + vec4(self.g3.z) * vec4(-other.g1.y, other.g1.x, 0.0, -other.g0.z) + vec4(self.g4.x) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g4.y) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g4.z) * vec4(0.0, 0.0, 0.0, -other.g1.z) + vec4(self.g10.x) * other.g1, vec3(self.g3.x) * vec3(-other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, -other.g1.w, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, -other.g1.w) - vec3(self.g5.w) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g9.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g9.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g9.z) * vec3(other.g1.y, -other.g1.x, 0.0) - vec3(self.g10.x) * other.g0, vec3(0.0) - vec3(self.g0.x) * other.g0 + vec3(self.g4.x) * vec3(-other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, -other.g1.w, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, -other.g1.w) + vec3(self.g5.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g5.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g5.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g10.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.y) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) + vec3(self.g7.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g7.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g7.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.y) * vec2(0.0, other.g1.w) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g6.x) * vec2(other.g1.x, 0.0) + vec2(self.g6.y) * vec2(other.g1.y, 0.0) + vec2(self.g6.z, self.g6.w) * vec2(other.g1.z, other.g1.w) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z) + vec2(self.g8.x) * vec2(0.0, -other.g1.x) + vec2(self.g8.y) * vec2(0.0, -other.g1.y) + vec2(self.g8.z) * vec2(0.0, -other.g1.z));
-}
-
-MultiVector multi_vector__anti_wedge_dot__translator(MultiVector self, Translator other) {
-    return MultiVector(self.g0 * vec2(other.g0.w) + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z), self.g1 * vec3(other.g0.w) - vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + self.g2 * vec2(other.g0.w) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z), self.g3 * vec3(other.g0.w), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g4 * vec3(other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g4.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g4.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g4.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + self.g5.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g5.w) * other.g0 * vec4(-1.0, -1.0, -1.0, 1.0) + vec4(self.g9.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g9.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g9.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(self.g6.x) * vec4(other.g0.w, 0.0, 0.0, other.g0.x) + vec4(self.g6.y) * vec4(0.0, other.g0.w, 0.0, other.g0.y) + vec4(self.g6.z) * vec4(0.0, 0.0, other.g0.w, other.g0.z) + vec4(self.g6.w) * vec4(0.0, 0.0, 0.0, other.g0.w), vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g7 * vec3(other.g0.w), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g8 * vec3(other.g0.w), vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0) + self.g9 * vec3(other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z) + vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + self.g10 * vec2(other.g0.w));
 }
 
 Plane plane__anti_wedge_dot__anti_scalar(Plane self, AntiScalar other) {
@@ -3295,10 +2366,6 @@ Motor plane__anti_wedge_dot__plane(Plane self, Plane other) {
     return Motor(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, other.g0.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, other.g0.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
-Flector plane__anti_wedge_dot__rotor(Plane self, Rotor other) {
-    return Flector(vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0), vec4(self.g0.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g0.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0));
-}
-
 MultiVector plane__anti_wedge_dot__round_point(Plane self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -3309,78 +2376,6 @@ RoundPoint plane__anti_wedge_dot__scalar(Plane self, Scalar other) {
 
 MultiVector plane__anti_wedge_dot__sphere(Plane self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, -other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g0 * vec4(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector plane__anti_wedge_dot__transflector(Plane self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Transflector plane__anti_wedge_dot__translator(Plane self, Translator other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, other.g0.z) + vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, other.g0.w));
-}
-
-Rotor rotor__anti_wedge_dot__anti_scalar(Rotor self, AntiScalar other) {
-    return Rotor(self.g0 * vec4(other.g0));
-}
-
-MultiVector rotor__anti_wedge_dot__circle(Rotor self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(self.g0.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g0.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g0.z) * vec3(-other.g2.y, other.g2.x, 0.0) + vec3(self.g0.w) * other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge_dot__dipole(Rotor self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g1, vec4(self.g0.x) * vec4(0.0, -other.g2.z, other.g2.y, 0.0) + vec4(self.g0.y) * vec4(other.g2.z, 0.0, -other.g2.x, 0.0) + vec4(self.g0.z) * vec4(-other.g2.y, other.g2.x, 0.0, 0.0) + vec4(self.g0.w) * other.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g2.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z));
-}
-
-MultiVector rotor__anti_wedge_dot__dual_num(Rotor self, DualNum other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-Flector rotor__anti_wedge_dot__flat_point(Rotor self, FlatPoint other) {
-    return Flector(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z));
-}
-
-Flector rotor__anti_wedge_dot__flector(Rotor self, Flector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(other.g0.w, -other.g1.z, other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, other.g0.w, -other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, other.g0.w, -other.g0.z) + vec4(self.g0.w) * other.g1);
-}
-
-MultiVector rotor__anti_wedge_dot__line(Rotor self, Line other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge_dot__motor(Rotor self, Motor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge_dot__multi_vector(Rotor self, MultiVector other) {
-    return MultiVector(vec2(0.0) - vec2(self.g0.x) * vec2(other.g4.x, other.g7.x) - vec2(self.g0.y) * vec2(other.g4.y, other.g7.y) - vec2(self.g0.z) * vec2(other.g4.z, other.g7.z) + vec2(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(other.g6.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, other.g6.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, other.g6.w) + vec3(self.g0.w) * other.g1, vec2(0.0) - vec2(self.g0.x) * vec2(other.g6.x, other.g8.x) - vec2(self.g0.y) * vec2(other.g6.y, other.g8.y) - vec2(self.g0.z) * vec2(other.g6.z, other.g8.z) + vec2(self.g0.w) * other.g2, vec3(self.g0.x) * vec3(other.g10.x, -other.g3.z, other.g3.y) + vec3(self.g0.y) * vec3(other.g3.z, other.g10.x, -other.g3.x) + vec3(self.g0.z) * vec3(-other.g3.y, other.g3.x, other.g10.x) + vec3(self.g0.w) * other.g3, vec3(self.g0.x) * vec3(other.g0.x, -other.g4.z, other.g4.y) + vec3(self.g0.y) * vec3(other.g4.z, other.g0.x, -other.g4.x) + vec3(self.g0.z) * vec3(-other.g4.y, other.g4.x, other.g0.x) + vec3(self.g0.w) * other.g4, vec4(self.g0.x) * vec4(other.g10.y, -other.g5.z, other.g5.y, -other.g9.x) + vec4(self.g0.y) * vec4(other.g5.z, other.g10.y, -other.g5.x, -other.g9.y) + vec4(self.g0.z) * vec4(-other.g5.y, other.g5.x, other.g10.y, -other.g9.z) + vec4(self.g0.w) * other.g5, vec4(self.g0.x) * vec4(other.g2.x, -other.g6.z, other.g6.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g6.z, other.g2.x, -other.g6.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g6.y, other.g6.x, other.g2.x, -other.g1.z) + vec4(self.g0.w) * other.g6, vec3(self.g0.x) * vec3(other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g0.y) * vec3(other.g7.z, other.g0.y, -other.g7.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, other.g0.y) + vec3(self.g0.w) * other.g7, vec3(self.g0.x) * vec3(other.g2.y, -other.g8.z, other.g8.y) + vec3(self.g0.y) * vec3(other.g8.z, other.g2.y, -other.g8.x) + vec3(self.g0.z) * vec3(-other.g8.y, other.g8.x, other.g2.y) + vec3(self.g0.w) * other.g8, vec3(self.g0.x) * vec3(other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.y) * vec3(other.g9.z, other.g5.w, -other.g9.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, other.g5.w) + vec3(self.g0.w) * other.g9, vec2(0.0) - vec2(self.g0.x) * vec2(other.g3.x, other.g5.x) - vec2(self.g0.y) * vec2(other.g3.y, other.g5.y) - vec2(self.g0.z) * vec2(other.g3.z, other.g5.z) + vec2(self.g0.w) * other.g10);
-}
-
-Flector rotor__anti_wedge_dot__plane(Rotor self, Plane other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * other.g0);
-}
-
-Rotor rotor__anti_wedge_dot__rotor(Rotor self, Rotor other) {
-    return Rotor(vec4(self.g0.x) * other.g0.wzyx * vec4(1.0, -1.0, 1.0, -1.0) + vec4(self.g0.y) * other.g0.zwxy * vec4(1.0, 1.0, -1.0, -1.0) + vec4(self.g0.z) * other.g0.yxwz * vec4(-1.0, 1.0, 1.0, -1.0) + vec4(self.g0.w) * other.g0);
-}
-
-MultiVector rotor__anti_wedge_dot__round_point(Rotor self, RoundPoint other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge_dot__scalar(Rotor self, Scalar other) {
-    return MultiVector(vec2(self.g0.w) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge_dot__sphere(Rotor self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(0.0), vec4(self.g0.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
-}
-
-Flector rotor__anti_wedge_dot__transflector(Rotor self, Transflector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, -other.g0.z) + vec4(self.g0.w) * other.g1);
-}
-
-MultiVector rotor__anti_wedge_dot__translator(Rotor self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 RoundPoint round_point__anti_wedge_dot__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -3423,10 +2418,6 @@ MultiVector round_point__anti_wedge_dot__plane(RoundPoint self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.y, self.g1.y, self.g1.y, self.g1.x) * other.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector round_point__anti_wedge_dot__rotor(RoundPoint self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(0.0), vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
 MultiVector round_point__anti_wedge_dot__round_point(RoundPoint self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
@@ -3437,14 +2428,6 @@ Sphere round_point__anti_wedge_dot__scalar(RoundPoint self, Scalar other) {
 
 MultiVector round_point__anti_wedge_dot__sphere(RoundPoint self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector round_point__anti_wedge_dot__transflector(RoundPoint self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z) * vec2(other.g1.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(other.g1.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g1.w, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g1.w, 0.0) + vec4(self.g1.y, self.g1.y, self.g1.y, self.g1.x) * other.g1, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector round_point__anti_wedge_dot__translator(RoundPoint self, Translator other) {
-    return MultiVector(vec2(0.0), self.g0 * vec3(other.g0.w) - vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
 Scalar scalar__anti_wedge_dot__anti_scalar(Scalar self, AntiScalar other) {
@@ -3487,10 +2470,6 @@ RoundPoint scalar__anti_wedge_dot__plane(Scalar self, Plane other) {
     return RoundPoint(vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, -other.g0.w));
 }
 
-MultiVector scalar__anti_wedge_dot__rotor(Scalar self, Rotor other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 Sphere scalar__anti_wedge_dot__round_point(Scalar self, RoundPoint other) {
     return Sphere(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
@@ -3501,14 +2480,6 @@ AntiScalar scalar__anti_wedge_dot__scalar(Scalar self, Scalar other) {
 
 RoundPoint scalar__anti_wedge_dot__sphere(Scalar self, Sphere other) {
     return RoundPoint(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
-}
-
-MultiVector scalar__anti_wedge_dot__transflector(Scalar self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(self.g0) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0) * vec2(0.0, -other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector scalar__anti_wedge_dot__translator(Scalar self, Translator other) {
-    return MultiVector(vec2(self.g0) * vec2(other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Sphere sphere__anti_wedge_dot__anti_scalar(Sphere self, AntiScalar other) {
@@ -3551,10 +2522,6 @@ MultiVector sphere__anti_wedge_dot__plane(Sphere self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0 * vec3(other.g0.w) - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-MultiVector sphere__anti_wedge_dot__rotor(Sphere self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), self.g1 * vec2(other.g0.w));
-}
-
 MultiVector sphere__anti_wedge_dot__round_point(Sphere self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -3565,142 +2532,6 @@ RoundPoint sphere__anti_wedge_dot__scalar(Sphere self, Scalar other) {
 
 MultiVector sphere__anti_wedge_dot__sphere(Sphere self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.y) + vec2(self.g1.y) * vec2(0.0, -other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector sphere__anti_wedge_dot__transflector(Sphere self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.w), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) - vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g1.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector sphere__anti_wedge_dot__translator(Sphere self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + self.g1 * vec2(other.g0.w));
-}
-
-Transflector transflector__anti_wedge_dot__anti_scalar(Transflector self, AntiScalar other) {
-    return Transflector(self.g0 * vec3(other.g0), self.g1 * vec4(other.g0));
-}
-
-MultiVector transflector__anti_wedge_dot__circle(Transflector self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) + vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(-other.g0.w, -other.g1.z, other.g1.y, other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, -other.g0.w, -other.g1.x, other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, -other.g0.w, other.g0.z) + vec4(self.g1.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g1.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g1.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.w) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.x) * vec2(-other.g0.x, other.g2.x) + vec2(self.g1.y) * vec2(-other.g0.y, other.g2.y) + vec2(self.g1.z) * vec2(-other.g0.z, other.g2.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w));
-}
-
-MultiVector transflector__anti_wedge_dot__dipole(Transflector self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g1.w) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g1.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g1.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g1.w) * vec2(0.0, -other.g2.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g2.w) - vec3(self.g1.w) * other.g0, vec3(self.g0.x) * vec3(-other.g2.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, -other.g2.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, -other.g2.w) + vec3(self.g1.x) * vec3(0.0, -other.g2.z, other.g2.y) + vec3(self.g1.y) * vec3(other.g2.z, 0.0, -other.g2.x) + vec3(self.g1.z) * vec3(-other.g2.y, other.g2.x, 0.0) - vec3(self.g1.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__anti_wedge_dot__dual_num(Transflector self, DualNum other) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.x), vec2(self.g1.w) * vec2(0.0, -other.g0.x), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, 0.0), vec4(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.x), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.y), vec2(self.g1.w) * vec2(0.0, other.g0.y));
-}
-
-MultiVector transflector__anti_wedge_dot__flat_point(Transflector self, FlatPoint other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__anti_wedge_dot__flector(Transflector self, Flector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(-other.g0.w, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, -other.g0.w, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, -other.g0.w), vec3(self.g0.x) * vec3(-other.g0.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, -other.g0.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, -other.g0.w) + vec3(self.g1.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Flector transflector__anti_wedge_dot__line(Transflector self, Line other) {
-    return Flector(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g1.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g1.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, other.g1.x) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, other.g1.y) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, other.g1.z));
-}
-
-Flector transflector__anti_wedge_dot__motor(Transflector self, Motor other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g0.w, 0.0) + vec4(self.g1.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g1.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g1.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, other.g1.x) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, other.g1.y) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, other.g0.w, other.g1.z) + vec4(self.g1.w) * vec4(0.0, 0.0, 0.0, other.g0.w));
-}
-
-MultiVector transflector__anti_wedge_dot__multi_vector(Transflector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g6.x, other.g3.x) + vec2(self.g0.y) * vec2(-other.g6.y, other.g3.y) + vec2(self.g0.z) * vec2(-other.g6.z, other.g3.z) + vec2(self.g1.x) * vec2(other.g1.x, other.g9.x) + vec2(self.g1.y) * vec2(other.g1.y, other.g9.y) + vec2(self.g1.z) * vec2(other.g1.z, other.g9.z) + vec2(self.g1.w) * vec2(other.g2.x, -other.g10.x), vec3(self.g0.x) * vec3(-other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, -other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, -other.g10.x) + vec3(self.g1.x) * vec3(other.g0.x, -other.g4.z, other.g4.y) + vec3(self.g1.y) * vec3(other.g4.z, other.g0.x, -other.g4.x) + vec3(self.g1.z) * vec3(-other.g4.y, other.g4.x, other.g0.x) - vec3(self.g1.w) * other.g3, vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.x) * vec2(0.0, other.g4.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.y) * vec2(0.0, other.g4.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g0.z) * vec2(0.0, other.g4.z) + vec2(self.g1.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g1.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g1.z) * vec2(other.g3.z, -other.g5.z) + vec2(self.g1.w) * vec2(0.0, -other.g5.w) + vec2(self.g1.w) * vec2(0.0, -other.g0.x), vec3(self.g1.x) * vec3(other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g1.y) * vec3(other.g6.z, other.g2.x, -other.g6.x) + vec3(self.g1.z) * vec3(-other.g6.y, other.g6.x, other.g2.x), vec3(self.g0.x) * vec3(other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, other.g2.x) + vec3(self.g1.x) * vec3(-other.g6.w, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, -other.g6.w, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, -other.g6.w) + vec3(self.g1.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x) * vec4(-other.g6.w, -other.g7.z, other.g7.y, other.g6.x) + vec4(self.g0.x) * vec4(other.g0.y, other.g1.z, -other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g7.z, -other.g6.w, -other.g7.x, other.g6.y) + vec4(self.g0.y) * vec4(-other.g1.z, other.g0.y, other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g7.y, other.g7.x, -other.g6.w, other.g6.z) + vec4(self.g0.z) * vec4(other.g1.y, -other.g1.x, other.g0.y, 0.0) + vec4(self.g1.x) * vec4(-other.g2.y, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g1.y) * vec4(-other.g8.z, -other.g2.y, other.g8.x, -other.g7.y) + vec4(self.g1.z) * vec4(other.g8.y, -other.g8.x, -other.g2.y, -other.g7.z) + vec4(self.g1.w) * vec4(other.g7.x, other.g7.y, other.g7.z, -other.g2.x) + vec4(self.g1.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g3.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g3.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g3.z) + vec4(self.g1.x) * vec4(-other.g10.x, other.g3.z, -other.g3.y, -other.g4.x) + vec4(self.g1.y) * vec4(-other.g3.z, -other.g10.x, other.g3.x, -other.g4.y) + vec4(self.g1.z) * vec4(other.g3.y, -other.g3.x, -other.g10.x, -other.g4.z) + vec4(self.g1.w) * vec4(0.0, 0.0, 0.0, -other.g10.x), vec3(self.g0.x) * vec3(-other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, -other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, -other.g10.x) + vec3(self.g1.x) * vec3(-other.g5.w, other.g9.z, -other.g9.y) + vec3(self.g1.y) * vec3(-other.g9.z, -other.g5.w, other.g9.x) + vec3(self.g1.z) * vec3(other.g9.y, -other.g9.x, -other.g5.w) - vec3(self.g1.w) * other.g3, vec3(self.g0.x) * vec3(-other.g5.w, other.g9.z, -other.g9.y) + vec3(self.g0.x) * vec3(-other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g9.z, -other.g5.w, other.g9.x) + vec3(self.g0.y) * vec3(-other.g4.z, -other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g9.y, -other.g9.x, -other.g5.w) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, -other.g0.x) + vec3(self.g1.x) * vec3(other.g10.y, -other.g5.z, other.g5.y) + vec3(self.g1.y) * vec3(other.g5.z, other.g10.y, -other.g5.x) + vec3(self.g1.z) * vec3(-other.g5.y, other.g5.x, other.g10.y) - vec3(self.g1.w) * other.g9 - vec3(self.g1.w) * other.g4, vec3(self.g0.x) * vec3(-other.g2.x, other.g6.z, -other.g6.y) + vec3(self.g0.y) * vec3(-other.g6.z, -other.g2.x, other.g6.x) + vec3(self.g0.z) * vec3(other.g6.y, -other.g6.x, -other.g2.x) + vec3(self.g1.x) * vec3(other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g1.y) * vec3(other.g7.z, other.g0.y, -other.g7.x) + vec3(self.g1.z) * vec3(-other.g7.y, other.g7.x, other.g0.y) - vec3(self.g1.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(0.0, -other.g7.x) + vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g7.y) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g7.z) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(-other.g6.x, other.g8.x) + vec2(self.g1.y) * vec2(-other.g6.y, other.g8.y) + vec2(self.g1.z) * vec2(-other.g6.z, other.g8.z) + vec2(self.g1.w) * vec2(0.0, -other.g6.w) + vec2(self.g1.w) * vec2(0.0, other.g0.y));
-}
-
-MultiVector transflector__anti_wedge_dot__plane(Transflector self, Plane other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-Flector transflector__anti_wedge_dot__rotor(Transflector self, Rotor other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, other.g0.w, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g1.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, other.g0.w, -other.g0.x, 0.0) + self.g1.zzzw * other.g0.yxww * vec4(-1.0, 1.0, 1.0, 1.0));
-}
-
-MultiVector transflector__anti_wedge_dot__round_point(Transflector self, RoundPoint other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.x), self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + self.g1.xyzx * vec4(-other.g1.y, -other.g1.y, -other.g1.y, 0.0) - vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
-}
-
-MultiVector transflector__anti_wedge_dot__scalar(Transflector self, Scalar other) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0), vec2(self.g1.w) * vec2(0.0, -other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__anti_wedge_dot__sphere(Transflector self, Sphere other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g1.x), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g1 * vec4(other.g1.x), vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.y) - vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__anti_wedge_dot__transflector(Transflector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * vec3(other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, other.g1.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, other.g1.w) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Transflector transflector__anti_wedge_dot__translator(Transflector self, Translator other) {
-    return Transflector(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g1.x) * vec4(other.g0.w, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g0.w, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g0.w, other.g0.z) + vec4(self.g1.w) * vec4(0.0, 0.0, 0.0, other.g0.w));
-}
-
-Translator translator__anti_wedge_dot__anti_scalar(Translator self, AntiScalar other) {
-    return Translator(self.g0 * vec4(other.g0));
-}
-
-MultiVector translator__anti_wedge_dot__circle(Translator self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(self.g0.x) * vec3(-other.g0.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, -other.g0.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, -other.g0.w) + vec3(self.g0.w) * other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge_dot__dipole(Translator self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g1, vec4(self.g0.x) * vec4(other.g2.w, -other.g1.z, other.g1.y, other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, other.g2.w, -other.g1.x, other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, other.g2.w, other.g0.z) + vec4(self.g0.w) * other.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z));
-}
-
-MultiVector translator__anti_wedge_dot__dual_num(Translator self, DualNum other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0.xyzx * vec4(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(0.0), vec2(0.0));
-}
-
-FlatPoint translator__anti_wedge_dot__flat_point(Translator self, FlatPoint other) {
-    return FlatPoint(self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0);
-}
-
-Flector translator__anti_wedge_dot__flector(Translator self, Flector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, other.g0.w, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g1.z) + vec4(self.g0.w) * other.g1);
-}
-
-MultiVector translator__anti_wedge_dot__line(Translator self, Line other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge_dot__motor(Translator self, Motor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w) + vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge_dot__multi_vector(Translator self, MultiVector other) {
-    return MultiVector(vec2(0.0) - vec2(self.g0.x) * vec2(other.g3.x, other.g6.x) - vec2(self.g0.y) * vec2(other.g3.y, other.g6.y) - vec2(self.g0.z) * vec2(other.g3.z, other.g6.z) + vec2(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, other.g2.x) + vec3(self.g0.w) * other.g1, vec2(self.g0.x) * vec2(0.0, -other.g7.x) + vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g7.y) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g7.z) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * other.g2, vec3(self.g0.w) * other.g3, vec3(self.g0.x) * vec3(other.g10.x, -other.g3.z, other.g3.y) + vec3(self.g0.y) * vec3(other.g3.z, other.g10.x, -other.g3.x) + vec3(self.g0.z) * vec3(-other.g3.y, other.g3.x, other.g10.x) + vec3(self.g0.w) * other.g4, vec4(self.g0.x) * vec4(other.g5.w, -other.g9.z, other.g9.y, other.g3.x) + vec4(self.g0.x) * vec4(other.g0.x, -other.g4.z, other.g4.y, 0.0) + vec4(self.g0.y) * vec4(other.g9.z, other.g5.w, -other.g9.x, other.g3.y) + vec4(self.g0.y) * vec4(other.g4.z, other.g0.x, -other.g4.x, 0.0) + vec4(self.g0.z) * vec4(-other.g9.y, other.g9.x, other.g5.w, other.g3.z) + vec4(self.g0.z) * vec4(-other.g4.y, other.g4.x, other.g0.x, 0.0) + vec4(self.g0.w) * other.g5, vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g6.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g6.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g6.z) + vec4(self.g0.w) * other.g6, vec3(self.g0.x) * vec3(other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, other.g2.x) + vec3(self.g0.w) * other.g7, vec3(self.g0.x) * vec3(-other.g6.w, -other.g7.z, other.g7.y) + vec3(self.g0.x) * vec3(other.g0.y, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(other.g7.z, -other.g6.w, -other.g7.x) + vec3(self.g0.y) * vec3(-other.g1.z, other.g0.y, other.g1.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, -other.g6.w) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, other.g0.y) + vec3(self.g0.w) * other.g8, vec3(self.g0.x) * vec3(-other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, -other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, -other.g10.x) + vec3(self.g0.w) * other.g9, vec2(self.g0.x) * vec2(0.0, -other.g9.x) + vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g9.y) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g9.z) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g0.w) * other.g10);
-}
-
-Transflector translator__anti_wedge_dot__plane(Translator self, Plane other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g0.w) * other.g0);
-}
-
-MultiVector translator__anti_wedge_dot__rotor(Translator self, Rotor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, other.g0.w), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge_dot__round_point(Translator self, RoundPoint other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge_dot__scalar(Translator self, Scalar other) {
-    return MultiVector(vec2(self.g0.w) * vec2(other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0.xyzx * vec4(other.g0, other.g0, other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge_dot__sphere(Translator self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * other.g1);
-}
-
-Transflector translator__anti_wedge_dot__transflector(Translator self, Transflector other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g1.z) + vec4(self.g0.w) * other.g1);
-}
-
-Translator translator__anti_wedge_dot__translator(Translator self, Translator other) {
-    return Translator(self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0);
 }
 
 Scalar anti_scalar__wedge_dot__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -3743,10 +2574,6 @@ RoundPoint anti_scalar__wedge_dot__plane(AntiScalar self, Plane other) {
     return RoundPoint(vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0) * vec2(0.0, other.g0.w));
 }
 
-MultiVector anti_scalar__wedge_dot__rotor(AntiScalar self, Rotor other) {
-    return MultiVector(vec2(self.g0) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 Sphere anti_scalar__wedge_dot__round_point(AntiScalar self, RoundPoint other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(0.0) - vec2(self.g0) * other.g1);
 }
@@ -3757,14 +2584,6 @@ AntiScalar anti_scalar__wedge_dot__scalar(AntiScalar self, Scalar other) {
 
 RoundPoint anti_scalar__wedge_dot__sphere(AntiScalar self, Sphere other) {
     return RoundPoint(vec3(0.0) - vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
-}
-
-MultiVector anti_scalar__wedge_dot__transflector(AntiScalar self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector anti_scalar__wedge_dot__translator(AntiScalar self, Translator other) {
-    return MultiVector(vec2(self.g0) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 Dipole circle__wedge_dot__anti_scalar(Circle self, AntiScalar other) {
@@ -3807,10 +2626,6 @@ MultiVector circle__wedge_dot__plane(Circle self, Plane other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) - vec2(self.g0.z, self.g0.w) * vec2(other.g0.z, other.g0.w) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector circle__wedge_dot__rotor(Circle self, Rotor other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec3(self.g1.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, other.g0.w) + vec4(self.g2.x) * vec4(-other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, -other.g0.w, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
-}
-
 MultiVector circle__wedge_dot__round_point(Circle self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0 - self.g2 * vec3(other.g1.x), vec4(self.g1.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z));
 }
@@ -3821,14 +2636,6 @@ Circle circle__wedge_dot__scalar(Circle self, Scalar other) {
 
 MultiVector circle__wedge_dot__sphere(Circle self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g2 * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * other.g1 * vec2(1.0, -1.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0 + self.g2 * vec3(other.g1.x), self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g2.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g2.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector circle__wedge_dot__transflector(Circle self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) - vec2(self.g0.z, self.g0.w) * vec2(other.g1.z, other.g1.w) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.x) + vec2(self.g2.y) * vec2(0.0, other.g1.y) + vec2(self.g2.z) * vec2(0.0, other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g1.z), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0) - vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g2.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g2.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g2.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector circle__wedge_dot__translator(Circle self, Translator other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g1 * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g0.w) * other.g0 + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g2.x, self.g2.y, self.g2.z, self.g2.x) * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
 }
 
 Circle dipole__wedge_dot__anti_scalar(Dipole self, AntiScalar other) {
@@ -3871,10 +2678,6 @@ MultiVector dipole__wedge_dot__plane(Dipole self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0 * vec3(other.g0.w) + vec3(self.g2.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g1.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w));
 }
 
-MultiVector dipole__wedge_dot__rotor(Dipole self, Rotor other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0) - vec3(self.g2.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g0.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, other.g0.w, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, other.g0.w, 0.0) + vec4(self.g2.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(self.g1.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, other.g0.w), vec3(self.g2.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dipole__wedge_dot__round_point(Dipole self, RoundPoint other) {
     return MultiVector(vec2(0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
@@ -3885,14 +2688,6 @@ Dipole dipole__wedge_dot__scalar(Dipole self, Scalar other) {
 
 MultiVector dipole__wedge_dot__sphere(Dipole self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) + vec3(self.g2.w) * other.g0, vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
-}
-
-MultiVector dipole__wedge_dot__transflector(Dipole self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g2.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g1.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, -other.g1.y) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g2.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g2.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g2.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g2.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(-other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g1.w) + vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.x) + vec2(self.g2.y) * vec2(0.0, other.g1.y) + vec2(self.g2.z) * vec2(0.0, other.g1.z) + vec2(self.g2.w) * vec2(0.0, other.g1.w));
-}
-
-MultiVector dipole__wedge_dot__translator(Dipole self, Translator other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g2.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g1 * vec3(other.g0.w), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g0.w) + vec3(self.g2.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 DualNum dual_num__wedge_dot__anti_scalar(DualNum self, AntiScalar other) {
@@ -3935,10 +2730,6 @@ MultiVector dual_num__wedge_dot__plane(DualNum self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.y) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, other.g0.w));
 }
 
-MultiVector dual_num__wedge_dot__rotor(DualNum self, Rotor other) {
-    return MultiVector(self.g0.yx * vec2(-other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 MultiVector dual_num__wedge_dot__round_point(DualNum self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec2(0.0) - vec2(self.g0.y) * other.g1);
 }
@@ -3949,14 +2740,6 @@ DualNum dual_num__wedge_dot__scalar(DualNum self, Scalar other) {
 
 MultiVector dual_num__wedge_dot__sphere(DualNum self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
-}
-
-MultiVector dual_num__wedge_dot__transflector(DualNum self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.y) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * other.g0, vec3(self.g0.x) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, other.g1.w));
-}
-
-MultiVector dual_num__wedge_dot__translator(DualNum self, Translator other) {
-    return MultiVector(self.g0.yx * vec2(-other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 Circle flat_point__wedge_dot__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -3999,10 +2782,6 @@ MultiVector flat_point__wedge_dot__plane(FlatPoint self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w));
 }
 
-MultiVector flat_point__wedge_dot__rotor(FlatPoint self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 MultiVector flat_point__wedge_dot__round_point(FlatPoint self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
@@ -4013,14 +2792,6 @@ FlatPoint flat_point__wedge_dot__scalar(FlatPoint self, Scalar other) {
 
 MultiVector flat_point__wedge_dot__sphere(FlatPoint self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) + vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
-}
-
-MultiVector flat_point__wedge_dot__transflector(FlatPoint self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w));
-}
-
-Circle flat_point__wedge_dot__translator(FlatPoint self, Translator other) {
-    return Circle(vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
 MultiVector flector__wedge_dot__anti_scalar(Flector self, AntiScalar other) {
@@ -4063,10 +2834,6 @@ MultiVector flector__wedge_dot__plane(Flector self, Plane other) {
     return MultiVector(vec2(self.g1.x) * vec2(-other.g0.x, 0.0) + vec2(self.g1.y) * vec2(-other.g0.y, 0.0) + vec2(self.g1.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + self.g1.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w));
 }
 
-MultiVector flector__wedge_dot__rotor(Flector self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g1.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g0.w) + vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
 MultiVector flector__wedge_dot__round_point(Flector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g1.w) * vec2(0.0, other.g1.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g1 * vec4(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.y) + vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
 }
@@ -4077,14 +2844,6 @@ Flector flector__wedge_dot__scalar(Flector self, Scalar other) {
 
 MultiVector flector__wedge_dot__sphere(Flector self, Sphere other) {
     return MultiVector(vec2(self.g1.x) * vec2(-other.g0.x, 0.0) + vec2(self.g1.y) * vec2(-other.g0.y, 0.0) + vec2(self.g1.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) + vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + self.g1.xyzx * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
-}
-
-MultiVector flector__wedge_dot__transflector(Flector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g1.x, 0.0) + vec2(self.g1.y) * vec2(-other.g1.y, 0.0) + vec2(self.g1.z) * vec2(-other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g1.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, 0.0) + vec4(self.g1.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector flector__wedge_dot__translator(Flector self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
 Dipole line__wedge_dot__anti_scalar(Line self, AntiScalar other) {
@@ -4127,10 +2886,6 @@ MultiVector line__wedge_dot__plane(Line self, Plane other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector line__wedge_dot__rotor(Line self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec4(self.g1.x) * vec4(-other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, -other.g0.w, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
-}
-
 MultiVector line__wedge_dot__round_point(Line self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec3(0.0) - self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
 }
@@ -4141,14 +2896,6 @@ Line line__wedge_dot__scalar(Line self, Scalar other) {
 
 MultiVector line__wedge_dot__sphere(Line self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g1 * vec3(other.g1.x), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, other.g0.z), self.g1 * vec3(other.g1.x), self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector line__wedge_dot__transflector(Line self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g1.z), vec3(0.0), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector line__wedge_dot__translator(Line self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
 MultiVector motor__wedge_dot__anti_scalar(Motor self, AntiScalar other) {
@@ -4191,10 +2938,6 @@ MultiVector motor__wedge_dot__plane(Motor self, Plane other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.w) * vec2(0.0, other.g0.w) + vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector motor__wedge_dot__rotor(Motor self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g1.x) * vec4(-other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, -other.g0.w, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
-}
-
 MultiVector motor__wedge_dot__round_point(Motor self, RoundPoint other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(0.0) - self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g0.w) * other.g0 - self.g1 * vec3(other.g1.x), vec2(0.0) - vec2(self.g0.w) * other.g1 + vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z));
 }
@@ -4205,14 +2948,6 @@ Motor motor__wedge_dot__scalar(Motor self, Scalar other) {
 
 MultiVector motor__wedge_dot__sphere(Motor self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * other.g0 - self.g1 * vec3(other.g1.x), vec2(self.g0.w) * other.g1 + vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, other.g0.z), self.g1 * vec3(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector motor__wedge_dot__transflector(Motor self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w) + vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g1.z), vec3(0.0), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g0.w) * other.g0 + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector motor__wedge_dot__translator(Motor self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0) + vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
 MultiVector multi_vector__wedge_dot__anti_scalar(MultiVector self, AntiScalar other) {
@@ -4255,10 +2990,6 @@ MultiVector multi_vector__wedge_dot__plane(MultiVector self, Plane other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g0.w) + vec2(self.g9.x) * vec2(-other.g0.x, 0.0) + vec2(self.g9.y) * vec2(-other.g0.y, 0.0) + vec2(self.g9.z) * vec2(-other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g0.w, 0.0), vec3(0.0) - vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0.w) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.y) * vec2(0.0, other.g0.w) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) - vec2(self.g6.z, self.g6.w) * vec2(other.g0.z, other.g0.w) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g3 * vec3(other.g0.w) + vec3(self.g5.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g4.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g5.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g5.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g5.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) - vec4(self.g10.y, self.g10.y, self.g10.y, self.g10.x) * other.g0, vec4(self.g2.x) * other.g0 + vec4(self.g6.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g6.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g6.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g7.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g7.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0.w) - vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0) - self.g1 * vec3(other.g0.w) - vec3(self.g2.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g7 * vec3(other.g0.w) + vec3(self.g8.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g8.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g8.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) - self.g3 * vec3(other.g0.w) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, other.g0.w) + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * vec2(0.0, other.g0.w));
 }
 
-MultiVector multi_vector__wedge_dot__rotor(MultiVector self, Rotor other) {
-    return MultiVector(self.g0.yx * vec2(-other.g0.w) + vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z) + vec2(self.g7.x) * vec2(other.g0.x, 0.0) + vec2(self.g7.y) * vec2(other.g0.y, 0.0) + vec2(self.g7.z) * vec2(other.g0.z, 0.0), vec3(0.0) - vec3(self.g5.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g9.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, -other.g0.x) + vec2(self.g5.y) * vec2(0.0, -other.g0.y) + vec2(self.g5.z) * vec2(0.0, -other.g0.z) + self.g10 * vec2(other.g0.w), vec3(0.0) - vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec3(0.0) - vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g7.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g2.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0) + vec4(self.g6.w) * vec4(0.0, 0.0, 0.0, other.g0.w) + vec4(self.g8.x) * vec4(-other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, -other.g0.w, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, -other.g0.w, 0.0), vec4(self.g3.x) * vec4(other.g0.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g3.y) * vec4(-other.g0.z, other.g0.w, other.g0.x, 0.0) + vec4(self.g3.z) * vec4(other.g0.y, -other.g0.x, other.g0.w, 0.0) + vec4(self.g5.w) * vec4(0.0, 0.0, 0.0, -other.g0.w) + vec4(self.g9.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g9.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g9.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g10.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g4.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, other.g0.w), vec3(self.g5.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, other.g0.w) + vec3(self.g10.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g1.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, other.g0.w) + vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(0.0) - self.g2 * vec2(other.g0.w) + vec2(self.g6.x) * vec2(other.g0.x, 0.0) + vec2(self.g6.y) * vec2(other.g0.y, 0.0) + vec2(self.g6.z) * vec2(other.g0.z, 0.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
-}
-
 MultiVector multi_vector__wedge_dot__round_point(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(-other.g1.y, 0.0) + vec2(self.g2.y) * vec2(-other.g1.x, 0.0) + vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, other.g1.y) + vec2(self.g10.y) * vec2(0.0, other.g1.x), vec3(self.g0.x) * other.g0 + self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(other.g0.x, 0.0) + vec2(self.g3.y) * vec2(other.g0.y, 0.0) + vec2(self.g3.z) * vec2(other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, -other.g0.x) + vec2(self.g5.y) * vec2(0.0, -other.g0.y) + vec2(self.g5.z) * vec2(0.0, -other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0) - self.g1 * vec3(other.g1.x) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g7 * vec3(other.g1.x), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) - vec3(self.g6.w) * other.g0 - self.g8 * vec3(other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x) + vec4(self.g7.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g10.x) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4(self.g10.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g9.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g9.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g9 * vec3(other.g1.y) + vec3(self.g10.y) * other.g0, vec3(self.g0.y) * other.g0 + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(0.0) - vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
 }
@@ -4269,14 +3000,6 @@ MultiVector multi_vector__wedge_dot__scalar(MultiVector self, Scalar other) {
 
 MultiVector multi_vector__wedge_dot__sphere(MultiVector self, Sphere other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.y) + vec2(self.g2.y) * vec2(0.0, other.g1.x) + vec2(self.g9.x) * vec2(-other.g0.x, 0.0) + vec2(self.g9.y) * vec2(-other.g0.y, 0.0) + vec2(self.g9.z) * vec2(-other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(0.0) - vec3(self.g0.y) * other.g0 + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g7.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g7.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(self.g0.y) * other.g1 + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(1.0, -1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g4 * vec3(other.g1.x) - self.g9 * vec3(other.g1.x) + vec3(self.g10.x) * other.g0, self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) + vec3(self.g5.w) * other.g0 + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g4.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g5.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g5.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g5.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g10.x) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g10.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4(self.g2.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g2.y) * vec4(0.0, 0.0, 0.0, -other.g1.x) + vec4(self.g6.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g6.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g6.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g7.x) * vec4(other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g1.x, 0.0, other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.x, other.g0.z), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) - vec3(self.g6.w) * other.g0 + self.g8 * vec3(other.g1.x), vec3(0.0) - self.g1 * vec3(other.g1.y) - vec3(self.g2.y) * other.g0 + self.g7 * vec3(other.g1.y) + vec3(self.g8.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g8.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g8.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * other.g0 - self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g0.x) * other.g1 + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(-1.0, 1.0));
-}
-
-MultiVector multi_vector__wedge_dot__transflector(MultiVector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z) + vec2(self.g2.x) * vec2(0.0, other.g1.w) + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z) + vec2(self.g9.x) * vec2(-other.g1.x, 0.0) + vec2(self.g9.y) * vec2(-other.g1.y, 0.0) + vec2(self.g9.z) * vec2(-other.g1.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.w, 0.0), vec3(0.0) - vec3(self.g0.y) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g7.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g7.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g7.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.y) * vec2(0.0, other.g1.w) + vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g6.x) * vec2(-other.g1.x, 0.0) + vec2(self.g6.y) * vec2(-other.g1.y, 0.0) - vec2(self.g6.z, self.g6.w) * vec2(other.g1.z, other.g1.w) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z) + vec2(self.g8.x) * vec2(0.0, other.g1.x) + vec2(self.g8.y) * vec2(0.0, other.g1.y) + vec2(self.g8.z) * vec2(0.0, other.g1.z), vec3(self.g3.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g3.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g3.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g10.x) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g3.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g5.w) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g9.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g9.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g9.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g10.x) * other.g0, vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g3.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g3.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g4.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g4.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, -other.g1.y) + vec4(self.g4.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, -other.g1.z) + vec4(self.g5.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g5.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g5.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g5.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g9.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g9.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, 0.0) + vec4(self.g9.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, 0.0) - vec4(self.g10.y, self.g10.y, self.g10.y, self.g10.x) * other.g1, vec4(self.g2.x) * other.g1 + vec4(self.g6.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g6.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g6.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g7.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g7.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g7.z) * vec4(0.0, 0.0, 0.0, other.g1.z), vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g2.x) * other.g0 + vec3(self.g6.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) - vec3(self.g6.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.y) * other.g0 + vec3(self.g1.x) * vec3(-other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, -other.g1.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, -other.g1.w) - vec3(self.g2.y) * vec3(other.g1.x, other.g1.y, other.g1.z) - vec3(self.g6.w) * other.g0 + vec3(self.g7.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g8.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g8.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g8.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec3(self.g0.x) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g3.x) * vec3(-other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, -other.g1.w, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, -other.g1.w) + vec3(self.g4.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g4.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g4.z) * vec3(other.g1.y, -other.g1.x, 0.0) - vec3(self.g10.x) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g1.w) + vec2(self.g3.x) * vec2(-other.g1.x, 0.0) + vec2(self.g3.y) * vec2(-other.g1.y, 0.0) + vec2(self.g3.z) * vec2(-other.g1.z, 0.0) + vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z) + vec2(self.g5.x) * vec2(0.0, other.g1.x) + vec2(self.g5.y) * vec2(0.0, other.g1.y) + vec2(self.g5.z) * vec2(0.0, other.g1.z) + vec2(self.g5.w) * vec2(0.0, other.g1.w) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector multi_vector__wedge_dot__translator(MultiVector self, Translator other) {
-    return MultiVector(self.g0.yx * vec2(-other.g0.w) + vec2(self.g3.x) * vec2(0.0, -other.g0.x) + vec2(self.g3.y) * vec2(0.0, -other.g0.y) + vec2(self.g3.z) * vec2(0.0, -other.g0.z) + vec2(self.g6.x) * vec2(other.g0.x, 0.0) + vec2(self.g6.y) * vec2(other.g0.y, 0.0) + vec2(self.g6.z) * vec2(other.g0.z, 0.0), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g9 * vec3(other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z) + self.g10 * vec2(other.g0.w), vec3(0.0) - vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0.w), vec3(0.0) - vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g6.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g6.z) * vec3(-other.g0.y, other.g0.x, 0.0) - self.g7 * vec3(other.g0.w), vec4(self.g0.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g6.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g6.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g6.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g6.w) * other.g0 + vec4(self.g7.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g7.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g7.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g8.x, self.g8.y, self.g8.z, self.g8.x) * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0), vec4(self.g3.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g3.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g3.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g5.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(self.g3.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g3.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g3.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g4 * vec3(other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g4.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g4.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g4.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g0.w) + vec3(self.g5.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g1 * vec3(other.g0.w) + vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z) + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) - self.g2 * vec2(other.g0.w) + vec2(self.g7.x) * vec2(0.0, other.g0.x) + vec2(self.g7.y) * vec2(0.0, other.g0.y) + vec2(self.g7.z) * vec2(0.0, other.g0.z));
 }
 
 RoundPoint plane__wedge_dot__anti_scalar(Plane self, AntiScalar other) {
@@ -4319,10 +3042,6 @@ MultiVector plane__wedge_dot__plane(Plane self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector plane__wedge_dot__rotor(Plane self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
 MultiVector plane__wedge_dot__round_point(Plane self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g0 * vec4(other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) + vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
 }
@@ -4333,78 +3052,6 @@ Plane plane__wedge_dot__scalar(Plane self, Scalar other) {
 
 MultiVector plane__wedge_dot__sphere(Plane self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g0.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0.xyzx * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector plane__wedge_dot__transflector(Plane self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec4(self.g0.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, 0.0) + vec4(self.g0.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector plane__wedge_dot__translator(Plane self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__anti_scalar(Rotor self, AntiScalar other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__circle(Rotor self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g1.x, 0.0) + vec2(self.g0.y) * vec2(other.g1.y, 0.0) + vec2(self.g0.z) * vec2(other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * other.g1, vec4(self.g0.x) * vec4(0.0, -other.g2.z, other.g2.y, 0.0) + vec4(self.g0.y) * vec4(other.g2.z, 0.0, -other.g2.x, 0.0) + vec4(self.g0.z) * vec4(-other.g2.y, other.g2.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g2.x, -other.g2.y, -other.g2.z, other.g0.w), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) + vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) + vec2(self.g0.z) * vec2(other.g0.z, other.g2.z));
-}
-
-MultiVector rotor__wedge_dot__dipole(Rotor self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g2.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g2.w), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(self.g0.x) * vec3(0.0, other.g2.z, -other.g2.y) + vec3(self.g0.y) * vec3(-other.g2.z, 0.0, other.g2.x) + vec3(self.g0.z) * vec3(other.g2.y, -other.g2.x, 0.0) + vec3(self.g0.w) * vec3(other.g2.x, other.g2.y, other.g2.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__dual_num(Rotor self, DualNum other) {
-    return MultiVector(vec2(self.g0.w) * other.g0.yx * vec2(-1.0, 1.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__flat_point(Rotor self, FlatPoint other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__flector(Rotor self, Flector other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, -other.g0.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, -other.g0.w) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g1.z) + vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__line(Rotor self, Line other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
-}
-
-MultiVector rotor__wedge_dot__motor(Rotor self, Motor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
-}
-
-MultiVector rotor__wedge_dot__multi_vector(Rotor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g7.x, -other.g4.x) + vec2(self.g0.y) * vec2(other.g7.y, -other.g4.y) + vec2(self.g0.z) * vec2(other.g7.z, -other.g4.z) + vec2(self.g0.w) * other.g0.yx * vec2(-1.0, 1.0), vec3(self.g0.x) * vec3(-other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.y) * vec3(other.g9.z, -other.g5.w, -other.g9.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, -other.g5.w) - vec3(self.g0.w) * other.g9, vec2(0.0) - vec2(self.g0.x) * vec2(other.g3.x, other.g5.x) - vec2(self.g0.y) * vec2(other.g3.y, other.g5.y) - vec2(self.g0.z) * vec2(other.g3.z, other.g5.z) + vec2(self.g0.w) * other.g10, vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x) - vec3(self.g0.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0.x) * vec3(-other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g0.y) * vec3(other.g7.z, -other.g0.y, -other.g7.x) + vec3(self.g0.z) * vec3(-other.g7.y, other.g7.x, -other.g0.y) - vec3(self.g0.w) * other.g7, vec4(self.g0.x) * vec4(-other.g2.y, -other.g8.z, other.g8.y, -other.g1.x) + vec4(self.g0.y) * vec4(other.g8.z, -other.g2.y, -other.g8.x, -other.g1.y) + vec4(self.g0.z) * vec4(-other.g8.y, other.g8.x, -other.g2.y, -other.g1.z) + vec4(self.g0.w) * vec4(-other.g8.x, -other.g8.y, -other.g8.z, other.g6.w), vec4(self.g0.x) * vec4(other.g10.x, other.g3.z, -other.g3.y, other.g9.x) + vec4(self.g0.y) * vec4(-other.g3.z, other.g10.x, other.g3.x, other.g9.y) + vec4(self.g0.z) * vec4(other.g3.y, -other.g3.x, other.g10.x, other.g9.z) + vec4(self.g0.w) * vec4(other.g3.x, other.g3.y, other.g3.z, -other.g5.w), vec3(self.g0.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, other.g0.x) + vec3(self.g0.w) * other.g4, vec3(self.g0.x) * vec3(other.g10.y, other.g5.z, -other.g5.y) + vec3(self.g0.y) * vec3(-other.g5.z, other.g10.y, other.g5.x) + vec3(self.g0.z) * vec3(other.g5.y, -other.g5.x, other.g10.y) + vec3(self.g0.w) * vec3(other.g5.x, other.g5.y, other.g5.z), vec3(self.g0.x) * vec3(other.g6.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, other.g6.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, other.g6.w) + vec3(self.g0.w) * other.g1, vec2(self.g0.x) * vec2(other.g6.x, other.g8.x) + vec2(self.g0.y) * vec2(other.g6.y, other.g8.y) + vec2(self.g0.z) * vec2(other.g6.z, other.g8.z) - vec2(self.g0.w) * other.g2);
-}
-
-MultiVector rotor__wedge_dot__plane(Rotor self, Plane other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__rotor(Rotor self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__round_point(Rotor self, RoundPoint other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(0.0), vec4(self.g0.x) * vec4(-other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.y, -other.g0.z), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g0.w) * other.g0, vec2(0.0) - vec2(self.g0.w) * other.g1);
-}
-
-Rotor rotor__wedge_dot__scalar(Rotor self, Scalar other) {
-    return Rotor(self.g0 * vec4(other.g0));
-}
-
-MultiVector rotor__wedge_dot__sphere(Rotor self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.x, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.x, other.g0.z), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__transflector(Rotor self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g1.z), vec3(0.0), vec3(self.g0.x) * vec3(other.g1.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g1.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g1.w) + vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__wedge_dot__translator(Rotor self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
 }
 
 Sphere round_point__wedge_dot__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -4447,10 +3094,6 @@ MultiVector round_point__wedge_dot__plane(RoundPoint self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-MultiVector round_point__wedge_dot__rotor(RoundPoint self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g0.w), vec2(0.0) - self.g1 * vec2(other.g0.w));
-}
-
 MultiVector round_point__wedge_dot__round_point(RoundPoint self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0) + vec2(self.g1.x) * vec2(-other.g1.y, 0.0) + vec2(self.g1.y) * vec2(-other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -4461,14 +3104,6 @@ RoundPoint round_point__wedge_dot__scalar(RoundPoint self, Scalar other) {
 
 MultiVector round_point__wedge_dot__sphere(RoundPoint self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector round_point__wedge_dot__transflector(RoundPoint self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, other.g1.w), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(-other.g1.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g1.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g1.w) - vec3(self.g1.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector round_point__wedge_dot__translator(RoundPoint self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) - self.g1 * vec2(other.g0.w));
 }
 
 AntiScalar scalar__wedge_dot__anti_scalar(Scalar self, AntiScalar other) {
@@ -4511,10 +3146,6 @@ Plane scalar__wedge_dot__plane(Scalar self, Plane other) {
     return Plane(vec4(self.g0) * other.g0);
 }
 
-Rotor scalar__wedge_dot__rotor(Scalar self, Rotor other) {
-    return Rotor(vec4(self.g0) * other.g0);
-}
-
 RoundPoint scalar__wedge_dot__round_point(Scalar self, RoundPoint other) {
     return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
@@ -4525,14 +3156,6 @@ Scalar scalar__wedge_dot__scalar(Scalar self, Scalar other) {
 
 Sphere scalar__wedge_dot__sphere(Scalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
-}
-
-Transflector scalar__wedge_dot__transflector(Scalar self, Transflector other) {
-    return Transflector(vec3(self.g0) * other.g0, vec4(self.g0) * other.g1);
-}
-
-Translator scalar__wedge_dot__translator(Scalar self, Translator other) {
-    return Translator(vec4(self.g0) * other.g0);
 }
 
 RoundPoint sphere__wedge_dot__anti_scalar(Sphere self, AntiScalar other) {
@@ -4575,10 +3198,6 @@ MultiVector sphere__wedge_dot__plane(Sphere self, Plane other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) - vec4(self.g1.y, self.g1.y, self.g1.y, self.g1.x) * other.g0, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
-MultiVector sphere__wedge_dot__rotor(Sphere self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec3(0.0), vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
 MultiVector sphere__wedge_dot__round_point(Sphere self, RoundPoint other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g1.x) * vec2(0.0, other.g1.y) + vec2(self.g1.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), self.g0 * vec3(other.g1.y) + vec3(self.g1.y) * other.g0, vec3(0.0), vec2(0.0));
 }
@@ -4589,142 +3208,6 @@ Sphere sphere__wedge_dot__scalar(Sphere self, Scalar other) {
 
 MultiVector sphere__wedge_dot__sphere(Sphere self, Sphere other) {
     return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.y, 0.0) + vec2(self.g1.y) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g1.y) + vec4(self.g1.y) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector sphere__wedge_dot__transflector(Sphere self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.w, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.x) * other.g0, vec4(self.g0.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, 0.0) - vec4(self.g1.y, self.g1.y, self.g1.y, self.g1.x) * other.g1, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector sphere__wedge_dot__translator(Sphere self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + self.g1 * vec2(other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__wedge_dot__anti_scalar(Transflector self, AntiScalar other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0), vec2(self.g1.w) * vec2(0.0, other.g0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__wedge_dot__circle(Transflector self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g1.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g1.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g1.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, other.g1.x) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, other.g1.y) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, other.g1.z), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) + vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(other.g0.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, other.g0.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, other.g0.w) + vec3(self.g1.x) * vec3(0.0, other.g2.z, -other.g2.y) + vec3(self.g1.y) * vec3(-other.g2.z, 0.0, other.g2.x) + vec3(self.g1.z) * vec3(other.g2.y, -other.g2.x, 0.0) + vec3(self.g1.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__wedge_dot__dipole(Transflector self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g2.w) + vec3(self.g1.w) * other.g0, vec4(self.g0.x) * vec4(-other.g2.w, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g0.y) * vec4(-other.g1.z, -other.g2.w, other.g1.x, -other.g0.y) + vec4(self.g0.z) * vec4(other.g1.y, -other.g1.x, -other.g2.w, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g1.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g1.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.w) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.w) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g1.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g1.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g1.w) * vec2(0.0, -other.g2.w));
-}
-
-MultiVector transflector__wedge_dot__dual_num(Transflector self, DualNum other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.y), vec2(self.g1.w) * vec2(0.0, other.g0.y), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.y), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.x), vec2(self.g1.w) * vec2(0.0, other.g0.x));
-}
-
-MultiVector transflector__wedge_dot__flat_point(Transflector self, FlatPoint other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w));
-}
-
-MultiVector transflector__wedge_dot__flector(Transflector self, Flector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g1.x, 0.0) + vec2(self.g1.y) * vec2(-other.g1.y, 0.0) + vec2(self.g1.z) * vec2(-other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * vec3(other.g0.w, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, other.g0.w, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, other.g0.w), vec4(self.g0.x) * vec4(-other.g0.w, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, -other.g0.w, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, -other.g0.w, 0.0) + vec4(self.g1.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, 0.0) + vec4(self.g1.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w));
-}
-
-MultiVector transflector__wedge_dot__line(Transflector self, Line other) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__wedge_dot__motor(Transflector self, Motor other) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.x) * vec2(0.0, -other.g1.x) + vec2(self.g1.y) * vec2(0.0, -other.g1.y) + vec2(self.g1.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g0.w) + vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0) + vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__wedge_dot__multi_vector(Transflector self, MultiVector other) {
-    return MultiVector(vec2(0.0) - vec2(self.g0.x) * vec2(other.g3.x, other.g6.x) - vec2(self.g0.y) * vec2(other.g3.y, other.g6.y) - vec2(self.g0.z) * vec2(other.g3.z, other.g6.z) + vec2(self.g1.x) * vec2(-other.g9.x, other.g1.x) + vec2(self.g1.y) * vec2(-other.g9.y, other.g1.y) + vec2(self.g1.z) * vec2(-other.g9.z, other.g1.z) + vec2(self.g1.w) * vec2(other.g10.x, other.g2.x), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x) + vec3(self.g1.x) * vec3(-other.g0.y, -other.g7.z, other.g7.y) + vec3(self.g1.y) * vec3(other.g7.z, -other.g0.y, -other.g7.x) + vec3(self.g1.z) * vec3(-other.g7.y, other.g7.x, -other.g0.y) - vec3(self.g1.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec2(self.g0.x) * vec2(0.0, -other.g7.x) + vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g7.y) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g7.z) + vec2(self.g0.z) * vec2(0.0, -other.g1.z) + vec2(self.g1.x) * vec2(other.g6.x, -other.g8.x) + vec2(self.g1.y) * vec2(other.g6.y, -other.g8.y) + vec2(self.g1.z) * vec2(other.g6.z, -other.g8.z) + vec2(self.g1.w) * vec2(0.0, other.g6.w) + vec2(self.g1.w) * vec2(0.0, other.g0.y), vec3(self.g1.x) * vec3(-other.g10.x, -other.g3.z, other.g3.y) + vec3(self.g1.y) * vec3(other.g3.z, -other.g10.x, -other.g3.x) + vec3(self.g1.z) * vec3(-other.g3.y, other.g3.x, -other.g10.x), vec3(self.g0.x) * vec3(other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, other.g10.x) + vec3(self.g1.x) * vec3(other.g5.w, other.g9.z, -other.g9.y) + vec3(self.g1.y) * vec3(-other.g9.z, other.g5.w, other.g9.x) + vec3(self.g1.z) * vec3(other.g9.y, -other.g9.x, other.g5.w) + vec3(self.g1.w) * other.g3, vec4(self.g0.x) * vec4(-other.g5.w, -other.g9.z, other.g9.y, -other.g3.x) + vec4(self.g0.x) * vec4(other.g0.x, other.g4.z, -other.g4.y, 0.0) + vec4(self.g0.y) * vec4(other.g9.z, -other.g5.w, -other.g9.x, -other.g3.y) + vec4(self.g0.y) * vec4(-other.g4.z, other.g0.x, other.g4.x, 0.0) + vec4(self.g0.z) * vec4(-other.g9.y, other.g9.x, -other.g5.w, -other.g3.z) + vec4(self.g0.z) * vec4(other.g4.y, -other.g4.x, other.g0.x, 0.0) + vec4(self.g1.x) * vec4(other.g10.y, other.g5.z, -other.g5.y, -other.g4.x) + vec4(self.g1.y) * vec4(-other.g5.z, other.g10.y, other.g5.x, -other.g4.y) + vec4(self.g1.z) * vec4(other.g5.y, -other.g5.x, other.g10.y, -other.g4.z) + vec4(self.g1.w) * vec4(-other.g9.x, -other.g9.y, -other.g9.z, other.g10.x) + vec4(self.g1.w) * vec4(other.g4.x, other.g4.y, other.g4.z, 0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g6.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g6.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g6.z) + vec4(self.g1.x) * vec4(-other.g2.x, -other.g6.z, other.g6.y, other.g7.x) + vec4(self.g1.y) * vec4(other.g6.z, -other.g2.x, -other.g6.x, other.g7.y) + vec4(self.g1.z) * vec4(-other.g6.y, other.g6.x, -other.g2.x, other.g7.z) + vec4(self.g1.w) * vec4(0.0, 0.0, 0.0, -other.g2.x), vec3(self.g0.x) * vec3(other.g2.x, other.g6.z, -other.g6.y) + vec3(self.g0.y) * vec3(-other.g6.z, other.g2.x, other.g6.x) + vec3(self.g0.z) * vec3(other.g6.y, -other.g6.x, other.g2.x) + vec3(self.g1.x) * vec3(-other.g6.w, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, -other.g6.w, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, -other.g6.w) + vec3(self.g1.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0.x) * vec3(other.g6.w, other.g7.z, -other.g7.y) + vec3(self.g0.x) * vec3(other.g0.y, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g7.z, other.g6.w, other.g7.x) + vec3(self.g0.y) * vec3(-other.g1.z, other.g0.y, other.g1.x) + vec3(self.g0.z) * vec3(other.g7.y, -other.g7.x, other.g6.w) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, other.g0.y) + vec3(self.g1.x) * vec3(other.g2.y, other.g8.z, -other.g8.y) + vec3(self.g1.y) * vec3(-other.g8.z, other.g2.y, other.g8.x) + vec3(self.g1.z) * vec3(other.g8.y, -other.g8.x, other.g2.y) + vec3(self.g1.w) * other.g7 + vec3(self.g1.w) * other.g1, vec3(self.g0.x) * vec3(other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, other.g10.x) + vec3(self.g1.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g1.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g1.z) * vec3(other.g4.y, -other.g4.x, other.g0.x) + vec3(self.g1.w) * other.g3, vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g1.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g1.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g1.z) * vec2(other.g3.z, -other.g5.z) + vec2(self.g1.w) * vec2(0.0, -other.g5.w) + vec2(self.g1.w) * vec2(0.0, other.g0.x));
-}
-
-MultiVector transflector__wedge_dot__plane(Transflector self, Plane other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g0.x, 0.0) + vec2(self.g1.y) * vec2(-other.g0.y, 0.0) + vec2(self.g1.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + self.g1.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
-}
-
-MultiVector transflector__wedge_dot__rotor(Transflector self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x) * vec3(-other.g0.w, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, -other.g0.w, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, -other.g0.w), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g0.z), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.w, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, other.g0.w, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, other.g0.w) + vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__wedge_dot__round_point(Transflector self, RoundPoint other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g1.w) * vec2(0.0, other.g1.x), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g1 * vec4(other.g1.x), self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.y) + vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-Transflector transflector__wedge_dot__scalar(Transflector self, Scalar other) {
-    return Transflector(self.g0 * vec3(other.g0), self.g1 * vec4(other.g0));
-}
-
-MultiVector transflector__wedge_dot__sphere(Transflector self, Sphere other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g0.x, 0.0) + vec2(self.g1.y) * vec2(-other.g0.y, 0.0) + vec2(self.g1.z) * vec2(-other.g0.z, 0.0) + vec2(self.g1.w) * vec2(other.g1.x, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.x), self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + self.g1.xyzx * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, other.g1.x), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
-}
-
-MultiVector transflector__wedge_dot__transflector(Transflector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g1.x, 0.0) + vec2(self.g1.y) * vec2(-other.g1.y, 0.0) + vec2(self.g1.z) * vec2(-other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.w, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, other.g1.w, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, other.g1.w, 0.0) + vec4(self.g1.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector transflector__wedge_dot__translator(Transflector self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__anti_scalar(Translator self, AntiScalar other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0.xyzx * vec4(-other.g0, -other.g0, -other.g0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__circle(Translator self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g0.x, 0.0) + vec2(self.g0.y) * vec2(other.g0.y, 0.0) + vec2(self.g0.z) * vec2(other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g0.w) * other.g1, vec4(self.g0.x) * vec4(-other.g0.w, -other.g1.z, other.g1.y, other.g0.x) + vec4(self.g0.y) * vec4(other.g1.z, -other.g0.w, -other.g1.x, other.g0.y) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, -other.g0.w, other.g0.z) + vec4(self.g0.w) * vec4(-other.g2.x, -other.g2.y, -other.g2.z, other.g0.w), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
-}
-
-MultiVector translator__wedge_dot__dipole(Translator self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, -other.g2.w), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + vec3(self.g0.w) * other.g1, vec3(self.g0.x) * vec3(-other.g2.w, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, -other.g2.w, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, -other.g2.w) + vec3(self.g0.w) * vec3(other.g2.x, other.g2.y, other.g2.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__dual_num(Translator self, DualNum other) {
-    return MultiVector(vec2(self.g0.w) * other.g0.yx * vec2(-1.0, 1.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0.xyzx * vec4(-other.g0.y, -other.g0.y, -other.g0.y, 0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec3(0.0), vec2(0.0));
-}
-
-Circle translator__wedge_dot__flat_point(Translator self, FlatPoint other) {
-    return Circle(vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
-}
-
-MultiVector translator__wedge_dot__flector(Translator self, Flector other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * vec4(0.0, 0.0, 0.0, -other.g0.w), vec3(0.0), vec3(self.g0.x) * vec3(-other.g0.w, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, -other.g0.w, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, -other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__line(Translator self, Line other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.w) * other.g0, vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g0.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
-}
-
-MultiVector translator__wedge_dot__motor(Translator self, Motor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(-other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, -other.g0.w, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, -other.g0.w, 0.0) + vec4(self.g0.w) * vec4(-other.g1.x, -other.g1.y, -other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
-}
-
-MultiVector translator__wedge_dot__multi_vector(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(other.g6.x, -other.g3.x) + vec2(self.g0.y) * vec2(other.g6.y, -other.g3.y) + vec2(self.g0.z) * vec2(other.g6.z, -other.g3.z) + vec2(self.g0.w) * other.g0.yx * vec2(-1.0, 1.0), vec3(self.g0.x) * vec3(-other.g10.x, -other.g3.z, other.g3.y) + vec3(self.g0.y) * vec3(other.g3.z, -other.g10.x, -other.g3.x) + vec3(self.g0.z) * vec3(-other.g3.y, other.g3.x, -other.g10.x) - vec3(self.g0.w) * other.g9, vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g0.w) * other.g10, vec3(0.0) - vec3(self.g0.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x) - vec3(self.g0.w) * other.g7, vec4(self.g0.x) * vec4(-other.g6.w, -other.g7.z, other.g7.y, other.g6.x) + vec4(self.g0.x) * vec4(-other.g0.y, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g7.z, -other.g6.w, -other.g7.x, other.g6.y) + vec4(self.g0.y) * vec4(other.g1.z, -other.g0.y, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g7.y, other.g7.x, -other.g6.w, other.g6.z) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, -other.g0.y, 0.0) + vec4(self.g0.w) * vec4(-other.g8.x, -other.g8.y, -other.g8.z, other.g6.w), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g3.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g3.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g3.z) + vec4(self.g0.w) * vec4(other.g3.x, other.g3.y, other.g3.z, -other.g5.w), vec3(self.g0.x) * vec3(other.g10.x, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, other.g10.x, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, other.g10.x) + vec3(self.g0.w) * other.g4, vec3(self.g0.x) * vec3(-other.g5.w, -other.g9.z, other.g9.y) + vec3(self.g0.x) * vec3(other.g0.x, other.g4.z, -other.g4.y) + vec3(self.g0.y) * vec3(other.g9.z, -other.g5.w, -other.g9.x) + vec3(self.g0.y) * vec3(-other.g4.z, other.g0.x, other.g4.x) + vec3(self.g0.z) * vec3(-other.g9.y, other.g9.x, -other.g5.w) + vec3(self.g0.z) * vec3(other.g4.y, -other.g4.x, other.g0.x) + vec3(self.g0.w) * vec3(other.g5.x, other.g5.y, other.g5.z), vec3(self.g0.x) * vec3(-other.g2.x, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, -other.g2.x, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, -other.g2.x) + vec3(self.g0.w) * other.g1, vec2(self.g0.x) * vec2(0.0, other.g7.x) + vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g7.y) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g7.z) + vec2(self.g0.z) * vec2(0.0, other.g1.z) - vec2(self.g0.w) * other.g2);
-}
-
-MultiVector translator__wedge_dot__plane(Translator self, Plane other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__rotor(Translator self, Rotor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(-other.g0.w, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, -other.g0.w, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, -other.g0.w, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z));
-}
-
-MultiVector translator__wedge_dot__round_point(Translator self, RoundPoint other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) + vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) - vec2(self.g0.w) * other.g1);
-}
-
-Translator translator__wedge_dot__scalar(Translator self, Scalar other) {
-    return Translator(self.g0 * vec4(other.g0));
-}
-
-MultiVector translator__wedge_dot__sphere(Translator self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x) - vec3(self.g0.w) * other.g0, vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__transflector(Translator self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__wedge_dot__translator(Translator self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(-other.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g0.xyzx * vec4(-other.g0.w, -other.g0.w, -other.g0.w, 0.0) + vec4(self.g0.w) * vec4(-other.g0.x, -other.g0.y, -other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 AntiScalar anti_scalar__anti_wedge__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -4767,10 +3250,6 @@ Plane anti_scalar__anti_wedge__plane(AntiScalar self, Plane other) {
     return Plane(vec4(self.g0) * other.g0);
 }
 
-Rotor anti_scalar__anti_wedge__rotor(AntiScalar self, Rotor other) {
-    return Rotor(vec4(self.g0) * other.g0);
-}
-
 RoundPoint anti_scalar__anti_wedge__round_point(AntiScalar self, RoundPoint other) {
     return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
@@ -4781,14 +3260,6 @@ Scalar anti_scalar__anti_wedge__scalar(AntiScalar self, Scalar other) {
 
 Sphere anti_scalar__anti_wedge__sphere(AntiScalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
-}
-
-Transflector anti_scalar__anti_wedge__transflector(AntiScalar self, Transflector other) {
-    return Transflector(vec3(self.g0) * other.g0, vec4(self.g0) * other.g1);
-}
-
-Translator anti_scalar__anti_wedge__translator(AntiScalar self, Translator other) {
-    return Translator(vec4(self.g0) * other.g0);
 }
 
 Circle circle__anti_wedge__anti_scalar(Circle self, AntiScalar other) {
@@ -4831,20 +3302,8 @@ Dipole circle__anti_wedge__plane(Circle self, Plane other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g1.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0));
 }
 
-MultiVector circle__anti_wedge__rotor(Circle self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, -other.g0.x) + vec2(self.g2.y) * vec2(0.0, -other.g0.y) + vec2(self.g2.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), self.g0 * vec4(other.g0.w), self.g1 * vec3(other.g0.w), self.g2 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 Dipole circle__anti_wedge__sphere(Circle self, Sphere other) {
     return Dipole(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g1 * vec3(other.g1.x), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0 + self.g2 * vec3(other.g1.x), vec4(self.g1.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g2.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g2.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g2.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0));
-}
-
-MultiVector circle__anti_wedge__transflector(Circle self, Transflector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.w) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g1.x) * vec4(other.g1.w, 0.0, 0.0, -other.g1.x) + vec4(self.g1.y) * vec4(0.0, other.g1.w, 0.0, -other.g1.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.w, -other.g1.z) + vec4(self.g2.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g2.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g2.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector circle__anti_wedge__translator(Circle self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), self.g0 * vec4(other.g0.w), self.g1 * vec3(other.g0.w), self.g2 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
 }
 
 Dipole dipole__anti_wedge__anti_scalar(Dipole self, AntiScalar other) {
@@ -4879,20 +3338,8 @@ RoundPoint dipole__anti_wedge__plane(Dipole self, Plane other) {
     return RoundPoint(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * vec2(0.0, other.g0.w));
 }
 
-MultiVector dipole__anti_wedge__rotor(Dipole self, Rotor other) {
-    return MultiVector(vec2(self.g1.x) * vec2(-other.g0.x, 0.0) + vec2(self.g1.y) * vec2(-other.g0.y, 0.0) + vec2(self.g1.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g0.w), self.g1 * vec3(other.g0.w), self.g2 * vec4(other.g0.w), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 RoundPoint dipole__anti_wedge__sphere(Dipole self, Sphere other) {
     return RoundPoint(self.g0 * vec3(other.g1.y) + vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g0.x) + vec2(self.g2.y) * vec2(0.0, other.g0.y) + vec2(self.g2.z) * vec2(0.0, other.g0.z) + vec2(self.g2.w) * other.g1 * vec2(-1.0, 1.0));
-}
-
-RoundPoint dipole__anti_wedge__transflector(Dipole self, Transflector other) {
-    return RoundPoint(self.g0 * vec3(other.g1.w) + vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0), vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0) + vec2(self.g2.x) * vec2(0.0, other.g1.x) + vec2(self.g2.y) * vec2(0.0, other.g1.y) + vec2(self.g2.z) * vec2(0.0, other.g1.z) + vec2(self.g2.w) * vec2(0.0, other.g1.w));
-}
-
-MultiVector dipole__anti_wedge__translator(Dipole self, Translator other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g0.w), self.g1 * vec3(other.g0.w), self.g2 * vec4(other.g0.w), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 DualNum dual_num__anti_wedge__anti_scalar(DualNum self, AntiScalar other) {
@@ -4935,10 +3382,6 @@ Plane dual_num__anti_wedge__plane(DualNum self, Plane other) {
     return Plane(vec4(self.g0.y) * other.g0);
 }
 
-MultiVector dual_num__anti_wedge__rotor(DualNum self, Rotor other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 RoundPoint dual_num__anti_wedge__round_point(DualNum self, RoundPoint other) {
     return RoundPoint(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
 }
@@ -4949,14 +3392,6 @@ Scalar dual_num__anti_wedge__scalar(DualNum self, Scalar other) {
 
 Sphere dual_num__anti_wedge__sphere(DualNum self, Sphere other) {
     return Sphere(vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
-}
-
-Transflector dual_num__anti_wedge__transflector(DualNum self, Transflector other) {
-    return Transflector(vec3(self.g0.y) * other.g0, vec4(self.g0.y) * other.g1);
-}
-
-MultiVector dual_num__anti_wedge__translator(DualNum self, Translator other) {
-    return MultiVector(self.g0 * vec2(other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 FlatPoint flat_point__anti_wedge__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -4987,20 +3422,8 @@ RoundPoint flat_point__anti_wedge__plane(FlatPoint self, Plane other) {
     return RoundPoint(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w));
 }
 
-FlatPoint flat_point__anti_wedge__rotor(FlatPoint self, Rotor other) {
-    return FlatPoint(self.g0 * vec4(other.g0.w));
-}
-
 RoundPoint flat_point__anti_wedge__sphere(FlatPoint self, Sphere other) {
     return RoundPoint(vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0));
-}
-
-RoundPoint flat_point__anti_wedge__transflector(FlatPoint self, Transflector other) {
-    return RoundPoint(vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w));
-}
-
-FlatPoint flat_point__anti_wedge__translator(FlatPoint self, Translator other) {
-    return FlatPoint(self.g0 * vec4(other.g0.w));
 }
 
 Flector flector__anti_wedge__anti_scalar(Flector self, AntiScalar other) {
@@ -5043,24 +3466,12 @@ MultiVector flector__anti_wedge__plane(Flector self, Plane other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
-Flector flector__anti_wedge__rotor(Flector self, Rotor other) {
-    return Flector(self.g0 * vec4(other.g0.w) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g1.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0), self.g1 * vec4(other.g0.w));
-}
-
 Scalar flector__anti_wedge__round_point(Flector self, RoundPoint other) {
     return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z + self.g1.w * other.g1.x);
 }
 
 MultiVector flector__anti_wedge__sphere(Flector self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z) + vec2(self.g0.w) * other.g1 * vec2(-1.0, 1.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g1 * vec4(other.g1.x), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.y) - vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector flector__anti_wedge__transflector(Flector self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g0.w) * vec2(0.0, other.g1.w) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.w) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Flector flector__anti_wedge__translator(Flector self, Translator other) {
-    return Flector(self.g0 * vec4(other.g0.w) + vec4(self.g1.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g1.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g1.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), self.g1 * vec4(other.g0.w));
 }
 
 Line line__anti_wedge__anti_scalar(Line self, AntiScalar other) {
@@ -5099,20 +3510,8 @@ FlatPoint line__anti_wedge__plane(Line self, Plane other) {
     return FlatPoint(vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0));
 }
 
-MultiVector line__anti_wedge__rotor(Line self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.w), self.g1 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 Dipole line__anti_wedge__sphere(Line self, Sphere other) {
     return Dipole(self.g0 * vec3(other.g1.x), self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0));
-}
-
-FlatPoint line__anti_wedge__transflector(Line self, Transflector other) {
-    return FlatPoint(vec4(self.g0.x) * vec4(other.g1.w, 0.0, 0.0, -other.g1.x) + vec4(self.g0.y) * vec4(0.0, other.g1.w, 0.0, -other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.w, -other.g1.z) + vec4(self.g1.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g1.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g1.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0));
-}
-
-MultiVector line__anti_wedge__translator(Line self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), self.g0 * vec3(other.g0.w), self.g1 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
 }
 
 Motor motor__anti_wedge__anti_scalar(Motor self, AntiScalar other) {
@@ -5155,10 +3554,6 @@ Flector motor__anti_wedge__plane(Motor self, Plane other) {
     return Flector(vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g0.w) * other.g0);
 }
 
-MultiVector motor__anti_wedge__rotor(Motor self, Rotor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g1 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
-}
-
 RoundPoint motor__anti_wedge__round_point(Motor self, RoundPoint other) {
     return RoundPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
 }
@@ -5169,14 +3564,6 @@ Scalar motor__anti_wedge__scalar(Motor self, Scalar other) {
 
 MultiVector motor__anti_wedge__sphere(Motor self, Sphere other) {
     return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), self.g1 * vec3(other.g1.x), vec4(self.g0.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g1.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g1.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g1.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
-}
-
-Flector motor__anti_wedge__transflector(Motor self, Transflector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, 0.0, 0.0, -other.g1.x) + vec4(self.g0.y) * vec4(0.0, other.g1.w, 0.0, -other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.w, -other.g1.z) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g1.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g1.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g1.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(self.g0.w) * other.g1);
-}
-
-MultiVector motor__anti_wedge__translator(Motor self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g1 * vec3(other.g0.w), vec3(0.0), vec2(0.0));
 }
 
 MultiVector multi_vector__anti_wedge__anti_scalar(MultiVector self, AntiScalar other) {
@@ -5219,10 +3606,6 @@ MultiVector multi_vector__anti_wedge__plane(MultiVector self, Plane other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(other.g0.w, 0.0), self.g3 * vec3(other.g0.w) + vec3(self.g4.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g4.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g4.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * vec2(0.0, other.g0.w), vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g0.w) - vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g7.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g10.x) * other.g0, vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g9 * vec3(other.g0.w) - vec3(self.g10.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.y) * vec2(0.0, other.g0.w));
 }
 
-MultiVector multi_vector__anti_wedge__rotor(MultiVector self, Rotor other) {
-    return MultiVector(self.g0 * vec2(other.g0.w) + vec2(self.g4.x) * vec2(-other.g0.x, 0.0) + vec2(self.g4.y) * vec2(-other.g0.y, 0.0) + vec2(self.g4.z) * vec2(-other.g0.z, 0.0), self.g1 * vec3(other.g0.w) + vec3(self.g6.w) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g2 * vec2(other.g0.w) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g8.x) * vec2(0.0, -other.g0.x) + vec2(self.g8.y) * vec2(0.0, -other.g0.y) + vec2(self.g8.z) * vec2(0.0, -other.g0.z), self.g3 * vec3(other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g4 * vec3(other.g0.w), self.g5 * vec4(other.g0.w) + vec4(self.g9.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g9.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g9.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g10.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g6 * vec4(other.g0.w), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g7 * vec3(other.g0.w), self.g8 * vec3(other.g0.w), self.g9 * vec3(other.g0.w), self.g10 * vec2(other.g0.w));
-}
-
 MultiVector multi_vector__anti_wedge__round_point(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g9.x) * vec2(other.g0.x, 0.0) + vec2(self.g9.y) * vec2(other.g0.y, 0.0) + vec2(self.g9.z) * vec2(other.g0.z, 0.0) + vec2(self.g10.x) * vec2(other.g1.y, 0.0) + vec2(self.g10.y) * vec2(other.g1.x, 0.0), vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1, vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
@@ -5233,14 +3616,6 @@ Scalar multi_vector__anti_wedge__scalar(MultiVector self, Scalar other) {
 
 MultiVector multi_vector__anti_wedge__sphere(MultiVector self, Sphere other) {
     return MultiVector(vec2(self.g1.x) * vec2(other.g0.x, 0.0) + vec2(self.g1.y) * vec2(other.g0.y, 0.0) + vec2(self.g1.z) * vec2(other.g0.z, 0.0) + vec2(self.g2.x) * vec2(other.g1.y, 0.0) + vec2(self.g2.y) * vec2(other.g1.x, 0.0), self.g3 * vec3(other.g1.y) + vec3(self.g4.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g4.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g4.z) * vec3(-other.g0.y, other.g0.x, 0.0) - vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x), vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g0.x) + vec2(self.g5.y) * vec2(0.0, other.g0.y) + vec2(self.g5.z) * vec2(0.0, other.g0.z) + vec2(self.g5.w) * other.g1 * vec2(-1.0, 1.0), vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0) + self.g7 * vec3(other.g1.x), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) - vec3(self.g6.w) * other.g0 + self.g8 * vec3(other.g1.x), vec4(self.g7.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g7.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z) + vec4(self.g8.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g8.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g8.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(self.g9.x, self.g9.y, self.g9.z, self.g9.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g10.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g10.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g9.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g9.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g9.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g9 * vec3(other.g1.y) - vec3(self.g10.y) * other.g0, vec3(self.g0.y) * other.g0, vec2(self.g0.y) * other.g1);
-}
-
-MultiVector multi_vector__anti_wedge__transflector(MultiVector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(other.g1.x, 0.0) + vec2(self.g1.y) * vec2(other.g1.y, 0.0) + vec2(self.g1.z) * vec2(other.g1.z, 0.0) + vec2(self.g2.x) * vec2(other.g1.w, 0.0) + vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0), self.g3 * vec3(other.g1.w) + vec3(self.g4.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g4.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g4.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g10.x) * other.g0, vec2(self.g3.x) * vec2(-other.g1.x, 0.0) + vec2(self.g3.y) * vec2(-other.g1.y, 0.0) + vec2(self.g3.z) * vec2(-other.g1.z, 0.0) + vec2(self.g5.x) * vec2(0.0, other.g1.x) + vec2(self.g5.y) * vec2(0.0, other.g1.y) + vec2(self.g5.z) * vec2(0.0, other.g1.z) + vec2(self.g5.w) * vec2(0.0, other.g1.w) + vec2(self.g9.x) * vec2(0.0, -other.g0.x) + vec2(self.g9.y) * vec2(0.0, -other.g0.y) + vec2(self.g9.z) * vec2(0.0, -other.g0.z), vec3(self.g6.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g6.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g6.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.w) - vec3(self.g6.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec4(self.g0.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0) + vec4(self.g7.x) * vec4(other.g1.w, 0.0, 0.0, -other.g1.x) + vec4(self.g7.y) * vec4(0.0, other.g1.w, 0.0, -other.g1.y) + vec4(self.g7.z) * vec4(0.0, 0.0, other.g1.w, -other.g1.z) + vec4(self.g8.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g8.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g8.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0), vec4(self.g10.x) * other.g1, vec3(self.g9.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g9.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g9.z) * vec3(other.g1.y, -other.g1.x, 0.0), self.g9 * vec3(other.g1.w) - vec3(self.g10.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(self.g0.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec2(self.g0.y) * vec2(0.0, other.g1.w));
-}
-
-MultiVector multi_vector__anti_wedge__translator(MultiVector self, Translator other) {
-    return MultiVector(self.g0 * vec2(other.g0.w) + vec2(self.g3.x) * vec2(-other.g0.x, 0.0) + vec2(self.g3.y) * vec2(-other.g0.y, 0.0) + vec2(self.g3.z) * vec2(-other.g0.z, 0.0), self.g1 * vec3(other.g0.w) + vec3(self.g6.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g6.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g6.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g2 * vec2(other.g0.w) + vec2(self.g7.x) * vec2(0.0, -other.g0.x) + vec2(self.g7.y) * vec2(0.0, -other.g0.y) + vec2(self.g7.z) * vec2(0.0, -other.g0.z), self.g3 * vec3(other.g0.w), self.g4 * vec3(other.g0.w) + vec3(self.g10.x) * vec3(other.g0.x, other.g0.y, other.g0.z), self.g5 * vec4(other.g0.w) + vec4(self.g9.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g9.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g9.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), self.g6 * vec4(other.g0.w), self.g7 * vec3(other.g0.w), vec3(self.g0.y) * vec3(other.g0.x, other.g0.y, other.g0.z) + self.g8 * vec3(other.g0.w), self.g9 * vec3(other.g0.w), self.g10 * vec2(other.g0.w));
 }
 
 Plane plane__anti_wedge__anti_scalar(Plane self, AntiScalar other) {
@@ -5283,88 +3658,12 @@ Line plane__anti_wedge__plane(Plane self, Plane other) {
     return Line(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) - vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
-Flector plane__anti_wedge__rotor(Plane self, Rotor other) {
-    return Flector(vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g0.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0), self.g0 * vec4(other.g0.w));
-}
-
 Scalar plane__anti_wedge__round_point(Plane self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g0.w * other.g1.x);
 }
 
 Circle plane__anti_wedge__sphere(Plane self, Sphere other) {
     return Circle(vec4(0.0) - self.g0 * vec4(other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.y) - vec3(self.g0.w) * other.g0);
-}
-
-MultiVector plane__anti_wedge__transflector(Plane self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.w) - vec3(self.g0.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Transflector plane__anti_wedge__translator(Plane self, Translator other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0 * vec4(other.g0.w));
-}
-
-Rotor rotor__anti_wedge__anti_scalar(Rotor self, AntiScalar other) {
-    return Rotor(self.g0 * vec4(other.g0));
-}
-
-MultiVector rotor__anti_wedge__circle(Rotor self, Circle other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec2(0.0) - vec2(self.g0.x) * vec2(other.g0.x, other.g2.x) - vec2(self.g0.y) * vec2(other.g0.y, other.g2.y) - vec2(self.g0.z) * vec2(other.g0.z, other.g2.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1, vec3(self.g0.w) * other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge__dipole(Rotor self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g1.x, 0.0) + vec2(self.g0.y) * vec2(-other.g1.y, 0.0) + vec2(self.g0.z) * vec2(-other.g1.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1, vec4(self.g0.w) * other.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge__dual_num(Rotor self, DualNum other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-FlatPoint rotor__anti_wedge__flat_point(Rotor self, FlatPoint other) {
-    return FlatPoint(vec4(self.g0.w) * other.g0);
-}
-
-Flector rotor__anti_wedge__flector(Rotor self, Flector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, 0.0, 0.0, -other.g1.x) + vec4(self.g0.y) * vec4(0.0, other.g1.w, 0.0, -other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.w, -other.g1.z) + vec4(self.g0.w) * other.g0, vec4(self.g0.w) * other.g1);
-}
-
-MultiVector rotor__anti_wedge__line(Rotor self, Line other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge__motor(Rotor self, Motor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector rotor__anti_wedge__multi_vector(Rotor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g4.x, 0.0) + vec2(self.g0.y) * vec2(-other.g4.y, 0.0) + vec2(self.g0.z) * vec2(-other.g4.z, 0.0) + vec2(self.g0.w) * other.g0, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g6.w) + vec3(self.g0.w) * other.g1, vec2(0.0) - vec2(self.g0.x) * vec2(other.g6.x, other.g8.x) - vec2(self.g0.y) * vec2(other.g6.y, other.g8.y) - vec2(self.g0.z) * vec2(other.g6.z, other.g8.z) + vec2(self.g0.w) * other.g2, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g10.x) + vec3(self.g0.w) * other.g3, vec3(self.g0.w) * other.g4, vec4(self.g0.x) * vec4(other.g10.y, 0.0, 0.0, -other.g9.x) + vec4(self.g0.y) * vec4(0.0, other.g10.y, 0.0, -other.g9.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g10.y, -other.g9.z) + vec4(self.g0.w) * other.g5, vec4(self.g0.w) * other.g6, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y) + vec3(self.g0.w) * other.g7, vec3(self.g0.w) * other.g8, vec3(self.g0.w) * other.g9, vec2(self.g0.w) * other.g10);
-}
-
-Flector rotor__anti_wedge__plane(Rotor self, Plane other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g0.w, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g0.w, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g0.w, -other.g0.z), vec4(self.g0.w) * other.g0);
-}
-
-Rotor rotor__anti_wedge__rotor(Rotor self, Rotor other) {
-    return Rotor(self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0);
-}
-
-RoundPoint rotor__anti_wedge__round_point(Rotor self, RoundPoint other) {
-    return RoundPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
-}
-
-Scalar rotor__anti_wedge__scalar(Rotor self, Scalar other) {
-    return Scalar(self.g0.w * other.g0);
-}
-
-MultiVector rotor__anti_wedge__sphere(Rotor self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec3(0.0), vec4(self.g0.x) * vec4(other.g1.y, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, other.g1.y, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.y, -other.g0.z), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
-}
-
-Flector rotor__anti_wedge__transflector(Rotor self, Transflector other) {
-    return Flector(vec4(self.g0.x) * vec4(other.g1.w, 0.0, 0.0, -other.g1.x) + vec4(self.g0.y) * vec4(0.0, other.g1.w, 0.0, -other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, other.g1.w, -other.g1.z) + vec4(self.g0.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(self.g0.w) * other.g1);
-}
-
-MultiVector rotor__anti_wedge__translator(Rotor self, Translator other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
 }
 
 RoundPoint round_point__anti_wedge__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -5391,20 +3690,8 @@ Scalar round_point__anti_wedge__plane(RoundPoint self, Plane other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
-RoundPoint round_point__anti_wedge__rotor(RoundPoint self, Rotor other) {
-    return RoundPoint(self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
-}
-
 Scalar round_point__anti_wedge__sphere(RoundPoint self, Sphere other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
-}
-
-Scalar round_point__anti_wedge__transflector(RoundPoint self, Transflector other) {
-    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g1.w);
-}
-
-RoundPoint round_point__anti_wedge__translator(RoundPoint self, Translator other) {
-    return RoundPoint(self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
 }
 
 Scalar scalar__anti_wedge__anti_scalar(Scalar self, AntiScalar other) {
@@ -5421,14 +3708,6 @@ Scalar scalar__anti_wedge__motor(Scalar self, Motor other) {
 
 Scalar scalar__anti_wedge__multi_vector(Scalar self, MultiVector other) {
     return Scalar(self.g0 * other.g0.y);
-}
-
-Scalar scalar__anti_wedge__rotor(Scalar self, Rotor other) {
-    return Scalar(self.g0 * other.g0.w);
-}
-
-Scalar scalar__anti_wedge__translator(Scalar self, Translator other) {
-    return Scalar(self.g0 * other.g0.w);
 }
 
 Sphere sphere__anti_wedge__anti_scalar(Sphere self, AntiScalar other) {
@@ -5471,148 +3750,12 @@ Circle sphere__anti_wedge__plane(Sphere self, Plane other) {
     return Circle(vec4(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0 * vec3(other.g0.w) - vec3(self.g1.y) * vec3(other.g0.x, other.g0.y, other.g0.z));
 }
 
-MultiVector sphere__anti_wedge__rotor(Sphere self, Rotor other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
-}
-
 Scalar sphere__anti_wedge__round_point(Sphere self, RoundPoint other) {
     return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
 Circle sphere__anti_wedge__sphere(Sphere self, Sphere other) {
     return Circle(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(-other.g1.x, -other.g1.x, -other.g1.x, 0.0) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.y) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g0 * vec3(other.g1.y) - vec3(self.g1.y) * other.g0);
-}
-
-MultiVector sphere__anti_wedge__transflector(Sphere self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x) * other.g0, vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g1.x) * other.g1, vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), self.g0 * vec3(other.g1.w) - vec3(self.g1.y) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-MultiVector sphere__anti_wedge__translator(Sphere self, Translator other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g1.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), self.g0 * vec3(other.g0.w), self.g1 * vec2(other.g0.w));
-}
-
-Transflector transflector__anti_wedge__anti_scalar(Transflector self, AntiScalar other) {
-    return Transflector(self.g0 * vec3(other.g0), self.g1 * vec4(other.g0));
-}
-
-MultiVector transflector__anti_wedge__circle(Transflector self, Circle other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) + vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec4(self.g1.x) * vec4(0.0, other.g2.z, -other.g2.y, -other.g1.x) + vec4(self.g1.y) * vec4(-other.g2.z, 0.0, other.g2.x, -other.g1.y) + vec4(self.g1.z) * vec4(other.g2.y, -other.g2.x, 0.0, -other.g1.z) + vec4(self.g1.w) * vec4(other.g1.x, other.g1.y, other.g1.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-RoundPoint transflector__anti_wedge__dipole(Transflector self, Dipole other) {
-    return RoundPoint(vec3(self.g1.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g1.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g1.z) * vec3(-other.g1.y, other.g1.x, 0.0) - vec3(self.g1.w) * other.g0, vec2(self.g1.x) * vec2(other.g0.x, -other.g2.x) + vec2(self.g1.y) * vec2(other.g0.y, -other.g2.y) + vec2(self.g1.z) * vec2(other.g0.z, -other.g2.z) + vec2(self.g1.w) * vec2(0.0, -other.g2.w));
-}
-
-Transflector transflector__anti_wedge__dual_num(Transflector self, DualNum other) {
-    return Transflector(self.g0 * vec3(other.g0.y), self.g1 * vec4(other.g0.y));
-}
-
-RoundPoint transflector__anti_wedge__flat_point(Transflector self, FlatPoint other) {
-    return RoundPoint(vec3(0.0), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w));
-}
-
-MultiVector transflector__anti_wedge__flector(Transflector self, Flector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z) + vec2(self.g1.w) * vec2(0.0, -other.g0.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.w) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-FlatPoint transflector__anti_wedge__line(Transflector self, Line other) {
-    return FlatPoint(vec4(self.g1.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g1.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g1.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0));
-}
-
-Flector transflector__anti_wedge__motor(Transflector self, Motor other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.x) * vec4(0.0, other.g1.z, -other.g1.y, -other.g0.x) + vec4(self.g1.y) * vec4(-other.g1.z, 0.0, other.g1.x, -other.g0.y) + vec4(self.g1.z) * vec4(other.g1.y, -other.g1.x, 0.0, -other.g0.z) + vec4(self.g1.w) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), self.g1 * vec4(other.g0.w));
-}
-
-MultiVector transflector__anti_wedge__multi_vector(Transflector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g6.x, 0.0) + vec2(self.g0.y) * vec2(-other.g6.y, 0.0) + vec2(self.g0.z) * vec2(-other.g6.z, 0.0) + vec2(self.g1.x) * vec2(other.g1.x, 0.0) + vec2(self.g1.y) * vec2(other.g1.y, 0.0) + vec2(self.g1.z) * vec2(other.g1.z, 0.0) + vec2(self.g1.w) * vec2(other.g2.x, 0.0), vec3(0.0) - self.g0 * vec3(other.g10.x) + vec3(self.g1.x) * vec3(0.0, -other.g4.z, other.g4.y) + vec3(self.g1.y) * vec3(other.g4.z, 0.0, -other.g4.x) + vec3(self.g1.z) * vec3(-other.g4.y, other.g4.x, 0.0) - vec3(self.g1.w) * other.g3, vec2(self.g0.x) * vec2(0.0, other.g9.x) + vec2(self.g0.y) * vec2(0.0, other.g9.y) + vec2(self.g0.z) * vec2(0.0, other.g9.z) + vec2(self.g1.x) * vec2(other.g3.x, -other.g5.x) + vec2(self.g1.y) * vec2(other.g3.y, -other.g5.y) + vec2(self.g1.z) * vec2(other.g3.z, -other.g5.z) + vec2(self.g1.w) * vec2(0.0, -other.g5.w), vec3(self.g1.x) * vec3(0.0, -other.g6.z, other.g6.y) + vec3(self.g1.y) * vec3(other.g6.z, 0.0, -other.g6.x) + vec3(self.g1.z) * vec3(-other.g6.y, other.g6.x, 0.0), vec3(0.0) - vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g6.w) + vec3(self.g1.w) * vec3(other.g6.x, other.g6.y, other.g6.z), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.y, other.g0.y, other.g0.y, 0.0) + vec4(self.g1.x) * vec4(0.0, other.g8.z, -other.g8.y, -other.g7.x) + vec4(self.g1.y) * vec4(-other.g8.z, 0.0, other.g8.x, -other.g7.y) + vec4(self.g1.z) * vec4(other.g8.y, -other.g8.x, 0.0, -other.g7.z) + vec4(self.g1.w) * vec4(other.g7.x, other.g7.y, other.g7.z, 0.0), vec4(0.0) - self.g1 * vec4(other.g10.x), vec3(self.g1.x) * vec3(0.0, other.g9.z, -other.g9.y) + vec3(self.g1.y) * vec3(-other.g9.z, 0.0, other.g9.x) + vec3(self.g1.z) * vec3(other.g9.y, -other.g9.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g10.y) - vec3(self.g1.w) * other.g9, vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.y), vec2(self.g1.w) * vec2(0.0, other.g0.y));
-}
-
-MultiVector transflector__anti_wedge__plane(Transflector self, Plane other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.w) - vec3(self.g1.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec2(0.0));
-}
-
-Flector transflector__anti_wedge__rotor(Transflector self, Rotor other) {
-    return Flector(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + self.g1.wwwz * other.g0.xyzz * vec4(1.0, 1.0, 1.0, -1.0), self.g1 * vec4(other.g0.w));
-}
-
-Scalar transflector__anti_wedge__round_point(Transflector self, RoundPoint other) {
-    return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z + self.g1.w * other.g1.x);
-}
-
-MultiVector transflector__anti_wedge__sphere(Transflector self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0) - self.g0 * vec3(other.g1.x), vec2(self.g0.x) * vec2(0.0, other.g0.x) + vec2(self.g0.y) * vec2(0.0, other.g0.y) + vec2(self.g0.z) * vec2(0.0, other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0) - self.g1 * vec4(other.g1.x), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.y) - vec3(self.g1.w) * other.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector transflector__anti_wedge__transflector(Transflector self, Transflector other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z) + vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g1.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g1.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g1.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g1.w) - vec3(self.g1.w) * vec3(other.g1.x, other.g1.y, other.g1.z), vec3(0.0), vec2(0.0));
-}
-
-Transflector transflector__anti_wedge__translator(Transflector self, Translator other) {
-    return Transflector(self.g0 * vec3(other.g0.w) + vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), self.g1 * vec4(other.g0.w));
-}
-
-Translator translator__anti_wedge__anti_scalar(Translator self, AntiScalar other) {
-    return Translator(self.g0 * vec4(other.g0));
-}
-
-MultiVector translator__anti_wedge__circle(Translator self, Circle other) {
-    return MultiVector(vec2(0.0), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, -other.g1.x) + vec2(self.g0.y) * vec2(0.0, -other.g1.y) + vec2(self.g0.z) * vec2(0.0, -other.g1.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1, vec3(self.g0.w) * other.g2, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge__dipole(Translator self, Dipole other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g0.x, 0.0) + vec2(self.g0.y) * vec2(-other.g0.y, 0.0) + vec2(self.g0.z) * vec2(-other.g0.z, 0.0), vec3(0.0), vec2(0.0), vec3(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1, vec4(self.g0.w) * other.g2, vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge__dual_num(Translator self, DualNum other) {
-    return MultiVector(vec2(self.g0.w) * other.g0, vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y), vec3(0.0), vec2(0.0));
-}
-
-FlatPoint translator__anti_wedge__flat_point(Translator self, FlatPoint other) {
-    return FlatPoint(vec4(self.g0.w) * other.g0);
-}
-
-Flector translator__anti_wedge__flector(Translator self, Flector other) {
-    return Flector(vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g0.w) * other.g0, vec4(self.g0.w) * other.g1);
-}
-
-MultiVector translator__anti_wedge__line(Translator self, Line other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * other.g0, vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge__motor(Translator self, Motor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w) + vec3(self.g0.w) * other.g1, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_wedge__multi_vector(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(-other.g3.x, 0.0) + vec2(self.g0.y) * vec2(-other.g3.y, 0.0) + vec2(self.g0.z) * vec2(-other.g3.z, 0.0) + vec2(self.g0.w) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g6.z, other.g6.y) + vec3(self.g0.y) * vec3(other.g6.z, 0.0, -other.g6.x) + vec3(self.g0.z) * vec3(-other.g6.y, other.g6.x, 0.0) + vec3(self.g0.w) * other.g1, vec2(self.g0.x) * vec2(0.0, -other.g7.x) + vec2(self.g0.y) * vec2(0.0, -other.g7.y) + vec2(self.g0.z) * vec2(0.0, -other.g7.z) + vec2(self.g0.w) * other.g2, vec3(self.g0.w) * other.g3, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g10.x) + vec3(self.g0.w) * other.g4, vec4(self.g0.x) * vec4(0.0, -other.g9.z, other.g9.y, 0.0) + vec4(self.g0.y) * vec4(other.g9.z, 0.0, -other.g9.x, 0.0) + vec4(self.g0.z) * vec4(-other.g9.y, other.g9.x, 0.0, 0.0) + vec4(self.g0.w) * other.g5, vec4(self.g0.w) * other.g6, vec3(self.g0.w) * other.g7, vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.y) + vec3(self.g0.w) * other.g8, vec3(self.g0.w) * other.g9, vec2(self.g0.w) * other.g10);
-}
-
-Transflector translator__anti_wedge__plane(Translator self, Plane other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.w) * other.g0);
-}
-
-MultiVector translator__anti_wedge__rotor(Translator self, Rotor other) {
-    return MultiVector(vec2(self.g0.w) * vec2(0.0, other.g0.w), vec3(0.0), vec2(self.g0.x) * vec2(0.0, -other.g0.x) + vec2(self.g0.y) * vec2(0.0, -other.g0.y) + vec2(self.g0.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.w) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.w), vec3(0.0), vec2(0.0));
-}
-
-RoundPoint translator__anti_wedge__round_point(Translator self, RoundPoint other) {
-    return RoundPoint(vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
-}
-
-Scalar translator__anti_wedge__scalar(Translator self, Scalar other) {
-    return Scalar(self.g0.w * other.g0);
-}
-
-MultiVector translator__anti_wedge__sphere(Translator self, Sphere other) {
-    return MultiVector(vec2(0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g1.x), vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.w) * other.g0, vec2(self.g0.w) * other.g1);
-}
-
-Transflector translator__anti_wedge__transflector(Translator self, Transflector other) {
-    return Transflector(vec3(self.g0.x) * vec3(0.0, -other.g1.z, other.g1.y) + vec3(self.g0.y) * vec3(other.g1.z, 0.0, -other.g1.x) + vec3(self.g0.z) * vec3(-other.g1.y, other.g1.x, 0.0) + vec3(self.g0.w) * other.g0, vec4(self.g0.w) * other.g1);
-}
-
-Translator translator__anti_wedge__translator(Translator self, Translator other) {
-    return Translator(self.g0.xyzx * vec4(other.g0.w, other.g0.w, other.g0.w, 0.0) + vec4(self.g0.w) * other.g0);
 }
 
 AntiScalar anti_scalar__wedge__dual_num(AntiScalar self, DualNum other) {
@@ -5655,10 +3798,6 @@ Circle circle__wedge__scalar(Circle self, Scalar other) {
     return Circle(self.g0 * vec4(other.g0), self.g1 * vec3(other.g0), self.g2 * vec3(other.g0));
 }
 
-AntiScalar circle__wedge__transflector(Circle self, Transflector other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
 AntiScalar dipole__wedge__circle(Dipole self, Circle other) {
     return AntiScalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z - self.g2.w * other.g0.w);
 }
@@ -5691,24 +3830,12 @@ MultiVector dipole__wedge__multi_vector(Dipole self, MultiVector other) {
     return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g8.x) + vec2(self.g0.y) * vec2(0.0, -other.g8.y) + vec2(self.g0.z) * vec2(0.0, -other.g8.z) + vec2(self.g1.x) * vec2(0.0, -other.g7.x) + vec2(self.g1.y) * vec2(0.0, -other.g7.y) + vec2(self.g1.z) * vec2(0.0, -other.g7.z) + vec2(self.g2.x) * vec2(0.0, -other.g6.x) + vec2(self.g2.y) * vec2(0.0, -other.g6.y) + vec2(self.g2.z) * vec2(0.0, -other.g6.z) + vec2(self.g2.w) * vec2(0.0, -other.g6.w), vec3(0.0), vec2(0.0), self.g0 * vec3(other.g0.x), self.g1 * vec3(other.g0.x), self.g2 * vec4(other.g0.x), vec4(self.g0.x) * vec4(0.0, -other.g1.z, other.g1.y, 0.0) + vec4(self.g0.y) * vec4(other.g1.z, 0.0, -other.g1.x, 0.0) + vec4(self.g0.z) * vec4(-other.g1.y, other.g1.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g2.x, 0.0, 0.0, -other.g1.x) + vec4(self.g1.y) * vec4(0.0, other.g2.x, 0.0, -other.g1.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g2.x, -other.g1.z), self.g0 * vec3(other.g2.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g2.x) - vec3(self.g2.w) * other.g1, self.g1 * vec3(other.g2.y) + vec3(self.g2.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g2.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g2.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, -other.g5.z, other.g5.y) + vec3(self.g0.y) * vec3(other.g5.z, 0.0, -other.g5.x) + vec3(self.g0.z) * vec3(-other.g5.y, other.g5.x, 0.0) + self.g1 * vec3(other.g5.w) + vec3(self.g2.x) * vec3(0.0, other.g3.z, -other.g3.y) + vec3(self.g2.y) * vec3(-other.g3.z, 0.0, other.g3.x) + vec3(self.g2.z) * vec3(other.g3.y, -other.g3.x, 0.0) + vec3(self.g2.w) * other.g4, vec2(self.g0.x) * vec2(-other.g4.x, 0.0) + vec2(self.g0.y) * vec2(-other.g4.y, 0.0) + vec2(self.g0.z) * vec2(-other.g4.z, 0.0) - vec2(self.g1.x) * vec2(other.g3.x, other.g5.x) - vec2(self.g1.y) * vec2(other.g3.y, other.g5.y) - vec2(self.g1.z) * vec2(other.g3.z, other.g5.z) + vec2(self.g2.x) * vec2(0.0, -other.g4.x) + vec2(self.g2.y) * vec2(0.0, -other.g4.y) + vec2(self.g2.z) * vec2(0.0, -other.g4.z));
 }
 
-AntiScalar dipole__wedge__rotor(Dipole self, Rotor other) {
-    return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
-}
-
 Circle dipole__wedge__round_point(Dipole self, RoundPoint other) {
     return Circle(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g0 * vec3(other.g1.y) + vec3(self.g2.x, self.g2.y, self.g2.z) * vec3(other.g1.x) - vec3(self.g2.w) * other.g0, self.g1 * vec3(other.g1.y) + vec3(self.g2.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g2.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g2.z) * vec3(other.g0.y, -other.g0.x, 0.0));
 }
 
 Dipole dipole__wedge__scalar(Dipole self, Scalar other) {
     return Dipole(self.g0 * vec3(other.g0), self.g1 * vec3(other.g0), self.g2 * vec4(other.g0));
-}
-
-Plane dipole__wedge__transflector(Dipole self, Transflector other) {
-    return Plane(vec4(self.g0.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g0.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g0.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, -other.g0.z));
-}
-
-AntiScalar dipole__wedge__translator(Dipole self, Translator other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 AntiScalar dual_num__wedge__anti_scalar(DualNum self, AntiScalar other) {
@@ -5751,10 +3878,6 @@ Plane dual_num__wedge__plane(DualNum self, Plane other) {
     return Plane(vec4(self.g0.x) * other.g0);
 }
 
-Rotor dual_num__wedge__rotor(DualNum self, Rotor other) {
-    return Rotor(vec4(self.g0.x) * other.g0);
-}
-
 RoundPoint dual_num__wedge__round_point(DualNum self, RoundPoint other) {
     return RoundPoint(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
 }
@@ -5765,14 +3888,6 @@ DualNum dual_num__wedge__scalar(DualNum self, Scalar other) {
 
 Sphere dual_num__wedge__sphere(DualNum self, Sphere other) {
     return Sphere(vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
-}
-
-Transflector dual_num__wedge__transflector(DualNum self, Transflector other) {
-    return Transflector(vec3(self.g0.x) * other.g0, vec4(self.g0.x) * other.g1);
-}
-
-Translator dual_num__wedge__translator(DualNum self, Translator other) {
-    return Translator(vec4(self.g0.x) * other.g0);
 }
 
 AntiScalar flat_point__wedge__circle(FlatPoint self, Circle other) {
@@ -5903,10 +4018,6 @@ MultiVector multi_vector__wedge__plane(MultiVector self, Plane other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g0.w), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g0.x) * vec2(0.0, other.g0.w));
 }
 
-MultiVector multi_vector__wedge__rotor(MultiVector self, Rotor other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.w) + vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(0.0), vec3(self.g1.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g1.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g1.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec2(0.0));
-}
-
 MultiVector multi_vector__wedge__round_point(MultiVector self, RoundPoint other) {
     return MultiVector(vec2(self.g9.x) * vec2(0.0, other.g0.x) + vec2(self.g9.y) * vec2(0.0, other.g0.y) + vec2(self.g9.z) * vec2(0.0, other.g0.z) + vec2(self.g10.x) * vec2(0.0, other.g1.y) + vec2(self.g10.y) * vec2(0.0, other.g1.x), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1, vec3(0.0) - self.g1 * vec3(other.g1.x) + vec3(self.g2.x) * other.g0, vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g1.x, self.g1.y, self.g1.z, self.g1.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g2.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g2.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x), vec4(self.g3.x) * vec4(0.0, -other.g0.z, other.g0.y, 0.0) + vec4(self.g3.y) * vec4(other.g0.z, 0.0, -other.g0.x, 0.0) + vec4(self.g3.z) * vec4(-other.g0.y, other.g0.x, 0.0, 0.0) + vec4(self.g4.x) * vec4(other.g1.x, 0.0, 0.0, -other.g0.x) + vec4(self.g4.y) * vec4(0.0, other.g1.x, 0.0, -other.g0.y) + vec4(self.g4.z) * vec4(0.0, 0.0, other.g1.x, -other.g0.z), self.g3 * vec3(other.g1.y) + vec3(self.g5.x, self.g5.y, self.g5.z) * vec3(other.g1.x) - vec3(self.g5.w) * other.g0, self.g4 * vec3(other.g1.y) + vec3(self.g5.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g5.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g5.z) * vec3(other.g0.y, -other.g0.x, 0.0), vec3(self.g6.x, self.g6.y, self.g6.z) * vec3(other.g1.y) + vec3(self.g7.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g7.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g7.z) * vec3(other.g0.y, -other.g0.x, 0.0) - self.g8 * vec3(other.g1.x), vec2(self.g6.x) * vec2(-other.g0.x, 0.0) + vec2(self.g6.y) * vec2(-other.g0.y, 0.0) + vec2(self.g6.z) * vec2(-other.g0.z, 0.0) + vec2(self.g6.w) * other.g1 * vec2(-1.0, 1.0) + vec2(self.g8.x) * vec2(0.0, other.g0.x) + vec2(self.g8.y) * vec2(0.0, other.g0.y) + vec2(self.g8.z) * vec2(0.0, other.g0.z));
 }
@@ -5917,14 +4028,6 @@ MultiVector multi_vector__wedge__scalar(MultiVector self, Scalar other) {
 
 MultiVector multi_vector__wedge__sphere(MultiVector self, Sphere other) {
     return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g0.x) + vec2(self.g1.y) * vec2(0.0, other.g0.y) + vec2(self.g1.z) * vec2(0.0, other.g0.z) + vec2(self.g2.x) * vec2(0.0, other.g1.y) + vec2(self.g2.y) * vec2(0.0, other.g1.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(self.g0.x) * other.g0, vec2(self.g0.x) * other.g1);
-}
-
-MultiVector multi_vector__wedge__transflector(MultiVector self, Transflector other) {
-    return MultiVector(vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z) + vec2(self.g2.x) * vec2(0.0, other.g1.w) + vec2(self.g6.x) * vec2(0.0, -other.g0.x) + vec2(self.g6.y) * vec2(0.0, -other.g0.y) + vec2(self.g6.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0), vec4(0.0), vec3(self.g2.x) * other.g0, vec3(self.g1.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g1.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g1.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec3(self.g0.x) * vec3(other.g1.x, other.g1.y, other.g1.z) + vec3(self.g3.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g3.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g3.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec2(self.g0.x) * vec2(0.0, other.g1.w) + vec2(self.g4.x) * vec2(0.0, -other.g0.x) + vec2(self.g4.y) * vec2(0.0, -other.g0.y) + vec2(self.g4.z) * vec2(0.0, -other.g0.z));
-}
-
-MultiVector multi_vector__wedge__translator(MultiVector self, Translator other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, other.g0.w) + vec2(self.g3.x) * vec2(0.0, -other.g0.x) + vec2(self.g3.y) * vec2(0.0, -other.g0.y) + vec2(self.g3.z) * vec2(0.0, -other.g0.z), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec3(self.g2.x) * vec3(other.g0.x, other.g0.y, other.g0.z), vec2(self.g1.x) * vec2(0.0, -other.g0.x) + vec2(self.g1.y) * vec2(0.0, -other.g0.y) + vec2(self.g1.z) * vec2(0.0, -other.g0.z));
 }
 
 Plane plane__wedge__dual_num(Plane self, DualNum other) {
@@ -5941,26 +4044,6 @@ AntiScalar plane__wedge__round_point(Plane self, RoundPoint other) {
 
 Plane plane__wedge__scalar(Plane self, Scalar other) {
     return Plane(self.g0 * vec4(other.g0));
-}
-
-AntiScalar rotor__wedge__dipole(Rotor self, Dipole other) {
-    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-Rotor rotor__wedge__dual_num(Rotor self, DualNum other) {
-    return Rotor(self.g0 * vec4(other.g0.x));
-}
-
-MultiVector rotor__wedge__multi_vector(Rotor self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g0.w) * vec2(0.0, other.g0.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec3(0.0), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec2(0.0));
-}
-
-Plane rotor__wedge__round_point(Rotor self, RoundPoint other) {
-    return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0));
-}
-
-Rotor rotor__wedge__scalar(Rotor self, Scalar other) {
-    return Rotor(self.g0 * vec4(other.g0));
 }
 
 Sphere round_point__wedge__circle(RoundPoint self, Circle other) {
@@ -5999,10 +4082,6 @@ AntiScalar round_point__wedge__plane(RoundPoint self, Plane other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g0.w);
 }
 
-Plane round_point__wedge__rotor(RoundPoint self, Rotor other) {
-    return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, 0.0) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, 0.0) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, 0.0));
-}
-
 Dipole round_point__wedge__round_point(RoundPoint self, RoundPoint other) {
     return Dipole(vec3(0.0) - self.g0 * vec3(other.g1.x) + vec3(self.g1.x) * other.g0, vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.y, other.g1.y, other.g1.y, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g1.y) - vec4(self.g1.y) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.x));
 }
@@ -6013,14 +4092,6 @@ RoundPoint round_point__wedge__scalar(RoundPoint self, Scalar other) {
 
 AntiScalar round_point__wedge__sphere(RoundPoint self, Sphere other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
-}
-
-Motor round_point__wedge__transflector(RoundPoint self, Transflector other) {
-    return Motor(vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, other.g1.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, other.g1.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, other.g1.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, other.g1.w), vec3(self.g0.x) * vec3(0.0, -other.g0.z, other.g0.y) + vec3(self.g0.y) * vec3(other.g0.z, 0.0, -other.g0.x) + vec3(self.g0.z) * vec3(-other.g0.y, other.g0.x, 0.0));
-}
-
-Plane round_point__wedge__translator(RoundPoint self, Translator other) {
-    return Plane(vec4(self.g0.x) * vec4(0.0, 0.0, 0.0, -other.g0.x) + vec4(self.g0.y) * vec4(0.0, 0.0, 0.0, -other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, 0.0, -other.g0.z) + vec4(self.g1.x) * vec4(other.g0.x, other.g0.y, other.g0.z, 0.0));
 }
 
 AntiScalar scalar__wedge__anti_scalar(Scalar self, AntiScalar other) {
@@ -6063,10 +4134,6 @@ Plane scalar__wedge__plane(Scalar self, Plane other) {
     return Plane(vec4(self.g0) * other.g0);
 }
 
-Rotor scalar__wedge__rotor(Scalar self, Rotor other) {
-    return Rotor(vec4(self.g0) * other.g0);
-}
-
 RoundPoint scalar__wedge__round_point(Scalar self, RoundPoint other) {
     return RoundPoint(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
 }
@@ -6077,14 +4144,6 @@ Scalar scalar__wedge__scalar(Scalar self, Scalar other) {
 
 Sphere scalar__wedge__sphere(Scalar self, Sphere other) {
     return Sphere(vec3(self.g0) * other.g0, vec2(self.g0) * other.g1);
-}
-
-Transflector scalar__wedge__transflector(Scalar self, Transflector other) {
-    return Transflector(vec3(self.g0) * other.g0, vec4(self.g0) * other.g1);
-}
-
-Translator scalar__wedge__translator(Scalar self, Translator other) {
-    return Translator(vec4(self.g0) * other.g0);
 }
 
 Sphere sphere__wedge__dual_num(Sphere self, DualNum other) {
@@ -6103,50 +4162,6 @@ Sphere sphere__wedge__scalar(Sphere self, Scalar other) {
     return Sphere(self.g0 * vec3(other.g0), self.g1 * vec2(other.g0));
 }
 
-AntiScalar transflector__wedge__circle(Transflector self, Circle other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Plane transflector__wedge__dipole(Transflector self, Dipole other) {
-    return Plane(vec4(self.g0.x) * vec4(0.0, other.g0.z, -other.g0.y, -other.g1.x) + vec4(self.g0.y) * vec4(-other.g0.z, 0.0, other.g0.x, -other.g1.y) + vec4(self.g0.z) * vec4(other.g0.y, -other.g0.x, 0.0, -other.g1.z));
-}
-
-Transflector transflector__wedge__dual_num(Transflector self, DualNum other) {
-    return Transflector(self.g0 * vec3(other.g0.x), self.g1 * vec4(other.g0.x));
-}
-
-MultiVector transflector__wedge__multi_vector(Transflector self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g6.x) + vec2(self.g0.y) * vec2(0.0, -other.g6.y) + vec2(self.g0.z) * vec2(0.0, -other.g6.z) + vec2(self.g1.x) * vec2(0.0, other.g1.x) + vec2(self.g1.y) * vec2(0.0, other.g1.y) + vec2(self.g1.z) * vec2(0.0, other.g1.z) + vec2(self.g1.w) * vec2(0.0, other.g2.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g0.x, other.g0.x, other.g0.x, 0.0), vec4(0.0), self.g0 * vec3(other.g2.x), vec3(self.g0.x) * vec3(0.0, other.g1.z, -other.g1.y) + vec3(self.g0.y) * vec3(-other.g1.z, 0.0, other.g1.x) + vec3(self.g0.z) * vec3(other.g1.y, -other.g1.x, 0.0), vec3(self.g0.x) * vec3(0.0, other.g3.z, -other.g3.y) + vec3(self.g0.y) * vec3(-other.g3.z, 0.0, other.g3.x) + vec3(self.g0.z) * vec3(other.g3.y, -other.g3.x, 0.0) + vec3(self.g1.x, self.g1.y, self.g1.z) * vec3(other.g0.x), vec2(self.g0.x) * vec2(0.0, -other.g4.x) + vec2(self.g0.y) * vec2(0.0, -other.g4.y) + vec2(self.g0.z) * vec2(0.0, -other.g4.z) + vec2(self.g1.w) * vec2(0.0, other.g0.x));
-}
-
-Motor transflector__wedge__round_point(Transflector self, RoundPoint other) {
-    return Motor(vec4(self.g0.x, self.g0.y, self.g0.z, self.g0.x) * vec4(other.g1.x, other.g1.x, other.g1.x, 0.0) + vec4(self.g1.x) * vec4(0.0, 0.0, 0.0, other.g0.x) + vec4(self.g1.y) * vec4(0.0, 0.0, 0.0, other.g0.y) + vec4(self.g1.z) * vec4(0.0, 0.0, 0.0, other.g0.z) + vec4(self.g1.w) * vec4(0.0, 0.0, 0.0, other.g1.x), vec3(self.g0.x) * vec3(0.0, other.g0.z, -other.g0.y) + vec3(self.g0.y) * vec3(-other.g0.z, 0.0, other.g0.x) + vec3(self.g0.z) * vec3(other.g0.y, -other.g0.x, 0.0));
-}
-
-Transflector transflector__wedge__scalar(Transflector self, Scalar other) {
-    return Transflector(self.g0 * vec3(other.g0), self.g1 * vec4(other.g0));
-}
-
-AntiScalar translator__wedge__dipole(Translator self, Dipole other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Translator translator__wedge__dual_num(Translator self, DualNum other) {
-    return Translator(self.g0 * vec4(other.g0.x));
-}
-
-MultiVector translator__wedge__multi_vector(Translator self, MultiVector other) {
-    return MultiVector(vec2(self.g0.x) * vec2(0.0, -other.g3.x) + vec2(self.g0.y) * vec2(0.0, -other.g3.y) + vec2(self.g0.z) * vec2(0.0, -other.g3.z) + vec2(self.g0.w) * vec2(0.0, other.g0.x), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g0.x), vec3(0.0) - vec3(self.g0.x, self.g0.y, self.g0.z) * vec3(other.g2.x), vec2(self.g0.x) * vec2(0.0, other.g1.x) + vec2(self.g0.y) * vec2(0.0, other.g1.y) + vec2(self.g0.z) * vec2(0.0, other.g1.z));
-}
-
-Plane translator__wedge__round_point(Translator self, RoundPoint other) {
-    return Plane(vec4(self.g0.x) * vec4(-other.g1.x, 0.0, 0.0, other.g0.x) + vec4(self.g0.y) * vec4(0.0, -other.g1.x, 0.0, other.g0.y) + vec4(self.g0.z) * vec4(0.0, 0.0, -other.g1.x, other.g0.z));
-}
-
-Translator translator__wedge__scalar(Translator self, Scalar other) {
-    return Translator(self.g0 * vec4(other.g0));
-}
-
 AntiScalar anti_scalar__anti_dot__anti_scalar(AntiScalar self, AntiScalar other) {
     return AntiScalar(self.g0 * other.g0);
 }
@@ -6161,14 +4176,6 @@ AntiScalar anti_scalar__anti_dot__motor(AntiScalar self, Motor other) {
 
 AntiScalar anti_scalar__anti_dot__multi_vector(AntiScalar self, MultiVector other) {
     return AntiScalar(self.g0 * other.g0.y);
-}
-
-AntiScalar anti_scalar__anti_dot__rotor(AntiScalar self, Rotor other) {
-    return AntiScalar(self.g0 * other.g0.w);
-}
-
-AntiScalar anti_scalar__anti_dot__translator(AntiScalar self, Translator other) {
-    return AntiScalar(self.g0 * other.g0.w);
 }
 
 AntiScalar circle__anti_dot__circle(Circle self, Circle other) {
@@ -6187,14 +4194,6 @@ AntiScalar circle__anti_dot__multi_vector(Circle self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g8.x - self.g0.y * other.g8.y - self.g0.z * other.g8.z + self.g0.w * other.g6.w - self.g1.x * other.g7.x - self.g1.y * other.g7.y - self.g1.z * other.g7.z - self.g2.x * other.g6.x - self.g2.y * other.g6.y - self.g2.z * other.g6.z);
 }
 
-AntiScalar circle__anti_dot__rotor(Circle self, Rotor other) {
-    return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
-}
-
-AntiScalar circle__anti_dot__translator(Circle self, Translator other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
 AntiScalar dipole__anti_dot__dipole(Dipole self, Dipole other) {
     return AntiScalar(self.g0.x * other.g2.x + self.g0.y * other.g2.y + self.g0.z * other.g2.z + self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z + self.g2.x * other.g0.x + self.g2.y * other.g0.y + self.g2.z * other.g0.z - self.g2.w * other.g2.w);
 }
@@ -6209,10 +4208,6 @@ AntiScalar dipole__anti_dot__flector(Dipole self, Flector other) {
 
 AntiScalar dipole__anti_dot__multi_vector(Dipole self, MultiVector other) {
     return AntiScalar(self.g0.x * other.g5.x + self.g0.y * other.g5.y + self.g0.z * other.g5.z + self.g1.x * other.g4.x + self.g1.y * other.g4.y + self.g1.z * other.g4.z + self.g2.x * other.g3.x + self.g2.y * other.g3.y + self.g2.z * other.g3.z - self.g2.w * other.g5.w);
-}
-
-AntiScalar dipole__anti_dot__transflector(Dipole self, Transflector other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
 AntiScalar dual_num__anti_dot__anti_scalar(DualNum self, AntiScalar other) {
@@ -6231,16 +4226,8 @@ AntiScalar dual_num__anti_dot__multi_vector(DualNum self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g0.x + self.g0.y * other.g0.y);
 }
 
-AntiScalar dual_num__anti_dot__rotor(DualNum self, Rotor other) {
-    return AntiScalar(self.g0.y * other.g0.w);
-}
-
 AntiScalar dual_num__anti_dot__scalar(DualNum self, Scalar other) {
     return AntiScalar(0.0 - self.g0.x * other.g0);
-}
-
-AntiScalar dual_num__anti_dot__translator(DualNum self, Translator other) {
-    return AntiScalar(self.g0.y * other.g0.w);
 }
 
 AntiScalar flat_point__anti_dot__dipole(FlatPoint self, Dipole other) {
@@ -6283,10 +4270,6 @@ AntiScalar flector__anti_dot__sphere(Flector self, Sphere other) {
     return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z - self.g1.w * other.g1.x);
 }
 
-AntiScalar flector__anti_dot__transflector(Flector self, Transflector other) {
-    return AntiScalar(self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z);
-}
-
 AntiScalar line__anti_dot__circle(Line self, Circle other) {
     return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
 }
@@ -6301,10 +4284,6 @@ AntiScalar line__anti_dot__motor(Line self, Motor other) {
 
 AntiScalar line__anti_dot__multi_vector(Line self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g7.x - self.g0.y * other.g7.y - self.g0.z * other.g7.z - self.g1.x * other.g6.x - self.g1.y * other.g6.y - self.g1.z * other.g6.z);
-}
-
-AntiScalar line__anti_dot__rotor(Line self, Rotor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 AntiScalar motor__anti_dot__anti_scalar(Motor self, AntiScalar other) {
@@ -6329,14 +4308,6 @@ AntiScalar motor__anti_dot__motor(Motor self, Motor other) {
 
 AntiScalar motor__anti_dot__multi_vector(Motor self, MultiVector other) {
     return AntiScalar(0.0 - self.g0.x * other.g7.x - self.g0.y * other.g7.y - self.g0.z * other.g7.z + self.g0.w * other.g0.y - self.g1.x * other.g6.x - self.g1.y * other.g6.y - self.g1.z * other.g6.z);
-}
-
-AntiScalar motor__anti_dot__rotor(Motor self, Rotor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
-}
-
-AntiScalar motor__anti_dot__translator(Motor self, Translator other) {
-    return AntiScalar(self.g0.w * other.g0.w);
 }
 
 AntiScalar multi_vector__anti_dot__anti_scalar(MultiVector self, AntiScalar other) {
@@ -6379,10 +4350,6 @@ AntiScalar multi_vector__anti_dot__plane(MultiVector self, Plane other) {
     return AntiScalar(self.g9.x * other.g0.x + self.g9.y * other.g0.y + self.g9.z * other.g0.z - self.g10.x * other.g0.w);
 }
 
-AntiScalar multi_vector__anti_dot__rotor(MultiVector self, Rotor other) {
-    return AntiScalar(self.g0.y * other.g0.w - self.g7.x * other.g0.x - self.g7.y * other.g0.y - self.g7.z * other.g0.z);
-}
-
 AntiScalar multi_vector__anti_dot__round_point(MultiVector self, RoundPoint other) {
     return AntiScalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z + self.g2.x * other.g1.y + self.g2.y * other.g1.x);
 }
@@ -6393,14 +4360,6 @@ AntiScalar multi_vector__anti_dot__scalar(MultiVector self, Scalar other) {
 
 AntiScalar multi_vector__anti_dot__sphere(MultiVector self, Sphere other) {
     return AntiScalar(self.g9.x * other.g0.x + self.g9.y * other.g0.y + self.g9.z * other.g0.z - self.g10.x * other.g1.y - self.g10.y * other.g1.x);
-}
-
-AntiScalar multi_vector__anti_dot__transflector(MultiVector self, Transflector other) {
-    return AntiScalar(self.g3.x * other.g0.x + self.g3.y * other.g0.y + self.g3.z * other.g0.z + self.g9.x * other.g1.x + self.g9.y * other.g1.y + self.g9.z * other.g1.z - self.g10.x * other.g1.w);
-}
-
-AntiScalar multi_vector__anti_dot__translator(MultiVector self, Translator other) {
-    return AntiScalar(self.g0.y * other.g0.w - self.g6.x * other.g0.x - self.g6.y * other.g0.y - self.g6.z * other.g0.z);
 }
 
 AntiScalar plane__anti_dot__flector(Plane self, Flector other) {
@@ -6417,42 +4376,6 @@ AntiScalar plane__anti_dot__plane(Plane self, Plane other) {
 
 AntiScalar plane__anti_dot__sphere(Plane self, Sphere other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g0.w * other.g1.x);
-}
-
-AntiScalar plane__anti_dot__transflector(Plane self, Transflector other) {
-    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
-}
-
-AntiScalar rotor__anti_dot__anti_scalar(Rotor self, AntiScalar other) {
-    return AntiScalar(self.g0.w * other.g0);
-}
-
-AntiScalar rotor__anti_dot__circle(Rotor self, Circle other) {
-    return AntiScalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-AntiScalar rotor__anti_dot__dual_num(Rotor self, DualNum other) {
-    return AntiScalar(self.g0.w * other.g0.y);
-}
-
-AntiScalar rotor__anti_dot__line(Rotor self, Line other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-AntiScalar rotor__anti_dot__motor(Rotor self, Motor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
-}
-
-AntiScalar rotor__anti_dot__multi_vector(Rotor self, MultiVector other) {
-    return AntiScalar(0.0 - self.g0.x * other.g7.x - self.g0.y * other.g7.y - self.g0.z * other.g7.z + self.g0.w * other.g0.y);
-}
-
-AntiScalar rotor__anti_dot__rotor(Rotor self, Rotor other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g0.w);
-}
-
-AntiScalar rotor__anti_dot__translator(Rotor self, Translator other) {
-    return AntiScalar(self.g0.w * other.g0.w);
 }
 
 AntiScalar round_point__anti_dot__multi_vector(RoundPoint self, MultiVector other) {
@@ -6491,62 +4414,6 @@ AntiScalar sphere__anti_dot__sphere(Sphere self, Sphere other) {
     return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g1.x * other.g1.y - self.g1.y * other.g1.x);
 }
 
-AntiScalar sphere__anti_dot__transflector(Sphere self, Transflector other) {
-    return AntiScalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z - self.g1.x * other.g1.w);
-}
-
-AntiScalar transflector__anti_dot__dipole(Transflector self, Dipole other) {
-    return AntiScalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-AntiScalar transflector__anti_dot__flector(Transflector self, Flector other) {
-    return AntiScalar(self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z);
-}
-
-AntiScalar transflector__anti_dot__multi_vector(Transflector self, MultiVector other) {
-    return AntiScalar(self.g0.x * other.g3.x + self.g0.y * other.g3.y + self.g0.z * other.g3.z + self.g1.x * other.g9.x + self.g1.y * other.g9.y + self.g1.z * other.g9.z - self.g1.w * other.g10.x);
-}
-
-AntiScalar transflector__anti_dot__plane(Transflector self, Plane other) {
-    return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
-}
-
-AntiScalar transflector__anti_dot__sphere(Transflector self, Sphere other) {
-    return AntiScalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z - self.g1.w * other.g1.x);
-}
-
-AntiScalar transflector__anti_dot__transflector(Transflector self, Transflector other) {
-    return AntiScalar(self.g1.x * other.g1.x + self.g1.y * other.g1.y + self.g1.z * other.g1.z);
-}
-
-AntiScalar translator__anti_dot__anti_scalar(Translator self, AntiScalar other) {
-    return AntiScalar(self.g0.w * other.g0);
-}
-
-AntiScalar translator__anti_dot__circle(Translator self, Circle other) {
-    return AntiScalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-AntiScalar translator__anti_dot__dual_num(Translator self, DualNum other) {
-    return AntiScalar(self.g0.w * other.g0.y);
-}
-
-AntiScalar translator__anti_dot__motor(Translator self, Motor other) {
-    return AntiScalar(self.g0.w * other.g0.w);
-}
-
-AntiScalar translator__anti_dot__multi_vector(Translator self, MultiVector other) {
-    return AntiScalar(0.0 - self.g0.x * other.g6.x - self.g0.y * other.g6.y - self.g0.z * other.g6.z + self.g0.w * other.g0.y);
-}
-
-AntiScalar translator__anti_dot__rotor(Translator self, Rotor other) {
-    return AntiScalar(self.g0.w * other.g0.w);
-}
-
-AntiScalar translator__anti_dot__translator(Translator self, Translator other) {
-    return AntiScalar(self.g0.w * other.g0.w);
-}
-
 Scalar anti_scalar__dot__anti_scalar(AntiScalar self, AntiScalar other) {
     return Scalar(0.0 - self.g0 * other.g0);
 }
@@ -6561,14 +4428,6 @@ Scalar anti_scalar__dot__motor(AntiScalar self, Motor other) {
 
 Scalar anti_scalar__dot__multi_vector(AntiScalar self, MultiVector other) {
     return Scalar(0.0 - self.g0 * other.g0.y);
-}
-
-Scalar anti_scalar__dot__rotor(AntiScalar self, Rotor other) {
-    return Scalar(0.0 - self.g0 * other.g0.w);
-}
-
-Scalar anti_scalar__dot__translator(AntiScalar self, Translator other) {
-    return Scalar(0.0 - self.g0 * other.g0.w);
 }
 
 Scalar circle__dot__circle(Circle self, Circle other) {
@@ -6587,14 +4446,6 @@ Scalar circle__dot__multi_vector(Circle self, MultiVector other) {
     return Scalar(self.g0.x * other.g8.x + self.g0.y * other.g8.y + self.g0.z * other.g8.z - self.g0.w * other.g6.w + self.g1.x * other.g7.x + self.g1.y * other.g7.y + self.g1.z * other.g7.z + self.g2.x * other.g6.x + self.g2.y * other.g6.y + self.g2.z * other.g6.z);
 }
 
-Scalar circle__dot__rotor(Circle self, Rotor other) {
-    return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
-}
-
-Scalar circle__dot__translator(Circle self, Translator other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
 Scalar dipole__dot__dipole(Dipole self, Dipole other) {
     return Scalar(0.0 - self.g0.x * other.g2.x - self.g0.y * other.g2.y - self.g0.z * other.g2.z - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z - self.g2.x * other.g0.x - self.g2.y * other.g0.y - self.g2.z * other.g0.z + self.g2.w * other.g2.w);
 }
@@ -6609,10 +4460,6 @@ Scalar dipole__dot__flector(Dipole self, Flector other) {
 
 Scalar dipole__dot__multi_vector(Dipole self, MultiVector other) {
     return Scalar(0.0 - self.g0.x * other.g5.x - self.g0.y * other.g5.y - self.g0.z * other.g5.z - self.g1.x * other.g4.x - self.g1.y * other.g4.y - self.g1.z * other.g4.z - self.g2.x * other.g3.x - self.g2.y * other.g3.y - self.g2.z * other.g3.z + self.g2.w * other.g5.w);
-}
-
-Scalar dipole__dot__transflector(Dipole self, Transflector other) {
-    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
 }
 
 Scalar dual_num__dot__anti_scalar(DualNum self, AntiScalar other) {
@@ -6631,16 +4478,8 @@ Scalar dual_num__dot__multi_vector(DualNum self, MultiVector other) {
     return Scalar(self.g0.x * other.g0.x - self.g0.y * other.g0.y);
 }
 
-Scalar dual_num__dot__rotor(DualNum self, Rotor other) {
-    return Scalar(0.0 - self.g0.y * other.g0.w);
-}
-
 Scalar dual_num__dot__scalar(DualNum self, Scalar other) {
     return Scalar(self.g0.x * other.g0);
-}
-
-Scalar dual_num__dot__translator(DualNum self, Translator other) {
-    return Scalar(0.0 - self.g0.y * other.g0.w);
 }
 
 Scalar flat_point__dot__dipole(FlatPoint self, Dipole other) {
@@ -6683,10 +4522,6 @@ Scalar flector__dot__sphere(Flector self, Sphere other) {
     return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z + self.g1.w * other.g1.x);
 }
 
-Scalar flector__dot__transflector(Flector self, Transflector other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
-}
-
 Scalar line__dot__circle(Line self, Circle other) {
     return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z + self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z);
 }
@@ -6701,10 +4536,6 @@ Scalar line__dot__motor(Line self, Motor other) {
 
 Scalar line__dot__multi_vector(Line self, MultiVector other) {
     return Scalar(self.g0.x * other.g7.x + self.g0.y * other.g7.y + self.g0.z * other.g7.z + self.g1.x * other.g6.x + self.g1.y * other.g6.y + self.g1.z * other.g6.z);
-}
-
-Scalar line__dot__rotor(Line self, Rotor other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
 }
 
 Scalar motor__dot__anti_scalar(Motor self, AntiScalar other) {
@@ -6729,14 +4560,6 @@ Scalar motor__dot__motor(Motor self, Motor other) {
 
 Scalar motor__dot__multi_vector(Motor self, MultiVector other) {
     return Scalar(self.g0.x * other.g7.x + self.g0.y * other.g7.y + self.g0.z * other.g7.z - self.g0.w * other.g0.y + self.g1.x * other.g6.x + self.g1.y * other.g6.y + self.g1.z * other.g6.z);
-}
-
-Scalar motor__dot__rotor(Motor self, Rotor other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g0.w * other.g0.w);
-}
-
-Scalar motor__dot__translator(Motor self, Translator other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
 }
 
 Scalar multi_vector__dot__anti_scalar(MultiVector self, AntiScalar other) {
@@ -6779,10 +4602,6 @@ Scalar multi_vector__dot__plane(MultiVector self, Plane other) {
     return Scalar(0.0 - self.g9.x * other.g0.x - self.g9.y * other.g0.y - self.g9.z * other.g0.z + self.g10.x * other.g0.w);
 }
 
-Scalar multi_vector__dot__rotor(MultiVector self, Rotor other) {
-    return Scalar(0.0 - self.g0.y * other.g0.w + self.g7.x * other.g0.x + self.g7.y * other.g0.y + self.g7.z * other.g0.z);
-}
-
 Scalar multi_vector__dot__round_point(MultiVector self, RoundPoint other) {
     return Scalar(self.g1.x * other.g0.x + self.g1.y * other.g0.y + self.g1.z * other.g0.z - self.g2.x * other.g1.y - self.g2.y * other.g1.x);
 }
@@ -6793,14 +4612,6 @@ Scalar multi_vector__dot__scalar(MultiVector self, Scalar other) {
 
 Scalar multi_vector__dot__sphere(MultiVector self, Sphere other) {
     return Scalar(0.0 - self.g9.x * other.g0.x - self.g9.y * other.g0.y - self.g9.z * other.g0.z + self.g10.x * other.g1.y + self.g10.y * other.g1.x);
-}
-
-Scalar multi_vector__dot__transflector(MultiVector self, Transflector other) {
-    return Scalar(0.0 - self.g3.x * other.g0.x - self.g3.y * other.g0.y - self.g3.z * other.g0.z - self.g9.x * other.g1.x - self.g9.y * other.g1.y - self.g9.z * other.g1.z + self.g10.x * other.g1.w);
-}
-
-Scalar multi_vector__dot__translator(MultiVector self, Translator other) {
-    return Scalar(0.0 - self.g0.y * other.g0.w + self.g6.x * other.g0.x + self.g6.y * other.g0.y + self.g6.z * other.g0.z);
 }
 
 Scalar plane__dot__flector(Plane self, Flector other) {
@@ -6817,42 +4628,6 @@ Scalar plane__dot__plane(Plane self, Plane other) {
 
 Scalar plane__dot__sphere(Plane self, Sphere other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g0.w * other.g1.x);
-}
-
-Scalar plane__dot__transflector(Plane self, Transflector other) {
-    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z);
-}
-
-Scalar rotor__dot__anti_scalar(Rotor self, AntiScalar other) {
-    return Scalar(0.0 - self.g0.w * other.g0);
-}
-
-Scalar rotor__dot__circle(Rotor self, Circle other) {
-    return Scalar(self.g0.x * other.g1.x + self.g0.y * other.g1.y + self.g0.z * other.g1.z);
-}
-
-Scalar rotor__dot__dual_num(Rotor self, DualNum other) {
-    return Scalar(0.0 - self.g0.w * other.g0.y);
-}
-
-Scalar rotor__dot__line(Rotor self, Line other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Scalar rotor__dot__motor(Rotor self, Motor other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g0.w * other.g0.w);
-}
-
-Scalar rotor__dot__multi_vector(Rotor self, MultiVector other) {
-    return Scalar(self.g0.x * other.g7.x + self.g0.y * other.g7.y + self.g0.z * other.g7.z - self.g0.w * other.g0.y);
-}
-
-Scalar rotor__dot__rotor(Rotor self, Rotor other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z - self.g0.w * other.g0.w);
-}
-
-Scalar rotor__dot__translator(Rotor self, Translator other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
 }
 
 Scalar round_point__dot__multi_vector(RoundPoint self, MultiVector other) {
@@ -6889,62 +4664,6 @@ Scalar sphere__dot__plane(Sphere self, Plane other) {
 
 Scalar sphere__dot__sphere(Sphere self, Sphere other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
-}
-
-Scalar sphere__dot__transflector(Sphere self, Transflector other) {
-    return Scalar(0.0 - self.g0.x * other.g1.x - self.g0.y * other.g1.y - self.g0.z * other.g1.z + self.g1.x * other.g1.w);
-}
-
-Scalar transflector__dot__dipole(Transflector self, Dipole other) {
-    return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z);
-}
-
-Scalar transflector__dot__flector(Transflector self, Flector other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
-}
-
-Scalar transflector__dot__multi_vector(Transflector self, MultiVector other) {
-    return Scalar(0.0 - self.g0.x * other.g3.x - self.g0.y * other.g3.y - self.g0.z * other.g3.z - self.g1.x * other.g9.x - self.g1.y * other.g9.y - self.g1.z * other.g9.z + self.g1.w * other.g10.x);
-}
-
-Scalar transflector__dot__plane(Transflector self, Plane other) {
-    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z);
-}
-
-Scalar transflector__dot__sphere(Transflector self, Sphere other) {
-    return Scalar(0.0 - self.g1.x * other.g0.x - self.g1.y * other.g0.y - self.g1.z * other.g0.z + self.g1.w * other.g1.x);
-}
-
-Scalar transflector__dot__transflector(Transflector self, Transflector other) {
-    return Scalar(0.0 - self.g1.x * other.g1.x - self.g1.y * other.g1.y - self.g1.z * other.g1.z);
-}
-
-Scalar translator__dot__anti_scalar(Translator self, AntiScalar other) {
-    return Scalar(0.0 - self.g0.w * other.g0);
-}
-
-Scalar translator__dot__circle(Translator self, Circle other) {
-    return Scalar(self.g0.x * other.g0.x + self.g0.y * other.g0.y + self.g0.z * other.g0.z);
-}
-
-Scalar translator__dot__dual_num(Translator self, DualNum other) {
-    return Scalar(0.0 - self.g0.w * other.g0.y);
-}
-
-Scalar translator__dot__motor(Translator self, Motor other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
-}
-
-Scalar translator__dot__multi_vector(Translator self, MultiVector other) {
-    return Scalar(self.g0.x * other.g6.x + self.g0.y * other.g6.y + self.g0.z * other.g6.z - self.g0.w * other.g0.y);
-}
-
-Scalar translator__dot__rotor(Translator self, Rotor other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
-}
-
-Scalar translator__dot__translator(Translator self, Translator other) {
-    return Scalar(0.0 - self.g0.w * other.g0.w);
 }
 
 Circle circle__bulk(Circle self) {
@@ -6985,14 +4704,6 @@ RoundPoint round_point__bulk(RoundPoint self) {
 
 Sphere sphere__bulk(Sphere self) {
     return Sphere(vec3(0.0), self.g1 * vec2(0.0, 1.0));
-}
-
-Transflector transflector__bulk(Transflector self) {
-    return Transflector(self.g0, self.g1 * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-Translator translator__bulk(Translator self) {
-    return Translator(self.g0 * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
 Circle circle__round_bulk(Circle self) {
@@ -7079,20 +4790,8 @@ Plane plane__weight(Plane self) {
     return Plane(self.g0 * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
-Rotor rotor__weight(Rotor self) {
-    return self;
-}
-
 Sphere sphere__weight(Sphere self) {
     return Sphere(self.g0, vec2(0.0));
-}
-
-Transflector transflector__weight(Transflector self) {
-    return Transflector(vec3(0.0), self.g1 * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-Translator translator__weight(Translator self) {
-    return Translator(self.g0 * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
 Scalar anti_scalar__anti_dual(AntiScalar self) {
@@ -7135,10 +4834,6 @@ RoundPoint plane__anti_dual(Plane self) {
     return RoundPoint(vec3(self.g0.x, self.g0.y, self.g0.z), vec2(0.0, -self.g0.w));
 }
 
-MultiVector rotor__anti_dual(Rotor self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 Sphere round_point__anti_dual(RoundPoint self) {
     return Sphere(self.g0 * vec3(-1.0), self.g1);
 }
@@ -7149,14 +4844,6 @@ AntiScalar scalar__anti_dual(Scalar self) {
 
 RoundPoint sphere__anti_dual(Sphere self) {
     return RoundPoint(self.g0, self.g1 * vec2(-1.0));
-}
-
-MultiVector transflector__anti_dual(Transflector self) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(0.0, -self.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), self.g0, vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__anti_dual(Translator self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(-self.g0.x, -self.g0.y, -self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 AntiScalar anti_scalar__anti_reversal(AntiScalar self) {
@@ -7199,10 +4886,6 @@ Plane plane__anti_reversal(Plane self) {
     return self;
 }
 
-Rotor rotor__anti_reversal(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
-}
-
 RoundPoint round_point__anti_reversal(RoundPoint self) {
     return self;
 }
@@ -7213,14 +4896,6 @@ Scalar scalar__anti_reversal(Scalar self) {
 
 Sphere sphere__anti_reversal(Sphere self) {
     return self;
-}
-
-Transflector transflector__anti_reversal(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1);
-}
-
-Translator translator__anti_reversal(Translator self) {
-    return Translator(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
 AntiScalar anti_scalar__automorphism(AntiScalar self) {
@@ -7263,10 +4938,6 @@ Plane plane__automorphism(Plane self) {
     return self;
 }
 
-Rotor rotor__automorphism(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0));
-}
-
 RoundPoint round_point__automorphism(RoundPoint self) {
     return RoundPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
@@ -7277,14 +4948,6 @@ Scalar scalar__automorphism(Scalar self) {
 
 Sphere sphere__automorphism(Sphere self) {
     return self;
-}
-
-Transflector transflector__automorphism(Transflector self) {
-    return self;
-}
-
-Translator translator__automorphism(Translator self) {
-    return Translator(self.g0 * vec4(-1.0));
 }
 
 Scalar anti_scalar__complement(AntiScalar self) {
@@ -7327,10 +4990,6 @@ RoundPoint plane__complement(Plane self) {
     return RoundPoint(vec3(self.g0.x, self.g0.y, self.g0.z), vec2(self.g0.w, 0.0));
 }
 
-MultiVector rotor__complement(Rotor self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 Sphere round_point__complement(RoundPoint self) {
     return Sphere(self.g0, self.g1.yx);
 }
@@ -7341,14 +5000,6 @@ AntiScalar scalar__complement(Scalar self) {
 
 RoundPoint sphere__complement(Sphere self) {
     return RoundPoint(self.g0, self.g1.yx);
-}
-
-MultiVector transflector__complement(Transflector self) {
-    return MultiVector(vec2(0.0), vec3(self.g1.x, self.g1.y, self.g1.z), vec2(self.g1.w, 0.0), vec3(0.0), vec3(0.0), vec4(0.0), vec4(-self.g0.x, -self.g0.y, -self.g0.z, 0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__complement(Translator self) {
-    return MultiVector(vec2(self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(-self.g0.x, self.g0.y, self.g0.z), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 AntiScalar anti_scalar__conformal_conjugate(AntiScalar self) {
@@ -7391,10 +5042,6 @@ Plane plane__conformal_conjugate(Plane self) {
     return Plane(self.g0 * vec4(-1.0));
 }
 
-Rotor rotor__conformal_conjugate(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0));
-}
-
 RoundPoint round_point__conformal_conjugate(RoundPoint self) {
     return RoundPoint(self.g0, self.g1 * vec2(1.0, -1.0));
 }
@@ -7405,14 +5052,6 @@ Scalar scalar__conformal_conjugate(Scalar self) {
 
 Sphere sphere__conformal_conjugate(Sphere self) {
     return Sphere(self.g0 * vec3(-1.0), self.g1 * vec2(1.0, -1.0));
-}
-
-Transflector transflector__conformal_conjugate(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1 * vec4(-1.0));
-}
-
-Translator translator__conformal_conjugate(Translator self) {
-    return Translator(self.g0 * vec4(-1.0));
 }
 
 AntiScalar anti_scalar__conjugation(AntiScalar self) {
@@ -7455,10 +5094,6 @@ Plane plane__conjugation(Plane self) {
     return self;
 }
 
-Rotor rotor__conjugation(Rotor self) {
-    return Rotor(self.g0 * vec4(1.0, 1.0, 1.0, -1.0));
-}
-
 RoundPoint round_point__conjugation(RoundPoint self) {
     return RoundPoint(self.g0 * vec3(-1.0), self.g1 * vec2(-1.0));
 }
@@ -7469,14 +5104,6 @@ Scalar scalar__conjugation(Scalar self) {
 
 Sphere sphere__conjugation(Sphere self) {
     return self;
-}
-
-Transflector transflector__conjugation(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1);
-}
-
-Translator translator__conjugation(Translator self) {
-    return Translator(self.g0 * vec4(1.0, 1.0, 1.0, -1.0));
 }
 
 AntiScalar anti_scalar__double_complement(AntiScalar self) {
@@ -7519,10 +5146,6 @@ Plane plane__double_complement(Plane self) {
     return self;
 }
 
-Rotor rotor__double_complement(Rotor self) {
-    return self;
-}
-
 RoundPoint round_point__double_complement(RoundPoint self) {
     return self;
 }
@@ -7532,14 +5155,6 @@ Scalar scalar__double_complement(Scalar self) {
 }
 
 Sphere sphere__double_complement(Sphere self) {
-    return self;
-}
-
-Transflector transflector__double_complement(Transflector self) {
-    return self;
-}
-
-Translator translator__double_complement(Translator self) {
     return self;
 }
 
@@ -7583,10 +5198,6 @@ RoundPoint plane__dual(Plane self) {
     return RoundPoint(vec3(-self.g0.x, self.g0.y, self.g0.z), vec2(0.0, self.g0.w));
 }
 
-MultiVector rotor__dual(Rotor self) {
-    return MultiVector(vec2(-self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(self.g0.x, self.g0.y, self.g0.z), vec4(0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
-}
-
 Sphere round_point__dual(RoundPoint self) {
     return Sphere(self.g0, self.g1 * vec2(-1.0));
 }
@@ -7597,14 +5208,6 @@ AntiScalar scalar__dual(Scalar self) {
 
 RoundPoint sphere__dual(Sphere self) {
     return RoundPoint(self.g0 * vec3(-1.0), self.g1);
-}
-
-MultiVector transflector__dual(Transflector self) {
-    return MultiVector(vec2(0.0), vec3(-self.g1.x, self.g1.y, self.g1.z), vec2(0.0, self.g1.w), vec3(0.0), vec3(0.0), vec4(0.0), vec4(0.0), vec3(0.0), self.g0 * vec3(-1.0), vec3(0.0), vec2(0.0));
-}
-
-MultiVector translator__dual(Translator self) {
-    return MultiVector(vec2(-self.g0.w, 0.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), vec4(self.g0.x, self.g0.y, self.g0.z, 0.0), vec4(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec2(0.0));
 }
 
 AntiScalar anti_scalar__reversal(AntiScalar self) {
@@ -7647,10 +5250,6 @@ Plane plane__reversal(Plane self) {
     return self;
 }
 
-Rotor rotor__reversal(Rotor self) {
-    return Rotor(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
-}
-
 RoundPoint round_point__reversal(RoundPoint self) {
     return self;
 }
@@ -7661,14 +5260,6 @@ Scalar scalar__reversal(Scalar self) {
 
 Sphere sphere__reversal(Sphere self) {
     return self;
-}
-
-Transflector transflector__reversal(Transflector self) {
-    return Transflector(self.g0 * vec3(-1.0), self.g1);
-}
-
-Translator translator__reversal(Translator self) {
-    return Translator(self.g0 * vec4(-1.0, -1.0, -1.0, 1.0));
 }
 
 Dipole circle__bulk_dual(Circle self) {
@@ -7711,14 +5302,6 @@ RoundPoint sphere__bulk_dual(Sphere self) {
     return sphere__complement(sphere__bulk(self));
 }
 
-MultiVector transflector__bulk_dual(Transflector self) {
-    return transflector__complement(transflector__bulk(self));
-}
-
-MultiVector translator__bulk_dual(Translator self) {
-    return translator__complement(translator__bulk(self));
-}
-
 Dipole circle__round_bulk_dual(Circle self) {
     return circle__complement(circle__bulk(self));
 }
@@ -7757,14 +5340,6 @@ Sphere round_point__round_bulk_dual(RoundPoint self) {
 
 RoundPoint sphere__round_bulk_dual(Sphere self) {
     return sphere__complement(sphere__bulk(self));
-}
-
-MultiVector transflector__round_bulk_dual(Transflector self) {
-    return transflector__complement(transflector__bulk(self));
-}
-
-MultiVector translator__round_bulk_dual(Translator self) {
-    return translator__complement(translator__bulk(self));
 }
 
 Scalar anti_scalar__round_weight_dual(AntiScalar self) {
@@ -7807,20 +5382,8 @@ RoundPoint plane__round_weight_dual(Plane self) {
     return plane__complement(plane__weight(self));
 }
 
-MultiVector rotor__round_weight_dual(Rotor self) {
-    return rotor__complement(rotor__weight(self));
-}
-
 RoundPoint sphere__round_weight_dual(Sphere self) {
     return sphere__complement(sphere__weight(self));
-}
-
-MultiVector transflector__round_weight_dual(Transflector self) {
-    return transflector__complement(transflector__weight(self));
-}
-
-MultiVector translator__round_weight_dual(Translator self) {
-    return translator__complement(translator__weight(self));
 }
 
 Scalar anti_scalar__weight_dual(AntiScalar self) {
@@ -7863,20 +5426,8 @@ RoundPoint plane__weight_dual(Plane self) {
     return plane__complement(plane__weight(self));
 }
 
-MultiVector rotor__weight_dual(Rotor self) {
-    return rotor__complement(rotor__weight(self));
-}
-
 RoundPoint sphere__weight_dual(Sphere self) {
     return sphere__complement(sphere__weight(self));
-}
-
-MultiVector transflector__weight_dual(Transflector self) {
-    return transflector__complement(transflector__weight(self));
-}
-
-MultiVector translator__weight_dual(Translator self) {
-    return translator__complement(translator__weight(self));
 }
 
 int anti_scalar__anti_grade() {
@@ -8015,10 +5566,6 @@ Plane plane__anti_inverse(Plane self) {
     return plane__anti_wedge_dot__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__unit(), plane__anti_dot__plane(self, self)));
 }
 
-Rotor rotor__anti_inverse(Rotor self) {
-    return rotor__anti_wedge_dot__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__unit(), rotor__anti_dot__rotor(self, self)));
-}
-
 RoundPoint round_point__anti_inverse(RoundPoint self) {
     return round_point__anti_wedge_dot__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__unit(), round_point__anti_dot__round_point(self, self)));
 }
@@ -8029,14 +5576,6 @@ Scalar scalar__anti_inverse(Scalar self) {
 
 Sphere sphere__anti_inverse(Sphere self) {
     return sphere__anti_wedge_dot__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__unit(), sphere__anti_dot__sphere(self, self)));
-}
-
-Transflector transflector__anti_inverse(Transflector self) {
-    return transflector__anti_wedge_dot__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__unit(), transflector__anti_dot__transflector(self, self)));
-}
-
-Translator translator__anti_inverse(Translator self) {
-    return translator__anti_wedge_dot__anti_scalar(self, anti_scalar__div__anti_scalar(anti_scalar__unit(), translator__anti_dot__translator(self, self)));
 }
 
 AntiScalar anti_scalar__inverse(AntiScalar self) {
@@ -8081,10 +5620,6 @@ Plane plane__inverse(Plane self) {
     return plane__wedge_dot__scalar(self, scalar__div__scalar(scalar__unit(), plane__dot__plane(self, self)));
 }
 
-Rotor rotor__inverse(Rotor self) {
-    return rotor__wedge_dot__scalar(self, scalar__div__scalar(scalar__unit(), rotor__dot__rotor(self, self)));
-}
-
 RoundPoint round_point__inverse(RoundPoint self) {
     return round_point__wedge_dot__scalar(self, scalar__div__scalar(scalar__unit(), round_point__dot__round_point(self, self)));
 }
@@ -8095,14 +5630,6 @@ Scalar scalar__inverse(Scalar self) {
 
 Sphere sphere__inverse(Sphere self) {
     return sphere__wedge_dot__scalar(self, scalar__div__scalar(scalar__unit(), sphere__dot__sphere(self, self)));
-}
-
-Transflector transflector__inverse(Transflector self) {
-    return transflector__wedge_dot__scalar(self, scalar__div__scalar(scalar__unit(), transflector__dot__transflector(self, self)));
-}
-
-Translator translator__inverse(Translator self) {
-    return translator__wedge_dot__scalar(self, scalar__div__scalar(scalar__unit(), translator__dot__translator(self, self)));
 }
 
 DualNum dual_num__anti_cos(DualNum self) {
@@ -8309,10 +5836,6 @@ Scalar plane__bulk_norm_squared(Plane self) {
     return plane__dot__plane(self, self);
 }
 
-Scalar rotor__bulk_norm_squared(Rotor self) {
-    return rotor__dot__rotor(self, self);
-}
-
 Scalar round_point__bulk_norm_squared(RoundPoint self) {
     return round_point__dot__round_point(self, self);
 }
@@ -8323,14 +5846,6 @@ Scalar scalar__bulk_norm_squared(Scalar self) {
 
 Scalar sphere__bulk_norm_squared(Sphere self) {
     return sphere__dot__sphere(self, self);
-}
-
-Scalar transflector__bulk_norm_squared(Transflector self) {
-    return transflector__dot__transflector(self, self);
-}
-
-Scalar translator__bulk_norm_squared(Translator self) {
-    return translator__dot__translator(self, self);
 }
 
 Scalar anti_scalar__bulk_norm(AntiScalar self) {
@@ -8373,10 +5888,6 @@ Scalar plane__bulk_norm(Plane self) {
     return scalar__sqrt(plane__dot__plane(self, self));
 }
 
-Scalar rotor__bulk_norm(Rotor self) {
-    return scalar__sqrt(rotor__dot__rotor(self, self));
-}
-
 Scalar round_point__bulk_norm(RoundPoint self) {
     return scalar__sqrt(round_point__dot__round_point(self, self));
 }
@@ -8387,14 +5898,6 @@ Scalar scalar__bulk_norm(Scalar self) {
 
 Scalar sphere__bulk_norm(Sphere self) {
     return scalar__sqrt(sphere__dot__sphere(self, self));
-}
-
-Scalar transflector__bulk_norm(Transflector self) {
-    return scalar__sqrt(transflector__dot__transflector(self, self));
-}
-
-Scalar translator__bulk_norm(Translator self) {
-    return scalar__sqrt(translator__dot__translator(self, self));
 }
 
 AntiScalar anti_scalar__weight_norm_squared(AntiScalar self) {
@@ -8437,10 +5940,6 @@ AntiScalar plane__weight_norm_squared(Plane self) {
     return plane__anti_dot__plane(self, self);
 }
 
-AntiScalar rotor__weight_norm_squared(Rotor self) {
-    return rotor__anti_dot__rotor(self, self);
-}
-
 AntiScalar round_point__weight_norm_squared(RoundPoint self) {
     return round_point__anti_dot__round_point(self, self);
 }
@@ -8451,14 +5950,6 @@ AntiScalar scalar__weight_norm_squared(Scalar self) {
 
 AntiScalar sphere__weight_norm_squared(Sphere self) {
     return sphere__anti_dot__sphere(self, self);
-}
-
-AntiScalar transflector__weight_norm_squared(Transflector self) {
-    return transflector__anti_dot__transflector(self, self);
-}
-
-AntiScalar translator__weight_norm_squared(Translator self) {
-    return translator__anti_dot__translator(self, self);
 }
 
 AntiScalar anti_scalar__weight_norm(AntiScalar self) {
@@ -8501,10 +5992,6 @@ AntiScalar plane__weight_norm(Plane self) {
     return anti_scalar__anti_sqrt(plane__anti_dot__plane(self, self));
 }
 
-AntiScalar rotor__weight_norm(Rotor self) {
-    return anti_scalar__anti_sqrt(rotor__anti_dot__rotor(self, self));
-}
-
 AntiScalar round_point__weight_norm(RoundPoint self) {
     return anti_scalar__anti_sqrt(round_point__anti_dot__round_point(self, self));
 }
@@ -8515,14 +6002,6 @@ AntiScalar scalar__weight_norm(Scalar self) {
 
 AntiScalar sphere__weight_norm(Sphere self) {
     return anti_scalar__anti_sqrt(sphere__anti_dot__sphere(self, self));
-}
-
-AntiScalar transflector__weight_norm(Transflector self) {
-    return anti_scalar__anti_sqrt(transflector__anti_dot__transflector(self, self));
-}
-
-AntiScalar translator__weight_norm(Translator self) {
-    return anti_scalar__anti_sqrt(translator__anti_dot__translator(self, self));
 }
 
 DualNum anti_scalar__geometric_norm(AntiScalar self) {
@@ -8565,10 +6044,6 @@ DualNum plane__geometric_norm(Plane self) {
     return scalar__add__anti_scalar(plane__bulk_norm(self), plane__weight_norm(self));
 }
 
-DualNum rotor__geometric_norm(Rotor self) {
-    return scalar__add__anti_scalar(rotor__bulk_norm(self), rotor__weight_norm(self));
-}
-
 DualNum round_point__geometric_norm(RoundPoint self) {
     return scalar__add__anti_scalar(round_point__bulk_norm(self), round_point__weight_norm(self));
 }
@@ -8579,14 +6054,6 @@ DualNum scalar__geometric_norm(Scalar self) {
 
 DualNum sphere__geometric_norm(Sphere self) {
     return scalar__add__anti_scalar(sphere__bulk_norm(self), sphere__weight_norm(self));
-}
-
-DualNum transflector__geometric_norm(Transflector self) {
-    return scalar__add__anti_scalar(transflector__bulk_norm(self), transflector__weight_norm(self));
-}
-
-DualNum translator__geometric_norm(Translator self) {
-    return scalar__add__anti_scalar(translator__bulk_norm(self), translator__weight_norm(self));
 }
 
 float anti_scalar__unitized_norm_squared(AntiScalar self) {
@@ -8629,10 +6096,6 @@ float plane__unitized_norm_squared(Plane self) {
     return plane__bulk_norm_squared(self).g0 / plane__weight_norm_squared(self).g0;
 }
 
-float rotor__unitized_norm_squared(Rotor self) {
-    return rotor__bulk_norm_squared(self).g0 / rotor__weight_norm_squared(self).g0;
-}
-
 float round_point__unitized_norm_squared(RoundPoint self) {
     return round_point__bulk_norm_squared(self).g0 / round_point__weight_norm_squared(self).g0;
 }
@@ -8643,14 +6106,6 @@ float scalar__unitized_norm_squared(Scalar self) {
 
 float sphere__unitized_norm_squared(Sphere self) {
     return sphere__bulk_norm_squared(self).g0 / sphere__weight_norm_squared(self).g0;
-}
-
-float transflector__unitized_norm_squared(Transflector self) {
-    return transflector__bulk_norm_squared(self).g0 / transflector__weight_norm_squared(self).g0;
-}
-
-float translator__unitized_norm_squared(Translator self) {
-    return translator__bulk_norm_squared(self).g0 / translator__weight_norm_squared(self).g0;
 }
 
 float anti_scalar__unitized_norm(AntiScalar self) {
@@ -8693,10 +6148,6 @@ float plane__unitized_norm(Plane self) {
     return sqrt(plane__unitized_norm_squared(self));
 }
 
-float rotor__unitized_norm(Rotor self) {
-    return sqrt(rotor__unitized_norm_squared(self));
-}
-
 float round_point__unitized_norm(RoundPoint self) {
     return sqrt(round_point__unitized_norm_squared(self));
 }
@@ -8707,14 +6158,6 @@ float scalar__unitized_norm(Scalar self) {
 
 float sphere__unitized_norm(Sphere self) {
     return sqrt(sphere__unitized_norm_squared(self));
-}
-
-float transflector__unitized_norm(Transflector self) {
-    return sqrt(transflector__unitized_norm_squared(self));
-}
-
-float translator__unitized_norm(Translator self) {
-    return sqrt(translator__unitized_norm_squared(self));
 }
 
 AntiScalar anti_scalar__unitize(AntiScalar self) {
@@ -8757,10 +6200,6 @@ Plane plane__unitize(Plane self) {
     return plane__wedge_dot__scalar(self, Scalar(1.0 / plane__weight_norm(self).g0));
 }
 
-Rotor rotor__unitize(Rotor self) {
-    return rotor__wedge_dot__scalar(self, Scalar(1.0 / rotor__weight_norm(self).g0));
-}
-
 RoundPoint round_point__unitize(RoundPoint self) {
     return round_point__wedge_dot__scalar(self, Scalar(1.0 / round_point__weight_norm(self).g0));
 }
@@ -8771,14 +6210,6 @@ Scalar scalar__unitize(Scalar self) {
 
 Sphere sphere__unitize(Sphere self) {
     return sphere__wedge_dot__scalar(self, Scalar(1.0 / sphere__weight_norm(self).g0));
-}
-
-Transflector transflector__unitize(Transflector self) {
-    return transflector__wedge_dot__scalar(self, Scalar(1.0 / transflector__weight_norm(self).g0));
-}
-
-Translator translator__unitize(Translator self) {
-    return translator__wedge_dot__scalar(self, Scalar(1.0 / translator__weight_norm(self).g0));
 }
 
 Circle anti_scalar__sandwich__circle(AntiScalar self, Circle other) {
@@ -8813,24 +6244,12 @@ Plane anti_scalar__sandwich__plane(AntiScalar self, Plane other) {
     return plane__anti_wedge_dot__anti_scalar(anti_scalar__anti_wedge_dot__plane(self, other), anti_scalar__anti_reversal(self));
 }
 
-Rotor anti_scalar__sandwich__rotor(AntiScalar self, Rotor other) {
-    return rotor__anti_wedge_dot__anti_scalar(anti_scalar__anti_wedge_dot__rotor(self, other), anti_scalar__anti_reversal(self));
-}
-
 RoundPoint anti_scalar__sandwich__round_point(AntiScalar self, RoundPoint other) {
     return round_point__anti_wedge_dot__anti_scalar(anti_scalar__anti_wedge_dot__round_point(self, other), anti_scalar__anti_reversal(self));
 }
 
 Sphere anti_scalar__sandwich__sphere(AntiScalar self, Sphere other) {
     return sphere__anti_wedge_dot__anti_scalar(anti_scalar__anti_wedge_dot__sphere(self, other), anti_scalar__anti_reversal(self));
-}
-
-Transflector anti_scalar__sandwich__transflector(AntiScalar self, Transflector other) {
-    return transflector__anti_wedge_dot__anti_scalar(anti_scalar__anti_wedge_dot__transflector(self, other), anti_scalar__anti_reversal(self));
-}
-
-Translator anti_scalar__sandwich__translator(AntiScalar self, Translator other) {
-    return translator__anti_wedge_dot__anti_scalar(anti_scalar__anti_wedge_dot__translator(self, other), anti_scalar__anti_reversal(self));
 }
 
 Circle circle__sandwich__circle(Circle self, Circle other) {
@@ -8865,24 +6284,12 @@ Plane circle__sandwich__plane(Circle self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__circle(circle__anti_wedge_dot__plane(self, other), circle__anti_reversal(self)));
 }
 
-Rotor circle__sandwich__rotor(Circle self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__circle(circle__anti_wedge_dot__rotor(self, other), circle__anti_reversal(self)));
-}
-
 RoundPoint circle__sandwich__round_point(Circle self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__circle(circle__anti_wedge_dot__round_point(self, other), circle__anti_reversal(self)));
 }
 
 Sphere circle__sandwich__sphere(Circle self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__circle(circle__anti_wedge_dot__sphere(self, other), circle__anti_reversal(self)));
-}
-
-Transflector circle__sandwich__transflector(Circle self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__circle(circle__anti_wedge_dot__transflector(self, other), circle__anti_reversal(self)));
-}
-
-Translator circle__sandwich__translator(Circle self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__circle(circle__anti_wedge_dot__translator(self, other), circle__anti_reversal(self)));
 }
 
 Circle dipole__sandwich__circle(Dipole self, Circle other) {
@@ -8917,24 +6324,12 @@ Plane dipole__sandwich__plane(Dipole self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__dipole(dipole__anti_wedge_dot__plane(self, other), dipole__anti_reversal(self)));
 }
 
-Rotor dipole__sandwich__rotor(Dipole self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__dipole(dipole__anti_wedge_dot__rotor(self, other), dipole__anti_reversal(self)));
-}
-
 RoundPoint dipole__sandwich__round_point(Dipole self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__dipole(dipole__anti_wedge_dot__round_point(self, other), dipole__anti_reversal(self)));
 }
 
 Sphere dipole__sandwich__sphere(Dipole self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__dipole(dipole__anti_wedge_dot__sphere(self, other), dipole__anti_reversal(self)));
-}
-
-Transflector dipole__sandwich__transflector(Dipole self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__dipole(dipole__anti_wedge_dot__transflector(self, other), dipole__anti_reversal(self)));
-}
-
-Translator dipole__sandwich__translator(Dipole self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__dipole(dipole__anti_wedge_dot__translator(self, other), dipole__anti_reversal(self)));
 }
 
 Circle dual_num__sandwich__circle(DualNum self, Circle other) {
@@ -8969,24 +6364,12 @@ Plane dual_num__sandwich__plane(DualNum self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__dual_num(dual_num__anti_wedge_dot__plane(self, other), dual_num__anti_reversal(self)));
 }
 
-Rotor dual_num__sandwich__rotor(DualNum self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__dual_num(dual_num__anti_wedge_dot__rotor(self, other), dual_num__anti_reversal(self)));
-}
-
 RoundPoint dual_num__sandwich__round_point(DualNum self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__dual_num(dual_num__anti_wedge_dot__round_point(self, other), dual_num__anti_reversal(self)));
 }
 
 Sphere dual_num__sandwich__sphere(DualNum self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__dual_num(dual_num__anti_wedge_dot__sphere(self, other), dual_num__anti_reversal(self)));
-}
-
-Transflector dual_num__sandwich__transflector(DualNum self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__dual_num(dual_num__anti_wedge_dot__transflector(self, other), dual_num__anti_reversal(self)));
-}
-
-Translator dual_num__sandwich__translator(DualNum self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__dual_num(dual_num__anti_wedge_dot__translator(self, other), dual_num__anti_reversal(self)));
 }
 
 Circle flat_point__sandwich__circle(FlatPoint self, Circle other) {
@@ -8998,7 +6381,7 @@ Dipole flat_point__sandwich__dipole(FlatPoint self, Dipole other) {
 }
 
 FlatPoint flat_point__sandwich__flat_point(FlatPoint self, FlatPoint other) {
-    return translator__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__flat_point(self, other), flat_point__anti_reversal(self));
+    return flector__into__flat_point(motor__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__flat_point(self, other), flat_point__anti_reversal(self)));
 }
 
 Flector flat_point__sandwich__flector(FlatPoint self, Flector other) {
@@ -9006,7 +6389,7 @@ Flector flat_point__sandwich__flector(FlatPoint self, Flector other) {
 }
 
 Line flat_point__sandwich__line(FlatPoint self, Line other) {
-    return multi_vector__into__line(transflector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__line(self, other), flat_point__anti_reversal(self)));
+    return multi_vector__into__line(flector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__line(self, other), flat_point__anti_reversal(self)));
 }
 
 Motor flat_point__sandwich__motor(FlatPoint self, Motor other) {
@@ -9021,24 +6404,12 @@ Plane flat_point__sandwich__plane(FlatPoint self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__plane(self, other), flat_point__anti_reversal(self)));
 }
 
-Rotor flat_point__sandwich__rotor(FlatPoint self, Rotor other) {
-    return multi_vector__into__rotor(flector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__rotor(self, other), flat_point__anti_reversal(self)));
-}
-
 RoundPoint flat_point__sandwich__round_point(FlatPoint self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__round_point(self, other), flat_point__anti_reversal(self)));
 }
 
 Sphere flat_point__sandwich__sphere(FlatPoint self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__sphere(self, other), flat_point__anti_reversal(self)));
-}
-
-Transflector flat_point__sandwich__transflector(FlatPoint self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__transflector(self, other), flat_point__anti_reversal(self)));
-}
-
-Translator flat_point__sandwich__translator(FlatPoint self, Translator other) {
-    return flat_point__anti_wedge_dot__flat_point(flat_point__anti_wedge_dot__translator(self, other), flat_point__anti_reversal(self));
 }
 
 Circle flector__sandwich__circle(Flector self, Circle other) {
@@ -9073,24 +6444,12 @@ Plane flector__sandwich__plane(Flector self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__flector(flector__anti_wedge_dot__plane(self, other), flector__anti_reversal(self)));
 }
 
-Rotor flector__sandwich__rotor(Flector self, Rotor other) {
-    return multi_vector__into__rotor(flector__anti_wedge_dot__flector(flector__anti_wedge_dot__rotor(self, other), flector__anti_reversal(self)));
-}
-
 RoundPoint flector__sandwich__round_point(Flector self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__flector(flector__anti_wedge_dot__round_point(self, other), flector__anti_reversal(self)));
 }
 
 Sphere flector__sandwich__sphere(Flector self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__flector(flector__anti_wedge_dot__sphere(self, other), flector__anti_reversal(self)));
-}
-
-Transflector flector__sandwich__transflector(Flector self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__flector(flector__anti_wedge_dot__transflector(self, other), flector__anti_reversal(self)));
-}
-
-Translator flector__sandwich__translator(Flector self, Translator other) {
-    return multi_vector__into__translator(flector__anti_wedge_dot__flector(flector__anti_wedge_dot__translator(self, other), flector__anti_reversal(self)));
 }
 
 Circle line__sandwich__circle(Line self, Circle other) {
@@ -9102,7 +6461,7 @@ Dipole line__sandwich__dipole(Line self, Dipole other) {
 }
 
 FlatPoint line__sandwich__flat_point(Line self, FlatPoint other) {
-    return flector__into__flat_point(transflector__anti_wedge_dot__line(line__anti_wedge_dot__flat_point(self, other), line__anti_reversal(self)));
+    return flector__into__flat_point(flector__anti_wedge_dot__line(line__anti_wedge_dot__flat_point(self, other), line__anti_reversal(self)));
 }
 
 Flector line__sandwich__flector(Line self, Flector other) {
@@ -9125,24 +6484,12 @@ Plane line__sandwich__plane(Line self, Plane other) {
     return flector__into__plane(flector__anti_wedge_dot__line(line__anti_wedge_dot__plane(self, other), line__anti_reversal(self)));
 }
 
-Rotor line__sandwich__rotor(Line self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__line(line__anti_wedge_dot__rotor(self, other), line__anti_reversal(self)));
-}
-
 RoundPoint line__sandwich__round_point(Line self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__line(line__anti_wedge_dot__round_point(self, other), line__anti_reversal(self)));
 }
 
 Sphere line__sandwich__sphere(Line self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__line(line__anti_wedge_dot__sphere(self, other), line__anti_reversal(self)));
-}
-
-Transflector line__sandwich__transflector(Line self, Transflector other) {
-    return flector__into__transflector(flector__anti_wedge_dot__line(line__anti_wedge_dot__transflector(self, other), line__anti_reversal(self)));
-}
-
-Translator line__sandwich__translator(Line self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__line(line__anti_wedge_dot__translator(self, other), line__anti_reversal(self)));
 }
 
 Circle motor__sandwich__circle(Motor self, Circle other) {
@@ -9177,24 +6524,12 @@ Plane motor__sandwich__plane(Motor self, Plane other) {
     return flector__into__plane(flector__anti_wedge_dot__motor(motor__anti_wedge_dot__plane(self, other), motor__anti_reversal(self)));
 }
 
-Rotor motor__sandwich__rotor(Motor self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__motor(motor__anti_wedge_dot__rotor(self, other), motor__anti_reversal(self)));
-}
-
 RoundPoint motor__sandwich__round_point(Motor self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__motor(motor__anti_wedge_dot__round_point(self, other), motor__anti_reversal(self)));
 }
 
 Sphere motor__sandwich__sphere(Motor self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__motor(motor__anti_wedge_dot__sphere(self, other), motor__anti_reversal(self)));
-}
-
-Transflector motor__sandwich__transflector(Motor self, Transflector other) {
-    return flector__into__transflector(flector__anti_wedge_dot__motor(motor__anti_wedge_dot__transflector(self, other), motor__anti_reversal(self)));
-}
-
-Translator motor__sandwich__translator(Motor self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__motor(motor__anti_wedge_dot__translator(self, other), motor__anti_reversal(self)));
 }
 
 Circle multi_vector__sandwich__circle(MultiVector self, Circle other) {
@@ -9229,24 +6564,12 @@ Plane multi_vector__sandwich__plane(MultiVector self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__multi_vector(multi_vector__anti_wedge_dot__plane(self, other), multi_vector__anti_reversal(self)));
 }
 
-Rotor multi_vector__sandwich__rotor(MultiVector self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__multi_vector(multi_vector__anti_wedge_dot__rotor(self, other), multi_vector__anti_reversal(self)));
-}
-
 RoundPoint multi_vector__sandwich__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__multi_vector(multi_vector__anti_wedge_dot__round_point(self, other), multi_vector__anti_reversal(self)));
 }
 
 Sphere multi_vector__sandwich__sphere(MultiVector self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__multi_vector(multi_vector__anti_wedge_dot__sphere(self, other), multi_vector__anti_reversal(self)));
-}
-
-Transflector multi_vector__sandwich__transflector(MultiVector self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__multi_vector(multi_vector__anti_wedge_dot__transflector(self, other), multi_vector__anti_reversal(self)));
-}
-
-Translator multi_vector__sandwich__translator(MultiVector self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__multi_vector(multi_vector__anti_wedge_dot__translator(self, other), multi_vector__anti_reversal(self)));
 }
 
 Circle plane__sandwich__circle(Plane self, Circle other) {
@@ -9281,76 +6604,12 @@ Plane plane__sandwich__plane(Plane self, Plane other) {
     return flector__into__plane(motor__anti_wedge_dot__plane(plane__anti_wedge_dot__plane(self, other), plane__anti_reversal(self)));
 }
 
-Rotor plane__sandwich__rotor(Plane self, Rotor other) {
-    return multi_vector__into__rotor(flector__anti_wedge_dot__plane(plane__anti_wedge_dot__rotor(self, other), plane__anti_reversal(self)));
-}
-
 RoundPoint plane__sandwich__round_point(Plane self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__plane(plane__anti_wedge_dot__round_point(self, other), plane__anti_reversal(self)));
 }
 
 Sphere plane__sandwich__sphere(Plane self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__plane(plane__anti_wedge_dot__sphere(self, other), plane__anti_reversal(self)));
-}
-
-Transflector plane__sandwich__transflector(Plane self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__plane(plane__anti_wedge_dot__transflector(self, other), plane__anti_reversal(self)));
-}
-
-Translator plane__sandwich__translator(Plane self, Translator other) {
-    return multi_vector__into__translator(transflector__anti_wedge_dot__plane(plane__anti_wedge_dot__translator(self, other), plane__anti_reversal(self)));
-}
-
-Circle rotor__sandwich__circle(Rotor self, Circle other) {
-    return multi_vector__into__circle(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__circle(self, other), rotor__anti_reversal(self)));
-}
-
-Dipole rotor__sandwich__dipole(Rotor self, Dipole other) {
-    return multi_vector__into__dipole(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__dipole(self, other), rotor__anti_reversal(self)));
-}
-
-FlatPoint rotor__sandwich__flat_point(Rotor self, FlatPoint other) {
-    return flector__into__flat_point(flector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__flat_point(self, other), rotor__anti_reversal(self)));
-}
-
-Flector rotor__sandwich__flector(Rotor self, Flector other) {
-    return flector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__flector(self, other), rotor__anti_reversal(self));
-}
-
-Line rotor__sandwich__line(Rotor self, Line other) {
-    return multi_vector__into__line(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__line(self, other), rotor__anti_reversal(self)));
-}
-
-Motor rotor__sandwich__motor(Rotor self, Motor other) {
-    return multi_vector__into__motor(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__motor(self, other), rotor__anti_reversal(self)));
-}
-
-MultiVector rotor__sandwich__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__multi_vector(self, other), rotor__anti_reversal(self));
-}
-
-Plane rotor__sandwich__plane(Rotor self, Plane other) {
-    return flector__into__plane(flector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__plane(self, other), rotor__anti_reversal(self)));
-}
-
-Rotor rotor__sandwich__rotor(Rotor self, Rotor other) {
-    return rotor__anti_wedge_dot__rotor(rotor__anti_wedge_dot__rotor(self, other), rotor__anti_reversal(self));
-}
-
-RoundPoint rotor__sandwich__round_point(Rotor self, RoundPoint other) {
-    return multi_vector__into__round_point(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__round_point(self, other), rotor__anti_reversal(self)));
-}
-
-Sphere rotor__sandwich__sphere(Rotor self, Sphere other) {
-    return multi_vector__into__sphere(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__sphere(self, other), rotor__anti_reversal(self)));
-}
-
-Transflector rotor__sandwich__transflector(Rotor self, Transflector other) {
-    return flector__into__transflector(flector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__transflector(self, other), rotor__anti_reversal(self)));
-}
-
-Translator rotor__sandwich__translator(Rotor self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__rotor(rotor__anti_wedge_dot__translator(self, other), rotor__anti_reversal(self)));
 }
 
 Circle round_point__sandwich__circle(RoundPoint self, Circle other) {
@@ -9385,24 +6644,12 @@ Plane round_point__sandwich__plane(RoundPoint self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__round_point(round_point__anti_wedge_dot__plane(self, other), round_point__anti_reversal(self)));
 }
 
-Rotor round_point__sandwich__rotor(RoundPoint self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__round_point(round_point__anti_wedge_dot__rotor(self, other), round_point__anti_reversal(self)));
-}
-
 RoundPoint round_point__sandwich__round_point(RoundPoint self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__round_point(round_point__anti_wedge_dot__round_point(self, other), round_point__anti_reversal(self)));
 }
 
 Sphere round_point__sandwich__sphere(RoundPoint self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__round_point(round_point__anti_wedge_dot__sphere(self, other), round_point__anti_reversal(self)));
-}
-
-Transflector round_point__sandwich__transflector(RoundPoint self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__round_point(round_point__anti_wedge_dot__transflector(self, other), round_point__anti_reversal(self)));
-}
-
-Translator round_point__sandwich__translator(RoundPoint self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__round_point(round_point__anti_wedge_dot__translator(self, other), round_point__anti_reversal(self)));
 }
 
 Circle scalar__sandwich__circle(Scalar self, Circle other) {
@@ -9437,24 +6684,12 @@ Plane scalar__sandwich__plane(Scalar self, Plane other) {
     return sphere__into__plane(round_point__anti_wedge_dot__scalar(scalar__anti_wedge_dot__plane(self, other), scalar__anti_reversal(self)));
 }
 
-Rotor scalar__sandwich__rotor(Scalar self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__scalar(scalar__anti_wedge_dot__rotor(self, other), scalar__anti_reversal(self)));
-}
-
 RoundPoint scalar__sandwich__round_point(Scalar self, RoundPoint other) {
     return sphere__anti_wedge_dot__scalar(scalar__anti_wedge_dot__round_point(self, other), scalar__anti_reversal(self));
 }
 
 Sphere scalar__sandwich__sphere(Scalar self, Sphere other) {
     return round_point__anti_wedge_dot__scalar(scalar__anti_wedge_dot__sphere(self, other), scalar__anti_reversal(self));
-}
-
-Transflector scalar__sandwich__transflector(Scalar self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__scalar(scalar__anti_wedge_dot__transflector(self, other), scalar__anti_reversal(self)));
-}
-
-Translator scalar__sandwich__translator(Scalar self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__scalar(scalar__anti_wedge_dot__translator(self, other), scalar__anti_reversal(self)));
 }
 
 Circle sphere__sandwich__circle(Sphere self, Circle other) {
@@ -9489,128 +6724,12 @@ Plane sphere__sandwich__plane(Sphere self, Plane other) {
     return multi_vector__into__plane(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__plane(self, other), sphere__anti_reversal(self)));
 }
 
-Rotor sphere__sandwich__rotor(Sphere self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__rotor(self, other), sphere__anti_reversal(self)));
-}
-
 RoundPoint sphere__sandwich__round_point(Sphere self, RoundPoint other) {
     return multi_vector__into__round_point(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__round_point(self, other), sphere__anti_reversal(self)));
 }
 
 Sphere sphere__sandwich__sphere(Sphere self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__sphere(self, other), sphere__anti_reversal(self)));
-}
-
-Transflector sphere__sandwich__transflector(Sphere self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__transflector(self, other), sphere__anti_reversal(self)));
-}
-
-Translator sphere__sandwich__translator(Sphere self, Translator other) {
-    return multi_vector__into__translator(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__translator(self, other), sphere__anti_reversal(self)));
-}
-
-Circle transflector__sandwich__circle(Transflector self, Circle other) {
-    return multi_vector__into__circle(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__circle(self, other), transflector__anti_reversal(self)));
-}
-
-Dipole transflector__sandwich__dipole(Transflector self, Dipole other) {
-    return multi_vector__into__dipole(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__dipole(self, other), transflector__anti_reversal(self)));
-}
-
-FlatPoint transflector__sandwich__flat_point(Transflector self, FlatPoint other) {
-    return multi_vector__into__flat_point(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__flat_point(self, other), transflector__anti_reversal(self)));
-}
-
-Flector transflector__sandwich__flector(Transflector self, Flector other) {
-    return multi_vector__into__flector(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__flector(self, other), transflector__anti_reversal(self)));
-}
-
-Line transflector__sandwich__line(Transflector self, Line other) {
-    return multi_vector__into__line(flector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__line(self, other), transflector__anti_reversal(self)));
-}
-
-Motor transflector__sandwich__motor(Transflector self, Motor other) {
-    return multi_vector__into__motor(flector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__motor(self, other), transflector__anti_reversal(self)));
-}
-
-MultiVector transflector__sandwich__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__multi_vector(self, other), transflector__anti_reversal(self));
-}
-
-Plane transflector__sandwich__plane(Transflector self, Plane other) {
-    return multi_vector__into__plane(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__plane(self, other), transflector__anti_reversal(self)));
-}
-
-Rotor transflector__sandwich__rotor(Transflector self, Rotor other) {
-    return multi_vector__into__rotor(flector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__rotor(self, other), transflector__anti_reversal(self)));
-}
-
-RoundPoint transflector__sandwich__round_point(Transflector self, RoundPoint other) {
-    return multi_vector__into__round_point(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__round_point(self, other), transflector__anti_reversal(self)));
-}
-
-Sphere transflector__sandwich__sphere(Transflector self, Sphere other) {
-    return multi_vector__into__sphere(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__sphere(self, other), transflector__anti_reversal(self)));
-}
-
-Transflector transflector__sandwich__transflector(Transflector self, Transflector other) {
-    return multi_vector__into__transflector(multi_vector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__transflector(self, other), transflector__anti_reversal(self)));
-}
-
-Translator transflector__sandwich__translator(Transflector self, Translator other) {
-    return multi_vector__into__translator(transflector__anti_wedge_dot__transflector(transflector__anti_wedge_dot__translator(self, other), transflector__anti_reversal(self)));
-}
-
-Circle translator__sandwich__circle(Translator self, Circle other) {
-    return multi_vector__into__circle(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__circle(self, other), translator__anti_reversal(self)));
-}
-
-Dipole translator__sandwich__dipole(Translator self, Dipole other) {
-    return multi_vector__into__dipole(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__dipole(self, other), translator__anti_reversal(self)));
-}
-
-FlatPoint translator__sandwich__flat_point(Translator self, FlatPoint other) {
-    return flat_point__anti_wedge_dot__translator(translator__anti_wedge_dot__flat_point(self, other), translator__anti_reversal(self));
-}
-
-Flector translator__sandwich__flector(Translator self, Flector other) {
-    return flector__anti_wedge_dot__translator(translator__anti_wedge_dot__flector(self, other), translator__anti_reversal(self));
-}
-
-Line translator__sandwich__line(Translator self, Line other) {
-    return multi_vector__into__line(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__line(self, other), translator__anti_reversal(self)));
-}
-
-Motor translator__sandwich__motor(Translator self, Motor other) {
-    return multi_vector__into__motor(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__motor(self, other), translator__anti_reversal(self)));
-}
-
-MultiVector translator__sandwich__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__multi_vector(self, other), translator__anti_reversal(self));
-}
-
-Plane translator__sandwich__plane(Translator self, Plane other) {
-    return transflector__into__plane(transflector__anti_wedge_dot__translator(translator__anti_wedge_dot__plane(self, other), translator__anti_reversal(self)));
-}
-
-Rotor translator__sandwich__rotor(Translator self, Rotor other) {
-    return multi_vector__into__rotor(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__rotor(self, other), translator__anti_reversal(self)));
-}
-
-RoundPoint translator__sandwich__round_point(Translator self, RoundPoint other) {
-    return multi_vector__into__round_point(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__round_point(self, other), translator__anti_reversal(self)));
-}
-
-Sphere translator__sandwich__sphere(Translator self, Sphere other) {
-    return multi_vector__into__sphere(multi_vector__anti_wedge_dot__translator(translator__anti_wedge_dot__sphere(self, other), translator__anti_reversal(self)));
-}
-
-Transflector translator__sandwich__transflector(Translator self, Transflector other) {
-    return transflector__anti_wedge_dot__translator(translator__anti_wedge_dot__transflector(self, other), translator__anti_reversal(self));
-}
-
-Translator translator__sandwich__translator(Translator self, Translator other) {
-    return translator__anti_wedge_dot__translator(translator__anti_wedge_dot__translator(self, other), translator__anti_reversal(self));
 }
 
 Circle flat_point__point_inversion__circle(FlatPoint self, Circle other) {
@@ -9645,24 +6764,12 @@ Plane flat_point__point_inversion__plane(FlatPoint self, Plane other) {
     return flat_point__sandwich__plane(flat_point__unitize(self), other);
 }
 
-Rotor flat_point__point_inversion__rotor(FlatPoint self, Rotor other) {
-    return flat_point__sandwich__rotor(flat_point__unitize(self), other);
-}
-
 RoundPoint flat_point__point_inversion__round_point(FlatPoint self, RoundPoint other) {
     return flat_point__sandwich__round_point(flat_point__unitize(self), other);
 }
 
 Sphere flat_point__point_inversion__sphere(FlatPoint self, Sphere other) {
     return flat_point__sandwich__sphere(flat_point__unitize(self), other);
-}
-
-Transflector flat_point__point_inversion__transflector(FlatPoint self, Transflector other) {
-    return flat_point__sandwich__transflector(flat_point__unitize(self), other);
-}
-
-Translator flat_point__point_inversion__translator(FlatPoint self, Translator other) {
-    return flat_point__sandwich__translator(flat_point__unitize(self), other);
 }
 
 Circle plane__reflect__circle(Plane self, Circle other) {
@@ -9697,180 +6804,12 @@ Plane plane__reflect__plane(Plane self, Plane other) {
     return plane__sandwich__plane(plane__unitize(self), other);
 }
 
-Rotor plane__reflect__rotor(Plane self, Rotor other) {
-    return plane__sandwich__rotor(plane__unitize(self), other);
-}
-
 RoundPoint plane__reflect__round_point(Plane self, RoundPoint other) {
     return plane__sandwich__round_point(plane__unitize(self), other);
 }
 
 Sphere plane__reflect__sphere(Plane self, Sphere other) {
     return plane__sandwich__sphere(plane__unitize(self), other);
-}
-
-Transflector plane__reflect__transflector(Plane self, Transflector other) {
-    return plane__sandwich__transflector(plane__unitize(self), other);
-}
-
-Translator plane__reflect__translator(Plane self, Translator other) {
-    return plane__sandwich__translator(plane__unitize(self), other);
-}
-
-Circle rotor__rotate__circle(Rotor self, Circle other) {
-    return rotor__sandwich__circle(self, other);
-}
-
-Dipole rotor__rotate__dipole(Rotor self, Dipole other) {
-    return rotor__sandwich__dipole(self, other);
-}
-
-FlatPoint rotor__rotate__flat_point(Rotor self, FlatPoint other) {
-    return rotor__sandwich__flat_point(self, other);
-}
-
-Flector rotor__rotate__flector(Rotor self, Flector other) {
-    return rotor__sandwich__flector(self, other);
-}
-
-Line rotor__rotate__line(Rotor self, Line other) {
-    return rotor__sandwich__line(self, other);
-}
-
-Motor rotor__rotate__motor(Rotor self, Motor other) {
-    return rotor__sandwich__motor(self, other);
-}
-
-MultiVector rotor__rotate__multi_vector(Rotor self, MultiVector other) {
-    return rotor__sandwich__multi_vector(self, other);
-}
-
-Plane rotor__rotate__plane(Rotor self, Plane other) {
-    return rotor__sandwich__plane(self, other);
-}
-
-Rotor rotor__rotate__rotor(Rotor self, Rotor other) {
-    return rotor__sandwich__rotor(self, other);
-}
-
-RoundPoint rotor__rotate__round_point(Rotor self, RoundPoint other) {
-    return rotor__sandwich__round_point(self, other);
-}
-
-Sphere rotor__rotate__sphere(Rotor self, Sphere other) {
-    return rotor__sandwich__sphere(self, other);
-}
-
-Transflector rotor__rotate__transflector(Rotor self, Transflector other) {
-    return rotor__sandwich__transflector(self, other);
-}
-
-Translator rotor__rotate__translator(Rotor self, Translator other) {
-    return rotor__sandwich__translator(self, other);
-}
-
-Circle transflector__transflect__circle(Transflector self, Circle other) {
-    return transflector__sandwich__circle(self, other);
-}
-
-Dipole transflector__transflect__dipole(Transflector self, Dipole other) {
-    return transflector__sandwich__dipole(self, other);
-}
-
-FlatPoint transflector__transflect__flat_point(Transflector self, FlatPoint other) {
-    return transflector__sandwich__flat_point(self, other);
-}
-
-Flector transflector__transflect__flector(Transflector self, Flector other) {
-    return transflector__sandwich__flector(self, other);
-}
-
-Line transflector__transflect__line(Transflector self, Line other) {
-    return transflector__sandwich__line(self, other);
-}
-
-Motor transflector__transflect__motor(Transflector self, Motor other) {
-    return transflector__sandwich__motor(self, other);
-}
-
-MultiVector transflector__transflect__multi_vector(Transflector self, MultiVector other) {
-    return transflector__sandwich__multi_vector(self, other);
-}
-
-Plane transflector__transflect__plane(Transflector self, Plane other) {
-    return transflector__sandwich__plane(self, other);
-}
-
-Rotor transflector__transflect__rotor(Transflector self, Rotor other) {
-    return transflector__sandwich__rotor(self, other);
-}
-
-RoundPoint transflector__transflect__round_point(Transflector self, RoundPoint other) {
-    return transflector__sandwich__round_point(self, other);
-}
-
-Sphere transflector__transflect__sphere(Transflector self, Sphere other) {
-    return transflector__sandwich__sphere(self, other);
-}
-
-Transflector transflector__transflect__transflector(Transflector self, Transflector other) {
-    return transflector__sandwich__transflector(self, other);
-}
-
-Translator transflector__transflect__translator(Transflector self, Translator other) {
-    return transflector__sandwich__translator(self, other);
-}
-
-Circle translator__translate__circle(Translator self, Circle other) {
-    return translator__sandwich__circle(self, other);
-}
-
-Dipole translator__translate__dipole(Translator self, Dipole other) {
-    return translator__sandwich__dipole(self, other);
-}
-
-FlatPoint translator__translate__flat_point(Translator self, FlatPoint other) {
-    return translator__sandwich__flat_point(self, other);
-}
-
-Flector translator__translate__flector(Translator self, Flector other) {
-    return translator__sandwich__flector(self, other);
-}
-
-Line translator__translate__line(Translator self, Line other) {
-    return translator__sandwich__line(self, other);
-}
-
-Motor translator__translate__motor(Translator self, Motor other) {
-    return translator__sandwich__motor(self, other);
-}
-
-MultiVector translator__translate__multi_vector(Translator self, MultiVector other) {
-    return translator__sandwich__multi_vector(self, other);
-}
-
-Plane translator__translate__plane(Translator self, Plane other) {
-    return translator__sandwich__plane(self, other);
-}
-
-Rotor translator__translate__rotor(Translator self, Rotor other) {
-    return translator__sandwich__rotor(self, other);
-}
-
-RoundPoint translator__translate__round_point(Translator self, RoundPoint other) {
-    return translator__sandwich__round_point(self, other);
-}
-
-Sphere translator__translate__sphere(Translator self, Sphere other) {
-    return translator__sandwich__sphere(self, other);
-}
-
-Transflector translator__translate__transflector(Translator self, Transflector other) {
-    return translator__sandwich__transflector(self, other);
-}
-
-Translator translator__translate__translator(Translator self, Translator other) {
-    return translator__sandwich__translator(self, other);
 }
 
 AntiScalar anti_scalar__geometric_anti_quotient__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -9913,10 +6852,6 @@ Plane anti_scalar__geometric_anti_quotient__plane(AntiScalar self, Plane other) 
     return anti_scalar__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-Rotor anti_scalar__geometric_anti_quotient__rotor(AntiScalar self, Rotor other) {
-    return anti_scalar__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 RoundPoint anti_scalar__geometric_anti_quotient__round_point(AntiScalar self, RoundPoint other) {
     return anti_scalar__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -9927,14 +6862,6 @@ Scalar anti_scalar__geometric_anti_quotient__scalar(AntiScalar self, Scalar othe
 
 Sphere anti_scalar__geometric_anti_quotient__sphere(AntiScalar self, Sphere other) {
     return anti_scalar__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-Transflector anti_scalar__geometric_anti_quotient__transflector(AntiScalar self, Transflector other) {
-    return anti_scalar__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-Translator anti_scalar__geometric_anti_quotient__translator(AntiScalar self, Translator other) {
-    return anti_scalar__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Circle circle__geometric_anti_quotient__anti_scalar(Circle self, AntiScalar other) {
@@ -9977,10 +6904,6 @@ MultiVector circle__geometric_anti_quotient__plane(Circle self, Plane other) {
     return circle__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector circle__geometric_anti_quotient__rotor(Circle self, Rotor other) {
-    return circle__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector circle__geometric_anti_quotient__round_point(Circle self, RoundPoint other) {
     return circle__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -9991,14 +6914,6 @@ Dipole circle__geometric_anti_quotient__scalar(Circle self, Scalar other) {
 
 MultiVector circle__geometric_anti_quotient__sphere(Circle self, Sphere other) {
     return circle__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector circle__geometric_anti_quotient__transflector(Circle self, Transflector other) {
-    return circle__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector circle__geometric_anti_quotient__translator(Circle self, Translator other) {
-    return circle__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Dipole dipole__geometric_anti_quotient__anti_scalar(Dipole self, AntiScalar other) {
@@ -10041,10 +6956,6 @@ MultiVector dipole__geometric_anti_quotient__plane(Dipole self, Plane other) {
     return dipole__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector dipole__geometric_anti_quotient__rotor(Dipole self, Rotor other) {
-    return dipole__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector dipole__geometric_anti_quotient__round_point(Dipole self, RoundPoint other) {
     return dipole__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10055,14 +6966,6 @@ Circle dipole__geometric_anti_quotient__scalar(Dipole self, Scalar other) {
 
 MultiVector dipole__geometric_anti_quotient__sphere(Dipole self, Sphere other) {
     return dipole__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector dipole__geometric_anti_quotient__transflector(Dipole self, Transflector other) {
-    return dipole__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector dipole__geometric_anti_quotient__translator(Dipole self, Translator other) {
-    return dipole__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 DualNum dual_num__geometric_anti_quotient__anti_scalar(DualNum self, AntiScalar other) {
@@ -10105,10 +7008,6 @@ MultiVector dual_num__geometric_anti_quotient__plane(DualNum self, Plane other) 
     return dual_num__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector dual_num__geometric_anti_quotient__rotor(DualNum self, Rotor other) {
-    return dual_num__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector dual_num__geometric_anti_quotient__round_point(DualNum self, RoundPoint other) {
     return dual_num__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10119,14 +7018,6 @@ DualNum dual_num__geometric_anti_quotient__scalar(DualNum self, Scalar other) {
 
 MultiVector dual_num__geometric_anti_quotient__sphere(DualNum self, Sphere other) {
     return dual_num__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector dual_num__geometric_anti_quotient__transflector(DualNum self, Transflector other) {
-    return dual_num__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector dual_num__geometric_anti_quotient__translator(DualNum self, Translator other) {
-    return dual_num__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 FlatPoint flat_point__geometric_anti_quotient__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -10145,7 +7036,7 @@ MultiVector flat_point__geometric_anti_quotient__dual_num(FlatPoint self, DualNu
     return flat_point__anti_wedge_dot__dual_num(self, dual_num__anti_inverse(other));
 }
 
-Translator flat_point__geometric_anti_quotient__flat_point(FlatPoint self, FlatPoint other) {
+Motor flat_point__geometric_anti_quotient__flat_point(FlatPoint self, FlatPoint other) {
     return flat_point__anti_wedge_dot__flat_point(self, flat_point__anti_inverse(other));
 }
 
@@ -10153,7 +7044,7 @@ MultiVector flat_point__geometric_anti_quotient__flector(FlatPoint self, Flector
     return flat_point__anti_wedge_dot__flector(self, flector__anti_inverse(other));
 }
 
-Transflector flat_point__geometric_anti_quotient__line(FlatPoint self, Line other) {
+Flector flat_point__geometric_anti_quotient__line(FlatPoint self, Line other) {
     return flat_point__anti_wedge_dot__line(self, line__anti_inverse(other));
 }
 
@@ -10169,10 +7060,6 @@ MultiVector flat_point__geometric_anti_quotient__plane(FlatPoint self, Plane oth
     return flat_point__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-Flector flat_point__geometric_anti_quotient__rotor(FlatPoint self, Rotor other) {
-    return flat_point__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector flat_point__geometric_anti_quotient__round_point(FlatPoint self, RoundPoint other) {
     return flat_point__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10183,14 +7070,6 @@ Circle flat_point__geometric_anti_quotient__scalar(FlatPoint self, Scalar other)
 
 MultiVector flat_point__geometric_anti_quotient__sphere(FlatPoint self, Sphere other) {
     return flat_point__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector flat_point__geometric_anti_quotient__transflector(FlatPoint self, Transflector other) {
-    return flat_point__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-FlatPoint flat_point__geometric_anti_quotient__translator(FlatPoint self, Translator other) {
-    return flat_point__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Flector flector__geometric_anti_quotient__anti_scalar(Flector self, AntiScalar other) {
@@ -10233,10 +7112,6 @@ MultiVector flector__geometric_anti_quotient__plane(Flector self, Plane other) {
     return flector__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-Flector flector__geometric_anti_quotient__rotor(Flector self, Rotor other) {
-    return flector__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector flector__geometric_anti_quotient__round_point(Flector self, RoundPoint other) {
     return flector__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10247,14 +7122,6 @@ MultiVector flector__geometric_anti_quotient__scalar(Flector self, Scalar other)
 
 MultiVector flector__geometric_anti_quotient__sphere(Flector self, Sphere other) {
     return flector__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector flector__geometric_anti_quotient__transflector(Flector self, Transflector other) {
-    return flector__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-Flector flector__geometric_anti_quotient__translator(Flector self, Translator other) {
-    return flector__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Line line__geometric_anti_quotient__anti_scalar(Line self, AntiScalar other) {
@@ -10273,7 +7140,7 @@ MultiVector line__geometric_anti_quotient__dual_num(Line self, DualNum other) {
     return line__anti_wedge_dot__dual_num(self, dual_num__anti_inverse(other));
 }
 
-Transflector line__geometric_anti_quotient__flat_point(Line self, FlatPoint other) {
+Flector line__geometric_anti_quotient__flat_point(Line self, FlatPoint other) {
     return line__anti_wedge_dot__flat_point(self, flat_point__anti_inverse(other));
 }
 
@@ -10297,10 +7164,6 @@ Flector line__geometric_anti_quotient__plane(Line self, Plane other) {
     return line__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector line__geometric_anti_quotient__rotor(Line self, Rotor other) {
-    return line__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector line__geometric_anti_quotient__round_point(Line self, RoundPoint other) {
     return line__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10311,14 +7174,6 @@ Dipole line__geometric_anti_quotient__scalar(Line self, Scalar other) {
 
 MultiVector line__geometric_anti_quotient__sphere(Line self, Sphere other) {
     return line__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-Flector line__geometric_anti_quotient__transflector(Line self, Transflector other) {
-    return line__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector line__geometric_anti_quotient__translator(Line self, Translator other) {
-    return line__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Motor motor__geometric_anti_quotient__anti_scalar(Motor self, AntiScalar other) {
@@ -10361,10 +7216,6 @@ Flector motor__geometric_anti_quotient__plane(Motor self, Plane other) {
     return motor__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector motor__geometric_anti_quotient__rotor(Motor self, Rotor other) {
-    return motor__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector motor__geometric_anti_quotient__round_point(Motor self, RoundPoint other) {
     return motor__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10375,14 +7226,6 @@ MultiVector motor__geometric_anti_quotient__scalar(Motor self, Scalar other) {
 
 MultiVector motor__geometric_anti_quotient__sphere(Motor self, Sphere other) {
     return motor__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-Flector motor__geometric_anti_quotient__transflector(Motor self, Transflector other) {
-    return motor__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector motor__geometric_anti_quotient__translator(Motor self, Translator other) {
-    return motor__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 MultiVector multi_vector__geometric_anti_quotient__anti_scalar(MultiVector self, AntiScalar other) {
@@ -10425,10 +7268,6 @@ MultiVector multi_vector__geometric_anti_quotient__plane(MultiVector self, Plane
     return multi_vector__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector multi_vector__geometric_anti_quotient__rotor(MultiVector self, Rotor other) {
-    return multi_vector__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector multi_vector__geometric_anti_quotient__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10439,14 +7278,6 @@ MultiVector multi_vector__geometric_anti_quotient__scalar(MultiVector self, Scal
 
 MultiVector multi_vector__geometric_anti_quotient__sphere(MultiVector self, Sphere other) {
     return multi_vector__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector multi_vector__geometric_anti_quotient__transflector(MultiVector self, Transflector other) {
-    return multi_vector__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector multi_vector__geometric_anti_quotient__translator(MultiVector self, Translator other) {
-    return multi_vector__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Plane plane__geometric_anti_quotient__anti_scalar(Plane self, AntiScalar other) {
@@ -10489,10 +7320,6 @@ Motor plane__geometric_anti_quotient__plane(Plane self, Plane other) {
     return plane__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-Flector plane__geometric_anti_quotient__rotor(Plane self, Rotor other) {
-    return plane__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector plane__geometric_anti_quotient__round_point(Plane self, RoundPoint other) {
     return plane__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10503,78 +7330,6 @@ RoundPoint plane__geometric_anti_quotient__scalar(Plane self, Scalar other) {
 
 MultiVector plane__geometric_anti_quotient__sphere(Plane self, Sphere other) {
     return plane__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector plane__geometric_anti_quotient__transflector(Plane self, Transflector other) {
-    return plane__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-Transflector plane__geometric_anti_quotient__translator(Plane self, Translator other) {
-    return plane__anti_wedge_dot__translator(self, translator__anti_inverse(other));
-}
-
-Rotor rotor__geometric_anti_quotient__anti_scalar(Rotor self, AntiScalar other) {
-    return rotor__anti_wedge_dot__anti_scalar(self, anti_scalar__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__circle(Rotor self, Circle other) {
-    return rotor__anti_wedge_dot__circle(self, circle__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__dipole(Rotor self, Dipole other) {
-    return rotor__anti_wedge_dot__dipole(self, dipole__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__dual_num(Rotor self, DualNum other) {
-    return rotor__anti_wedge_dot__dual_num(self, dual_num__anti_inverse(other));
-}
-
-Flector rotor__geometric_anti_quotient__flat_point(Rotor self, FlatPoint other) {
-    return rotor__anti_wedge_dot__flat_point(self, flat_point__anti_inverse(other));
-}
-
-Flector rotor__geometric_anti_quotient__flector(Rotor self, Flector other) {
-    return rotor__anti_wedge_dot__flector(self, flector__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__line(Rotor self, Line other) {
-    return rotor__anti_wedge_dot__line(self, line__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__motor(Rotor self, Motor other) {
-    return rotor__anti_wedge_dot__motor(self, motor__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__multi_vector(Rotor self, MultiVector other) {
-    return rotor__anti_wedge_dot__multi_vector(self, multi_vector__anti_inverse(other));
-}
-
-Flector rotor__geometric_anti_quotient__plane(Rotor self, Plane other) {
-    return rotor__anti_wedge_dot__plane(self, plane__anti_inverse(other));
-}
-
-Rotor rotor__geometric_anti_quotient__rotor(Rotor self, Rotor other) {
-    return rotor__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__round_point(Rotor self, RoundPoint other) {
-    return rotor__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__scalar(Rotor self, Scalar other) {
-    return rotor__anti_wedge_dot__scalar(self, scalar__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__sphere(Rotor self, Sphere other) {
-    return rotor__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-Flector rotor__geometric_anti_quotient__transflector(Rotor self, Transflector other) {
-    return rotor__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector rotor__geometric_anti_quotient__translator(Rotor self, Translator other) {
-    return rotor__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 RoundPoint round_point__geometric_anti_quotient__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -10617,10 +7372,6 @@ MultiVector round_point__geometric_anti_quotient__plane(RoundPoint self, Plane o
     return round_point__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector round_point__geometric_anti_quotient__rotor(RoundPoint self, Rotor other) {
-    return round_point__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector round_point__geometric_anti_quotient__round_point(RoundPoint self, RoundPoint other) {
     return round_point__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10631,14 +7382,6 @@ Sphere round_point__geometric_anti_quotient__scalar(RoundPoint self, Scalar othe
 
 MultiVector round_point__geometric_anti_quotient__sphere(RoundPoint self, Sphere other) {
     return round_point__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector round_point__geometric_anti_quotient__transflector(RoundPoint self, Transflector other) {
-    return round_point__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector round_point__geometric_anti_quotient__translator(RoundPoint self, Translator other) {
-    return round_point__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Scalar scalar__geometric_anti_quotient__anti_scalar(Scalar self, AntiScalar other) {
@@ -10681,10 +7424,6 @@ RoundPoint scalar__geometric_anti_quotient__plane(Scalar self, Plane other) {
     return scalar__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector scalar__geometric_anti_quotient__rotor(Scalar self, Rotor other) {
-    return scalar__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 Sphere scalar__geometric_anti_quotient__round_point(Scalar self, RoundPoint other) {
     return scalar__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10695,14 +7434,6 @@ AntiScalar scalar__geometric_anti_quotient__scalar(Scalar self, Scalar other) {
 
 RoundPoint scalar__geometric_anti_quotient__sphere(Scalar self, Sphere other) {
     return scalar__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector scalar__geometric_anti_quotient__transflector(Scalar self, Transflector other) {
-    return scalar__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector scalar__geometric_anti_quotient__translator(Scalar self, Translator other) {
-    return scalar__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Sphere sphere__geometric_anti_quotient__anti_scalar(Sphere self, AntiScalar other) {
@@ -10745,10 +7476,6 @@ MultiVector sphere__geometric_anti_quotient__plane(Sphere self, Plane other) {
     return sphere__anti_wedge_dot__plane(self, plane__anti_inverse(other));
 }
 
-MultiVector sphere__geometric_anti_quotient__rotor(Sphere self, Rotor other) {
-    return sphere__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
 MultiVector sphere__geometric_anti_quotient__round_point(Sphere self, RoundPoint other) {
     return sphere__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
 }
@@ -10759,142 +7486,6 @@ RoundPoint sphere__geometric_anti_quotient__scalar(Sphere self, Scalar other) {
 
 MultiVector sphere__geometric_anti_quotient__sphere(Sphere self, Sphere other) {
     return sphere__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector sphere__geometric_anti_quotient__transflector(Sphere self, Transflector other) {
-    return sphere__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-MultiVector sphere__geometric_anti_quotient__translator(Sphere self, Translator other) {
-    return sphere__anti_wedge_dot__translator(self, translator__anti_inverse(other));
-}
-
-Transflector transflector__geometric_anti_quotient__anti_scalar(Transflector self, AntiScalar other) {
-    return transflector__anti_wedge_dot__anti_scalar(self, anti_scalar__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__circle(Transflector self, Circle other) {
-    return transflector__anti_wedge_dot__circle(self, circle__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__dipole(Transflector self, Dipole other) {
-    return transflector__anti_wedge_dot__dipole(self, dipole__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__dual_num(Transflector self, DualNum other) {
-    return transflector__anti_wedge_dot__dual_num(self, dual_num__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__flat_point(Transflector self, FlatPoint other) {
-    return transflector__anti_wedge_dot__flat_point(self, flat_point__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__flector(Transflector self, Flector other) {
-    return transflector__anti_wedge_dot__flector(self, flector__anti_inverse(other));
-}
-
-Flector transflector__geometric_anti_quotient__line(Transflector self, Line other) {
-    return transflector__anti_wedge_dot__line(self, line__anti_inverse(other));
-}
-
-Flector transflector__geometric_anti_quotient__motor(Transflector self, Motor other) {
-    return transflector__anti_wedge_dot__motor(self, motor__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__multi_vector(Transflector self, MultiVector other) {
-    return transflector__anti_wedge_dot__multi_vector(self, multi_vector__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__plane(Transflector self, Plane other) {
-    return transflector__anti_wedge_dot__plane(self, plane__anti_inverse(other));
-}
-
-Flector transflector__geometric_anti_quotient__rotor(Transflector self, Rotor other) {
-    return transflector__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__round_point(Transflector self, RoundPoint other) {
-    return transflector__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__scalar(Transflector self, Scalar other) {
-    return transflector__anti_wedge_dot__scalar(self, scalar__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__sphere(Transflector self, Sphere other) {
-    return transflector__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-MultiVector transflector__geometric_anti_quotient__transflector(Transflector self, Transflector other) {
-    return transflector__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-Transflector transflector__geometric_anti_quotient__translator(Transflector self, Translator other) {
-    return transflector__anti_wedge_dot__translator(self, translator__anti_inverse(other));
-}
-
-Translator translator__geometric_anti_quotient__anti_scalar(Translator self, AntiScalar other) {
-    return translator__anti_wedge_dot__anti_scalar(self, anti_scalar__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__circle(Translator self, Circle other) {
-    return translator__anti_wedge_dot__circle(self, circle__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__dipole(Translator self, Dipole other) {
-    return translator__anti_wedge_dot__dipole(self, dipole__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__dual_num(Translator self, DualNum other) {
-    return translator__anti_wedge_dot__dual_num(self, dual_num__anti_inverse(other));
-}
-
-FlatPoint translator__geometric_anti_quotient__flat_point(Translator self, FlatPoint other) {
-    return translator__anti_wedge_dot__flat_point(self, flat_point__anti_inverse(other));
-}
-
-Flector translator__geometric_anti_quotient__flector(Translator self, Flector other) {
-    return translator__anti_wedge_dot__flector(self, flector__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__line(Translator self, Line other) {
-    return translator__anti_wedge_dot__line(self, line__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__motor(Translator self, Motor other) {
-    return translator__anti_wedge_dot__motor(self, motor__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__multi_vector(Translator self, MultiVector other) {
-    return translator__anti_wedge_dot__multi_vector(self, multi_vector__anti_inverse(other));
-}
-
-Transflector translator__geometric_anti_quotient__plane(Translator self, Plane other) {
-    return translator__anti_wedge_dot__plane(self, plane__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__rotor(Translator self, Rotor other) {
-    return translator__anti_wedge_dot__rotor(self, rotor__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__round_point(Translator self, RoundPoint other) {
-    return translator__anti_wedge_dot__round_point(self, round_point__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__scalar(Translator self, Scalar other) {
-    return translator__anti_wedge_dot__scalar(self, scalar__anti_inverse(other));
-}
-
-MultiVector translator__geometric_anti_quotient__sphere(Translator self, Sphere other) {
-    return translator__anti_wedge_dot__sphere(self, sphere__anti_inverse(other));
-}
-
-Transflector translator__geometric_anti_quotient__transflector(Translator self, Transflector other) {
-    return translator__anti_wedge_dot__transflector(self, transflector__anti_inverse(other));
-}
-
-Translator translator__geometric_anti_quotient__translator(Translator self, Translator other) {
-    return translator__anti_wedge_dot__translator(self, translator__anti_inverse(other));
 }
 
 Scalar anti_scalar__geometric_quotient__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -10937,10 +7528,6 @@ RoundPoint anti_scalar__geometric_quotient__plane(AntiScalar self, Plane other) 
     return anti_scalar__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector anti_scalar__geometric_quotient__rotor(AntiScalar self, Rotor other) {
-    return anti_scalar__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 Sphere anti_scalar__geometric_quotient__round_point(AntiScalar self, RoundPoint other) {
     return anti_scalar__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -10951,14 +7538,6 @@ AntiScalar anti_scalar__geometric_quotient__scalar(AntiScalar self, Scalar other
 
 RoundPoint anti_scalar__geometric_quotient__sphere(AntiScalar self, Sphere other) {
     return anti_scalar__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector anti_scalar__geometric_quotient__transflector(AntiScalar self, Transflector other) {
-    return anti_scalar__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector anti_scalar__geometric_quotient__translator(AntiScalar self, Translator other) {
-    return anti_scalar__wedge_dot__translator(self, translator__inverse(other));
 }
 
 Dipole circle__geometric_quotient__anti_scalar(Circle self, AntiScalar other) {
@@ -11001,10 +7580,6 @@ MultiVector circle__geometric_quotient__plane(Circle self, Plane other) {
     return circle__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector circle__geometric_quotient__rotor(Circle self, Rotor other) {
-    return circle__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector circle__geometric_quotient__round_point(Circle self, RoundPoint other) {
     return circle__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11015,14 +7590,6 @@ Circle circle__geometric_quotient__scalar(Circle self, Scalar other) {
 
 MultiVector circle__geometric_quotient__sphere(Circle self, Sphere other) {
     return circle__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector circle__geometric_quotient__transflector(Circle self, Transflector other) {
-    return circle__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector circle__geometric_quotient__translator(Circle self, Translator other) {
-    return circle__wedge_dot__translator(self, translator__inverse(other));
 }
 
 Circle dipole__geometric_quotient__anti_scalar(Dipole self, AntiScalar other) {
@@ -11065,10 +7632,6 @@ MultiVector dipole__geometric_quotient__plane(Dipole self, Plane other) {
     return dipole__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector dipole__geometric_quotient__rotor(Dipole self, Rotor other) {
-    return dipole__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector dipole__geometric_quotient__round_point(Dipole self, RoundPoint other) {
     return dipole__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11079,14 +7642,6 @@ Dipole dipole__geometric_quotient__scalar(Dipole self, Scalar other) {
 
 MultiVector dipole__geometric_quotient__sphere(Dipole self, Sphere other) {
     return dipole__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector dipole__geometric_quotient__transflector(Dipole self, Transflector other) {
-    return dipole__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector dipole__geometric_quotient__translator(Dipole self, Translator other) {
-    return dipole__wedge_dot__translator(self, translator__inverse(other));
 }
 
 DualNum dual_num__geometric_quotient__anti_scalar(DualNum self, AntiScalar other) {
@@ -11129,10 +7684,6 @@ MultiVector dual_num__geometric_quotient__plane(DualNum self, Plane other) {
     return dual_num__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector dual_num__geometric_quotient__rotor(DualNum self, Rotor other) {
-    return dual_num__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector dual_num__geometric_quotient__round_point(DualNum self, RoundPoint other) {
     return dual_num__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11143,14 +7694,6 @@ DualNum dual_num__geometric_quotient__scalar(DualNum self, Scalar other) {
 
 MultiVector dual_num__geometric_quotient__sphere(DualNum self, Sphere other) {
     return dual_num__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector dual_num__geometric_quotient__transflector(DualNum self, Transflector other) {
-    return dual_num__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector dual_num__geometric_quotient__translator(DualNum self, Translator other) {
-    return dual_num__wedge_dot__translator(self, translator__inverse(other));
 }
 
 Circle flat_point__geometric_quotient__anti_scalar(FlatPoint self, AntiScalar other) {
@@ -11193,10 +7736,6 @@ MultiVector flat_point__geometric_quotient__plane(FlatPoint self, Plane other) {
     return flat_point__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector flat_point__geometric_quotient__rotor(FlatPoint self, Rotor other) {
-    return flat_point__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector flat_point__geometric_quotient__round_point(FlatPoint self, RoundPoint other) {
     return flat_point__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11207,14 +7746,6 @@ FlatPoint flat_point__geometric_quotient__scalar(FlatPoint self, Scalar other) {
 
 MultiVector flat_point__geometric_quotient__sphere(FlatPoint self, Sphere other) {
     return flat_point__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector flat_point__geometric_quotient__transflector(FlatPoint self, Transflector other) {
-    return flat_point__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-Circle flat_point__geometric_quotient__translator(FlatPoint self, Translator other) {
-    return flat_point__wedge_dot__translator(self, translator__inverse(other));
 }
 
 MultiVector flector__geometric_quotient__anti_scalar(Flector self, AntiScalar other) {
@@ -11257,10 +7788,6 @@ MultiVector flector__geometric_quotient__plane(Flector self, Plane other) {
     return flector__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector flector__geometric_quotient__rotor(Flector self, Rotor other) {
-    return flector__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector flector__geometric_quotient__round_point(Flector self, RoundPoint other) {
     return flector__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11271,14 +7798,6 @@ Flector flector__geometric_quotient__scalar(Flector self, Scalar other) {
 
 MultiVector flector__geometric_quotient__sphere(Flector self, Sphere other) {
     return flector__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector flector__geometric_quotient__transflector(Flector self, Transflector other) {
-    return flector__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector flector__geometric_quotient__translator(Flector self, Translator other) {
-    return flector__wedge_dot__translator(self, translator__inverse(other));
 }
 
 Dipole line__geometric_quotient__anti_scalar(Line self, AntiScalar other) {
@@ -11321,10 +7840,6 @@ MultiVector line__geometric_quotient__plane(Line self, Plane other) {
     return line__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector line__geometric_quotient__rotor(Line self, Rotor other) {
-    return line__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector line__geometric_quotient__round_point(Line self, RoundPoint other) {
     return line__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11335,14 +7850,6 @@ Line line__geometric_quotient__scalar(Line self, Scalar other) {
 
 MultiVector line__geometric_quotient__sphere(Line self, Sphere other) {
     return line__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector line__geometric_quotient__transflector(Line self, Transflector other) {
-    return line__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector line__geometric_quotient__translator(Line self, Translator other) {
-    return line__wedge_dot__translator(self, translator__inverse(other));
 }
 
 MultiVector motor__geometric_quotient__anti_scalar(Motor self, AntiScalar other) {
@@ -11385,10 +7892,6 @@ MultiVector motor__geometric_quotient__plane(Motor self, Plane other) {
     return motor__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector motor__geometric_quotient__rotor(Motor self, Rotor other) {
-    return motor__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector motor__geometric_quotient__round_point(Motor self, RoundPoint other) {
     return motor__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11399,14 +7902,6 @@ Motor motor__geometric_quotient__scalar(Motor self, Scalar other) {
 
 MultiVector motor__geometric_quotient__sphere(Motor self, Sphere other) {
     return motor__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector motor__geometric_quotient__transflector(Motor self, Transflector other) {
-    return motor__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector motor__geometric_quotient__translator(Motor self, Translator other) {
-    return motor__wedge_dot__translator(self, translator__inverse(other));
 }
 
 MultiVector multi_vector__geometric_quotient__anti_scalar(MultiVector self, AntiScalar other) {
@@ -11449,10 +7944,6 @@ MultiVector multi_vector__geometric_quotient__plane(MultiVector self, Plane othe
     return multi_vector__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector multi_vector__geometric_quotient__rotor(MultiVector self, Rotor other) {
-    return multi_vector__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector multi_vector__geometric_quotient__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11463,14 +7954,6 @@ MultiVector multi_vector__geometric_quotient__scalar(MultiVector self, Scalar ot
 
 MultiVector multi_vector__geometric_quotient__sphere(MultiVector self, Sphere other) {
     return multi_vector__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector multi_vector__geometric_quotient__transflector(MultiVector self, Transflector other) {
-    return multi_vector__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector multi_vector__geometric_quotient__translator(MultiVector self, Translator other) {
-    return multi_vector__wedge_dot__translator(self, translator__inverse(other));
 }
 
 RoundPoint plane__geometric_quotient__anti_scalar(Plane self, AntiScalar other) {
@@ -11513,10 +7996,6 @@ MultiVector plane__geometric_quotient__plane(Plane self, Plane other) {
     return plane__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector plane__geometric_quotient__rotor(Plane self, Rotor other) {
-    return plane__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector plane__geometric_quotient__round_point(Plane self, RoundPoint other) {
     return plane__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11527,78 +8006,6 @@ Plane plane__geometric_quotient__scalar(Plane self, Scalar other) {
 
 MultiVector plane__geometric_quotient__sphere(Plane self, Sphere other) {
     return plane__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector plane__geometric_quotient__transflector(Plane self, Transflector other) {
-    return plane__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector plane__geometric_quotient__translator(Plane self, Translator other) {
-    return plane__wedge_dot__translator(self, translator__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__anti_scalar(Rotor self, AntiScalar other) {
-    return rotor__wedge_dot__anti_scalar(self, anti_scalar__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__circle(Rotor self, Circle other) {
-    return rotor__wedge_dot__circle(self, circle__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__dipole(Rotor self, Dipole other) {
-    return rotor__wedge_dot__dipole(self, dipole__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__dual_num(Rotor self, DualNum other) {
-    return rotor__wedge_dot__dual_num(self, dual_num__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__flat_point(Rotor self, FlatPoint other) {
-    return rotor__wedge_dot__flat_point(self, flat_point__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__flector(Rotor self, Flector other) {
-    return rotor__wedge_dot__flector(self, flector__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__line(Rotor self, Line other) {
-    return rotor__wedge_dot__line(self, line__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__motor(Rotor self, Motor other) {
-    return rotor__wedge_dot__motor(self, motor__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__multi_vector(Rotor self, MultiVector other) {
-    return rotor__wedge_dot__multi_vector(self, multi_vector__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__plane(Rotor self, Plane other) {
-    return rotor__wedge_dot__plane(self, plane__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__rotor(Rotor self, Rotor other) {
-    return rotor__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__round_point(Rotor self, RoundPoint other) {
-    return rotor__wedge_dot__round_point(self, round_point__inverse(other));
-}
-
-Rotor rotor__geometric_quotient__scalar(Rotor self, Scalar other) {
-    return rotor__wedge_dot__scalar(self, scalar__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__sphere(Rotor self, Sphere other) {
-    return rotor__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__transflector(Rotor self, Transflector other) {
-    return rotor__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector rotor__geometric_quotient__translator(Rotor self, Translator other) {
-    return rotor__wedge_dot__translator(self, translator__inverse(other));
 }
 
 Sphere round_point__geometric_quotient__anti_scalar(RoundPoint self, AntiScalar other) {
@@ -11641,10 +8048,6 @@ MultiVector round_point__geometric_quotient__plane(RoundPoint self, Plane other)
     return round_point__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector round_point__geometric_quotient__rotor(RoundPoint self, Rotor other) {
-    return round_point__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector round_point__geometric_quotient__round_point(RoundPoint self, RoundPoint other) {
     return round_point__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11655,14 +8058,6 @@ RoundPoint round_point__geometric_quotient__scalar(RoundPoint self, Scalar other
 
 MultiVector round_point__geometric_quotient__sphere(RoundPoint self, Sphere other) {
     return round_point__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector round_point__geometric_quotient__transflector(RoundPoint self, Transflector other) {
-    return round_point__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector round_point__geometric_quotient__translator(RoundPoint self, Translator other) {
-    return round_point__wedge_dot__translator(self, translator__inverse(other));
 }
 
 AntiScalar scalar__geometric_quotient__anti_scalar(Scalar self, AntiScalar other) {
@@ -11705,10 +8100,6 @@ Plane scalar__geometric_quotient__plane(Scalar self, Plane other) {
     return scalar__wedge_dot__plane(self, plane__inverse(other));
 }
 
-Rotor scalar__geometric_quotient__rotor(Scalar self, Rotor other) {
-    return scalar__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 RoundPoint scalar__geometric_quotient__round_point(Scalar self, RoundPoint other) {
     return scalar__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11719,14 +8110,6 @@ Scalar scalar__geometric_quotient__scalar(Scalar self, Scalar other) {
 
 Sphere scalar__geometric_quotient__sphere(Scalar self, Sphere other) {
     return scalar__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-Transflector scalar__geometric_quotient__transflector(Scalar self, Transflector other) {
-    return scalar__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-Translator scalar__geometric_quotient__translator(Scalar self, Translator other) {
-    return scalar__wedge_dot__translator(self, translator__inverse(other));
 }
 
 RoundPoint sphere__geometric_quotient__anti_scalar(Sphere self, AntiScalar other) {
@@ -11769,10 +8152,6 @@ MultiVector sphere__geometric_quotient__plane(Sphere self, Plane other) {
     return sphere__wedge_dot__plane(self, plane__inverse(other));
 }
 
-MultiVector sphere__geometric_quotient__rotor(Sphere self, Rotor other) {
-    return sphere__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
 MultiVector sphere__geometric_quotient__round_point(Sphere self, RoundPoint other) {
     return sphere__wedge_dot__round_point(self, round_point__inverse(other));
 }
@@ -11783,142 +8162,6 @@ Sphere sphere__geometric_quotient__scalar(Sphere self, Scalar other) {
 
 MultiVector sphere__geometric_quotient__sphere(Sphere self, Sphere other) {
     return sphere__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector sphere__geometric_quotient__transflector(Sphere self, Transflector other) {
-    return sphere__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector sphere__geometric_quotient__translator(Sphere self, Translator other) {
-    return sphere__wedge_dot__translator(self, translator__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__anti_scalar(Transflector self, AntiScalar other) {
-    return transflector__wedge_dot__anti_scalar(self, anti_scalar__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__circle(Transflector self, Circle other) {
-    return transflector__wedge_dot__circle(self, circle__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__dipole(Transflector self, Dipole other) {
-    return transflector__wedge_dot__dipole(self, dipole__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__dual_num(Transflector self, DualNum other) {
-    return transflector__wedge_dot__dual_num(self, dual_num__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__flat_point(Transflector self, FlatPoint other) {
-    return transflector__wedge_dot__flat_point(self, flat_point__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__flector(Transflector self, Flector other) {
-    return transflector__wedge_dot__flector(self, flector__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__line(Transflector self, Line other) {
-    return transflector__wedge_dot__line(self, line__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__motor(Transflector self, Motor other) {
-    return transflector__wedge_dot__motor(self, motor__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__multi_vector(Transflector self, MultiVector other) {
-    return transflector__wedge_dot__multi_vector(self, multi_vector__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__plane(Transflector self, Plane other) {
-    return transflector__wedge_dot__plane(self, plane__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__rotor(Transflector self, Rotor other) {
-    return transflector__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__round_point(Transflector self, RoundPoint other) {
-    return transflector__wedge_dot__round_point(self, round_point__inverse(other));
-}
-
-Transflector transflector__geometric_quotient__scalar(Transflector self, Scalar other) {
-    return transflector__wedge_dot__scalar(self, scalar__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__sphere(Transflector self, Sphere other) {
-    return transflector__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__transflector(Transflector self, Transflector other) {
-    return transflector__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector transflector__geometric_quotient__translator(Transflector self, Translator other) {
-    return transflector__wedge_dot__translator(self, translator__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__anti_scalar(Translator self, AntiScalar other) {
-    return translator__wedge_dot__anti_scalar(self, anti_scalar__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__circle(Translator self, Circle other) {
-    return translator__wedge_dot__circle(self, circle__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__dipole(Translator self, Dipole other) {
-    return translator__wedge_dot__dipole(self, dipole__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__dual_num(Translator self, DualNum other) {
-    return translator__wedge_dot__dual_num(self, dual_num__inverse(other));
-}
-
-Circle translator__geometric_quotient__flat_point(Translator self, FlatPoint other) {
-    return translator__wedge_dot__flat_point(self, flat_point__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__flector(Translator self, Flector other) {
-    return translator__wedge_dot__flector(self, flector__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__line(Translator self, Line other) {
-    return translator__wedge_dot__line(self, line__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__motor(Translator self, Motor other) {
-    return translator__wedge_dot__motor(self, motor__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__multi_vector(Translator self, MultiVector other) {
-    return translator__wedge_dot__multi_vector(self, multi_vector__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__plane(Translator self, Plane other) {
-    return translator__wedge_dot__plane(self, plane__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__rotor(Translator self, Rotor other) {
-    return translator__wedge_dot__rotor(self, rotor__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__round_point(Translator self, RoundPoint other) {
-    return translator__wedge_dot__round_point(self, round_point__inverse(other));
-}
-
-Translator translator__geometric_quotient__scalar(Translator self, Scalar other) {
-    return translator__wedge_dot__scalar(self, scalar__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__sphere(Translator self, Sphere other) {
-    return translator__wedge_dot__sphere(self, sphere__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__transflector(Translator self, Transflector other) {
-    return translator__wedge_dot__transflector(self, transflector__inverse(other));
-}
-
-MultiVector translator__geometric_quotient__translator(Translator self, Translator other) {
-    return translator__wedge_dot__translator(self, translator__inverse(other));
 }
 
 Scalar circle__contraction__circle(Circle self, Circle other) {
@@ -11949,20 +8192,8 @@ MultiVector circle__contraction__multi_vector(Circle self, MultiVector other) {
     return circle__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
 }
 
-MultiVector circle__contraction__rotor(Circle self, Rotor other) {
-    return circle__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Dipole circle__contraction__round_point(Circle self, RoundPoint other) {
     return circle__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-MultiVector circle__contraction__transflector(Circle self, Transflector other) {
-    return circle__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector circle__contraction__translator(Circle self, Translator other) {
-    return circle__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Scalar dipole__contraction__dipole(Dipole self, Dipole other) {
@@ -11985,20 +8216,8 @@ MultiVector dipole__contraction__multi_vector(Dipole self, MultiVector other) {
     return dipole__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
 }
 
-MultiVector dipole__contraction__rotor(Dipole self, Rotor other) {
-    return dipole__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 RoundPoint dipole__contraction__round_point(Dipole self, RoundPoint other) {
     return dipole__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-MultiVector dipole__contraction__transflector(Dipole self, Transflector other) {
-    return dipole__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector dipole__contraction__translator(Dipole self, Translator other) {
-    return dipole__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Scalar flat_point__contraction__dipole(FlatPoint self, Dipole other) {
@@ -12021,20 +8240,8 @@ MultiVector flat_point__contraction__multi_vector(FlatPoint self, MultiVector ot
     return flat_point__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
 }
 
-MultiVector flat_point__contraction__rotor(FlatPoint self, Rotor other) {
-    return flat_point__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 RoundPoint flat_point__contraction__round_point(FlatPoint self, RoundPoint other) {
     return flat_point__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-MultiVector flat_point__contraction__transflector(FlatPoint self, Transflector other) {
-    return flat_point__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector flat_point__contraction__translator(FlatPoint self, Translator other) {
-    return flat_point__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 RoundPoint flector__contraction__circle(Flector self, Circle other) {
@@ -12069,24 +8276,12 @@ Scalar flector__contraction__plane(Flector self, Plane other) {
     return flector__anti_wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector flector__contraction__rotor(Flector self, Rotor other) {
-    return flector__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 MultiVector flector__contraction__round_point(Flector self, RoundPoint other) {
     return flector__anti_wedge__sphere(self, round_point__anti_dual(other));
 }
 
 Scalar flector__contraction__sphere(Flector self, Sphere other) {
     return flector__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector flector__contraction__transflector(Flector self, Transflector other) {
-    return flector__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector flector__contraction__translator(Flector self, Translator other) {
-    return flector__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Scalar line__contraction__circle(Line self, Circle other) {
@@ -12117,20 +8312,8 @@ MultiVector line__contraction__multi_vector(Line self, MultiVector other) {
     return line__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
 }
 
-MultiVector line__contraction__rotor(Line self, Rotor other) {
-    return line__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Dipole line__contraction__round_point(Line self, RoundPoint other) {
     return line__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-MultiVector line__contraction__transflector(Line self, Transflector other) {
-    return line__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector line__contraction__translator(Line self, Translator other) {
-    return line__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 MultiVector motor__contraction__circle(Motor self, Circle other) {
@@ -12165,24 +8348,12 @@ RoundPoint motor__contraction__plane(Motor self, Plane other) {
     return motor__anti_wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector motor__contraction__rotor(Motor self, Rotor other) {
-    return motor__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 MultiVector motor__contraction__round_point(Motor self, RoundPoint other) {
     return motor__anti_wedge__sphere(self, round_point__anti_dual(other));
 }
 
 RoundPoint motor__contraction__sphere(Motor self, Sphere other) {
     return motor__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector motor__contraction__transflector(Motor self, Transflector other) {
-    return motor__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector motor__contraction__translator(Motor self, Translator other) {
-    return motor__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 MultiVector multi_vector__contraction__circle(MultiVector self, Circle other) {
@@ -12217,24 +8388,12 @@ MultiVector multi_vector__contraction__plane(MultiVector self, Plane other) {
     return multi_vector__anti_wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector multi_vector__contraction__rotor(MultiVector self, Rotor other) {
-    return multi_vector__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 MultiVector multi_vector__contraction__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__anti_wedge__sphere(self, round_point__anti_dual(other));
 }
 
 MultiVector multi_vector__contraction__sphere(MultiVector self, Sphere other) {
     return multi_vector__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector multi_vector__contraction__transflector(MultiVector self, Transflector other) {
-    return multi_vector__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector multi_vector__contraction__translator(MultiVector self, Translator other) {
-    return multi_vector__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 RoundPoint plane__contraction__circle(Plane self, Circle other) {
@@ -12269,76 +8428,12 @@ Scalar plane__contraction__plane(Plane self, Plane other) {
     return plane__anti_wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector plane__contraction__rotor(Plane self, Rotor other) {
-    return plane__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Circle plane__contraction__round_point(Plane self, RoundPoint other) {
     return plane__anti_wedge__sphere(self, round_point__anti_dual(other));
 }
 
 Scalar plane__contraction__sphere(Plane self, Sphere other) {
     return plane__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector plane__contraction__transflector(Plane self, Transflector other) {
-    return plane__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector plane__contraction__translator(Plane self, Translator other) {
-    return plane__anti_wedge__multi_vector(self, translator__anti_dual(other));
-}
-
-MultiVector rotor__contraction__circle(Rotor self, Circle other) {
-    return rotor__anti_wedge__dipole(self, circle__anti_dual(other));
-}
-
-MultiVector rotor__contraction__dipole(Rotor self, Dipole other) {
-    return rotor__anti_wedge__circle(self, dipole__anti_dual(other));
-}
-
-MultiVector rotor__contraction__flat_point(Rotor self, FlatPoint other) {
-    return rotor__anti_wedge__circle(self, flat_point__anti_dual(other));
-}
-
-MultiVector rotor__contraction__flector(Rotor self, Flector other) {
-    return rotor__anti_wedge__multi_vector(self, flector__anti_dual(other));
-}
-
-MultiVector rotor__contraction__line(Rotor self, Line other) {
-    return rotor__anti_wedge__dipole(self, line__anti_dual(other));
-}
-
-MultiVector rotor__contraction__motor(Rotor self, Motor other) {
-    return rotor__anti_wedge__multi_vector(self, motor__anti_dual(other));
-}
-
-MultiVector rotor__contraction__multi_vector(Rotor self, MultiVector other) {
-    return rotor__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
-}
-
-RoundPoint rotor__contraction__plane(Rotor self, Plane other) {
-    return rotor__anti_wedge__round_point(self, plane__anti_dual(other));
-}
-
-MultiVector rotor__contraction__rotor(Rotor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
-MultiVector rotor__contraction__round_point(Rotor self, RoundPoint other) {
-    return rotor__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-RoundPoint rotor__contraction__sphere(Rotor self, Sphere other) {
-    return rotor__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector rotor__contraction__transflector(Rotor self, Transflector other) {
-    return rotor__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector rotor__contraction__translator(Rotor self, Translator other) {
-    return rotor__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 MultiVector round_point__contraction__flector(RoundPoint self, Flector other) {
@@ -12353,20 +8448,8 @@ MultiVector round_point__contraction__multi_vector(RoundPoint self, MultiVector 
     return round_point__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
 }
 
-MultiVector round_point__contraction__rotor(RoundPoint self, Rotor other) {
-    return round_point__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Scalar round_point__contraction__round_point(RoundPoint self, RoundPoint other) {
     return round_point__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-MultiVector round_point__contraction__transflector(RoundPoint self, Transflector other) {
-    return round_point__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector round_point__contraction__translator(RoundPoint self, Translator other) {
-    return round_point__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 RoundPoint sphere__contraction__circle(Sphere self, Circle other) {
@@ -12401,128 +8484,12 @@ Scalar sphere__contraction__plane(Sphere self, Plane other) {
     return sphere__anti_wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector sphere__contraction__rotor(Sphere self, Rotor other) {
-    return sphere__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Circle sphere__contraction__round_point(Sphere self, RoundPoint other) {
     return sphere__anti_wedge__sphere(self, round_point__anti_dual(other));
 }
 
 Scalar sphere__contraction__sphere(Sphere self, Sphere other) {
     return sphere__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector sphere__contraction__transflector(Sphere self, Transflector other) {
-    return sphere__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector sphere__contraction__translator(Sphere self, Translator other) {
-    return sphere__anti_wedge__multi_vector(self, translator__anti_dual(other));
-}
-
-RoundPoint transflector__contraction__circle(Transflector self, Circle other) {
-    return transflector__anti_wedge__dipole(self, circle__anti_dual(other));
-}
-
-MultiVector transflector__contraction__dipole(Transflector self, Dipole other) {
-    return transflector__anti_wedge__circle(self, dipole__anti_dual(other));
-}
-
-MultiVector transflector__contraction__flat_point(Transflector self, FlatPoint other) {
-    return transflector__anti_wedge__circle(self, flat_point__anti_dual(other));
-}
-
-MultiVector transflector__contraction__flector(Transflector self, Flector other) {
-    return transflector__anti_wedge__multi_vector(self, flector__anti_dual(other));
-}
-
-RoundPoint transflector__contraction__line(Transflector self, Line other) {
-    return transflector__anti_wedge__dipole(self, line__anti_dual(other));
-}
-
-MultiVector transflector__contraction__motor(Transflector self, Motor other) {
-    return transflector__anti_wedge__multi_vector(self, motor__anti_dual(other));
-}
-
-MultiVector transflector__contraction__multi_vector(Transflector self, MultiVector other) {
-    return transflector__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
-}
-
-Scalar transflector__contraction__plane(Transflector self, Plane other) {
-    return transflector__anti_wedge__round_point(self, plane__anti_dual(other));
-}
-
-MultiVector transflector__contraction__rotor(Transflector self, Rotor other) {
-    return transflector__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
-MultiVector transflector__contraction__round_point(Transflector self, RoundPoint other) {
-    return transflector__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-Scalar transflector__contraction__sphere(Transflector self, Sphere other) {
-    return transflector__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector transflector__contraction__transflector(Transflector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector transflector__contraction__translator(Transflector self, Translator other) {
-    return transflector__anti_wedge__multi_vector(self, translator__anti_dual(other));
-}
-
-MultiVector translator__contraction__circle(Translator self, Circle other) {
-    return translator__anti_wedge__dipole(self, circle__anti_dual(other));
-}
-
-MultiVector translator__contraction__dipole(Translator self, Dipole other) {
-    return translator__anti_wedge__circle(self, dipole__anti_dual(other));
-}
-
-MultiVector translator__contraction__flat_point(Translator self, FlatPoint other) {
-    return translator__anti_wedge__circle(self, flat_point__anti_dual(other));
-}
-
-MultiVector translator__contraction__flector(Translator self, Flector other) {
-    return translator__anti_wedge__multi_vector(self, flector__anti_dual(other));
-}
-
-MultiVector translator__contraction__line(Translator self, Line other) {
-    return translator__anti_wedge__dipole(self, line__anti_dual(other));
-}
-
-MultiVector translator__contraction__motor(Translator self, Motor other) {
-    return translator__anti_wedge__multi_vector(self, motor__anti_dual(other));
-}
-
-MultiVector translator__contraction__multi_vector(Translator self, MultiVector other) {
-    return translator__anti_wedge__multi_vector(self, multi_vector__anti_dual(other));
-}
-
-RoundPoint translator__contraction__plane(Translator self, Plane other) {
-    return translator__anti_wedge__round_point(self, plane__anti_dual(other));
-}
-
-MultiVector translator__contraction__rotor(Translator self, Rotor other) {
-    return translator__anti_wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
-MultiVector translator__contraction__round_point(Translator self, RoundPoint other) {
-    return translator__anti_wedge__sphere(self, round_point__anti_dual(other));
-}
-
-RoundPoint translator__contraction__sphere(Translator self, Sphere other) {
-    return translator__anti_wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector translator__contraction__transflector(Translator self, Transflector other) {
-    return translator__anti_wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector translator__contraction__translator(Translator self, Translator other) {
-    return translator__anti_wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 AntiScalar circle__expansion__circle(Circle self, Circle other) {
@@ -12549,20 +8516,8 @@ Sphere circle__expansion__plane(Circle self, Plane other) {
     return circle__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector circle__expansion__rotor(Circle self, Rotor other) {
-    return circle__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Sphere circle__expansion__sphere(Circle self, Sphere other) {
     return circle__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector circle__expansion__transflector(Circle self, Transflector other) {
-    return circle__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector circle__expansion__translator(Circle self, Translator other) {
-    return circle__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Sphere dipole__expansion__circle(Dipole self, Circle other) {
@@ -12597,20 +8552,8 @@ Circle dipole__expansion__plane(Dipole self, Plane other) {
     return dipole__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector dipole__expansion__rotor(Dipole self, Rotor other) {
-    return dipole__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Circle dipole__expansion__sphere(Dipole self, Sphere other) {
     return dipole__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector dipole__expansion__transflector(Dipole self, Transflector other) {
-    return dipole__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector dipole__expansion__translator(Dipole self, Translator other) {
-    return dipole__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Plane flat_point__expansion__circle(FlatPoint self, Circle other) {
@@ -12645,20 +8588,8 @@ Line flat_point__expansion__plane(FlatPoint self, Plane other) {
     return flat_point__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector flat_point__expansion__rotor(FlatPoint self, Rotor other) {
-    return flat_point__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Line flat_point__expansion__sphere(FlatPoint self, Sphere other) {
     return flat_point__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector flat_point__expansion__transflector(FlatPoint self, Transflector other) {
-    return flat_point__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector flat_point__expansion__translator(FlatPoint self, Translator other) {
-    return flat_point__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Plane flector__expansion__circle(Flector self, Circle other) {
@@ -12693,20 +8624,8 @@ Motor flector__expansion__plane(Flector self, Plane other) {
     return flector__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector flector__expansion__rotor(Flector self, Rotor other) {
-    return flector__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Motor flector__expansion__sphere(Flector self, Sphere other) {
     return flector__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector flector__expansion__transflector(Flector self, Transflector other) {
-    return flector__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector flector__expansion__translator(Flector self, Translator other) {
-    return flector__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 AntiScalar line__expansion__circle(Line self, Circle other) {
@@ -12733,20 +8652,8 @@ Plane line__expansion__plane(Line self, Plane other) {
     return line__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector line__expansion__rotor(Line self, Rotor other) {
-    return line__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Plane line__expansion__sphere(Line self, Sphere other) {
     return line__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector line__expansion__transflector(Line self, Transflector other) {
-    return line__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector line__expansion__translator(Line self, Translator other) {
-    return line__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 AntiScalar motor__expansion__circle(Motor self, Circle other) {
@@ -12773,20 +8680,8 @@ Plane motor__expansion__plane(Motor self, Plane other) {
     return motor__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector motor__expansion__rotor(Motor self, Rotor other) {
-    return motor__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 Plane motor__expansion__sphere(Motor self, Sphere other) {
     return motor__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector motor__expansion__transflector(Motor self, Transflector other) {
-    return motor__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector motor__expansion__translator(Motor self, Translator other) {
-    return motor__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 MultiVector multi_vector__expansion__circle(MultiVector self, Circle other) {
@@ -12821,24 +8716,12 @@ MultiVector multi_vector__expansion__plane(MultiVector self, Plane other) {
     return multi_vector__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector multi_vector__expansion__rotor(MultiVector self, Rotor other) {
-    return multi_vector__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 MultiVector multi_vector__expansion__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__wedge__sphere(self, round_point__anti_dual(other));
 }
 
 MultiVector multi_vector__expansion__sphere(MultiVector self, Sphere other) {
     return multi_vector__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector multi_vector__expansion__transflector(MultiVector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector multi_vector__expansion__translator(MultiVector self, Translator other) {
-    return multi_vector__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 MultiVector plane__expansion__flector(Plane self, Flector other) {
@@ -12857,60 +8740,8 @@ AntiScalar plane__expansion__plane(Plane self, Plane other) {
     return plane__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector plane__expansion__rotor(Plane self, Rotor other) {
-    return plane__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 AntiScalar plane__expansion__sphere(Plane self, Sphere other) {
     return plane__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector plane__expansion__transflector(Plane self, Transflector other) {
-    return plane__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector plane__expansion__translator(Plane self, Translator other) {
-    return plane__wedge__multi_vector(self, translator__anti_dual(other));
-}
-
-AntiScalar rotor__expansion__circle(Rotor self, Circle other) {
-    return rotor__wedge__dipole(self, circle__anti_dual(other));
-}
-
-MultiVector rotor__expansion__flector(Rotor self, Flector other) {
-    return rotor__wedge__multi_vector(self, flector__anti_dual(other));
-}
-
-AntiScalar rotor__expansion__line(Rotor self, Line other) {
-    return rotor__wedge__dipole(self, line__anti_dual(other));
-}
-
-MultiVector rotor__expansion__motor(Rotor self, Motor other) {
-    return rotor__wedge__multi_vector(self, motor__anti_dual(other));
-}
-
-MultiVector rotor__expansion__multi_vector(Rotor self, MultiVector other) {
-    return rotor__wedge__multi_vector(self, multi_vector__anti_dual(other));
-}
-
-Plane rotor__expansion__plane(Rotor self, Plane other) {
-    return rotor__wedge__round_point(self, plane__anti_dual(other));
-}
-
-MultiVector rotor__expansion__rotor(Rotor self, Rotor other) {
-    return rotor__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
-Plane rotor__expansion__sphere(Rotor self, Sphere other) {
-    return rotor__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector rotor__expansion__transflector(Rotor self, Transflector other) {
-    return rotor__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector rotor__expansion__translator(Rotor self, Translator other) {
-    return rotor__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Circle round_point__expansion__circle(RoundPoint self, Circle other) {
@@ -12945,24 +8776,12 @@ Dipole round_point__expansion__plane(RoundPoint self, Plane other) {
     return round_point__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector round_point__expansion__rotor(RoundPoint self, Rotor other) {
-    return round_point__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 AntiScalar round_point__expansion__round_point(RoundPoint self, RoundPoint other) {
     return round_point__wedge__sphere(self, round_point__anti_dual(other));
 }
 
 Dipole round_point__expansion__sphere(RoundPoint self, Sphere other) {
     return round_point__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector round_point__expansion__transflector(RoundPoint self, Transflector other) {
-    return round_point__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector round_point__expansion__translator(RoundPoint self, Translator other) {
-    return round_point__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 MultiVector sphere__expansion__flector(Sphere self, Flector other) {
@@ -12981,108 +8800,8 @@ AntiScalar sphere__expansion__plane(Sphere self, Plane other) {
     return sphere__wedge__round_point(self, plane__anti_dual(other));
 }
 
-MultiVector sphere__expansion__rotor(Sphere self, Rotor other) {
-    return sphere__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
 AntiScalar sphere__expansion__sphere(Sphere self, Sphere other) {
     return sphere__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector sphere__expansion__transflector(Sphere self, Transflector other) {
-    return sphere__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector sphere__expansion__translator(Sphere self, Translator other) {
-    return sphere__wedge__multi_vector(self, translator__anti_dual(other));
-}
-
-Plane transflector__expansion__circle(Transflector self, Circle other) {
-    return transflector__wedge__dipole(self, circle__anti_dual(other));
-}
-
-AntiScalar transflector__expansion__dipole(Transflector self, Dipole other) {
-    return transflector__wedge__circle(self, dipole__anti_dual(other));
-}
-
-AntiScalar transflector__expansion__flat_point(Transflector self, FlatPoint other) {
-    return transflector__wedge__circle(self, flat_point__anti_dual(other));
-}
-
-MultiVector transflector__expansion__flector(Transflector self, Flector other) {
-    return transflector__wedge__multi_vector(self, flector__anti_dual(other));
-}
-
-Plane transflector__expansion__line(Transflector self, Line other) {
-    return transflector__wedge__dipole(self, line__anti_dual(other));
-}
-
-MultiVector transflector__expansion__motor(Transflector self, Motor other) {
-    return transflector__wedge__multi_vector(self, motor__anti_dual(other));
-}
-
-MultiVector transflector__expansion__multi_vector(Transflector self, MultiVector other) {
-    return transflector__wedge__multi_vector(self, multi_vector__anti_dual(other));
-}
-
-Motor transflector__expansion__plane(Transflector self, Plane other) {
-    return transflector__wedge__round_point(self, plane__anti_dual(other));
-}
-
-MultiVector transflector__expansion__rotor(Transflector self, Rotor other) {
-    return transflector__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
-Motor transflector__expansion__sphere(Transflector self, Sphere other) {
-    return transflector__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector transflector__expansion__transflector(Transflector self, Transflector other) {
-    return transflector__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector transflector__expansion__translator(Transflector self, Translator other) {
-    return transflector__wedge__multi_vector(self, translator__anti_dual(other));
-}
-
-AntiScalar translator__expansion__circle(Translator self, Circle other) {
-    return translator__wedge__dipole(self, circle__anti_dual(other));
-}
-
-MultiVector translator__expansion__flector(Translator self, Flector other) {
-    return translator__wedge__multi_vector(self, flector__anti_dual(other));
-}
-
-AntiScalar translator__expansion__line(Translator self, Line other) {
-    return translator__wedge__dipole(self, line__anti_dual(other));
-}
-
-MultiVector translator__expansion__motor(Translator self, Motor other) {
-    return translator__wedge__multi_vector(self, motor__anti_dual(other));
-}
-
-MultiVector translator__expansion__multi_vector(Translator self, MultiVector other) {
-    return translator__wedge__multi_vector(self, multi_vector__anti_dual(other));
-}
-
-Plane translator__expansion__plane(Translator self, Plane other) {
-    return translator__wedge__round_point(self, plane__anti_dual(other));
-}
-
-MultiVector translator__expansion__rotor(Translator self, Rotor other) {
-    return translator__wedge__multi_vector(self, rotor__anti_dual(other));
-}
-
-Plane translator__expansion__sphere(Translator self, Sphere other) {
-    return translator__wedge__round_point(self, sphere__anti_dual(other));
-}
-
-MultiVector translator__expansion__transflector(Translator self, Transflector other) {
-    return translator__wedge__multi_vector(self, transflector__anti_dual(other));
-}
-
-MultiVector translator__expansion__translator(Translator self, Translator other) {
-    return translator__wedge__multi_vector(self, translator__anti_dual(other));
 }
 
 Circle circle__anti_project_orthogonally_onto__circle(Circle self, Circle other) {
@@ -13113,20 +8832,8 @@ MultiVector circle__anti_project_orthogonally_onto__multi_vector(Circle self, Mu
     return multi_vector__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
 }
 
-MultiVector circle__anti_project_orthogonally_onto__rotor(Circle self, Rotor other) {
-    return rotor__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Circle circle__anti_project_orthogonally_onto__round_point(Circle self, RoundPoint other) {
     return round_point__wedge__dipole(other, circle__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-MultiVector circle__anti_project_orthogonally_onto__transflector(Circle self, Transflector other) {
-    return transflector__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector circle__anti_project_orthogonally_onto__translator(Circle self, Translator other) {
-    return translator__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Dipole dipole__anti_project_orthogonally_onto__dipole(Dipole self, Dipole other) {
@@ -13149,20 +8856,8 @@ MultiVector dipole__anti_project_orthogonally_onto__multi_vector(Dipole self, Mu
     return multi_vector__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
 }
 
-MultiVector dipole__anti_project_orthogonally_onto__rotor(Dipole self, Rotor other) {
-    return rotor__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Dipole dipole__anti_project_orthogonally_onto__round_point(Dipole self, RoundPoint other) {
     return round_point__wedge__round_point(other, dipole__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-MultiVector dipole__anti_project_orthogonally_onto__transflector(Dipole self, Transflector other) {
-    return transflector__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector dipole__anti_project_orthogonally_onto__translator(Dipole self, Translator other) {
-    return translator__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Dipole flat_point__anti_project_orthogonally_onto__dipole(FlatPoint self, Dipole other) {
@@ -13185,20 +8880,8 @@ MultiVector flat_point__anti_project_orthogonally_onto__multi_vector(FlatPoint s
     return multi_vector__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
 }
 
-MultiVector flat_point__anti_project_orthogonally_onto__rotor(FlatPoint self, Rotor other) {
-    return rotor__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Dipole flat_point__anti_project_orthogonally_onto__round_point(FlatPoint self, RoundPoint other) {
     return round_point__wedge__round_point(other, flat_point__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-MultiVector flat_point__anti_project_orthogonally_onto__transflector(FlatPoint self, Transflector other) {
-    return transflector__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector flat_point__anti_project_orthogonally_onto__translator(FlatPoint self, Translator other) {
-    return translator__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Sphere flector__anti_project_orthogonally_onto__circle(Flector self, Circle other) {
@@ -13233,24 +8916,12 @@ Plane flector__anti_project_orthogonally_onto__plane(Flector self, Plane other) 
     return plane__wedge__scalar(other, flector__anti_wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector flector__anti_project_orthogonally_onto__rotor(Flector self, Rotor other) {
-    return rotor__wedge__multi_vector(other, flector__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 MultiVector flector__anti_project_orthogonally_onto__round_point(Flector self, RoundPoint other) {
     return round_point__wedge__multi_vector(other, flector__anti_wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 Sphere flector__anti_project_orthogonally_onto__sphere(Flector self, Sphere other) {
     return sphere__wedge__scalar(other, flector__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector flector__anti_project_orthogonally_onto__transflector(Flector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, flector__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector flector__anti_project_orthogonally_onto__translator(Flector self, Translator other) {
-    return translator__wedge__multi_vector(other, flector__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Circle line__anti_project_orthogonally_onto__circle(Line self, Circle other) {
@@ -13281,20 +8952,8 @@ MultiVector line__anti_project_orthogonally_onto__multi_vector(Line self, MultiV
     return multi_vector__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
 }
 
-MultiVector line__anti_project_orthogonally_onto__rotor(Line self, Rotor other) {
-    return rotor__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Circle line__anti_project_orthogonally_onto__round_point(Line self, RoundPoint other) {
     return round_point__wedge__dipole(other, line__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-MultiVector line__anti_project_orthogonally_onto__transflector(Line self, Transflector other) {
-    return transflector__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector line__anti_project_orthogonally_onto__translator(Line self, Translator other) {
-    return translator__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 MultiVector motor__anti_project_orthogonally_onto__circle(Motor self, Circle other) {
@@ -13329,24 +8988,12 @@ AntiScalar motor__anti_project_orthogonally_onto__plane(Motor self, Plane other)
     return plane__wedge__round_point(other, motor__anti_wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector motor__anti_project_orthogonally_onto__rotor(Motor self, Rotor other) {
-    return rotor__wedge__multi_vector(other, motor__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 MultiVector motor__anti_project_orthogonally_onto__round_point(Motor self, RoundPoint other) {
     return round_point__wedge__multi_vector(other, motor__anti_wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 AntiScalar motor__anti_project_orthogonally_onto__sphere(Motor self, Sphere other) {
     return sphere__wedge__round_point(other, motor__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector motor__anti_project_orthogonally_onto__transflector(Motor self, Transflector other) {
-    return transflector__wedge__multi_vector(other, motor__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector motor__anti_project_orthogonally_onto__translator(Motor self, Translator other) {
-    return translator__wedge__multi_vector(other, motor__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__circle(MultiVector self, Circle other) {
@@ -13381,24 +9028,12 @@ MultiVector multi_vector__anti_project_orthogonally_onto__plane(MultiVector self
     return plane__wedge__multi_vector(other, multi_vector__anti_wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector multi_vector__anti_project_orthogonally_onto__rotor(MultiVector self, Rotor other) {
-    return rotor__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 MultiVector multi_vector__anti_project_orthogonally_onto__round_point(MultiVector self, RoundPoint other) {
     return round_point__wedge__multi_vector(other, multi_vector__anti_wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 MultiVector multi_vector__anti_project_orthogonally_onto__sphere(MultiVector self, Sphere other) {
     return sphere__wedge__multi_vector(other, multi_vector__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector multi_vector__anti_project_orthogonally_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector multi_vector__anti_project_orthogonally_onto__translator(MultiVector self, Translator other) {
-    return translator__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Sphere plane__anti_project_orthogonally_onto__circle(Plane self, Circle other) {
@@ -13433,76 +9068,12 @@ Plane plane__anti_project_orthogonally_onto__plane(Plane self, Plane other) {
     return plane__wedge__scalar(other, plane__anti_wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector plane__anti_project_orthogonally_onto__rotor(Plane self, Rotor other) {
-    return rotor__wedge__multi_vector(other, plane__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Sphere plane__anti_project_orthogonally_onto__round_point(Plane self, RoundPoint other) {
     return round_point__wedge__circle(other, plane__anti_wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 Sphere plane__anti_project_orthogonally_onto__sphere(Plane self, Sphere other) {
     return sphere__wedge__scalar(other, plane__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector plane__anti_project_orthogonally_onto__transflector(Plane self, Transflector other) {
-    return transflector__wedge__multi_vector(other, plane__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector plane__anti_project_orthogonally_onto__translator(Plane self, Translator other) {
-    return translator__wedge__multi_vector(other, plane__anti_wedge__multi_vector(self, translator__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__circle(Rotor self, Circle other) {
-    return circle__wedge__multi_vector(other, rotor__anti_wedge__dipole(self, circle__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__dipole(Rotor self, Dipole other) {
-    return dipole__wedge__multi_vector(other, rotor__anti_wedge__circle(self, dipole__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__flat_point(Rotor self, FlatPoint other) {
-    return flat_point__wedge__multi_vector(other, rotor__anti_wedge__circle(self, flat_point__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__flector(Rotor self, Flector other) {
-    return flector__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, flector__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__line(Rotor self, Line other) {
-    return line__wedge__multi_vector(other, rotor__anti_wedge__dipole(self, line__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__motor(Rotor self, Motor other) {
-    return motor__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, motor__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
-}
-
-AntiScalar rotor__anti_project_orthogonally_onto__plane(Rotor self, Plane other) {
-    return plane__wedge__round_point(other, rotor__anti_wedge__round_point(self, plane__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__rotor(Rotor self, Rotor other) {
-    return rotor__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__round_point(Rotor self, RoundPoint other) {
-    return round_point__wedge__multi_vector(other, rotor__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-AntiScalar rotor__anti_project_orthogonally_onto__sphere(Rotor self, Sphere other) {
-    return sphere__wedge__round_point(other, rotor__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__transflector(Rotor self, Transflector other) {
-    return transflector__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector rotor__anti_project_orthogonally_onto__translator(Rotor self, Translator other) {
-    return translator__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 MultiVector round_point__anti_project_orthogonally_onto__flector(RoundPoint self, Flector other) {
@@ -13517,20 +9088,8 @@ MultiVector round_point__anti_project_orthogonally_onto__multi_vector(RoundPoint
     return multi_vector__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
 }
 
-MultiVector round_point__anti_project_orthogonally_onto__rotor(RoundPoint self, Rotor other) {
-    return rotor__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 RoundPoint round_point__anti_project_orthogonally_onto__round_point(RoundPoint self, RoundPoint other) {
     return round_point__wedge__scalar(other, round_point__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-MultiVector round_point__anti_project_orthogonally_onto__transflector(RoundPoint self, Transflector other) {
-    return transflector__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector round_point__anti_project_orthogonally_onto__translator(RoundPoint self, Translator other) {
-    return translator__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Sphere sphere__anti_project_orthogonally_onto__circle(Sphere self, Circle other) {
@@ -13565,128 +9124,12 @@ Plane sphere__anti_project_orthogonally_onto__plane(Sphere self, Plane other) {
     return plane__wedge__scalar(other, sphere__anti_wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector sphere__anti_project_orthogonally_onto__rotor(Sphere self, Rotor other) {
-    return rotor__wedge__multi_vector(other, sphere__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Sphere sphere__anti_project_orthogonally_onto__round_point(Sphere self, RoundPoint other) {
     return round_point__wedge__circle(other, sphere__anti_wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 Sphere sphere__anti_project_orthogonally_onto__sphere(Sphere self, Sphere other) {
     return sphere__wedge__scalar(other, sphere__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector sphere__anti_project_orthogonally_onto__transflector(Sphere self, Transflector other) {
-    return transflector__wedge__multi_vector(other, sphere__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector sphere__anti_project_orthogonally_onto__translator(Sphere self, Translator other) {
-    return translator__wedge__multi_vector(other, sphere__anti_wedge__multi_vector(self, translator__anti_dual(other)));
-}
-
-Sphere transflector__anti_project_orthogonally_onto__circle(Transflector self, Circle other) {
-    return circle__wedge__round_point(other, transflector__anti_wedge__dipole(self, circle__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__dipole(Transflector self, Dipole other) {
-    return dipole__wedge__multi_vector(other, transflector__anti_wedge__circle(self, dipole__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__flat_point(Transflector self, FlatPoint other) {
-    return flat_point__wedge__multi_vector(other, transflector__anti_wedge__circle(self, flat_point__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__flector(Transflector self, Flector other) {
-    return flector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, flector__anti_dual(other)));
-}
-
-Plane transflector__anti_project_orthogonally_onto__line(Transflector self, Line other) {
-    return line__wedge__round_point(other, transflector__anti_wedge__dipole(self, line__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__motor(Transflector self, Motor other) {
-    return motor__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, motor__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
-}
-
-Plane transflector__anti_project_orthogonally_onto__plane(Transflector self, Plane other) {
-    return plane__wedge__scalar(other, transflector__anti_wedge__round_point(self, plane__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__rotor(Transflector self, Rotor other) {
-    return rotor__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__round_point(Transflector self, RoundPoint other) {
-    return round_point__wedge__multi_vector(other, transflector__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-Sphere transflector__anti_project_orthogonally_onto__sphere(Transflector self, Sphere other) {
-    return sphere__wedge__scalar(other, transflector__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__transflector(Transflector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector transflector__anti_project_orthogonally_onto__translator(Transflector self, Translator other) {
-    return translator__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, translator__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__circle(Translator self, Circle other) {
-    return circle__wedge__multi_vector(other, translator__anti_wedge__dipole(self, circle__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__dipole(Translator self, Dipole other) {
-    return dipole__wedge__multi_vector(other, translator__anti_wedge__circle(self, dipole__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__flat_point(Translator self, FlatPoint other) {
-    return flat_point__wedge__multi_vector(other, translator__anti_wedge__circle(self, flat_point__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__flector(Translator self, Flector other) {
-    return flector__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, flector__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__line(Translator self, Line other) {
-    return line__wedge__multi_vector(other, translator__anti_wedge__dipole(self, line__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__motor(Translator self, Motor other) {
-    return motor__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, motor__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, multi_vector__anti_dual(other)));
-}
-
-AntiScalar translator__anti_project_orthogonally_onto__plane(Translator self, Plane other) {
-    return plane__wedge__round_point(other, translator__anti_wedge__round_point(self, plane__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__rotor(Translator self, Rotor other) {
-    return rotor__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__round_point(Translator self, RoundPoint other) {
-    return round_point__wedge__multi_vector(other, translator__anti_wedge__sphere(self, round_point__anti_dual(other)));
-}
-
-AntiScalar translator__anti_project_orthogonally_onto__sphere(Translator self, Sphere other) {
-    return sphere__wedge__round_point(other, translator__anti_wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__transflector(Translator self, Transflector other) {
-    return transflector__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector translator__anti_project_orthogonally_onto__translator(Translator self, Translator other) {
-    return translator__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Circle circle__anti_project_via_horizon_onto__circle(Circle self, Circle other) {
@@ -13717,20 +9160,8 @@ MultiVector circle__anti_project_via_horizon_onto__multi_vector(Circle self, Mul
     return multi_vector__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, multi_vector__dual(other)));
 }
 
-MultiVector circle__anti_project_via_horizon_onto__rotor(Circle self, Rotor other) {
-    return rotor__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Circle circle__anti_project_via_horizon_onto__round_point(Circle self, RoundPoint other) {
     return round_point__wedge__dipole(other, circle__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-MultiVector circle__anti_project_via_horizon_onto__transflector(Circle self, Transflector other) {
-    return transflector__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector circle__anti_project_via_horizon_onto__translator(Circle self, Translator other) {
-    return translator__wedge__multi_vector(other, circle__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Dipole dipole__anti_project_via_horizon_onto__dipole(Dipole self, Dipole other) {
@@ -13753,20 +9184,8 @@ MultiVector dipole__anti_project_via_horizon_onto__multi_vector(Dipole self, Mul
     return multi_vector__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, multi_vector__dual(other)));
 }
 
-MultiVector dipole__anti_project_via_horizon_onto__rotor(Dipole self, Rotor other) {
-    return rotor__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Dipole dipole__anti_project_via_horizon_onto__round_point(Dipole self, RoundPoint other) {
     return round_point__wedge__round_point(other, dipole__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-MultiVector dipole__anti_project_via_horizon_onto__transflector(Dipole self, Transflector other) {
-    return transflector__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector dipole__anti_project_via_horizon_onto__translator(Dipole self, Translator other) {
-    return translator__wedge__multi_vector(other, dipole__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Dipole flat_point__anti_project_via_horizon_onto__dipole(FlatPoint self, Dipole other) {
@@ -13789,20 +9208,8 @@ MultiVector flat_point__anti_project_via_horizon_onto__multi_vector(FlatPoint se
     return multi_vector__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, multi_vector__dual(other)));
 }
 
-MultiVector flat_point__anti_project_via_horizon_onto__rotor(FlatPoint self, Rotor other) {
-    return rotor__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Dipole flat_point__anti_project_via_horizon_onto__round_point(FlatPoint self, RoundPoint other) {
     return round_point__wedge__round_point(other, flat_point__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-MultiVector flat_point__anti_project_via_horizon_onto__transflector(FlatPoint self, Transflector other) {
-    return transflector__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector flat_point__anti_project_via_horizon_onto__translator(FlatPoint self, Translator other) {
-    return translator__wedge__multi_vector(other, flat_point__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Sphere flector__anti_project_via_horizon_onto__circle(Flector self, Circle other) {
@@ -13837,24 +9244,12 @@ Plane flector__anti_project_via_horizon_onto__plane(Flector self, Plane other) {
     return plane__wedge__scalar(other, flector__anti_wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector flector__anti_project_via_horizon_onto__rotor(Flector self, Rotor other) {
-    return rotor__wedge__multi_vector(other, flector__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 MultiVector flector__anti_project_via_horizon_onto__round_point(Flector self, RoundPoint other) {
     return round_point__wedge__multi_vector(other, flector__anti_wedge__sphere(self, round_point__dual(other)));
 }
 
 Sphere flector__anti_project_via_horizon_onto__sphere(Flector self, Sphere other) {
     return sphere__wedge__scalar(other, flector__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector flector__anti_project_via_horizon_onto__transflector(Flector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, flector__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector flector__anti_project_via_horizon_onto__translator(Flector self, Translator other) {
-    return translator__wedge__multi_vector(other, flector__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Circle line__anti_project_via_horizon_onto__circle(Line self, Circle other) {
@@ -13885,20 +9280,8 @@ MultiVector line__anti_project_via_horizon_onto__multi_vector(Line self, MultiVe
     return multi_vector__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, multi_vector__dual(other)));
 }
 
-MultiVector line__anti_project_via_horizon_onto__rotor(Line self, Rotor other) {
-    return rotor__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Circle line__anti_project_via_horizon_onto__round_point(Line self, RoundPoint other) {
     return round_point__wedge__dipole(other, line__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-MultiVector line__anti_project_via_horizon_onto__transflector(Line self, Transflector other) {
-    return transflector__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector line__anti_project_via_horizon_onto__translator(Line self, Translator other) {
-    return translator__wedge__multi_vector(other, line__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 MultiVector motor__anti_project_via_horizon_onto__circle(Motor self, Circle other) {
@@ -13933,24 +9316,12 @@ AntiScalar motor__anti_project_via_horizon_onto__plane(Motor self, Plane other) 
     return plane__wedge__round_point(other, motor__anti_wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector motor__anti_project_via_horizon_onto__rotor(Motor self, Rotor other) {
-    return rotor__wedge__multi_vector(other, motor__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 MultiVector motor__anti_project_via_horizon_onto__round_point(Motor self, RoundPoint other) {
     return round_point__wedge__multi_vector(other, motor__anti_wedge__sphere(self, round_point__dual(other)));
 }
 
 AntiScalar motor__anti_project_via_horizon_onto__sphere(Motor self, Sphere other) {
     return sphere__wedge__round_point(other, motor__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector motor__anti_project_via_horizon_onto__transflector(Motor self, Transflector other) {
-    return transflector__wedge__multi_vector(other, motor__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector motor__anti_project_via_horizon_onto__translator(Motor self, Translator other) {
-    return translator__wedge__multi_vector(other, motor__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__circle(MultiVector self, Circle other) {
@@ -13985,24 +9356,12 @@ MultiVector multi_vector__anti_project_via_horizon_onto__plane(MultiVector self,
     return plane__wedge__multi_vector(other, multi_vector__anti_wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector multi_vector__anti_project_via_horizon_onto__rotor(MultiVector self, Rotor other) {
-    return rotor__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 MultiVector multi_vector__anti_project_via_horizon_onto__round_point(MultiVector self, RoundPoint other) {
     return round_point__wedge__multi_vector(other, multi_vector__anti_wedge__sphere(self, round_point__dual(other)));
 }
 
 MultiVector multi_vector__anti_project_via_horizon_onto__sphere(MultiVector self, Sphere other) {
     return sphere__wedge__multi_vector(other, multi_vector__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector multi_vector__anti_project_via_horizon_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector multi_vector__anti_project_via_horizon_onto__translator(MultiVector self, Translator other) {
-    return translator__wedge__multi_vector(other, multi_vector__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Sphere plane__anti_project_via_horizon_onto__circle(Plane self, Circle other) {
@@ -14037,76 +9396,12 @@ Plane plane__anti_project_via_horizon_onto__plane(Plane self, Plane other) {
     return plane__wedge__scalar(other, plane__anti_wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector plane__anti_project_via_horizon_onto__rotor(Plane self, Rotor other) {
-    return rotor__wedge__multi_vector(other, plane__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Sphere plane__anti_project_via_horizon_onto__round_point(Plane self, RoundPoint other) {
     return round_point__wedge__circle(other, plane__anti_wedge__sphere(self, round_point__dual(other)));
 }
 
 Sphere plane__anti_project_via_horizon_onto__sphere(Plane self, Sphere other) {
     return sphere__wedge__scalar(other, plane__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector plane__anti_project_via_horizon_onto__transflector(Plane self, Transflector other) {
-    return transflector__wedge__multi_vector(other, plane__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector plane__anti_project_via_horizon_onto__translator(Plane self, Translator other) {
-    return translator__wedge__multi_vector(other, plane__anti_wedge__multi_vector(self, translator__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__circle(Rotor self, Circle other) {
-    return circle__wedge__multi_vector(other, rotor__anti_wedge__dipole(self, circle__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__dipole(Rotor self, Dipole other) {
-    return dipole__wedge__multi_vector(other, rotor__anti_wedge__circle(self, dipole__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__flat_point(Rotor self, FlatPoint other) {
-    return flat_point__wedge__multi_vector(other, rotor__anti_wedge__circle(self, flat_point__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__flector(Rotor self, Flector other) {
-    return flector__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, flector__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__line(Rotor self, Line other) {
-    return line__wedge__multi_vector(other, rotor__anti_wedge__dipole(self, line__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__motor(Rotor self, Motor other) {
-    return motor__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, motor__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, multi_vector__dual(other)));
-}
-
-AntiScalar rotor__anti_project_via_horizon_onto__plane(Rotor self, Plane other) {
-    return plane__wedge__round_point(other, rotor__anti_wedge__round_point(self, plane__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__rotor(Rotor self, Rotor other) {
-    return rotor__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__round_point(Rotor self, RoundPoint other) {
-    return round_point__wedge__multi_vector(other, rotor__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-AntiScalar rotor__anti_project_via_horizon_onto__sphere(Rotor self, Sphere other) {
-    return sphere__wedge__round_point(other, rotor__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__transflector(Rotor self, Transflector other) {
-    return transflector__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector rotor__anti_project_via_horizon_onto__translator(Rotor self, Translator other) {
-    return translator__wedge__multi_vector(other, rotor__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 MultiVector round_point__anti_project_via_horizon_onto__flector(RoundPoint self, Flector other) {
@@ -14121,20 +9416,8 @@ MultiVector round_point__anti_project_via_horizon_onto__multi_vector(RoundPoint 
     return multi_vector__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, multi_vector__dual(other)));
 }
 
-MultiVector round_point__anti_project_via_horizon_onto__rotor(RoundPoint self, Rotor other) {
-    return rotor__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 RoundPoint round_point__anti_project_via_horizon_onto__round_point(RoundPoint self, RoundPoint other) {
     return round_point__wedge__scalar(other, round_point__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-MultiVector round_point__anti_project_via_horizon_onto__transflector(RoundPoint self, Transflector other) {
-    return transflector__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector round_point__anti_project_via_horizon_onto__translator(RoundPoint self, Translator other) {
-    return translator__wedge__multi_vector(other, round_point__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Sphere sphere__anti_project_via_horizon_onto__circle(Sphere self, Circle other) {
@@ -14169,128 +9452,12 @@ Plane sphere__anti_project_via_horizon_onto__plane(Sphere self, Plane other) {
     return plane__wedge__scalar(other, sphere__anti_wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector sphere__anti_project_via_horizon_onto__rotor(Sphere self, Rotor other) {
-    return rotor__wedge__multi_vector(other, sphere__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Sphere sphere__anti_project_via_horizon_onto__round_point(Sphere self, RoundPoint other) {
     return round_point__wedge__circle(other, sphere__anti_wedge__sphere(self, round_point__dual(other)));
 }
 
 Sphere sphere__anti_project_via_horizon_onto__sphere(Sphere self, Sphere other) {
     return sphere__wedge__scalar(other, sphere__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector sphere__anti_project_via_horizon_onto__transflector(Sphere self, Transflector other) {
-    return transflector__wedge__multi_vector(other, sphere__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector sphere__anti_project_via_horizon_onto__translator(Sphere self, Translator other) {
-    return translator__wedge__multi_vector(other, sphere__anti_wedge__multi_vector(self, translator__dual(other)));
-}
-
-Sphere transflector__anti_project_via_horizon_onto__circle(Transflector self, Circle other) {
-    return circle__wedge__round_point(other, transflector__anti_wedge__dipole(self, circle__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__dipole(Transflector self, Dipole other) {
-    return dipole__wedge__multi_vector(other, transflector__anti_wedge__circle(self, dipole__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__flat_point(Transflector self, FlatPoint other) {
-    return flat_point__wedge__multi_vector(other, transflector__anti_wedge__circle(self, flat_point__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__flector(Transflector self, Flector other) {
-    return flector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, flector__dual(other)));
-}
-
-Plane transflector__anti_project_via_horizon_onto__line(Transflector self, Line other) {
-    return line__wedge__round_point(other, transflector__anti_wedge__dipole(self, line__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__motor(Transflector self, Motor other) {
-    return motor__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, motor__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, multi_vector__dual(other)));
-}
-
-Plane transflector__anti_project_via_horizon_onto__plane(Transflector self, Plane other) {
-    return plane__wedge__scalar(other, transflector__anti_wedge__round_point(self, plane__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__rotor(Transflector self, Rotor other) {
-    return rotor__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__round_point(Transflector self, RoundPoint other) {
-    return round_point__wedge__multi_vector(other, transflector__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-Sphere transflector__anti_project_via_horizon_onto__sphere(Transflector self, Sphere other) {
-    return sphere__wedge__scalar(other, transflector__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__transflector(Transflector self, Transflector other) {
-    return transflector__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector transflector__anti_project_via_horizon_onto__translator(Transflector self, Translator other) {
-    return translator__wedge__multi_vector(other, transflector__anti_wedge__multi_vector(self, translator__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__circle(Translator self, Circle other) {
-    return circle__wedge__multi_vector(other, translator__anti_wedge__dipole(self, circle__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__dipole(Translator self, Dipole other) {
-    return dipole__wedge__multi_vector(other, translator__anti_wedge__circle(self, dipole__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__flat_point(Translator self, FlatPoint other) {
-    return flat_point__wedge__multi_vector(other, translator__anti_wedge__circle(self, flat_point__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__flector(Translator self, Flector other) {
-    return flector__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, flector__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__line(Translator self, Line other) {
-    return line__wedge__multi_vector(other, translator__anti_wedge__dipole(self, line__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__motor(Translator self, Motor other) {
-    return motor__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, motor__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, multi_vector__dual(other)));
-}
-
-AntiScalar translator__anti_project_via_horizon_onto__plane(Translator self, Plane other) {
-    return plane__wedge__round_point(other, translator__anti_wedge__round_point(self, plane__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__rotor(Translator self, Rotor other) {
-    return rotor__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, rotor__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__round_point(Translator self, RoundPoint other) {
-    return round_point__wedge__multi_vector(other, translator__anti_wedge__sphere(self, round_point__dual(other)));
-}
-
-AntiScalar translator__anti_project_via_horizon_onto__sphere(Translator self, Sphere other) {
-    return sphere__wedge__round_point(other, translator__anti_wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__transflector(Translator self, Transflector other) {
-    return transflector__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector translator__anti_project_via_horizon_onto__translator(Translator self, Translator other) {
-    return translator__wedge__multi_vector(other, translator__anti_wedge__multi_vector(self, translator__dual(other)));
 }
 
 Circle circle__project_orthogonally_onto__circle(Circle self, Circle other) {
@@ -14317,20 +9484,8 @@ Circle circle__project_orthogonally_onto__plane(Circle self, Plane other) {
     return plane__anti_wedge__sphere(other, circle__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector circle__project_orthogonally_onto__rotor(Circle self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, circle__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Circle circle__project_orthogonally_onto__sphere(Circle self, Sphere other) {
     return sphere__anti_wedge__sphere(other, circle__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector circle__project_orthogonally_onto__transflector(Circle self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, circle__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector circle__project_orthogonally_onto__translator(Circle self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, circle__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Dipole dipole__project_orthogonally_onto__circle(Dipole self, Circle other) {
@@ -14365,20 +9520,8 @@ Dipole dipole__project_orthogonally_onto__plane(Dipole self, Plane other) {
     return plane__anti_wedge__circle(other, dipole__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector dipole__project_orthogonally_onto__rotor(Dipole self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, dipole__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Dipole dipole__project_orthogonally_onto__sphere(Dipole self, Sphere other) {
     return sphere__anti_wedge__circle(other, dipole__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector dipole__project_orthogonally_onto__transflector(Dipole self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, dipole__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector dipole__project_orthogonally_onto__translator(Dipole self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, dipole__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Dipole flat_point__project_orthogonally_onto__circle(FlatPoint self, Circle other) {
@@ -14413,20 +9556,8 @@ FlatPoint flat_point__project_orthogonally_onto__plane(FlatPoint self, Plane oth
     return plane__anti_wedge__line(other, flat_point__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector flat_point__project_orthogonally_onto__rotor(FlatPoint self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, flat_point__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Dipole flat_point__project_orthogonally_onto__sphere(FlatPoint self, Sphere other) {
     return sphere__anti_wedge__line(other, flat_point__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector flat_point__project_orthogonally_onto__transflector(FlatPoint self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, flat_point__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector flat_point__project_orthogonally_onto__translator(FlatPoint self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, flat_point__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Dipole flector__project_orthogonally_onto__circle(Flector self, Circle other) {
@@ -14461,20 +9592,8 @@ Flector flector__project_orthogonally_onto__plane(Flector self, Plane other) {
     return plane__anti_wedge__motor(other, flector__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector flector__project_orthogonally_onto__rotor(Flector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, flector__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 MultiVector flector__project_orthogonally_onto__sphere(Flector self, Sphere other) {
     return sphere__anti_wedge__motor(other, flector__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector flector__project_orthogonally_onto__transflector(Flector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, flector__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector flector__project_orthogonally_onto__translator(Flector self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, flector__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Circle line__project_orthogonally_onto__circle(Line self, Circle other) {
@@ -14501,20 +9620,8 @@ Line line__project_orthogonally_onto__plane(Line self, Plane other) {
     return plane__anti_wedge__plane(other, line__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector line__project_orthogonally_onto__rotor(Line self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, line__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Circle line__project_orthogonally_onto__sphere(Line self, Sphere other) {
     return sphere__anti_wedge__plane(other, line__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector line__project_orthogonally_onto__transflector(Line self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, line__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector line__project_orthogonally_onto__translator(Line self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, line__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Circle motor__project_orthogonally_onto__circle(Motor self, Circle other) {
@@ -14541,20 +9648,8 @@ Line motor__project_orthogonally_onto__plane(Motor self, Plane other) {
     return plane__anti_wedge__plane(other, motor__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector motor__project_orthogonally_onto__rotor(Motor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, motor__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Circle motor__project_orthogonally_onto__sphere(Motor self, Sphere other) {
     return sphere__anti_wedge__plane(other, motor__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector motor__project_orthogonally_onto__transflector(Motor self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, motor__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector motor__project_orthogonally_onto__translator(Motor self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, motor__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__circle(MultiVector self, Circle other) {
@@ -14589,24 +9684,12 @@ MultiVector multi_vector__project_orthogonally_onto__plane(MultiVector self, Pla
     return plane__anti_wedge__multi_vector(other, multi_vector__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector multi_vector__project_orthogonally_onto__rotor(MultiVector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 MultiVector multi_vector__project_orthogonally_onto__round_point(MultiVector self, RoundPoint other) {
     return round_point__anti_wedge__multi_vector(other, multi_vector__wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 MultiVector multi_vector__project_orthogonally_onto__sphere(MultiVector self, Sphere other) {
     return sphere__anti_wedge__multi_vector(other, multi_vector__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector multi_vector__project_orthogonally_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector multi_vector__project_orthogonally_onto__translator(MultiVector self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 MultiVector plane__project_orthogonally_onto__flector(Plane self, Flector other) {
@@ -14625,60 +9708,8 @@ Plane plane__project_orthogonally_onto__plane(Plane self, Plane other) {
     return plane__anti_wedge__anti_scalar(other, plane__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector plane__project_orthogonally_onto__rotor(Plane self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, plane__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Sphere plane__project_orthogonally_onto__sphere(Plane self, Sphere other) {
     return sphere__anti_wedge__anti_scalar(other, plane__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector plane__project_orthogonally_onto__transflector(Plane self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, plane__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector plane__project_orthogonally_onto__translator(Plane self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, plane__wedge__multi_vector(self, translator__anti_dual(other)));
-}
-
-Circle rotor__project_orthogonally_onto__circle(Rotor self, Circle other) {
-    return circle__anti_wedge__anti_scalar(other, rotor__wedge__dipole(self, circle__anti_dual(other)));
-}
-
-MultiVector rotor__project_orthogonally_onto__flector(Rotor self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, flector__anti_dual(other)));
-}
-
-Line rotor__project_orthogonally_onto__line(Rotor self, Line other) {
-    return line__anti_wedge__anti_scalar(other, rotor__wedge__dipole(self, line__anti_dual(other)));
-}
-
-MultiVector rotor__project_orthogonally_onto__motor(Rotor self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, motor__anti_dual(other)));
-}
-
-MultiVector rotor__project_orthogonally_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, multi_vector__anti_dual(other)));
-}
-
-Line rotor__project_orthogonally_onto__plane(Rotor self, Plane other) {
-    return plane__anti_wedge__plane(other, rotor__wedge__round_point(self, plane__anti_dual(other)));
-}
-
-MultiVector rotor__project_orthogonally_onto__rotor(Rotor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
-Circle rotor__project_orthogonally_onto__sphere(Rotor self, Sphere other) {
-    return sphere__anti_wedge__plane(other, rotor__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector rotor__project_orthogonally_onto__transflector(Rotor self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector rotor__project_orthogonally_onto__translator(Rotor self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 RoundPoint round_point__project_orthogonally_onto__circle(RoundPoint self, Circle other) {
@@ -14713,24 +9744,12 @@ RoundPoint round_point__project_orthogonally_onto__plane(RoundPoint self, Plane 
     return plane__anti_wedge__dipole(other, round_point__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector round_point__project_orthogonally_onto__rotor(RoundPoint self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, round_point__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 RoundPoint round_point__project_orthogonally_onto__round_point(RoundPoint self, RoundPoint other) {
     return round_point__anti_wedge__anti_scalar(other, round_point__wedge__sphere(self, round_point__anti_dual(other)));
 }
 
 RoundPoint round_point__project_orthogonally_onto__sphere(RoundPoint self, Sphere other) {
     return sphere__anti_wedge__dipole(other, round_point__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector round_point__project_orthogonally_onto__transflector(RoundPoint self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, round_point__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector round_point__project_orthogonally_onto__translator(RoundPoint self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, round_point__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 MultiVector sphere__project_orthogonally_onto__flector(Sphere self, Flector other) {
@@ -14749,108 +9768,8 @@ Plane sphere__project_orthogonally_onto__plane(Sphere self, Plane other) {
     return plane__anti_wedge__anti_scalar(other, sphere__wedge__round_point(self, plane__anti_dual(other)));
 }
 
-MultiVector sphere__project_orthogonally_onto__rotor(Sphere self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, sphere__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
 Sphere sphere__project_orthogonally_onto__sphere(Sphere self, Sphere other) {
     return sphere__anti_wedge__anti_scalar(other, sphere__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector sphere__project_orthogonally_onto__transflector(Sphere self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, sphere__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector sphere__project_orthogonally_onto__translator(Sphere self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, sphere__wedge__multi_vector(self, translator__anti_dual(other)));
-}
-
-Dipole transflector__project_orthogonally_onto__circle(Transflector self, Circle other) {
-    return circle__anti_wedge__plane(other, transflector__wedge__dipole(self, circle__anti_dual(other)));
-}
-
-Dipole transflector__project_orthogonally_onto__dipole(Transflector self, Dipole other) {
-    return dipole__anti_wedge__anti_scalar(other, transflector__wedge__circle(self, dipole__anti_dual(other)));
-}
-
-FlatPoint transflector__project_orthogonally_onto__flat_point(Transflector self, FlatPoint other) {
-    return flat_point__anti_wedge__anti_scalar(other, transflector__wedge__circle(self, flat_point__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__flector(Transflector self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, flector__anti_dual(other)));
-}
-
-FlatPoint transflector__project_orthogonally_onto__line(Transflector self, Line other) {
-    return line__anti_wedge__plane(other, transflector__wedge__dipole(self, line__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__motor(Transflector self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, motor__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, multi_vector__anti_dual(other)));
-}
-
-Flector transflector__project_orthogonally_onto__plane(Transflector self, Plane other) {
-    return plane__anti_wedge__motor(other, transflector__wedge__round_point(self, plane__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__rotor(Transflector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__sphere(Transflector self, Sphere other) {
-    return sphere__anti_wedge__motor(other, transflector__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__transflector(Transflector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector transflector__project_orthogonally_onto__translator(Transflector self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, translator__anti_dual(other)));
-}
-
-Circle translator__project_orthogonally_onto__circle(Translator self, Circle other) {
-    return circle__anti_wedge__anti_scalar(other, translator__wedge__dipole(self, circle__anti_dual(other)));
-}
-
-MultiVector translator__project_orthogonally_onto__flector(Translator self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, flector__anti_dual(other)));
-}
-
-Line translator__project_orthogonally_onto__line(Translator self, Line other) {
-    return line__anti_wedge__anti_scalar(other, translator__wedge__dipole(self, line__anti_dual(other)));
-}
-
-MultiVector translator__project_orthogonally_onto__motor(Translator self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, motor__anti_dual(other)));
-}
-
-MultiVector translator__project_orthogonally_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, multi_vector__anti_dual(other)));
-}
-
-Line translator__project_orthogonally_onto__plane(Translator self, Plane other) {
-    return plane__anti_wedge__plane(other, translator__wedge__round_point(self, plane__anti_dual(other)));
-}
-
-MultiVector translator__project_orthogonally_onto__rotor(Translator self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, rotor__anti_dual(other)));
-}
-
-Circle translator__project_orthogonally_onto__sphere(Translator self, Sphere other) {
-    return sphere__anti_wedge__plane(other, translator__wedge__round_point(self, sphere__anti_dual(other)));
-}
-
-MultiVector translator__project_orthogonally_onto__transflector(Translator self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, transflector__anti_dual(other)));
-}
-
-MultiVector translator__project_orthogonally_onto__translator(Translator self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, translator__anti_dual(other)));
 }
 
 Circle circle__project_via_origin_onto__circle(Circle self, Circle other) {
@@ -14877,20 +9796,8 @@ Circle circle__project_via_origin_onto__plane(Circle self, Plane other) {
     return plane__anti_wedge__sphere(other, circle__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector circle__project_via_origin_onto__rotor(Circle self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, circle__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Circle circle__project_via_origin_onto__sphere(Circle self, Sphere other) {
     return sphere__anti_wedge__sphere(other, circle__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector circle__project_via_origin_onto__transflector(Circle self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, circle__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector circle__project_via_origin_onto__translator(Circle self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, circle__wedge__multi_vector(self, translator__dual(other)));
 }
 
 Dipole dipole__project_via_origin_onto__circle(Dipole self, Circle other) {
@@ -14925,20 +9832,8 @@ Dipole dipole__project_via_origin_onto__plane(Dipole self, Plane other) {
     return plane__anti_wedge__circle(other, dipole__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector dipole__project_via_origin_onto__rotor(Dipole self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, dipole__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Dipole dipole__project_via_origin_onto__sphere(Dipole self, Sphere other) {
     return sphere__anti_wedge__circle(other, dipole__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector dipole__project_via_origin_onto__transflector(Dipole self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, dipole__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector dipole__project_via_origin_onto__translator(Dipole self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, dipole__wedge__multi_vector(self, translator__dual(other)));
 }
 
 Dipole flat_point__project_via_origin_onto__circle(FlatPoint self, Circle other) {
@@ -14973,20 +9868,8 @@ FlatPoint flat_point__project_via_origin_onto__plane(FlatPoint self, Plane other
     return plane__anti_wedge__line(other, flat_point__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector flat_point__project_via_origin_onto__rotor(FlatPoint self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, flat_point__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Dipole flat_point__project_via_origin_onto__sphere(FlatPoint self, Sphere other) {
     return sphere__anti_wedge__line(other, flat_point__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector flat_point__project_via_origin_onto__transflector(FlatPoint self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, flat_point__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector flat_point__project_via_origin_onto__translator(FlatPoint self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, flat_point__wedge__multi_vector(self, translator__dual(other)));
 }
 
 Dipole flector__project_via_origin_onto__circle(Flector self, Circle other) {
@@ -15021,20 +9904,8 @@ Flector flector__project_via_origin_onto__plane(Flector self, Plane other) {
     return plane__anti_wedge__motor(other, flector__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector flector__project_via_origin_onto__rotor(Flector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, flector__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 MultiVector flector__project_via_origin_onto__sphere(Flector self, Sphere other) {
     return sphere__anti_wedge__motor(other, flector__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector flector__project_via_origin_onto__transflector(Flector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, flector__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector flector__project_via_origin_onto__translator(Flector self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, flector__wedge__multi_vector(self, translator__dual(other)));
 }
 
 Circle line__project_via_origin_onto__circle(Line self, Circle other) {
@@ -15061,20 +9932,8 @@ Line line__project_via_origin_onto__plane(Line self, Plane other) {
     return plane__anti_wedge__plane(other, line__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector line__project_via_origin_onto__rotor(Line self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, line__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Circle line__project_via_origin_onto__sphere(Line self, Sphere other) {
     return sphere__anti_wedge__plane(other, line__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector line__project_via_origin_onto__transflector(Line self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, line__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector line__project_via_origin_onto__translator(Line self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, line__wedge__multi_vector(self, translator__dual(other)));
 }
 
 Circle motor__project_via_origin_onto__circle(Motor self, Circle other) {
@@ -15101,20 +9960,8 @@ Line motor__project_via_origin_onto__plane(Motor self, Plane other) {
     return plane__anti_wedge__plane(other, motor__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector motor__project_via_origin_onto__rotor(Motor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, motor__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Circle motor__project_via_origin_onto__sphere(Motor self, Sphere other) {
     return sphere__anti_wedge__plane(other, motor__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector motor__project_via_origin_onto__transflector(Motor self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, motor__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector motor__project_via_origin_onto__translator(Motor self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, motor__wedge__multi_vector(self, translator__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__circle(MultiVector self, Circle other) {
@@ -15149,24 +9996,12 @@ MultiVector multi_vector__project_via_origin_onto__plane(MultiVector self, Plane
     return plane__anti_wedge__multi_vector(other, multi_vector__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector multi_vector__project_via_origin_onto__rotor(MultiVector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 MultiVector multi_vector__project_via_origin_onto__round_point(MultiVector self, RoundPoint other) {
     return round_point__anti_wedge__multi_vector(other, multi_vector__wedge__sphere(self, round_point__dual(other)));
 }
 
 MultiVector multi_vector__project_via_origin_onto__sphere(MultiVector self, Sphere other) {
     return sphere__anti_wedge__multi_vector(other, multi_vector__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector multi_vector__project_via_origin_onto__transflector(MultiVector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector multi_vector__project_via_origin_onto__translator(MultiVector self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, multi_vector__wedge__multi_vector(self, translator__dual(other)));
 }
 
 MultiVector plane__project_via_origin_onto__flector(Plane self, Flector other) {
@@ -15185,60 +10020,8 @@ Plane plane__project_via_origin_onto__plane(Plane self, Plane other) {
     return plane__anti_wedge__anti_scalar(other, plane__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector plane__project_via_origin_onto__rotor(Plane self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, plane__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Sphere plane__project_via_origin_onto__sphere(Plane self, Sphere other) {
     return sphere__anti_wedge__anti_scalar(other, plane__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector plane__project_via_origin_onto__transflector(Plane self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, plane__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector plane__project_via_origin_onto__translator(Plane self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, plane__wedge__multi_vector(self, translator__dual(other)));
-}
-
-Circle rotor__project_via_origin_onto__circle(Rotor self, Circle other) {
-    return circle__anti_wedge__anti_scalar(other, rotor__wedge__dipole(self, circle__dual(other)));
-}
-
-MultiVector rotor__project_via_origin_onto__flector(Rotor self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, flector__dual(other)));
-}
-
-Line rotor__project_via_origin_onto__line(Rotor self, Line other) {
-    return line__anti_wedge__anti_scalar(other, rotor__wedge__dipole(self, line__dual(other)));
-}
-
-MultiVector rotor__project_via_origin_onto__motor(Rotor self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, motor__dual(other)));
-}
-
-MultiVector rotor__project_via_origin_onto__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, multi_vector__dual(other)));
-}
-
-Line rotor__project_via_origin_onto__plane(Rotor self, Plane other) {
-    return plane__anti_wedge__plane(other, rotor__wedge__round_point(self, plane__dual(other)));
-}
-
-MultiVector rotor__project_via_origin_onto__rotor(Rotor self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, rotor__dual(other)));
-}
-
-Circle rotor__project_via_origin_onto__sphere(Rotor self, Sphere other) {
-    return sphere__anti_wedge__plane(other, rotor__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector rotor__project_via_origin_onto__transflector(Rotor self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector rotor__project_via_origin_onto__translator(Rotor self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, rotor__wedge__multi_vector(self, translator__dual(other)));
 }
 
 RoundPoint round_point__project_via_origin_onto__circle(RoundPoint self, Circle other) {
@@ -15273,24 +10056,12 @@ RoundPoint round_point__project_via_origin_onto__plane(RoundPoint self, Plane ot
     return plane__anti_wedge__dipole(other, round_point__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector round_point__project_via_origin_onto__rotor(RoundPoint self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, round_point__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 RoundPoint round_point__project_via_origin_onto__round_point(RoundPoint self, RoundPoint other) {
     return round_point__anti_wedge__anti_scalar(other, round_point__wedge__sphere(self, round_point__dual(other)));
 }
 
 RoundPoint round_point__project_via_origin_onto__sphere(RoundPoint self, Sphere other) {
     return sphere__anti_wedge__dipole(other, round_point__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector round_point__project_via_origin_onto__transflector(RoundPoint self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, round_point__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector round_point__project_via_origin_onto__translator(RoundPoint self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, round_point__wedge__multi_vector(self, translator__dual(other)));
 }
 
 MultiVector sphere__project_via_origin_onto__flector(Sphere self, Flector other) {
@@ -15309,108 +10080,8 @@ Plane sphere__project_via_origin_onto__plane(Sphere self, Plane other) {
     return plane__anti_wedge__anti_scalar(other, sphere__wedge__round_point(self, plane__dual(other)));
 }
 
-MultiVector sphere__project_via_origin_onto__rotor(Sphere self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, sphere__wedge__multi_vector(self, rotor__dual(other)));
-}
-
 Sphere sphere__project_via_origin_onto__sphere(Sphere self, Sphere other) {
     return sphere__anti_wedge__anti_scalar(other, sphere__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector sphere__project_via_origin_onto__transflector(Sphere self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, sphere__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector sphere__project_via_origin_onto__translator(Sphere self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, sphere__wedge__multi_vector(self, translator__dual(other)));
-}
-
-Dipole transflector__project_via_origin_onto__circle(Transflector self, Circle other) {
-    return circle__anti_wedge__plane(other, transflector__wedge__dipole(self, circle__dual(other)));
-}
-
-Dipole transflector__project_via_origin_onto__dipole(Transflector self, Dipole other) {
-    return dipole__anti_wedge__anti_scalar(other, transflector__wedge__circle(self, dipole__dual(other)));
-}
-
-FlatPoint transflector__project_via_origin_onto__flat_point(Transflector self, FlatPoint other) {
-    return flat_point__anti_wedge__anti_scalar(other, transflector__wedge__circle(self, flat_point__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__flector(Transflector self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, flector__dual(other)));
-}
-
-FlatPoint transflector__project_via_origin_onto__line(Transflector self, Line other) {
-    return line__anti_wedge__plane(other, transflector__wedge__dipole(self, line__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__motor(Transflector self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, motor__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, multi_vector__dual(other)));
-}
-
-Flector transflector__project_via_origin_onto__plane(Transflector self, Plane other) {
-    return plane__anti_wedge__motor(other, transflector__wedge__round_point(self, plane__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__rotor(Transflector self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, rotor__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__sphere(Transflector self, Sphere other) {
-    return sphere__anti_wedge__motor(other, transflector__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__transflector(Transflector self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector transflector__project_via_origin_onto__translator(Transflector self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, transflector__wedge__multi_vector(self, translator__dual(other)));
-}
-
-Circle translator__project_via_origin_onto__circle(Translator self, Circle other) {
-    return circle__anti_wedge__anti_scalar(other, translator__wedge__dipole(self, circle__dual(other)));
-}
-
-MultiVector translator__project_via_origin_onto__flector(Translator self, Flector other) {
-    return flector__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, flector__dual(other)));
-}
-
-Line translator__project_via_origin_onto__line(Translator self, Line other) {
-    return line__anti_wedge__anti_scalar(other, translator__wedge__dipole(self, line__dual(other)));
-}
-
-MultiVector translator__project_via_origin_onto__motor(Translator self, Motor other) {
-    return motor__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, motor__dual(other)));
-}
-
-MultiVector translator__project_via_origin_onto__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, multi_vector__dual(other)));
-}
-
-Line translator__project_via_origin_onto__plane(Translator self, Plane other) {
-    return plane__anti_wedge__plane(other, translator__wedge__round_point(self, plane__dual(other)));
-}
-
-MultiVector translator__project_via_origin_onto__rotor(Translator self, Rotor other) {
-    return rotor__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, rotor__dual(other)));
-}
-
-Circle translator__project_via_origin_onto__sphere(Translator self, Sphere other) {
-    return sphere__anti_wedge__plane(other, translator__wedge__round_point(self, sphere__dual(other)));
-}
-
-MultiVector translator__project_via_origin_onto__transflector(Translator self, Transflector other) {
-    return transflector__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, transflector__dual(other)));
-}
-
-MultiVector translator__project_via_origin_onto__translator(Translator self, Translator other) {
-    return translator__anti_wedge__multi_vector(other, translator__wedge__multi_vector(self, translator__dual(other)));
 }
 
 Circle circle__anti_reject_orthogonally_from__dipole(Circle self, Dipole other) {
@@ -15431,10 +10102,6 @@ MultiVector circle__anti_reject_orthogonally_from__multi_vector(Circle self, Mul
 
 Circle circle__anti_reject_orthogonally_from__round_point(Circle self, RoundPoint other) {
     return sphere__anti_wedge__sphere(circle__wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-MultiVector circle__anti_reject_orthogonally_from__transflector(Circle self, Transflector other) {
-    return anti_scalar__anti_wedge__multi_vector(circle__wedge__transflector(self, other), transflector__anti_dual(other));
 }
 
 Dipole dipole__anti_reject_orthogonally_from__circle(Dipole self, Circle other) {
@@ -15465,20 +10132,8 @@ MultiVector dipole__anti_reject_orthogonally_from__multi_vector(Dipole self, Mul
     return multi_vector__anti_wedge__multi_vector(dipole__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
-MultiVector dipole__anti_reject_orthogonally_from__rotor(Dipole self, Rotor other) {
-    return anti_scalar__anti_wedge__multi_vector(dipole__wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Dipole dipole__anti_reject_orthogonally_from__round_point(Dipole self, RoundPoint other) {
     return circle__anti_wedge__sphere(dipole__wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-MultiVector dipole__anti_reject_orthogonally_from__transflector(Dipole self, Transflector other) {
-    return plane__anti_wedge__multi_vector(dipole__wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector dipole__anti_reject_orthogonally_from__translator(Dipole self, Translator other) {
-    return anti_scalar__anti_wedge__multi_vector(dipole__wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Dipole flat_point__anti_reject_orthogonally_from__circle(FlatPoint self, Circle other) {
@@ -15569,10 +10224,6 @@ MultiVector multi_vector__anti_reject_orthogonally_from__plane(MultiVector self,
     return multi_vector__anti_wedge__round_point(multi_vector__wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector multi_vector__anti_reject_orthogonally_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector__anti_wedge__multi_vector(multi_vector__wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 MultiVector multi_vector__anti_reject_orthogonally_from__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__anti_wedge__sphere(multi_vector__wedge__round_point(self, other), round_point__anti_dual(other));
 }
@@ -15581,32 +10232,12 @@ MultiVector multi_vector__anti_reject_orthogonally_from__sphere(MultiVector self
     return multi_vector__anti_wedge__round_point(multi_vector__wedge__sphere(self, other), sphere__anti_dual(other));
 }
 
-MultiVector multi_vector__anti_reject_orthogonally_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__anti_wedge__multi_vector(multi_vector__wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector multi_vector__anti_reject_orthogonally_from__translator(MultiVector self, Translator other) {
-    return multi_vector__anti_wedge__multi_vector(multi_vector__wedge__translator(self, other), translator__anti_dual(other));
-}
-
 MultiVector plane__anti_reject_orthogonally_from__multi_vector(Plane self, MultiVector other) {
     return multi_vector__anti_wedge__multi_vector(plane__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 Sphere plane__anti_reject_orthogonally_from__round_point(Plane self, RoundPoint other) {
     return anti_scalar__anti_wedge__sphere(plane__wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-Circle rotor__anti_reject_orthogonally_from__dipole(Rotor self, Dipole other) {
-    return anti_scalar__anti_wedge__circle(rotor__wedge__dipole(self, other), dipole__anti_dual(other));
-}
-
-MultiVector rotor__anti_reject_orthogonally_from__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(rotor__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
-}
-
-Circle rotor__anti_reject_orthogonally_from__round_point(Rotor self, RoundPoint other) {
-    return plane__anti_wedge__sphere(rotor__wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 RoundPoint round_point__anti_reject_orthogonally_from__circle(RoundPoint self, Circle other) {
@@ -15641,10 +10272,6 @@ RoundPoint round_point__anti_reject_orthogonally_from__plane(RoundPoint self, Pl
     return anti_scalar__anti_wedge__round_point(round_point__wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector round_point__anti_reject_orthogonally_from__rotor(RoundPoint self, Rotor other) {
-    return plane__anti_wedge__multi_vector(round_point__wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 RoundPoint round_point__anti_reject_orthogonally_from__round_point(RoundPoint self, RoundPoint other) {
     return dipole__anti_wedge__sphere(round_point__wedge__round_point(self, other), round_point__anti_dual(other));
 }
@@ -15653,48 +10280,12 @@ RoundPoint round_point__anti_reject_orthogonally_from__sphere(RoundPoint self, S
     return anti_scalar__anti_wedge__round_point(round_point__wedge__sphere(self, other), sphere__anti_dual(other));
 }
 
-MultiVector round_point__anti_reject_orthogonally_from__transflector(RoundPoint self, Transflector other) {
-    return motor__anti_wedge__multi_vector(round_point__wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector round_point__anti_reject_orthogonally_from__translator(RoundPoint self, Translator other) {
-    return plane__anti_wedge__multi_vector(round_point__wedge__translator(self, other), translator__anti_dual(other));
-}
-
 MultiVector sphere__anti_reject_orthogonally_from__multi_vector(Sphere self, MultiVector other) {
     return multi_vector__anti_wedge__multi_vector(sphere__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
 }
 
 Sphere sphere__anti_reject_orthogonally_from__round_point(Sphere self, RoundPoint other) {
     return anti_scalar__anti_wedge__sphere(sphere__wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-Dipole transflector__anti_reject_orthogonally_from__circle(Transflector self, Circle other) {
-    return anti_scalar__anti_wedge__dipole(transflector__wedge__circle(self, other), circle__anti_dual(other));
-}
-
-Dipole transflector__anti_reject_orthogonally_from__dipole(Transflector self, Dipole other) {
-    return plane__anti_wedge__circle(transflector__wedge__dipole(self, other), dipole__anti_dual(other));
-}
-
-MultiVector transflector__anti_reject_orthogonally_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(transflector__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
-}
-
-MultiVector transflector__anti_reject_orthogonally_from__round_point(Transflector self, RoundPoint other) {
-    return motor__anti_wedge__sphere(transflector__wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-Circle translator__anti_reject_orthogonally_from__dipole(Translator self, Dipole other) {
-    return anti_scalar__anti_wedge__circle(translator__wedge__dipole(self, other), dipole__anti_dual(other));
-}
-
-MultiVector translator__anti_reject_orthogonally_from__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(translator__wedge__multi_vector(self, other), multi_vector__anti_dual(other));
-}
-
-Circle translator__anti_reject_orthogonally_from__round_point(Translator self, RoundPoint other) {
-    return plane__anti_wedge__sphere(translator__wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 Circle circle__anti_reject_via_horizon_from__dipole(Circle self, Dipole other) {
@@ -15715,10 +10306,6 @@ MultiVector circle__anti_reject_via_horizon_from__multi_vector(Circle self, Mult
 
 Circle circle__anti_reject_via_horizon_from__round_point(Circle self, RoundPoint other) {
     return sphere__anti_wedge__sphere(circle__wedge__round_point(self, other), round_point__dual(other));
-}
-
-MultiVector circle__anti_reject_via_horizon_from__transflector(Circle self, Transflector other) {
-    return anti_scalar__anti_wedge__multi_vector(circle__wedge__transflector(self, other), transflector__dual(other));
 }
 
 Dipole dipole__anti_reject_via_horizon_from__circle(Dipole self, Circle other) {
@@ -15749,20 +10336,8 @@ MultiVector dipole__anti_reject_via_horizon_from__multi_vector(Dipole self, Mult
     return multi_vector__anti_wedge__multi_vector(dipole__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
-MultiVector dipole__anti_reject_via_horizon_from__rotor(Dipole self, Rotor other) {
-    return anti_scalar__anti_wedge__multi_vector(dipole__wedge__rotor(self, other), rotor__dual(other));
-}
-
 Dipole dipole__anti_reject_via_horizon_from__round_point(Dipole self, RoundPoint other) {
     return circle__anti_wedge__sphere(dipole__wedge__round_point(self, other), round_point__dual(other));
-}
-
-MultiVector dipole__anti_reject_via_horizon_from__transflector(Dipole self, Transflector other) {
-    return plane__anti_wedge__multi_vector(dipole__wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector dipole__anti_reject_via_horizon_from__translator(Dipole self, Translator other) {
-    return anti_scalar__anti_wedge__multi_vector(dipole__wedge__translator(self, other), translator__dual(other));
 }
 
 Dipole flat_point__anti_reject_via_horizon_from__circle(FlatPoint self, Circle other) {
@@ -15853,10 +10428,6 @@ MultiVector multi_vector__anti_reject_via_horizon_from__plane(MultiVector self, 
     return multi_vector__anti_wedge__round_point(multi_vector__wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector multi_vector__anti_reject_via_horizon_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector__anti_wedge__multi_vector(multi_vector__wedge__rotor(self, other), rotor__dual(other));
-}
-
 MultiVector multi_vector__anti_reject_via_horizon_from__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__anti_wedge__sphere(multi_vector__wedge__round_point(self, other), round_point__dual(other));
 }
@@ -15865,32 +10436,12 @@ MultiVector multi_vector__anti_reject_via_horizon_from__sphere(MultiVector self,
     return multi_vector__anti_wedge__round_point(multi_vector__wedge__sphere(self, other), sphere__dual(other));
 }
 
-MultiVector multi_vector__anti_reject_via_horizon_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__anti_wedge__multi_vector(multi_vector__wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector multi_vector__anti_reject_via_horizon_from__translator(MultiVector self, Translator other) {
-    return multi_vector__anti_wedge__multi_vector(multi_vector__wedge__translator(self, other), translator__dual(other));
-}
-
 MultiVector plane__anti_reject_via_horizon_from__multi_vector(Plane self, MultiVector other) {
     return multi_vector__anti_wedge__multi_vector(plane__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 Sphere plane__anti_reject_via_horizon_from__round_point(Plane self, RoundPoint other) {
     return anti_scalar__anti_wedge__sphere(plane__wedge__round_point(self, other), round_point__dual(other));
-}
-
-Circle rotor__anti_reject_via_horizon_from__dipole(Rotor self, Dipole other) {
-    return anti_scalar__anti_wedge__circle(rotor__wedge__dipole(self, other), dipole__dual(other));
-}
-
-MultiVector rotor__anti_reject_via_horizon_from__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(rotor__wedge__multi_vector(self, other), multi_vector__dual(other));
-}
-
-Circle rotor__anti_reject_via_horizon_from__round_point(Rotor self, RoundPoint other) {
-    return plane__anti_wedge__sphere(rotor__wedge__round_point(self, other), round_point__dual(other));
 }
 
 RoundPoint round_point__anti_reject_via_horizon_from__circle(RoundPoint self, Circle other) {
@@ -15925,10 +10476,6 @@ RoundPoint round_point__anti_reject_via_horizon_from__plane(RoundPoint self, Pla
     return anti_scalar__anti_wedge__round_point(round_point__wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector round_point__anti_reject_via_horizon_from__rotor(RoundPoint self, Rotor other) {
-    return plane__anti_wedge__multi_vector(round_point__wedge__rotor(self, other), rotor__dual(other));
-}
-
 RoundPoint round_point__anti_reject_via_horizon_from__round_point(RoundPoint self, RoundPoint other) {
     return dipole__anti_wedge__sphere(round_point__wedge__round_point(self, other), round_point__dual(other));
 }
@@ -15937,48 +10484,12 @@ RoundPoint round_point__anti_reject_via_horizon_from__sphere(RoundPoint self, Sp
     return anti_scalar__anti_wedge__round_point(round_point__wedge__sphere(self, other), sphere__dual(other));
 }
 
-MultiVector round_point__anti_reject_via_horizon_from__transflector(RoundPoint self, Transflector other) {
-    return motor__anti_wedge__multi_vector(round_point__wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector round_point__anti_reject_via_horizon_from__translator(RoundPoint self, Translator other) {
-    return plane__anti_wedge__multi_vector(round_point__wedge__translator(self, other), translator__dual(other));
-}
-
 MultiVector sphere__anti_reject_via_horizon_from__multi_vector(Sphere self, MultiVector other) {
     return multi_vector__anti_wedge__multi_vector(sphere__wedge__multi_vector(self, other), multi_vector__dual(other));
 }
 
 Sphere sphere__anti_reject_via_horizon_from__round_point(Sphere self, RoundPoint other) {
     return anti_scalar__anti_wedge__sphere(sphere__wedge__round_point(self, other), round_point__dual(other));
-}
-
-Dipole transflector__anti_reject_via_horizon_from__circle(Transflector self, Circle other) {
-    return anti_scalar__anti_wedge__dipole(transflector__wedge__circle(self, other), circle__dual(other));
-}
-
-Dipole transflector__anti_reject_via_horizon_from__dipole(Transflector self, Dipole other) {
-    return plane__anti_wedge__circle(transflector__wedge__dipole(self, other), dipole__dual(other));
-}
-
-MultiVector transflector__anti_reject_via_horizon_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(transflector__wedge__multi_vector(self, other), multi_vector__dual(other));
-}
-
-MultiVector transflector__anti_reject_via_horizon_from__round_point(Transflector self, RoundPoint other) {
-    return motor__anti_wedge__sphere(transflector__wedge__round_point(self, other), round_point__dual(other));
-}
-
-Circle translator__anti_reject_via_horizon_from__dipole(Translator self, Dipole other) {
-    return anti_scalar__anti_wedge__circle(translator__wedge__dipole(self, other), dipole__dual(other));
-}
-
-MultiVector translator__anti_reject_via_horizon_from__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__anti_wedge__multi_vector(translator__wedge__multi_vector(self, other), multi_vector__dual(other));
-}
-
-Circle translator__anti_reject_via_horizon_from__round_point(Translator self, RoundPoint other) {
-    return plane__anti_wedge__sphere(translator__wedge__round_point(self, other), round_point__dual(other));
 }
 
 Circle circle__reject_orthogonally_from__circle(Circle self, Circle other) {
@@ -16013,20 +10524,8 @@ Circle circle__reject_orthogonally_from__plane(Circle self, Plane other) {
     return dipole__wedge__round_point(circle__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector circle__reject_orthogonally_from__rotor(Circle self, Rotor other) {
-    return multi_vector__wedge__multi_vector(circle__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Circle circle__reject_orthogonally_from__sphere(Circle self, Sphere other) {
     return dipole__wedge__round_point(circle__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector circle__reject_orthogonally_from__transflector(Circle self, Transflector other) {
-    return multi_vector__wedge__multi_vector(circle__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector circle__reject_orthogonally_from__translator(Circle self, Translator other) {
-    return multi_vector__wedge__multi_vector(circle__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Dipole dipole__reject_orthogonally_from__circle(Dipole self, Circle other) {
@@ -16053,20 +10552,8 @@ Dipole dipole__reject_orthogonally_from__plane(Dipole self, Plane other) {
     return round_point__wedge__round_point(dipole__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector dipole__reject_orthogonally_from__rotor(Dipole self, Rotor other) {
-    return multi_vector__wedge__multi_vector(dipole__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Dipole dipole__reject_orthogonally_from__sphere(Dipole self, Sphere other) {
     return round_point__wedge__round_point(dipole__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector dipole__reject_orthogonally_from__transflector(Dipole self, Transflector other) {
-    return round_point__wedge__multi_vector(dipole__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector dipole__reject_orthogonally_from__translator(Dipole self, Translator other) {
-    return multi_vector__wedge__multi_vector(dipole__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Dipole flat_point__reject_orthogonally_from__circle(FlatPoint self, Circle other) {
@@ -16089,20 +10576,8 @@ Dipole flat_point__reject_orthogonally_from__plane(FlatPoint self, Plane other) 
     return round_point__wedge__round_point(flat_point__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector flat_point__reject_orthogonally_from__rotor(FlatPoint self, Rotor other) {
-    return flat_point__wedge__multi_vector(flat_point__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Dipole flat_point__reject_orthogonally_from__sphere(FlatPoint self, Sphere other) {
     return round_point__wedge__round_point(flat_point__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector flat_point__reject_orthogonally_from__transflector(FlatPoint self, Transflector other) {
-    return round_point__wedge__multi_vector(flat_point__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector flat_point__reject_orthogonally_from__translator(FlatPoint self, Translator other) {
-    return flat_point__wedge__multi_vector(flat_point__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__circle(Flector self, Circle other) {
@@ -16137,24 +10612,12 @@ MultiVector flector__reject_orthogonally_from__plane(Flector self, Plane other) 
     return multi_vector__wedge__round_point(flector__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector flector__reject_orthogonally_from__rotor(Flector self, Rotor other) {
-    return flector__wedge__multi_vector(flector__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Sphere flector__reject_orthogonally_from__round_point(Flector self, RoundPoint other) {
     return scalar__wedge__sphere(flector__anti_wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 MultiVector flector__reject_orthogonally_from__sphere(Flector self, Sphere other) {
     return multi_vector__wedge__round_point(flector__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector flector__reject_orthogonally_from__transflector(Flector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(flector__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector flector__reject_orthogonally_from__translator(Flector self, Translator other) {
-    return flector__wedge__multi_vector(flector__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Circle line__reject_orthogonally_from__circle(Line self, Circle other) {
@@ -16185,20 +10648,8 @@ Line line__reject_orthogonally_from__plane(Line self, Plane other) {
     return flat_point__wedge__round_point(line__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector line__reject_orthogonally_from__rotor(Line self, Rotor other) {
-    return multi_vector__wedge__multi_vector(line__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Circle line__reject_orthogonally_from__sphere(Line self, Sphere other) {
     return dipole__wedge__round_point(line__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector line__reject_orthogonally_from__transflector(Line self, Transflector other) {
-    return flat_point__wedge__multi_vector(line__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector line__reject_orthogonally_from__translator(Line self, Translator other) {
-    return multi_vector__wedge__multi_vector(line__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__circle(Motor self, Circle other) {
@@ -16233,24 +10684,12 @@ Motor motor__reject_orthogonally_from__plane(Motor self, Plane other) {
     return flector__wedge__round_point(motor__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector motor__reject_orthogonally_from__rotor(Motor self, Rotor other) {
-    return multi_vector__wedge__multi_vector(motor__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 AntiScalar motor__reject_orthogonally_from__round_point(Motor self, RoundPoint other) {
     return round_point__wedge__sphere(motor__anti_wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 MultiVector motor__reject_orthogonally_from__sphere(Motor self, Sphere other) {
     return multi_vector__wedge__round_point(motor__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector motor__reject_orthogonally_from__transflector(Motor self, Transflector other) {
-    return flector__wedge__multi_vector(motor__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector motor__reject_orthogonally_from__translator(Motor self, Translator other) {
-    return multi_vector__wedge__multi_vector(motor__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__circle(MultiVector self, Circle other) {
@@ -16285,24 +10724,12 @@ MultiVector multi_vector__reject_orthogonally_from__plane(MultiVector self, Plan
     return multi_vector__wedge__round_point(multi_vector__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector multi_vector__reject_orthogonally_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector__wedge__multi_vector(multi_vector__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 MultiVector multi_vector__reject_orthogonally_from__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__wedge__sphere(multi_vector__anti_wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 MultiVector multi_vector__reject_orthogonally_from__sphere(MultiVector self, Sphere other) {
     return multi_vector__wedge__round_point(multi_vector__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector multi_vector__reject_orthogonally_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(multi_vector__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector multi_vector__reject_orthogonally_from__translator(MultiVector self, Translator other) {
-    return multi_vector__wedge__multi_vector(multi_vector__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Sphere plane__reject_orthogonally_from__circle(Plane self, Circle other) {
@@ -16337,76 +10764,12 @@ Plane plane__reject_orthogonally_from__plane(Plane self, Plane other) {
     return line__wedge__round_point(plane__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector plane__reject_orthogonally_from__rotor(Plane self, Rotor other) {
-    return flector__wedge__multi_vector(plane__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Sphere plane__reject_orthogonally_from__round_point(Plane self, RoundPoint other) {
     return scalar__wedge__sphere(plane__anti_wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 Sphere plane__reject_orthogonally_from__sphere(Plane self, Sphere other) {
     return circle__wedge__round_point(plane__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector plane__reject_orthogonally_from__transflector(Plane self, Transflector other) {
-    return multi_vector__wedge__multi_vector(plane__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector plane__reject_orthogonally_from__translator(Plane self, Translator other) {
-    return transflector__wedge__multi_vector(plane__anti_wedge__translator(self, other), translator__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__circle(Rotor self, Circle other) {
-    return multi_vector__wedge__dipole(rotor__anti_wedge__circle(self, other), circle__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__dipole(Rotor self, Dipole other) {
-    return multi_vector__wedge__circle(rotor__anti_wedge__dipole(self, other), dipole__anti_dual(other));
-}
-
-AntiScalar rotor__reject_orthogonally_from__flat_point(Rotor self, FlatPoint other) {
-    return flat_point__wedge__circle(rotor__anti_wedge__flat_point(self, other), flat_point__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__flector(Rotor self, Flector other) {
-    return flector__wedge__multi_vector(rotor__anti_wedge__flector(self, other), flector__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__line(Rotor self, Line other) {
-    return multi_vector__wedge__dipole(rotor__anti_wedge__line(self, other), line__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__motor(Rotor self, Motor other) {
-    return multi_vector__wedge__multi_vector(rotor__anti_wedge__motor(self, other), motor__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(rotor__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
-}
-
-Motor rotor__reject_orthogonally_from__plane(Rotor self, Plane other) {
-    return flector__wedge__round_point(rotor__anti_wedge__plane(self, other), plane__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__rotor(Rotor self, Rotor other) {
-    return rotor__wedge__multi_vector(rotor__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
-AntiScalar rotor__reject_orthogonally_from__round_point(Rotor self, RoundPoint other) {
-    return round_point__wedge__sphere(rotor__anti_wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__sphere(Rotor self, Sphere other) {
-    return multi_vector__wedge__round_point(rotor__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__transflector(Rotor self, Transflector other) {
-    return flector__wedge__multi_vector(rotor__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector rotor__reject_orthogonally_from__translator(Rotor self, Translator other) {
-    return multi_vector__wedge__multi_vector(rotor__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 MultiVector round_point__reject_orthogonally_from__flector(RoundPoint self, Flector other) {
@@ -16425,20 +10788,8 @@ RoundPoint round_point__reject_orthogonally_from__plane(RoundPoint self, Plane o
     return scalar__wedge__round_point(round_point__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector round_point__reject_orthogonally_from__rotor(RoundPoint self, Rotor other) {
-    return round_point__wedge__multi_vector(round_point__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 RoundPoint round_point__reject_orthogonally_from__sphere(RoundPoint self, Sphere other) {
     return scalar__wedge__round_point(round_point__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector round_point__reject_orthogonally_from__transflector(RoundPoint self, Transflector other) {
-    return scalar__wedge__multi_vector(round_point__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector round_point__reject_orthogonally_from__translator(RoundPoint self, Translator other) {
-    return round_point__wedge__multi_vector(round_point__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Sphere sphere__reject_orthogonally_from__circle(Sphere self, Circle other) {
@@ -16473,128 +10824,12 @@ Sphere sphere__reject_orthogonally_from__plane(Sphere self, Plane other) {
     return circle__wedge__round_point(sphere__anti_wedge__plane(self, other), plane__anti_dual(other));
 }
 
-MultiVector sphere__reject_orthogonally_from__rotor(Sphere self, Rotor other) {
-    return multi_vector__wedge__multi_vector(sphere__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
 Sphere sphere__reject_orthogonally_from__round_point(Sphere self, RoundPoint other) {
     return scalar__wedge__sphere(sphere__anti_wedge__round_point(self, other), round_point__anti_dual(other));
 }
 
 Sphere sphere__reject_orthogonally_from__sphere(Sphere self, Sphere other) {
     return circle__wedge__round_point(sphere__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector sphere__reject_orthogonally_from__transflector(Sphere self, Transflector other) {
-    return multi_vector__wedge__multi_vector(sphere__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector sphere__reject_orthogonally_from__translator(Sphere self, Translator other) {
-    return multi_vector__wedge__multi_vector(sphere__anti_wedge__translator(self, other), translator__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__circle(Transflector self, Circle other) {
-    return multi_vector__wedge__dipole(transflector__anti_wedge__circle(self, other), circle__anti_dual(other));
-}
-
-Sphere transflector__reject_orthogonally_from__dipole(Transflector self, Dipole other) {
-    return round_point__wedge__circle(transflector__anti_wedge__dipole(self, other), dipole__anti_dual(other));
-}
-
-Sphere transflector__reject_orthogonally_from__flat_point(Transflector self, FlatPoint other) {
-    return round_point__wedge__circle(transflector__anti_wedge__flat_point(self, other), flat_point__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__flector(Transflector self, Flector other) {
-    return multi_vector__wedge__multi_vector(transflector__anti_wedge__flector(self, other), flector__anti_dual(other));
-}
-
-Plane transflector__reject_orthogonally_from__line(Transflector self, Line other) {
-    return flat_point__wedge__dipole(transflector__anti_wedge__line(self, other), line__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__motor(Transflector self, Motor other) {
-    return flector__wedge__multi_vector(transflector__anti_wedge__motor(self, other), motor__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(transflector__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__plane(Transflector self, Plane other) {
-    return multi_vector__wedge__round_point(transflector__anti_wedge__plane(self, other), plane__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__rotor(Transflector self, Rotor other) {
-    return flector__wedge__multi_vector(transflector__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
-Sphere transflector__reject_orthogonally_from__round_point(Transflector self, RoundPoint other) {
-    return scalar__wedge__sphere(transflector__anti_wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__sphere(Transflector self, Sphere other) {
-    return multi_vector__wedge__round_point(transflector__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__transflector(Transflector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(transflector__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector transflector__reject_orthogonally_from__translator(Transflector self, Translator other) {
-    return transflector__wedge__multi_vector(transflector__anti_wedge__translator(self, other), translator__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__circle(Translator self, Circle other) {
-    return multi_vector__wedge__dipole(translator__anti_wedge__circle(self, other), circle__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__dipole(Translator self, Dipole other) {
-    return multi_vector__wedge__circle(translator__anti_wedge__dipole(self, other), dipole__anti_dual(other));
-}
-
-AntiScalar translator__reject_orthogonally_from__flat_point(Translator self, FlatPoint other) {
-    return flat_point__wedge__circle(translator__anti_wedge__flat_point(self, other), flat_point__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__flector(Translator self, Flector other) {
-    return flector__wedge__multi_vector(translator__anti_wedge__flector(self, other), flector__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__line(Translator self, Line other) {
-    return multi_vector__wedge__dipole(translator__anti_wedge__line(self, other), line__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__motor(Translator self, Motor other) {
-    return multi_vector__wedge__multi_vector(translator__anti_wedge__motor(self, other), motor__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(translator__anti_wedge__multi_vector(self, other), multi_vector__anti_dual(other));
-}
-
-Motor translator__reject_orthogonally_from__plane(Translator self, Plane other) {
-    return transflector__wedge__round_point(translator__anti_wedge__plane(self, other), plane__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__rotor(Translator self, Rotor other) {
-    return multi_vector__wedge__multi_vector(translator__anti_wedge__rotor(self, other), rotor__anti_dual(other));
-}
-
-AntiScalar translator__reject_orthogonally_from__round_point(Translator self, RoundPoint other) {
-    return round_point__wedge__sphere(translator__anti_wedge__round_point(self, other), round_point__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__sphere(Translator self, Sphere other) {
-    return multi_vector__wedge__round_point(translator__anti_wedge__sphere(self, other), sphere__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__transflector(Translator self, Transflector other) {
-    return transflector__wedge__multi_vector(translator__anti_wedge__transflector(self, other), transflector__anti_dual(other));
-}
-
-MultiVector translator__reject_orthogonally_from__translator(Translator self, Translator other) {
-    return translator__wedge__multi_vector(translator__anti_wedge__translator(self, other), translator__anti_dual(other));
 }
 
 Circle circle__reject_via_origin_from__circle(Circle self, Circle other) {
@@ -16629,20 +10864,8 @@ Circle circle__reject_via_origin_from__plane(Circle self, Plane other) {
     return dipole__wedge__round_point(circle__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector circle__reject_via_origin_from__rotor(Circle self, Rotor other) {
-    return multi_vector__wedge__multi_vector(circle__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Circle circle__reject_via_origin_from__sphere(Circle self, Sphere other) {
     return dipole__wedge__round_point(circle__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector circle__reject_via_origin_from__transflector(Circle self, Transflector other) {
-    return multi_vector__wedge__multi_vector(circle__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector circle__reject_via_origin_from__translator(Circle self, Translator other) {
-    return multi_vector__wedge__multi_vector(circle__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 Dipole dipole__reject_via_origin_from__circle(Dipole self, Circle other) {
@@ -16669,20 +10892,8 @@ Dipole dipole__reject_via_origin_from__plane(Dipole self, Plane other) {
     return round_point__wedge__round_point(dipole__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector dipole__reject_via_origin_from__rotor(Dipole self, Rotor other) {
-    return multi_vector__wedge__multi_vector(dipole__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Dipole dipole__reject_via_origin_from__sphere(Dipole self, Sphere other) {
     return round_point__wedge__round_point(dipole__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector dipole__reject_via_origin_from__transflector(Dipole self, Transflector other) {
-    return round_point__wedge__multi_vector(dipole__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector dipole__reject_via_origin_from__translator(Dipole self, Translator other) {
-    return multi_vector__wedge__multi_vector(dipole__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 Dipole flat_point__reject_via_origin_from__circle(FlatPoint self, Circle other) {
@@ -16705,20 +10916,8 @@ Dipole flat_point__reject_via_origin_from__plane(FlatPoint self, Plane other) {
     return round_point__wedge__round_point(flat_point__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector flat_point__reject_via_origin_from__rotor(FlatPoint self, Rotor other) {
-    return flat_point__wedge__multi_vector(flat_point__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Dipole flat_point__reject_via_origin_from__sphere(FlatPoint self, Sphere other) {
     return round_point__wedge__round_point(flat_point__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector flat_point__reject_via_origin_from__transflector(FlatPoint self, Transflector other) {
-    return round_point__wedge__multi_vector(flat_point__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector flat_point__reject_via_origin_from__translator(FlatPoint self, Translator other) {
-    return flat_point__wedge__multi_vector(flat_point__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector flector__reject_via_origin_from__circle(Flector self, Circle other) {
@@ -16753,24 +10952,12 @@ MultiVector flector__reject_via_origin_from__plane(Flector self, Plane other) {
     return multi_vector__wedge__round_point(flector__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector flector__reject_via_origin_from__rotor(Flector self, Rotor other) {
-    return flector__wedge__multi_vector(flector__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Sphere flector__reject_via_origin_from__round_point(Flector self, RoundPoint other) {
     return scalar__wedge__sphere(flector__anti_wedge__round_point(self, other), round_point__dual(other));
 }
 
 MultiVector flector__reject_via_origin_from__sphere(Flector self, Sphere other) {
     return multi_vector__wedge__round_point(flector__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector flector__reject_via_origin_from__transflector(Flector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(flector__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector flector__reject_via_origin_from__translator(Flector self, Translator other) {
-    return flector__wedge__multi_vector(flector__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 Circle line__reject_via_origin_from__circle(Line self, Circle other) {
@@ -16801,20 +10988,8 @@ Line line__reject_via_origin_from__plane(Line self, Plane other) {
     return flat_point__wedge__round_point(line__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector line__reject_via_origin_from__rotor(Line self, Rotor other) {
-    return multi_vector__wedge__multi_vector(line__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Circle line__reject_via_origin_from__sphere(Line self, Sphere other) {
     return dipole__wedge__round_point(line__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector line__reject_via_origin_from__transflector(Line self, Transflector other) {
-    return flat_point__wedge__multi_vector(line__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector line__reject_via_origin_from__translator(Line self, Translator other) {
-    return multi_vector__wedge__multi_vector(line__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector motor__reject_via_origin_from__circle(Motor self, Circle other) {
@@ -16849,24 +11024,12 @@ Motor motor__reject_via_origin_from__plane(Motor self, Plane other) {
     return flector__wedge__round_point(motor__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector motor__reject_via_origin_from__rotor(Motor self, Rotor other) {
-    return multi_vector__wedge__multi_vector(motor__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 AntiScalar motor__reject_via_origin_from__round_point(Motor self, RoundPoint other) {
     return round_point__wedge__sphere(motor__anti_wedge__round_point(self, other), round_point__dual(other));
 }
 
 MultiVector motor__reject_via_origin_from__sphere(Motor self, Sphere other) {
     return multi_vector__wedge__round_point(motor__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector motor__reject_via_origin_from__transflector(Motor self, Transflector other) {
-    return flector__wedge__multi_vector(motor__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector motor__reject_via_origin_from__translator(Motor self, Translator other) {
-    return multi_vector__wedge__multi_vector(motor__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector multi_vector__reject_via_origin_from__circle(MultiVector self, Circle other) {
@@ -16901,24 +11064,12 @@ MultiVector multi_vector__reject_via_origin_from__plane(MultiVector self, Plane 
     return multi_vector__wedge__round_point(multi_vector__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector multi_vector__reject_via_origin_from__rotor(MultiVector self, Rotor other) {
-    return multi_vector__wedge__multi_vector(multi_vector__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 MultiVector multi_vector__reject_via_origin_from__round_point(MultiVector self, RoundPoint other) {
     return multi_vector__wedge__sphere(multi_vector__anti_wedge__round_point(self, other), round_point__dual(other));
 }
 
 MultiVector multi_vector__reject_via_origin_from__sphere(MultiVector self, Sphere other) {
     return multi_vector__wedge__round_point(multi_vector__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector multi_vector__reject_via_origin_from__transflector(MultiVector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(multi_vector__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector multi_vector__reject_via_origin_from__translator(MultiVector self, Translator other) {
-    return multi_vector__wedge__multi_vector(multi_vector__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 Sphere plane__reject_via_origin_from__circle(Plane self, Circle other) {
@@ -16953,76 +11104,12 @@ Plane plane__reject_via_origin_from__plane(Plane self, Plane other) {
     return line__wedge__round_point(plane__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector plane__reject_via_origin_from__rotor(Plane self, Rotor other) {
-    return flector__wedge__multi_vector(plane__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Sphere plane__reject_via_origin_from__round_point(Plane self, RoundPoint other) {
     return scalar__wedge__sphere(plane__anti_wedge__round_point(self, other), round_point__dual(other));
 }
 
 Sphere plane__reject_via_origin_from__sphere(Plane self, Sphere other) {
     return circle__wedge__round_point(plane__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector plane__reject_via_origin_from__transflector(Plane self, Transflector other) {
-    return multi_vector__wedge__multi_vector(plane__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector plane__reject_via_origin_from__translator(Plane self, Translator other) {
-    return transflector__wedge__multi_vector(plane__anti_wedge__translator(self, other), translator__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__circle(Rotor self, Circle other) {
-    return multi_vector__wedge__dipole(rotor__anti_wedge__circle(self, other), circle__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__dipole(Rotor self, Dipole other) {
-    return multi_vector__wedge__circle(rotor__anti_wedge__dipole(self, other), dipole__dual(other));
-}
-
-AntiScalar rotor__reject_via_origin_from__flat_point(Rotor self, FlatPoint other) {
-    return flat_point__wedge__circle(rotor__anti_wedge__flat_point(self, other), flat_point__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__flector(Rotor self, Flector other) {
-    return flector__wedge__multi_vector(rotor__anti_wedge__flector(self, other), flector__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__line(Rotor self, Line other) {
-    return multi_vector__wedge__dipole(rotor__anti_wedge__line(self, other), line__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__motor(Rotor self, Motor other) {
-    return multi_vector__wedge__multi_vector(rotor__anti_wedge__motor(self, other), motor__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__multi_vector(Rotor self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(rotor__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
-}
-
-Motor rotor__reject_via_origin_from__plane(Rotor self, Plane other) {
-    return flector__wedge__round_point(rotor__anti_wedge__plane(self, other), plane__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__rotor(Rotor self, Rotor other) {
-    return rotor__wedge__multi_vector(rotor__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
-AntiScalar rotor__reject_via_origin_from__round_point(Rotor self, RoundPoint other) {
-    return round_point__wedge__sphere(rotor__anti_wedge__round_point(self, other), round_point__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__sphere(Rotor self, Sphere other) {
-    return multi_vector__wedge__round_point(rotor__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__transflector(Rotor self, Transflector other) {
-    return flector__wedge__multi_vector(rotor__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector rotor__reject_via_origin_from__translator(Rotor self, Translator other) {
-    return multi_vector__wedge__multi_vector(rotor__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 MultiVector round_point__reject_via_origin_from__flector(RoundPoint self, Flector other) {
@@ -17041,20 +11128,8 @@ RoundPoint round_point__reject_via_origin_from__plane(RoundPoint self, Plane oth
     return scalar__wedge__round_point(round_point__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector round_point__reject_via_origin_from__rotor(RoundPoint self, Rotor other) {
-    return round_point__wedge__multi_vector(round_point__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 RoundPoint round_point__reject_via_origin_from__sphere(RoundPoint self, Sphere other) {
     return scalar__wedge__round_point(round_point__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector round_point__reject_via_origin_from__transflector(RoundPoint self, Transflector other) {
-    return scalar__wedge__multi_vector(round_point__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector round_point__reject_via_origin_from__translator(RoundPoint self, Translator other) {
-    return round_point__wedge__multi_vector(round_point__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 Sphere sphere__reject_via_origin_from__circle(Sphere self, Circle other) {
@@ -17089,128 +11164,12 @@ Sphere sphere__reject_via_origin_from__plane(Sphere self, Plane other) {
     return circle__wedge__round_point(sphere__anti_wedge__plane(self, other), plane__dual(other));
 }
 
-MultiVector sphere__reject_via_origin_from__rotor(Sphere self, Rotor other) {
-    return multi_vector__wedge__multi_vector(sphere__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
 Sphere sphere__reject_via_origin_from__round_point(Sphere self, RoundPoint other) {
     return scalar__wedge__sphere(sphere__anti_wedge__round_point(self, other), round_point__dual(other));
 }
 
 Sphere sphere__reject_via_origin_from__sphere(Sphere self, Sphere other) {
     return circle__wedge__round_point(sphere__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector sphere__reject_via_origin_from__transflector(Sphere self, Transflector other) {
-    return multi_vector__wedge__multi_vector(sphere__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector sphere__reject_via_origin_from__translator(Sphere self, Translator other) {
-    return multi_vector__wedge__multi_vector(sphere__anti_wedge__translator(self, other), translator__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__circle(Transflector self, Circle other) {
-    return multi_vector__wedge__dipole(transflector__anti_wedge__circle(self, other), circle__dual(other));
-}
-
-Sphere transflector__reject_via_origin_from__dipole(Transflector self, Dipole other) {
-    return round_point__wedge__circle(transflector__anti_wedge__dipole(self, other), dipole__dual(other));
-}
-
-Sphere transflector__reject_via_origin_from__flat_point(Transflector self, FlatPoint other) {
-    return round_point__wedge__circle(transflector__anti_wedge__flat_point(self, other), flat_point__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__flector(Transflector self, Flector other) {
-    return multi_vector__wedge__multi_vector(transflector__anti_wedge__flector(self, other), flector__dual(other));
-}
-
-Plane transflector__reject_via_origin_from__line(Transflector self, Line other) {
-    return flat_point__wedge__dipole(transflector__anti_wedge__line(self, other), line__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__motor(Transflector self, Motor other) {
-    return flector__wedge__multi_vector(transflector__anti_wedge__motor(self, other), motor__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__multi_vector(Transflector self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(transflector__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__plane(Transflector self, Plane other) {
-    return multi_vector__wedge__round_point(transflector__anti_wedge__plane(self, other), plane__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__rotor(Transflector self, Rotor other) {
-    return flector__wedge__multi_vector(transflector__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
-Sphere transflector__reject_via_origin_from__round_point(Transflector self, RoundPoint other) {
-    return scalar__wedge__sphere(transflector__anti_wedge__round_point(self, other), round_point__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__sphere(Transflector self, Sphere other) {
-    return multi_vector__wedge__round_point(transflector__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__transflector(Transflector self, Transflector other) {
-    return multi_vector__wedge__multi_vector(transflector__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector transflector__reject_via_origin_from__translator(Transflector self, Translator other) {
-    return transflector__wedge__multi_vector(transflector__anti_wedge__translator(self, other), translator__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__circle(Translator self, Circle other) {
-    return multi_vector__wedge__dipole(translator__anti_wedge__circle(self, other), circle__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__dipole(Translator self, Dipole other) {
-    return multi_vector__wedge__circle(translator__anti_wedge__dipole(self, other), dipole__dual(other));
-}
-
-AntiScalar translator__reject_via_origin_from__flat_point(Translator self, FlatPoint other) {
-    return flat_point__wedge__circle(translator__anti_wedge__flat_point(self, other), flat_point__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__flector(Translator self, Flector other) {
-    return flector__wedge__multi_vector(translator__anti_wedge__flector(self, other), flector__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__line(Translator self, Line other) {
-    return multi_vector__wedge__dipole(translator__anti_wedge__line(self, other), line__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__motor(Translator self, Motor other) {
-    return multi_vector__wedge__multi_vector(translator__anti_wedge__motor(self, other), motor__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__multi_vector(Translator self, MultiVector other) {
-    return multi_vector__wedge__multi_vector(translator__anti_wedge__multi_vector(self, other), multi_vector__dual(other));
-}
-
-Motor translator__reject_via_origin_from__plane(Translator self, Plane other) {
-    return transflector__wedge__round_point(translator__anti_wedge__plane(self, other), plane__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__rotor(Translator self, Rotor other) {
-    return multi_vector__wedge__multi_vector(translator__anti_wedge__rotor(self, other), rotor__dual(other));
-}
-
-AntiScalar translator__reject_via_origin_from__round_point(Translator self, RoundPoint other) {
-    return round_point__wedge__sphere(translator__anti_wedge__round_point(self, other), round_point__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__sphere(Translator self, Sphere other) {
-    return multi_vector__wedge__round_point(translator__anti_wedge__sphere(self, other), sphere__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__transflector(Translator self, Transflector other) {
-    return transflector__wedge__multi_vector(translator__anti_wedge__transflector(self, other), transflector__dual(other));
-}
-
-MultiVector translator__reject_via_origin_from__translator(Translator self, Translator other) {
-    return translator__wedge__multi_vector(translator__anti_wedge__translator(self, other), translator__dual(other));
 }
 
 DualNum circle__cosine_angle__circle(Circle self, Circle other) {

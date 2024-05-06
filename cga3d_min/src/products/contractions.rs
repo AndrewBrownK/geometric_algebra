@@ -72,34 +72,10 @@ impl Contraction<MultiVector> for Circle {
     }
 }
 
-impl Contraction<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Circle {
     type Output = Dipole;
 
     fn contraction(self, other: RoundPoint) -> Dipole {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -144,34 +120,10 @@ impl Contraction<MultiVector> for Dipole {
     }
 }
 
-impl Contraction<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Dipole {
     type Output = RoundPoint;
 
     fn contraction(self, other: RoundPoint) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -216,34 +168,10 @@ impl Contraction<MultiVector> for FlatPoint {
     }
 }
 
-impl Contraction<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for FlatPoint {
     type Output = RoundPoint;
 
     fn contraction(self, other: RoundPoint) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -312,14 +240,6 @@ impl Contraction<Plane> for Flector {
     }
 }
 
-impl Contraction<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -332,22 +252,6 @@ impl Contraction<Sphere> for Flector {
     type Output = Scalar;
 
     fn contraction(self, other: Sphere) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -408,34 +312,10 @@ impl Contraction<MultiVector> for Line {
     }
 }
 
-impl Contraction<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Line {
     type Output = Dipole;
 
     fn contraction(self, other: RoundPoint) -> Dipole {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Line {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -504,14 +384,6 @@ impl Contraction<Plane> for Motor {
     }
 }
 
-impl Contraction<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -524,22 +396,6 @@ impl Contraction<Sphere> for Motor {
     type Output = RoundPoint;
 
     fn contraction(self, other: Sphere) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -608,14 +464,6 @@ impl Contraction<Plane> for MultiVector {
     }
 }
 
-impl Contraction<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -628,22 +476,6 @@ impl Contraction<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn contraction(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -712,14 +544,6 @@ impl Contraction<Plane> for Plane {
     }
 }
 
-impl Contraction<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Plane {
     type Output = Circle;
 
@@ -732,126 +556,6 @@ impl Contraction<Sphere> for Plane {
     type Output = Scalar;
 
     fn contraction(self, other: Sphere) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<FlatPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: FlatPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Line) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Plane> for Rotor {
-    type Output = RoundPoint;
-
-    fn contraction(self, other: Plane) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: RoundPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Sphere> for Rotor {
-    type Output = RoundPoint;
-
-    fn contraction(self, other: Sphere) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -880,34 +584,10 @@ impl Contraction<MultiVector> for RoundPoint {
     }
 }
 
-impl Contraction<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for RoundPoint {
     type Output = Scalar;
 
     fn contraction(self, other: RoundPoint) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }
@@ -976,14 +656,6 @@ impl Contraction<Plane> for Sphere {
     }
 }
 
-impl Contraction<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
 impl Contraction<RoundPoint> for Sphere {
     type Output = Circle;
 
@@ -996,230 +668,6 @@ impl Contraction<Sphere> for Sphere {
     type Output = Scalar;
 
     fn contraction(self, other: Sphere) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Circle> for Transflector {
-    type Output = RoundPoint;
-
-    fn contraction(self, other: Circle) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<FlatPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: FlatPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Line> for Transflector {
-    type Output = RoundPoint;
-
-    fn contraction(self, other: Line) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Plane> for Transflector {
-    type Output = Scalar;
-
-    fn contraction(self, other: Plane) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: RoundPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Sphere> for Transflector {
-    type Output = Scalar;
-
-    fn contraction(self, other: Sphere) -> Scalar {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<FlatPoint> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: FlatPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Line> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Line) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Plane> for Translator {
-    type Output = RoundPoint;
-
-    fn contraction(self, other: Plane) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: RoundPoint) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Sphere> for Translator {
-    type Output = RoundPoint;
-
-    fn contraction(self, other: Sphere) -> RoundPoint {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other.anti_dual())
-    }
-}
-
-impl Contraction<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn contraction(self, other: Translator) -> MultiVector {
         self.anti_wedge(other.anti_dual())
     }
 }

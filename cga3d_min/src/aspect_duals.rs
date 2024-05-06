@@ -131,22 +131,6 @@ impl BulkDual for Sphere {
     }
 }
 
-impl BulkDual for Transflector {
-    type Output = MultiVector;
-
-    fn bulk_dual(self) -> MultiVector {
-        self.bulk().complement()
-    }
-}
-
-impl BulkDual for Translator {
-    type Output = MultiVector;
-
-    fn bulk_dual(self) -> MultiVector {
-        self.bulk().complement()
-    }
-}
-
 impl RoundBulkDual for Circle {
     type Output = Dipole;
 
@@ -223,22 +207,6 @@ impl RoundBulkDual for Sphere {
     type Output = RoundPoint;
 
     fn round_bulk_dual(self) -> RoundPoint {
-        self.bulk().complement()
-    }
-}
-
-impl RoundBulkDual for Transflector {
-    type Output = MultiVector;
-
-    fn round_bulk_dual(self) -> MultiVector {
-        self.bulk().complement()
-    }
-}
-
-impl RoundBulkDual for Translator {
-    type Output = MultiVector;
-
-    fn round_bulk_dual(self) -> MultiVector {
         self.bulk().complement()
     }
 }
@@ -323,34 +291,10 @@ impl RoundWeightDual for Plane {
     }
 }
 
-impl RoundWeightDual for Rotor {
-    type Output = MultiVector;
-
-    fn round_weight_dual(self) -> MultiVector {
-        self.weight().complement()
-    }
-}
-
 impl RoundWeightDual for Sphere {
     type Output = RoundPoint;
 
     fn round_weight_dual(self) -> RoundPoint {
-        self.weight().complement()
-    }
-}
-
-impl RoundWeightDual for Transflector {
-    type Output = MultiVector;
-
-    fn round_weight_dual(self) -> MultiVector {
-        self.weight().complement()
-    }
-}
-
-impl RoundWeightDual for Translator {
-    type Output = MultiVector;
-
-    fn round_weight_dual(self) -> MultiVector {
         self.weight().complement()
     }
 }
@@ -435,34 +379,10 @@ impl WeightDual for Plane {
     }
 }
 
-impl WeightDual for Rotor {
-    type Output = MultiVector;
-
-    fn weight_dual(self) -> MultiVector {
-        self.weight().complement()
-    }
-}
-
 impl WeightDual for Sphere {
     type Output = RoundPoint;
 
     fn weight_dual(self) -> RoundPoint {
-        self.weight().complement()
-    }
-}
-
-impl WeightDual for Transflector {
-    type Output = MultiVector;
-
-    fn weight_dual(self) -> MultiVector {
-        self.weight().complement()
-    }
-}
-
-impl WeightDual for Translator {
-    type Output = MultiVector;
-
-    fn weight_dual(self) -> MultiVector {
         self.weight().complement()
     }
 }

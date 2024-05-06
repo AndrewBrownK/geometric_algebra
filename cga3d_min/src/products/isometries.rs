@@ -131,14 +131,6 @@ impl Sandwich<Plane> for AntiScalar {
     }
 }
 
-impl Sandwich<Rotor> for AntiScalar {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
 impl Sandwich<RoundPoint> for AntiScalar {
     type Output = RoundPoint;
 
@@ -151,22 +143,6 @@ impl Sandwich<Sphere> for AntiScalar {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Transflector> for AntiScalar {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Translator> for AntiScalar {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
     }
 }
@@ -235,14 +211,6 @@ impl Sandwich<Plane> for Circle {
     }
 }
 
-impl Sandwich<Rotor> for Circle {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Circle {
     type Output = RoundPoint;
 
@@ -255,22 +223,6 @@ impl Sandwich<Sphere> for Circle {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Circle {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Circle {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -339,14 +291,6 @@ impl Sandwich<Plane> for Dipole {
     }
 }
 
-impl Sandwich<Rotor> for Dipole {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Dipole {
     type Output = RoundPoint;
 
@@ -359,22 +303,6 @@ impl Sandwich<Sphere> for Dipole {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Dipole {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Dipole {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -443,14 +371,6 @@ impl Sandwich<Plane> for DualNum {
     }
 }
 
-impl Sandwich<Rotor> for DualNum {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for DualNum {
     type Output = RoundPoint;
 
@@ -463,22 +383,6 @@ impl Sandwich<Sphere> for DualNum {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for DualNum {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for DualNum {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -503,7 +407,7 @@ impl Sandwich<FlatPoint> for FlatPoint {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
+        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
 
@@ -547,14 +451,6 @@ impl Sandwich<Plane> for FlatPoint {
     }
 }
 
-impl Sandwich<Rotor> for FlatPoint {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for FlatPoint {
     type Output = RoundPoint;
 
@@ -568,22 +464,6 @@ impl Sandwich<Sphere> for FlatPoint {
 
     fn sandwich(self, other: Sphere) -> Sphere {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for FlatPoint {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for FlatPoint {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
     }
 }
 
@@ -651,14 +531,6 @@ impl Sandwich<Plane> for Flector {
     }
 }
 
-impl Sandwich<Rotor> for Flector {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Flector {
     type Output = RoundPoint;
 
@@ -671,22 +543,6 @@ impl Sandwich<Sphere> for Flector {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Flector {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Flector {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -755,14 +611,6 @@ impl Sandwich<Plane> for Line {
     }
 }
 
-impl Sandwich<Rotor> for Line {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Line {
     type Output = RoundPoint;
 
@@ -775,22 +623,6 @@ impl Sandwich<Sphere> for Line {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Line {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Line {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -859,14 +691,6 @@ impl Sandwich<Plane> for Motor {
     }
 }
 
-impl Sandwich<Rotor> for Motor {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Motor {
     type Output = RoundPoint;
 
@@ -879,22 +703,6 @@ impl Sandwich<Sphere> for Motor {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Motor {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Motor {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -963,14 +771,6 @@ impl Sandwich<Plane> for MultiVector {
     }
 }
 
-impl Sandwich<Rotor> for MultiVector {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for MultiVector {
     type Output = RoundPoint;
 
@@ -983,22 +783,6 @@ impl Sandwich<Sphere> for MultiVector {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for MultiVector {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for MultiVector {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -1067,14 +851,6 @@ impl Sandwich<Plane> for Plane {
     }
 }
 
-impl Sandwich<Rotor> for Plane {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Plane {
     type Output = RoundPoint;
 
@@ -1087,126 +863,6 @@ impl Sandwich<Sphere> for Plane {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Plane {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Plane {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Circle> for Rotor {
-    type Output = Circle;
-
-    fn sandwich(self, other: Circle) -> Circle {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Dipole> for Rotor {
-    type Output = Dipole;
-
-    fn sandwich(self, other: Dipole) -> Dipole {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for Rotor {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for Rotor {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Line> for Rotor {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for Rotor {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Plane> for Rotor {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPoint> for Rotor {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for Rotor {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Rotor {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Rotor {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -1275,14 +931,6 @@ impl Sandwich<Plane> for RoundPoint {
     }
 }
 
-impl Sandwich<Rotor> for RoundPoint {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -1295,22 +943,6 @@ impl Sandwich<Sphere> for RoundPoint {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for RoundPoint {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for RoundPoint {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
@@ -1379,14 +1011,6 @@ impl Sandwich<Plane> for Scalar {
     }
 }
 
-impl Sandwich<Rotor> for Scalar {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Scalar {
     type Output = RoundPoint;
 
@@ -1400,22 +1024,6 @@ impl Sandwich<Sphere> for Scalar {
 
     fn sandwich(self, other: Sphere) -> Sphere {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Transflector> for Scalar {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Scalar {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
     }
 }
 
@@ -1483,14 +1091,6 @@ impl Sandwich<Plane> for Sphere {
     }
 }
 
-impl Sandwich<Rotor> for Sphere {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPoint> for Sphere {
     type Output = RoundPoint;
 
@@ -1504,230 +1104,6 @@ impl Sandwich<Sphere> for Sphere {
 
     fn sandwich(self, other: Sphere) -> Sphere {
         self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Sphere {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Sphere {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Circle> for Transflector {
-    type Output = Circle;
-
-    fn sandwich(self, other: Circle) -> Circle {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Dipole> for Transflector {
-    type Output = Dipole;
-
-    fn sandwich(self, other: Dipole) -> Dipole {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for Transflector {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for Transflector {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for Transflector {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for Transflector {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Plane> for Transflector {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for Transflector {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for Transflector {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for Transflector {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Transflector {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for Transflector {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Circle> for Translator {
-    type Output = Circle;
-
-    fn sandwich(self, other: Circle) -> Circle {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Dipole> for Translator {
-    type Output = Dipole;
-
-    fn sandwich(self, other: Dipole) -> Dipole {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for Translator {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Flector> for Translator {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Line> for Translator {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for Translator {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Plane> for Translator {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for Translator {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for Translator {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for Translator {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for Translator {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Translator> for Translator {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.anti_wedge_dot(other).anti_wedge_dot(self.anti_reversal())
     }
 }
 
@@ -1795,14 +1171,6 @@ impl PointInversion<Plane> for FlatPoint {
     }
 }
 
-impl PointInversion<Rotor> for FlatPoint {
-    type Output = Rotor;
-
-    fn point_inversion(self, other: Rotor) -> Rotor {
-        self.unitize().sandwich(other)
-    }
-}
-
 impl PointInversion<RoundPoint> for FlatPoint {
     type Output = RoundPoint;
 
@@ -1815,22 +1183,6 @@ impl PointInversion<Sphere> for FlatPoint {
     type Output = Sphere;
 
     fn point_inversion(self, other: Sphere) -> Sphere {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl PointInversion<Transflector> for FlatPoint {
-    type Output = Transflector;
-
-    fn point_inversion(self, other: Transflector) -> Transflector {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl PointInversion<Translator> for FlatPoint {
-    type Output = Translator;
-
-    fn point_inversion(self, other: Translator) -> Translator {
         self.unitize().sandwich(other)
     }
 }
@@ -1899,14 +1251,6 @@ impl Reflect<Plane> for Plane {
     }
 }
 
-impl Reflect<Rotor> for Plane {
-    type Output = Rotor;
-
-    fn reflect(self, other: Rotor) -> Rotor {
-        self.unitize().sandwich(other)
-    }
-}
-
 impl Reflect<RoundPoint> for Plane {
     type Output = RoundPoint;
 
@@ -1920,333 +1264,5 @@ impl Reflect<Sphere> for Plane {
 
     fn reflect(self, other: Sphere) -> Sphere {
         self.unitize().sandwich(other)
-    }
-}
-
-impl Reflect<Transflector> for Plane {
-    type Output = Transflector;
-
-    fn reflect(self, other: Transflector) -> Transflector {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl Reflect<Translator> for Plane {
-    type Output = Translator;
-
-    fn reflect(self, other: Translator) -> Translator {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl Rotate<Circle> for Rotor {
-    type Output = Circle;
-
-    fn rotate(self, other: Circle) -> Circle {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Dipole> for Rotor {
-    type Output = Dipole;
-
-    fn rotate(self, other: Dipole) -> Dipole {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<FlatPoint> for Rotor {
-    type Output = FlatPoint;
-
-    fn rotate(self, other: FlatPoint) -> FlatPoint {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Flector> for Rotor {
-    type Output = Flector;
-
-    fn rotate(self, other: Flector) -> Flector {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Line> for Rotor {
-    type Output = Line;
-
-    fn rotate(self, other: Line) -> Line {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Motor> for Rotor {
-    type Output = Motor;
-
-    fn rotate(self, other: Motor) -> Motor {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn rotate(self, other: MultiVector) -> MultiVector {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Plane> for Rotor {
-    type Output = Plane;
-
-    fn rotate(self, other: Plane) -> Plane {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn rotate(self, other: Rotor) -> Rotor {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<RoundPoint> for Rotor {
-    type Output = RoundPoint;
-
-    fn rotate(self, other: RoundPoint) -> RoundPoint {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Sphere> for Rotor {
-    type Output = Sphere;
-
-    fn rotate(self, other: Sphere) -> Sphere {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Transflector> for Rotor {
-    type Output = Transflector;
-
-    fn rotate(self, other: Transflector) -> Transflector {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<Translator> for Rotor {
-    type Output = Translator;
-
-    fn rotate(self, other: Translator) -> Translator {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Circle> for Transflector {
-    type Output = Circle;
-
-    fn transflect(self, other: Circle) -> Circle {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Dipole> for Transflector {
-    type Output = Dipole;
-
-    fn transflect(self, other: Dipole) -> Dipole {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<FlatPoint> for Transflector {
-    type Output = FlatPoint;
-
-    fn transflect(self, other: FlatPoint) -> FlatPoint {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Flector> for Transflector {
-    type Output = Flector;
-
-    fn transflect(self, other: Flector) -> Flector {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Line> for Transflector {
-    type Output = Line;
-
-    fn transflect(self, other: Line) -> Line {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Motor> for Transflector {
-    type Output = Motor;
-
-    fn transflect(self, other: Motor) -> Motor {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn transflect(self, other: MultiVector) -> MultiVector {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Plane> for Transflector {
-    type Output = Plane;
-
-    fn transflect(self, other: Plane) -> Plane {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Rotor> for Transflector {
-    type Output = Rotor;
-
-    fn transflect(self, other: Rotor) -> Rotor {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<RoundPoint> for Transflector {
-    type Output = RoundPoint;
-
-    fn transflect(self, other: RoundPoint) -> RoundPoint {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Sphere> for Transflector {
-    type Output = Sphere;
-
-    fn transflect(self, other: Sphere) -> Sphere {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Transflector> for Transflector {
-    type Output = Transflector;
-
-    fn transflect(self, other: Transflector) -> Transflector {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<Translator> for Transflector {
-    type Output = Translator;
-
-    fn transflect(self, other: Translator) -> Translator {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Circle> for Translator {
-    type Output = Circle;
-
-    fn translate(self, other: Circle) -> Circle {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Dipole> for Translator {
-    type Output = Dipole;
-
-    fn translate(self, other: Dipole) -> Dipole {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<FlatPoint> for Translator {
-    type Output = FlatPoint;
-
-    fn translate(self, other: FlatPoint) -> FlatPoint {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Flector> for Translator {
-    type Output = Flector;
-
-    fn translate(self, other: Flector) -> Flector {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Line> for Translator {
-    type Output = Line;
-
-    fn translate(self, other: Line) -> Line {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Motor> for Translator {
-    type Output = Motor;
-
-    fn translate(self, other: Motor) -> Motor {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn translate(self, other: MultiVector) -> MultiVector {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Plane> for Translator {
-    type Output = Plane;
-
-    fn translate(self, other: Plane) -> Plane {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Rotor> for Translator {
-    type Output = Rotor;
-
-    fn translate(self, other: Rotor) -> Rotor {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<RoundPoint> for Translator {
-    type Output = RoundPoint;
-
-    fn translate(self, other: RoundPoint) -> RoundPoint {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Sphere> for Translator {
-    type Output = Sphere;
-
-    fn translate(self, other: Sphere) -> Sphere {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Transflector> for Translator {
-    type Output = Transflector;
-
-    fn translate(self, other: Transflector) -> Transflector {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<Translator> for Translator {
-    type Output = Translator;
-
-    fn translate(self, other: Translator) -> Translator {
-        self.sandwich(other)
     }
 }

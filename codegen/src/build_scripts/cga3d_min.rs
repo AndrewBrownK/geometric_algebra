@@ -37,10 +37,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
         // Operator Objects
         "Motor:e415,e425,e435,e12345|e235,e315,e125",
-        "Rotor:e415,e425,e435,e12345",
-        "Translator:e235,e315,e125,e12345",
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
-        "Transflector:e15,e25,e35|e4235,e4315,e4125,e3215",
 
         "MultiVector:\
             1,e12345|\

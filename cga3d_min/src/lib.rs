@@ -950,156 +950,6 @@ impl std::fmt::Debug for Motor {
 }
 
 #[derive(Clone, Copy)]
-struct RotorGroups {
-    /// -e145, -e245, -e345, e12345
-    g0: Simd32x4,
-}
-
-#[derive(Clone, Copy)]
-pub union Rotor {
-    groups: RotorGroups,
-    /// -e145, -e245, -e345, e12345
-    elements: [f32; 4],
-}
-
-impl Rotor {
-    #[allow(clippy::too_many_arguments)]
-    pub const fn new(neg_e145: f32, neg_e245: f32, neg_e345: f32, e12345: f32) -> Self {
-        Self {
-            elements: [neg_e145, neg_e245, neg_e345, e12345],
-        }
-    }
-    pub const fn from_groups(g0: Simd32x4) -> Self {
-        Self { groups: RotorGroups { g0 } }
-    }
-    #[inline(always)]
-    pub fn group0(&self) -> Simd32x4 {
-        unsafe { self.groups.g0 }
-    }
-    #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
-        unsafe { &mut self.groups.g0 }
-    }
-}
-
-const ROTOR_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
-
-impl std::ops::Index<usize> for Rotor {
-    type Output = f32;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ROTOR_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::ops::IndexMut<usize> for Rotor {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ROTOR_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::convert::From<Rotor> for [f32; 4] {
-    fn from(vector: Rotor) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
-    }
-}
-
-impl std::convert::From<[f32; 4]> for Rotor {
-    fn from(array: [f32; 4]) -> Self {
-        Self {
-            elements: [array[0], array[1], array[2], array[3]],
-        }
-    }
-}
-
-impl std::fmt::Debug for Rotor {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("Rotor")
-            .field("-e145", &self[0])
-            .field("-e245", &self[1])
-            .field("-e345", &self[2])
-            .field("e12345", &self[3])
-            .finish()
-    }
-}
-
-#[derive(Clone, Copy)]
-struct TranslatorGroups {
-    /// e235, -e135, e125, e12345
-    g0: Simd32x4,
-}
-
-#[derive(Clone, Copy)]
-pub union Translator {
-    groups: TranslatorGroups,
-    /// e235, -e135, e125, e12345
-    elements: [f32; 4],
-}
-
-impl Translator {
-    #[allow(clippy::too_many_arguments)]
-    pub const fn new(e235: f32, neg_e135: f32, e125: f32, e12345: f32) -> Self {
-        Self {
-            elements: [e235, neg_e135, e125, e12345],
-        }
-    }
-    pub const fn from_groups(g0: Simd32x4) -> Self {
-        Self { groups: TranslatorGroups { g0 } }
-    }
-    #[inline(always)]
-    pub fn group0(&self) -> Simd32x4 {
-        unsafe { self.groups.g0 }
-    }
-    #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
-        unsafe { &mut self.groups.g0 }
-    }
-}
-
-const TRANSLATOR_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
-
-impl std::ops::Index<usize> for Translator {
-    type Output = f32;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[TRANSLATOR_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::ops::IndexMut<usize> for Translator {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[TRANSLATOR_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::convert::From<Translator> for [f32; 4] {
-    fn from(vector: Translator) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
-    }
-}
-
-impl std::convert::From<[f32; 4]> for Translator {
-    fn from(array: [f32; 4]) -> Self {
-        Self {
-            elements: [array[0], array[1], array[2], array[3]],
-        }
-    }
-}
-
-impl std::fmt::Debug for Translator {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("Translator")
-            .field("e235", &self[0])
-            .field("-e135", &self[1])
-            .field("e125", &self[2])
-            .field("e12345", &self[3])
-            .finish()
-    }
-}
-
-#[derive(Clone, Copy)]
 struct FlectorGroups {
     /// e15, e25, e35, e45
     g0: Simd32x4,
@@ -1188,100 +1038,6 @@ impl std::fmt::Debug for Flector {
             .field("-e1345", &self[5])
             .field("e1245", &self[6])
             .field("-e1235", &self[7])
-            .finish()
-    }
-}
-
-#[derive(Clone, Copy)]
-struct TransflectorGroups {
-    /// e15, e25, e35
-    g0: Simd32x3,
-    /// e2345, -e1345, e1245, -e1235
-    g1: Simd32x4,
-}
-
-#[derive(Clone, Copy)]
-pub union Transflector {
-    groups: TransflectorGroups,
-    /// e15, e25, e35, 0, e2345, -e1345, e1245, -e1235
-    elements: [f32; 8],
-}
-
-impl Transflector {
-    #[allow(clippy::too_many_arguments)]
-    pub const fn new(e15: f32, e25: f32, e35: f32, e2345: f32, neg_e1345: f32, e1245: f32, neg_e1235: f32) -> Self {
-        Self {
-            elements: [e15, e25, e35, 0.0, e2345, neg_e1345, e1245, neg_e1235],
-        }
-    }
-    pub const fn from_groups(g0: Simd32x3, g1: Simd32x4) -> Self {
-        Self {
-            groups: TransflectorGroups { g0, g1 },
-        }
-    }
-    #[inline(always)]
-    pub fn group0(&self) -> Simd32x3 {
-        unsafe { self.groups.g0 }
-    }
-    #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
-        unsafe { &mut self.groups.g0 }
-    }
-    #[inline(always)]
-    pub fn group1(&self) -> Simd32x4 {
-        unsafe { self.groups.g1 }
-    }
-    #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut Simd32x4 {
-        unsafe { &mut self.groups.g1 }
-    }
-}
-
-const TRANSFLECTOR_INDEX_REMAP: [usize; 7] = [0, 1, 2, 4, 5, 6, 7];
-
-impl std::ops::Index<usize> for Transflector {
-    type Output = f32;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[TRANSFLECTOR_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::ops::IndexMut<usize> for Transflector {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[TRANSFLECTOR_INDEX_REMAP[index]] }
-    }
-}
-
-impl std::convert::From<Transflector> for [f32; 7] {
-    fn from(vector: Transflector) -> Self {
-        unsafe {
-            [
-                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[7],
-            ]
-        }
-    }
-}
-
-impl std::convert::From<[f32; 7]> for Transflector {
-    fn from(array: [f32; 7]) -> Self {
-        Self {
-            elements: [array[0], array[1], array[2], 0.0, array[3], array[4], array[5], array[6]],
-        }
-    }
-}
-
-impl std::fmt::Debug for Transflector {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter
-            .debug_struct("Transflector")
-            .field("e15", &self[0])
-            .field("e25", &self[1])
-            .field("e35", &self[2])
-            .field("e2345", &self[3])
-            .field("-e1345", &self[4])
-            .field("e1245", &self[5])
-            .field("-e1235", &self[6])
             .finish()
     }
 }
@@ -1672,14 +1428,6 @@ impl One for Plane {
     }
 }
 
-impl One for Rotor {
-    fn one() -> Self {
-        Rotor {
-            groups: RotorGroups { g0: Simd32x4::from(0.0) },
-        }
-    }
-}
-
 impl One for RoundPoint {
     fn one() -> Self {
         RoundPoint {
@@ -1704,25 +1452,6 @@ impl One for Sphere {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
-        }
-    }
-}
-
-impl One for Transflector {
-    fn one() -> Self {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x4::from(0.0),
-            },
-        }
-    }
-}
-
-impl One for Translator {
-    fn one() -> Self {
-        Translator {
-            groups: TranslatorGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -1836,14 +1565,6 @@ impl Unit for Plane {
     }
 }
 
-impl Unit for Rotor {
-    fn unit() -> Self {
-        Rotor {
-            groups: RotorGroups { g0: Simd32x4::from(1.0) },
-        }
-    }
-}
-
 impl Unit for RoundPoint {
     fn unit() -> Self {
         RoundPoint {
@@ -1868,25 +1589,6 @@ impl Unit for Sphere {
                 g0: Simd32x3::from(1.0),
                 g1: Simd32x2::from(1.0),
             },
-        }
-    }
-}
-
-impl Unit for Transflector {
-    fn unit() -> Self {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from(1.0),
-                g1: Simd32x4::from(1.0),
-            },
-        }
-    }
-}
-
-impl Unit for Translator {
-    fn unit() -> Self {
-        Translator {
-            groups: TranslatorGroups { g0: Simd32x4::from(1.0) },
         }
     }
 }
@@ -2000,14 +1702,6 @@ impl Zero for Plane {
     }
 }
 
-impl Zero for Rotor {
-    fn zero() -> Self {
-        Rotor {
-            groups: RotorGroups { g0: Simd32x4::from(0.0) },
-        }
-    }
-}
-
 impl Zero for RoundPoint {
     fn zero() -> Self {
         RoundPoint {
@@ -2032,25 +1726,6 @@ impl Zero for Sphere {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x2::from(0.0),
             },
-        }
-    }
-}
-
-impl Zero for Transflector {
-    fn zero() -> Self {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from(0.0),
-                g1: Simd32x4::from(0.0),
-            },
-        }
-    }
-}
-
-impl Zero for Translator {
-    fn zero() -> Self {
-        Translator {
-            groups: TranslatorGroups { g0: Simd32x4::from(0.0) },
         }
     }
 }
@@ -2190,18 +1865,6 @@ impl Neg for Plane {
     }
 }
 
-impl Neg for Rotor {
-    type Output = Rotor;
-
-    fn neg(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Neg for RoundPoint {
     type Output = RoundPoint;
 
@@ -2233,31 +1896,6 @@ impl Neg for Sphere {
             groups: SphereGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x2::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Neg for Transflector {
-    type Output = Transflector;
-
-    fn neg(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Neg for Translator {
-    type Output = Translator;
-
-    fn neg(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2451,18 +2089,6 @@ impl Add<Plane> for AntiScalar {
     }
 }
 
-impl Add<Rotor> for AntiScalar {
-    type Output = Rotor;
-
-    fn add(self, other: Rotor) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for AntiScalar {
     type Output = MultiVector;
 
@@ -2514,40 +2140,6 @@ impl Add<Sphere> for AntiScalar {
                 g8: Simd32x3::from(0.0),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for AntiScalar {
-    type Output = Translator;
-
-    fn add(self, other: Translator) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group0(),
             },
         }
     }
@@ -2769,28 +2361,6 @@ impl Add<Plane> for Circle {
     }
 }
 
-impl Add<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Circle {
     type Output = MultiVector;
 
@@ -2852,50 +2422,6 @@ impl Add<Sphere> for Circle {
                 g8: self.group2(),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2(),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -3117,28 +2643,6 @@ impl Add<Plane> for Dipole {
     }
 }
 
-impl Add<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0(),
-                g4: self.group1(),
-                g5: self.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Dipole {
     type Output = MultiVector;
 
@@ -3200,50 +2704,6 @@ impl Add<Sphere> for Dipole {
                 g8: Simd32x3::from(0.0),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0(),
-                g4: self.group1(),
-                g5: self.group2() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0(),
-                g4: self.group1(),
-                g5: self.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -3461,28 +2921,6 @@ impl Add<Plane> for DualNum {
     }
 }
 
-impl Add<Rotor> for DualNum {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for DualNum {
     type Output = MultiVector;
 
@@ -3540,50 +2978,6 @@ impl Add<Sphere> for DualNum {
                 g8: Simd32x3::from(0.0),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for DualNum {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for DualNum {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -3779,28 +3173,6 @@ impl Add<Plane> for FlatPoint {
     }
 }
 
-impl Add<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for FlatPoint {
     type Output = MultiVector;
 
@@ -3862,41 +3234,6 @@ impl Add<Sphere> for FlatPoint {
                 g8: Simd32x3::from(0.0),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for FlatPoint {
-    type Output = Flector;
-
-    fn add(self, other: Transflector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -4113,28 +3450,6 @@ impl AddAssign<Plane> for Flector {
     }
 }
 
-impl Add<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -4196,47 +3511,6 @@ impl Add<Sphere> for Flector {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group0(),
                 g10: Simd32x2::from([0.0, self.group1()[3]]) + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Flector {
-    type Output = Flector;
-
-    fn add(self, other: Transflector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: self.group1() + other.group1(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Transflector> for Flector {
-    fn add_assign(&mut self, other: Transflector) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
             },
         }
     }
@@ -4433,19 +3707,6 @@ impl Add<Plane> for Line {
     }
 }
 
-impl Add<Rotor> for Line {
-    type Output = Motor;
-
-    fn add(self, other: Rotor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Line {
     type Output = MultiVector;
 
@@ -4507,41 +3768,6 @@ impl Add<Sphere> for Line {
                 g8: self.group1(),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: self.group0(),
-                g8: self.group1(),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Line {
-    type Output = Motor;
-
-    fn add(self, other: Translator) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -4758,25 +3984,6 @@ impl Add<Plane> for Motor {
     }
 }
 
-impl Add<Rotor> for Motor {
-    type Output = Motor;
-
-    fn add(self, other: Rotor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() + other.group0(),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Rotor> for Motor {
-    fn add_assign(&mut self, other: Rotor) {
-        *self = (*self).add(other);
-    }
-}
-
 impl Add<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -4840,47 +4047,6 @@ impl Add<Sphere> for Motor {
                 g10: other.group1(),
             },
         }
-    }
-}
-
-impl Add<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: self.group1(),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Motor {
-    type Output = Motor;
-
-    fn add(self, other: Translator) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl AddAssign<Translator> for Motor {
-    fn add_assign(&mut self, other: Translator) {
-        *self = (*self).add(other);
     }
 }
 
@@ -5164,34 +4330,6 @@ impl AddAssign<Plane> for MultiVector {
     }
 }
 
-impl Add<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5(),
-                g6: self.group6(),
-                g7: self.group7() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Rotor> for MultiVector {
-    fn add_assign(&mut self, other: Rotor) {
-        *self = (*self).add(other);
-    }
-}
-
 impl Add<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -5272,62 +4410,6 @@ impl Add<Sphere> for MultiVector {
 
 impl AddAssign<Sphere> for MultiVector {
     fn add_assign(&mut self, other: Sphere) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: self.group10() + Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl AddAssign<Transflector> for MultiVector {
-    fn add_assign(&mut self, other: Transflector) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() + Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5(),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Translator> for MultiVector {
-    fn add_assign(&mut self, other: Translator) {
         *self = (*self).add(other);
     }
 }
@@ -5530,28 +4612,6 @@ impl AddAssign<Plane> for Plane {
     }
 }
 
-impl Add<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g10: Simd32x2::from([0.0, self.group0()[3]]),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Plane {
     type Output = MultiVector;
 
@@ -5604,358 +4664,6 @@ impl Add<Sphere> for Plane {
             groups: SphereGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()[3]]) + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Plane {
-    type Output = Transflector;
-
-    fn add(self, other: Transflector) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: other.group0(),
-                g1: self.group0() + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g10: Simd32x2::from([0.0, self.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<AntiScalar> for Rotor {
-    type Output = Rotor;
-
-    fn add(self, other: AntiScalar) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-            },
-        }
-    }
-}
-
-impl AddAssign<AntiScalar> for Rotor {
-    fn add_assign(&mut self, other: AntiScalar) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: other.group0(),
-                g4: other.group1(),
-                g5: other.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<DualNum> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: DualNum) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<FlatPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: FlatPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Line> for Rotor {
-    type Output = Motor;
-
-    fn add(self, other: Line) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Motor> for Rotor {
-    type Output = Motor;
-
-    fn add(self, other: Motor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() + other.group0(),
-                g1: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
-                g1: other.group1(),
-                g2: other.group2(),
-                g3: other.group3(),
-                g4: other.group4(),
-                g5: other.group5(),
-                g6: other.group6(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group7(),
-                g8: other.group8(),
-                g9: other.group9(),
-                g10: other.group10(),
-            },
-        }
-    }
-}
-
-impl Add<Plane> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn add(self, other: Rotor) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() + other.group0(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Rotor> for Rotor {
-    fn add_assign(&mut self, other: Rotor) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: other.group0(),
-                g2: other.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Scalar> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Scalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) + Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Sphere> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: other.group0(),
-                g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Rotor {
-    type Output = Motor;
-
-    fn add(self, other: Translator) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -6181,28 +4889,6 @@ impl Add<Plane> for RoundPoint {
     }
 }
 
-impl Add<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group0(),
-                g2: self.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -6261,50 +4947,6 @@ impl Add<Sphere> for RoundPoint {
                 g8: Simd32x3::from(0.0),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: self.group0(),
-                g2: self.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group0(),
-                g2: self.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -6510,28 +5152,6 @@ impl Add<Plane> for Scalar {
     }
 }
 
-impl Add<Rotor> for Scalar {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Scalar {
     type Output = MultiVector;
 
@@ -6589,50 +5209,6 @@ impl Add<Sphere> for Scalar {
                 g8: Simd32x3::from(0.0),
                 g9: other.group0(),
                 g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Scalar {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Scalar {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -6855,28 +5431,6 @@ impl AddAssign<Plane> for Sphere {
     }
 }
 
-impl Add<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: self.group0(),
-                g10: self.group1(),
-            },
-        }
-    }
-}
-
 impl Add<RoundPoint> for Sphere {
     type Output = MultiVector;
 
@@ -6936,695 +5490,6 @@ impl Add<Sphere> for Sphere {
 
 impl AddAssign<Sphere> for Sphere {
     fn add_assign(&mut self, other: Sphere) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: self.group0() + Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: self.group1() + Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: self.group0(),
-                g10: self.group1(),
-            },
-        }
-    }
-}
-
-impl Add<AntiScalar> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Circle> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: other.group2(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: other.group0(),
-                g4: other.group1(),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<DualNum> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: DualNum) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: other.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<FlatPoint> for Transflector {
-    type Output = Flector;
-
-    fn add(self, other: FlatPoint) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Flector> for Transflector {
-    type Output = Flector;
-
-    fn add(self, other: Flector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group0(),
-                g1: self.group1() + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Line> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Line) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: other.group0(),
-                g8: other.group1(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: other.group1(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: other.group0(),
-                g1: other.group1(),
-                g2: other.group2(),
-                g3: other.group3(),
-                g4: other.group4(),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group5(),
-                g6: other.group6(),
-                g7: other.group7(),
-                g8: other.group8(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group9(),
-                g10: Simd32x2::from([0.0, self.group1()[3]]) + other.group10(),
-            },
-        }
-    }
-}
-
-impl Add<Plane> for Transflector {
-    type Output = Transflector;
-
-    fn add(self, other: Plane) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0(),
-                g1: self.group1() + other.group0(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Plane> for Transflector {
-    fn add_assign(&mut self, other: Plane) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: other.group0(),
-                g2: other.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Scalar> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Scalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) + other.group0(),
-                g10: Simd32x2::from([0.0, self.group1()[3]]) + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Transflector {
-    type Output = Transflector;
-
-    fn add(self, other: Transflector) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() + other.group0(),
-                g1: self.group1() + other.group1(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Transflector> for Transflector {
-    fn add_assign(&mut self, other: Transflector) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<AntiScalar> for Translator {
-    type Output = Translator;
-
-    fn add(self, other: AntiScalar) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-            },
-        }
-    }
-}
-
-impl AddAssign<AntiScalar> for Translator {
-    fn add_assign(&mut self, other: AntiScalar) {
-        *self = (*self).add(other);
-    }
-}
-
-impl Add<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: other.group0(),
-                g4: other.group1(),
-                g5: other.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<DualNum> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: DualNum) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<FlatPoint> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: FlatPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Line> for Translator {
-    type Output = Motor;
-
-    fn add(self, other: Line) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Motor> for Translator {
-    type Output = Motor;
-
-    fn add(self, other: Motor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group0(),
-                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) + other.group0(),
-                g1: other.group1(),
-                g2: other.group2(),
-                g3: other.group3(),
-                g4: other.group4(),
-                g5: other.group5(),
-                g6: other.group6(),
-                g7: other.group7(),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group8(),
-                g9: other.group9(),
-                g10: other.group10(),
-            },
-        }
-    }
-}
-
-impl Add<Plane> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Rotor> for Translator {
-    type Output = Motor;
-
-    fn add(self, other: Rotor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group0(),
-                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl Add<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: other.group0(),
-                g2: other.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Scalar> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Scalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) + Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Add<Sphere> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: other.group0(),
-                g10: other.group1(),
-            },
-        }
-    }
-}
-
-impl Add<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn add(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Add<Translator> for Translator {
-    type Output = Translator;
-
-    fn add(self, other: Translator) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() + other.group0(),
-            },
-        }
-    }
-}
-
-impl AddAssign<Translator> for Translator {
-    fn add_assign(&mut self, other: Translator) {
         *self = (*self).add(other);
     }
 }
@@ -7826,24 +5691,6 @@ impl DivAssign<Plane> for Plane {
     }
 }
 
-impl Div<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn div(self, other: Rotor) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() / other.group0(),
-            },
-        }
-    }
-}
-
-impl DivAssign<Rotor> for Rotor {
-    fn div_assign(&mut self, other: Rotor) {
-        *self = (*self).div(other);
-    }
-}
-
 impl Div<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -7900,43 +5747,6 @@ impl DivAssign<Sphere> for Sphere {
     }
 }
 
-impl Div<Transflector> for Transflector {
-    type Output = Transflector;
-
-    fn div(self, other: Transflector) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() / other.group0(),
-                g1: self.group1() / other.group1(),
-            },
-        }
-    }
-}
-
-impl DivAssign<Transflector> for Transflector {
-    fn div_assign(&mut self, other: Transflector) {
-        *self = (*self).div(other);
-    }
-}
-
-impl Div<Translator> for Translator {
-    type Output = Translator;
-
-    fn div(self, other: Translator) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() / other.group0(),
-            },
-        }
-    }
-}
-
-impl DivAssign<Translator> for Translator {
-    fn div_assign(&mut self, other: Translator) {
-        *self = (*self).div(other);
-    }
-}
-
 impl Into<Line> for Circle {
     fn into(self) -> Line {
         Line {
@@ -7988,17 +5798,6 @@ impl Into<Plane> for Flector {
     }
 }
 
-impl Into<Transflector> for Flector {
-    fn into(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
 impl Into<AntiScalar> for Motor {
     fn into(self) -> AntiScalar {
         AntiScalar {
@@ -8013,24 +5812,6 @@ impl Into<Line> for Motor {
             groups: LineGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl Into<Rotor> for Motor {
-    fn into(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Into<Translator> for Motor {
-    fn into(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]]),
             },
         }
     }
@@ -8127,16 +5908,6 @@ impl Into<Plane> for MultiVector {
     }
 }
 
-impl Into<Rotor> for MultiVector {
-    fn into(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: Simd32x4::from([self.group7()[0], self.group7()[1], self.group7()[2], self.group0()[1]]),
-            },
-        }
-    }
-}
-
 impl Into<RoundPoint> for MultiVector {
     fn into(self) -> RoundPoint {
         RoundPoint {
@@ -8167,57 +5938,12 @@ impl Into<Sphere> for MultiVector {
     }
 }
 
-impl Into<Transflector> for MultiVector {
-    fn into(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]),
-                g1: Simd32x4::from([self.group9()[0], self.group9()[1], self.group9()[2], self.group10()[1]]),
-            },
-        }
-    }
-}
-
-impl Into<Translator> for MultiVector {
-    fn into(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], self.group0()[1]]),
-            },
-        }
-    }
-}
-
-impl Into<AntiScalar> for Rotor {
-    fn into(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[3] },
-        }
-    }
-}
-
 impl Into<Plane> for Sphere {
     fn into(self) -> Plane {
         Plane {
             groups: PlaneGroups {
                 g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[1]]),
             },
-        }
-    }
-}
-
-impl Into<Plane> for Transflector {
-    fn into(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group1() },
-        }
-    }
-}
-
-impl Into<AntiScalar> for Translator {
-    fn into(self) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -8419,24 +6145,6 @@ impl MulAssign<Plane> for Plane {
     }
 }
 
-impl Mul<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn mul(self, other: Rotor) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * other.group0(),
-            },
-        }
-    }
-}
-
-impl MulAssign<Rotor> for Rotor {
-    fn mul_assign(&mut self, other: Rotor) {
-        *self = (*self).mul(other);
-    }
-}
-
 impl Mul<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -8489,43 +6197,6 @@ impl Mul<Sphere> for Sphere {
 
 impl MulAssign<Sphere> for Sphere {
     fn mul_assign(&mut self, other: Sphere) {
-        *self = (*self).mul(other);
-    }
-}
-
-impl Mul<Transflector> for Transflector {
-    type Output = Transflector;
-
-    fn mul(self, other: Transflector) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() * other.group0(),
-                g1: self.group1() * other.group1(),
-            },
-        }
-    }
-}
-
-impl MulAssign<Transflector> for Transflector {
-    fn mul_assign(&mut self, other: Transflector) {
-        *self = (*self).mul(other);
-    }
-}
-
-impl Mul<Translator> for Translator {
-    type Output = Translator;
-
-    fn mul(self, other: Translator) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * other.group0(),
-            },
-        }
-    }
-}
-
-impl MulAssign<Translator> for Translator {
-    fn mul_assign(&mut self, other: Translator) {
         *self = (*self).mul(other);
     }
 }
@@ -8718,18 +6389,6 @@ impl Sub<Plane> for AntiScalar {
     }
 }
 
-impl Sub<Rotor> for AntiScalar {
-    type Output = Rotor;
-
-    fn sub(self, other: Rotor) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for AntiScalar {
     type Output = MultiVector;
 
@@ -8781,40 +6440,6 @@ impl Sub<Sphere> for AntiScalar {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for AntiScalar {
-    type Output = Translator;
-
-    fn sub(self, other: Translator) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group0(),
             },
         }
     }
@@ -9036,28 +6661,6 @@ impl Sub<Plane> for Circle {
     }
 }
 
-impl Sub<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Circle {
     type Output = MultiVector;
 
@@ -9119,50 +6722,6 @@ impl Sub<Sphere> for Circle {
                 g8: self.group2(),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -9384,28 +6943,6 @@ impl Sub<Plane> for Dipole {
     }
 }
 
-impl Sub<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0(),
-                g4: self.group1(),
-                g5: self.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Dipole {
     type Output = MultiVector;
 
@@ -9467,50 +7004,6 @@ impl Sub<Sphere> for Dipole {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0(),
-                g4: self.group1(),
-                g5: self.group2() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: self.group0(),
-                g4: self.group1(),
-                g5: self.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -9728,28 +7221,6 @@ impl Sub<Plane> for DualNum {
     }
 }
 
-impl Sub<Rotor> for DualNum {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for DualNum {
     type Output = MultiVector;
 
@@ -9807,50 +7278,6 @@ impl Sub<Sphere> for DualNum {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for DualNum {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for DualNum {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -10046,28 +7473,6 @@ impl Sub<Plane> for FlatPoint {
     }
 }
 
-impl Sub<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for FlatPoint {
     type Output = MultiVector;
 
@@ -10129,41 +7534,6 @@ impl Sub<Sphere> for FlatPoint {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for FlatPoint {
-    type Output = Flector;
-
-    fn sub(self, other: Transflector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: Simd32x4::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -10380,28 +7750,6 @@ impl SubAssign<Plane> for Flector {
     }
 }
 
-impl Sub<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -10463,47 +7811,6 @@ impl Sub<Sphere> for Flector {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group0(),
                 g10: Simd32x2::from([0.0, self.group1()[3]]) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Flector {
-    type Output = Flector;
-
-    fn sub(self, other: Transflector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: self.group1() - other.group1(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Transflector> for Flector {
-    fn sub_assign(&mut self, other: Transflector) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: self.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
             },
         }
     }
@@ -10700,19 +8007,6 @@ impl Sub<Plane> for Line {
     }
 }
 
-impl Sub<Rotor> for Line {
-    type Output = Motor;
-
-    fn sub(self, other: Rotor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Line {
     type Output = MultiVector;
 
@@ -10774,41 +8068,6 @@ impl Sub<Sphere> for Line {
                 g8: self.group1(),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: self.group0(),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Line {
-    type Output = Motor;
-
-    fn sub(self, other: Translator) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -11025,25 +8284,6 @@ impl Sub<Plane> for Motor {
     }
 }
 
-impl Sub<Rotor> for Motor {
-    type Output = Motor;
-
-    fn sub(self, other: Rotor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() - other.group0(),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Rotor> for Motor {
-    fn sub_assign(&mut self, other: Rotor) {
-        *self = (*self).sub(other);
-    }
-}
-
 impl Sub<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -11107,47 +8347,6 @@ impl Sub<Sphere> for Motor {
                 g10: Simd32x2::from(0.0) - other.group1(),
             },
         }
-    }
-}
-
-impl Sub<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Motor {
-    type Output = Motor;
-
-    fn sub(self, other: Translator) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl SubAssign<Translator> for Motor {
-    fn sub_assign(&mut self, other: Translator) {
-        *self = (*self).sub(other);
     }
 }
 
@@ -11431,34 +8630,6 @@ impl SubAssign<Plane> for MultiVector {
     }
 }
 
-impl Sub<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5(),
-                g6: self.group6(),
-                g7: self.group7() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group8(),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Rotor> for MultiVector {
-    fn sub_assign(&mut self, other: Rotor) {
-        *self = (*self).sub(other);
-    }
-}
-
 impl Sub<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -11539,62 +8710,6 @@ impl Sub<Sphere> for MultiVector {
 
 impl SubAssign<Sphere> for MultiVector {
     fn sub_assign(&mut self, other: Sphere) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0(),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8(),
-                g9: self.group9() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: self.group10() - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl SubAssign<Transflector> for MultiVector {
-    fn sub_assign(&mut self, other: Transflector) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: self.group0() - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group1(),
-                g2: self.group2(),
-                g3: self.group3(),
-                g4: self.group4(),
-                g5: self.group5(),
-                g6: self.group6(),
-                g7: self.group7(),
-                g8: self.group8() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: self.group9(),
-                g10: self.group10(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Translator> for MultiVector {
-    fn sub_assign(&mut self, other: Translator) {
         *self = (*self).sub(other);
     }
 }
@@ -11797,28 +8912,6 @@ impl SubAssign<Plane> for Plane {
     }
 }
 
-impl Sub<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g10: Simd32x2::from([0.0, self.group0()[3]]),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Plane {
     type Output = MultiVector;
 
@@ -11871,358 +8964,6 @@ impl Sub<Sphere> for Plane {
             groups: SphereGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
                 g1: Simd32x2::from([0.0, self.group0()[3]]) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Plane {
-    type Output = Transflector;
-
-    fn sub(self, other: Transflector) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from(0.0) - other.group0(),
-                g1: self.group0() - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g10: Simd32x2::from([0.0, self.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<AntiScalar> for Rotor {
-    type Output = Rotor;
-
-    fn sub(self, other: AntiScalar) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-            },
-        }
-    }
-}
-
-impl SubAssign<AntiScalar> for Rotor {
-    fn sub_assign(&mut self, other: AntiScalar) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x3::from(0.0) - other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - other.group0(),
-                g4: Simd32x3::from(0.0) - other.group1(),
-                g5: Simd32x4::from(0.0) - other.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<DualNum> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: DualNum) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<FlatPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: FlatPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Line> for Rotor {
-    type Output = Motor;
-
-    fn sub(self, other: Line) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: Simd32x3::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Motor> for Rotor {
-    type Output = Motor;
-
-    fn sub(self, other: Motor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x2::from(0.0) - other.group2(),
-                g3: Simd32x3::from(0.0) - other.group3(),
-                g4: Simd32x3::from(0.0) - other.group4(),
-                g5: Simd32x4::from(0.0) - other.group5(),
-                g6: Simd32x4::from(0.0) - other.group6(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group7(),
-                g8: Simd32x3::from(0.0) - other.group8(),
-                g9: Simd32x3::from(0.0) - other.group9(),
-                g10: Simd32x2::from(0.0) - other.group10(),
-            },
-        }
-    }
-}
-
-impl Sub<Plane> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn sub(self, other: Rotor) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() - other.group0(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Rotor> for Rotor {
-    fn sub_assign(&mut self, other: Rotor) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0) - other.group0(),
-                g2: Simd32x2::from(0.0) - other.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Scalar> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Scalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) - Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Sphere> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - other.group0(),
-                g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Rotor {
-    type Output = Motor;
-
-    fn sub(self, other: Translator) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
             },
         }
     }
@@ -12448,28 +9189,6 @@ impl Sub<Plane> for RoundPoint {
     }
 }
 
-impl Sub<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group0(),
-                g2: self.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -12528,50 +9247,6 @@ impl Sub<Sphere> for RoundPoint {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: self.group0(),
-                g2: self.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: self.group0(),
-                g2: self.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -12777,28 +9452,6 @@ impl Sub<Plane> for Scalar {
     }
 }
 
-impl Sub<Rotor> for Scalar {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Scalar {
     type Output = MultiVector;
 
@@ -12856,50 +9509,6 @@ impl Sub<Sphere> for Scalar {
                 g8: Simd32x3::from(0.0),
                 g9: Simd32x3::from(0.0) - other.group0(),
                 g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Scalar {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Scalar {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -13122,28 +9731,6 @@ impl SubAssign<Plane> for Sphere {
     }
 }
 
-impl Sub<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: self.group0(),
-                g10: self.group1(),
-            },
-        }
-    }
-}
-
 impl Sub<RoundPoint> for Sphere {
     type Output = MultiVector;
 
@@ -13203,695 +9790,6 @@ impl Sub<Sphere> for Sphere {
 
 impl SubAssign<Sphere> for Sphere {
     fn sub_assign(&mut self, other: Sphere) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: self.group0() - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: self.group1() - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: self.group0(),
-                g10: self.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<AntiScalar> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Circle> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x3::from(0.0) - other.group2(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - other.group0(),
-                g4: Simd32x3::from(0.0) - other.group1(),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<DualNum> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: DualNum) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - other.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<FlatPoint> for Transflector {
-    type Output = Flector;
-
-    fn sub(self, other: FlatPoint) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Flector> for Transflector {
-    type Output = Flector;
-
-    fn sub(self, other: Flector) -> Flector {
-        Flector {
-            groups: FlectorGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group0(),
-                g1: self.group1() - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Line> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Line) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - other.group0(),
-                g8: Simd32x3::from(0.0) - other.group1(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0) - other.group1(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x2::from(0.0) - other.group2(),
-                g3: Simd32x3::from(0.0) - other.group3(),
-                g4: Simd32x3::from(0.0) - other.group4(),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group5(),
-                g6: Simd32x4::from(0.0) - other.group6(),
-                g7: Simd32x3::from(0.0) - other.group7(),
-                g8: Simd32x3::from(0.0) - other.group8(),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group9(),
-                g10: Simd32x2::from([0.0, self.group1()[3]]) - other.group10(),
-            },
-        }
-    }
-}
-
-impl Sub<Plane> for Transflector {
-    type Output = Transflector;
-
-    fn sub(self, other: Plane) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0(),
-                g1: self.group1() - other.group0(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Plane> for Transflector {
-    fn sub_assign(&mut self, other: Plane) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0) - other.group0(),
-                g2: Simd32x2::from(0.0) - other.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Scalar> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Scalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]) - other.group0(),
-                g10: Simd32x2::from([0.0, self.group1()[3]]) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Transflector {
-    type Output = Transflector;
-
-    fn sub(self, other: Transflector) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() - other.group0(),
-                g1: self.group1() - other.group1(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Transflector> for Transflector {
-    fn sub_assign(&mut self, other: Transflector) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g10: Simd32x2::from([0.0, self.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<AntiScalar> for Translator {
-    type Output = Translator;
-
-    fn sub(self, other: AntiScalar) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-            },
-        }
-    }
-}
-
-impl SubAssign<AntiScalar> for Translator {
-    fn sub_assign(&mut self, other: AntiScalar) {
-        *self = (*self).sub(other);
-    }
-}
-
-impl Sub<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Dipole) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0) - other.group0(),
-                g4: Simd32x3::from(0.0) - other.group1(),
-                g5: Simd32x4::from(0.0) - other.group2(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<DualNum> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: DualNum) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<FlatPoint> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: FlatPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Flector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - other.group0(),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Line> for Translator {
-    type Output = Motor;
-
-    fn sub(self, other: Line) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Motor> for Translator {
-    type Output = Motor;
-
-    fn sub(self, other: Motor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group0(),
-                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: MultiVector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) - other.group0(),
-                g1: Simd32x3::from(0.0) - other.group1(),
-                g2: Simd32x2::from(0.0) - other.group2(),
-                g3: Simd32x3::from(0.0) - other.group3(),
-                g4: Simd32x3::from(0.0) - other.group4(),
-                g5: Simd32x4::from(0.0) - other.group5(),
-                g6: Simd32x4::from(0.0) - other.group6(),
-                g7: Simd32x3::from(0.0) - other.group7(),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group8(),
-                g9: Simd32x3::from(0.0) - other.group9(),
-                g10: Simd32x2::from(0.0) - other.group10(),
-            },
-        }
-    }
-}
-
-impl Sub<Plane> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Plane) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Rotor> for Translator {
-    type Output = Motor;
-
-    fn sub(self, other: Rotor) -> Motor {
-        Motor {
-            groups: MotorGroups {
-                g0: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group0(),
-                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl Sub<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: RoundPoint) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0) - other.group0(),
-                g2: Simd32x2::from(0.0) - other.group1(),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Scalar> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Scalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]) - Simd32x2::from([other.group0(), 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Sub<Sphere> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Sphere) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0) - other.group0(),
-                g10: Simd32x2::from(0.0) - other.group1(),
-            },
-        }
-    }
-}
-
-impl Sub<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn sub(self, other: Transflector) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
-                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
-            },
-        }
-    }
-}
-
-impl Sub<Translator> for Translator {
-    type Output = Translator;
-
-    fn sub(self, other: Translator) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() - other.group0(),
-            },
-        }
-    }
-}
-
-impl SubAssign<Translator> for Translator {
-    fn sub_assign(&mut self, other: Translator) {
         *self = (*self).sub(other);
     }
 }

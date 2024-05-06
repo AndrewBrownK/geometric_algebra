@@ -136,18 +136,6 @@ impl Unitize for Plane {
     }
 }
 
-impl Unitize for Rotor {
-    type Output = Rotor;
-
-    fn unitize(self) -> Rotor {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
 impl Unitize for RoundPoint {
     type Output = RoundPoint;
 
@@ -176,30 +164,6 @@ impl Unitize for Sphere {
     type Output = Sphere;
 
     fn unitize(self) -> Sphere {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Transflector {
-    type Output = Transflector;
-
-    fn unitize(self) -> Transflector {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Translator {
-    type Output = Translator;
-
-    fn unitize(self) -> Translator {
         self.wedge_dot(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

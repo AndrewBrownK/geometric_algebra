@@ -234,28 +234,6 @@ impl AntiDual for Plane {
     }
 }
 
-impl AntiDual for Rotor {
-    type Output = MultiVector;
-
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl AntiDual for RoundPoint {
     type Output = Sphere;
 
@@ -287,50 +265,6 @@ impl AntiDual for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x2::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for Transflector {
-    type Output = MultiVector;
-
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g2: Simd32x2::from([0.0, -self.group1()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: self.group0(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for Translator {
-    type Output = MultiVector;
-
-    fn anti_dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -461,18 +395,6 @@ impl AntiReversal for Plane {
     }
 }
 
-impl AntiReversal for Rotor {
-    type Output = Rotor;
-
-    fn anti_reversal(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
 impl AntiReversal for RoundPoint {
     type Output = RoundPoint;
 
@@ -494,31 +416,6 @@ impl AntiReversal for Sphere {
 
     fn anti_reversal(self) -> Sphere {
         self
-    }
-}
-
-impl AntiReversal for Transflector {
-    type Output = Transflector;
-
-    fn anti_reversal(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl AntiReversal for Translator {
-    type Output = Translator;
-
-    fn anti_reversal(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
     }
 }
 
@@ -638,18 +535,6 @@ impl Automorphism for Plane {
     }
 }
 
-impl Automorphism for Rotor {
-    type Output = Rotor;
-
-    fn automorphism(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Automorphism for RoundPoint {
     type Output = RoundPoint;
 
@@ -676,26 +561,6 @@ impl Automorphism for Sphere {
 
     fn automorphism(self) -> Sphere {
         self
-    }
-}
-
-impl Automorphism for Transflector {
-    type Output = Transflector;
-
-    fn automorphism(self) -> Transflector {
-        self
-    }
-}
-
-impl Automorphism for Translator {
-    type Output = Translator;
-
-    fn automorphism(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
     }
 }
 
@@ -856,28 +721,6 @@ impl Complement for Plane {
     }
 }
 
-impl Complement for Rotor {
-    type Output = MultiVector;
-
-    fn complement(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Complement for RoundPoint {
     type Output = Sphere;
 
@@ -909,50 +752,6 @@ impl Complement for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0(),
                 g1: swizzle!(self.group1(), 1, 0),
-            },
-        }
-    }
-}
-
-impl Complement for Transflector {
-    type Output = MultiVector;
-
-    fn complement(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g2: Simd32x2::from([self.group1()[3], 0.0]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Complement for Translator {
-    type Output = MultiVector;
-
-    fn complement(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1093,18 +892,6 @@ impl ConformalConjugate for Plane {
     }
 }
 
-impl ConformalConjugate for Rotor {
-    type Output = Rotor;
-
-    fn conformal_conjugate(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl ConformalConjugate for RoundPoint {
     type Output = RoundPoint;
 
@@ -1134,31 +921,6 @@ impl ConformalConjugate for Sphere {
             groups: SphereGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
-    }
-}
-
-impl ConformalConjugate for Transflector {
-    type Output = Transflector;
-
-    fn conformal_conjugate(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl ConformalConjugate for Translator {
-    type Output = Translator;
-
-    fn conformal_conjugate(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1284,18 +1046,6 @@ impl Conjugation for Plane {
     }
 }
 
-impl Conjugation for Rotor {
-    type Output = Rotor;
-
-    fn conjugation(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
 impl Conjugation for RoundPoint {
     type Output = RoundPoint;
 
@@ -1322,31 +1072,6 @@ impl Conjugation for Sphere {
 
     fn conjugation(self) -> Sphere {
         self
-    }
-}
-
-impl Conjugation for Transflector {
-    type Output = Transflector;
-
-    fn conjugation(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl Conjugation for Translator {
-    type Output = Translator;
-
-    fn conjugation(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
     }
 }
 
@@ -1430,14 +1155,6 @@ impl DoubleComplement for Plane {
     }
 }
 
-impl DoubleComplement for Rotor {
-    type Output = Rotor;
-
-    fn double_complement(self) -> Rotor {
-        self
-    }
-}
-
 impl DoubleComplement for RoundPoint {
     type Output = RoundPoint;
 
@@ -1458,22 +1175,6 @@ impl DoubleComplement for Sphere {
     type Output = Sphere;
 
     fn double_complement(self) -> Sphere {
-        self
-    }
-}
-
-impl DoubleComplement for Transflector {
-    type Output = Transflector;
-
-    fn double_complement(self) -> Transflector {
-        self
-    }
-}
-
-impl DoubleComplement for Translator {
-    type Output = Translator;
-
-    fn double_complement(self) -> Translator {
         self
     }
 }
@@ -1635,28 +1336,6 @@ impl Dual for Plane {
     }
 }
 
-impl Dual for Rotor {
-    type Output = MultiVector;
-
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([-self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
 impl Dual for RoundPoint {
     type Output = Sphere;
 
@@ -1688,50 +1367,6 @@ impl Dual for Sphere {
             groups: RoundPointGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl Dual for Transflector {
-    type Output = MultiVector;
-
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0),
-                g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
-                g2: Simd32x2::from([0.0, self.group1()[3]]),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: self.group0() * Simd32x3::from(-1.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Dual for Translator {
-    type Output = MultiVector;
-
-    fn dual(self) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([-self.group0()[3], 0.0]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -1862,18 +1497,6 @@ impl Reversal for Plane {
     }
 }
 
-impl Reversal for Rotor {
-    type Output = Rotor;
-
-    fn reversal(self) -> Rotor {
-        Rotor {
-            groups: RotorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
 impl Reversal for RoundPoint {
     type Output = RoundPoint;
 
@@ -1895,30 +1518,5 @@ impl Reversal for Sphere {
 
     fn reversal(self) -> Sphere {
         self
-    }
-}
-
-impl Reversal for Transflector {
-    type Output = Transflector;
-
-    fn reversal(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1(),
-            },
-        }
-    }
-}
-
-impl Reversal for Translator {
-    type Output = Translator;
-
-    fn reversal(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
     }
 }

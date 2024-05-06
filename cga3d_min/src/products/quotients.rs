@@ -104,14 +104,6 @@ impl GeometricAntiQuotient<Plane> for AntiScalar {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for AntiScalar {
-    type Output = Rotor;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for AntiScalar {
     type Output = RoundPoint;
 
@@ -132,22 +124,6 @@ impl GeometricAntiQuotient<Sphere> for AntiScalar {
     type Output = Sphere;
 
     fn geometric_anti_quotient(self, other: Sphere) -> Sphere {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for AntiScalar {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for AntiScalar {
-    type Output = Translator;
-
-    fn geometric_anti_quotient(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -232,14 +208,6 @@ impl GeometricAntiQuotient<Plane> for Circle {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Circle {
     type Output = MultiVector;
 
@@ -260,22 +228,6 @@ impl GeometricAntiQuotient<Sphere> for Circle {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -360,14 +312,6 @@ impl GeometricAntiQuotient<Plane> for Dipole {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Dipole {
     type Output = MultiVector;
 
@@ -388,22 +332,6 @@ impl GeometricAntiQuotient<Sphere> for Dipole {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -488,14 +416,6 @@ impl GeometricAntiQuotient<Plane> for DualNum {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for DualNum {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for DualNum {
     type Output = MultiVector;
 
@@ -516,22 +436,6 @@ impl GeometricAntiQuotient<Sphere> for DualNum {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for DualNum {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for DualNum {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -569,9 +473,9 @@ impl GeometricAntiQuotient<DualNum> for FlatPoint {
 }
 
 impl GeometricAntiQuotient<FlatPoint> for FlatPoint {
-    type Output = Translator;
+    type Output = Motor;
 
-    fn geometric_anti_quotient(self, other: FlatPoint) -> Translator {
+    fn geometric_anti_quotient(self, other: FlatPoint) -> Motor {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -585,9 +489,9 @@ impl GeometricAntiQuotient<Flector> for FlatPoint {
 }
 
 impl GeometricAntiQuotient<Line> for FlatPoint {
-    type Output = Transflector;
+    type Output = Flector;
 
-    fn geometric_anti_quotient(self, other: Line) -> Transflector {
+    fn geometric_anti_quotient(self, other: Line) -> Flector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -616,14 +520,6 @@ impl GeometricAntiQuotient<Plane> for FlatPoint {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for FlatPoint {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for FlatPoint {
     type Output = MultiVector;
 
@@ -644,22 +540,6 @@ impl GeometricAntiQuotient<Sphere> for FlatPoint {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for FlatPoint {
-    type Output = FlatPoint;
-
-    fn geometric_anti_quotient(self, other: Translator) -> FlatPoint {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -744,14 +624,6 @@ impl GeometricAntiQuotient<Plane> for Flector {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Flector {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -772,22 +644,6 @@ impl GeometricAntiQuotient<Sphere> for Flector {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Flector {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> Flector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -825,9 +681,9 @@ impl GeometricAntiQuotient<DualNum> for Line {
 }
 
 impl GeometricAntiQuotient<FlatPoint> for Line {
-    type Output = Transflector;
+    type Output = Flector;
 
-    fn geometric_anti_quotient(self, other: FlatPoint) -> Transflector {
+    fn geometric_anti_quotient(self, other: FlatPoint) -> Flector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -872,14 +728,6 @@ impl GeometricAntiQuotient<Plane> for Line {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Line {
     type Output = MultiVector;
 
@@ -900,22 +748,6 @@ impl GeometricAntiQuotient<Sphere> for Line {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Line {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Line {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -1000,14 +832,6 @@ impl GeometricAntiQuotient<Plane> for Motor {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -1028,22 +852,6 @@ impl GeometricAntiQuotient<Sphere> for Motor {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Motor {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -1128,14 +936,6 @@ impl GeometricAntiQuotient<Plane> for MultiVector {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -1156,22 +956,6 @@ impl GeometricAntiQuotient<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -1256,14 +1040,6 @@ impl GeometricAntiQuotient<Plane> for Plane {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Plane {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Plane {
     type Output = MultiVector;
 
@@ -1284,150 +1060,6 @@ impl GeometricAntiQuotient<Sphere> for Plane {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Plane {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> Transflector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<AntiScalar> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_anti_quotient(self, other: AntiScalar) -> Rotor {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Circle) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Dipole) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<DualNum> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<FlatPoint> for Rotor {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: FlatPoint) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Flector> for Rotor {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Flector) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Line) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Motor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Plane> for Rotor {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Plane) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Rotor> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> Rotor {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: RoundPoint) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Scalar> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Scalar) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Sphere> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Rotor {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -1512,14 +1144,6 @@ impl GeometricAntiQuotient<Plane> for RoundPoint {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for RoundPoint {
     type Output = MultiVector;
 
@@ -1540,22 +1164,6 @@ impl GeometricAntiQuotient<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -1640,14 +1248,6 @@ impl GeometricAntiQuotient<Plane> for Scalar {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Scalar {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Scalar {
     type Output = Sphere;
 
@@ -1668,22 +1268,6 @@ impl GeometricAntiQuotient<Sphere> for Scalar {
     type Output = RoundPoint;
 
     fn geometric_anti_quotient(self, other: Sphere) -> RoundPoint {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Scalar {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Scalar {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -1768,14 +1352,6 @@ impl GeometricAntiQuotient<Plane> for Sphere {
     }
 }
 
-impl GeometricAntiQuotient<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
 impl GeometricAntiQuotient<RoundPoint> for Sphere {
     type Output = MultiVector;
 
@@ -1796,278 +1372,6 @@ impl GeometricAntiQuotient<Sphere> for Sphere {
     type Output = MultiVector;
 
     fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<AntiScalar> for Transflector {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: AntiScalar) -> Transflector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Circle> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Circle) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Dipole) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<DualNum> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<FlatPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: FlatPoint) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Flector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Line> for Transflector {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Line) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Motor> for Transflector {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Motor) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Plane> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Plane) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Rotor> for Transflector {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: RoundPoint) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Scalar> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Scalar) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Transflector {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Translator) -> Transflector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<AntiScalar> for Translator {
-    type Output = Translator;
-
-    fn geometric_anti_quotient(self, other: AntiScalar) -> Translator {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Circle) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Dipole) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<DualNum> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: DualNum) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<FlatPoint> for Translator {
-    type Output = FlatPoint;
-
-    fn geometric_anti_quotient(self, other: FlatPoint) -> FlatPoint {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Flector> for Translator {
-    type Output = Flector;
-
-    fn geometric_anti_quotient(self, other: Flector) -> Flector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Line> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Line) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Motor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Plane> for Translator {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Plane) -> Transflector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Rotor) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: RoundPoint) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Scalar> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Scalar) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Sphere> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_anti_quotient(self, other: Sphere) -> MultiVector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Transflector> for Translator {
-    type Output = Transflector;
-
-    fn geometric_anti_quotient(self, other: Transflector) -> Transflector {
-        self.anti_wedge_dot(other.anti_inverse())
-    }
-}
-
-impl GeometricAntiQuotient<Translator> for Translator {
-    type Output = Translator;
-
-    fn geometric_anti_quotient(self, other: Translator) -> Translator {
         self.anti_wedge_dot(other.anti_inverse())
     }
 }
@@ -2152,14 +1456,6 @@ impl GeometricQuotient<Plane> for AntiScalar {
     }
 }
 
-impl GeometricQuotient<Rotor> for AntiScalar {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for AntiScalar {
     type Output = Sphere;
 
@@ -2180,22 +1476,6 @@ impl GeometricQuotient<Sphere> for AntiScalar {
     type Output = RoundPoint;
 
     fn geometric_quotient(self, other: Sphere) -> RoundPoint {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for AntiScalar {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for AntiScalar {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -2280,14 +1560,6 @@ impl GeometricQuotient<Plane> for Circle {
     }
 }
 
-impl GeometricQuotient<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Circle {
     type Output = MultiVector;
 
@@ -2308,22 +1580,6 @@ impl GeometricQuotient<Sphere> for Circle {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -2408,14 +1664,6 @@ impl GeometricQuotient<Plane> for Dipole {
     }
 }
 
-impl GeometricQuotient<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Dipole {
     type Output = MultiVector;
 
@@ -2436,22 +1684,6 @@ impl GeometricQuotient<Sphere> for Dipole {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -2536,14 +1768,6 @@ impl GeometricQuotient<Plane> for DualNum {
     }
 }
 
-impl GeometricQuotient<Rotor> for DualNum {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for DualNum {
     type Output = MultiVector;
 
@@ -2564,22 +1788,6 @@ impl GeometricQuotient<Sphere> for DualNum {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for DualNum {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for DualNum {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -2664,14 +1872,6 @@ impl GeometricQuotient<Plane> for FlatPoint {
     }
 }
 
-impl GeometricQuotient<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for FlatPoint {
     type Output = MultiVector;
 
@@ -2692,22 +1892,6 @@ impl GeometricQuotient<Sphere> for FlatPoint {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for FlatPoint {
-    type Output = Circle;
-
-    fn geometric_quotient(self, other: Translator) -> Circle {
         self.wedge_dot(other.inverse())
     }
 }
@@ -2792,14 +1976,6 @@ impl GeometricQuotient<Plane> for Flector {
     }
 }
 
-impl GeometricQuotient<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -2820,22 +1996,6 @@ impl GeometricQuotient<Sphere> for Flector {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -2920,14 +2080,6 @@ impl GeometricQuotient<Plane> for Line {
     }
 }
 
-impl GeometricQuotient<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Line {
     type Output = MultiVector;
 
@@ -2948,22 +2100,6 @@ impl GeometricQuotient<Sphere> for Line {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Line {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -3048,14 +2184,6 @@ impl GeometricQuotient<Plane> for Motor {
     }
 }
 
-impl GeometricQuotient<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -3076,22 +2204,6 @@ impl GeometricQuotient<Sphere> for Motor {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -3176,14 +2288,6 @@ impl GeometricQuotient<Plane> for MultiVector {
     }
 }
 
-impl GeometricQuotient<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -3204,22 +2308,6 @@ impl GeometricQuotient<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -3304,14 +2392,6 @@ impl GeometricQuotient<Plane> for Plane {
     }
 }
 
-impl GeometricQuotient<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Plane {
     type Output = MultiVector;
 
@@ -3332,150 +2412,6 @@ impl GeometricQuotient<Sphere> for Plane {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<AntiScalar> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: AntiScalar) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Circle) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Dipole) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<DualNum> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: DualNum) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<FlatPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: FlatPoint) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Flector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Line) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Motor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Plane> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Plane) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: RoundPoint) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Scalar> for Rotor {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Scalar) -> Rotor {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Sphere> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -3560,14 +2496,6 @@ impl GeometricQuotient<Plane> for RoundPoint {
     }
 }
 
-impl GeometricQuotient<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for RoundPoint {
     type Output = MultiVector;
 
@@ -3588,22 +2516,6 @@ impl GeometricQuotient<Sphere> for RoundPoint {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }
@@ -3688,14 +2600,6 @@ impl GeometricQuotient<Plane> for Scalar {
     }
 }
 
-impl GeometricQuotient<Rotor> for Scalar {
-    type Output = Rotor;
-
-    fn geometric_quotient(self, other: Rotor) -> Rotor {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Scalar {
     type Output = RoundPoint;
 
@@ -3716,22 +2620,6 @@ impl GeometricQuotient<Sphere> for Scalar {
     type Output = Sphere;
 
     fn geometric_quotient(self, other: Sphere) -> Sphere {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Scalar {
-    type Output = Transflector;
-
-    fn geometric_quotient(self, other: Transflector) -> Transflector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Scalar {
-    type Output = Translator;
-
-    fn geometric_quotient(self, other: Translator) -> Translator {
         self.wedge_dot(other.inverse())
     }
 }
@@ -3816,14 +2704,6 @@ impl GeometricQuotient<Plane> for Sphere {
     }
 }
 
-impl GeometricQuotient<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
 impl GeometricQuotient<RoundPoint> for Sphere {
     type Output = MultiVector;
 
@@ -3844,278 +2724,6 @@ impl GeometricQuotient<Sphere> for Sphere {
     type Output = MultiVector;
 
     fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<AntiScalar> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: AntiScalar) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Circle> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Circle) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Dipole) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<DualNum> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: DualNum) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<FlatPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: FlatPoint) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Flector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Line> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Line) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Motor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Plane> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Plane) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: RoundPoint) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Scalar> for Transflector {
-    type Output = Transflector;
-
-    fn geometric_quotient(self, other: Scalar) -> Transflector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<AntiScalar> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: AntiScalar) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Circle) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Dipole) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<DualNum> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: DualNum) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<FlatPoint> for Translator {
-    type Output = Circle;
-
-    fn geometric_quotient(self, other: FlatPoint) -> Circle {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Flector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Line> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Line) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Motor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: MultiVector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Plane> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Plane) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Rotor) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: RoundPoint) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Scalar> for Translator {
-    type Output = Translator;
-
-    fn geometric_quotient(self, other: Scalar) -> Translator {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Sphere> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Sphere) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Transflector) -> MultiVector {
-        self.wedge_dot(other.inverse())
-    }
-}
-
-impl GeometricQuotient<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn geometric_quotient(self, other: Translator) -> MultiVector {
         self.wedge_dot(other.inverse())
     }
 }

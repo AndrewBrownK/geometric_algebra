@@ -178,31 +178,6 @@ impl Bulk for Sphere {
     }
 }
 
-impl Bulk for Transflector {
-    type Output = Transflector;
-
-    fn bulk(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: self.group0(),
-                g1: self.group1() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl Bulk for Translator {
-    type Output = Translator;
-
-    fn bulk(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-            },
-        }
-    }
-}
-
 impl RoundBulk for Circle {
     type Output = Circle;
 
@@ -495,14 +470,6 @@ impl Weight for Plane {
     }
 }
 
-impl Weight for Rotor {
-    type Output = Rotor;
-
-    fn weight(self) -> Rotor {
-        self
-    }
-}
-
 impl Weight for Sphere {
     type Output = Sphere;
 
@@ -511,31 +478,6 @@ impl Weight for Sphere {
             groups: SphereGroups {
                 g0: self.group0(),
                 g1: Simd32x2::from(0.0),
-            },
-        }
-    }
-}
-
-impl Weight for Transflector {
-    type Output = Transflector;
-
-    fn weight(self) -> Transflector {
-        Transflector {
-            groups: TransflectorGroups {
-                g0: Simd32x3::from(0.0),
-                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-            },
-        }
-    }
-}
-
-impl Weight for Translator {
-    type Output = Translator;
-
-    fn weight(self) -> Translator {
-        Translator {
-            groups: TranslatorGroups {
-                g0: self.group0() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
             },
         }
     }

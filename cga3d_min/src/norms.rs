@@ -139,14 +139,6 @@ impl BulkNormSquared for Plane {
     }
 }
 
-impl BulkNormSquared for Rotor {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
 impl BulkNormSquared for RoundPoint {
     type Output = Scalar;
 
@@ -164,22 +156,6 @@ impl BulkNormSquared for Scalar {
 }
 
 impl BulkNormSquared for Sphere {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
-impl BulkNormSquared for Transflector {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
-impl BulkNormSquared for Translator {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -267,14 +243,6 @@ impl BulkNorm for Plane {
     }
 }
 
-impl BulkNorm for Rotor {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
 impl BulkNorm for RoundPoint {
     type Output = Scalar;
 
@@ -292,22 +260,6 @@ impl BulkNorm for Scalar {
 }
 
 impl BulkNorm for Sphere {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Transflector {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for Translator {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -395,14 +347,6 @@ impl WeightNormSquared for Plane {
     }
 }
 
-impl WeightNormSquared for Rotor {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
 impl WeightNormSquared for RoundPoint {
     type Output = AntiScalar;
 
@@ -420,22 +364,6 @@ impl WeightNormSquared for Scalar {
 }
 
 impl WeightNormSquared for Sphere {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
-impl WeightNormSquared for Transflector {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
-impl WeightNormSquared for Translator {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -523,14 +451,6 @@ impl WeightNorm for Plane {
     }
 }
 
-impl WeightNorm for Rotor {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).anti_sqrt()
-    }
-}
-
 impl WeightNorm for RoundPoint {
     type Output = AntiScalar;
 
@@ -548,22 +468,6 @@ impl WeightNorm for Scalar {
 }
 
 impl WeightNorm for Sphere {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).anti_sqrt()
-    }
-}
-
-impl WeightNorm for Transflector {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).anti_sqrt()
-    }
-}
-
-impl WeightNorm for Translator {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -651,14 +555,6 @@ impl GeometricNorm for Plane {
     }
 }
 
-impl GeometricNorm for Rotor {
-    type Output = DualNum;
-
-    fn geometric_norm(self) -> DualNum {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
 impl GeometricNorm for RoundPoint {
     type Output = DualNum;
 
@@ -676,22 +572,6 @@ impl GeometricNorm for Scalar {
 }
 
 impl GeometricNorm for Sphere {
-    type Output = DualNum;
-
-    fn geometric_norm(self) -> DualNum {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Transflector {
-    type Output = DualNum;
-
-    fn geometric_norm(self) -> DualNum {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for Translator {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -779,14 +659,6 @@ impl UnitizedNormSquared for Plane {
     }
 }
 
-impl UnitizedNormSquared for Rotor {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
 impl UnitizedNormSquared for RoundPoint {
     type Output = f32;
 
@@ -804,22 +676,6 @@ impl UnitizedNormSquared for Scalar {
 }
 
 impl UnitizedNormSquared for Sphere {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
-impl UnitizedNormSquared for Transflector {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
-impl UnitizedNormSquared for Translator {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -907,14 +763,6 @@ impl UnitizedNorm for Plane {
     }
 }
 
-impl UnitizedNorm for Rotor {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
 impl UnitizedNorm for RoundPoint {
     type Output = f32;
 
@@ -932,22 +780,6 @@ impl UnitizedNorm for Scalar {
 }
 
 impl UnitizedNorm for Sphere {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
-impl UnitizedNorm for Transflector {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
-impl UnitizedNorm for Translator {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {

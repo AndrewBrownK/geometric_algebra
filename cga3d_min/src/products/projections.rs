@@ -100,34 +100,10 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for Circle {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Circle {
     type Output = Circle;
 
     fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -172,34 +148,10 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for Dipole {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Dipole {
     type Output = Dipole;
 
     fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -244,34 +196,10 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for FlatPoint {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for FlatPoint {
     type Output = Dipole;
 
     fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Dipole {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -340,14 +268,6 @@ impl AntiProjectOrthogonallyOnto<Plane> for Flector {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -360,22 +280,6 @@ impl AntiProjectOrthogonallyOnto<Sphere> for Flector {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -436,34 +340,10 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for Line {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Line {
     type Output = Circle;
 
     fn anti_project_orthogonally_onto(self, other: RoundPoint) -> Circle {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Line {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -532,14 +412,6 @@ impl AntiProjectOrthogonallyOnto<Plane> for Motor {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -552,22 +424,6 @@ impl AntiProjectOrthogonallyOnto<Sphere> for Motor {
     type Output = AntiScalar;
 
     fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -636,14 +492,6 @@ impl AntiProjectOrthogonallyOnto<Plane> for MultiVector {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -656,22 +504,6 @@ impl AntiProjectOrthogonallyOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: Sphere) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -740,14 +572,6 @@ impl AntiProjectOrthogonallyOnto<Plane> for Plane {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Plane {
     type Output = Sphere;
 
@@ -760,126 +584,6 @@ impl AntiProjectOrthogonallyOnto<Sphere> for Plane {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<FlatPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Plane> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Sphere> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -908,34 +612,10 @@ impl AntiProjectOrthogonallyOnto<MultiVector> for RoundPoint {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
     fn anti_project_orthogonally_onto(self, other: RoundPoint) -> RoundPoint {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1004,14 +684,6 @@ impl AntiProjectOrthogonallyOnto<Plane> for Sphere {
     }
 }
 
-impl AntiProjectOrthogonallyOnto<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
 impl AntiProjectOrthogonallyOnto<RoundPoint> for Sphere {
     type Output = Sphere;
 
@@ -1024,230 +696,6 @@ impl AntiProjectOrthogonallyOnto<Sphere> for Sphere {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Circle> for Transflector {
-    type Output = Sphere;
-
-    fn anti_project_orthogonally_onto(self, other: Circle) -> Sphere {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<FlatPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Line> for Transflector {
-    type Output = Plane;
-
-    fn anti_project_orthogonally_onto(self, other: Line) -> Plane {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Plane> for Transflector {
-    type Output = Plane;
-
-    fn anti_project_orthogonally_onto(self, other: Plane) -> Plane {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Sphere> for Transflector {
-    type Output = Sphere;
-
-    fn anti_project_orthogonally_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<FlatPoint> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Line> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Plane> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Sphere> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.anti_dual()))
-    }
-}
-
-impl AntiProjectOrthogonallyOnto<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1308,34 +756,10 @@ impl AntiProjectViaHorizonOnto<MultiVector> for Circle {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Circle {
     type Output = Circle;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> Circle {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1380,34 +804,10 @@ impl AntiProjectViaHorizonOnto<MultiVector> for Dipole {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Dipole {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> Dipole {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1452,34 +852,10 @@ impl AntiProjectViaHorizonOnto<MultiVector> for FlatPoint {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for FlatPoint {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> Dipole {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1548,14 +924,6 @@ impl AntiProjectViaHorizonOnto<Plane> for Flector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Flector {
     type Output = MultiVector;
 
@@ -1568,22 +936,6 @@ impl AntiProjectViaHorizonOnto<Sphere> for Flector {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1644,34 +996,10 @@ impl AntiProjectViaHorizonOnto<MultiVector> for Line {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Line {
     type Output = Circle;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> Circle {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Line {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1740,14 +1068,6 @@ impl AntiProjectViaHorizonOnto<Plane> for Motor {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Motor {
     type Output = MultiVector;
 
@@ -1760,22 +1080,6 @@ impl AntiProjectViaHorizonOnto<Sphere> for Motor {
     type Output = AntiScalar;
 
     fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1844,14 +1148,6 @@ impl AntiProjectViaHorizonOnto<Plane> for MultiVector {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -1864,22 +1160,6 @@ impl AntiProjectViaHorizonOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: Sphere) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -1948,14 +1228,6 @@ impl AntiProjectViaHorizonOnto<Plane> for Plane {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Plane {
     type Output = Sphere;
 
@@ -1968,126 +1240,6 @@ impl AntiProjectViaHorizonOnto<Sphere> for Plane {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Circle) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<FlatPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: FlatPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Plane> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<RoundPoint> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Sphere> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -2116,34 +1268,10 @@ impl AntiProjectViaHorizonOnto<MultiVector> for RoundPoint {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
     fn anti_project_via_horizon_onto(self, other: RoundPoint) -> RoundPoint {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -2212,14 +1340,6 @@ impl AntiProjectViaHorizonOnto<Plane> for Sphere {
     }
 }
 
-impl AntiProjectViaHorizonOnto<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
 impl AntiProjectViaHorizonOnto<RoundPoint> for Sphere {
     type Output = Sphere;
 
@@ -2232,230 +1352,6 @@ impl AntiProjectViaHorizonOnto<Sphere> for Sphere {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Circle> for Transflector {
-    type Output = Sphere;
-
-    fn anti_project_via_horizon_onto(self, other: Circle) -> Sphere {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Dipole> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<FlatPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: FlatPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Line> for Transflector {
-    type Output = Plane;
-
-    fn anti_project_via_horizon_onto(self, other: Line) -> Plane {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Plane> for Transflector {
-    type Output = Plane;
-
-    fn anti_project_via_horizon_onto(self, other: Plane) -> Plane {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Sphere> for Transflector {
-    type Output = Sphere;
-
-    fn anti_project_via_horizon_onto(self, other: Sphere) -> Sphere {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Circle) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<FlatPoint> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: FlatPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Line> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Plane> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<RoundPoint> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Sphere> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
-        other.wedge(self.anti_wedge(other.dual()))
-    }
-}
-
-impl AntiProjectViaHorizonOnto<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -2508,34 +1404,10 @@ impl ProjectOrthogonallyOnto<Plane> for Circle {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Circle {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -2604,34 +1476,10 @@ impl ProjectOrthogonallyOnto<Plane> for Dipole {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Dipole {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Dipole {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -2700,34 +1548,10 @@ impl ProjectOrthogonallyOnto<Plane> for FlatPoint {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for FlatPoint {
     type Output = Dipole;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Dipole {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -2796,34 +1620,10 @@ impl ProjectOrthogonallyOnto<Plane> for Flector {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Flector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Sphere) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -2876,34 +1676,10 @@ impl ProjectOrthogonallyOnto<Plane> for Line {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Line {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Line {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -2956,34 +1732,10 @@ impl ProjectOrthogonallyOnto<Plane> for Motor {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Motor {
     type Output = Circle;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -3052,14 +1804,6 @@ impl ProjectOrthogonallyOnto<Plane> for MultiVector {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -3072,22 +1816,6 @@ impl ProjectOrthogonallyOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Sphere) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -3124,114 +1852,10 @@ impl ProjectOrthogonallyOnto<Plane> for Plane {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Plane {
     type Output = Sphere;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Sphere {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Circle> for Rotor {
-    type Output = Circle;
-
-    fn project_orthogonally_onto(self, other: Circle) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Line> for Rotor {
-    type Output = Line;
-
-    fn project_orthogonally_onto(self, other: Line) -> Line {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Plane> for Rotor {
-    type Output = Line;
-
-    fn project_orthogonally_onto(self, other: Plane) -> Line {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Sphere> for Rotor {
-    type Output = Circle;
-
-    fn project_orthogonally_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -3300,14 +1924,6 @@ impl ProjectOrthogonallyOnto<Plane> for RoundPoint {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -3320,22 +1936,6 @@ impl ProjectOrthogonallyOnto<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: Sphere) -> RoundPoint {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -3372,210 +1972,10 @@ impl ProjectOrthogonallyOnto<Plane> for Sphere {
     }
 }
 
-impl ProjectOrthogonallyOnto<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
 impl ProjectOrthogonallyOnto<Sphere> for Sphere {
     type Output = Sphere;
 
     fn project_orthogonally_onto(self, other: Sphere) -> Sphere {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Circle> for Transflector {
-    type Output = Dipole;
-
-    fn project_orthogonally_onto(self, other: Circle) -> Dipole {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Dipole> for Transflector {
-    type Output = Dipole;
-
-    fn project_orthogonally_onto(self, other: Dipole) -> Dipole {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<FlatPoint> for Transflector {
-    type Output = FlatPoint;
-
-    fn project_orthogonally_onto(self, other: FlatPoint) -> FlatPoint {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Line> for Transflector {
-    type Output = FlatPoint;
-
-    fn project_orthogonally_onto(self, other: Line) -> FlatPoint {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Plane> for Transflector {
-    type Output = Flector;
-
-    fn project_orthogonally_onto(self, other: Plane) -> Flector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Sphere) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Circle> for Translator {
-    type Output = Circle;
-
-    fn project_orthogonally_onto(self, other: Circle) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Line> for Translator {
-    type Output = Line;
-
-    fn project_orthogonally_onto(self, other: Line) -> Line {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Plane> for Translator {
-    type Output = Line;
-
-    fn project_orthogonally_onto(self, other: Plane) -> Line {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Sphere> for Translator {
-    type Output = Circle;
-
-    fn project_orthogonally_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.anti_dual()))
-    }
-}
-
-impl ProjectOrthogonallyOnto<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -3628,34 +2028,10 @@ impl ProjectViaOriginOnto<Plane> for Circle {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Circle {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -3724,34 +2100,10 @@ impl ProjectViaOriginOnto<Plane> for Dipole {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Dipole {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: Sphere) -> Dipole {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -3820,34 +2172,10 @@ impl ProjectViaOriginOnto<Plane> for FlatPoint {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for FlatPoint {
     type Output = Dipole;
 
     fn project_via_origin_onto(self, other: Sphere) -> Dipole {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -3916,34 +2244,10 @@ impl ProjectViaOriginOnto<Plane> for Flector {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Flector {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Sphere) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -3996,34 +2300,10 @@ impl ProjectViaOriginOnto<Plane> for Line {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Line {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Line {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -4076,34 +2356,10 @@ impl ProjectViaOriginOnto<Plane> for Motor {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Motor {
     type Output = Circle;
 
     fn project_via_origin_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -4172,14 +2428,6 @@ impl ProjectViaOriginOnto<Plane> for MultiVector {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -4192,22 +2440,6 @@ impl ProjectViaOriginOnto<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Sphere) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -4244,114 +2476,10 @@ impl ProjectViaOriginOnto<Plane> for Plane {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Plane {
     type Output = Sphere;
 
     fn project_via_origin_onto(self, other: Sphere) -> Sphere {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Circle> for Rotor {
-    type Output = Circle;
-
-    fn project_via_origin_onto(self, other: Circle) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Line> for Rotor {
-    type Output = Line;
-
-    fn project_via_origin_onto(self, other: Line) -> Line {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Plane> for Rotor {
-    type Output = Line;
-
-    fn project_via_origin_onto(self, other: Plane) -> Line {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Sphere> for Rotor {
-    type Output = Circle;
-
-    fn project_via_origin_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -4420,14 +2548,6 @@ impl ProjectViaOriginOnto<Plane> for RoundPoint {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -4440,22 +2560,6 @@ impl ProjectViaOriginOnto<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: Sphere) -> RoundPoint {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -4492,210 +2596,10 @@ impl ProjectViaOriginOnto<Plane> for Sphere {
     }
 }
 
-impl ProjectViaOriginOnto<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
 impl ProjectViaOriginOnto<Sphere> for Sphere {
     type Output = Sphere;
 
     fn project_via_origin_onto(self, other: Sphere) -> Sphere {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Circle> for Transflector {
-    type Output = Dipole;
-
-    fn project_via_origin_onto(self, other: Circle) -> Dipole {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Dipole> for Transflector {
-    type Output = Dipole;
-
-    fn project_via_origin_onto(self, other: Dipole) -> Dipole {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<FlatPoint> for Transflector {
-    type Output = FlatPoint;
-
-    fn project_via_origin_onto(self, other: FlatPoint) -> FlatPoint {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Line> for Transflector {
-    type Output = FlatPoint;
-
-    fn project_via_origin_onto(self, other: Line) -> FlatPoint {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Plane> for Transflector {
-    type Output = Flector;
-
-    fn project_via_origin_onto(self, other: Plane) -> Flector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Sphere) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Circle> for Translator {
-    type Output = Circle;
-
-    fn project_via_origin_onto(self, other: Circle) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Line> for Translator {
-    type Output = Line;
-
-    fn project_via_origin_onto(self, other: Line) -> Line {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Plane> for Translator {
-    type Output = Line;
-
-    fn project_via_origin_onto(self, other: Plane) -> Line {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Sphere> for Translator {
-    type Output = Circle;
-
-    fn project_via_origin_onto(self, other: Sphere) -> Circle {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
-        other.anti_wedge(self.wedge(other.dual()))
-    }
-}
-
-impl ProjectViaOriginOnto<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }

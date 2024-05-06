@@ -83,14 +83,6 @@ impl AntiRejectOrthogonallyFrom<RoundPoint> for Circle {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
 impl AntiRejectOrthogonallyFrom<Circle> for Dipole {
     type Output = Dipole;
 
@@ -147,34 +139,10 @@ impl AntiRejectOrthogonallyFrom<MultiVector> for Dipole {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
 impl AntiRejectOrthogonallyFrom<RoundPoint> for Dipole {
     type Output = Dipole;
 
     fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Dipole {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -355,14 +323,6 @@ impl AntiRejectOrthogonallyFrom<Plane> for MultiVector {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
 impl AntiRejectOrthogonallyFrom<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -379,22 +339,6 @@ impl AntiRejectOrthogonallyFrom<Sphere> for MultiVector {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Translator) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
 impl AntiRejectOrthogonallyFrom<MultiVector> for Plane {
     type Output = MultiVector;
 
@@ -407,30 +351,6 @@ impl AntiRejectOrthogonallyFrom<RoundPoint> for Plane {
     type Output = Sphere;
 
     fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Sphere {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Dipole> for Rotor {
-    type Output = Circle;
-
-    fn anti_reject_orthogonally_from(self, other: Dipole) -> Circle {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<RoundPoint> for Rotor {
-    type Output = Circle;
-
-    fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -499,14 +419,6 @@ impl AntiRejectOrthogonallyFrom<Plane> for RoundPoint {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
 impl AntiRejectOrthogonallyFrom<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -523,22 +435,6 @@ impl AntiRejectOrthogonallyFrom<Sphere> for RoundPoint {
     }
 }
 
-impl AntiRejectOrthogonallyFrom<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: Translator) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
 impl AntiRejectOrthogonallyFrom<MultiVector> for Sphere {
     type Output = MultiVector;
 
@@ -551,62 +447,6 @@ impl AntiRejectOrthogonallyFrom<RoundPoint> for Sphere {
     type Output = Sphere;
 
     fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Sphere {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Circle> for Transflector {
-    type Output = Dipole;
-
-    fn anti_reject_orthogonally_from(self, other: Circle) -> Dipole {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Dipole> for Transflector {
-    type Output = Dipole;
-
-    fn anti_reject_orthogonally_from(self, other: Dipole) -> Dipole {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: RoundPoint) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<Dipole> for Translator {
-    type Output = Circle;
-
-    fn anti_reject_orthogonally_from(self, other: Dipole) -> Circle {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.anti_dual())
-    }
-}
-
-impl AntiRejectOrthogonallyFrom<RoundPoint> for Translator {
-    type Output = Circle;
-
-    fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Circle {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -647,14 +487,6 @@ impl AntiRejectViaHorizonFrom<RoundPoint> for Circle {
     type Output = Circle;
 
     fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Circle {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Transflector) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -715,34 +547,10 @@ impl AntiRejectViaHorizonFrom<MultiVector> for Dipole {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Rotor) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
 impl AntiRejectViaHorizonFrom<RoundPoint> for Dipole {
     type Output = Dipole;
 
     fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Dipole {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Translator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -923,14 +731,6 @@ impl AntiRejectViaHorizonFrom<Plane> for MultiVector {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Rotor) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
 impl AntiRejectViaHorizonFrom<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -947,22 +747,6 @@ impl AntiRejectViaHorizonFrom<Sphere> for MultiVector {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Translator) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
 impl AntiRejectViaHorizonFrom<MultiVector> for Plane {
     type Output = MultiVector;
 
@@ -975,30 +759,6 @@ impl AntiRejectViaHorizonFrom<RoundPoint> for Plane {
     type Output = Sphere;
 
     fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Sphere {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Dipole> for Rotor {
-    type Output = Circle;
-
-    fn anti_reject_via_horizon_from(self, other: Dipole) -> Circle {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: MultiVector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<RoundPoint> for Rotor {
-    type Output = Circle;
-
-    fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -1067,14 +827,6 @@ impl AntiRejectViaHorizonFrom<Plane> for RoundPoint {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Rotor) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
 impl AntiRejectViaHorizonFrom<RoundPoint> for RoundPoint {
     type Output = RoundPoint;
 
@@ -1091,22 +843,6 @@ impl AntiRejectViaHorizonFrom<Sphere> for RoundPoint {
     }
 }
 
-impl AntiRejectViaHorizonFrom<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Transflector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: Translator) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
 impl AntiRejectViaHorizonFrom<MultiVector> for Sphere {
     type Output = MultiVector;
 
@@ -1119,62 +855,6 @@ impl AntiRejectViaHorizonFrom<RoundPoint> for Sphere {
     type Output = Sphere;
 
     fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Sphere {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Circle> for Transflector {
-    type Output = Dipole;
-
-    fn anti_reject_via_horizon_from(self, other: Circle) -> Dipole {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Dipole> for Transflector {
-    type Output = Dipole;
-
-    fn anti_reject_via_horizon_from(self, other: Dipole) -> Dipole {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: MultiVector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<RoundPoint> for Transflector {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: RoundPoint) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<Dipole> for Translator {
-    type Output = Circle;
-
-    fn anti_reject_via_horizon_from(self, other: Dipole) -> Circle {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn anti_reject_via_horizon_from(self, other: MultiVector) -> MultiVector {
-        self.wedge(other).anti_wedge(other.dual())
-    }
-}
-
-impl AntiRejectViaHorizonFrom<RoundPoint> for Translator {
-    type Output = Circle;
-
-    fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Circle {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -1243,34 +923,10 @@ impl RejectOrthogonallyFrom<Plane> for Circle {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<Sphere> for Circle {
     type Output = Circle;
 
     fn reject_orthogonally_from(self, other: Sphere) -> Circle {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1323,34 +979,10 @@ impl RejectOrthogonallyFrom<Plane> for Dipole {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<Sphere> for Dipole {
     type Output = Dipole;
 
     fn reject_orthogonally_from(self, other: Sphere) -> Dipole {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1395,34 +1027,10 @@ impl RejectOrthogonallyFrom<Plane> for FlatPoint {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<Sphere> for FlatPoint {
     type Output = Dipole;
 
     fn reject_orthogonally_from(self, other: Sphere) -> Dipole {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1491,14 +1099,6 @@ impl RejectOrthogonallyFrom<Plane> for Flector {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<RoundPoint> for Flector {
     type Output = Sphere;
 
@@ -1511,22 +1111,6 @@ impl RejectOrthogonallyFrom<Sphere> for Flector {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1587,34 +1171,10 @@ impl RejectOrthogonallyFrom<Plane> for Line {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<Sphere> for Line {
     type Output = Circle;
 
     fn reject_orthogonally_from(self, other: Sphere) -> Circle {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Line {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1683,14 +1243,6 @@ impl RejectOrthogonallyFrom<Plane> for Motor {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<RoundPoint> for Motor {
     type Output = AntiScalar;
 
@@ -1703,22 +1255,6 @@ impl RejectOrthogonallyFrom<Sphere> for Motor {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1787,14 +1323,6 @@ impl RejectOrthogonallyFrom<Plane> for MultiVector {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -1807,22 +1335,6 @@ impl RejectOrthogonallyFrom<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -1891,14 +1403,6 @@ impl RejectOrthogonallyFrom<Plane> for Plane {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<RoundPoint> for Plane {
     type Output = Sphere;
 
@@ -1911,126 +1415,6 @@ impl RejectOrthogonallyFrom<Sphere> for Plane {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: Sphere) -> Sphere {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<FlatPoint> for Rotor {
-    type Output = AntiScalar;
-
-    fn reject_orthogonally_from(self, other: FlatPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Line) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Plane> for Rotor {
-    type Output = Motor;
-
-    fn reject_orthogonally_from(self, other: Plane) -> Motor {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<RoundPoint> for Rotor {
-    type Output = AntiScalar;
-
-    fn reject_orthogonally_from(self, other: RoundPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Sphere> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -2067,34 +1451,10 @@ impl RejectOrthogonallyFrom<Plane> for RoundPoint {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
     fn reject_orthogonally_from(self, other: Sphere) -> RoundPoint {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -2163,14 +1523,6 @@ impl RejectOrthogonallyFrom<Plane> for Sphere {
     }
 }
 
-impl RejectOrthogonallyFrom<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
 impl RejectOrthogonallyFrom<RoundPoint> for Sphere {
     type Output = Sphere;
 
@@ -2183,230 +1535,6 @@ impl RejectOrthogonallyFrom<Sphere> for Sphere {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: Sphere) -> Sphere {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Circle> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Dipole> for Transflector {
-    type Output = Sphere;
-
-    fn reject_orthogonally_from(self, other: Dipole) -> Sphere {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<FlatPoint> for Transflector {
-    type Output = Sphere;
-
-    fn reject_orthogonally_from(self, other: FlatPoint) -> Sphere {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Line> for Transflector {
-    type Output = Plane;
-
-    fn reject_orthogonally_from(self, other: Line) -> Plane {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Plane> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Plane) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<RoundPoint> for Transflector {
-    type Output = Sphere;
-
-    fn reject_orthogonally_from(self, other: RoundPoint) -> Sphere {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<FlatPoint> for Translator {
-    type Output = AntiScalar;
-
-    fn reject_orthogonally_from(self, other: FlatPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Line> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Line) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Plane> for Translator {
-    type Output = Motor;
-
-    fn reject_orthogonally_from(self, other: Plane) -> Motor {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<RoundPoint> for Translator {
-    type Output = AntiScalar;
-
-    fn reject_orthogonally_from(self, other: RoundPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Sphere> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.anti_dual())
-    }
-}
-
-impl RejectOrthogonallyFrom<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -2475,34 +1603,10 @@ impl RejectViaOriginFrom<Plane> for Circle {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Circle {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<Sphere> for Circle {
     type Output = Circle;
 
     fn reject_via_origin_from(self, other: Sphere) -> Circle {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Circle {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Circle {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -2555,34 +1659,10 @@ impl RejectViaOriginFrom<Plane> for Dipole {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Dipole {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<Sphere> for Dipole {
     type Output = Dipole;
 
     fn reject_via_origin_from(self, other: Sphere) -> Dipole {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Dipole {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Dipole {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -2627,34 +1707,10 @@ impl RejectViaOriginFrom<Plane> for FlatPoint {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for FlatPoint {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<Sphere> for FlatPoint {
     type Output = Dipole;
 
     fn reject_via_origin_from(self, other: Sphere) -> Dipole {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for FlatPoint {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for FlatPoint {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -2723,14 +1779,6 @@ impl RejectViaOriginFrom<Plane> for Flector {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Flector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<RoundPoint> for Flector {
     type Output = Sphere;
 
@@ -2743,22 +1791,6 @@ impl RejectViaOriginFrom<Sphere> for Flector {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Flector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Flector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -2819,34 +1851,10 @@ impl RejectViaOriginFrom<Plane> for Line {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Line {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<Sphere> for Line {
     type Output = Circle;
 
     fn reject_via_origin_from(self, other: Sphere) -> Circle {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Line {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Line {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -2915,14 +1923,6 @@ impl RejectViaOriginFrom<Plane> for Motor {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Motor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<RoundPoint> for Motor {
     type Output = AntiScalar;
 
@@ -2935,22 +1935,6 @@ impl RejectViaOriginFrom<Sphere> for Motor {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Motor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Motor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -3019,14 +2003,6 @@ impl RejectViaOriginFrom<Plane> for MultiVector {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for MultiVector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<RoundPoint> for MultiVector {
     type Output = MultiVector;
 
@@ -3039,22 +2015,6 @@ impl RejectViaOriginFrom<Sphere> for MultiVector {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for MultiVector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for MultiVector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -3123,14 +2083,6 @@ impl RejectViaOriginFrom<Plane> for Plane {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Plane {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<RoundPoint> for Plane {
     type Output = Sphere;
 
@@ -3143,126 +2095,6 @@ impl RejectViaOriginFrom<Sphere> for Plane {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: Sphere) -> Sphere {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Plane {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Plane {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Circle> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Dipole> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<FlatPoint> for Rotor {
-    type Output = AntiScalar;
-
-    fn reject_via_origin_from(self, other: FlatPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Flector> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Line> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Line) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Motor> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<MultiVector> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Plane> for Rotor {
-    type Output = Motor;
-
-    fn reject_via_origin_from(self, other: Plane) -> Motor {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Rotor> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<RoundPoint> for Rotor {
-    type Output = AntiScalar;
-
-    fn reject_via_origin_from(self, other: RoundPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Sphere> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Rotor {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -3299,34 +2131,10 @@ impl RejectViaOriginFrom<Plane> for RoundPoint {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for RoundPoint {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<Sphere> for RoundPoint {
     type Output = RoundPoint;
 
     fn reject_via_origin_from(self, other: Sphere) -> RoundPoint {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for RoundPoint {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for RoundPoint {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -3395,14 +2203,6 @@ impl RejectViaOriginFrom<Plane> for Sphere {
     }
 }
 
-impl RejectViaOriginFrom<Rotor> for Sphere {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
 impl RejectViaOriginFrom<RoundPoint> for Sphere {
     type Output = Sphere;
 
@@ -3415,230 +2215,6 @@ impl RejectViaOriginFrom<Sphere> for Sphere {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: Sphere) -> Sphere {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Sphere {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Sphere {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Circle> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Dipole> for Transflector {
-    type Output = Sphere;
-
-    fn reject_via_origin_from(self, other: Dipole) -> Sphere {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<FlatPoint> for Transflector {
-    type Output = Sphere;
-
-    fn reject_via_origin_from(self, other: FlatPoint) -> Sphere {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Flector> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Line> for Transflector {
-    type Output = Plane;
-
-    fn reject_via_origin_from(self, other: Line) -> Plane {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Motor> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<MultiVector> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Plane> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Plane) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Rotor> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<RoundPoint> for Transflector {
-    type Output = Sphere;
-
-    fn reject_via_origin_from(self, other: RoundPoint) -> Sphere {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Sphere> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Transflector {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Circle> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Circle) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Dipole> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Dipole) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<FlatPoint> for Translator {
-    type Output = AntiScalar;
-
-    fn reject_via_origin_from(self, other: FlatPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Flector> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Flector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Line> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Line) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Motor> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Motor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<MultiVector> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: MultiVector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Plane> for Translator {
-    type Output = Motor;
-
-    fn reject_via_origin_from(self, other: Plane) -> Motor {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Rotor> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<RoundPoint> for Translator {
-    type Output = AntiScalar;
-
-    fn reject_via_origin_from(self, other: RoundPoint) -> AntiScalar {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Sphere> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Transflector> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
-        self.anti_wedge(other).wedge(other.dual())
-    }
-}
-
-impl RejectViaOriginFrom<Translator> for Translator {
-    type Output = MultiVector;
-
-    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }

@@ -71,30 +71,6 @@ impl AntiDot<MultiVector> for AntiScalar {
     }
 }
 
-impl AntiDot<Rotor> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0() * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for AntiScalar {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0() * other.group0()[3],
-            },
-        }
-    }
-}
-
 impl AntiDot<Circle> for Circle {
     type Output = AntiScalar;
 
@@ -167,30 +143,6 @@ impl AntiDot<MultiVector> for Circle {
     }
 }
 
-impl AntiDot<Rotor> for Circle {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for Circle {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
 impl AntiDot<Dipole> for Dipole {
     type Output = AntiScalar;
 
@@ -257,18 +209,6 @@ impl AntiDot<MultiVector> for Dipole {
     }
 }
 
-impl AntiDot<Transflector> for Dipole {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Transflector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
 impl AntiDot<AntiScalar> for DualNum {
     type Output = AntiScalar;
 
@@ -317,18 +257,6 @@ impl AntiDot<MultiVector> for DualNum {
     }
 }
 
-impl AntiDot<Rotor> for DualNum {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
 impl AntiDot<Scalar> for DualNum {
     type Output = AntiScalar;
 
@@ -336,18 +264,6 @@ impl AntiDot<Scalar> for DualNum {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for DualNum {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3],
             },
         }
     }
@@ -477,18 +393,6 @@ impl AntiDot<Sphere> for Flector {
     }
 }
 
-impl AntiDot<Transflector> for Flector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Transflector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
 impl AntiDot<Circle> for Line {
     type Output = AntiScalar;
 
@@ -544,18 +448,6 @@ impl AntiDot<MultiVector> for Line {
                     - self.group1()[0] * other.group6()[0]
                     - self.group1()[1] * other.group6()[1]
                     - self.group1()[2] * other.group6()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Rotor> for Line {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -637,30 +529,6 @@ impl AntiDot<MultiVector> for Motor {
                     - self.group1()[0] * other.group6()[0]
                     - self.group1()[1] * other.group6()[1]
                     - self.group1()[2] * other.group6()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Rotor> for Motor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for Motor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -847,18 +715,6 @@ impl AntiDot<Plane> for MultiVector {
     }
 }
 
-impl AntiDot<Rotor> for MultiVector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3] - self.group7()[0] * other.group0()[0] - self.group7()[1] * other.group0()[1] - self.group7()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
 impl AntiDot<RoundPoint> for MultiVector {
     type Output = AntiScalar;
 
@@ -894,36 +750,6 @@ impl AntiDot<Sphere> for MultiVector {
                 g0: self.group9()[0] * other.group0()[0] + self.group9()[1] * other.group0()[1] + self.group9()[2] * other.group0()[2]
                     - self.group10()[0] * other.group1()[1]
                     - self.group10()[1] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl AntiDot<Transflector> for MultiVector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Transflector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group3()[0] * other.group0()[0]
-                    + self.group3()[1] * other.group0()[1]
-                    + self.group3()[2] * other.group0()[2]
-                    + self.group9()[0] * other.group1()[0]
-                    + self.group9()[1] * other.group1()[1]
-                    + self.group9()[2] * other.group1()[2]
-                    - self.group10()[0] * other.group1()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for MultiVector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[1] * other.group0()[3] - self.group6()[0] * other.group0()[0] - self.group6()[1] * other.group0()[1] - self.group6()[2] * other.group0()[2],
             },
         }
     }
@@ -972,114 +798,6 @@ impl AntiDot<Sphere> for Plane {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl AntiDot<Transflector> for Plane {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Transflector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<AntiScalar> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: AntiScalar) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiDot<Circle> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Circle) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<DualNum> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: DualNum) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl AntiDot<Line> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Line) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Motor> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Motor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<MultiVector> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: MultiVector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group7()[0] - self.group0()[1] * other.group7()[1] - self.group0()[2] * other.group7()[2] + self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl AntiDot<Rotor> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for Rotor {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -1201,180 +919,6 @@ impl AntiDot<Sphere> for Sphere {
     }
 }
 
-impl AntiDot<Transflector> for Sphere {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Transflector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] - self.group1()[0] * other.group1()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Dipole> for Transflector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Dipole) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Flector> for Transflector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Flector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<MultiVector> for Transflector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: MultiVector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[0] * other.group3()[0]
-                    + self.group0()[1] * other.group3()[1]
-                    + self.group0()[2] * other.group3()[2]
-                    + self.group1()[0] * other.group9()[0]
-                    + self.group1()[1] * other.group9()[1]
-                    + self.group1()[2] * other.group9()[2]
-                    - self.group1()[3] * other.group10()[0],
-            },
-        }
-    }
-}
-
-impl AntiDot<Plane> for Transflector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Plane) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<Sphere> for Transflector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Sphere) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2] - self.group1()[3] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl AntiDot<Transflector> for Transflector {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Transflector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group1()[0] * other.group1()[0] + self.group1()[1] * other.group1()[1] + self.group1()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<AntiScalar> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: AntiScalar) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl AntiDot<Circle> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Circle) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl AntiDot<DualNum> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: DualNum) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl AntiDot<Motor> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Motor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<MultiVector> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: MultiVector) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group6()[0] - self.group0()[1] * other.group6()[1] - self.group0()[2] * other.group6()[2] + self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl AntiDot<Rotor> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Rotor) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl AntiDot<Translator> for Translator {
-    type Output = AntiScalar;
-
-    fn anti_dot(self, other: Translator) -> AntiScalar {
-        AntiScalar {
-            groups: AntiScalarGroups {
-                g0: self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
 impl Dot<AntiScalar> for AntiScalar {
     type Output = Scalar;
 
@@ -1418,30 +962,6 @@ impl Dot<MultiVector> for AntiScalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Rotor> for AntiScalar {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for AntiScalar {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0() * other.group0()[3],
             },
         }
     }
@@ -1517,30 +1037,6 @@ impl Dot<MultiVector> for Circle {
     }
 }
 
-impl Dot<Rotor> for Circle {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for Circle {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
 impl Dot<Dipole> for Dipole {
     type Output = Scalar;
 
@@ -1609,18 +1105,6 @@ impl Dot<MultiVector> for Dipole {
     }
 }
 
-impl Dot<Transflector> for Dipole {
-    type Output = Scalar;
-
-    fn dot(self, other: Transflector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
 impl Dot<AntiScalar> for DualNum {
     type Output = Scalar;
 
@@ -1669,18 +1153,6 @@ impl Dot<MultiVector> for DualNum {
     }
 }
 
-impl Dot<Rotor> for DualNum {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3],
-            },
-        }
-    }
-}
-
 impl Dot<Scalar> for DualNum {
     type Output = Scalar;
 
@@ -1688,18 +1160,6 @@ impl Dot<Scalar> for DualNum {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0(),
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for DualNum {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3],
             },
         }
     }
@@ -1829,18 +1289,6 @@ impl Dot<Sphere> for Flector {
     }
 }
 
-impl Dot<Transflector> for Flector {
-    type Output = Scalar;
-
-    fn dot(self, other: Transflector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
 impl Dot<Circle> for Line {
     type Output = Scalar;
 
@@ -1894,18 +1342,6 @@ impl Dot<MultiVector> for Line {
                     + self.group1()[0] * other.group6()[0]
                     + self.group1()[1] * other.group6()[1]
                     + self.group1()[2] * other.group6()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Rotor> for Line {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
             },
         }
     }
@@ -1986,30 +1422,6 @@ impl Dot<MultiVector> for Motor {
                     + self.group1()[0] * other.group6()[0]
                     + self.group1()[1] * other.group6()[1]
                     + self.group1()[2] * other.group6()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Rotor> for Motor {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for Motor {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -2197,18 +1609,6 @@ impl Dot<Plane> for MultiVector {
     }
 }
 
-impl Dot<Rotor> for MultiVector {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3] + self.group7()[0] * other.group0()[0] + self.group7()[1] * other.group0()[1] + self.group7()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
 impl Dot<RoundPoint> for MultiVector {
     type Output = Scalar;
 
@@ -2244,37 +1644,6 @@ impl Dot<Sphere> for MultiVector {
                 g0: 0.0 - self.group9()[0] * other.group0()[0] - self.group9()[1] * other.group0()[1] - self.group9()[2] * other.group0()[2]
                     + self.group10()[0] * other.group1()[1]
                     + self.group10()[1] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl Dot<Transflector> for MultiVector {
-    type Output = Scalar;
-
-    fn dot(self, other: Transflector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0
-                    - self.group3()[0] * other.group0()[0]
-                    - self.group3()[1] * other.group0()[1]
-                    - self.group3()[2] * other.group0()[2]
-                    - self.group9()[0] * other.group1()[0]
-                    - self.group9()[1] * other.group1()[1]
-                    - self.group9()[2] * other.group1()[2]
-                    + self.group10()[0] * other.group1()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for MultiVector {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[1] * other.group0()[3] + self.group6()[0] * other.group0()[0] + self.group6()[1] * other.group0()[1] + self.group6()[2] * other.group0()[2],
             },
         }
     }
@@ -2324,114 +1693,6 @@ impl Dot<Sphere> for Plane {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2] + self.group0()[3] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl Dot<Transflector> for Plane {
-    type Output = Scalar;
-
-    fn dot(self, other: Transflector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl Dot<AntiScalar> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: AntiScalar) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl Dot<Circle> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: Circle) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl Dot<DualNum> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: DualNum) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Line> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: Line) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Motor> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: Motor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<MultiVector> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: MultiVector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group7()[0] + self.group0()[1] * other.group7()[1] + self.group0()[2] * other.group7()[2] - self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Rotor> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2] - self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for Rotor {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[3],
             },
         }
     }
@@ -2548,181 +1809,6 @@ impl Dot<Sphere> for Sphere {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2]
                     + self.group1()[0] * other.group1()[1]
                     + self.group1()[1] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl Dot<Transflector> for Sphere {
-    type Output = Scalar;
-
-    fn dot(self, other: Transflector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] + self.group1()[0] * other.group1()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Dipole> for Transflector {
-    type Output = Scalar;
-
-    fn dot(self, other: Dipole) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Flector> for Transflector {
-    type Output = Scalar;
-
-    fn dot(self, other: Flector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl Dot<MultiVector> for Transflector {
-    type Output = Scalar;
-
-    fn dot(self, other: MultiVector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0
-                    - self.group0()[0] * other.group3()[0]
-                    - self.group0()[1] * other.group3()[1]
-                    - self.group0()[2] * other.group3()[2]
-                    - self.group1()[0] * other.group9()[0]
-                    - self.group1()[1] * other.group9()[1]
-                    - self.group1()[2] * other.group9()[2]
-                    + self.group1()[3] * other.group10()[0],
-            },
-        }
-    }
-}
-
-impl Dot<Plane> for Transflector {
-    type Output = Scalar;
-
-    fn dot(self, other: Plane) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<Sphere> for Transflector {
-    type Output = Scalar;
-
-    fn dot(self, other: Sphere) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2] + self.group1()[3] * other.group1()[0],
-            },
-        }
-    }
-}
-
-impl Dot<Transflector> for Transflector {
-    type Output = Scalar;
-
-    fn dot(self, other: Transflector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group1()[0] * other.group1()[0] - self.group1()[1] * other.group1()[1] - self.group1()[2] * other.group1()[2],
-            },
-        }
-    }
-}
-
-impl Dot<AntiScalar> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: AntiScalar) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0(),
-            },
-        }
-    }
-}
-
-impl Dot<Circle> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: Circle) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
-            },
-        }
-    }
-}
-
-impl Dot<DualNum> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: DualNum) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Motor> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: Motor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<MultiVector> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: MultiVector) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: self.group0()[0] * other.group6()[0] + self.group0()[1] * other.group6()[1] + self.group0()[2] * other.group6()[2] - self.group0()[3] * other.group0()[1],
-            },
-        }
-    }
-}
-
-impl Dot<Rotor> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: Rotor) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[3],
-            },
-        }
-    }
-}
-
-impl Dot<Translator> for Translator {
-    type Output = Scalar;
-
-    fn dot(self, other: Translator) -> Scalar {
-        Scalar {
-            groups: ScalarGroups {
-                g0: 0.0 - self.group0()[3] * other.group0()[3],
             },
         }
     }

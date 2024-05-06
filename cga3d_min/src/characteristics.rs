@@ -496,14 +496,6 @@ impl AntiInverse for Plane {
     }
 }
 
-impl AntiInverse for Rotor {
-    type Output = Rotor;
-
-    fn anti_inverse(self) -> Rotor {
-        self.anti_wedge_dot(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
 impl AntiInverse for RoundPoint {
     type Output = RoundPoint;
 
@@ -524,22 +516,6 @@ impl AntiInverse for Sphere {
     type Output = Sphere;
 
     fn anti_inverse(self) -> Sphere {
-        self.anti_wedge_dot(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
-impl AntiInverse for Transflector {
-    type Output = Transflector;
-
-    fn anti_inverse(self) -> Transflector {
-        self.anti_wedge_dot(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
-impl AntiInverse for Translator {
-    type Output = Translator;
-
-    fn anti_inverse(self) -> Translator {
         self.anti_wedge_dot(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -630,14 +606,6 @@ impl Inverse for Plane {
     }
 }
 
-impl Inverse for Rotor {
-    type Output = Rotor;
-
-    fn inverse(self) -> Rotor {
-        self.wedge_dot(Scalar::unit().div(self.dot(self)))
-    }
-}
-
 impl Inverse for RoundPoint {
     type Output = RoundPoint;
 
@@ -658,22 +626,6 @@ impl Inverse for Sphere {
     type Output = Sphere;
 
     fn inverse(self) -> Sphere {
-        self.wedge_dot(Scalar::unit().div(self.dot(self)))
-    }
-}
-
-impl Inverse for Transflector {
-    type Output = Transflector;
-
-    fn inverse(self) -> Transflector {
-        self.wedge_dot(Scalar::unit().div(self.dot(self)))
-    }
-}
-
-impl Inverse for Translator {
-    type Output = Translator;
-
-    fn inverse(self) -> Translator {
         self.wedge_dot(Scalar::unit().div(self.dot(self)))
     }
 }
