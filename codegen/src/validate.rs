@@ -21,6 +21,7 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     // Append a dummy entry point
     glsl_contents.push_str("\nvoid main() {}");
 
+    // Parse and validate the naga module
     let module = match glsl_frontend.parse(&options, glsl_contents.as_str()) {
         Ok(m) => m,
         Err(err) => {
@@ -51,7 +52,7 @@ pub fn validate_wgsl(algebra_name: &str, file_path: PathBuf) {
     let mut wgsl_contents = String::new();
     wgsl_file.read_to_string(&mut wgsl_contents).unwrap();
 
-    // Parse, prune, and validate the naga module
+    // Parse and validate the naga module
     let module = match wgsl_frontend.parse(wgsl_contents.as_str()) {
         Ok(m) => m,
         Err(err) => {
