@@ -126,6 +126,8 @@ impl App {
 
         window.request_redraw();
         self.window = Some(window);
+
+        // TODO render a circle instead of a triangle
         self.handle_redraw = Box::new(move |event_loop, id, event| {
             let frame = surface
                 .get_current_texture()

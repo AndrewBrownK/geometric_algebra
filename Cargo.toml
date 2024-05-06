@@ -1,4 +1,12 @@
 [workspace]
 resolver = "2"
 
-members = ["codegen", "rga3d", "cga3d", "examples", "cga3d_min"]
+members = [
+    "codegen",
+    "rga3d",
+    "cga3d",
+    "cga3d_min",
+    "examples/build_shader_manually",
+    "examples/build_shader_automatically",
+    "examples/hello_circle",
+]

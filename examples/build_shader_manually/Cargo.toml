@@ -1,0 +1,25 @@
+[package]
+name = "build_shader_manually"
+version = "0.1.0"
+authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
+edition = "2021"
+license = "MIT"
+publish = false
+
+
+[dependencies]
+# This binary is used as a manual build step for a different crate: enable include-glsl-src
+# TODO explain the motivation better, because several megabyte shader files are quirky and
+#  in particular the naga validation of glsl can stack overflow in a build.rs (very deep arithmetic), despite
+#  working normally outside build.rs (cargo seems to provide build.rs a relatively small stack, not sure how
+#  to manually override that yet).
+cga3d_min = { path = "../../cga3d_min", features = ["include-glsl-src"] }
+# Tell wgpu to allow spirv shader input, or whatever type of composed output you prefer
+wgpu = { version = "0.19.4", features = ["spirv"] }
+
+winit = "0.30.0"
+wasm-bindgen = "0.2.92"
+env_logger = "0.11.3"
+wasm-bindgen-futures = "0.4.42"
+tracing = "0.1.40"
+pollster = "0.3.0"
