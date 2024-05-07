@@ -385,6 +385,319 @@ impl AntiSqrt for DualNum {
     }
 }
 
+impl Attitude for AntiScalar {
+    type Output = Plane;
+
+    fn attitude(self) -> Plane {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Circle {
+    type Output = Dipole;
+
+    fn attitude(self) -> Dipole {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Dipole {
+    type Output = RoundPoint;
+
+    fn attitude(self) -> RoundPoint {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for DualNum {
+    type Output = Plane;
+
+    fn attitude(self) -> Plane {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for FlatPoint {
+    type Output = RoundPoint;
+
+    fn attitude(self) -> RoundPoint {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Flector {
+    type Output = MultiVector;
+
+    fn attitude(self) -> MultiVector {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Line {
+    type Output = FlatPoint;
+
+    fn attitude(self) -> FlatPoint {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Motor {
+    type Output = Flector;
+
+    fn attitude(self) -> Flector {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for MultiVector {
+    type Output = MultiVector;
+
+    fn attitude(self) -> MultiVector {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Plane {
+    type Output = Line;
+
+    fn attitude(self) -> Line {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for RoundPoint {
+    type Output = Scalar;
+
+    fn attitude(self) -> Scalar {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Attitude for Sphere {
+    type Output = Circle;
+
+    fn attitude(self) -> Circle {
+        self.anti_wedge(Plane {
+            groups: PlaneGroups {
+                g0: Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for Circle {
+    type Output = Sphere;
+
+    fn carrier(self) -> Sphere {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for Dipole {
+    type Output = Circle;
+
+    fn carrier(self) -> Circle {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for DualNum {
+    type Output = RoundPoint;
+
+    fn carrier(self) -> RoundPoint {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for MultiVector {
+    type Output = MultiVector;
+
+    fn carrier(self) -> MultiVector {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for RoundPoint {
+    type Output = Dipole;
+
+    fn carrier(self) -> Dipole {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for Scalar {
+    type Output = RoundPoint;
+
+    fn carrier(self) -> RoundPoint {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl Carrier for Sphere {
+    type Output = AntiScalar;
+
+    fn carrier(self) -> AntiScalar {
+        self.wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl CoCarrier for Circle {
+    type Output = Circle;
+
+    fn co_carrier(self) -> Circle {
+        self.anti_dual().wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl CoCarrier for Dipole {
+    type Output = Sphere;
+
+    fn co_carrier(self) -> Sphere {
+        self.anti_dual().wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl CoCarrier for DualNum {
+    type Output = RoundPoint;
+
+    fn co_carrier(self) -> RoundPoint {
+        self.anti_dual().wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl CoCarrier for MultiVector {
+    type Output = MultiVector;
+
+    fn co_carrier(self) -> MultiVector {
+        self.anti_dual().wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl CoCarrier for RoundPoint {
+    type Output = AntiScalar;
+
+    fn co_carrier(self) -> AntiScalar {
+        self.anti_dual().wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
+impl CoCarrier for Sphere {
+    type Output = Dipole;
+
+    fn co_carrier(self) -> Dipole {
+        self.anti_dual().wedge(RoundPoint {
+            groups: RoundPointGroups {
+                g0: Simd32x3::from(0.0),
+                g1: Simd32x2::from([0.0, 1.0]),
+            },
+        })
+    }
+}
+
 impl Sqrt for DualNum {
     type Output = DualNum;
 
@@ -407,6 +720,158 @@ impl Sqrt for Scalar {
         Scalar {
             groups: ScalarGroups { g0: self.group0().sqrt() },
         }
+    }
+}
+
+impl Center for Circle {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Dipole {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for DualNum {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for MultiVector {
+    type Output = MultiVector;
+
+    fn center(self) -> MultiVector {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for RoundPoint {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Sphere {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Container for Circle {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Dipole {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for DualNum {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for MultiVector {
+    type Output = MultiVector;
+
+    fn container(self) -> MultiVector {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for RoundPoint {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Scalar {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Sphere {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Partner for Circle {
+    type Output = Circle;
+
+    fn partner(self) -> Circle {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for Dipole {
+    type Output = Dipole;
+
+    fn partner(self) -> Dipole {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for DualNum {
+    type Output = Scalar;
+
+    fn partner(self) -> Scalar {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for MultiVector {
+    type Output = MultiVector;
+
+    fn partner(self) -> MultiVector {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for RoundPoint {
+    type Output = RoundPoint;
+
+    fn partner(self) -> RoundPoint {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for Sphere {
+    type Output = Sphere;
+
+    fn partner(self) -> Sphere {
+        self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
 

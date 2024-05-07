@@ -36,7 +36,7 @@ pub fn cga_script(
     //  Then see if you can instead work around that if that object is not included
     //  (e.g. when it comes time to generate cga3d_min, it might be preferable to include "Sphere"
     //   and "Plane" but not "Horizon". We'll have to feel it out.)
-    code_gen.attitude_and_dependencies("Horizon", &registry);
+    code_gen.attitude_and_dependencies(&registry);
     // TODO impose constraints on page 235
 
 

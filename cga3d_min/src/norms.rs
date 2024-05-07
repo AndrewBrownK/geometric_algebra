@@ -24,11 +24,109 @@ pub trait BulkNormSquared {
     fn bulk_norm_squared(self) -> Self::Output;
 }
 
+/// CenterBulkNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterBulkNorm {
+    type Output;
+    fn center_bulk_norm(self) -> Self::Output;
+}
+
+/// CenterBulkNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterBulkNormSquared {
+    type Output;
+    fn center_bulk_norm_squared(self) -> Self::Output;
+}
+
+/// CenterGeometricNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterGeometricNorm {
+    type Output;
+    fn center_geometric_norm(self) -> Self::Output;
+}
+
+/// CenterUnitizedNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterUnitizedNorm {
+    type Output;
+    fn center_unitized_norm(self) -> Self::Output;
+}
+
+/// CenterUnitizedNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterUnitizedNormSquared {
+    type Output;
+    fn center_unitized_norm_squared(self) -> Self::Output;
+}
+
+/// CenterWeightNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterWeightNorm {
+    type Output;
+    fn center_weight_norm(self) -> Self::Output;
+}
+
+/// CenterWeightNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait CenterWeightNormSquared {
+    type Output;
+    fn center_weight_norm_squared(self) -> Self::Output;
+}
+
 /// GeometricNorm
 /// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
 pub trait GeometricNorm {
     type Output;
     fn geometric_norm(self) -> Self::Output;
+}
+
+/// RadiusBulkNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusBulkNorm {
+    type Output;
+    fn radius_bulk_norm(self) -> Self::Output;
+}
+
+/// RadiusBulkNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusBulkNormSquared {
+    type Output;
+    fn radius_bulk_norm_squared(self) -> Self::Output;
+}
+
+/// RadiusGeometricNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusGeometricNorm {
+    type Output;
+    fn radius_geometric_norm(self) -> Self::Output;
+}
+
+/// RadiusUnitizedNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusUnitizedNorm {
+    type Output;
+    fn radius_unitized_norm(self) -> Self::Output;
+}
+
+/// RadiusUnitizedNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusUnitizedNormSquared {
+    type Output;
+    fn radius_unitized_norm_squared(self) -> Self::Output;
+}
+
+/// RadiusWeightNorm
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusWeightNorm {
+    type Output;
+    fn radius_weight_norm(self) -> Self::Output;
+}
+
+/// RadiusWeightNormSquared
+/// https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
+pub trait RadiusWeightNormSquared {
+    type Output;
+    fn radius_weight_norm_squared(self) -> Self::Output;
 }
 
 /// UnitizedNorm
@@ -784,5 +882,605 @@ impl UnitizedNorm for Sphere {
 
     fn unitized_norm(self) -> f32 {
         self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNormSquared for Circle {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for Dipole {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for DualNum {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for RoundPoint {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for Sphere {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNorm for Circle {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for Dipole {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for DualNum {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for RoundPoint {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for Sphere {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterWeightNormSquared for Circle {
+    type Output = AntiScalar;
+
+    fn center_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl CenterWeightNormSquared for Dipole {
+    type Output = AntiScalar;
+
+    fn center_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl CenterWeightNormSquared for DualNum {
+    type Output = AntiScalar;
+
+    fn center_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl CenterWeightNormSquared for RoundPoint {
+    type Output = AntiScalar;
+
+    fn center_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl CenterWeightNormSquared for Sphere {
+    type Output = AntiScalar;
+
+    fn center_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl CenterWeightNorm for Circle {
+    type Output = AntiScalar;
+
+    fn center_weight_norm(self) -> AntiScalar {
+        self.center_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl CenterWeightNorm for Dipole {
+    type Output = AntiScalar;
+
+    fn center_weight_norm(self) -> AntiScalar {
+        self.center_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl CenterWeightNorm for DualNum {
+    type Output = AntiScalar;
+
+    fn center_weight_norm(self) -> AntiScalar {
+        self.center_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl CenterWeightNorm for RoundPoint {
+    type Output = AntiScalar;
+
+    fn center_weight_norm(self) -> AntiScalar {
+        self.center_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl CenterWeightNorm for Sphere {
+    type Output = AntiScalar;
+
+    fn center_weight_norm(self) -> AntiScalar {
+        self.center_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl CenterGeometricNorm for Circle {
+    type Output = DualNum;
+
+    fn center_geometric_norm(self) -> DualNum {
+        self.center_bulk_norm().add(self.center_weight_norm())
+    }
+}
+
+impl CenterGeometricNorm for Dipole {
+    type Output = DualNum;
+
+    fn center_geometric_norm(self) -> DualNum {
+        self.center_bulk_norm().add(self.center_weight_norm())
+    }
+}
+
+impl CenterGeometricNorm for DualNum {
+    type Output = DualNum;
+
+    fn center_geometric_norm(self) -> DualNum {
+        self.center_bulk_norm().add(self.center_weight_norm())
+    }
+}
+
+impl CenterGeometricNorm for RoundPoint {
+    type Output = DualNum;
+
+    fn center_geometric_norm(self) -> DualNum {
+        self.center_bulk_norm().add(self.center_weight_norm())
+    }
+}
+
+impl CenterGeometricNorm for Sphere {
+    type Output = DualNum;
+
+    fn center_geometric_norm(self) -> DualNum {
+        self.center_bulk_norm().add(self.center_weight_norm())
+    }
+}
+
+impl CenterUnitizedNormSquared for Circle {
+    type Output = f32;
+
+    fn center_unitized_norm_squared(self) -> f32 {
+        self.center_bulk_norm_squared().group0() / self.center_weight_norm_squared().group0()
+    }
+}
+
+impl CenterUnitizedNormSquared for Dipole {
+    type Output = f32;
+
+    fn center_unitized_norm_squared(self) -> f32 {
+        self.center_bulk_norm_squared().group0() / self.center_weight_norm_squared().group0()
+    }
+}
+
+impl CenterUnitizedNormSquared for DualNum {
+    type Output = f32;
+
+    fn center_unitized_norm_squared(self) -> f32 {
+        self.center_bulk_norm_squared().group0() / self.center_weight_norm_squared().group0()
+    }
+}
+
+impl CenterUnitizedNormSquared for RoundPoint {
+    type Output = f32;
+
+    fn center_unitized_norm_squared(self) -> f32 {
+        self.center_bulk_norm_squared().group0() / self.center_weight_norm_squared().group0()
+    }
+}
+
+impl CenterUnitizedNormSquared for Sphere {
+    type Output = f32;
+
+    fn center_unitized_norm_squared(self) -> f32 {
+        self.center_bulk_norm_squared().group0() / self.center_weight_norm_squared().group0()
+    }
+}
+
+impl CenterUnitizedNorm for Circle {
+    type Output = f32;
+
+    fn center_unitized_norm(self) -> f32 {
+        self.center_unitized_norm_squared().sqrt()
+    }
+}
+
+impl CenterUnitizedNorm for Dipole {
+    type Output = f32;
+
+    fn center_unitized_norm(self) -> f32 {
+        self.center_unitized_norm_squared().sqrt()
+    }
+}
+
+impl CenterUnitizedNorm for DualNum {
+    type Output = f32;
+
+    fn center_unitized_norm(self) -> f32 {
+        self.center_unitized_norm_squared().sqrt()
+    }
+}
+
+impl CenterUnitizedNorm for RoundPoint {
+    type Output = f32;
+
+    fn center_unitized_norm(self) -> f32 {
+        self.center_unitized_norm_squared().sqrt()
+    }
+}
+
+impl CenterUnitizedNorm for Sphere {
+    type Output = f32;
+
+    fn center_unitized_norm(self) -> f32 {
+        self.center_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusBulkNormSquared for Circle {
+    type Output = Scalar;
+
+    fn radius_bulk_norm_squared(self) -> Scalar {
+        let mut center: RoundPoint = self.center();
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        let mut two_aw_au: Scalar = Scalar {
+            groups: ScalarGroups { g0: 2.0 * center.bulk().group0() },
+        };
+        two_aw_au.sub(round_bulk.dot(round_bulk))
+    }
+}
+
+impl RadiusBulkNormSquared for Dipole {
+    type Output = Scalar;
+
+    fn radius_bulk_norm_squared(self) -> Scalar {
+        let mut center: RoundPoint = self.center();
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        let mut two_aw_au: Scalar = Scalar {
+            groups: ScalarGroups { g0: 2.0 * center.bulk().group0() },
+        };
+        two_aw_au.sub(round_bulk.dot(round_bulk))
+    }
+}
+
+impl RadiusBulkNormSquared for DualNum {
+    type Output = Scalar;
+
+    fn radius_bulk_norm_squared(self) -> Scalar {
+        let mut center: RoundPoint = self.center();
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        let mut two_aw_au: Scalar = Scalar {
+            groups: ScalarGroups { g0: 2.0 * center.bulk().group0() },
+        };
+        two_aw_au.sub(round_bulk.dot(round_bulk))
+    }
+}
+
+impl RadiusBulkNormSquared for RoundPoint {
+    type Output = Scalar;
+
+    fn radius_bulk_norm_squared(self) -> Scalar {
+        let mut center: RoundPoint = self.center();
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        let mut two_aw_au: Scalar = Scalar {
+            groups: ScalarGroups { g0: 2.0 * center.bulk().group0() },
+        };
+        two_aw_au.sub(round_bulk.dot(round_bulk))
+    }
+}
+
+impl RadiusBulkNormSquared for Sphere {
+    type Output = Scalar;
+
+    fn radius_bulk_norm_squared(self) -> Scalar {
+        let mut center: RoundPoint = self.center();
+        let mut round_bulk: RoundPoint = self.center().round_bulk();
+        let mut two_aw_au: Scalar = Scalar {
+            groups: ScalarGroups { g0: 2.0 * center.bulk().group0() },
+        };
+        two_aw_au.sub(round_bulk.dot(round_bulk))
+    }
+}
+
+impl RadiusBulkNorm for Circle {
+    type Output = Scalar;
+
+    fn radius_bulk_norm(self) -> Scalar {
+        self.radius_bulk_norm_squared().sqrt()
+    }
+}
+
+impl RadiusBulkNorm for Dipole {
+    type Output = Scalar;
+
+    fn radius_bulk_norm(self) -> Scalar {
+        self.radius_bulk_norm_squared().sqrt()
+    }
+}
+
+impl RadiusBulkNorm for DualNum {
+    type Output = Scalar;
+
+    fn radius_bulk_norm(self) -> Scalar {
+        self.radius_bulk_norm_squared().sqrt()
+    }
+}
+
+impl RadiusBulkNorm for RoundPoint {
+    type Output = Scalar;
+
+    fn radius_bulk_norm(self) -> Scalar {
+        self.radius_bulk_norm_squared().sqrt()
+    }
+}
+
+impl RadiusBulkNorm for Sphere {
+    type Output = Scalar;
+
+    fn radius_bulk_norm(self) -> Scalar {
+        self.radius_bulk_norm_squared().sqrt()
+    }
+}
+
+impl RadiusWeightNormSquared for Circle {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for Dipole {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for DualNum {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for RoundPoint {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNormSquared for Sphere {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight: RoundPoint = self.center().round_weight();
+        round_weight.anti_dot(round_weight)
+    }
+}
+
+impl RadiusWeightNorm for Circle {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl RadiusWeightNorm for Dipole {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl RadiusWeightNorm for DualNum {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl RadiusWeightNorm for RoundPoint {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl RadiusWeightNorm for Sphere {
+    type Output = AntiScalar;
+
+    fn radius_weight_norm(self) -> AntiScalar {
+        self.radius_weight_norm_squared().anti_sqrt()
+    }
+}
+
+impl RadiusGeometricNorm for Circle {
+    type Output = DualNum;
+
+    fn radius_geometric_norm(self) -> DualNum {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for Dipole {
+    type Output = DualNum;
+
+    fn radius_geometric_norm(self) -> DualNum {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for DualNum {
+    type Output = DualNum;
+
+    fn radius_geometric_norm(self) -> DualNum {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for RoundPoint {
+    type Output = DualNum;
+
+    fn radius_geometric_norm(self) -> DualNum {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusGeometricNorm for Sphere {
+    type Output = DualNum;
+
+    fn radius_geometric_norm(self) -> DualNum {
+        self.radius_bulk_norm().add(self.radius_weight_norm())
+    }
+}
+
+impl RadiusUnitizedNormSquared for Circle {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for Dipole {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for DualNum {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for RoundPoint {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNormSquared for Sphere {
+    type Output = f32;
+
+    fn radius_unitized_norm_squared(self) -> f32 {
+        self.radius_bulk_norm_squared().group0() / self.radius_weight_norm_squared().group0()
+    }
+}
+
+impl RadiusUnitizedNorm for Circle {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for Dipole {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for DualNum {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for RoundPoint {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
+    }
+}
+
+impl RadiusUnitizedNorm for Sphere {
+    type Output = f32;
+
+    fn radius_unitized_norm(self) -> f32 {
+        self.radius_unitized_norm_squared().sqrt()
     }
 }

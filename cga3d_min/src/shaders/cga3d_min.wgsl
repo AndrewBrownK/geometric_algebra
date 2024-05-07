@@ -5513,6 +5513,106 @@ fn dual_num__anti_sqrt(self_: DualNum) -> DualNum {
     return DualNum(vec2<f32>(s / (2.0 * sqrt_t), sqrt_t));
 }
 
+fn anti_scalar__attitude(self_: AntiScalar) -> Plane {
+    return anti_scalar__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn circle__attitude(self_: Circle) -> Dipole {
+    return circle__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn dipole__attitude(self_: Dipole) -> RoundPoint {
+    return dipole__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn dual_num__attitude(self_: DualNum) -> Plane {
+    return dual_num__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn flat_point__attitude(self_: FlatPoint) -> RoundPoint {
+    return flat_point__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn flector__attitude(self_: Flector) -> MultiVector {
+    return flector__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn line__attitude(self_: Line) -> FlatPoint {
+    return line__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn motor__attitude(self_: Motor) -> Flector {
+    return motor__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn multi_vector__attitude(self_: MultiVector) -> MultiVector {
+    return multi_vector__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn plane__attitude(self_: Plane) -> Line {
+    return plane__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn round_point__attitude(self_: RoundPoint) -> Scalar {
+    return round_point__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn sphere__attitude(self_: Sphere) -> Circle {
+    return sphere__anti_wedge__plane(self_, Plane(vec4<f32>(0.0, 0.0, 0.0, 1.0)));
+}
+
+fn circle__carrier(self_: Circle) -> Sphere {
+    return circle__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn dipole__carrier(self_: Dipole) -> Circle {
+    return dipole__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn dual_num__carrier(self_: DualNum) -> RoundPoint {
+    return dual_num__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn multi_vector__carrier(self_: MultiVector) -> MultiVector {
+    return multi_vector__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn round_point__carrier(self_: RoundPoint) -> Dipole {
+    return round_point__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn scalar__carrier(self_: Scalar) -> RoundPoint {
+    return scalar__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn sphere__carrier(self_: Sphere) -> AntiScalar {
+    return sphere__wedge__round_point(self_, RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn circle__co_carrier(self_: Circle) -> Circle {
+    return dipole__wedge__round_point(circle__anti_dual(self_), RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn dipole__co_carrier(self_: Dipole) -> Sphere {
+    return circle__wedge__round_point(dipole__anti_dual(self_), RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn dual_num__co_carrier(self_: DualNum) -> RoundPoint {
+    return dual_num__wedge__round_point(dual_num__anti_dual(self_), RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn multi_vector__co_carrier(self_: MultiVector) -> MultiVector {
+    return multi_vector__wedge__round_point(multi_vector__anti_dual(self_), RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn round_point__co_carrier(self_: RoundPoint) -> AntiScalar {
+    return sphere__wedge__round_point(round_point__anti_dual(self_), RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
+fn sphere__co_carrier(self_: Sphere) -> Dipole {
+    return round_point__wedge__round_point(sphere__anti_dual(self_), RoundPoint(vec3<f32>(0.0), vec2<f32>(0.0, 1.0)));
+}
+
 fn dual_num__sqrt(self_: DualNum) -> DualNum {
     let s: f32 = self_.g0.x;
     let t: f32 = self_.g0.y;
@@ -5522,6 +5622,82 @@ fn dual_num__sqrt(self_: DualNum) -> DualNum {
 
 fn scalar__sqrt(self_: Scalar) -> Scalar {
     return Scalar(sqrt(self_.g0));
+}
+
+fn circle__center(self_: Circle) -> RoundPoint {
+    return circle__anti_wedge__circle(circle__co_carrier(self_), self_);
+}
+
+fn dipole__center(self_: Dipole) -> RoundPoint {
+    return sphere__anti_wedge__dipole(dipole__co_carrier(self_), self_);
+}
+
+fn dual_num__center(self_: DualNum) -> RoundPoint {
+    return round_point__anti_wedge__dual_num(dual_num__co_carrier(self_), self_);
+}
+
+fn multi_vector__center(self_: MultiVector) -> MultiVector {
+    return multi_vector__anti_wedge__multi_vector(multi_vector__co_carrier(self_), self_);
+}
+
+fn round_point__center(self_: RoundPoint) -> RoundPoint {
+    return anti_scalar__anti_wedge__round_point(round_point__co_carrier(self_), self_);
+}
+
+fn sphere__center(self_: Sphere) -> RoundPoint {
+    return dipole__anti_wedge__sphere(sphere__co_carrier(self_), self_);
+}
+
+fn circle__container(self_: Circle) -> Sphere {
+    return circle__wedge__round_point(self_, sphere__anti_dual(circle__carrier(self_)));
+}
+
+fn dipole__container(self_: Dipole) -> Sphere {
+    return dipole__wedge__dipole(self_, circle__anti_dual(dipole__carrier(self_)));
+}
+
+fn dual_num__container(self_: DualNum) -> Sphere {
+    return dual_num__wedge__sphere(self_, round_point__anti_dual(dual_num__carrier(self_)));
+}
+
+fn multi_vector__container(self_: MultiVector) -> MultiVector {
+    return multi_vector__wedge__multi_vector(self_, multi_vector__anti_dual(multi_vector__carrier(self_)));
+}
+
+fn round_point__container(self_: RoundPoint) -> Sphere {
+    return round_point__wedge__circle(self_, dipole__anti_dual(round_point__carrier(self_)));
+}
+
+fn scalar__container(self_: Scalar) -> Sphere {
+    return scalar__wedge__sphere(self_, round_point__anti_dual(scalar__carrier(self_)));
+}
+
+fn sphere__container(self_: Sphere) -> Sphere {
+    return sphere__wedge__scalar(self_, anti_scalar__anti_dual(sphere__carrier(self_)));
+}
+
+fn circle__partner(self_: Circle) -> Circle {
+    return sphere__anti_wedge__sphere(sphere__neg(dipole__container(circle__dual(self_))), circle__carrier(self_));
+}
+
+fn dipole__partner(self_: Dipole) -> Dipole {
+    return sphere__anti_wedge__circle(sphere__neg(circle__container(dipole__dual(self_))), dipole__carrier(self_));
+}
+
+fn dual_num__partner(self_: DualNum) -> Scalar {
+    return sphere__anti_wedge__round_point(sphere__neg(dual_num__container(dual_num__dual(self_))), dual_num__carrier(self_));
+}
+
+fn multi_vector__partner(self_: MultiVector) -> MultiVector {
+    return multi_vector__anti_wedge__multi_vector(multi_vector__neg(multi_vector__container(multi_vector__dual(self_))), multi_vector__carrier(self_));
+}
+
+fn round_point__partner(self_: RoundPoint) -> RoundPoint {
+    return sphere__anti_wedge__dipole(sphere__neg(sphere__container(round_point__dual(self_))), round_point__carrier(self_));
+}
+
+fn sphere__partner(self_: Sphere) -> Sphere {
+    return sphere__anti_wedge__anti_scalar(sphere__neg(round_point__container(sphere__dual(self_))), sphere__carrier(self_));
 }
 
 fn anti_scalar__anti_inverse(self_: AntiScalar) -> AntiScalar {
@@ -6158,6 +6334,316 @@ fn scalar__unitized_norm(self_: Scalar) -> f32 {
 
 fn sphere__unitized_norm(self_: Sphere) -> f32 {
     return sqrt(sphere__unitized_norm_squared(self_));
+}
+
+fn circle__center_bulk_norm_squared(self_: Circle) -> Scalar {
+    let round_bulk: RoundPoint = round_point__round_bulk(circle__center(self_));
+    return round_point__dot__round_point(round_bulk, round_bulk);
+}
+
+fn dipole__center_bulk_norm_squared(self_: Dipole) -> Scalar {
+    let round_bulk: RoundPoint = round_point__round_bulk(dipole__center(self_));
+    return round_point__dot__round_point(round_bulk, round_bulk);
+}
+
+fn dual_num__center_bulk_norm_squared(self_: DualNum) -> Scalar {
+    let round_bulk: RoundPoint = round_point__round_bulk(dual_num__center(self_));
+    return round_point__dot__round_point(round_bulk, round_bulk);
+}
+
+fn round_point__center_bulk_norm_squared(self_: RoundPoint) -> Scalar {
+    let round_bulk: RoundPoint = round_point__round_bulk(round_point__center(self_));
+    return round_point__dot__round_point(round_bulk, round_bulk);
+}
+
+fn sphere__center_bulk_norm_squared(self_: Sphere) -> Scalar {
+    let round_bulk: RoundPoint = round_point__round_bulk(sphere__center(self_));
+    return round_point__dot__round_point(round_bulk, round_bulk);
+}
+
+fn circle__center_bulk_norm(self_: Circle) -> Scalar {
+    return scalar__sqrt(circle__center_bulk_norm_squared(self_));
+}
+
+fn dipole__center_bulk_norm(self_: Dipole) -> Scalar {
+    return scalar__sqrt(dipole__center_bulk_norm_squared(self_));
+}
+
+fn dual_num__center_bulk_norm(self_: DualNum) -> Scalar {
+    return scalar__sqrt(dual_num__center_bulk_norm_squared(self_));
+}
+
+fn round_point__center_bulk_norm(self_: RoundPoint) -> Scalar {
+    return scalar__sqrt(round_point__center_bulk_norm_squared(self_));
+}
+
+fn sphere__center_bulk_norm(self_: Sphere) -> Scalar {
+    return scalar__sqrt(sphere__center_bulk_norm_squared(self_));
+}
+
+fn circle__center_weight_norm_squared(self_: Circle) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(circle__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn dipole__center_weight_norm_squared(self_: Dipole) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(dipole__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn dual_num__center_weight_norm_squared(self_: DualNum) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(dual_num__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn round_point__center_weight_norm_squared(self_: RoundPoint) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(round_point__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn sphere__center_weight_norm_squared(self_: Sphere) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(sphere__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn circle__center_weight_norm(self_: Circle) -> AntiScalar {
+    return anti_scalar__anti_sqrt(circle__center_weight_norm_squared(self_));
+}
+
+fn dipole__center_weight_norm(self_: Dipole) -> AntiScalar {
+    return anti_scalar__anti_sqrt(dipole__center_weight_norm_squared(self_));
+}
+
+fn dual_num__center_weight_norm(self_: DualNum) -> AntiScalar {
+    return anti_scalar__anti_sqrt(dual_num__center_weight_norm_squared(self_));
+}
+
+fn round_point__center_weight_norm(self_: RoundPoint) -> AntiScalar {
+    return anti_scalar__anti_sqrt(round_point__center_weight_norm_squared(self_));
+}
+
+fn sphere__center_weight_norm(self_: Sphere) -> AntiScalar {
+    return anti_scalar__anti_sqrt(sphere__center_weight_norm_squared(self_));
+}
+
+fn circle__center_geometric_norm(self_: Circle) -> DualNum {
+    return scalar__add__anti_scalar(circle__center_bulk_norm(self_), circle__center_weight_norm(self_));
+}
+
+fn dipole__center_geometric_norm(self_: Dipole) -> DualNum {
+    return scalar__add__anti_scalar(dipole__center_bulk_norm(self_), dipole__center_weight_norm(self_));
+}
+
+fn dual_num__center_geometric_norm(self_: DualNum) -> DualNum {
+    return scalar__add__anti_scalar(dual_num__center_bulk_norm(self_), dual_num__center_weight_norm(self_));
+}
+
+fn round_point__center_geometric_norm(self_: RoundPoint) -> DualNum {
+    return scalar__add__anti_scalar(round_point__center_bulk_norm(self_), round_point__center_weight_norm(self_));
+}
+
+fn sphere__center_geometric_norm(self_: Sphere) -> DualNum {
+    return scalar__add__anti_scalar(sphere__center_bulk_norm(self_), sphere__center_weight_norm(self_));
+}
+
+fn circle__center_unitized_norm_squared(self_: Circle) -> f32 {
+    return circle__center_bulk_norm_squared(self_).g0 / circle__center_weight_norm_squared(self_).g0;
+}
+
+fn dipole__center_unitized_norm_squared(self_: Dipole) -> f32 {
+    return dipole__center_bulk_norm_squared(self_).g0 / dipole__center_weight_norm_squared(self_).g0;
+}
+
+fn dual_num__center_unitized_norm_squared(self_: DualNum) -> f32 {
+    return dual_num__center_bulk_norm_squared(self_).g0 / dual_num__center_weight_norm_squared(self_).g0;
+}
+
+fn round_point__center_unitized_norm_squared(self_: RoundPoint) -> f32 {
+    return round_point__center_bulk_norm_squared(self_).g0 / round_point__center_weight_norm_squared(self_).g0;
+}
+
+fn sphere__center_unitized_norm_squared(self_: Sphere) -> f32 {
+    return sphere__center_bulk_norm_squared(self_).g0 / sphere__center_weight_norm_squared(self_).g0;
+}
+
+fn circle__center_unitized_norm(self_: Circle) -> f32 {
+    return sqrt(circle__center_unitized_norm_squared(self_));
+}
+
+fn dipole__center_unitized_norm(self_: Dipole) -> f32 {
+    return sqrt(dipole__center_unitized_norm_squared(self_));
+}
+
+fn dual_num__center_unitized_norm(self_: DualNum) -> f32 {
+    return sqrt(dual_num__center_unitized_norm_squared(self_));
+}
+
+fn round_point__center_unitized_norm(self_: RoundPoint) -> f32 {
+    return sqrt(round_point__center_unitized_norm_squared(self_));
+}
+
+fn sphere__center_unitized_norm(self_: Sphere) -> f32 {
+    return sqrt(sphere__center_unitized_norm_squared(self_));
+}
+
+fn circle__radius_bulk_norm_squared(self_: Circle) -> Scalar {
+    let center: RoundPoint = circle__center(self_);
+    let round_bulk: RoundPoint = round_point__round_bulk(circle__center(self_));
+    let two_aw_au: Scalar = Scalar(2.0 * round_point__bulk(center).g0);
+    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+}
+
+fn dipole__radius_bulk_norm_squared(self_: Dipole) -> Scalar {
+    let center: RoundPoint = dipole__center(self_);
+    let round_bulk: RoundPoint = round_point__round_bulk(dipole__center(self_));
+    let two_aw_au: Scalar = Scalar(2.0 * round_point__bulk(center).g0);
+    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+}
+
+fn dual_num__radius_bulk_norm_squared(self_: DualNum) -> Scalar {
+    let center: RoundPoint = dual_num__center(self_);
+    let round_bulk: RoundPoint = round_point__round_bulk(dual_num__center(self_));
+    let two_aw_au: Scalar = Scalar(2.0 * round_point__bulk(center).g0);
+    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+}
+
+fn round_point__radius_bulk_norm_squared(self_: RoundPoint) -> Scalar {
+    let center: RoundPoint = round_point__center(self_);
+    let round_bulk: RoundPoint = round_point__round_bulk(round_point__center(self_));
+    let two_aw_au: Scalar = Scalar(2.0 * round_point__bulk(center).g0);
+    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+}
+
+fn sphere__radius_bulk_norm_squared(self_: Sphere) -> Scalar {
+    let center: RoundPoint = sphere__center(self_);
+    let round_bulk: RoundPoint = round_point__round_bulk(sphere__center(self_));
+    let two_aw_au: Scalar = Scalar(2.0 * round_point__bulk(center).g0);
+    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+}
+
+fn circle__radius_bulk_norm(self_: Circle) -> Scalar {
+    return scalar__sqrt(circle__radius_bulk_norm_squared(self_));
+}
+
+fn dipole__radius_bulk_norm(self_: Dipole) -> Scalar {
+    return scalar__sqrt(dipole__radius_bulk_norm_squared(self_));
+}
+
+fn dual_num__radius_bulk_norm(self_: DualNum) -> Scalar {
+    return scalar__sqrt(dual_num__radius_bulk_norm_squared(self_));
+}
+
+fn round_point__radius_bulk_norm(self_: RoundPoint) -> Scalar {
+    return scalar__sqrt(round_point__radius_bulk_norm_squared(self_));
+}
+
+fn sphere__radius_bulk_norm(self_: Sphere) -> Scalar {
+    return scalar__sqrt(sphere__radius_bulk_norm_squared(self_));
+}
+
+fn circle__radius_weight_norm_squared(self_: Circle) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(circle__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn dipole__radius_weight_norm_squared(self_: Dipole) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(dipole__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn dual_num__radius_weight_norm_squared(self_: DualNum) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(dual_num__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn round_point__radius_weight_norm_squared(self_: RoundPoint) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(round_point__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn sphere__radius_weight_norm_squared(self_: Sphere) -> AntiScalar {
+    let round_weight: RoundPoint = round_point__round_weight(sphere__center(self_));
+    return round_point__anti_dot__round_point(round_weight, round_weight);
+}
+
+fn circle__radius_weight_norm(self_: Circle) -> AntiScalar {
+    return anti_scalar__anti_sqrt(circle__radius_weight_norm_squared(self_));
+}
+
+fn dipole__radius_weight_norm(self_: Dipole) -> AntiScalar {
+    return anti_scalar__anti_sqrt(dipole__radius_weight_norm_squared(self_));
+}
+
+fn dual_num__radius_weight_norm(self_: DualNum) -> AntiScalar {
+    return anti_scalar__anti_sqrt(dual_num__radius_weight_norm_squared(self_));
+}
+
+fn round_point__radius_weight_norm(self_: RoundPoint) -> AntiScalar {
+    return anti_scalar__anti_sqrt(round_point__radius_weight_norm_squared(self_));
+}
+
+fn sphere__radius_weight_norm(self_: Sphere) -> AntiScalar {
+    return anti_scalar__anti_sqrt(sphere__radius_weight_norm_squared(self_));
+}
+
+fn circle__radius_geometric_norm(self_: Circle) -> DualNum {
+    return scalar__add__anti_scalar(circle__radius_bulk_norm(self_), circle__radius_weight_norm(self_));
+}
+
+fn dipole__radius_geometric_norm(self_: Dipole) -> DualNum {
+    return scalar__add__anti_scalar(dipole__radius_bulk_norm(self_), dipole__radius_weight_norm(self_));
+}
+
+fn dual_num__radius_geometric_norm(self_: DualNum) -> DualNum {
+    return scalar__add__anti_scalar(dual_num__radius_bulk_norm(self_), dual_num__radius_weight_norm(self_));
+}
+
+fn round_point__radius_geometric_norm(self_: RoundPoint) -> DualNum {
+    return scalar__add__anti_scalar(round_point__radius_bulk_norm(self_), round_point__radius_weight_norm(self_));
+}
+
+fn sphere__radius_geometric_norm(self_: Sphere) -> DualNum {
+    return scalar__add__anti_scalar(sphere__radius_bulk_norm(self_), sphere__radius_weight_norm(self_));
+}
+
+fn circle__radius_unitized_norm_squared(self_: Circle) -> f32 {
+    return circle__radius_bulk_norm_squared(self_).g0 / circle__radius_weight_norm_squared(self_).g0;
+}
+
+fn dipole__radius_unitized_norm_squared(self_: Dipole) -> f32 {
+    return dipole__radius_bulk_norm_squared(self_).g0 / dipole__radius_weight_norm_squared(self_).g0;
+}
+
+fn dual_num__radius_unitized_norm_squared(self_: DualNum) -> f32 {
+    return dual_num__radius_bulk_norm_squared(self_).g0 / dual_num__radius_weight_norm_squared(self_).g0;
+}
+
+fn round_point__radius_unitized_norm_squared(self_: RoundPoint) -> f32 {
+    return round_point__radius_bulk_norm_squared(self_).g0 / round_point__radius_weight_norm_squared(self_).g0;
+}
+
+fn sphere__radius_unitized_norm_squared(self_: Sphere) -> f32 {
+    return sphere__radius_bulk_norm_squared(self_).g0 / sphere__radius_weight_norm_squared(self_).g0;
+}
+
+fn circle__radius_unitized_norm(self_: Circle) -> f32 {
+    return sqrt(circle__radius_unitized_norm_squared(self_));
+}
+
+fn dipole__radius_unitized_norm(self_: Dipole) -> f32 {
+    return sqrt(dipole__radius_unitized_norm_squared(self_));
+}
+
+fn dual_num__radius_unitized_norm(self_: DualNum) -> f32 {
+    return sqrt(dual_num__radius_unitized_norm_squared(self_));
+}
+
+fn round_point__radius_unitized_norm(self_: RoundPoint) -> f32 {
+    return sqrt(round_point__radius_unitized_norm_squared(self_));
+}
+
+fn sphere__radius_unitized_norm(self_: Sphere) -> f32 {
+    return sqrt(sphere__radius_unitized_norm_squared(self_));
 }
 
 fn anti_scalar__unitize(self_: AntiScalar) -> AntiScalar {
@@ -11170,6 +11656,102 @@ fn sphere__reject_via_origin_from__round_point(self_: Sphere, other: RoundPoint)
 
 fn sphere__reject_via_origin_from__sphere(self_: Sphere, other: Sphere) -> Sphere {
     return circle__wedge__round_point(sphere__anti_wedge__sphere(self_, other), sphere__dual(other));
+}
+
+fn circle__anti_support(self_: Circle) -> Sphere {
+    return circle__wedge__round_point(self_, sphere__anti_wedge__dipole(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), circle__dual(self_)));
+}
+
+fn dipole__anti_support(self_: Dipole) -> Sphere {
+    return dipole__wedge__dipole(self_, sphere__anti_wedge__circle(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), dipole__dual(self_)));
+}
+
+fn dual_num__anti_support(self_: DualNum) -> Sphere {
+    return dual_num__wedge__sphere(self_, sphere__anti_wedge__dual_num(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), dual_num__dual(self_)));
+}
+
+fn flat_point__anti_support(self_: FlatPoint) -> Plane {
+    return flat_point__wedge__dipole(self_, sphere__anti_wedge__circle(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), flat_point__dual(self_)));
+}
+
+fn flector__anti_support(self_: Flector) -> MultiVector {
+    return flector__wedge__multi_vector(self_, sphere__anti_wedge__multi_vector(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), flector__dual(self_)));
+}
+
+fn line__anti_support(self_: Line) -> Plane {
+    return line__wedge__round_point(self_, sphere__anti_wedge__dipole(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), line__dual(self_)));
+}
+
+fn motor__anti_support(self_: Motor) -> MultiVector {
+    return motor__wedge__multi_vector(self_, sphere__anti_wedge__multi_vector(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), motor__dual(self_)));
+}
+
+fn multi_vector__anti_support(self_: MultiVector) -> MultiVector {
+    return multi_vector__wedge__multi_vector(self_, sphere__anti_wedge__multi_vector(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), multi_vector__dual(self_)));
+}
+
+fn plane__anti_support(self_: Plane) -> Plane {
+    return plane__wedge__scalar(self_, sphere__anti_wedge__round_point(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), plane__dual(self_)));
+}
+
+fn round_point__anti_support(self_: RoundPoint) -> Sphere {
+    return round_point__wedge__circle(self_, sphere__anti_wedge__sphere(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), round_point__dual(self_)));
+}
+
+fn scalar__anti_support(self_: Scalar) -> Sphere {
+    return scalar__wedge__sphere(self_, sphere__anti_wedge__anti_scalar(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), scalar__dual(self_)));
+}
+
+fn sphere__anti_support(self_: Sphere) -> Sphere {
+    return sphere__wedge__scalar(self_, sphere__anti_wedge__round_point(round_point__complement(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0))), sphere__dual(self_)));
+}
+
+fn anti_scalar__support(self_: AntiScalar) -> RoundPoint {
+    return anti_scalar__anti_wedge__round_point(self_, round_point__wedge__scalar(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), anti_scalar__anti_dual(self_)));
+}
+
+fn circle__support(self_: Circle) -> RoundPoint {
+    return circle__anti_wedge__circle(self_, round_point__wedge__dipole(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), circle__anti_dual(self_)));
+}
+
+fn dipole__support(self_: Dipole) -> RoundPoint {
+    return dipole__anti_wedge__sphere(self_, round_point__wedge__circle(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), dipole__anti_dual(self_)));
+}
+
+fn dual_num__support(self_: DualNum) -> RoundPoint {
+    return dual_num__anti_wedge__round_point(self_, round_point__wedge__dual_num(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), dual_num__anti_dual(self_)));
+}
+
+fn flat_point__support(self_: FlatPoint) -> RoundPoint {
+    return flat_point__anti_wedge__sphere(self_, round_point__wedge__circle(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), flat_point__anti_dual(self_)));
+}
+
+fn flector__support(self_: Flector) -> MultiVector {
+    return flector__anti_wedge__multi_vector(self_, round_point__wedge__multi_vector(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), flector__anti_dual(self_)));
+}
+
+fn line__support(self_: Line) -> RoundPoint {
+    return line__anti_wedge__circle(self_, round_point__wedge__dipole(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), line__anti_dual(self_)));
+}
+
+fn motor__support(self_: Motor) -> MultiVector {
+    return motor__anti_wedge__multi_vector(self_, round_point__wedge__multi_vector(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), motor__anti_dual(self_)));
+}
+
+fn multi_vector__support(self_: MultiVector) -> MultiVector {
+    return multi_vector__anti_wedge__multi_vector(self_, round_point__wedge__multi_vector(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), multi_vector__anti_dual(self_)));
+}
+
+fn plane__support(self_: Plane) -> RoundPoint {
+    return plane__anti_wedge__dipole(self_, round_point__wedge__round_point(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), plane__anti_dual(self_)));
+}
+
+fn round_point__support(self_: RoundPoint) -> RoundPoint {
+    return round_point__anti_wedge__anti_scalar(self_, round_point__wedge__sphere(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), round_point__anti_dual(self_)));
+}
+
+fn sphere__support(self_: Sphere) -> RoundPoint {
+    return sphere__anti_wedge__dipole(self_, round_point__wedge__round_point(RoundPoint(vec3<f32>(0.0), vec2<f32>(1.0, 0.0)), sphere__anti_dual(self_)));
 }
 
 fn circle__cosine_angle__circle(self_: Circle, other: Circle) -> DualNum {

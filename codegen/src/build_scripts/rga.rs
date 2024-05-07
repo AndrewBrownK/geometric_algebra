@@ -29,7 +29,7 @@ pub fn rga_script(
     code_gen.dual_num_stuff(&registry).unwrap();
     code_gen.basic_norms(&registry);
     code_gen.post_norm_universal_stuff(&registry, &sandwich_outputs);
-    code_gen.attitude_and_dependencies("Horizon", &registry);
+    code_gen.attitude_and_dependencies(&registry);
 
     let mut file_path = Path::new("src/").to_path_buf();
     if !path_prefix.is_empty() {

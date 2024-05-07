@@ -2818,12 +2818,36 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        let origin = registry.classes.iter().find(|it| it.class_name.as_str() == "Origin");
+        let origin_idx = (1 as BasisElementIndex) << self.algebra.represented_dimensions();
+        let origin = registry.get_at_least(&[origin_idx]);
+        let origin = match origin { None => None, Some(origin) => {
+            if origin.flat_basis().len() == 1 {
+                self.trait_impls.get_class_invocation("Unit", origin)
+            } else {
+                let mut body = vec![];
+                for result_group in origin.grouped_basis.iter() {
+                    let size = result_group.len();
+                    let expression = Expression {
+                        size,
+                        content: ExpressionContent::Constant(
+                            DataType::SimdVector(size),
+                            result_group.iter().map(|element| if element.index == origin_idx { 1 } else { 0 }).collect(),
+                        ),
+                        data_type_hint: Some(DataType::SimdVector(size)),
+                    };
+                    body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+                }
+                Some(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::MultiVector(origin)),
+                    content: ExpressionContent::InvokeClassMethod(origin, "Constructor", body),
+                })
+            }
+        }};
         for param_a in registry.single_parameters() {
             let name = "Support";
             let _: Option<()> = try {
                 let origin = origin.clone()?;
-                let origin = self.trait_impls.get_class_invocation("Unit", origin)?;
                 let ad = self.trait_impls.get_single_invocation("AntiDual", variable(&param_a))?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, origin, ad)?;
@@ -2838,7 +2862,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "AntiSupport";
             let _: Option<()> = try {
                 let origin = origin.clone()?;
-                let origin = self.trait_impls.get_class_invocation("Unit", origin)?;
                 let origin_right_complement = self.trait_impls.get_single_invocation("RightComplement", origin.clone());
                 let origin_complement = self.trait_impls.get_single_invocation("Complement", origin);
                 let origin_complement = origin_right_complement.or(origin_complement)?;
@@ -3030,14 +3053,39 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// Step 5: Attitude and its dependencies
     /// https://rigidgeometricalgebra.org/wiki/index.php?title=Attitude
     /// https://conformalgeometricalgebra.org/wiki/index.php?title=Attitude
-    /// Note that e4 (article) = e3 (codegen) = Origin (MultivectorClass, One)
-    pub fn attitude_and_dependencies<'s>(&'s mut self, horizon_class_name: &str, registry: &'r MultiVectorClassRegistry) {
+    pub fn attitude_and_dependencies<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
+        let d = self.algebra.represented_dimensions();
+        let origin = BasisElement::from_index((1 as BasisElementIndex) << d);
+        let horizon = self.algebra.right_complement(&origin);
+
+
         // Attitude
         for param_a in registry.single_parameters() {
             let name = "Attitude";
             let _: Option<()> = try {
-                let horizon = registry.classes.iter().find(|it| it.class_name == horizon_class_name)?;
-                let unit = self.trait_impls.get_class_invocation("Unit", horizon)?;
+                let horizon_or_plane = registry.get_at_least(&[horizon.index])?;
+                let unit = if horizon_or_plane.flat_basis().len() == 1 {
+                    self.trait_impls.get_class_invocation("Unit", horizon_or_plane)?
+                } else {
+                    let mut body = vec![];
+                    for result_group in horizon_or_plane.grouped_basis.iter() {
+                        let size = result_group.len();
+                        let expression = Expression {
+                            size,
+                            content: ExpressionContent::Constant(
+                                DataType::SimdVector(size),
+                                result_group.iter().map(|element| if element.index == horizon.index { 1 } else { 0 }).collect(),
+                            ),
+                            data_type_hint: Some(DataType::SimdVector(size)),
+                        };
+                        body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+                    }
+                    Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::MultiVector(horizon_or_plane)),
+                        content: ExpressionContent::InvokeClassMethod(horizon_or_plane, "Constructor", body),
+                    }
+                };
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), unit)?;
                 let attitude = single_expression_single_trait_impl(name, &param_a, anti_wedge);
@@ -3134,20 +3182,41 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     pub fn round_features<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
 
-        let one_infinity: Option<(Expression, BasisElementIndex)> = try {
-            let infinity = registry.classes.iter().find(|it| it.class_name == "Infinity")?;
-            let index = infinity.flat_basis().first()?.index;
-            let one_infinity = self.trait_impls.get_class_invocation("Unit", infinity)?;
-            (one_infinity, index)
-        };
-        let (one_infinity, infinity_index) = match one_infinity {
+        let d = self.algebra.represented_dimensions();
+        let infinity_idx = (1 as BasisElementIndex) << (d + 1);
+        let infinity = registry.get_at_least(&[infinity_idx]);
+        let one_infinity = match infinity { None => None, Some(infinity) => {
+            if infinity.flat_basis().len() == 1 {
+                self.trait_impls.get_class_invocation("Unit", infinity)
+            } else {
+                let mut body = vec![];
+                for result_group in infinity.grouped_basis.iter() {
+                    let size = result_group.len();
+                    let expression = Expression {
+                        size,
+                        content: ExpressionContent::Constant(
+                            DataType::SimdVector(size),
+                            result_group.iter().map(|element| if element.index == infinity_idx { 1 } else { 0 }).collect(),
+                        ),
+                        data_type_hint: Some(DataType::SimdVector(size)),
+                    };
+                    body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+                }
+                Some(Expression {
+                    size: 1,
+                    data_type_hint: Some(DataType::MultiVector(infinity)),
+                    content: ExpressionContent::InvokeClassMethod(infinity, "Constructor", body),
+                })
+            }
+        }};
+        let one_infinity = match one_infinity {
             None => return,
             Some(it) => it
         };
 
         for param_a in registry.single_parameters() {
             let is_all_flat = param_a.multi_vector_class().flat_basis().iter().all(|it| {
-                infinity_index == (infinity_index & it.index)
+                infinity_idx == (infinity_idx & it.index)
             });
             if is_all_flat {
                 continue;
@@ -3205,7 +3274,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         for param_a in registry.single_parameters() {
             let is_all_flat = param_a.multi_vector_class().flat_basis().iter().all(|it| {
-                infinity_index == (infinity_index & it.index)
+                infinity_idx == (infinity_idx & it.index)
             });
             if is_all_flat {
                 continue;
