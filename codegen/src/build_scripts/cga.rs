@@ -32,10 +32,6 @@ pub fn cga_script(
     code_gen.post_norm_universal_stuff(&registry, &sandwich_outputs);
     code_gen.round_features(&registry);
     code_gen.fancy_norms(&registry);
-    // TODO dig in and find what multivector class names are hard coded (by name) dependencies
-    //  Then see if you can instead work around that if that object is not included
-    //  (e.g. when it comes time to generate cga3d_min, it might be preferable to include "Sphere"
-    //   and "Plane" but not "Horizon". We'll have to feel it out.)
     code_gen.attitude_and_dependencies(&registry);
     // TODO impose constraints on page 235
 

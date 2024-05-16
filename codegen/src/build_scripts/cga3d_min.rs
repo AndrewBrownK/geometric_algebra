@@ -25,10 +25,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Line:e415,e425,e435|e235,e315,e125",
         "Plane:e4235,e4315,e4125,e3215",
 
-        // TODO since you no longer have separate Horizon and Origin definitions,
-        //  you need to supplement some compilation logic to construct Planes
-        //  and RoundPoints instead.
-
         // Round objects
         "RoundPoint:e1,e2,e3|e4,e5",
         "Dipole:e41,e42,e43|e23,e31,e12|e15,e25,e35,e45",

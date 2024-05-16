@@ -1983,6 +1983,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(&mut self, registry: &'r MultiVectorClassRegistry) {
 
+
         // TODO here
         // TODO hardly any of these are getting emitted
 
@@ -4092,7 +4093,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             Rejection and Projection are counterparts to one another.
             This is the counterpart to `ProjectOrthogonallyOnto`.
         "
-                .to_string()
                 .to_string(),
         })?;
         emitter.emit(&AstNode::TraitDefinition {

@@ -11,23 +11,6 @@ use std::ops::Add;
 
 #[test]
 fn round_point_distances() {
-    // TODO in order to better understand the "e1, e2, e3" object (tentatively called
-    //  "RoundPointBulk"), I want to better understand the meaning of distances between
-    //  RoundPoints, particularly RoundPoints with imaginary radius. If you consider
-    //  a RoundPointOnOrigin, and then bring its e4 component to zero, you can see it
-    //  approaches a point at infinity with an imaginary radius that stays at the origin.
-    //  Thus it creates something like a PlaneAtOrigin. This also makes sense that a
-    //  RoundPointBulk is commonly found as a WeightDual to various Planes. But if it's not
-    //  a plane overtly.... then what is it? If we focus on the center of the point, it is like
-    //  a "PlaneNormalVector" or something.. but as we know, the radial leash of a RoundPoint
-    //  is one of it's most defining features. So it seems inappropriate to ignore. The e1,e2,e3
-    //  elements certainly specify a direction, but if you want to be zero-distance from the
-    //  object, you need to be near a PlaneAtOrigin, not near infinity. I guess.... this gets at
-    //  the heart of a big and very interesting question. What is the fundamental authentic
-    //  difference between a Sphere and RoundPoint? Because a plane is a sphere, and the sphere
-    //  IS its surface, so a PlaneAtOrigin IS its surface. But a RoundPointBulk is zero distance
-    //  away from some PlaneAtOrigin while NOT being its surface... it's weird.
-
     // TODO new problem.... RoundPoints don't have very many distance implementations.
     // TODO FlatPoints are same situation. Only have distance with Circles?
 
