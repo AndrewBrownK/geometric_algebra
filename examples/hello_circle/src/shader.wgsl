@@ -1,3 +1,5 @@
+#import cga3d_min;
+
 @vertex
 fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> @builtin(position) vec4<f32> {
     let x = f32(i32(in_vertex_index) - 1);
@@ -10,5 +12,5 @@ fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> @builtin(position) ve
 // https://www.youtube.com/watch?v=Q9Domz1Qlbw
 @fragment
 fn fs_main() -> @location(0) vec4<f32> {
-    return vec4<f32>(1.0, 0.0, 0.0, 1.0);
+    return vec4<f32>(0.0, 0.0, 1.0, 1.0);
 }

@@ -1988,54 +1988,11 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         // TODO see page 197 of the book (and onward) for formulas to check against
 
-        // It is not elaborated very much, but one can infer/detect a few things from the CGA poster.
-        // Flat objects have a Position Norm, but no Center Norm or Radius Norm.
-        // Round objects have a Center Norm and Radius Norm, but no Position Norm.
-        // Or at least that is the implication.
-        // But closer inspection reveals what is clearly obvious, round objects also have a position norm.
-        // The thing is, if you're familiar with the way flat objects are really round objects
-        // with an infinite radius, then you can see how flat and round objects have the
-        // same flat bulks. That is, they have the same definition for the position relative to the
-        // origin. So a "Position Norm" is about the position with respect to the origin.
-        // And a "Center Norm" is the center of the round object, which is not (necessarily) the
-        // same as the component of the object closest to the origin. And same for radius.
 
-        // And to elaborate further, and highlight the notation...
-        // rga3d poster: https://projectivegeometricalgebra.org/projgeomalg.pdf
-        // cga3d poster: https://projectivegeometricalgebra.org/confgeomalg.pdf
-        // In the "Norms" section of rga3d you can see the double bars denoting absolute value,
-        // one for bulk, one for weight, the "geometric" combination of both, and then
-        // the little hat denoting unitization by projecting onto the plane where e4 = 1.
-        // So the norms in the cga poster are apparently/obviously doing the same thing, but
-        // with less elaboration. It is clear that the formulas are listing the unitized/projected
-        // formulations, but you could decompose it to a bulk aspect, weight aspect, and/or geometric
-        // combination if you wanted.
-
-        // Hypothesis for how to implement...
-
-        // Center Norm:
-        // - unitize the object by its round weight
-        // - take the center of the object (RoundPoint)
-        // - split into round bulk and round weight (omits e5 element)
-        // - take the square root of the (Anti)Dot of the Bulk or Weight for each part of the norm
-        //
-        // This looks like it would work for RoundPoint and Sphere,
-        // but less confident in Dipole or Circle.
-
-        // Radius Norm:
-        // - there's an uncanny term... it seems to be from the "non-e4" element of the Container
-        // - hmm yeah the Container seems promising... the e1234 and e3215 elements...
-        // - hmmmmm
-
-        // I'm probably overthinking this.
-        // The RoundPoint and Sphere have construction formulas that include the radius.
-        // And heck, so does the Dipole and Circle.
-        // Obviously the radius norm is going to have to reverse the engineer that construction
-        // to acquire the radius. Yesssss..... seems legit for RoundPoint....
-        // But like.... really fricken complicated for Dipole/Circle....
-        // ...unless I convert to Center anyway...
 
         for param_a in registry.single_parameters() {
+
+            // TODO I broke things in cga3d_min, so I should do this next.
 
             // TODO according to page 204-205, the conformal conjugate might be useful in defining
             //  the distance between the origin and the center position
@@ -3374,6 +3331,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             })?;
         }
 
+        // TODO rename so that in cga RoundBulk is called Bulk
+        //  and FlatBulk is the qualified trait, and
+        //  obviously same for Weight
         let trait_names = ["Bulk", "Weight", "RoundBulk", "RoundWeight"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
