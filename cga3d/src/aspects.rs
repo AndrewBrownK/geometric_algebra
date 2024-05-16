@@ -39,7 +39,29 @@ pub trait RoundWeight {
     fn round_weight(self) -> Self::Output;
 }
 
+impl Bulk for AntiPlane {
+    type Output = Infinity;
+
+    fn bulk(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
 impl Bulk for Circle {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+            },
+        }
+    }
+}
+
+impl Bulk for CircleAligningOrigin {
     type Output = LineAtInfinity;
 
     fn bulk(self) -> LineAtInfinity {
@@ -55,7 +77,29 @@ impl Bulk for CircleAtInfinity {
     fn bulk(self) -> LineAtInfinity {
         LineAtInfinity {
             groups: LineAtInfinityGroups {
-                g0: Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]]),
+                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl Bulk for CircleAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Bulk for CircleOrthogonalOrigin {
+    type Output = LineAtInfinity;
+
+    fn bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
             },
         }
     }
@@ -73,12 +117,46 @@ impl Bulk for Dipole {
     }
 }
 
+impl Bulk for DipoleAligningOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn bulk(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            },
+        }
+    }
+}
+
 impl Bulk for DipoleAtInfinity {
     type Output = FlatPointAtInfinity;
 
     fn bulk(self) -> FlatPointAtInfinity {
         FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+            },
+        }
+    }
+}
+
+impl Bulk for DipoleAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn bulk(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
             groups: FlatPointAtInfinityGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Bulk for DipoleOrthogonalOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn bulk(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups { g0: self.group2() },
         }
     }
 }
@@ -176,12 +254,12 @@ impl Bulk for MultiVector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: self.group2() * Simd32x2::from([0.0, 1.0]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: self.group5() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: self.group5(),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: self.group8(),
+                g8: self.group8() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: self.group10() * Simd32x2::from([0.0, 1.0]),
             },
@@ -209,16 +287,6 @@ impl Bulk for RoundPoint {
     }
 }
 
-impl Bulk for RoundPointAtInfinity {
-    type Output = Infinity;
-
-    fn bulk(self) -> Infinity {
-        Infinity {
-            groups: InfinityGroups { g0: self.group0()[3] },
-        }
-    }
-}
-
 impl Bulk for RoundPointAtOrigin {
     type Output = Infinity;
 
@@ -229,22 +297,22 @@ impl Bulk for RoundPointAtOrigin {
     }
 }
 
-impl Bulk for SpacialCurvature {
-    type Output = Horizon;
-
-    fn bulk(self) -> Horizon {
-        Horizon {
-            groups: HorizonGroups { g0: self.group0()[1] },
-        }
-    }
-}
-
 impl Bulk for Sphere {
     type Output = Horizon;
 
     fn bulk(self) -> Horizon {
         Horizon {
             groups: HorizonGroups { g0: self.group1()[1] },
+        }
+    }
+}
+
+impl Bulk for SphereAtOrigin {
+    type Output = Horizon;
+
+    fn bulk(self) -> Horizon {
+        Horizon {
+            groups: HorizonGroups { g0: self.group0()[1] },
         }
     }
 }
@@ -273,78 +341,130 @@ impl Bulk for Translator {
     }
 }
 
-impl RoundBulk for Circle {
-    type Output = CircleBulk;
+impl RoundBulk for AntiCircleOnOrigin {
+    type Output = AntiLineAtOrigin;
 
-    fn round_bulk(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0()[3] },
+    fn round_bulk(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl RoundBulk for AntiDipoleOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn round_bulk(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
+impl RoundBulk for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn round_bulk(self) -> AntiFlatPointAtOrigin {
+        self
+    }
+}
+
+impl RoundBulk for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn round_bulk(self) -> AntiLineAtOrigin {
+        self
+    }
+}
+
+impl RoundBulk for AntiPlane {
+    type Output = AntiPlaneAtOrigin;
+
+    fn round_bulk(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl RoundBulk for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn round_bulk(self) -> AntiPlaneAtOrigin {
+        self
+    }
+}
+
+impl RoundBulk for AntiSphereOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn round_bulk(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl RoundBulk for Circle {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn round_bulk(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group2()[3] },
         }
     }
 }
 
 impl RoundBulk for CircleAtInfinity {
-    type Output = CircleBulk;
+    type Output = AntiFlatPointAtOrigin;
 
-    fn round_bulk(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0()[0] },
+    fn round_bulk(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group1()[3] },
         }
     }
 }
 
-impl RoundBulk for CircleBulk {
-    type Output = CircleBulk;
+impl RoundBulk for CircleOrthogonalOrigin {
+    type Output = AntiFlatPointAtOrigin;
 
-    fn round_bulk(self) -> CircleBulk {
-        self
-    }
-}
-
-impl RoundBulk for CircleCarrierAspect {
-    type Output = CircleBulk;
-
-    fn round_bulk(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0()[3] },
+    fn round_bulk(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group1()[3] },
         }
     }
 }
 
 impl RoundBulk for Dipole {
-    type Output = DipoleBulk;
+    type Output = AntiLineAtOrigin;
 
-    fn round_bulk(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group1() },
+    fn round_bulk(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups { g0: self.group1() },
         }
     }
 }
 
 impl RoundBulk for DipoleAtInfinity {
-    type Output = DipoleBulk;
+    type Output = AntiLineAtOrigin;
 
-    fn round_bulk(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group0() },
+    fn round_bulk(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
-impl RoundBulk for DipoleBulk {
-    type Output = DipoleBulk;
+impl RoundBulk for DipoleOrthogonalOrigin {
+    type Output = AntiLineAtOrigin;
 
-    fn round_bulk(self) -> DipoleBulk {
-        self
-    }
-}
-
-impl RoundBulk for DipoleCarrierAspect {
-    type Output = DipoleBulk;
-
-    fn round_bulk(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group1() },
+    fn round_bulk(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups { g0: self.group1() },
         }
     }
 }
@@ -368,12 +488,12 @@ impl RoundBulk for MultiVector {
                 g0: self.group0() * Simd32x2::from([1.0, 0.0]),
                 g1: self.group1(),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: self.group4(),
-                g5: Simd32x4::from(0.0),
-                g6: self.group6() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: self.group8() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -382,43 +502,11 @@ impl RoundBulk for MultiVector {
 }
 
 impl RoundBulk for RoundPoint {
-    type Output = RoundPointBulk;
+    type Output = AntiPlaneAtOrigin;
 
-    fn round_bulk(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl RoundBulk for RoundPointAtInfinity {
-    type Output = RoundPointBulk;
-
-    fn round_bulk(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
-        }
-    }
-}
-
-impl RoundBulk for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn round_bulk(self) -> RoundPointBulk {
-        self
-    }
-}
-
-impl RoundBulk for RoundPointOnOrigin {
-    type Output = RoundPointBulk;
-
-    fn round_bulk(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
+    fn round_bulk(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -431,63 +519,137 @@ impl RoundBulk for Scalar {
     }
 }
 
+impl RoundWeight for AntiCircleOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RoundWeight for AntiDipoleOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl RoundWeight for AntiSphereOnOrigin {
+    type Output = Origin;
+
+    fn round_weight(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0()[3] },
+        }
+    }
+}
+
 impl RoundWeight for Circle {
-    type Output = CircleWeight;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
-impl RoundWeight for CircleCarrierAspect {
-    type Output = CircleWeight;
+impl RoundWeight for CircleAligningOrigin {
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-            },
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
-impl RoundWeight for CircleWeight {
-    type Output = CircleWeight;
+impl RoundWeight for CircleAtOrigin {
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight(self) -> CircleWeight {
-        self
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RoundWeight for CircleOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RoundWeight for CircleOrthogonalOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group0() },
+        }
     }
 }
 
 impl RoundWeight for Dipole {
-    type Output = DipoleWeight;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups { g0: self.group0() },
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
-impl RoundWeight for DipoleCarrierAspect {
-    type Output = DipoleWeight;
+impl RoundWeight for DipoleAligningOrigin {
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups { g0: self.group0() },
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
-impl RoundWeight for DipoleWeight {
-    type Output = DipoleWeight;
+impl RoundWeight for DipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight(self) -> DipoleWeight {
-        self
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RoundWeight for DipoleOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
+        }
+    }
+}
+
+impl RoundWeight for DipoleOrthogonalOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups { g0: self.group0() },
+        }
     }
 }
 
@@ -500,16 +662,40 @@ impl RoundWeight for MultiVector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: self.group2() * Simd32x2::from([1.0, 0.0]),
-                g3: self.group3(),
+                g3: self.group3() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: self.group6() * Simd32x4::from([1.0, 1.0, 1.0, 0.0]),
+                g5: Simd32x3::from(0.0),
+                g6: self.group6(),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: self.group10() * Simd32x2::from([1.0, 0.0]),
             },
         }
+    }
+}
+
+impl RoundWeight for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn round_weight(self) -> NullCircleAtOrigin {
+        self
+    }
+}
+
+impl RoundWeight for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn round_weight(self) -> NullDipoleAtOrigin {
+        self
+    }
+}
+
+impl RoundWeight for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn round_weight(self) -> NullSphereAtOrigin {
+        self
     }
 }
 
@@ -541,41 +727,33 @@ impl RoundWeight for RoundPointAtOrigin {
     }
 }
 
-impl RoundWeight for RoundPointOnOrigin {
-    type Output = Origin;
-
-    fn round_weight(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0()[3] },
-        }
-    }
-}
-
-impl RoundWeight for SpacialCurvature {
-    type Output = SphereWeight;
-
-    fn round_weight(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0()[0] },
-        }
-    }
-}
-
 impl RoundWeight for Sphere {
-    type Output = SphereWeight;
+    type Output = NullSphereAtOrigin;
 
-    fn round_weight(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group1()[0] },
+    fn round_weight(self) -> NullSphereAtOrigin {
+        NullSphereAtOrigin {
+            groups: NullSphereAtOriginGroups { g0: self.group1()[0] },
         }
     }
 }
 
-impl RoundWeight for SphereWeight {
-    type Output = SphereWeight;
+impl RoundWeight for SphereAtOrigin {
+    type Output = NullSphereAtOrigin;
 
-    fn round_weight(self) -> SphereWeight {
-        self
+    fn round_weight(self) -> NullSphereAtOrigin {
+        NullSphereAtOrigin {
+            groups: NullSphereAtOriginGroups { g0: self.group0()[0] },
+        }
+    }
+}
+
+impl RoundWeight for SphereOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn round_weight(self) -> NullSphereAtOrigin {
+        NullSphereAtOrigin {
+            groups: NullSphereAtOriginGroups { g0: self.group0()[3] },
+        }
     }
 }
 
@@ -597,12 +775,72 @@ impl Weight for Circle {
     }
 }
 
+impl Weight for CircleAligningOrigin {
+    type Output = LineAtOrigin;
+
+    fn weight(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Weight for CircleAtInfinity {
+    type Output = LineAtOrigin;
+
+    fn weight(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Weight for CircleOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn weight(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
 impl Weight for Dipole {
     type Output = FlatPointAtOrigin;
 
     fn weight(self) -> FlatPointAtOrigin {
         FlatPointAtOrigin {
             groups: FlatPointAtOriginGroups { g0: self.group2()[3] },
+        }
+    }
+}
+
+impl Weight for DipoleAligningOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn weight(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group1()[3] },
+        }
+    }
+}
+
+impl Weight for DipoleAtInfinity {
+    type Output = FlatPointAtOrigin;
+
+    fn weight(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group1()[3] },
+        }
+    }
+}
+
+impl Weight for DipoleOnOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn weight(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group0()[3] },
         }
     }
 }
@@ -685,12 +923,12 @@ impl Weight for MultiVector {
                 g0: self.group0() * Simd32x2::from([0.0, 1.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: self.group3() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
                 g4: Simd32x3::from(0.0),
-                g5: self.group5() * Simd32x4::from([0.0, 0.0, 0.0, 1.0]),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: self.group7(),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: self.group9(),
                 g10: Simd32x2::from(0.0),
             },
@@ -732,6 +970,18 @@ impl Weight for Sphere {
     fn weight(self) -> PlaneAtOrigin {
         PlaneAtOrigin {
             groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Weight for SphereOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn weight(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+            },
         }
     }
 }

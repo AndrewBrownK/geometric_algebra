@@ -216,6 +216,54 @@ pub trait Partner {
     fn partner(self) -> Self::Output;
 }
 
+impl AntiGrade for AntiCircleOnOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        3
+    }
+}
+
+impl AntiGrade for AntiDipoleOnOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        2
+    }
+}
+
+impl AntiGrade for AntiFlatPointAtOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        2
+    }
+}
+
+impl AntiGrade for AntiLineAtOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        3
+    }
+}
+
+impl AntiGrade for AntiPlane {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        4
+    }
+}
+
+impl AntiGrade for AntiPlaneAtOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        4
+    }
+}
+
 impl AntiGrade for AntiScalar {
     type Output = isize;
 
@@ -224,7 +272,23 @@ impl AntiGrade for AntiScalar {
     }
 }
 
+impl AntiGrade for AntiSphereOnOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        4
+    }
+}
+
 impl AntiGrade for Circle {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        2
+    }
+}
+
+impl AntiGrade for CircleAligningOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -240,7 +304,7 @@ impl AntiGrade for CircleAtInfinity {
     }
 }
 
-impl AntiGrade for CircleBulk {
+impl AntiGrade for CircleAtOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -248,7 +312,7 @@ impl AntiGrade for CircleBulk {
     }
 }
 
-impl AntiGrade for CircleCarrierAspect {
+impl AntiGrade for CircleOnOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -256,7 +320,7 @@ impl AntiGrade for CircleCarrierAspect {
     }
 }
 
-impl AntiGrade for CircleWeight {
+impl AntiGrade for CircleOrthogonalOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -272,6 +336,14 @@ impl AntiGrade for Dipole {
     }
 }
 
+impl AntiGrade for DipoleAligningOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        3
+    }
+}
+
 impl AntiGrade for DipoleAtInfinity {
     type Output = isize;
 
@@ -280,7 +352,7 @@ impl AntiGrade for DipoleAtInfinity {
     }
 }
 
-impl AntiGrade for DipoleBulk {
+impl AntiGrade for DipoleAtOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -288,7 +360,7 @@ impl AntiGrade for DipoleBulk {
     }
 }
 
-impl AntiGrade for DipoleCarrierAspect {
+impl AntiGrade for DipoleOnOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -296,7 +368,7 @@ impl AntiGrade for DipoleCarrierAspect {
     }
 }
 
-impl AntiGrade for DipoleWeight {
+impl AntiGrade for DipoleOrthogonalOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -368,6 +440,30 @@ impl AntiGrade for LineAtOrigin {
     }
 }
 
+impl AntiGrade for NullCircleAtOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        2
+    }
+}
+
+impl AntiGrade for NullDipoleAtOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        3
+    }
+}
+
+impl AntiGrade for NullSphereAtOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        1
+    }
+}
+
 impl AntiGrade for Origin {
     type Output = isize;
 
@@ -400,31 +496,7 @@ impl AntiGrade for RoundPoint {
     }
 }
 
-impl AntiGrade for RoundPointAtInfinity {
-    type Output = isize;
-
-    fn anti_grade() -> isize {
-        4
-    }
-}
-
 impl AntiGrade for RoundPointAtOrigin {
-    type Output = isize;
-
-    fn anti_grade() -> isize {
-        4
-    }
-}
-
-impl AntiGrade for RoundPointBulk {
-    type Output = isize;
-
-    fn anti_grade() -> isize {
-        4
-    }
-}
-
-impl AntiGrade for RoundPointOnOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
@@ -440,14 +512,6 @@ impl AntiGrade for Scalar {
     }
 }
 
-impl AntiGrade for SpacialCurvature {
-    type Output = isize;
-
-    fn anti_grade() -> isize {
-        1
-    }
-}
-
 impl AntiGrade for Sphere {
     type Output = isize;
 
@@ -456,10 +520,66 @@ impl AntiGrade for Sphere {
     }
 }
 
-impl AntiGrade for SphereWeight {
+impl AntiGrade for SphereAtOrigin {
     type Output = isize;
 
     fn anti_grade() -> isize {
+        1
+    }
+}
+
+impl AntiGrade for SphereOnOrigin {
+    type Output = isize;
+
+    fn anti_grade() -> isize {
+        1
+    }
+}
+
+impl Grade for AntiCircleOnOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        2
+    }
+}
+
+impl Grade for AntiDipoleOnOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        3
+    }
+}
+
+impl Grade for AntiFlatPointAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        3
+    }
+}
+
+impl Grade for AntiLineAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        2
+    }
+}
+
+impl Grade for AntiPlane {
+    type Output = isize;
+
+    fn grade() -> isize {
+        1
+    }
+}
+
+impl Grade for AntiPlaneAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
         1
     }
 }
@@ -472,7 +592,23 @@ impl Grade for AntiScalar {
     }
 }
 
+impl Grade for AntiSphereOnOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        1
+    }
+}
+
 impl Grade for Circle {
+    type Output = isize;
+
+    fn grade() -> isize {
+        3
+    }
+}
+
+impl Grade for CircleAligningOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -488,7 +624,7 @@ impl Grade for CircleAtInfinity {
     }
 }
 
-impl Grade for CircleBulk {
+impl Grade for CircleAtOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -496,7 +632,7 @@ impl Grade for CircleBulk {
     }
 }
 
-impl Grade for CircleCarrierAspect {
+impl Grade for CircleOnOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -504,7 +640,7 @@ impl Grade for CircleCarrierAspect {
     }
 }
 
-impl Grade for CircleWeight {
+impl Grade for CircleOrthogonalOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -520,6 +656,14 @@ impl Grade for Dipole {
     }
 }
 
+impl Grade for DipoleAligningOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        2
+    }
+}
+
 impl Grade for DipoleAtInfinity {
     type Output = isize;
 
@@ -528,7 +672,7 @@ impl Grade for DipoleAtInfinity {
     }
 }
 
-impl Grade for DipoleBulk {
+impl Grade for DipoleAtOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -536,7 +680,7 @@ impl Grade for DipoleBulk {
     }
 }
 
-impl Grade for DipoleCarrierAspect {
+impl Grade for DipoleOnOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -544,7 +688,7 @@ impl Grade for DipoleCarrierAspect {
     }
 }
 
-impl Grade for DipoleWeight {
+impl Grade for DipoleOrthogonalOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -616,6 +760,30 @@ impl Grade for LineAtOrigin {
     }
 }
 
+impl Grade for NullCircleAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        3
+    }
+}
+
+impl Grade for NullDipoleAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        2
+    }
+}
+
+impl Grade for NullSphereAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        4
+    }
+}
+
 impl Grade for Origin {
     type Output = isize;
 
@@ -648,31 +816,7 @@ impl Grade for RoundPoint {
     }
 }
 
-impl Grade for RoundPointAtInfinity {
-    type Output = isize;
-
-    fn grade() -> isize {
-        1
-    }
-}
-
 impl Grade for RoundPointAtOrigin {
-    type Output = isize;
-
-    fn grade() -> isize {
-        1
-    }
-}
-
-impl Grade for RoundPointBulk {
-    type Output = isize;
-
-    fn grade() -> isize {
-        1
-    }
-}
-
-impl Grade for RoundPointOnOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -688,14 +832,6 @@ impl Grade for Scalar {
     }
 }
 
-impl Grade for SpacialCurvature {
-    type Output = isize;
-
-    fn grade() -> isize {
-        4
-    }
-}
-
 impl Grade for Sphere {
     type Output = isize;
 
@@ -704,7 +840,15 @@ impl Grade for Sphere {
     }
 }
 
-impl Grade for SphereWeight {
+impl Grade for SphereAtOrigin {
+    type Output = isize;
+
+    fn grade() -> isize {
+        4
+    }
+}
+
+impl Grade for SphereOnOrigin {
     type Output = isize;
 
     fn grade() -> isize {
@@ -737,10 +881,34 @@ impl AntiSqrt for DualNum {
     }
 }
 
+impl Attitude for AntiCircleOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn attitude(self) -> AntiPlaneAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for AntiDipoleOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn attitude(self) -> AntiLineAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
 impl Attitude for AntiScalar {
     type Output = Horizon;
 
     fn attitude(self) -> Horizon {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for AntiSphereOnOrigin {
+    type Output = Scalar;
+
+    fn attitude(self) -> Scalar {
         self.anti_wedge(Horizon::unit())
     }
 }
@@ -753,42 +921,90 @@ impl Attitude for Circle {
     }
 }
 
-impl Attitude for CircleCarrierAspect {
-    type Output = DipoleBulk;
+impl Attitude for CircleAligningOrigin {
+    type Output = DipoleAtInfinity;
 
-    fn attitude(self) -> DipoleBulk {
+    fn attitude(self) -> DipoleAtInfinity {
         self.anti_wedge(Horizon::unit())
     }
 }
 
-impl Attitude for CircleWeight {
-    type Output = DipoleBulk;
+impl Attitude for CircleAtInfinity {
+    type Output = FlatPointAtInfinity;
 
-    fn attitude(self) -> DipoleBulk {
+    fn attitude(self) -> FlatPointAtInfinity {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for CircleAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn attitude(self) -> AntiLineAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for CircleOnOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn attitude(self) -> DipoleAtInfinity {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for CircleOrthogonalOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn attitude(self) -> AntiLineAtOrigin {
         self.anti_wedge(Horizon::unit())
     }
 }
 
 impl Attitude for Dipole {
-    type Output = RoundPointAtInfinity;
+    type Output = AntiPlane;
 
-    fn attitude(self) -> RoundPointAtInfinity {
+    fn attitude(self) -> AntiPlane {
         self.anti_wedge(Horizon::unit())
     }
 }
 
-impl Attitude for DipoleCarrierAspect {
-    type Output = RoundPointBulk;
+impl Attitude for DipoleAligningOrigin {
+    type Output = AntiPlane;
 
-    fn attitude(self) -> RoundPointBulk {
+    fn attitude(self) -> AntiPlane {
         self.anti_wedge(Horizon::unit())
     }
 }
 
-impl Attitude for DipoleWeight {
-    type Output = RoundPointBulk;
+impl Attitude for DipoleAtInfinity {
+    type Output = Infinity;
 
-    fn attitude(self) -> RoundPointBulk {
+    fn attitude(self) -> Infinity {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for DipoleAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn attitude(self) -> AntiPlaneAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for DipoleOnOrigin {
+    type Output = AntiPlane;
+
+    fn attitude(self) -> AntiPlane {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for DipoleOrthogonalOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn attitude(self) -> AntiPlaneAtOrigin {
         self.anti_wedge(Horizon::unit())
     }
 }
@@ -857,6 +1073,30 @@ impl Attitude for MultiVector {
     }
 }
 
+impl Attitude for NullCircleAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn attitude(self) -> AntiLineAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for NullDipoleAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn attitude(self) -> AntiPlaneAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for NullSphereAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn attitude(self) -> AntiFlatPointAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
 impl Attitude for Origin {
     type Output = Scalar;
 
@@ -905,34 +1145,26 @@ impl Attitude for RoundPointAtOrigin {
     }
 }
 
-impl Attitude for RoundPointOnOrigin {
-    type Output = Scalar;
-
-    fn attitude(self) -> Scalar {
-        self.anti_wedge(Horizon::unit())
-    }
-}
-
-impl Attitude for SpacialCurvature {
-    type Output = CircleBulk;
-
-    fn attitude(self) -> CircleBulk {
-        self.anti_wedge(Horizon::unit())
-    }
-}
-
 impl Attitude for Sphere {
-    type Output = CircleAtInfinity;
+    type Output = CircleOrthogonalOrigin;
 
-    fn attitude(self) -> CircleAtInfinity {
+    fn attitude(self) -> CircleOrthogonalOrigin {
         self.anti_wedge(Horizon::unit())
     }
 }
 
-impl Attitude for SphereWeight {
-    type Output = CircleBulk;
+impl Attitude for SphereAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
 
-    fn attitude(self) -> CircleBulk {
+    fn attitude(self) -> AntiFlatPointAtOrigin {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
+impl Attitude for SphereOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn attitude(self) -> CircleOrthogonalOrigin {
         self.anti_wedge(Horizon::unit())
     }
 }
@@ -953,10 +1185,74 @@ impl Attitude for Translator {
     }
 }
 
+impl Carrier for AntiCircleOnOrigin {
+    type Output = Line;
+
+    fn carrier(self) -> Line {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for AntiDipoleOnOrigin {
+    type Output = Plane;
+
+    fn carrier(self) -> Plane {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for AntiFlatPointAtOrigin {
+    type Output = Horizon;
+
+    fn carrier(self) -> Horizon {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for AntiLineAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn carrier(self) -> LineAtInfinity {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for AntiPlane {
+    type Output = FlatPointAtInfinity;
+
+    fn carrier(self) -> FlatPointAtInfinity {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for AntiPlaneAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn carrier(self) -> FlatPointAtInfinity {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for AntiSphereOnOrigin {
+    type Output = FlatPoint;
+
+    fn carrier(self) -> FlatPoint {
+        self.wedge(Infinity::unit())
+    }
+}
+
 impl Carrier for Circle {
     type Output = Plane;
 
     fn carrier(self) -> Plane {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for CircleAligningOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn carrier(self) -> PlaneAtOrigin {
         self.wedge(Infinity::unit())
     }
 }
@@ -969,26 +1265,26 @@ impl Carrier for CircleAtInfinity {
     }
 }
 
-impl Carrier for CircleBulk {
-    type Output = Horizon;
-
-    fn carrier(self) -> Horizon {
-        self.wedge(Infinity::unit())
-    }
-}
-
-impl Carrier for CircleCarrierAspect {
-    type Output = Plane;
-
-    fn carrier(self) -> Plane {
-        self.wedge(Infinity::unit())
-    }
-}
-
-impl Carrier for CircleWeight {
+impl Carrier for CircleAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn carrier(self) -> PlaneAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for CircleOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn carrier(self) -> PlaneAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for CircleOrthogonalOrigin {
+    type Output = Plane;
+
+    fn carrier(self) -> Plane {
         self.wedge(Infinity::unit())
     }
 }
@@ -1001,6 +1297,14 @@ impl Carrier for Dipole {
     }
 }
 
+impl Carrier for DipoleAligningOrigin {
+    type Output = LineAtOrigin;
+
+    fn carrier(self) -> LineAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
 impl Carrier for DipoleAtInfinity {
     type Output = LineAtInfinity;
 
@@ -1009,26 +1313,26 @@ impl Carrier for DipoleAtInfinity {
     }
 }
 
-impl Carrier for DipoleBulk {
-    type Output = LineAtInfinity;
-
-    fn carrier(self) -> LineAtInfinity {
-        self.wedge(Infinity::unit())
-    }
-}
-
-impl Carrier for DipoleCarrierAspect {
-    type Output = Line;
-
-    fn carrier(self) -> Line {
-        self.wedge(Infinity::unit())
-    }
-}
-
-impl Carrier for DipoleWeight {
+impl Carrier for DipoleAtOrigin {
     type Output = LineAtOrigin;
 
     fn carrier(self) -> LineAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for DipoleOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn carrier(self) -> LineAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for DipoleOrthogonalOrigin {
+    type Output = Line;
+
+    fn carrier(self) -> Line {
         self.wedge(Infinity::unit())
     }
 }
@@ -1049,6 +1353,30 @@ impl Carrier for MultiVector {
     }
 }
 
+impl Carrier for NullCircleAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn carrier(self) -> PlaneAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for NullDipoleAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn carrier(self) -> LineAtOrigin {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for NullSphereAtOrigin {
+    type Output = AntiScalar;
+
+    fn carrier(self) -> AntiScalar {
+        self.wedge(Infinity::unit())
+    }
+}
+
 impl Carrier for Origin {
     type Output = FlatPointAtOrigin;
 
@@ -1065,34 +1393,10 @@ impl Carrier for RoundPoint {
     }
 }
 
-impl Carrier for RoundPointAtInfinity {
-    type Output = FlatPointAtInfinity;
-
-    fn carrier(self) -> FlatPointAtInfinity {
-        self.wedge(Infinity::unit())
-    }
-}
-
 impl Carrier for RoundPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn carrier(self) -> FlatPointAtOrigin {
-        self.wedge(Infinity::unit())
-    }
-}
-
-impl Carrier for RoundPointBulk {
-    type Output = FlatPointAtInfinity;
-
-    fn carrier(self) -> FlatPointAtInfinity {
-        self.wedge(Infinity::unit())
-    }
-}
-
-impl Carrier for RoundPointOnOrigin {
-    type Output = FlatPoint;
-
-    fn carrier(self) -> FlatPoint {
         self.wedge(Infinity::unit())
     }
 }
@@ -1105,14 +1409,6 @@ impl Carrier for Scalar {
     }
 }
 
-impl Carrier for SpacialCurvature {
-    type Output = AntiScalar;
-
-    fn carrier(self) -> AntiScalar {
-        self.wedge(Infinity::unit())
-    }
-}
-
 impl Carrier for Sphere {
     type Output = AntiScalar;
 
@@ -1121,11 +1417,43 @@ impl Carrier for Sphere {
     }
 }
 
-impl Carrier for SphereWeight {
+impl Carrier for SphereAtOrigin {
     type Output = AntiScalar;
 
     fn carrier(self) -> AntiScalar {
         self.wedge(Infinity::unit())
+    }
+}
+
+impl Carrier for SphereOnOrigin {
+    type Output = AntiScalar;
+
+    fn carrier(self) -> AntiScalar {
+        self.wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for AntiCircleOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn co_carrier(self) -> PlaneAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for AntiDipoleOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn co_carrier(self) -> LineAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for AntiSphereOnOrigin {
+    type Output = AntiScalar;
+
+    fn co_carrier(self) -> AntiScalar {
+        self.anti_dual().wedge(Infinity::unit())
     }
 }
 
@@ -1137,7 +1465,7 @@ impl CoCarrier for Circle {
     }
 }
 
-impl CoCarrier for CircleCarrierAspect {
+impl CoCarrier for CircleAligningOrigin {
     type Output = Line;
 
     fn co_carrier(self) -> Line {
@@ -1145,7 +1473,31 @@ impl CoCarrier for CircleCarrierAspect {
     }
 }
 
-impl CoCarrier for CircleWeight {
+impl CoCarrier for CircleAtInfinity {
+    type Output = LineAtInfinity;
+
+    fn co_carrier(self) -> LineAtInfinity {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for CircleAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn co_carrier(self) -> LineAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for CircleOnOrigin {
+    type Output = Line;
+
+    fn co_carrier(self) -> Line {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for CircleOrthogonalOrigin {
     type Output = LineAtOrigin;
 
     fn co_carrier(self) -> LineAtOrigin {
@@ -1161,7 +1513,7 @@ impl CoCarrier for Dipole {
     }
 }
 
-impl CoCarrier for DipoleCarrierAspect {
+impl CoCarrier for DipoleAligningOrigin {
     type Output = Plane;
 
     fn co_carrier(self) -> Plane {
@@ -1169,7 +1521,31 @@ impl CoCarrier for DipoleCarrierAspect {
     }
 }
 
-impl CoCarrier for DipoleWeight {
+impl CoCarrier for DipoleAtInfinity {
+    type Output = Horizon;
+
+    fn co_carrier(self) -> Horizon {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for DipoleAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn co_carrier(self) -> PlaneAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for DipoleOnOrigin {
+    type Output = Plane;
+
+    fn co_carrier(self) -> Plane {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for DipoleOrthogonalOrigin {
     type Output = PlaneAtOrigin;
 
     fn co_carrier(self) -> PlaneAtOrigin {
@@ -1189,6 +1565,30 @@ impl CoCarrier for MultiVector {
     type Output = MultiVector;
 
     fn co_carrier(self) -> MultiVector {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for NullCircleAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn co_carrier(self) -> LineAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for NullDipoleAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn co_carrier(self) -> PlaneAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for NullSphereAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn co_carrier(self) -> FlatPointAtOrigin {
         self.anti_dual().wedge(Infinity::unit())
     }
 }
@@ -1217,22 +1617,6 @@ impl CoCarrier for RoundPointAtOrigin {
     }
 }
 
-impl CoCarrier for RoundPointOnOrigin {
-    type Output = AntiScalar;
-
-    fn co_carrier(self) -> AntiScalar {
-        self.anti_dual().wedge(Infinity::unit())
-    }
-}
-
-impl CoCarrier for SpacialCurvature {
-    type Output = FlatPointAtOrigin;
-
-    fn co_carrier(self) -> FlatPointAtOrigin {
-        self.anti_dual().wedge(Infinity::unit())
-    }
-}
-
 impl CoCarrier for Sphere {
     type Output = FlatPoint;
 
@@ -1241,10 +1625,18 @@ impl CoCarrier for Sphere {
     }
 }
 
-impl CoCarrier for SphereWeight {
+impl CoCarrier for SphereAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn co_carrier(self) -> FlatPointAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for SphereOnOrigin {
+    type Output = FlatPoint;
+
+    fn co_carrier(self) -> FlatPoint {
         self.anti_dual().wedge(Infinity::unit())
     }
 }
@@ -1274,6 +1666,30 @@ impl Sqrt for Scalar {
     }
 }
 
+impl Center for AntiCircleOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn center(self) -> AntiSphereOnOrigin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for AntiDipoleOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn center(self) -> AntiSphereOnOrigin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn center(self) -> AntiSphereOnOrigin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
 impl Center for Circle {
     type Output = RoundPoint;
 
@@ -1282,18 +1698,42 @@ impl Center for Circle {
     }
 }
 
-impl Center for CircleCarrierAspect {
-    type Output = RoundPointOnOrigin;
+impl Center for CircleAligningOrigin {
+    type Output = RoundPoint;
 
-    fn center(self) -> RoundPointOnOrigin {
+    fn center(self) -> RoundPoint {
         self.co_carrier().anti_wedge(self)
     }
 }
 
-impl Center for CircleWeight {
-    type Output = Origin;
+impl Center for CircleAtInfinity {
+    type Output = Infinity;
 
-    fn center(self) -> Origin {
+    fn center(self) -> Infinity {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for CircleAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn center(self) -> RoundPointAtOrigin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for CircleOnOrigin {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for CircleOrthogonalOrigin {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1306,18 +1746,42 @@ impl Center for Dipole {
     }
 }
 
-impl Center for DipoleCarrierAspect {
-    type Output = RoundPointOnOrigin;
+impl Center for DipoleAligningOrigin {
+    type Output = RoundPoint;
 
-    fn center(self) -> RoundPointOnOrigin {
+    fn center(self) -> RoundPoint {
         self.co_carrier().anti_wedge(self)
     }
 }
 
-impl Center for DipoleWeight {
-    type Output = Origin;
+impl Center for DipoleAtInfinity {
+    type Output = Infinity;
 
-    fn center(self) -> Origin {
+    fn center(self) -> Infinity {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for DipoleAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn center(self) -> RoundPointAtOrigin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for DipoleOnOrigin {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for DipoleOrthogonalOrigin {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1334,6 +1798,30 @@ impl Center for MultiVector {
     type Output = MultiVector;
 
     fn center(self) -> MultiVector {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for NullCircleAtOrigin {
+    type Output = Origin;
+
+    fn center(self) -> Origin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for NullDipoleAtOrigin {
+    type Output = Origin;
+
+    fn center(self) -> Origin {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for NullSphereAtOrigin {
+    type Output = Origin;
+
+    fn center(self) -> Origin {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1362,22 +1850,6 @@ impl Center for RoundPointAtOrigin {
     }
 }
 
-impl Center for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn center(self) -> RoundPointOnOrigin {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
-impl Center for SpacialCurvature {
-    type Output = RoundPointAtOrigin;
-
-    fn center(self) -> RoundPointAtOrigin {
-        self.co_carrier().anti_wedge(self)
-    }
-}
-
 impl Center for Sphere {
     type Output = RoundPoint;
 
@@ -1386,15 +1858,87 @@ impl Center for Sphere {
     }
 }
 
-impl Center for SphereWeight {
-    type Output = Origin;
+impl Center for SphereAtOrigin {
+    type Output = RoundPointAtOrigin;
 
-    fn center(self) -> Origin {
+    fn center(self) -> RoundPointAtOrigin {
         self.co_carrier().anti_wedge(self)
     }
 }
 
+impl Center for SphereOnOrigin {
+    type Output = RoundPoint;
+
+    fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Container for AntiCircleOnOrigin {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for AntiDipoleOnOrigin {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for AntiFlatPointAtOrigin {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for AntiLineAtOrigin {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for AntiPlane {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for AntiPlaneAtOrigin {
+    type Output = Horizon;
+
+    fn container(self) -> Horizon {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for AntiSphereOnOrigin {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
 impl Container for Circle {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for CircleAligningOrigin {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
@@ -1410,15 +1954,23 @@ impl Container for CircleAtInfinity {
     }
 }
 
-impl Container for CircleBulk {
-    type Output = Horizon;
+impl Container for CircleAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn container(self) -> Horizon {
+    fn container(self) -> SphereAtOrigin {
         self.wedge(self.carrier().anti_dual())
     }
 }
 
-impl Container for CircleCarrierAspect {
+impl Container for CircleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn container(self) -> SphereOnOrigin {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for CircleOrthogonalOrigin {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
@@ -1426,15 +1978,15 @@ impl Container for CircleCarrierAspect {
     }
 }
 
-impl Container for CircleWeight {
-    type Output = SphereWeight;
+impl Container for Dipole {
+    type Output = Sphere;
 
-    fn container(self) -> SphereWeight {
+    fn container(self) -> Sphere {
         self.wedge(self.carrier().anti_dual())
     }
 }
 
-impl Container for Dipole {
+impl Container for DipoleAligningOrigin {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
@@ -1450,26 +2002,26 @@ impl Container for DipoleAtInfinity {
     }
 }
 
-impl Container for DipoleBulk {
-    type Output = Horizon;
+impl Container for DipoleAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn container(self) -> Horizon {
+    fn container(self) -> SphereAtOrigin {
         self.wedge(self.carrier().anti_dual())
     }
 }
 
-impl Container for DipoleCarrierAspect {
+impl Container for DipoleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn container(self) -> SphereOnOrigin {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for DipoleOrthogonalOrigin {
     type Output = Sphere;
 
     fn container(self) -> Sphere {
-        self.wedge(self.carrier().anti_dual())
-    }
-}
-
-impl Container for DipoleWeight {
-    type Output = SphereWeight;
-
-    fn container(self) -> SphereWeight {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1490,10 +2042,34 @@ impl Container for MultiVector {
     }
 }
 
-impl Container for Origin {
-    type Output = SphereWeight;
+impl Container for NullCircleAtOrigin {
+    type Output = NullSphereAtOrigin;
 
-    fn container(self) -> SphereWeight {
+    fn container(self) -> NullSphereAtOrigin {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for NullDipoleAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn container(self) -> NullSphereAtOrigin {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn container(self) -> NullSphereAtOrigin {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for Origin {
+    type Output = NullSphereAtOrigin;
+
+    fn container(self) -> NullSphereAtOrigin {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1506,34 +2082,10 @@ impl Container for RoundPoint {
     }
 }
 
-impl Container for RoundPointAtInfinity {
-    type Output = Horizon;
-
-    fn container(self) -> Horizon {
-        self.wedge(self.carrier().anti_dual())
-    }
-}
-
 impl Container for RoundPointAtOrigin {
-    type Output = SpacialCurvature;
+    type Output = SphereAtOrigin;
 
-    fn container(self) -> SpacialCurvature {
-        self.wedge(self.carrier().anti_dual())
-    }
-}
-
-impl Container for RoundPointBulk {
-    type Output = Horizon;
-
-    fn container(self) -> Horizon {
-        self.wedge(self.carrier().anti_dual())
-    }
-}
-
-impl Container for RoundPointOnOrigin {
-    type Output = Sphere;
-
-    fn container(self) -> Sphere {
+    fn container(self) -> SphereAtOrigin {
         self.wedge(self.carrier().anti_dual())
     }
 }
@@ -1546,14 +2098,6 @@ impl Container for Scalar {
     }
 }
 
-impl Container for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn container(self) -> SpacialCurvature {
-        self.wedge(self.carrier().anti_dual())
-    }
-}
-
 impl Container for Sphere {
     type Output = Sphere;
 
@@ -1562,11 +2106,43 @@ impl Container for Sphere {
     }
 }
 
-impl Container for SphereWeight {
-    type Output = SphereWeight;
+impl Container for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn container(self) -> SphereWeight {
+    fn container(self) -> SphereAtOrigin {
         self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Container for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn container(self) -> SphereOnOrigin {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
+impl Partner for AntiCircleOnOrigin {
+    type Output = Dipole;
+
+    fn partner(self) -> Dipole {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for AntiDipoleOnOrigin {
+    type Output = Circle;
+
+    fn partner(self) -> Circle {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for AntiSphereOnOrigin {
+    type Output = RoundPoint;
+
+    fn partner(self) -> RoundPoint {
+        self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
 
@@ -1578,18 +2154,34 @@ impl Partner for Circle {
     }
 }
 
-impl Partner for CircleCarrierAspect {
-    type Output = Circle;
+impl Partner for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
 
-    fn partner(self) -> Circle {
+    fn partner(self) -> CircleAligningOrigin {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
 
-impl Partner for CircleWeight {
-    type Output = CircleWeight;
+impl Partner for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn partner(self) -> CircleWeight {
+    fn partner(self) -> CircleAtOrigin {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for CircleOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn partner(self) -> CircleAligningOrigin {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for CircleOrthogonalOrigin {
+    type Output = Circle;
+
+    fn partner(self) -> Circle {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -1602,18 +2194,34 @@ impl Partner for Dipole {
     }
 }
 
-impl Partner for DipoleCarrierAspect {
-    type Output = Dipole;
+impl Partner for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
 
-    fn partner(self) -> Dipole {
+    fn partner(self) -> DipoleAligningOrigin {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
 
-impl Partner for DipoleWeight {
-    type Output = DipoleWeight;
+impl Partner for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn partner(self) -> DipoleWeight {
+    fn partner(self) -> DipoleAtOrigin {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for DipoleOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn partner(self) -> DipoleAligningOrigin {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for DipoleOrthogonalOrigin {
+    type Output = Dipole;
+
+    fn partner(self) -> Dipole {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -1622,6 +2230,30 @@ impl Partner for MultiVector {
     type Output = MultiVector;
 
     fn partner(self) -> MultiVector {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn partner(self) -> NullCircleAtOrigin {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn partner(self) -> NullDipoleAtOrigin {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn partner(self) -> NullSphereAtOrigin {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -1650,22 +2282,6 @@ impl Partner for RoundPointAtOrigin {
     }
 }
 
-impl Partner for RoundPointOnOrigin {
-    type Output = RoundPoint;
-
-    fn partner(self) -> RoundPoint {
-        self.dual().container().neg().anti_wedge(self.carrier())
-    }
-}
-
-impl Partner for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn partner(self) -> SpacialCurvature {
-        self.dual().container().neg().anti_wedge(self.carrier())
-    }
-}
-
 impl Partner for Sphere {
     type Output = Sphere;
 
@@ -1674,11 +2290,67 @@ impl Partner for Sphere {
     }
 }
 
-impl Partner for SphereWeight {
-    type Output = SphereWeight;
+impl Partner for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn partner(self) -> SphereWeight {
+    fn partner(self) -> SphereAtOrigin {
         self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for SphereOnOrigin {
+    type Output = Sphere;
+
+    fn partner(self) -> Sphere {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl AntiInverse for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn anti_inverse(self) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn anti_inverse(self) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn anti_inverse(self) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn anti_inverse(self) -> AntiLineAtOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for AntiPlane {
+    type Output = AntiPlane;
+
+    fn anti_inverse(self) -> AntiPlane {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn anti_inverse(self) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
@@ -1686,6 +2358,14 @@ impl AntiInverse for AntiScalar {
     type Output = AntiScalar;
 
     fn anti_inverse(self) -> AntiScalar {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn anti_inverse(self) -> AntiSphereOnOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -1698,6 +2378,14 @@ impl AntiInverse for Circle {
     }
 }
 
+impl AntiInverse for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn anti_inverse(self) -> CircleAligningOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
 impl AntiInverse for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
@@ -1706,18 +2394,26 @@ impl AntiInverse for CircleAtInfinity {
     }
 }
 
-impl AntiInverse for CircleBulk {
-    type Output = CircleBulk;
+impl AntiInverse for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn anti_inverse(self) -> CircleBulk {
+    fn anti_inverse(self) -> CircleAtOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
-impl AntiInverse for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl AntiInverse for CircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn anti_inverse(self) -> CircleCarrierAspect {
+    fn anti_inverse(self) -> CircleOnOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_inverse(self) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -1730,6 +2426,14 @@ impl AntiInverse for Dipole {
     }
 }
 
+impl AntiInverse for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn anti_inverse(self) -> DipoleAligningOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
 impl AntiInverse for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -1738,18 +2442,26 @@ impl AntiInverse for DipoleAtInfinity {
     }
 }
 
-impl AntiInverse for DipoleBulk {
-    type Output = DipoleBulk;
+impl AntiInverse for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn anti_inverse(self) -> DipoleBulk {
+    fn anti_inverse(self) -> DipoleAtOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
 
-impl AntiInverse for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl AntiInverse for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn anti_inverse(self) -> DipoleCarrierAspect {
+    fn anti_inverse(self) -> DipoleOnOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn anti_inverse(self) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -1856,34 +2568,10 @@ impl AntiInverse for RoundPoint {
     }
 }
 
-impl AntiInverse for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn anti_inverse(self) -> RoundPointAtInfinity {
-        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
 impl AntiInverse for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_inverse(self) -> RoundPointAtOrigin {
-        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
-impl AntiInverse for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn anti_inverse(self) -> RoundPointBulk {
-        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
-impl AntiInverse for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn anti_inverse(self) -> RoundPointOnOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -1896,18 +2584,26 @@ impl AntiInverse for Scalar {
     }
 }
 
-impl AntiInverse for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn anti_inverse(self) -> SpacialCurvature {
-        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
-    }
-}
-
 impl AntiInverse for Sphere {
     type Output = Sphere;
 
     fn anti_inverse(self) -> Sphere {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for SphereAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn anti_inverse(self) -> SphereAtOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn anti_inverse(self) -> SphereOnOrigin {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -1928,10 +2624,66 @@ impl AntiInverse for Translator {
     }
 }
 
+impl Inverse for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn inverse(self) -> AntiCircleOnOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn inverse(self) -> AntiDipoleOnOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn inverse(self) -> AntiFlatPointAtOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn inverse(self) -> AntiLineAtOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for AntiPlane {
+    type Output = AntiPlane;
+
+    fn inverse(self) -> AntiPlane {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn inverse(self) -> AntiPlaneAtOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
 impl Inverse for AntiScalar {
     type Output = AntiScalar;
 
     fn inverse(self) -> AntiScalar {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn inverse(self) -> AntiSphereOnOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
@@ -1944,6 +2696,14 @@ impl Inverse for Circle {
     }
 }
 
+impl Inverse for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn inverse(self) -> CircleAligningOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
 impl Inverse for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
@@ -1952,18 +2712,26 @@ impl Inverse for CircleAtInfinity {
     }
 }
 
-impl Inverse for CircleBulk {
-    type Output = CircleBulk;
+impl Inverse for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn inverse(self) -> CircleBulk {
+    fn inverse(self) -> CircleAtOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
-impl Inverse for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl Inverse for CircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn inverse(self) -> CircleCarrierAspect {
+    fn inverse(self) -> CircleOnOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn inverse(self) -> CircleOrthogonalOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
@@ -1976,6 +2744,14 @@ impl Inverse for Dipole {
     }
 }
 
+impl Inverse for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn inverse(self) -> DipoleAligningOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
 impl Inverse for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -1984,18 +2760,26 @@ impl Inverse for DipoleAtInfinity {
     }
 }
 
-impl Inverse for DipoleBulk {
-    type Output = DipoleBulk;
+impl Inverse for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn inverse(self) -> DipoleBulk {
+    fn inverse(self) -> DipoleAtOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
 
-impl Inverse for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl Inverse for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn inverse(self) -> DipoleCarrierAspect {
+    fn inverse(self) -> DipoleOnOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn inverse(self) -> DipoleOrthogonalOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
@@ -2102,34 +2886,10 @@ impl Inverse for RoundPoint {
     }
 }
 
-impl Inverse for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn inverse(self) -> RoundPointAtInfinity {
-        self.geometric_product(Scalar::unit().div(self.dot(self)))
-    }
-}
-
 impl Inverse for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn inverse(self) -> RoundPointAtOrigin {
-        self.geometric_product(Scalar::unit().div(self.dot(self)))
-    }
-}
-
-impl Inverse for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn inverse(self) -> RoundPointBulk {
-        self.geometric_product(Scalar::unit().div(self.dot(self)))
-    }
-}
-
-impl Inverse for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn inverse(self) -> RoundPointOnOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }
@@ -2142,18 +2902,26 @@ impl Inverse for Scalar {
     }
 }
 
-impl Inverse for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn inverse(self) -> SpacialCurvature {
-        self.geometric_product(Scalar::unit().div(self.dot(self)))
-    }
-}
-
 impl Inverse for Sphere {
     type Output = Sphere;
 
     fn inverse(self) -> Sphere {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for SphereAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn inverse(self) -> SphereAtOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn inverse(self) -> SphereOnOrigin {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }

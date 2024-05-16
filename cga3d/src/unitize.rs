@@ -16,10 +16,94 @@ pub trait Unitize {
     fn unitize(self) -> Self::Output;
 }
 
+impl Unitize for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn unitize(self) -> AntiCircleOnOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn unitize(self) -> AntiDipoleOnOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn unitize(self) -> AntiFlatPointAtOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn unitize(self) -> AntiLineAtOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for AntiPlane {
+    type Output = AntiPlane;
+
+    fn unitize(self) -> AntiPlane {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn unitize(self) -> AntiPlaneAtOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for AntiScalar {
     type Output = AntiScalar;
 
     fn unitize(self) -> AntiScalar {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn unitize(self) -> AntiSphereOnOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -40,6 +124,18 @@ impl Unitize for Circle {
     }
 }
 
+impl Unitize for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn unitize(self) -> CircleAligningOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
@@ -52,10 +148,10 @@ impl Unitize for CircleAtInfinity {
     }
 }
 
-impl Unitize for CircleBulk {
-    type Output = CircleBulk;
+impl Unitize for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn unitize(self) -> CircleBulk {
+    fn unitize(self) -> CircleAtOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -64,10 +160,22 @@ impl Unitize for CircleBulk {
     }
 }
 
-impl Unitize for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl Unitize for CircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn unitize(self) -> CircleCarrierAspect {
+    fn unitize(self) -> CircleOnOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn unitize(self) -> CircleOrthogonalOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -88,6 +196,18 @@ impl Unitize for Dipole {
     }
 }
 
+impl Unitize for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn unitize(self) -> DipoleAligningOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -100,10 +220,10 @@ impl Unitize for DipoleAtInfinity {
     }
 }
 
-impl Unitize for DipoleBulk {
-    type Output = DipoleBulk;
+impl Unitize for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn unitize(self) -> DipoleBulk {
+    fn unitize(self) -> DipoleAtOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -112,10 +232,22 @@ impl Unitize for DipoleBulk {
     }
 }
 
-impl Unitize for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl Unitize for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn unitize(self) -> DipoleCarrierAspect {
+    fn unitize(self) -> DipoleOnOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn unitize(self) -> DipoleOrthogonalOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -268,46 +400,10 @@ impl Unitize for RoundPoint {
     }
 }
 
-impl Unitize for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn unitize(self) -> RoundPointAtInfinity {
-        self.geometric_product(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
 impl Unitize for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn unitize(self) -> RoundPointAtOrigin {
-        self.geometric_product(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn unitize(self) -> RoundPointBulk {
-        self.geometric_product(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn unitize(self) -> RoundPointOnOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -328,10 +424,10 @@ impl Unitize for Scalar {
     }
 }
 
-impl Unitize for SpacialCurvature {
-    type Output = SpacialCurvature;
+impl Unitize for Sphere {
+    type Output = Sphere;
 
-    fn unitize(self) -> SpacialCurvature {
+    fn unitize(self) -> Sphere {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),
@@ -340,10 +436,22 @@ impl Unitize for SpacialCurvature {
     }
 }
 
-impl Unitize for Sphere {
-    type Output = Sphere;
+impl Unitize for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn unitize(self) -> Sphere {
+    fn unitize(self) -> SphereAtOrigin {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.weight_norm().group0(),
+            },
+        })
+    }
+}
+
+impl Unitize for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn unitize(self) -> SphereOnOrigin {
         self.geometric_product(Scalar {
             groups: ScalarGroups {
                 g0: 1.0 / self.weight_norm().group0(),

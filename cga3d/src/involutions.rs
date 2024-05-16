@@ -77,6 +77,75 @@ pub trait ConformalConjugate {
     fn conformal_conjugate(self) -> Self::Output;
 }
 
+impl AntiDual for AntiCircleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn anti_dual(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl AntiDual for AntiDipoleOnOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn anti_dual(self) -> DipoleOnOrigin {
+        DipoleOnOrigin {
+            groups: DipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl AntiDual for AntiFlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn anti_dual(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for AntiLineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn anti_dual(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for AntiPlane {
+    type Output = Plane;
+
+    fn anti_dual(self) -> Plane {
+        Plane {
+            groups: PlaneGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl AntiDual for AntiPlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn anti_dual(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for AntiScalar {
     type Output = Scalar;
 
@@ -87,63 +156,93 @@ impl AntiDual for AntiScalar {
     }
 }
 
+impl AntiDual for AntiSphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn anti_dual(self) -> SphereOnOrigin {
+        SphereOnOrigin {
+            groups: SphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl AntiDual for Circle {
     type Output = Dipole;
 
     fn anti_dual(self) -> Dipole {
         Dipole {
             groups: DipoleGroups {
-                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
-                g2: Simd32x4::from([-self.group2()[0], -self.group2()[1], -self.group2()[2], self.group0()[3]]),
+                g2: self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl AntiDual for CircleAligningOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn anti_dual(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
 }
 
 impl AntiDual for CircleAtInfinity {
-    type Output = FlatPoint;
+    type Output = DipoleAtInfinity;
 
-    fn anti_dual(self) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: swizzle!(self.group0(), 1, 2, 3, 0) * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
-impl AntiDual for CircleBulk {
-    type Output = FlatPointAtOrigin;
-
-    fn anti_dual(self) -> FlatPointAtOrigin {
-        FlatPointAtOrigin {
-            groups: FlatPointAtOriginGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl AntiDual for CircleCarrierAspect {
-    type Output = Dipole;
-
-    fn anti_dual(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl AntiDual for CircleWeight {
-    type Output = DipoleWeight;
-
-    fn anti_dual(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_dual(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl AntiDual for CircleAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn anti_dual(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for CircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn anti_dual(self) -> AntiCircleOnOrigin {
+        AntiCircleOnOrigin {
+            groups: AntiCircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for CircleOrthogonalOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn anti_dual(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -155,20 +254,46 @@ impl AntiDual for Dipole {
     fn anti_dual(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], -self.group2()[3]]),
+                g0: self.group0(),
                 g1: self.group1(),
-                g2: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+                g2: self.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiDual for DipoleAligningOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_dual(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
     }
 }
 
 impl AntiDual for DipoleAtInfinity {
-    type Output = Line;
+    type Output = CircleAtInfinity;
 
-    fn anti_dual(self) -> Line {
-        Line {
-            groups: LineGroups {
+    fn anti_dual(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl AntiDual for DipoleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn anti_dual(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
                 g0: self.group0(),
                 g1: self.group1(),
             },
@@ -176,36 +301,28 @@ impl AntiDual for DipoleAtInfinity {
     }
 }
 
-impl AntiDual for DipoleBulk {
-    type Output = LineAtOrigin;
+impl AntiDual for DipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
 
-    fn anti_dual(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl AntiDual for DipoleCarrierAspect {
-    type Output = Circle;
-
-    fn anti_dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g1: self.group1(),
-                g2: Simd32x3::from(0.0),
+    fn anti_dual(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
     }
 }
 
-impl AntiDual for DipoleWeight {
-    type Output = CircleWeight;
+impl AntiDual for DipoleOrthogonalOrigin {
+    type Output = CircleAligningOrigin;
 
-    fn anti_dual(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups { g0: self.group0() },
+    fn anti_dual(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
         }
     }
 }
@@ -223,12 +340,13 @@ impl AntiDual for DualNum {
 }
 
 impl AntiDual for FlatPoint {
-    type Output = CircleAtInfinity;
+    type Output = CircleOrthogonalOrigin;
 
-    fn anti_dual(self) -> CircleAtInfinity {
-        CircleAtInfinity {
-            groups: CircleAtInfinityGroups {
-                g0: swizzle!(self.group0(), 3, 0, 1, 2) * Simd32x4::from([-1.0, 1.0, 1.0, 1.0]),
+    fn anti_dual(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
     }
@@ -245,11 +363,11 @@ impl AntiDual for FlatPointAtInfinity {
 }
 
 impl AntiDual for FlatPointAtOrigin {
-    type Output = CircleBulk;
+    type Output = AntiFlatPointAtOrigin;
 
-    fn anti_dual(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: -self.group0() },
+    fn anti_dual(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -263,12 +381,12 @@ impl AntiDual for Flector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g2: Simd32x2::from([0.0, -self.group1()[3]]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -285,12 +403,12 @@ impl AntiDual for FlectorAtInfinity {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from([0.0, -self.group0()[3]]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -325,7 +443,7 @@ impl AntiDual for Line {
         DipoleAtInfinity {
             groups: DipoleAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
+                g1: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
             },
         }
     }
@@ -344,11 +462,11 @@ impl AntiDual for LineAtInfinity {
 }
 
 impl AntiDual for LineAtOrigin {
-    type Output = DipoleBulk;
+    type Output = AntiLineAtOrigin;
 
-    fn anti_dual(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn anti_dual(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -364,12 +482,12 @@ impl AntiDual for Motor {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: self.group1() * Simd32x3::from(-1.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -386,12 +504,12 @@ impl AntiDual for MultiVector {
                 g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([1.0, -1.0]),
                 g1: self.group9(),
                 g2: self.group10() * Simd32x2::from(-1.0),
-                g3: Simd32x3::from([-self.group6()[0], self.group6()[1], self.group6()[2]]),
+                g3: Simd32x4::from([-self.group6()[0], -self.group6()[1], -self.group6()[2], self.group8()[3]]),
                 g4: self.group7() * Simd32x3::from(-1.0),
-                g5: Simd32x4::from([-self.group8()[0], -self.group8()[1], -self.group8()[2], self.group6()[3]]),
-                g6: Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], -self.group5()[3]]),
+                g5: Simd32x3::from([-self.group8()[0], self.group8()[1], self.group8()[2]]),
+                g6: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
                 g7: self.group4(),
-                g8: Simd32x3::from([self.group5()[0], self.group5()[1], self.group5()[2]]),
+                g8: Simd32x4::from([self.group5()[0], self.group5()[1], self.group5()[2], -self.group3()[3]]),
                 g9: self.group1() * Simd32x3::from(-1.0),
                 g10: self.group2(),
             },
@@ -399,22 +517,54 @@ impl AntiDual for MultiVector {
     }
 }
 
-impl AntiDual for Origin {
-    type Output = SphereWeight;
+impl AntiDual for NullCircleAtOrigin {
+    type Output = NullDipoleAtOrigin;
 
-    fn anti_dual(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
+    fn anti_dual(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for NullDipoleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn anti_dual(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl AntiDual for NullSphereAtOrigin {
+    type Output = Origin;
+
+    fn anti_dual(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl AntiDual for Origin {
+    type Output = NullSphereAtOrigin;
+
+    fn anti_dual(self) -> NullSphereAtOrigin {
+        NullSphereAtOrigin {
+            groups: NullSphereAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
 impl AntiDual for Plane {
-    type Output = RoundPointAtInfinity;
+    type Output = AntiPlane;
 
-    fn anti_dual(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups {
+    fn anti_dual(self) -> AntiPlane {
+        AntiPlane {
+            groups: AntiPlaneGroups {
                 g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
@@ -422,11 +572,11 @@ impl AntiDual for Plane {
 }
 
 impl AntiDual for PlaneAtOrigin {
-    type Output = RoundPointBulk;
+    type Output = AntiPlaneAtOrigin;
 
-    fn anti_dual(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
+    fn anti_dual(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -440,12 +590,12 @@ impl AntiDual for Rotor {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -466,49 +616,12 @@ impl AntiDual for RoundPoint {
     }
 }
 
-impl AntiDual for RoundPointAtInfinity {
-    type Output = Plane;
-
-    fn anti_dual(self) -> Plane {
-        Plane {
-            groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
-            },
-        }
-    }
-}
-
 impl AntiDual for RoundPointAtOrigin {
-    type Output = SpacialCurvature;
+    type Output = SphereAtOrigin;
 
-    fn anti_dual(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl AntiDual for RoundPointBulk {
-    type Output = PlaneAtOrigin;
-
-    fn anti_dual(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiDual for RoundPointOnOrigin {
-    type Output = Sphere;
-
-    fn anti_dual(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: Simd32x2::from([self.group0()[3], 0.0]),
-            },
+    fn anti_dual(self) -> SphereAtOrigin {
+        SphereAtOrigin {
+            groups: SphereAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -519,18 +632,6 @@ impl AntiDual for Scalar {
     fn anti_dual(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: -self.group0() },
-        }
-    }
-}
-
-impl AntiDual for SpacialCurvature {
-    type Output = RoundPointAtOrigin;
-
-    fn anti_dual(self) -> RoundPointAtOrigin {
-        RoundPointAtOrigin {
-            groups: RoundPointAtOriginGroups {
-                g0: self.group0() * Simd32x2::from(-1.0),
-            },
         }
     }
 }
@@ -548,12 +649,26 @@ impl AntiDual for Sphere {
     }
 }
 
-impl AntiDual for SphereWeight {
-    type Output = Origin;
+impl AntiDual for SphereAtOrigin {
+    type Output = RoundPointAtOrigin;
 
-    fn anti_dual(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: -self.group0() },
+    fn anti_dual(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: self.group0() * Simd32x2::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiDual for SphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn anti_dual(self) -> AntiSphereOnOrigin {
+        AntiSphereOnOrigin {
+            groups: AntiSphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
         }
     }
 }
@@ -567,12 +682,12 @@ impl AntiDual for Transflector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g2: Simd32x2::from([0.0, -self.group1()[3]]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: self.group0(),
+                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -589,16 +704,79 @@ impl AntiDual for Translator {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
+    }
+}
+
+impl AntiReversal for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn anti_reversal(self) -> AntiCircleOnOrigin {
+        AntiCircleOnOrigin {
+            groups: AntiCircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn anti_reversal(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn anti_reversal(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl AntiReversal for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn anti_reversal(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for AntiPlane {
+    type Output = AntiPlane;
+
+    fn anti_reversal(self) -> AntiPlane {
+        self
+    }
+}
+
+impl AntiReversal for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn anti_reversal(self) -> AntiPlaneAtOrigin {
+        self
     }
 }
 
@@ -610,13 +788,35 @@ impl AntiReversal for AntiScalar {
     }
 }
 
+impl AntiReversal for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn anti_reversal(self) -> AntiSphereOnOrigin {
+        self
+    }
+}
+
 impl AntiReversal for Circle {
     type Output = Circle;
 
     fn anti_reversal(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn anti_reversal(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x3::from(-1.0),
             },
@@ -630,41 +830,47 @@ impl AntiReversal for CircleAtInfinity {
     fn anti_reversal(self) -> CircleAtInfinity {
         CircleAtInfinity {
             groups: CircleAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiReversal for CircleBulk {
-    type Output = CircleBulk;
-
-    fn anti_reversal(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: -self.group0() },
-        }
-    }
-}
-
-impl AntiReversal for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
-
-    fn anti_reversal(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiReversal for CircleWeight {
-    type Output = CircleWeight;
-
-    fn anti_reversal(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for CircleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn anti_reversal(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for CircleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn anti_reversal(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reversal(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -684,6 +890,19 @@ impl AntiReversal for Dipole {
     }
 }
 
+impl AntiReversal for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn anti_reversal(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl AntiReversal for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -691,30 +910,18 @@ impl AntiReversal for DipoleAtInfinity {
         DipoleAtInfinity {
             groups: DipoleAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
 }
 
-impl AntiReversal for DipoleBulk {
-    type Output = DipoleBulk;
+impl AntiReversal for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn anti_reversal(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl AntiReversal for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
-
-    fn anti_reversal(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
+    fn anti_reversal(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
@@ -722,13 +929,27 @@ impl AntiReversal for DipoleCarrierAspect {
     }
 }
 
-impl AntiReversal for DipoleWeight {
-    type Output = DipoleWeight;
+impl AntiReversal for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn anti_reversal(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn anti_reversal(self) -> DipoleOnOrigin {
+        DipoleOnOrigin {
+            groups: DipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn anti_reversal(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -876,16 +1097,48 @@ impl AntiReversal for MultiVector {
                 g0: self.group0(),
                 g1: self.group1(),
                 g2: self.group2(),
-                g3: self.group3() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
                 g4: self.group4() * Simd32x3::from(-1.0),
-                g5: self.group5() * Simd32x4::from(-1.0),
-                g6: self.group6() * Simd32x4::from(-1.0),
+                g5: self.group5() * Simd32x3::from(-1.0),
+                g6: self.group6() * Simd32x3::from(-1.0),
                 g7: self.group7() * Simd32x3::from(-1.0),
-                g8: self.group8() * Simd32x3::from(-1.0),
+                g8: self.group8() * Simd32x4::from(-1.0),
                 g9: self.group9(),
                 g10: self.group10(),
             },
         }
+    }
+}
+
+impl AntiReversal for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn anti_reversal(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn anti_reversal(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl AntiReversal for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn anti_reversal(self) -> NullSphereAtOrigin {
+        self
     }
 }
 
@@ -933,34 +1186,10 @@ impl AntiReversal for RoundPoint {
     }
 }
 
-impl AntiReversal for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn anti_reversal(self) -> RoundPointAtInfinity {
-        self
-    }
-}
-
 impl AntiReversal for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn anti_reversal(self) -> RoundPointAtOrigin {
-        self
-    }
-}
-
-impl AntiReversal for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn anti_reversal(self) -> RoundPointBulk {
-        self
-    }
-}
-
-impl AntiReversal for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn anti_reversal(self) -> RoundPointOnOrigin {
         self
     }
 }
@@ -973,14 +1202,6 @@ impl AntiReversal for Scalar {
     }
 }
 
-impl AntiReversal for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn anti_reversal(self) -> SpacialCurvature {
-        self
-    }
-}
-
 impl AntiReversal for Sphere {
     type Output = Sphere;
 
@@ -989,10 +1210,18 @@ impl AntiReversal for Sphere {
     }
 }
 
-impl AntiReversal for SphereWeight {
-    type Output = SphereWeight;
+impl AntiReversal for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn anti_reversal(self) -> SphereWeight {
+    fn anti_reversal(self) -> SphereAtOrigin {
+        self
+    }
+}
+
+impl AntiReversal for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn anti_reversal(self) -> SphereOnOrigin {
         self
     }
 }
@@ -1022,6 +1251,68 @@ impl AntiReversal for Translator {
     }
 }
 
+impl Automorphism for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn automorphism(self) -> AntiCircleOnOrigin {
+        self
+    }
+}
+
+impl Automorphism for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn automorphism(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn automorphism(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Automorphism for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn automorphism(self) -> AntiLineAtOrigin {
+        self
+    }
+}
+
+impl Automorphism for AntiPlane {
+    type Output = AntiPlane;
+
+    fn automorphism(self) -> AntiPlane {
+        AntiPlane {
+            groups: AntiPlaneGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn automorphism(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Automorphism for AntiScalar {
     type Output = AntiScalar;
 
@@ -1032,13 +1323,39 @@ impl Automorphism for AntiScalar {
     }
 }
 
+impl Automorphism for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn automorphism(self) -> AntiSphereOnOrigin {
+        AntiSphereOnOrigin {
+            groups: AntiSphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Automorphism for Circle {
     type Output = Circle;
 
     fn automorphism(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn automorphism(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x3::from(-1.0),
             },
@@ -1052,41 +1369,47 @@ impl Automorphism for CircleAtInfinity {
     fn automorphism(self) -> CircleAtInfinity {
         CircleAtInfinity {
             groups: CircleAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Automorphism for CircleBulk {
-    type Output = CircleBulk;
-
-    fn automorphism(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: -self.group0() },
-        }
-    }
-}
-
-impl Automorphism for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
-
-    fn automorphism(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Automorphism for CircleWeight {
-    type Output = CircleWeight;
-
-    fn automorphism(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for CircleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn automorphism(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for CircleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn automorphism(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn automorphism(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1100,6 +1423,14 @@ impl Automorphism for Dipole {
     }
 }
 
+impl Automorphism for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn automorphism(self) -> DipoleAligningOrigin {
+        self
+    }
+}
+
 impl Automorphism for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -1108,26 +1439,26 @@ impl Automorphism for DipoleAtInfinity {
     }
 }
 
-impl Automorphism for DipoleBulk {
-    type Output = DipoleBulk;
+impl Automorphism for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn automorphism(self) -> DipoleBulk {
+    fn automorphism(self) -> DipoleAtOrigin {
         self
     }
 }
 
-impl Automorphism for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl Automorphism for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn automorphism(self) -> DipoleCarrierAspect {
+    fn automorphism(self) -> DipoleOnOrigin {
         self
     }
 }
 
-impl Automorphism for DipoleWeight {
-    type Output = DipoleWeight;
+impl Automorphism for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn automorphism(self) -> DipoleWeight {
+    fn automorphism(self) -> DipoleOrthogonalOrigin {
         self
     }
 }
@@ -1264,13 +1595,41 @@ impl Automorphism for MultiVector {
                 g3: self.group3(),
                 g4: self.group4(),
                 g5: self.group5(),
-                g6: self.group6() * Simd32x4::from(-1.0),
+                g6: self.group6() * Simd32x3::from(-1.0),
                 g7: self.group7() * Simd32x3::from(-1.0),
-                g8: self.group8() * Simd32x3::from(-1.0),
+                g8: self.group8() * Simd32x4::from(-1.0),
                 g9: self.group9(),
                 g10: self.group10(),
             },
         }
+    }
+}
+
+impl Automorphism for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn automorphism(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Automorphism for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn automorphism(self) -> NullDipoleAtOrigin {
+        self
+    }
+}
+
+impl Automorphism for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn automorphism(self) -> NullSphereAtOrigin {
+        self
     }
 }
 
@@ -1325,18 +1684,6 @@ impl Automorphism for RoundPoint {
     }
 }
 
-impl Automorphism for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn automorphism(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Automorphism for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
@@ -1344,30 +1691,6 @@ impl Automorphism for RoundPointAtOrigin {
         RoundPointAtOrigin {
             groups: RoundPointAtOriginGroups {
                 g0: self.group0() * Simd32x2::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Automorphism for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn automorphism(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Automorphism for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn automorphism(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -1381,14 +1704,6 @@ impl Automorphism for Scalar {
     }
 }
 
-impl Automorphism for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn automorphism(self) -> SpacialCurvature {
-        self
-    }
-}
-
 impl Automorphism for Sphere {
     type Output = Sphere;
 
@@ -1397,10 +1712,18 @@ impl Automorphism for Sphere {
     }
 }
 
-impl Automorphism for SphereWeight {
-    type Output = SphereWeight;
+impl Automorphism for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn automorphism(self) -> SphereWeight {
+    fn automorphism(self) -> SphereAtOrigin {
+        self
+    }
+}
+
+impl Automorphism for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn automorphism(self) -> SphereOnOrigin {
         self
     }
 }
@@ -1425,119 +1748,7 @@ impl Automorphism for Translator {
     }
 }
 
-impl Complement for AntiScalar {
-    type Output = Scalar;
-
-    fn complement(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Complement for Circle {
-    type Output = Dipole;
-
-    fn complement(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: self.group2() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Complement for CircleAtInfinity {
-    type Output = Dipole;
-
-    fn complement(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from([-self.group0()[1], self.group0()[2], self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[0]]),
-            },
-        }
-    }
-}
-
-impl Complement for CircleBulk {
-    type Output = FlatPointAtOrigin;
-
-    fn complement(self) -> FlatPointAtOrigin {
-        FlatPointAtOrigin {
-            groups: FlatPointAtOriginGroups { g0: -self.group0() },
-        }
-    }
-}
-
-impl Complement for CircleCarrierAspect {
-    type Output = FlatPoint;
-
-    fn complement(self) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Complement for CircleWeight {
-    type Output = FlatPointAtInfinity;
-
-    fn complement(self) -> FlatPointAtInfinity {
-        FlatPointAtInfinity {
-            groups: FlatPointAtInfinityGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Complement for Dipole {
-    type Output = Circle;
-
-    fn complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: self.group2() * Simd32x4::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
-                g2: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Complement for DipoleAtInfinity {
-    type Output = Circle;
-
-    fn complement(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
-                g1: self.group0() * Simd32x3::from(-1.0),
-                g2: Simd32x3::from(0.0),
-            },
-        }
-    }
-}
-
-impl Complement for DipoleBulk {
-    type Output = LineAtOrigin;
-
-    fn complement(self) -> LineAtOrigin {
-        LineAtOrigin {
-            groups: LineAtOriginGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Complement for DipoleCarrierAspect {
+impl Complement for AntiCircleOnOrigin {
     type Output = Line;
 
     fn complement(self) -> Line {
@@ -1550,13 +1761,237 @@ impl Complement for DipoleCarrierAspect {
     }
 }
 
-impl Complement for DipoleWeight {
-    type Output = LineAtInfinity;
+impl Complement for AntiDipoleOnOrigin {
+    type Output = FlatPoint;
 
-    fn complement(self) -> LineAtInfinity {
-        LineAtInfinity {
-            groups: LineAtInfinityGroups {
+    fn complement(self) -> FlatPoint {
+        FlatPoint {
+            groups: FlatPointGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for AntiFlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn complement(self) -> FlatPointAtOrigin {
+        FlatPointAtOrigin {
+            groups: FlatPointAtOriginGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Complement for AntiLineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn complement(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for AntiPlane {
+    type Output = SphereOnOrigin;
+
+    fn complement(self) -> SphereOnOrigin {
+        SphereOnOrigin {
+            groups: SphereOnOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Complement for AntiPlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn complement(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Complement for AntiScalar {
+    type Output = Scalar;
+
+    fn complement(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Complement for AntiSphereOnOrigin {
+    type Output = Plane;
+
+    fn complement(self) -> Plane {
+        Plane {
+            groups: PlaneGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Complement for Circle {
+    type Output = Dipole;
+
+    fn complement(self) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: Simd32x4::from([-self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for CircleAligningOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn complement(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
+                g0: self.group2() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for CircleAtInfinity {
+    type Output = Dipole;
+
+    fn complement(self) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g1: self.group0() * Simd32x3::from(-1.0),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, -self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for CircleAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn complement(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
+                g0: self.group1() * Simd32x3::from(-1.0),
+                g1: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for CircleOnOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn complement(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group1() * Simd32x3::from(-1.0),
+                g1: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Complement for CircleOrthogonalOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn complement(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g1: Simd32x4::from([-self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for Dipole {
+    type Output = Circle;
+
+    fn complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: Simd32x4::from([-self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for DipoleAligningOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn complement(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g1: Simd32x4::from([-self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for DipoleAtInfinity {
+    type Output = Circle;
+
+    fn complement(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g1: self.group0() * Simd32x3::from(-1.0),
+                g2: Simd32x4::from([0.0, 0.0, 0.0, -self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for DipoleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn complement(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group1() * Simd32x3::from(-1.0),
+                g1: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for DipoleOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn complement(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for DipoleOrthogonalOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn complement(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group2() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group0() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -1575,11 +2010,11 @@ impl Complement for DualNum {
 }
 
 impl Complement for FlatPoint {
-    type Output = CircleCarrierAspect;
+    type Output = AntiDipoleOnOrigin;
 
-    fn complement(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups {
+    fn complement(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
                 g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
@@ -1587,11 +2022,11 @@ impl Complement for FlatPoint {
 }
 
 impl Complement for FlatPointAtInfinity {
-    type Output = CircleWeight;
+    type Output = NullCircleAtOrigin;
 
-    fn complement(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn complement(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -1599,11 +2034,11 @@ impl Complement for FlatPointAtInfinity {
 }
 
 impl Complement for FlatPointAtOrigin {
-    type Output = CircleBulk;
+    type Output = AntiFlatPointAtOrigin;
 
-    fn complement(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: -self.group0() },
+    fn complement(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: -self.group0() },
         }
     }
 }
@@ -1617,12 +2052,12 @@ impl Complement for Flector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g2: Simd32x2::from([self.group1()[3], 0.0]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: self.group0() * Simd32x4::from(-1.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -1639,12 +2074,12 @@ impl Complement for FlectorAtInfinity {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from([self.group0()[3], 0.0]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -1663,21 +2098,21 @@ impl Complement for Horizon {
 }
 
 impl Complement for Infinity {
-    type Output = SphereWeight;
+    type Output = NullSphereAtOrigin;
 
-    fn complement(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: self.group0() },
+    fn complement(self) -> NullSphereAtOrigin {
+        NullSphereAtOrigin {
+            groups: NullSphereAtOriginGroups { g0: self.group0() },
         }
     }
 }
 
 impl Complement for Line {
-    type Output = DipoleCarrierAspect;
+    type Output = AntiCircleOnOrigin;
 
-    fn complement(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
+    fn complement(self) -> AntiCircleOnOrigin {
+        AntiCircleOnOrigin {
+            groups: AntiCircleOnOriginGroups {
                 g0: self.group1() * Simd32x3::from(-1.0),
                 g1: self.group0() * Simd32x3::from(-1.0),
             },
@@ -1686,11 +2121,11 @@ impl Complement for Line {
 }
 
 impl Complement for LineAtInfinity {
-    type Output = DipoleWeight;
+    type Output = NullDipoleAtOrigin;
 
-    fn complement(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn complement(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -1698,11 +2133,11 @@ impl Complement for LineAtInfinity {
 }
 
 impl Complement for LineAtOrigin {
-    type Output = DipoleBulk;
+    type Output = AntiLineAtOrigin;
 
-    fn complement(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
+    fn complement(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -1718,12 +2153,12 @@ impl Complement for Motor {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: self.group1() * Simd32x3::from(-1.0),
+                g3: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], 0.0]),
                 g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -1740,15 +2175,49 @@ impl Complement for MultiVector {
                 g0: swizzle!(self.group0(), 1, 0),
                 g1: self.group9(),
                 g2: swizzle!(self.group10(), 1, 0),
-                g3: self.group8() * Simd32x3::from(-1.0),
+                g3: self.group8() * Simd32x4::from(-1.0),
                 g4: self.group7() * Simd32x3::from(-1.0),
-                g5: self.group6() * Simd32x4::from(-1.0),
-                g6: self.group5() * Simd32x4::from(-1.0),
+                g5: self.group6() * Simd32x3::from(-1.0),
+                g6: self.group5() * Simd32x3::from(-1.0),
                 g7: self.group4() * Simd32x3::from(-1.0),
-                g8: self.group3() * Simd32x3::from(-1.0),
+                g8: self.group3() * Simd32x4::from(-1.0),
                 g9: self.group1(),
                 g10: swizzle!(self.group2(), 1, 0),
             },
+        }
+    }
+}
+
+impl Complement for NullCircleAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn complement(self) -> FlatPointAtInfinity {
+        FlatPointAtInfinity {
+            groups: FlatPointAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for NullDipoleAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn complement(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Complement for NullSphereAtOrigin {
+    type Output = Infinity;
+
+    fn complement(self) -> Infinity {
+        Infinity {
+            groups: InfinityGroups { g0: self.group0() },
         }
     }
 }
@@ -1764,21 +2233,21 @@ impl Complement for Origin {
 }
 
 impl Complement for Plane {
-    type Output = RoundPointOnOrigin;
+    type Output = AntiSphereOnOrigin;
 
-    fn complement(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups { g0: self.group0() },
+    fn complement(self) -> AntiSphereOnOrigin {
+        AntiSphereOnOrigin {
+            groups: AntiSphereOnOriginGroups { g0: self.group0() },
         }
     }
 }
 
 impl Complement for PlaneAtOrigin {
-    type Output = RoundPointBulk;
+    type Output = AntiPlaneAtOrigin;
 
-    fn complement(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups { g0: self.group0() },
+    fn complement(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -1792,12 +2261,12 @@ impl Complement for Rotor {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -1818,47 +2287,14 @@ impl Complement for RoundPoint {
     }
 }
 
-impl Complement for RoundPointAtInfinity {
-    type Output = Sphere;
-
-    fn complement(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: Simd32x2::from([self.group0()[3], 0.0]),
-            },
-        }
-    }
-}
-
 impl Complement for RoundPointAtOrigin {
-    type Output = SpacialCurvature;
+    type Output = SphereAtOrigin;
 
-    fn complement(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups {
+    fn complement(self) -> SphereAtOrigin {
+        SphereAtOrigin {
+            groups: SphereAtOriginGroups {
                 g0: swizzle!(self.group0(), 1, 0),
             },
-        }
-    }
-}
-
-impl Complement for RoundPointBulk {
-    type Output = PlaneAtOrigin;
-
-    fn complement(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Complement for RoundPointOnOrigin {
-    type Output = Plane;
-
-    fn complement(self) -> Plane {
-        Plane {
-            groups: PlaneGroups { g0: self.group0() },
         }
     }
 }
@@ -1869,18 +2305,6 @@ impl Complement for Scalar {
     fn complement(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Complement for SpacialCurvature {
-    type Output = RoundPointAtOrigin;
-
-    fn complement(self) -> RoundPointAtOrigin {
-        RoundPointAtOrigin {
-            groups: RoundPointAtOriginGroups {
-                g0: swizzle!(self.group0(), 1, 0),
-            },
         }
     }
 }
@@ -1898,12 +2322,24 @@ impl Complement for Sphere {
     }
 }
 
-impl Complement for SphereWeight {
-    type Output = Infinity;
+impl Complement for SphereAtOrigin {
+    type Output = RoundPointAtOrigin;
 
-    fn complement(self) -> Infinity {
-        Infinity {
-            groups: InfinityGroups { g0: self.group0() },
+    fn complement(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups {
+                g0: swizzle!(self.group0(), 1, 0),
+            },
+        }
+    }
+}
+
+impl Complement for SphereOnOrigin {
+    type Output = AntiPlane;
+
+    fn complement(self) -> AntiPlane {
+        AntiPlane {
+            groups: AntiPlaneGroups { g0: self.group0() },
         }
     }
 }
@@ -1917,12 +2353,12 @@ impl Complement for Transflector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g2: Simd32x2::from([self.group1()[3], 0.0]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
+                g5: Simd32x3::from(0.0),
+                g6: self.group0() * Simd32x3::from(-1.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -1939,16 +2375,68 @@ impl Complement for Translator {
                 g0: Simd32x2::from([self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
+    }
+}
+
+impl ConformalConjugate for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn conformal_conjugate(self) -> AntiCircleOnOrigin {
+        self
+    }
+}
+
+impl ConformalConjugate for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn conformal_conjugate(self) -> AntiDipoleOnOrigin {
+        self
+    }
+}
+
+impl ConformalConjugate for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn conformal_conjugate(self) -> AntiFlatPointAtOrigin {
+        self
+    }
+}
+
+impl ConformalConjugate for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn conformal_conjugate(self) -> AntiLineAtOrigin {
+        self
+    }
+}
+
+impl ConformalConjugate for AntiPlane {
+    type Output = AntiPlane;
+
+    fn conformal_conjugate(self) -> AntiPlane {
+        AntiPlane {
+            groups: AntiPlaneGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl ConformalConjugate for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn conformal_conjugate(self) -> AntiPlaneAtOrigin {
+        self
     }
 }
 
@@ -1962,12 +2450,34 @@ impl ConformalConjugate for AntiScalar {
     }
 }
 
+impl ConformalConjugate for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn conformal_conjugate(self) -> AntiSphereOnOrigin {
+        self
+    }
+}
+
 impl ConformalConjugate for Circle {
     type Output = Circle;
 
     fn conformal_conjugate(self) -> Circle {
         Circle {
             groups: CircleGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl ConformalConjugate for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn conformal_conjugate(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x3::from(-1.0),
@@ -1982,33 +2492,49 @@ impl ConformalConjugate for CircleAtInfinity {
     fn conformal_conjugate(self) -> CircleAtInfinity {
         CircleAtInfinity {
             groups: CircleAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
 }
 
-impl ConformalConjugate for CircleBulk {
-    type Output = CircleBulk;
+impl ConformalConjugate for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn conformal_conjugate(self) -> CircleBulk {
-        self
+    fn conformal_conjugate(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
     }
 }
 
-impl ConformalConjugate for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl ConformalConjugate for CircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn conformal_conjugate(self) -> CircleCarrierAspect {
-        self
+    fn conformal_conjugate(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
     }
 }
 
-impl ConformalConjugate for CircleWeight {
-    type Output = CircleWeight;
+impl ConformalConjugate for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn conformal_conjugate(self) -> CircleWeight {
-        self
+    fn conformal_conjugate(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
     }
 }
 
@@ -2026,6 +2552,19 @@ impl ConformalConjugate for Dipole {
     }
 }
 
+impl ConformalConjugate for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn conformal_conjugate(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl ConformalConjugate for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -2033,33 +2572,48 @@ impl ConformalConjugate for DipoleAtInfinity {
         DipoleAtInfinity {
             groups: DipoleAtInfinityGroups {
                 g0: self.group0(),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl ConformalConjugate for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn conformal_conjugate(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
+                g0: self.group0(),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
 }
 
-impl ConformalConjugate for DipoleBulk {
-    type Output = DipoleBulk;
+impl ConformalConjugate for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn conformal_conjugate(self) -> DipoleBulk {
-        self
+    fn conformal_conjugate(self) -> DipoleOnOrigin {
+        DipoleOnOrigin {
+            groups: DipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
     }
 }
 
-impl ConformalConjugate for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl ConformalConjugate for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn conformal_conjugate(self) -> DipoleCarrierAspect {
-        self
-    }
-}
-
-impl ConformalConjugate for DipoleWeight {
-    type Output = DipoleWeight;
-
-    fn conformal_conjugate(self) -> DipoleWeight {
-        self
+    fn conformal_conjugate(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() * Simd32x3::from(-1.0),
+            },
+        }
     }
 }
 
@@ -2213,16 +2767,40 @@ impl ConformalConjugate for MultiVector {
                 g0: self.group0() * Simd32x2::from([1.0, -1.0]),
                 g1: self.group1(),
                 g2: self.group2() * Simd32x2::from([1.0, -1.0]),
-                g3: self.group3(),
+                g3: self.group3() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
                 g4: self.group4(),
-                g5: self.group5() * Simd32x4::from(-1.0),
+                g5: self.group5() * Simd32x3::from(-1.0),
                 g6: self.group6(),
                 g7: self.group7() * Simd32x3::from(-1.0),
-                g8: self.group8() * Simd32x3::from(-1.0),
+                g8: self.group8() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
                 g9: self.group9() * Simd32x3::from(-1.0),
                 g10: self.group10() * Simd32x2::from([1.0, -1.0]),
             },
         }
+    }
+}
+
+impl ConformalConjugate for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn conformal_conjugate(self) -> NullCircleAtOrigin {
+        self
+    }
+}
+
+impl ConformalConjugate for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn conformal_conjugate(self) -> NullDipoleAtOrigin {
+        self
+    }
+}
+
+impl ConformalConjugate for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn conformal_conjugate(self) -> NullSphereAtOrigin {
+        self
     }
 }
 
@@ -2283,18 +2861,6 @@ impl ConformalConjugate for RoundPoint {
     }
 }
 
-impl ConformalConjugate for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn conformal_conjugate(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
 impl ConformalConjugate for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
@@ -2307,39 +2873,11 @@ impl ConformalConjugate for RoundPointAtOrigin {
     }
 }
 
-impl ConformalConjugate for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn conformal_conjugate(self) -> RoundPointBulk {
-        self
-    }
-}
-
-impl ConformalConjugate for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn conformal_conjugate(self) -> RoundPointOnOrigin {
-        self
-    }
-}
-
 impl ConformalConjugate for Scalar {
     type Output = Scalar;
 
     fn conformal_conjugate(self) -> Scalar {
         self
-    }
-}
-
-impl ConformalConjugate for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn conformal_conjugate(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups {
-                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
-            },
-        }
     }
 }
 
@@ -2356,11 +2894,27 @@ impl ConformalConjugate for Sphere {
     }
 }
 
-impl ConformalConjugate for SphereWeight {
-    type Output = SphereWeight;
+impl ConformalConjugate for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn conformal_conjugate(self) -> SphereWeight {
-        self
+    fn conformal_conjugate(self) -> SphereAtOrigin {
+        SphereAtOrigin {
+            groups: SphereAtOriginGroups {
+                g0: self.group0() * Simd32x2::from([1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl ConformalConjugate for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn conformal_conjugate(self) -> SphereOnOrigin {
+        SphereOnOrigin {
+            groups: SphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
     }
 }
 
@@ -2389,12 +2943,89 @@ impl ConformalConjugate for Translator {
     }
 }
 
+impl Conjugation for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn conjugation(self) -> AntiCircleOnOrigin {
+        AntiCircleOnOrigin {
+            groups: AntiCircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn conjugation(self) -> AntiDipoleOnOrigin {
+        self
+    }
+}
+
+impl Conjugation for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn conjugation(self) -> AntiFlatPointAtOrigin {
+        self
+    }
+}
+
+impl Conjugation for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn conjugation(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for AntiPlane {
+    type Output = AntiPlane;
+
+    fn conjugation(self) -> AntiPlane {
+        AntiPlane {
+            groups: AntiPlaneGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn conjugation(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Conjugation for AntiScalar {
     type Output = AntiScalar;
 
     fn conjugation(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Conjugation for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn conjugation(self) -> AntiSphereOnOrigin {
+        AntiSphereOnOrigin {
+            groups: AntiSphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
         }
     }
 }
@@ -2407,6 +3038,14 @@ impl Conjugation for Circle {
     }
 }
 
+impl Conjugation for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn conjugation(self) -> CircleAligningOrigin {
+        self
+    }
+}
+
 impl Conjugation for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
@@ -2415,26 +3054,26 @@ impl Conjugation for CircleAtInfinity {
     }
 }
 
-impl Conjugation for CircleBulk {
-    type Output = CircleBulk;
+impl Conjugation for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn conjugation(self) -> CircleBulk {
+    fn conjugation(self) -> CircleAtOrigin {
         self
     }
 }
 
-impl Conjugation for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl Conjugation for CircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn conjugation(self) -> CircleCarrierAspect {
+    fn conjugation(self) -> CircleOnOrigin {
         self
     }
 }
 
-impl Conjugation for CircleWeight {
-    type Output = CircleWeight;
+impl Conjugation for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn conjugation(self) -> CircleWeight {
+    fn conjugation(self) -> CircleOrthogonalOrigin {
         self
     }
 }
@@ -2453,6 +3092,19 @@ impl Conjugation for Dipole {
     }
 }
 
+impl Conjugation for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn conjugation(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Conjugation for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -2460,30 +3112,18 @@ impl Conjugation for DipoleAtInfinity {
         DipoleAtInfinity {
             groups: DipoleAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
 }
 
-impl Conjugation for DipoleBulk {
-    type Output = DipoleBulk;
+impl Conjugation for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn conjugation(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Conjugation for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
-
-    fn conjugation(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
+    fn conjugation(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
@@ -2491,13 +3131,27 @@ impl Conjugation for DipoleCarrierAspect {
     }
 }
 
-impl Conjugation for DipoleWeight {
-    type Output = DipoleWeight;
+impl Conjugation for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn conjugation(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn conjugation(self) -> DipoleOnOrigin {
+        DipoleOnOrigin {
+            groups: DipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn conjugation(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -2638,9 +3292,9 @@ impl Conjugation for MultiVector {
                 g0: self.group0() * Simd32x2::from([1.0, -1.0]),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x2::from(-1.0),
-                g3: self.group3() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
                 g4: self.group4() * Simd32x3::from(-1.0),
-                g5: self.group5() * Simd32x4::from(-1.0),
+                g5: self.group5() * Simd32x3::from(-1.0),
                 g6: self.group6(),
                 g7: self.group7(),
                 g8: self.group8(),
@@ -2648,6 +3302,34 @@ impl Conjugation for MultiVector {
                 g10: self.group10(),
             },
         }
+    }
+}
+
+impl Conjugation for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn conjugation(self) -> NullCircleAtOrigin {
+        self
+    }
+}
+
+impl Conjugation for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn conjugation(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Conjugation for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn conjugation(self) -> NullSphereAtOrigin {
+        self
     }
 }
 
@@ -2702,18 +3384,6 @@ impl Conjugation for RoundPoint {
     }
 }
 
-impl Conjugation for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn conjugation(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
 impl Conjugation for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
@@ -2721,30 +3391,6 @@ impl Conjugation for RoundPointAtOrigin {
         RoundPointAtOrigin {
             groups: RoundPointAtOriginGroups {
                 g0: self.group0() * Simd32x2::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Conjugation for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn conjugation(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Conjugation for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn conjugation(self) -> RoundPointOnOrigin {
-        RoundPointOnOrigin {
-            groups: RoundPointOnOriginGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -2758,14 +3404,6 @@ impl Conjugation for Scalar {
     }
 }
 
-impl Conjugation for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn conjugation(self) -> SpacialCurvature {
-        self
-    }
-}
-
 impl Conjugation for Sphere {
     type Output = Sphere;
 
@@ -2774,10 +3412,18 @@ impl Conjugation for Sphere {
     }
 }
 
-impl Conjugation for SphereWeight {
-    type Output = SphereWeight;
+impl Conjugation for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn conjugation(self) -> SphereWeight {
+    fn conjugation(self) -> SphereAtOrigin {
+        self
+    }
+}
+
+impl Conjugation for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn conjugation(self) -> SphereOnOrigin {
         self
     }
 }
@@ -2807,10 +3453,66 @@ impl Conjugation for Translator {
     }
 }
 
+impl DoubleComplement for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn double_complement(self) -> AntiCircleOnOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn double_complement(self) -> AntiDipoleOnOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn double_complement(self) -> AntiFlatPointAtOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn double_complement(self) -> AntiLineAtOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for AntiPlane {
+    type Output = AntiPlane;
+
+    fn double_complement(self) -> AntiPlane {
+        self
+    }
+}
+
+impl DoubleComplement for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn double_complement(self) -> AntiPlaneAtOrigin {
+        self
+    }
+}
+
 impl DoubleComplement for AntiScalar {
     type Output = AntiScalar;
 
     fn double_complement(self) -> AntiScalar {
+        self
+    }
+}
+
+impl DoubleComplement for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn double_complement(self) -> AntiSphereOnOrigin {
         self
     }
 }
@@ -2823,6 +3525,14 @@ impl DoubleComplement for Circle {
     }
 }
 
+impl DoubleComplement for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn double_complement(self) -> CircleAligningOrigin {
+        self
+    }
+}
+
 impl DoubleComplement for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
@@ -2831,26 +3541,26 @@ impl DoubleComplement for CircleAtInfinity {
     }
 }
 
-impl DoubleComplement for CircleBulk {
-    type Output = CircleBulk;
+impl DoubleComplement for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn double_complement(self) -> CircleBulk {
+    fn double_complement(self) -> CircleAtOrigin {
         self
     }
 }
 
-impl DoubleComplement for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl DoubleComplement for CircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn double_complement(self) -> CircleCarrierAspect {
+    fn double_complement(self) -> CircleOnOrigin {
         self
     }
 }
 
-impl DoubleComplement for CircleWeight {
-    type Output = CircleWeight;
+impl DoubleComplement for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn double_complement(self) -> CircleWeight {
+    fn double_complement(self) -> CircleOrthogonalOrigin {
         self
     }
 }
@@ -2863,6 +3573,14 @@ impl DoubleComplement for Dipole {
     }
 }
 
+impl DoubleComplement for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn double_complement(self) -> DipoleAligningOrigin {
+        self
+    }
+}
+
 impl DoubleComplement for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -2871,26 +3589,26 @@ impl DoubleComplement for DipoleAtInfinity {
     }
 }
 
-impl DoubleComplement for DipoleBulk {
-    type Output = DipoleBulk;
+impl DoubleComplement for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn double_complement(self) -> DipoleBulk {
+    fn double_complement(self) -> DipoleAtOrigin {
         self
     }
 }
 
-impl DoubleComplement for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl DoubleComplement for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn double_complement(self) -> DipoleCarrierAspect {
+    fn double_complement(self) -> DipoleOnOrigin {
         self
     }
 }
 
-impl DoubleComplement for DipoleWeight {
-    type Output = DipoleWeight;
+impl DoubleComplement for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn double_complement(self) -> DipoleWeight {
+    fn double_complement(self) -> DipoleOrthogonalOrigin {
         self
     }
 }
@@ -2999,6 +3717,30 @@ impl DoubleComplement for MultiVector {
     }
 }
 
+impl DoubleComplement for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn double_complement(self) -> NullCircleAtOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn double_complement(self) -> NullDipoleAtOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn double_complement(self) -> NullSphereAtOrigin {
+        self
+    }
+}
+
 impl DoubleComplement for Origin {
     type Output = Origin;
 
@@ -3039,34 +3781,10 @@ impl DoubleComplement for RoundPoint {
     }
 }
 
-impl DoubleComplement for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn double_complement(self) -> RoundPointAtInfinity {
-        self
-    }
-}
-
 impl DoubleComplement for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn double_complement(self) -> RoundPointAtOrigin {
-        self
-    }
-}
-
-impl DoubleComplement for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn double_complement(self) -> RoundPointBulk {
-        self
-    }
-}
-
-impl DoubleComplement for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn double_complement(self) -> RoundPointOnOrigin {
         self
     }
 }
@@ -3079,14 +3797,6 @@ impl DoubleComplement for Scalar {
     }
 }
 
-impl DoubleComplement for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn double_complement(self) -> SpacialCurvature {
-        self
-    }
-}
-
 impl DoubleComplement for Sphere {
     type Output = Sphere;
 
@@ -3095,10 +3805,18 @@ impl DoubleComplement for Sphere {
     }
 }
 
-impl DoubleComplement for SphereWeight {
-    type Output = SphereWeight;
+impl DoubleComplement for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn double_complement(self) -> SphereWeight {
+    fn double_complement(self) -> SphereAtOrigin {
+        self
+    }
+}
+
+impl DoubleComplement for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn double_complement(self) -> SphereOnOrigin {
         self
     }
 }
@@ -3119,43 +3837,32 @@ impl DoubleComplement for Translator {
     }
 }
 
-impl Dual for AntiScalar {
-    type Output = Scalar;
+impl Dual for AntiCircleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn dual(self) -> Scalar {
-        Scalar {
-            groups: ScalarGroups { g0: -self.group0() },
-        }
-    }
-}
-
-impl Dual for Circle {
-    type Output = Dipole;
-
-    fn dual(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: self.group1(),
-                g2: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], -self.group0()[3]]),
+    fn dual(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
             },
         }
     }
 }
 
-impl Dual for CircleAtInfinity {
-    type Output = FlatPoint;
+impl Dual for AntiDipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn dual(self) -> FlatPoint {
-        FlatPoint {
-            groups: FlatPointGroups {
-                g0: swizzle!(self.group0(), 1, 2, 3, 0) * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+    fn dual(self) -> DipoleOnOrigin {
+        DipoleOnOrigin {
+            groups: DipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
     }
 }
 
-impl Dual for CircleBulk {
+impl Dual for AntiFlatPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn dual(self) -> FlatPointAtOrigin {
@@ -3165,58 +3872,7 @@ impl Dual for CircleBulk {
     }
 }
 
-impl Dual for CircleCarrierAspect {
-    type Output = Dipole;
-
-    fn dual(self) -> Dipole {
-        Dipole {
-            groups: DipoleGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x4::from([0.0, 0.0, 0.0, -self.group0()[3]]),
-            },
-        }
-    }
-}
-
-impl Dual for CircleWeight {
-    type Output = DipoleWeight;
-
-    fn dual(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Dual for Dipole {
-    type Output = Circle;
-
-    fn dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], self.group2()[3]]),
-                g1: self.group1() * Simd32x3::from(-1.0),
-                g2: Simd32x3::from([-self.group2()[0], self.group2()[1], self.group2()[2]]),
-            },
-        }
-    }
-}
-
-impl Dual for DipoleAtInfinity {
-    type Output = Line;
-
-    fn dual(self) -> Line {
-        Line {
-            groups: LineGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Dual for DipoleBulk {
+impl Dual for AntiLineAtOrigin {
     type Output = LineAtOrigin;
 
     fn dual(self) -> LineAtOrigin {
@@ -3228,27 +3884,204 @@ impl Dual for DipoleBulk {
     }
 }
 
-impl Dual for DipoleCarrierAspect {
-    type Output = Circle;
+impl Dual for AntiPlane {
+    type Output = Plane;
 
-    fn dual(self) -> Circle {
-        Circle {
-            groups: CircleGroups {
-                g0: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
-                g1: self.group1() * Simd32x3::from(-1.0),
-                g2: Simd32x3::from(0.0),
+    fn dual(self) -> Plane {
+        Plane {
+            groups: PlaneGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
             },
         }
     }
 }
 
-impl Dual for DipoleWeight {
-    type Output = CircleWeight;
+impl Dual for AntiPlaneAtOrigin {
+    type Output = PlaneAtOrigin;
 
-    fn dual(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
+    fn dual(self) -> PlaneAtOrigin {
+        PlaneAtOrigin {
+            groups: PlaneAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for AntiScalar {
+    type Output = Scalar;
+
+    fn dual(self) -> Scalar {
+        Scalar {
+            groups: ScalarGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Dual for AntiSphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn dual(self) -> SphereOnOrigin {
+        SphereOnOrigin {
+            groups: SphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for Circle {
+    type Output = Dipole;
+
+    fn dual(self) -> Dipole {
+        Dipole {
+            groups: DipoleGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for CircleAligningOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn dual(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+            },
+        }
+    }
+}
+
+impl Dual for CircleAtInfinity {
+    type Output = DipoleAtInfinity;
+
+    fn dual(self) -> DipoleAtInfinity {
+        DipoleAtInfinity {
+            groups: DipoleAtInfinityGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for CircleAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn dual(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Dual for CircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn dual(self) -> AntiCircleOnOrigin {
+        AntiCircleOnOrigin {
+            groups: AntiCircleOnOriginGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+            },
+        }
+    }
+}
+
+impl Dual for CircleOrthogonalOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn dual(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for Dipole {
+    type Output = Circle;
+
+    fn dual(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for DipoleAligningOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn dual(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for DipoleAtInfinity {
+    type Output = CircleAtInfinity;
+
+    fn dual(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for DipoleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn dual(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Dual for DipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn dual(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for DipoleOrthogonalOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn dual(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -3267,12 +4100,13 @@ impl Dual for DualNum {
 }
 
 impl Dual for FlatPoint {
-    type Output = CircleAtInfinity;
+    type Output = CircleOrthogonalOrigin;
 
-    fn dual(self) -> CircleAtInfinity {
-        CircleAtInfinity {
-            groups: CircleAtInfinityGroups {
-                g0: swizzle!(self.group0(), 3, 0, 1, 2) * Simd32x4::from([1.0, -1.0, -1.0, -1.0]),
+    fn dual(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: Simd32x3::from(0.0),
+                g1: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
     }
@@ -3291,11 +4125,11 @@ impl Dual for FlatPointAtInfinity {
 }
 
 impl Dual for FlatPointAtOrigin {
-    type Output = CircleBulk;
+    type Output = AntiFlatPointAtOrigin;
 
-    fn dual(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: self.group0() },
+    fn dual(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -3309,12 +4143,12 @@ impl Dual for Flector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g2: Simd32x2::from([0.0, self.group1()[3]]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -3331,12 +4165,12 @@ impl Dual for FlectorAtInfinity {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from([0.0, self.group0()[3]]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from([-self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g8: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -3371,7 +4205,7 @@ impl Dual for Line {
         DipoleAtInfinity {
             groups: DipoleAtInfinityGroups {
                 g0: self.group0(),
-                g1: self.group1(),
+                g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -3388,11 +4222,11 @@ impl Dual for LineAtInfinity {
 }
 
 impl Dual for LineAtOrigin {
-    type Output = DipoleBulk;
+    type Output = AntiLineAtOrigin;
 
-    fn dual(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups { g0: self.group0() },
+    fn dual(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -3406,12 +4240,12 @@ impl Dual for Motor {
                 g0: Simd32x2::from([-self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: self.group1(),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -3428,12 +4262,12 @@ impl Dual for MultiVector {
                 g0: swizzle!(self.group0(), 1, 0) * Simd32x2::from([-1.0, 1.0]),
                 g1: self.group9() * Simd32x3::from(-1.0),
                 g2: self.group10(),
-                g3: Simd32x3::from([self.group6()[0], self.group6()[1], self.group6()[2]]),
+                g3: Simd32x4::from([self.group6()[0], self.group6()[1], self.group6()[2], -self.group8()[3]]),
                 g4: self.group7(),
-                g5: Simd32x4::from([self.group8()[0], self.group8()[1], self.group8()[2], -self.group6()[3]]),
-                g6: Simd32x4::from([-self.group3()[0], -self.group3()[1], -self.group3()[2], self.group5()[3]]),
+                g5: Simd32x3::from([self.group8()[0], self.group8()[1], self.group8()[2]]),
+                g6: Simd32x3::from([-self.group3()[0], self.group3()[1], self.group3()[2]]),
                 g7: self.group4() * Simd32x3::from(-1.0),
-                g8: Simd32x3::from([-self.group5()[0], self.group5()[1], self.group5()[2]]),
+                g8: Simd32x4::from([-self.group5()[0], -self.group5()[1], -self.group5()[2], self.group3()[3]]),
                 g9: self.group1(),
                 g10: self.group2() * Simd32x2::from(-1.0),
             },
@@ -3441,22 +4275,54 @@ impl Dual for MultiVector {
     }
 }
 
-impl Dual for Origin {
-    type Output = SphereWeight;
+impl Dual for NullCircleAtOrigin {
+    type Output = NullDipoleAtOrigin;
 
-    fn dual(self) -> SphereWeight {
-        SphereWeight {
-            groups: SphereWeightGroups { g0: -self.group0() },
+    fn dual(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for NullDipoleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn dual(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Dual for NullSphereAtOrigin {
+    type Output = Origin;
+
+    fn dual(self) -> Origin {
+        Origin {
+            groups: OriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for Origin {
+    type Output = NullSphereAtOrigin;
+
+    fn dual(self) -> NullSphereAtOrigin {
+        NullSphereAtOrigin {
+            groups: NullSphereAtOriginGroups { g0: -self.group0() },
         }
     }
 }
 
 impl Dual for Plane {
-    type Output = RoundPointAtInfinity;
+    type Output = AntiPlane;
 
-    fn dual(self) -> RoundPointAtInfinity {
-        RoundPointAtInfinity {
-            groups: RoundPointAtInfinityGroups {
+    fn dual(self) -> AntiPlane {
+        AntiPlane {
+            groups: AntiPlaneGroups {
                 g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
             },
         }
@@ -3464,11 +4330,11 @@ impl Dual for Plane {
 }
 
 impl Dual for PlaneAtOrigin {
-    type Output = RoundPointBulk;
+    type Output = AntiPlaneAtOrigin;
 
-    fn dual(self) -> RoundPointBulk {
-        RoundPointBulk {
-            groups: RoundPointBulkGroups {
+    fn dual(self) -> AntiPlaneAtOrigin {
+        AntiPlaneAtOrigin {
+            groups: AntiPlaneAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
             },
         }
@@ -3484,12 +4350,12 @@ impl Dual for Rotor {
                 g0: Simd32x2::from([-self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -3510,48 +4376,13 @@ impl Dual for RoundPoint {
     }
 }
 
-impl Dual for RoundPointAtInfinity {
-    type Output = Plane;
-
-    fn dual(self) -> Plane {
-        Plane {
-            groups: PlaneGroups {
-                g0: self.group0() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
-            },
-        }
-    }
-}
-
 impl Dual for RoundPointAtOrigin {
-    type Output = SpacialCurvature;
+    type Output = SphereAtOrigin;
 
-    fn dual(self) -> SpacialCurvature {
-        SpacialCurvature {
-            groups: SpacialCurvatureGroups {
+    fn dual(self) -> SphereAtOrigin {
+        SphereAtOrigin {
+            groups: SphereAtOriginGroups {
                 g0: self.group0() * Simd32x2::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Dual for RoundPointBulk {
-    type Output = PlaneAtOrigin;
-
-    fn dual(self) -> PlaneAtOrigin {
-        PlaneAtOrigin {
-            groups: PlaneAtOriginGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Dual for RoundPointOnOrigin {
-    type Output = Sphere;
-
-    fn dual(self) -> Sphere {
-        Sphere {
-            groups: SphereGroups {
-                g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g1: Simd32x2::from([-self.group0()[3], 0.0]),
             },
         }
     }
@@ -3563,16 +4394,6 @@ impl Dual for Scalar {
     fn dual(self) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups { g0: self.group0() },
-        }
-    }
-}
-
-impl Dual for SpacialCurvature {
-    type Output = RoundPointAtOrigin;
-
-    fn dual(self) -> RoundPointAtOrigin {
-        RoundPointAtOrigin {
-            groups: RoundPointAtOriginGroups { g0: self.group0() },
         }
     }
 }
@@ -3590,12 +4411,24 @@ impl Dual for Sphere {
     }
 }
 
-impl Dual for SphereWeight {
-    type Output = Origin;
+impl Dual for SphereAtOrigin {
+    type Output = RoundPointAtOrigin;
 
-    fn dual(self) -> Origin {
-        Origin {
-            groups: OriginGroups { g0: self.group0() },
+    fn dual(self) -> RoundPointAtOrigin {
+        RoundPointAtOrigin {
+            groups: RoundPointAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Dual for SphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn dual(self) -> AntiSphereOnOrigin {
+        AntiSphereOnOrigin {
+            groups: AntiSphereOnOriginGroups {
+                g0: self.group0() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
         }
     }
 }
@@ -3609,12 +4442,12 @@ impl Dual for Transflector {
                 g0: Simd32x2::from(0.0),
                 g1: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g2: Simd32x2::from([0.0, self.group1()[3]]),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from(0.0),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: self.group0() * Simd32x3::from(-1.0),
+                g8: Simd32x4::from([-self.group0()[0], -self.group0()[1], -self.group0()[2], 0.0]),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -3631,16 +4464,79 @@ impl Dual for Translator {
                 g0: Simd32x2::from([-self.group0()[3], 0.0]),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
-                g3: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
-                g5: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g6: Simd32x4::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: Simd32x3::from(0.0),
                 g7: Simd32x3::from(0.0),
-                g8: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
+    }
+}
+
+impl Reversal for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn reversal(self) -> AntiCircleOnOrigin {
+        AntiCircleOnOrigin {
+            groups: AntiCircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn reversal(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn reversal(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: -self.group0() },
+        }
+    }
+}
+
+impl Reversal for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn reversal(self) -> AntiLineAtOrigin {
+        AntiLineAtOrigin {
+            groups: AntiLineAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for AntiPlane {
+    type Output = AntiPlane;
+
+    fn reversal(self) -> AntiPlane {
+        self
+    }
+}
+
+impl Reversal for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn reversal(self) -> AntiPlaneAtOrigin {
+        self
     }
 }
 
@@ -3652,13 +4548,35 @@ impl Reversal for AntiScalar {
     }
 }
 
+impl Reversal for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn reversal(self) -> AntiSphereOnOrigin {
+        self
+    }
+}
+
 impl Reversal for Circle {
     type Output = Circle;
 
     fn reversal(self) -> Circle {
         Circle {
             groups: CircleGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn reversal(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
                 g2: self.group2() * Simd32x3::from(-1.0),
             },
@@ -3672,41 +4590,47 @@ impl Reversal for CircleAtInfinity {
     fn reversal(self) -> CircleAtInfinity {
         CircleAtInfinity {
             groups: CircleAtInfinityGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Reversal for CircleBulk {
-    type Output = CircleBulk;
-
-    fn reversal(self) -> CircleBulk {
-        CircleBulk {
-            groups: CircleBulkGroups { g0: -self.group0() },
-        }
-    }
-}
-
-impl Reversal for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
-
-    fn reversal(self) -> CircleCarrierAspect {
-        CircleCarrierAspect {
-            groups: CircleCarrierAspectGroups {
-                g0: self.group0() * Simd32x4::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Reversal for CircleWeight {
-    type Output = CircleWeight;
-
-    fn reversal(self) -> CircleWeight {
-        CircleWeight {
-            groups: CircleWeightGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for CircleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn reversal(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for CircleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn reversal(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn reversal(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -3726,6 +4650,19 @@ impl Reversal for Dipole {
     }
 }
 
+impl Reversal for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn reversal(self) -> DipoleAligningOrigin {
+        DipoleAligningOrigin {
+            groups: DipoleAligningOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Reversal for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -3733,30 +4670,18 @@ impl Reversal for DipoleAtInfinity {
         DipoleAtInfinity {
             groups: DipoleAtInfinityGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
-                g1: self.group1() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x4::from(-1.0),
             },
         }
     }
 }
 
-impl Reversal for DipoleBulk {
-    type Output = DipoleBulk;
+impl Reversal for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn reversal(self) -> DipoleBulk {
-        DipoleBulk {
-            groups: DipoleBulkGroups {
-                g0: self.group0() * Simd32x3::from(-1.0),
-            },
-        }
-    }
-}
-
-impl Reversal for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
-
-    fn reversal(self) -> DipoleCarrierAspect {
-        DipoleCarrierAspect {
-            groups: DipoleCarrierAspectGroups {
+    fn reversal(self) -> DipoleAtOrigin {
+        DipoleAtOrigin {
+            groups: DipoleAtOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x3::from(-1.0),
             },
@@ -3764,13 +4689,27 @@ impl Reversal for DipoleCarrierAspect {
     }
 }
 
-impl Reversal for DipoleWeight {
-    type Output = DipoleWeight;
+impl Reversal for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn reversal(self) -> DipoleWeight {
-        DipoleWeight {
-            groups: DipoleWeightGroups {
+    fn reversal(self) -> DipoleOnOrigin {
+        DipoleOnOrigin {
+            groups: DipoleOnOriginGroups {
+                g0: self.group0() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn reversal(self) -> DipoleOrthogonalOrigin {
+        DipoleOrthogonalOrigin {
+            groups: DipoleOrthogonalOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
             },
         }
     }
@@ -3918,16 +4857,48 @@ impl Reversal for MultiVector {
                 g0: self.group0(),
                 g1: self.group1(),
                 g2: self.group2(),
-                g3: self.group3() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
                 g4: self.group4() * Simd32x3::from(-1.0),
-                g5: self.group5() * Simd32x4::from(-1.0),
-                g6: self.group6() * Simd32x4::from(-1.0),
+                g5: self.group5() * Simd32x3::from(-1.0),
+                g6: self.group6() * Simd32x3::from(-1.0),
                 g7: self.group7() * Simd32x3::from(-1.0),
-                g8: self.group8() * Simd32x3::from(-1.0),
+                g8: self.group8() * Simd32x4::from(-1.0),
                 g9: self.group9(),
                 g10: self.group10(),
             },
         }
+    }
+}
+
+impl Reversal for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn reversal(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn reversal(self) -> NullDipoleAtOrigin {
+        NullDipoleAtOrigin {
+            groups: NullDipoleAtOriginGroups {
+                g0: self.group0() * Simd32x3::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn reversal(self) -> NullSphereAtOrigin {
+        self
     }
 }
 
@@ -3975,34 +4946,10 @@ impl Reversal for RoundPoint {
     }
 }
 
-impl Reversal for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn reversal(self) -> RoundPointAtInfinity {
-        self
-    }
-}
-
 impl Reversal for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn reversal(self) -> RoundPointAtOrigin {
-        self
-    }
-}
-
-impl Reversal for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn reversal(self) -> RoundPointBulk {
-        self
-    }
-}
-
-impl Reversal for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn reversal(self) -> RoundPointOnOrigin {
         self
     }
 }
@@ -4015,14 +4962,6 @@ impl Reversal for Scalar {
     }
 }
 
-impl Reversal for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn reversal(self) -> SpacialCurvature {
-        self
-    }
-}
-
 impl Reversal for Sphere {
     type Output = Sphere;
 
@@ -4031,10 +4970,18 @@ impl Reversal for Sphere {
     }
 }
 
-impl Reversal for SphereWeight {
-    type Output = SphereWeight;
+impl Reversal for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn reversal(self) -> SphereWeight {
+    fn reversal(self) -> SphereAtOrigin {
+        self
+    }
+}
+
+impl Reversal for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn reversal(self) -> SphereOnOrigin {
         self
     }
 }

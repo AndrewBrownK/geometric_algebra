@@ -73,7 +73,63 @@ pub trait WeightNormSquared {
     fn weight_norm_squared(self) -> Self::Output;
 }
 
+impl BulkNormSquared for AntiCircleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for AntiDipoleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for AntiFlatPointAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for AntiLineAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for AntiPlane {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for AntiPlaneAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for AntiScalar {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for AntiSphereOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -89,6 +145,14 @@ impl BulkNormSquared for Circle {
     }
 }
 
+impl BulkNormSquared for CircleAligningOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for CircleAtInfinity {
     type Output = Scalar;
 
@@ -97,7 +161,7 @@ impl BulkNormSquared for CircleAtInfinity {
     }
 }
 
-impl BulkNormSquared for CircleBulk {
+impl BulkNormSquared for CircleAtOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -105,7 +169,15 @@ impl BulkNormSquared for CircleBulk {
     }
 }
 
-impl BulkNormSquared for CircleCarrierAspect {
+impl BulkNormSquared for CircleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for CircleOrthogonalOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -121,6 +193,14 @@ impl BulkNormSquared for Dipole {
     }
 }
 
+impl BulkNormSquared for DipoleAligningOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
 impl BulkNormSquared for DipoleAtInfinity {
     type Output = Scalar;
 
@@ -129,7 +209,7 @@ impl BulkNormSquared for DipoleAtInfinity {
     }
 }
 
-impl BulkNormSquared for DipoleBulk {
+impl BulkNormSquared for DipoleAtOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -137,7 +217,15 @@ impl BulkNormSquared for DipoleBulk {
     }
 }
 
-impl BulkNormSquared for DipoleCarrierAspect {
+impl BulkNormSquared for DipoleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for DipoleOrthogonalOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -241,31 +329,7 @@ impl BulkNormSquared for RoundPoint {
     }
 }
 
-impl BulkNormSquared for RoundPointAtInfinity {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
 impl BulkNormSquared for RoundPointAtOrigin {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
-impl BulkNormSquared for RoundPointBulk {
-    type Output = Scalar;
-
-    fn bulk_norm_squared(self) -> Scalar {
-        self.dot(self)
-    }
-}
-
-impl BulkNormSquared for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -281,7 +345,7 @@ impl BulkNormSquared for Scalar {
     }
 }
 
-impl BulkNormSquared for SpacialCurvature {
+impl BulkNormSquared for Sphere {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -289,7 +353,15 @@ impl BulkNormSquared for SpacialCurvature {
     }
 }
 
-impl BulkNormSquared for Sphere {
+impl BulkNormSquared for SphereAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm_squared(self) -> Scalar {
+        self.dot(self)
+    }
+}
+
+impl BulkNormSquared for SphereOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm_squared(self) -> Scalar {
@@ -313,7 +385,63 @@ impl BulkNormSquared for Translator {
     }
 }
 
+impl BulkNorm for AntiCircleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for AntiDipoleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for AntiFlatPointAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for AntiLineAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for AntiPlane {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for AntiPlaneAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
 impl BulkNorm for AntiScalar {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for AntiSphereOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -329,6 +457,14 @@ impl BulkNorm for Circle {
     }
 }
 
+impl BulkNorm for CircleAligningOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
 impl BulkNorm for CircleAtInfinity {
     type Output = Scalar;
 
@@ -337,7 +473,7 @@ impl BulkNorm for CircleAtInfinity {
     }
 }
 
-impl BulkNorm for CircleBulk {
+impl BulkNorm for CircleAtOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -345,7 +481,15 @@ impl BulkNorm for CircleBulk {
     }
 }
 
-impl BulkNorm for CircleCarrierAspect {
+impl BulkNorm for CircleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for CircleOrthogonalOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -361,6 +505,14 @@ impl BulkNorm for Dipole {
     }
 }
 
+impl BulkNorm for DipoleAligningOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
 impl BulkNorm for DipoleAtInfinity {
     type Output = Scalar;
 
@@ -369,7 +521,7 @@ impl BulkNorm for DipoleAtInfinity {
     }
 }
 
-impl BulkNorm for DipoleBulk {
+impl BulkNorm for DipoleAtOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -377,7 +529,15 @@ impl BulkNorm for DipoleBulk {
     }
 }
 
-impl BulkNorm for DipoleCarrierAspect {
+impl BulkNorm for DipoleOnOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for DipoleOrthogonalOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -481,31 +641,7 @@ impl BulkNorm for RoundPoint {
     }
 }
 
-impl BulkNorm for RoundPointAtInfinity {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
 impl BulkNorm for RoundPointAtOrigin {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for RoundPointBulk {
-    type Output = Scalar;
-
-    fn bulk_norm(self) -> Scalar {
-        self.dot(self).sqrt()
-    }
-}
-
-impl BulkNorm for RoundPointOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -521,7 +657,7 @@ impl BulkNorm for Scalar {
     }
 }
 
-impl BulkNorm for SpacialCurvature {
+impl BulkNorm for Sphere {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -529,7 +665,15 @@ impl BulkNorm for SpacialCurvature {
     }
 }
 
-impl BulkNorm for Sphere {
+impl BulkNorm for SphereAtOrigin {
+    type Output = Scalar;
+
+    fn bulk_norm(self) -> Scalar {
+        self.dot(self).sqrt()
+    }
+}
+
+impl BulkNorm for SphereOnOrigin {
     type Output = Scalar;
 
     fn bulk_norm(self) -> Scalar {
@@ -553,7 +697,63 @@ impl BulkNorm for Translator {
     }
 }
 
+impl WeightNormSquared for AntiCircleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for AntiDipoleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for AntiFlatPointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for AntiLineAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for AntiPlane {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for AntiPlaneAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
 impl WeightNormSquared for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for AntiSphereOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -569,6 +769,14 @@ impl WeightNormSquared for Circle {
     }
 }
 
+impl WeightNormSquared for CircleAligningOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
 impl WeightNormSquared for CircleAtInfinity {
     type Output = AntiScalar;
 
@@ -577,7 +785,7 @@ impl WeightNormSquared for CircleAtInfinity {
     }
 }
 
-impl WeightNormSquared for CircleBulk {
+impl WeightNormSquared for CircleAtOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -585,7 +793,15 @@ impl WeightNormSquared for CircleBulk {
     }
 }
 
-impl WeightNormSquared for CircleCarrierAspect {
+impl WeightNormSquared for CircleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for CircleOrthogonalOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -601,6 +817,14 @@ impl WeightNormSquared for Dipole {
     }
 }
 
+impl WeightNormSquared for DipoleAligningOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
 impl WeightNormSquared for DipoleAtInfinity {
     type Output = AntiScalar;
 
@@ -609,7 +833,7 @@ impl WeightNormSquared for DipoleAtInfinity {
     }
 }
 
-impl WeightNormSquared for DipoleBulk {
+impl WeightNormSquared for DipoleAtOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -617,7 +841,15 @@ impl WeightNormSquared for DipoleBulk {
     }
 }
 
-impl WeightNormSquared for DipoleCarrierAspect {
+impl WeightNormSquared for DipoleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for DipoleOrthogonalOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -721,31 +953,7 @@ impl WeightNormSquared for RoundPoint {
     }
 }
 
-impl WeightNormSquared for RoundPointAtInfinity {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
 impl WeightNormSquared for RoundPointAtOrigin {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
-impl WeightNormSquared for RoundPointBulk {
-    type Output = AntiScalar;
-
-    fn weight_norm_squared(self) -> AntiScalar {
-        self.anti_dot(self)
-    }
-}
-
-impl WeightNormSquared for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -761,7 +969,7 @@ impl WeightNormSquared for Scalar {
     }
 }
 
-impl WeightNormSquared for SpacialCurvature {
+impl WeightNormSquared for Sphere {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -769,7 +977,15 @@ impl WeightNormSquared for SpacialCurvature {
     }
 }
 
-impl WeightNormSquared for Sphere {
+impl WeightNormSquared for SphereAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm_squared(self) -> AntiScalar {
+        self.anti_dot(self)
+    }
+}
+
+impl WeightNormSquared for SphereOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm_squared(self) -> AntiScalar {
@@ -793,7 +1009,63 @@ impl WeightNormSquared for Translator {
     }
 }
 
+impl WeightNorm for AntiCircleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for AntiDipoleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for AntiFlatPointAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for AntiLineAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for AntiPlane {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for AntiPlaneAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
 impl WeightNorm for AntiScalar {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for AntiSphereOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -809,6 +1081,14 @@ impl WeightNorm for Circle {
     }
 }
 
+impl WeightNorm for CircleAligningOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
 impl WeightNorm for CircleAtInfinity {
     type Output = AntiScalar;
 
@@ -817,7 +1097,7 @@ impl WeightNorm for CircleAtInfinity {
     }
 }
 
-impl WeightNorm for CircleBulk {
+impl WeightNorm for CircleAtOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -825,7 +1105,15 @@ impl WeightNorm for CircleBulk {
     }
 }
 
-impl WeightNorm for CircleCarrierAspect {
+impl WeightNorm for CircleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for CircleOrthogonalOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -841,6 +1129,14 @@ impl WeightNorm for Dipole {
     }
 }
 
+impl WeightNorm for DipoleAligningOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
 impl WeightNorm for DipoleAtInfinity {
     type Output = AntiScalar;
 
@@ -849,7 +1145,7 @@ impl WeightNorm for DipoleAtInfinity {
     }
 }
 
-impl WeightNorm for DipoleBulk {
+impl WeightNorm for DipoleAtOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -857,7 +1153,15 @@ impl WeightNorm for DipoleBulk {
     }
 }
 
-impl WeightNorm for DipoleCarrierAspect {
+impl WeightNorm for DipoleOnOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for DipoleOrthogonalOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -961,31 +1265,7 @@ impl WeightNorm for RoundPoint {
     }
 }
 
-impl WeightNorm for RoundPointAtInfinity {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).anti_sqrt()
-    }
-}
-
 impl WeightNorm for RoundPointAtOrigin {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).anti_sqrt()
-    }
-}
-
-impl WeightNorm for RoundPointBulk {
-    type Output = AntiScalar;
-
-    fn weight_norm(self) -> AntiScalar {
-        self.anti_dot(self).anti_sqrt()
-    }
-}
-
-impl WeightNorm for RoundPointOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -1001,7 +1281,7 @@ impl WeightNorm for Scalar {
     }
 }
 
-impl WeightNorm for SpacialCurvature {
+impl WeightNorm for Sphere {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -1009,7 +1289,15 @@ impl WeightNorm for SpacialCurvature {
     }
 }
 
-impl WeightNorm for Sphere {
+impl WeightNorm for SphereAtOrigin {
+    type Output = AntiScalar;
+
+    fn weight_norm(self) -> AntiScalar {
+        self.anti_dot(self).anti_sqrt()
+    }
+}
+
+impl WeightNorm for SphereOnOrigin {
     type Output = AntiScalar;
 
     fn weight_norm(self) -> AntiScalar {
@@ -1033,7 +1321,63 @@ impl WeightNorm for Translator {
     }
 }
 
+impl GeometricNorm for AntiCircleOnOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for AntiDipoleOnOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for AntiFlatPointAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for AntiLineAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for AntiPlane {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for AntiPlaneAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
 impl GeometricNorm for AntiScalar {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for AntiSphereOnOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1049,6 +1393,14 @@ impl GeometricNorm for Circle {
     }
 }
 
+impl GeometricNorm for CircleAligningOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
 impl GeometricNorm for CircleAtInfinity {
     type Output = DualNum;
 
@@ -1057,7 +1409,7 @@ impl GeometricNorm for CircleAtInfinity {
     }
 }
 
-impl GeometricNorm for CircleBulk {
+impl GeometricNorm for CircleAtOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1065,7 +1417,15 @@ impl GeometricNorm for CircleBulk {
     }
 }
 
-impl GeometricNorm for CircleCarrierAspect {
+impl GeometricNorm for CircleOnOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for CircleOrthogonalOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1081,6 +1441,14 @@ impl GeometricNorm for Dipole {
     }
 }
 
+impl GeometricNorm for DipoleAligningOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
 impl GeometricNorm for DipoleAtInfinity {
     type Output = DualNum;
 
@@ -1089,7 +1457,7 @@ impl GeometricNorm for DipoleAtInfinity {
     }
 }
 
-impl GeometricNorm for DipoleBulk {
+impl GeometricNorm for DipoleAtOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1097,7 +1465,15 @@ impl GeometricNorm for DipoleBulk {
     }
 }
 
-impl GeometricNorm for DipoleCarrierAspect {
+impl GeometricNorm for DipoleOnOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for DipoleOrthogonalOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1201,31 +1577,7 @@ impl GeometricNorm for RoundPoint {
     }
 }
 
-impl GeometricNorm for RoundPointAtInfinity {
-    type Output = DualNum;
-
-    fn geometric_norm(self) -> DualNum {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
 impl GeometricNorm for RoundPointAtOrigin {
-    type Output = DualNum;
-
-    fn geometric_norm(self) -> DualNum {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for RoundPointBulk {
-    type Output = DualNum;
-
-    fn geometric_norm(self) -> DualNum {
-        self.bulk_norm().add(self.weight_norm())
-    }
-}
-
-impl GeometricNorm for RoundPointOnOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1241,7 +1593,7 @@ impl GeometricNorm for Scalar {
     }
 }
 
-impl GeometricNorm for SpacialCurvature {
+impl GeometricNorm for Sphere {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1249,7 +1601,15 @@ impl GeometricNorm for SpacialCurvature {
     }
 }
 
-impl GeometricNorm for Sphere {
+impl GeometricNorm for SphereAtOrigin {
+    type Output = DualNum;
+
+    fn geometric_norm(self) -> DualNum {
+        self.bulk_norm().add(self.weight_norm())
+    }
+}
+
+impl GeometricNorm for SphereOnOrigin {
     type Output = DualNum;
 
     fn geometric_norm(self) -> DualNum {
@@ -1273,7 +1633,63 @@ impl GeometricNorm for Translator {
     }
 }
 
+impl UnitizedNormSquared for AntiCircleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for AntiDipoleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for AntiFlatPointAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for AntiLineAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for AntiPlane {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for AntiPlaneAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedNormSquared for AntiScalar {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for AntiSphereOnOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1289,6 +1705,14 @@ impl UnitizedNormSquared for Circle {
     }
 }
 
+impl UnitizedNormSquared for CircleAligningOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedNormSquared for CircleAtInfinity {
     type Output = f32;
 
@@ -1297,7 +1721,7 @@ impl UnitizedNormSquared for CircleAtInfinity {
     }
 }
 
-impl UnitizedNormSquared for CircleBulk {
+impl UnitizedNormSquared for CircleAtOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1305,7 +1729,15 @@ impl UnitizedNormSquared for CircleBulk {
     }
 }
 
-impl UnitizedNormSquared for CircleCarrierAspect {
+impl UnitizedNormSquared for CircleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for CircleOrthogonalOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1321,6 +1753,14 @@ impl UnitizedNormSquared for Dipole {
     }
 }
 
+impl UnitizedNormSquared for DipoleAligningOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedNormSquared for DipoleAtInfinity {
     type Output = f32;
 
@@ -1329,7 +1769,7 @@ impl UnitizedNormSquared for DipoleAtInfinity {
     }
 }
 
-impl UnitizedNormSquared for DipoleBulk {
+impl UnitizedNormSquared for DipoleAtOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1337,7 +1777,15 @@ impl UnitizedNormSquared for DipoleBulk {
     }
 }
 
-impl UnitizedNormSquared for DipoleCarrierAspect {
+impl UnitizedNormSquared for DipoleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for DipoleOrthogonalOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1441,31 +1889,7 @@ impl UnitizedNormSquared for RoundPoint {
     }
 }
 
-impl UnitizedNormSquared for RoundPointAtInfinity {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
 impl UnitizedNormSquared for RoundPointAtOrigin {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
-impl UnitizedNormSquared for RoundPointBulk {
-    type Output = f32;
-
-    fn unitized_norm_squared(self) -> f32 {
-        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
-    }
-}
-
-impl UnitizedNormSquared for RoundPointOnOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1481,7 +1905,7 @@ impl UnitizedNormSquared for Scalar {
     }
 }
 
-impl UnitizedNormSquared for SpacialCurvature {
+impl UnitizedNormSquared for Sphere {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1489,7 +1913,15 @@ impl UnitizedNormSquared for SpacialCurvature {
     }
 }
 
-impl UnitizedNormSquared for Sphere {
+impl UnitizedNormSquared for SphereAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm_squared(self) -> f32 {
+        self.bulk_norm_squared().group0() / self.weight_norm_squared().group0()
+    }
+}
+
+impl UnitizedNormSquared for SphereOnOrigin {
     type Output = f32;
 
     fn unitized_norm_squared(self) -> f32 {
@@ -1513,7 +1945,63 @@ impl UnitizedNormSquared for Translator {
     }
 }
 
+impl UnitizedNorm for AntiCircleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for AntiDipoleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for AntiFlatPointAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for AntiLineAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for AntiPlane {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for AntiPlaneAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
 impl UnitizedNorm for AntiScalar {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for AntiSphereOnOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1529,6 +2017,14 @@ impl UnitizedNorm for Circle {
     }
 }
 
+impl UnitizedNorm for CircleAligningOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
 impl UnitizedNorm for CircleAtInfinity {
     type Output = f32;
 
@@ -1537,7 +2033,7 @@ impl UnitizedNorm for CircleAtInfinity {
     }
 }
 
-impl UnitizedNorm for CircleBulk {
+impl UnitizedNorm for CircleAtOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1545,7 +2041,15 @@ impl UnitizedNorm for CircleBulk {
     }
 }
 
-impl UnitizedNorm for CircleCarrierAspect {
+impl UnitizedNorm for CircleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for CircleOrthogonalOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1561,6 +2065,14 @@ impl UnitizedNorm for Dipole {
     }
 }
 
+impl UnitizedNorm for DipoleAligningOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
 impl UnitizedNorm for DipoleAtInfinity {
     type Output = f32;
 
@@ -1569,7 +2081,7 @@ impl UnitizedNorm for DipoleAtInfinity {
     }
 }
 
-impl UnitizedNorm for DipoleBulk {
+impl UnitizedNorm for DipoleAtOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1577,7 +2089,15 @@ impl UnitizedNorm for DipoleBulk {
     }
 }
 
-impl UnitizedNorm for DipoleCarrierAspect {
+impl UnitizedNorm for DipoleOnOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for DipoleOrthogonalOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1681,31 +2201,7 @@ impl UnitizedNorm for RoundPoint {
     }
 }
 
-impl UnitizedNorm for RoundPointAtInfinity {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
 impl UnitizedNorm for RoundPointAtOrigin {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
-impl UnitizedNorm for RoundPointBulk {
-    type Output = f32;
-
-    fn unitized_norm(self) -> f32 {
-        self.unitized_norm_squared().sqrt()
-    }
-}
-
-impl UnitizedNorm for RoundPointOnOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1721,7 +2217,7 @@ impl UnitizedNorm for Scalar {
     }
 }
 
-impl UnitizedNorm for SpacialCurvature {
+impl UnitizedNorm for Sphere {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1729,7 +2225,15 @@ impl UnitizedNorm for SpacialCurvature {
     }
 }
 
-impl UnitizedNorm for Sphere {
+impl UnitizedNorm for SphereAtOrigin {
+    type Output = f32;
+
+    fn unitized_norm(self) -> f32 {
+        self.unitized_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedNorm for SphereOnOrigin {
     type Output = f32;
 
     fn unitized_norm(self) -> f32 {
@@ -1757,7 +2261,34 @@ impl CenterBulkNormSquared for Circle {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for CircleAligningOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for CircleOnOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for CircleOrthogonalOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1766,7 +2297,34 @@ impl CenterBulkNormSquared for Dipole {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for DipoleAligningOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for DipoleOnOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for DipoleOrthogonalOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1775,7 +2333,7 @@ impl CenterBulkNormSquared for RoundPoint {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1784,7 +2342,16 @@ impl CenterBulkNormSquared for Sphere {
     type Output = Scalar;
 
     fn center_bulk_norm_squared(self) -> Scalar {
-        let mut round_bulk: RoundPointBulk = self.center().round_bulk();
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
+        round_bulk.dot(round_bulk)
+    }
+}
+
+impl CenterBulkNormSquared for SphereOnOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk: AntiPlaneAtOrigin = self.center().round_bulk();
         round_bulk.dot(round_bulk)
     }
 }
@@ -1797,7 +2364,55 @@ impl CenterBulkNorm for Circle {
     }
 }
 
+impl CenterBulkNorm for CircleAligningOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for CircleOnOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for CircleOrthogonalOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
 impl CenterBulkNorm for Dipole {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for DipoleAligningOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for DipoleOnOrigin {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for DipoleOrthogonalOrigin {
     type Output = Scalar;
 
     fn center_bulk_norm(self) -> Scalar {
@@ -1814,6 +2429,14 @@ impl CenterBulkNorm for RoundPoint {
 }
 
 impl CenterBulkNorm for Sphere {
+    type Output = Scalar;
+
+    fn center_bulk_norm(self) -> Scalar {
+        self.center_bulk_norm_squared().sqrt()
+    }
+}
+
+impl CenterBulkNorm for SphereOnOrigin {
     type Output = Scalar;
 
     fn center_bulk_norm(self) -> Scalar {

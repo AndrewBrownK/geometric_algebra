@@ -67,10 +67,2234 @@ pub trait Rotate<T> {
     fn rotate(self, other: T) -> Self::Output;
 }
 
+impl Sandwich<AntiCircleOnOrigin> for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiCircleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiCircleOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiCircleOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiCircleOnOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiCircleOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiCircleOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiCircleOnOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiCircleOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiCircleOnOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiCircleOnOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiCircleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiCircleOnOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiCircleOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiCircleOnOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiCircleOnOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiCircleOnOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiCircleOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiCircleOnOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiCircleOnOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiCircleOnOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for AntiCircleOnOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiCircleOnOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for AntiCircleOnOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for AntiCircleOnOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for AntiCircleOnOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiCircleOnOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiCircleOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for AntiCircleOnOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiCircleOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiCircleOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiCircleOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for AntiCircleOnOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for AntiCircleOnOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiCircleOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for AntiCircleOnOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiCircleOnOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiCircleOnOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for AntiCircleOnOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiCircleOnOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiCircleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiCircleOnOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiCircleOnOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiDipoleOnOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiDipoleOnOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiDipoleOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiDipoleOnOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiDipoleOnOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiDipoleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiDipoleOnOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiDipoleOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiDipoleOnOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiDipoleOnOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiDipoleOnOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiDipoleOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiDipoleOnOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiDipoleOnOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiDipoleOnOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for AntiDipoleOnOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiDipoleOnOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for AntiDipoleOnOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for AntiDipoleOnOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for AntiDipoleOnOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiDipoleOnOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiDipoleOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for AntiDipoleOnOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiDipoleOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiDipoleOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiDipoleOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Origin> for AntiDipoleOnOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for AntiDipoleOnOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiDipoleOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for AntiDipoleOnOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiDipoleOnOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiDipoleOnOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for AntiDipoleOnOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiDipoleOnOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiDipoleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiDipoleOnOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiDipoleOnOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for AntiFlatPointAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiFlatPointAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiFlatPointAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiFlatPointAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiFlatPointAtOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiFlatPointAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiFlatPointAtOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiFlatPointAtOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiFlatPointAtOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiFlatPointAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiFlatPointAtOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiFlatPointAtOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiFlatPointAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiFlatPointAtOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiFlatPointAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Flector> for AntiFlatPointAtOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiFlatPointAtOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Horizon> for AntiFlatPointAtOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Infinity> for AntiFlatPointAtOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Line> for AntiFlatPointAtOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiFlatPointAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Motor> for AntiFlatPointAtOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Origin> for AntiFlatPointAtOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for AntiFlatPointAtOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Rotor> for AntiFlatPointAtOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiFlatPointAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Sphere> for AntiFlatPointAtOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiFlatPointAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiFlatPointAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiFlatPointAtOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiFlatPointAtOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for AntiLineAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiLineAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiLineAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiLineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiLineAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiLineAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiLineAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiLineAtOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiLineAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiLineAtOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiLineAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiLineAtOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiLineAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiLineAtOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiLineAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiLineAtOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiLineAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiLineAtOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiLineAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiLineAtOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiLineAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiLineAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for AntiLineAtOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiLineAtOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for AntiLineAtOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for AntiLineAtOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for AntiLineAtOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiLineAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiLineAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for AntiLineAtOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiLineAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiLineAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiLineAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for AntiLineAtOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for AntiLineAtOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiLineAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for AntiLineAtOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiLineAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiLineAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for AntiLineAtOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiLineAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiLineAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiLineAtOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiLineAtOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for AntiPlane {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiPlane {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiPlane {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiPlane {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiPlane {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiPlane {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiPlane {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiPlane {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiPlane {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiPlane {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiPlane {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiPlane {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiPlane {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiPlane {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiPlane {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiPlane {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiPlane {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiPlane {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiPlane {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiPlane {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiPlane {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiPlane {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for AntiPlane {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiPlane {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Horizon> for AntiPlane {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for AntiPlane {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for AntiPlane {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiPlane {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiPlane {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for AntiPlane {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiPlane {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiPlane {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiPlane {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiPlane {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for AntiPlane {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for AntiPlane {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiPlane {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for AntiPlane {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiPlane {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiPlane {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for AntiPlane {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiPlane {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiPlane {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiPlane {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiPlane {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for AntiPlaneAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiPlaneAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiPlaneAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiPlaneAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiPlaneAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiPlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiPlaneAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiPlaneAtOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiPlaneAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiPlaneAtOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiPlaneAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiPlaneAtOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiPlaneAtOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiPlaneAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiPlaneAtOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiPlaneAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiPlaneAtOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiPlaneAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiPlaneAtOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiPlaneAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiPlaneAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for AntiPlaneAtOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiPlaneAtOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Horizon> for AntiPlaneAtOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for AntiPlaneAtOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for AntiPlaneAtOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiPlaneAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiPlaneAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for AntiPlaneAtOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiPlaneAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiPlaneAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiPlaneAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for AntiPlaneAtOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for AntiPlaneAtOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiPlaneAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for AntiPlaneAtOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiPlaneAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiPlaneAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for AntiPlaneAtOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiPlaneAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiPlaneAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiPlaneAtOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiPlaneAtOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for AntiScalar {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiScalar {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiScalar {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiScalar {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiScalar {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiScalar {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiScalar {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Circle> for AntiScalar {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiScalar {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -83,26 +2307,26 @@ impl Sandwich<CircleAtInfinity> for AntiScalar {
     }
 }
 
-impl Sandwich<CircleBulk> for AntiScalar {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for AntiScalar {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for AntiScalar {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for AntiScalar {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<CircleWeight> for AntiScalar {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for AntiScalar {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -115,6 +2339,14 @@ impl Sandwich<Dipole> for AntiScalar {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for AntiScalar {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for AntiScalar {
     type Output = DipoleAtInfinity;
 
@@ -123,26 +2355,26 @@ impl Sandwich<DipoleAtInfinity> for AntiScalar {
     }
 }
 
-impl Sandwich<DipoleBulk> for AntiScalar {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for AntiScalar {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for AntiScalar {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for AntiScalar {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<DipoleWeight> for AntiScalar {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for AntiScalar {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -243,6 +2475,30 @@ impl Sandwich<MultiVector> for AntiScalar {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for AntiScalar {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiScalar {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiScalar {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Origin> for AntiScalar {
     type Output = Origin;
 
@@ -283,42 +2539,10 @@ impl Sandwich<RoundPoint> for AntiScalar {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for AntiScalar {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for AntiScalar {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointBulk> for AntiScalar {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for AntiScalar {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<SpacialCurvature> for AntiScalar {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -331,10 +2555,18 @@ impl Sandwich<Sphere> for AntiScalar {
     }
 }
 
-impl Sandwich<SphereWeight> for AntiScalar {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for AntiScalar {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiScalar {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -355,10 +2587,434 @@ impl Sandwich<Translator> for AntiScalar {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for AntiSphereOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for AntiSphereOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for AntiSphereOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for AntiSphereOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for AntiSphereOnOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for AntiSphereOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for AntiSphereOnOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for AntiSphereOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for AntiSphereOnOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for AntiSphereOnOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for AntiSphereOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for AntiSphereOnOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for AntiSphereOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for AntiSphereOnOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for AntiSphereOnOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for AntiSphereOnOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for AntiSphereOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for AntiSphereOnOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for AntiSphereOnOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for AntiSphereOnOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for AntiSphereOnOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for AntiSphereOnOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for AntiSphereOnOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for AntiSphereOnOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for AntiSphereOnOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for AntiSphereOnOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for AntiSphereOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for AntiSphereOnOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for AntiSphereOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for AntiSphereOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for AntiSphereOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for AntiSphereOnOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for AntiSphereOnOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for AntiSphereOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for AntiSphereOnOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for AntiSphereOnOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for AntiSphereOnOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for AntiSphereOnOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for AntiSphereOnOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for AntiSphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for AntiSphereOnOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for AntiSphereOnOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for Circle {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Circle {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Circle {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Circle {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Circle {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Circle {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Circle {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Circle {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Circle {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -371,26 +3027,26 @@ impl Sandwich<CircleAtInfinity> for Circle {
     }
 }
 
-impl Sandwich<CircleBulk> for Circle {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Circle {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Circle {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Circle {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Circle {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Circle {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -403,6 +3059,14 @@ impl Sandwich<Dipole> for Circle {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Circle {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Circle {
     type Output = DipoleAtInfinity;
 
@@ -411,26 +3075,26 @@ impl Sandwich<DipoleAtInfinity> for Circle {
     }
 }
 
-impl Sandwich<DipoleBulk> for Circle {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Circle {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Circle {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Circle {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Circle {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Circle {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -531,6 +3195,30 @@ impl Sandwich<MultiVector> for Circle {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Circle {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Circle {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Circle {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Circle {
     type Output = Origin;
 
@@ -571,42 +3259,10 @@ impl Sandwich<RoundPoint> for Circle {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Circle {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Circle {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Circle {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Circle {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Circle {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -619,10 +3275,18 @@ impl Sandwich<Sphere> for Circle {
     }
 }
 
-impl Sandwich<SphereWeight> for Circle {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Circle {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Circle {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -643,6 +3307,422 @@ impl Sandwich<Translator> for Circle {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for CircleAligningOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for CircleAligningOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for CircleAligningOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for CircleAligningOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for CircleAligningOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for CircleAligningOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for CircleAligningOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for CircleAligningOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for CircleAligningOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for CircleAligningOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for CircleAligningOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for CircleAligningOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for CircleAligningOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for CircleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for CircleAligningOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for CircleAligningOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for CircleAligningOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for CircleAligningOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for CircleAligningOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for CircleAligningOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for CircleAligningOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for CircleAligningOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for CircleAligningOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for CircleAligningOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for CircleAligningOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for CircleAligningOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for CircleAligningOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for CircleAligningOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for CircleAligningOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for CircleAligningOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for CircleAligningOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for CircleAligningOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for CircleAligningOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for CircleAligningOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for CircleAligningOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for CircleAligningOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for CircleAligningOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for CircleAligningOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for CircleAligningOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for CircleAligningOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for CircleAligningOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for CircleAligningOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for CircleAligningOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for CircleAtInfinity {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for CircleAtInfinity {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for CircleAtInfinity {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for CircleAtInfinity {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for CircleAtInfinity {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for CircleAtInfinity {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for CircleAtInfinity {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for CircleAtInfinity {
     type Output = Circle;
 
@@ -651,34 +3731,42 @@ impl Sandwich<Circle> for CircleAtInfinity {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for CircleAtInfinity {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for CircleAtInfinity {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<CircleBulk> for CircleAtInfinity {
-    type Output = CircleBulk;
-
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for CircleAtInfinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAtOrigin> for CircleAtInfinity {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for CircleAtInfinity {
-    type Output = CircleWeight;
+impl Sandwich<CircleOnOrigin> for CircleAtInfinity {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for CircleAtInfinity {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -691,6 +3779,14 @@ impl Sandwich<Dipole> for CircleAtInfinity {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for CircleAtInfinity {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for CircleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -699,26 +3795,26 @@ impl Sandwich<DipoleAtInfinity> for CircleAtInfinity {
     }
 }
 
-impl Sandwich<DipoleBulk> for CircleAtInfinity {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for CircleAtInfinity {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for CircleAtInfinity {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for CircleAtInfinity {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for CircleAtInfinity {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for CircleAtInfinity {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -735,7 +3831,7 @@ impl Sandwich<FlatPointAtInfinity> for CircleAtInfinity {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -767,7 +3863,7 @@ impl Sandwich<Horizon> for CircleAtInfinity {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -775,7 +3871,7 @@ impl Sandwich<Infinity> for CircleAtInfinity {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -791,7 +3887,7 @@ impl Sandwich<LineAtInfinity> for CircleAtInfinity {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -816,6 +3912,30 @@ impl Sandwich<MultiVector> for CircleAtInfinity {
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for CircleAtInfinity {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for CircleAtInfinity {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for CircleAtInfinity {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -859,42 +3979,10 @@ impl Sandwich<RoundPoint> for CircleAtInfinity {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for CircleAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for CircleAtInfinity {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for CircleAtInfinity {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for CircleAtInfinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for CircleAtInfinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -907,10 +3995,18 @@ impl Sandwich<Sphere> for CircleAtInfinity {
     }
 }
 
-impl Sandwich<SphereWeight> for CircleAtInfinity {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for CircleAtInfinity {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for CircleAtInfinity {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -927,11 +4023,67 @@ impl Sandwich<Translator> for CircleAtInfinity {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Circle> for CircleBulk {
+impl Sandwich<AntiCircleOnOrigin> for CircleAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for CircleAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for CircleAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for CircleAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for CircleAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for CircleAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for CircleAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for CircleAtOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -939,295 +4091,15 @@ impl Sandwich<Circle> for CircleBulk {
     }
 }
 
-impl Sandwich<CircleAtInfinity> for CircleBulk {
-    type Output = CircleAtInfinity;
+impl Sandwich<CircleAligningOrigin> for CircleAtOrigin {
+    type Output = CircleAligningOrigin;
 
-    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<CircleBulk> for CircleBulk {
-    type Output = CircleBulk;
-
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<CircleCarrierAspect> for CircleBulk {
-    type Output = CircleCarrierAspect;
-
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for CircleBulk {
-    type Output = CircleWeight;
-
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Dipole> for CircleBulk {
-    type Output = Dipole;
-
-    fn sandwich(self, other: Dipole) -> Dipole {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleAtInfinity> for CircleBulk {
-    type Output = DipoleAtInfinity;
-
-    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleBulk> for CircleBulk {
-    type Output = DipoleBulk;
-
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<DipoleCarrierAspect> for CircleBulk {
-    type Output = DipoleCarrierAspect;
-
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleWeight> for CircleBulk {
-    type Output = DipoleWeight;
-
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<FlatPoint> for CircleBulk {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtInfinity> for CircleBulk {
-    type Output = FlatPointAtInfinity;
-
-    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<FlatPointAtOrigin> for CircleBulk {
-    type Output = FlatPointAtOrigin;
-
-    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Flector> for CircleBulk {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlectorAtInfinity> for CircleBulk {
-    type Output = FlectorAtInfinity;
-
-    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Horizon> for CircleBulk {
-    type Output = Horizon;
-
-    fn sandwich(self, other: Horizon) -> Horizon {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Infinity> for CircleBulk {
-    type Output = Infinity;
-
-    fn sandwich(self, other: Infinity) -> Infinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Line> for CircleBulk {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtInfinity> for CircleBulk {
-    type Output = LineAtInfinity;
-
-    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<LineAtOrigin> for CircleBulk {
-    type Output = LineAtOrigin;
-
-    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Motor> for CircleBulk {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for CircleBulk {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Origin> for CircleBulk {
-    type Output = Origin;
-
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Plane> for CircleBulk {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<PlaneAtOrigin> for CircleBulk {
-    type Output = PlaneAtOrigin;
-
-    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Rotor> for CircleBulk {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for CircleBulk {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtInfinity> for CircleBulk {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for CircleBulk {
-    type Output = RoundPointAtOrigin;
-
-    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointBulk> for CircleBulk {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for CircleBulk {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for CircleBulk {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Sphere> for CircleBulk {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SphereWeight> for CircleBulk {
-    type Output = SphereWeight;
-
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Transflector> for CircleBulk {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for CircleBulk {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Circle> for CircleCarrierAspect {
-    type Output = Circle;
-
-    fn sandwich(self, other: Circle) -> Circle {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleAtInfinity> for CircleCarrierAspect {
+impl Sandwich<CircleAtInfinity> for CircleAtOrigin {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
@@ -1235,31 +4107,31 @@ impl Sandwich<CircleAtInfinity> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<CircleBulk> for CircleCarrierAspect {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for CircleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for CircleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for CircleAtOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for CircleCarrierAspect {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for CircleAtOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Dipole> for CircleCarrierAspect {
+impl Sandwich<Dipole> for CircleAtOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -1267,7 +4139,15 @@ impl Sandwich<Dipole> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for CircleCarrierAspect {
+impl Sandwich<DipoleAligningOrigin> for CircleAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for CircleAtOrigin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
@@ -1275,31 +4155,31 @@ impl Sandwich<DipoleAtInfinity> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<DipoleBulk> for CircleCarrierAspect {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for CircleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for CircleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for CircleAtOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for CircleCarrierAspect {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for CircleAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<FlatPoint> for CircleCarrierAspect {
+impl Sandwich<FlatPoint> for CircleAtOrigin {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
@@ -1307,7 +4187,7 @@ impl Sandwich<FlatPoint> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<FlatPointAtInfinity> for CircleCarrierAspect {
+impl Sandwich<FlatPointAtInfinity> for CircleAtOrigin {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
@@ -1315,7 +4195,7 @@ impl Sandwich<FlatPointAtInfinity> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<FlatPointAtOrigin> for CircleCarrierAspect {
+impl Sandwich<FlatPointAtOrigin> for CircleAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
@@ -1323,7 +4203,7 @@ impl Sandwich<FlatPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Flector> for CircleCarrierAspect {
+impl Sandwich<Flector> for CircleAtOrigin {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -1331,7 +4211,7 @@ impl Sandwich<Flector> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for CircleCarrierAspect {
+impl Sandwich<FlectorAtInfinity> for CircleAtOrigin {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -1339,7 +4219,7 @@ impl Sandwich<FlectorAtInfinity> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Horizon> for CircleCarrierAspect {
+impl Sandwich<Horizon> for CircleAtOrigin {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -1347,7 +4227,7 @@ impl Sandwich<Horizon> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Infinity> for CircleCarrierAspect {
+impl Sandwich<Infinity> for CircleAtOrigin {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
@@ -1355,7 +4235,7 @@ impl Sandwich<Infinity> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Line> for CircleCarrierAspect {
+impl Sandwich<Line> for CircleAtOrigin {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -1363,7 +4243,7 @@ impl Sandwich<Line> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<LineAtInfinity> for CircleCarrierAspect {
+impl Sandwich<LineAtInfinity> for CircleAtOrigin {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -1371,7 +4251,7 @@ impl Sandwich<LineAtInfinity> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<LineAtOrigin> for CircleCarrierAspect {
+impl Sandwich<LineAtOrigin> for CircleAtOrigin {
     type Output = LineAtOrigin;
 
     fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -1379,7 +4259,7 @@ impl Sandwich<LineAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Motor> for CircleCarrierAspect {
+impl Sandwich<Motor> for CircleAtOrigin {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -1387,7 +4267,7 @@ impl Sandwich<Motor> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<MultiVector> for CircleCarrierAspect {
+impl Sandwich<MultiVector> for CircleAtOrigin {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -1395,15 +4275,39 @@ impl Sandwich<MultiVector> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Origin> for CircleCarrierAspect {
-    type Output = Origin;
+impl Sandwich<NullCircleAtOrigin> for CircleAtOrigin {
+    type Output = NullCircleAtOrigin;
 
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Plane> for CircleCarrierAspect {
+impl Sandwich<NullDipoleAtOrigin> for CircleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for CircleAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for CircleAtOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for CircleAtOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -1411,7 +4315,7 @@ impl Sandwich<Plane> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for CircleCarrierAspect {
+impl Sandwich<PlaneAtOrigin> for CircleAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -1419,7 +4323,7 @@ impl Sandwich<PlaneAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Rotor> for CircleCarrierAspect {
+impl Sandwich<Rotor> for CircleAtOrigin {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -1427,7 +4331,7 @@ impl Sandwich<Rotor> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<RoundPoint> for CircleCarrierAspect {
+impl Sandwich<RoundPoint> for CircleAtOrigin {
     type Output = RoundPoint;
 
     fn sandwich(self, other: RoundPoint) -> RoundPoint {
@@ -1435,15 +4339,7 @@ impl Sandwich<RoundPoint> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for CircleCarrierAspect {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for CircleCarrierAspect {
+impl Sandwich<RoundPointAtOrigin> for CircleAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -1451,31 +4347,7 @@ impl Sandwich<RoundPointAtOrigin> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<RoundPointBulk> for CircleCarrierAspect {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for CircleCarrierAspect {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for CircleCarrierAspect {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for CircleCarrierAspect {
+impl Sandwich<Sphere> for CircleAtOrigin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -1483,15 +4355,23 @@ impl Sandwich<Sphere> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<SphereWeight> for CircleCarrierAspect {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for CircleAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Transflector> for CircleCarrierAspect {
+impl Sandwich<SphereOnOrigin> for CircleAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for CircleAtOrigin {
     type Output = Transflector;
 
     fn sandwich(self, other: Transflector) -> Transflector {
@@ -1499,7 +4379,7 @@ impl Sandwich<Transflector> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Translator> for CircleCarrierAspect {
+impl Sandwich<Translator> for CircleAtOrigin {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
@@ -1507,7 +4387,63 @@ impl Sandwich<Translator> for CircleCarrierAspect {
     }
 }
 
-impl Sandwich<Circle> for CircleWeight {
+impl Sandwich<AntiCircleOnOrigin> for CircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for CircleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for CircleOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for CircleOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for CircleOnOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for CircleOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for CircleOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for CircleOnOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -1515,7 +4451,15 @@ impl Sandwich<Circle> for CircleWeight {
     }
 }
 
-impl Sandwich<CircleAtInfinity> for CircleWeight {
+impl Sandwich<CircleAligningOrigin> for CircleOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for CircleOnOrigin {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
@@ -1523,7 +4467,31 @@ impl Sandwich<CircleAtInfinity> for CircleWeight {
     }
 }
 
-impl Sandwich<Dipole> for CircleWeight {
+impl Sandwich<CircleAtOrigin> for CircleOnOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for CircleOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for CircleOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for CircleOnOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -1531,7 +4499,15 @@ impl Sandwich<Dipole> for CircleWeight {
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for CircleWeight {
+impl Sandwich<DipoleAligningOrigin> for CircleOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for CircleOnOrigin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
@@ -1539,23 +4515,31 @@ impl Sandwich<DipoleAtInfinity> for CircleWeight {
     }
 }
 
-impl Sandwich<DipoleBulk> for CircleWeight {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for CircleOnOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for CircleWeight {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for CircleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<FlatPoint> for CircleWeight {
+impl Sandwich<DipoleOrthogonalOrigin> for CircleOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for CircleOnOrigin {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
@@ -1563,7 +4547,7 @@ impl Sandwich<FlatPoint> for CircleWeight {
     }
 }
 
-impl Sandwich<FlatPointAtInfinity> for CircleWeight {
+impl Sandwich<FlatPointAtInfinity> for CircleOnOrigin {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
@@ -1571,7 +4555,15 @@ impl Sandwich<FlatPointAtInfinity> for CircleWeight {
     }
 }
 
-impl Sandwich<Flector> for CircleWeight {
+impl Sandwich<FlatPointAtOrigin> for CircleOnOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for CircleOnOrigin {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -1579,7 +4571,7 @@ impl Sandwich<Flector> for CircleWeight {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for CircleWeight {
+impl Sandwich<FlectorAtInfinity> for CircleOnOrigin {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -1587,7 +4579,7 @@ impl Sandwich<FlectorAtInfinity> for CircleWeight {
     }
 }
 
-impl Sandwich<Horizon> for CircleWeight {
+impl Sandwich<Horizon> for CircleOnOrigin {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -1595,7 +4587,7 @@ impl Sandwich<Horizon> for CircleWeight {
     }
 }
 
-impl Sandwich<Infinity> for CircleWeight {
+impl Sandwich<Infinity> for CircleOnOrigin {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
@@ -1603,7 +4595,7 @@ impl Sandwich<Infinity> for CircleWeight {
     }
 }
 
-impl Sandwich<Line> for CircleWeight {
+impl Sandwich<Line> for CircleOnOrigin {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -1611,7 +4603,7 @@ impl Sandwich<Line> for CircleWeight {
     }
 }
 
-impl Sandwich<LineAtInfinity> for CircleWeight {
+impl Sandwich<LineAtInfinity> for CircleOnOrigin {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -1619,7 +4611,7 @@ impl Sandwich<LineAtInfinity> for CircleWeight {
     }
 }
 
-impl Sandwich<LineAtOrigin> for CircleWeight {
+impl Sandwich<LineAtOrigin> for CircleOnOrigin {
     type Output = LineAtOrigin;
 
     fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -1627,7 +4619,7 @@ impl Sandwich<LineAtOrigin> for CircleWeight {
     }
 }
 
-impl Sandwich<Motor> for CircleWeight {
+impl Sandwich<Motor> for CircleOnOrigin {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -1635,7 +4627,7 @@ impl Sandwich<Motor> for CircleWeight {
     }
 }
 
-impl Sandwich<MultiVector> for CircleWeight {
+impl Sandwich<MultiVector> for CircleOnOrigin {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -1643,7 +4635,39 @@ impl Sandwich<MultiVector> for CircleWeight {
     }
 }
 
-impl Sandwich<Plane> for CircleWeight {
+impl Sandwich<NullCircleAtOrigin> for CircleOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for CircleOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for CircleOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for CircleOnOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for CircleOnOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -1651,7 +4675,7 @@ impl Sandwich<Plane> for CircleWeight {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for CircleWeight {
+impl Sandwich<PlaneAtOrigin> for CircleOnOrigin {
     type Output = PlaneAtOrigin;
 
     fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -1659,7 +4683,7 @@ impl Sandwich<PlaneAtOrigin> for CircleWeight {
     }
 }
 
-impl Sandwich<Rotor> for CircleWeight {
+impl Sandwich<Rotor> for CircleOnOrigin {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -1667,7 +4691,7 @@ impl Sandwich<Rotor> for CircleWeight {
     }
 }
 
-impl Sandwich<RoundPoint> for CircleWeight {
+impl Sandwich<RoundPoint> for CircleOnOrigin {
     type Output = RoundPoint;
 
     fn sandwich(self, other: RoundPoint) -> RoundPoint {
@@ -1675,15 +4699,7 @@ impl Sandwich<RoundPoint> for CircleWeight {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for CircleWeight {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for CircleWeight {
+impl Sandwich<RoundPointAtOrigin> for CircleOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -1691,31 +4707,7 @@ impl Sandwich<RoundPointAtOrigin> for CircleWeight {
     }
 }
 
-impl Sandwich<RoundPointBulk> for CircleWeight {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for CircleWeight {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for CircleWeight {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for CircleWeight {
+impl Sandwich<Sphere> for CircleOnOrigin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -1723,7 +4715,23 @@ impl Sandwich<Sphere> for CircleWeight {
     }
 }
 
-impl Sandwich<Transflector> for CircleWeight {
+impl Sandwich<SphereAtOrigin> for CircleOnOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for CircleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for CircleOnOrigin {
     type Output = Transflector;
 
     fn sandwich(self, other: Transflector) -> Transflector {
@@ -1731,10 +4739,426 @@ impl Sandwich<Transflector> for CircleWeight {
     }
 }
 
-impl Sandwich<Translator> for CircleWeight {
+impl Sandwich<Translator> for CircleOnOrigin {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for CircleOrthogonalOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for CircleOrthogonalOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for CircleOrthogonalOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for CircleOrthogonalOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for CircleOrthogonalOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for CircleOrthogonalOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for CircleOrthogonalOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for CircleOrthogonalOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for CircleOrthogonalOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for CircleOrthogonalOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for CircleOrthogonalOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for CircleOrthogonalOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for CircleOrthogonalOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for CircleOrthogonalOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for CircleOrthogonalOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for CircleOrthogonalOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for CircleOrthogonalOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for CircleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for CircleOrthogonalOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for CircleOrthogonalOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for CircleOrthogonalOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for CircleOrthogonalOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for CircleOrthogonalOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for CircleOrthogonalOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for CircleOrthogonalOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for CircleOrthogonalOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for CircleOrthogonalOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for CircleOrthogonalOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for CircleOrthogonalOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for CircleOrthogonalOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for CircleOrthogonalOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for CircleOrthogonalOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for CircleOrthogonalOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for CircleOrthogonalOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for CircleOrthogonalOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for CircleOrthogonalOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for CircleOrthogonalOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for CircleOrthogonalOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for CircleOrthogonalOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for CircleOrthogonalOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for CircleOrthogonalOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for CircleOrthogonalOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for CircleOrthogonalOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for Dipole {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Dipole {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Dipole {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Dipole {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Dipole {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Dipole {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Dipole {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1747,6 +5171,14 @@ impl Sandwich<Circle> for Dipole {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for Dipole {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for Dipole {
     type Output = CircleAtInfinity;
 
@@ -1755,26 +5187,26 @@ impl Sandwich<CircleAtInfinity> for Dipole {
     }
 }
 
-impl Sandwich<CircleBulk> for Dipole {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Dipole {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Dipole {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Dipole {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Dipole {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Dipole {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1787,6 +5219,14 @@ impl Sandwich<Dipole> for Dipole {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Dipole {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Dipole {
     type Output = DipoleAtInfinity;
 
@@ -1795,26 +5235,26 @@ impl Sandwich<DipoleAtInfinity> for Dipole {
     }
 }
 
-impl Sandwich<DipoleBulk> for Dipole {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Dipole {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Dipole {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Dipole {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Dipole {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Dipole {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1915,6 +5355,30 @@ impl Sandwich<MultiVector> for Dipole {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Dipole {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Dipole {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Dipole {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Dipole {
     type Output = Origin;
 
@@ -1955,42 +5419,10 @@ impl Sandwich<RoundPoint> for Dipole {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Dipole {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Dipole {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Dipole {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Dipole {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Dipole {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2003,10 +5435,18 @@ impl Sandwich<Sphere> for Dipole {
     }
 }
 
-impl Sandwich<SphereWeight> for Dipole {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Dipole {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Dipole {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2027,10 +5467,434 @@ impl Sandwich<Translator> for Dipole {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for DipoleAligningOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for DipoleAligningOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for DipoleAligningOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for DipoleAligningOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for DipoleAligningOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for DipoleAligningOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for DipoleAligningOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for DipoleAligningOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for DipoleAligningOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for DipoleAligningOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for DipoleAligningOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for DipoleAligningOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for DipoleAligningOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for DipoleAligningOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for DipoleAligningOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for DipoleAligningOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for DipoleAligningOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for DipoleAligningOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for DipoleAligningOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for DipoleAligningOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for DipoleAligningOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for DipoleAligningOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for DipoleAligningOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for DipoleAligningOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for DipoleAligningOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for DipoleAligningOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for DipoleAligningOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for DipoleAligningOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for DipoleAligningOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for DipoleAligningOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for DipoleAligningOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for DipoleAligningOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for DipoleAligningOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for DipoleAligningOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for DipoleAligningOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for DipoleAligningOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for DipoleAligningOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for DipoleAligningOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for DipoleAligningOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for DipoleAligningOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for DipoleAligningOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for DipoleAligningOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for DipoleAligningOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for DipoleAtInfinity {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for DipoleAtInfinity {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for DipoleAtInfinity {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for DipoleAtInfinity {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for DipoleAtInfinity {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for DipoleAtInfinity {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for DipoleAtInfinity {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for DipoleAtInfinity {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for DipoleAtInfinity {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2043,26 +5907,26 @@ impl Sandwich<CircleAtInfinity> for DipoleAtInfinity {
     }
 }
 
-impl Sandwich<CircleBulk> for DipoleAtInfinity {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for DipoleAtInfinity {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for DipoleAtInfinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for DipoleAtInfinity {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for DipoleAtInfinity {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for DipoleAtInfinity {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2075,6 +5939,14 @@ impl Sandwich<Dipole> for DipoleAtInfinity {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for DipoleAtInfinity {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for DipoleAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -2083,26 +5955,26 @@ impl Sandwich<DipoleAtInfinity> for DipoleAtInfinity {
     }
 }
 
-impl Sandwich<DipoleBulk> for DipoleAtInfinity {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for DipoleAtInfinity {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for DipoleAtInfinity {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for DipoleAtInfinity {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for DipoleAtInfinity {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for DipoleAtInfinity {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2203,6 +6075,30 @@ impl Sandwich<MultiVector> for DipoleAtInfinity {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for DipoleAtInfinity {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for DipoleAtInfinity {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for DipoleAtInfinity {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for DipoleAtInfinity {
     type Output = Origin;
 
@@ -2243,42 +6139,10 @@ impl Sandwich<RoundPoint> for DipoleAtInfinity {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for DipoleAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for DipoleAtInfinity {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for DipoleAtInfinity {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for DipoleAtInfinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for DipoleAtInfinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2291,10 +6155,18 @@ impl Sandwich<Sphere> for DipoleAtInfinity {
     }
 }
 
-impl Sandwich<SphereWeight> for DipoleAtInfinity {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for DipoleAtInfinity {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for DipoleAtInfinity {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2315,7 +6187,63 @@ impl Sandwich<Translator> for DipoleAtInfinity {
     }
 }
 
-impl Sandwich<Circle> for DipoleBulk {
+impl Sandwich<AntiCircleOnOrigin> for DipoleAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for DipoleAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for DipoleAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for DipoleAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for DipoleAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for DipoleAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for DipoleAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for DipoleAtOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -2323,7 +6251,15 @@ impl Sandwich<Circle> for DipoleBulk {
     }
 }
 
-impl Sandwich<CircleAtInfinity> for DipoleBulk {
+impl Sandwich<CircleAligningOrigin> for DipoleAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for DipoleAtOrigin {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
@@ -2331,31 +6267,31 @@ impl Sandwich<CircleAtInfinity> for DipoleBulk {
     }
 }
 
-impl Sandwich<CircleBulk> for DipoleBulk {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for DipoleAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for DipoleBulk {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for DipoleAtOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for DipoleBulk {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for DipoleAtOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Dipole> for DipoleBulk {
+impl Sandwich<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -2363,7 +6299,15 @@ impl Sandwich<Dipole> for DipoleBulk {
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for DipoleBulk {
+impl Sandwich<DipoleAligningOrigin> for DipoleAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for DipoleAtOrigin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
@@ -2371,31 +6315,31 @@ impl Sandwich<DipoleAtInfinity> for DipoleBulk {
     }
 }
 
-impl Sandwich<DipoleBulk> for DipoleBulk {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for DipoleBulk {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for DipoleAtOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for DipoleBulk {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for DipoleAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<FlatPoint> for DipoleBulk {
+impl Sandwich<FlatPoint> for DipoleAtOrigin {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
@@ -2403,7 +6347,7 @@ impl Sandwich<FlatPoint> for DipoleBulk {
     }
 }
 
-impl Sandwich<FlatPointAtInfinity> for DipoleBulk {
+impl Sandwich<FlatPointAtInfinity> for DipoleAtOrigin {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
@@ -2411,7 +6355,7 @@ impl Sandwich<FlatPointAtInfinity> for DipoleBulk {
     }
 }
 
-impl Sandwich<FlatPointAtOrigin> for DipoleBulk {
+impl Sandwich<FlatPointAtOrigin> for DipoleAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
@@ -2419,7 +6363,7 @@ impl Sandwich<FlatPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Sandwich<Flector> for DipoleBulk {
+impl Sandwich<Flector> for DipoleAtOrigin {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -2427,7 +6371,7 @@ impl Sandwich<Flector> for DipoleBulk {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for DipoleBulk {
+impl Sandwich<FlectorAtInfinity> for DipoleAtOrigin {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -2435,7 +6379,7 @@ impl Sandwich<FlectorAtInfinity> for DipoleBulk {
     }
 }
 
-impl Sandwich<Horizon> for DipoleBulk {
+impl Sandwich<Horizon> for DipoleAtOrigin {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -2443,7 +6387,7 @@ impl Sandwich<Horizon> for DipoleBulk {
     }
 }
 
-impl Sandwich<Infinity> for DipoleBulk {
+impl Sandwich<Infinity> for DipoleAtOrigin {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
@@ -2451,7 +6395,7 @@ impl Sandwich<Infinity> for DipoleBulk {
     }
 }
 
-impl Sandwich<Line> for DipoleBulk {
+impl Sandwich<Line> for DipoleAtOrigin {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -2459,7 +6403,7 @@ impl Sandwich<Line> for DipoleBulk {
     }
 }
 
-impl Sandwich<LineAtInfinity> for DipoleBulk {
+impl Sandwich<LineAtInfinity> for DipoleAtOrigin {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -2467,7 +6411,7 @@ impl Sandwich<LineAtInfinity> for DipoleBulk {
     }
 }
 
-impl Sandwich<LineAtOrigin> for DipoleBulk {
+impl Sandwich<LineAtOrigin> for DipoleAtOrigin {
     type Output = LineAtOrigin;
 
     fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -2475,7 +6419,7 @@ impl Sandwich<LineAtOrigin> for DipoleBulk {
     }
 }
 
-impl Sandwich<Motor> for DipoleBulk {
+impl Sandwich<Motor> for DipoleAtOrigin {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -2483,7 +6427,7 @@ impl Sandwich<Motor> for DipoleBulk {
     }
 }
 
-impl Sandwich<MultiVector> for DipoleBulk {
+impl Sandwich<MultiVector> for DipoleAtOrigin {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -2491,7 +6435,31 @@ impl Sandwich<MultiVector> for DipoleBulk {
     }
 }
 
-impl Sandwich<Origin> for DipoleBulk {
+impl Sandwich<NullCircleAtOrigin> for DipoleAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for DipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for DipoleAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for DipoleAtOrigin {
     type Output = Origin;
 
     fn sandwich(self, other: Origin) -> Origin {
@@ -2499,7 +6467,7 @@ impl Sandwich<Origin> for DipoleBulk {
     }
 }
 
-impl Sandwich<Plane> for DipoleBulk {
+impl Sandwich<Plane> for DipoleAtOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -2507,7 +6475,7 @@ impl Sandwich<Plane> for DipoleBulk {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for DipoleBulk {
+impl Sandwich<PlaneAtOrigin> for DipoleAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -2515,7 +6483,7 @@ impl Sandwich<PlaneAtOrigin> for DipoleBulk {
     }
 }
 
-impl Sandwich<Rotor> for DipoleBulk {
+impl Sandwich<Rotor> for DipoleAtOrigin {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -2523,7 +6491,7 @@ impl Sandwich<Rotor> for DipoleBulk {
     }
 }
 
-impl Sandwich<RoundPoint> for DipoleBulk {
+impl Sandwich<RoundPoint> for DipoleAtOrigin {
     type Output = RoundPoint;
 
     fn sandwich(self, other: RoundPoint) -> RoundPoint {
@@ -2531,15 +6499,7 @@ impl Sandwich<RoundPoint> for DipoleBulk {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for DipoleBulk {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for DipoleBulk {
+impl Sandwich<RoundPointAtOrigin> for DipoleAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -2547,31 +6507,7 @@ impl Sandwich<RoundPointAtOrigin> for DipoleBulk {
     }
 }
 
-impl Sandwich<RoundPointBulk> for DipoleBulk {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for DipoleBulk {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for DipoleBulk {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for DipoleBulk {
+impl Sandwich<Sphere> for DipoleAtOrigin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -2579,15 +6515,23 @@ impl Sandwich<Sphere> for DipoleBulk {
     }
 }
 
-impl Sandwich<SphereWeight> for DipoleBulk {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for DipoleAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Transflector> for DipoleBulk {
+impl Sandwich<SphereOnOrigin> for DipoleAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for DipoleAtOrigin {
     type Output = Transflector;
 
     fn sandwich(self, other: Transflector) -> Transflector {
@@ -2595,7 +6539,7 @@ impl Sandwich<Transflector> for DipoleBulk {
     }
 }
 
-impl Sandwich<Translator> for DipoleBulk {
+impl Sandwich<Translator> for DipoleAtOrigin {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
@@ -2603,7 +6547,63 @@ impl Sandwich<Translator> for DipoleBulk {
     }
 }
 
-impl Sandwich<Circle> for DipoleCarrierAspect {
+impl Sandwich<AntiCircleOnOrigin> for DipoleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for DipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for DipoleOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for DipoleOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for DipoleOnOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for DipoleOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for DipoleOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for DipoleOnOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -2611,7 +6611,15 @@ impl Sandwich<Circle> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<CircleAtInfinity> for DipoleCarrierAspect {
+impl Sandwich<CircleAligningOrigin> for DipoleOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for DipoleOnOrigin {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
@@ -2619,31 +6627,31 @@ impl Sandwich<CircleAtInfinity> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<CircleBulk> for DipoleCarrierAspect {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for DipoleOnOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for DipoleCarrierAspect {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for DipoleOnOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for DipoleCarrierAspect {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for DipoleOnOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Dipole> for DipoleCarrierAspect {
+impl Sandwich<Dipole> for DipoleOnOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -2651,7 +6659,15 @@ impl Sandwich<Dipole> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for DipoleCarrierAspect {
+impl Sandwich<DipoleAligningOrigin> for DipoleOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for DipoleOnOrigin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
@@ -2659,31 +6675,31 @@ impl Sandwich<DipoleAtInfinity> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<DipoleBulk> for DipoleCarrierAspect {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for DipoleOnOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for DipoleCarrierAspect {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for DipoleCarrierAspect {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for DipoleOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<FlatPoint> for DipoleCarrierAspect {
+impl Sandwich<FlatPoint> for DipoleOnOrigin {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
@@ -2691,7 +6707,7 @@ impl Sandwich<FlatPoint> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<FlatPointAtInfinity> for DipoleCarrierAspect {
+impl Sandwich<FlatPointAtInfinity> for DipoleOnOrigin {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
@@ -2699,7 +6715,7 @@ impl Sandwich<FlatPointAtInfinity> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<FlatPointAtOrigin> for DipoleCarrierAspect {
+impl Sandwich<FlatPointAtOrigin> for DipoleOnOrigin {
     type Output = FlatPointAtOrigin;
 
     fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
@@ -2707,7 +6723,7 @@ impl Sandwich<FlatPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Flector> for DipoleCarrierAspect {
+impl Sandwich<Flector> for DipoleOnOrigin {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -2715,7 +6731,7 @@ impl Sandwich<Flector> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for DipoleCarrierAspect {
+impl Sandwich<FlectorAtInfinity> for DipoleOnOrigin {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -2723,7 +6739,7 @@ impl Sandwich<FlectorAtInfinity> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Horizon> for DipoleCarrierAspect {
+impl Sandwich<Horizon> for DipoleOnOrigin {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -2731,7 +6747,7 @@ impl Sandwich<Horizon> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Infinity> for DipoleCarrierAspect {
+impl Sandwich<Infinity> for DipoleOnOrigin {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
@@ -2739,7 +6755,7 @@ impl Sandwich<Infinity> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Line> for DipoleCarrierAspect {
+impl Sandwich<Line> for DipoleOnOrigin {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -2747,7 +6763,7 @@ impl Sandwich<Line> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<LineAtInfinity> for DipoleCarrierAspect {
+impl Sandwich<LineAtInfinity> for DipoleOnOrigin {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -2755,7 +6771,7 @@ impl Sandwich<LineAtInfinity> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<LineAtOrigin> for DipoleCarrierAspect {
+impl Sandwich<LineAtOrigin> for DipoleOnOrigin {
     type Output = LineAtOrigin;
 
     fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -2763,7 +6779,7 @@ impl Sandwich<LineAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Motor> for DipoleCarrierAspect {
+impl Sandwich<Motor> for DipoleOnOrigin {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -2771,7 +6787,7 @@ impl Sandwich<Motor> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<MultiVector> for DipoleCarrierAspect {
+impl Sandwich<MultiVector> for DipoleOnOrigin {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -2779,15 +6795,39 @@ impl Sandwich<MultiVector> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Origin> for DipoleCarrierAspect {
-    type Output = Origin;
+impl Sandwich<NullCircleAtOrigin> for DipoleOnOrigin {
+    type Output = NullCircleAtOrigin;
 
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Plane> for DipoleCarrierAspect {
+impl Sandwich<NullDipoleAtOrigin> for DipoleOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for DipoleOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Origin> for DipoleOnOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for DipoleOnOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -2795,7 +6835,7 @@ impl Sandwich<Plane> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for DipoleCarrierAspect {
+impl Sandwich<PlaneAtOrigin> for DipoleOnOrigin {
     type Output = PlaneAtOrigin;
 
     fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -2803,7 +6843,7 @@ impl Sandwich<PlaneAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Rotor> for DipoleCarrierAspect {
+impl Sandwich<Rotor> for DipoleOnOrigin {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -2811,7 +6851,7 @@ impl Sandwich<Rotor> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<RoundPoint> for DipoleCarrierAspect {
+impl Sandwich<RoundPoint> for DipoleOnOrigin {
     type Output = RoundPoint;
 
     fn sandwich(self, other: RoundPoint) -> RoundPoint {
@@ -2819,15 +6859,7 @@ impl Sandwich<RoundPoint> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for DipoleCarrierAspect {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for DipoleCarrierAspect {
+impl Sandwich<RoundPointAtOrigin> for DipoleOnOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -2835,31 +6867,7 @@ impl Sandwich<RoundPointAtOrigin> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<RoundPointBulk> for DipoleCarrierAspect {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for DipoleCarrierAspect {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for DipoleCarrierAspect {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for DipoleCarrierAspect {
+impl Sandwich<Sphere> for DipoleOnOrigin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -2867,15 +6875,23 @@ impl Sandwich<Sphere> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<SphereWeight> for DipoleCarrierAspect {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for DipoleOnOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Transflector> for DipoleCarrierAspect {
+impl Sandwich<SphereOnOrigin> for DipoleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for DipoleOnOrigin {
     type Output = Transflector;
 
     fn sandwich(self, other: Transflector) -> Transflector {
@@ -2883,7 +6899,7 @@ impl Sandwich<Transflector> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Translator> for DipoleCarrierAspect {
+impl Sandwich<Translator> for DipoleOnOrigin {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
@@ -2891,7 +6907,63 @@ impl Sandwich<Translator> for DipoleCarrierAspect {
     }
 }
 
-impl Sandwich<Circle> for DipoleWeight {
+impl Sandwich<AntiCircleOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for DipoleOrthogonalOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for DipoleOrthogonalOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -2899,7 +6971,15 @@ impl Sandwich<Circle> for DipoleWeight {
     }
 }
 
-impl Sandwich<CircleAtInfinity> for DipoleWeight {
+impl Sandwich<CircleAligningOrigin> for DipoleOrthogonalOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for DipoleOrthogonalOrigin {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
@@ -2907,7 +6987,31 @@ impl Sandwich<CircleAtInfinity> for DipoleWeight {
     }
 }
 
-impl Sandwich<Dipole> for DipoleWeight {
+impl Sandwich<CircleAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for DipoleOrthogonalOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -2915,7 +7019,15 @@ impl Sandwich<Dipole> for DipoleWeight {
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for DipoleWeight {
+impl Sandwich<DipoleAligningOrigin> for DipoleOrthogonalOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for DipoleOrthogonalOrigin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
@@ -2923,23 +7035,31 @@ impl Sandwich<DipoleAtInfinity> for DipoleWeight {
     }
 }
 
-impl Sandwich<DipoleBulk> for DipoleWeight {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for DipoleWeight {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<FlatPoint> for DipoleWeight {
+impl Sandwich<DipoleOrthogonalOrigin> for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for DipoleOrthogonalOrigin {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
@@ -2947,7 +7067,7 @@ impl Sandwich<FlatPoint> for DipoleWeight {
     }
 }
 
-impl Sandwich<FlatPointAtInfinity> for DipoleWeight {
+impl Sandwich<FlatPointAtInfinity> for DipoleOrthogonalOrigin {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
@@ -2955,7 +7075,15 @@ impl Sandwich<FlatPointAtInfinity> for DipoleWeight {
     }
 }
 
-impl Sandwich<Flector> for DipoleWeight {
+impl Sandwich<FlatPointAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for DipoleOrthogonalOrigin {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -2963,7 +7091,7 @@ impl Sandwich<Flector> for DipoleWeight {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for DipoleWeight {
+impl Sandwich<FlectorAtInfinity> for DipoleOrthogonalOrigin {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -2971,7 +7099,7 @@ impl Sandwich<FlectorAtInfinity> for DipoleWeight {
     }
 }
 
-impl Sandwich<Horizon> for DipoleWeight {
+impl Sandwich<Horizon> for DipoleOrthogonalOrigin {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -2979,7 +7107,7 @@ impl Sandwich<Horizon> for DipoleWeight {
     }
 }
 
-impl Sandwich<Infinity> for DipoleWeight {
+impl Sandwich<Infinity> for DipoleOrthogonalOrigin {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
@@ -2987,7 +7115,7 @@ impl Sandwich<Infinity> for DipoleWeight {
     }
 }
 
-impl Sandwich<Line> for DipoleWeight {
+impl Sandwich<Line> for DipoleOrthogonalOrigin {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -2995,7 +7123,7 @@ impl Sandwich<Line> for DipoleWeight {
     }
 }
 
-impl Sandwich<LineAtInfinity> for DipoleWeight {
+impl Sandwich<LineAtInfinity> for DipoleOrthogonalOrigin {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -3003,7 +7131,7 @@ impl Sandwich<LineAtInfinity> for DipoleWeight {
     }
 }
 
-impl Sandwich<LineAtOrigin> for DipoleWeight {
+impl Sandwich<LineAtOrigin> for DipoleOrthogonalOrigin {
     type Output = LineAtOrigin;
 
     fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
@@ -3011,7 +7139,7 @@ impl Sandwich<LineAtOrigin> for DipoleWeight {
     }
 }
 
-impl Sandwich<Motor> for DipoleWeight {
+impl Sandwich<Motor> for DipoleOrthogonalOrigin {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -3019,7 +7147,7 @@ impl Sandwich<Motor> for DipoleWeight {
     }
 }
 
-impl Sandwich<MultiVector> for DipoleWeight {
+impl Sandwich<MultiVector> for DipoleOrthogonalOrigin {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -3027,7 +7155,39 @@ impl Sandwich<MultiVector> for DipoleWeight {
     }
 }
 
-impl Sandwich<Plane> for DipoleWeight {
+impl Sandwich<NullCircleAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for DipoleOrthogonalOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for DipoleOrthogonalOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -3035,7 +7195,7 @@ impl Sandwich<Plane> for DipoleWeight {
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for DipoleWeight {
+impl Sandwich<PlaneAtOrigin> for DipoleOrthogonalOrigin {
     type Output = PlaneAtOrigin;
 
     fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
@@ -3043,7 +7203,7 @@ impl Sandwich<PlaneAtOrigin> for DipoleWeight {
     }
 }
 
-impl Sandwich<Rotor> for DipoleWeight {
+impl Sandwich<Rotor> for DipoleOrthogonalOrigin {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -3051,7 +7211,7 @@ impl Sandwich<Rotor> for DipoleWeight {
     }
 }
 
-impl Sandwich<RoundPoint> for DipoleWeight {
+impl Sandwich<RoundPoint> for DipoleOrthogonalOrigin {
     type Output = RoundPoint;
 
     fn sandwich(self, other: RoundPoint) -> RoundPoint {
@@ -3059,15 +7219,7 @@ impl Sandwich<RoundPoint> for DipoleWeight {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for DipoleWeight {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for DipoleWeight {
+impl Sandwich<RoundPointAtOrigin> for DipoleOrthogonalOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -3075,31 +7227,7 @@ impl Sandwich<RoundPointAtOrigin> for DipoleWeight {
     }
 }
 
-impl Sandwich<RoundPointBulk> for DipoleWeight {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for DipoleWeight {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for DipoleWeight {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for DipoleWeight {
+impl Sandwich<Sphere> for DipoleOrthogonalOrigin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -3107,7 +7235,23 @@ impl Sandwich<Sphere> for DipoleWeight {
     }
 }
 
-impl Sandwich<Transflector> for DipoleWeight {
+impl Sandwich<SphereAtOrigin> for DipoleOrthogonalOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for DipoleOrthogonalOrigin {
     type Output = Transflector;
 
     fn sandwich(self, other: Transflector) -> Transflector {
@@ -3115,10 +7259,66 @@ impl Sandwich<Transflector> for DipoleWeight {
     }
 }
 
-impl Sandwich<Translator> for DipoleWeight {
+impl Sandwich<Translator> for DipoleOrthogonalOrigin {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for DualNum {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for DualNum {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for DualNum {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for DualNum {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for DualNum {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for DualNum {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for DualNum {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3131,6 +7331,14 @@ impl Sandwich<Circle> for DualNum {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for DualNum {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for DualNum {
     type Output = CircleAtInfinity;
 
@@ -3139,26 +7347,26 @@ impl Sandwich<CircleAtInfinity> for DualNum {
     }
 }
 
-impl Sandwich<CircleBulk> for DualNum {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for DualNum {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for DualNum {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for DualNum {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for DualNum {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for DualNum {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3171,6 +7379,14 @@ impl Sandwich<Dipole> for DualNum {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for DualNum {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for DualNum {
     type Output = DipoleAtInfinity;
 
@@ -3179,26 +7395,26 @@ impl Sandwich<DipoleAtInfinity> for DualNum {
     }
 }
 
-impl Sandwich<DipoleBulk> for DualNum {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for DualNum {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for DualNum {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for DualNum {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for DualNum {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for DualNum {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3299,6 +7515,30 @@ impl Sandwich<MultiVector> for DualNum {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for DualNum {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for DualNum {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for DualNum {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for DualNum {
     type Output = Origin;
 
@@ -3339,42 +7579,10 @@ impl Sandwich<RoundPoint> for DualNum {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for DualNum {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for DualNum {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for DualNum {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for DualNum {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for DualNum {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3387,10 +7595,18 @@ impl Sandwich<Sphere> for DualNum {
     }
 }
 
-impl Sandwich<SphereWeight> for DualNum {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for DualNum {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for DualNum {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3411,10 +7627,74 @@ impl Sandwich<Translator> for DualNum {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for FlatPoint {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for FlatPoint {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for FlatPoint {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for FlatPoint {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for FlatPoint {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for FlatPoint {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for FlatPoint {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for FlatPoint {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for FlatPoint {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3427,26 +7707,26 @@ impl Sandwich<CircleAtInfinity> for FlatPoint {
     }
 }
 
-impl Sandwich<CircleBulk> for FlatPoint {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for FlatPoint {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for FlatPoint {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for FlatPoint {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for FlatPoint {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for FlatPoint {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3459,6 +7739,14 @@ impl Sandwich<Dipole> for FlatPoint {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for FlatPoint {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for FlatPoint {
     type Output = DipoleAtInfinity;
 
@@ -3467,26 +7755,26 @@ impl Sandwich<DipoleAtInfinity> for FlatPoint {
     }
 }
 
-impl Sandwich<DipoleBulk> for FlatPoint {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for FlatPoint {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for FlatPoint {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for FlatPoint {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for FlatPoint {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for FlatPoint {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3587,6 +7875,30 @@ impl Sandwich<MultiVector> for FlatPoint {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for FlatPoint {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for FlatPoint {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for FlatPoint {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for FlatPoint {
     type Output = Origin;
 
@@ -3627,42 +7939,10 @@ impl Sandwich<RoundPoint> for FlatPoint {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for FlatPoint {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for FlatPoint {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for FlatPoint {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for FlatPoint {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for FlatPoint {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3675,10 +7955,18 @@ impl Sandwich<Sphere> for FlatPoint {
     }
 }
 
-impl Sandwich<SphereWeight> for FlatPoint {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for FlatPoint {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for FlatPoint {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3699,6 +7987,38 @@ impl Sandwich<Translator> for FlatPoint {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for FlatPointAtInfinity {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for FlatPointAtInfinity {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for FlatPointAtInfinity {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for FlatPointAtInfinity {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for FlatPointAtInfinity {
     type Output = Circle;
 
@@ -3707,18 +8027,34 @@ impl Sandwich<Circle> for FlatPointAtInfinity {
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for FlatPointAtInfinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAligningOrigin> for FlatPointAtInfinity {
+    type Output = CircleAligningOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for FlatPointAtInfinity {
-    type Output = CircleWeight;
+impl Sandwich<CircleAtOrigin> for FlatPointAtInfinity {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for FlatPointAtInfinity {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for FlatPointAtInfinity {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3731,6 +8067,14 @@ impl Sandwich<Dipole> for FlatPointAtInfinity {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for FlatPointAtInfinity {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for FlatPointAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -3739,26 +8083,26 @@ impl Sandwich<DipoleAtInfinity> for FlatPointAtInfinity {
     }
 }
 
-impl Sandwich<DipoleBulk> for FlatPointAtInfinity {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for FlatPointAtInfinity {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for FlatPointAtInfinity {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for FlatPointAtInfinity {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for FlatPointAtInfinity {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for FlatPointAtInfinity {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3776,6 +8120,30 @@ impl Sandwich<MultiVector> for FlatPointAtInfinity {
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for FlatPointAtInfinity {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for FlatPointAtInfinity {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for FlatPointAtInfinity {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -3819,22 +8187,6 @@ impl Sandwich<RoundPointAtOrigin> for FlatPointAtInfinity {
     }
 }
 
-impl Sandwich<RoundPointOnOrigin> for FlatPointAtInfinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for FlatPointAtInfinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<Sphere> for FlatPointAtInfinity {
     type Output = Sphere;
 
@@ -3843,10 +8195,18 @@ impl Sandwich<Sphere> for FlatPointAtInfinity {
     }
 }
 
-impl Sandwich<SphereWeight> for FlatPointAtInfinity {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for FlatPointAtInfinity {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for FlatPointAtInfinity {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3859,10 +8219,74 @@ impl Sandwich<Transflector> for FlatPointAtInfinity {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for FlatPointAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for FlatPointAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for FlatPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for FlatPointAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiPlane> for FlatPointAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for FlatPointAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for FlatPointAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for FlatPointAtOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for FlatPointAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3875,27 +8299,27 @@ impl Sandwich<CircleAtInfinity> for FlatPointAtOrigin {
     }
 }
 
-impl Sandwich<CircleBulk> for FlatPointAtOrigin {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for FlatPointAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for FlatPointAtOrigin {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for FlatPointAtOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for FlatPointAtOrigin {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for FlatPointAtOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -3903,6 +8327,14 @@ impl Sandwich<Dipole> for FlatPointAtOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for FlatPointAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3915,27 +8347,27 @@ impl Sandwich<DipoleAtInfinity> for FlatPointAtOrigin {
     }
 }
 
-impl Sandwich<DipoleBulk> for FlatPointAtOrigin {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for FlatPointAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for FlatPointAtOrigin {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for FlatPointAtOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for FlatPointAtOrigin {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for FlatPointAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -4035,6 +8467,30 @@ impl Sandwich<MultiVector> for FlatPointAtOrigin {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for FlatPointAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for FlatPointAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for FlatPointAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Origin> for FlatPointAtOrigin {
     type Output = Origin;
 
@@ -4075,42 +8531,10 @@ impl Sandwich<RoundPoint> for FlatPointAtOrigin {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for FlatPointAtOrigin {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for FlatPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointBulk> for FlatPointAtOrigin {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for FlatPointAtOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for FlatPointAtOrigin {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -4123,11 +8547,19 @@ impl Sandwich<Sphere> for FlatPointAtOrigin {
     }
 }
 
-impl Sandwich<SphereWeight> for FlatPointAtOrigin {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for FlatPointAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for FlatPointAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -4147,10 +8579,74 @@ impl Sandwich<Translator> for FlatPointAtOrigin {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Flector {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Flector {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Flector {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Flector {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Flector {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Flector {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Flector {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Flector {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Flector {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4163,26 +8659,26 @@ impl Sandwich<CircleAtInfinity> for Flector {
     }
 }
 
-impl Sandwich<CircleBulk> for Flector {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Flector {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Flector {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Flector {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Flector {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Flector {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4195,6 +8691,14 @@ impl Sandwich<Dipole> for Flector {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Flector {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Flector {
     type Output = DipoleAtInfinity;
 
@@ -4203,26 +8707,26 @@ impl Sandwich<DipoleAtInfinity> for Flector {
     }
 }
 
-impl Sandwich<DipoleBulk> for Flector {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Flector {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Flector {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Flector {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Flector {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Flector {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4323,6 +8827,30 @@ impl Sandwich<MultiVector> for Flector {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Flector {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Flector {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Flector {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Flector {
     type Output = Origin;
 
@@ -4363,42 +8891,10 @@ impl Sandwich<RoundPoint> for Flector {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Flector {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Flector {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Flector {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Flector {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Flector {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4411,10 +8907,18 @@ impl Sandwich<Sphere> for Flector {
     }
 }
 
-impl Sandwich<SphereWeight> for Flector {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Flector {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Flector {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4435,6 +8939,38 @@ impl Sandwich<Translator> for Flector {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for FlectorAtInfinity {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for FlectorAtInfinity {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for FlectorAtInfinity {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for FlectorAtInfinity {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for FlectorAtInfinity {
     type Output = Circle;
 
@@ -4443,18 +8979,34 @@ impl Sandwich<Circle> for FlectorAtInfinity {
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for FlectorAtInfinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAligningOrigin> for FlectorAtInfinity {
+    type Output = CircleAligningOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for FlectorAtInfinity {
-    type Output = CircleWeight;
+impl Sandwich<CircleAtOrigin> for FlectorAtInfinity {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for FlectorAtInfinity {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for FlectorAtInfinity {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4467,6 +9019,14 @@ impl Sandwich<Dipole> for FlectorAtInfinity {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for FlectorAtInfinity {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for FlectorAtInfinity {
     type Output = DipoleAtInfinity;
 
@@ -4475,26 +9035,26 @@ impl Sandwich<DipoleAtInfinity> for FlectorAtInfinity {
     }
 }
 
-impl Sandwich<DipoleBulk> for FlectorAtInfinity {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for FlectorAtInfinity {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for FlectorAtInfinity {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for FlectorAtInfinity {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for FlectorAtInfinity {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for FlectorAtInfinity {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4528,6 +9088,30 @@ impl Sandwich<MultiVector> for FlectorAtInfinity {
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for FlectorAtInfinity {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for FlectorAtInfinity {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for FlectorAtInfinity {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -4571,22 +9155,6 @@ impl Sandwich<RoundPointAtOrigin> for FlectorAtInfinity {
     }
 }
 
-impl Sandwich<RoundPointOnOrigin> for FlectorAtInfinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for FlectorAtInfinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<Sphere> for FlectorAtInfinity {
     type Output = Sphere;
 
@@ -4595,10 +9163,18 @@ impl Sandwich<Sphere> for FlectorAtInfinity {
     }
 }
 
-impl Sandwich<SphereWeight> for FlectorAtInfinity {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for FlectorAtInfinity {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for FlectorAtInfinity {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4611,6 +9187,30 @@ impl Sandwich<Transflector> for FlectorAtInfinity {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Horizon {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Horizon {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Horizon {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Horizon {
     type Output = Circle;
 
@@ -4619,18 +9219,34 @@ impl Sandwich<Circle> for Horizon {
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Horizon {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAligningOrigin> for Horizon {
+    type Output = CircleAligningOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Horizon {
-    type Output = CircleWeight;
+impl Sandwich<CircleAtOrigin> for Horizon {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for Horizon {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for Horizon {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4643,18 +9259,42 @@ impl Sandwich<Dipole> for Horizon {
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Horizon {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleAligningOrigin> for Horizon {
+    type Output = DipoleAligningOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Horizon {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleAtInfinity> for Horizon {
+    type Output = DipoleAtInfinity;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for Horizon {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for Horizon {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for Horizon {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4672,6 +9312,30 @@ impl Sandwich<MultiVector> for Horizon {
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for Horizon {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Horizon {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Horizon {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -4699,22 +9363,6 @@ impl Sandwich<RoundPointAtOrigin> for Horizon {
     }
 }
 
-impl Sandwich<RoundPointOnOrigin> for Horizon {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Horizon {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<Sphere> for Horizon {
     type Output = Sphere;
 
@@ -4723,10 +9371,42 @@ impl Sandwich<Sphere> for Horizon {
     }
 }
 
-impl Sandwich<SphereWeight> for Horizon {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Horizon {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Horizon {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for Infinity {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Infinity {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Infinity {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4739,18 +9419,42 @@ impl Sandwich<Circle> for Infinity {
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Infinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAligningOrigin> for Infinity {
+    type Output = CircleAligningOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Infinity {
-    type Output = CircleWeight;
+impl Sandwich<CircleAtInfinity> for Infinity {
+    type Output = CircleAtInfinity;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for Infinity {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for Infinity {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for Infinity {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4763,18 +9467,34 @@ impl Sandwich<Dipole> for Infinity {
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Infinity {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleAligningOrigin> for Infinity {
+    type Output = DipoleAligningOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Infinity {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleAtOrigin> for Infinity {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for Infinity {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for Infinity {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4792,6 +9512,30 @@ impl Sandwich<MultiVector> for Infinity {
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for Infinity {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Infinity {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Infinity {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -4827,22 +9571,6 @@ impl Sandwich<RoundPointAtOrigin> for Infinity {
     }
 }
 
-impl Sandwich<RoundPointOnOrigin> for Infinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Infinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<Sphere> for Infinity {
     type Output = Sphere;
 
@@ -4851,10 +9579,74 @@ impl Sandwich<Sphere> for Infinity {
     }
 }
 
-impl Sandwich<SphereWeight> for Infinity {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Infinity {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Infinity {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for Line {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Line {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Line {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Line {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Line {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Line {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Line {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4867,6 +9659,14 @@ impl Sandwich<Circle> for Line {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for Line {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for Line {
     type Output = CircleAtInfinity;
 
@@ -4875,26 +9675,26 @@ impl Sandwich<CircleAtInfinity> for Line {
     }
 }
 
-impl Sandwich<CircleBulk> for Line {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Line {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Line {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Line {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Line {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Line {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4907,6 +9707,14 @@ impl Sandwich<Dipole> for Line {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Line {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Line {
     type Output = DipoleAtInfinity;
 
@@ -4915,26 +9723,26 @@ impl Sandwich<DipoleAtInfinity> for Line {
     }
 }
 
-impl Sandwich<DipoleBulk> for Line {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Line {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Line {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Line {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Line {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Line {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5035,6 +9843,30 @@ impl Sandwich<MultiVector> for Line {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Line {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Line {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Line {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Line {
     type Output = Origin;
 
@@ -5075,42 +9907,10 @@ impl Sandwich<RoundPoint> for Line {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Line {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Line {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Line {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Line {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Line {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5123,10 +9923,18 @@ impl Sandwich<Sphere> for Line {
     }
 }
 
-impl Sandwich<SphereWeight> for Line {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Line {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Line {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5147,6 +9955,46 @@ impl Sandwich<Translator> for Line {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for LineAtInfinity {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for LineAtInfinity {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for LineAtInfinity {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for LineAtInfinity {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for LineAtInfinity {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for LineAtInfinity {
     type Output = Circle;
 
@@ -5155,18 +10003,42 @@ impl Sandwich<Circle> for LineAtInfinity {
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for LineAtInfinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAligningOrigin> for LineAtInfinity {
+    type Output = CircleAligningOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for LineAtInfinity {
-    type Output = CircleWeight;
+impl Sandwich<CircleAtInfinity> for LineAtInfinity {
+    type Output = CircleAtInfinity;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for LineAtInfinity {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for LineAtInfinity {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for LineAtInfinity {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5179,18 +10051,34 @@ impl Sandwich<Dipole> for LineAtInfinity {
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for LineAtInfinity {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleAligningOrigin> for LineAtInfinity {
+    type Output = DipoleAligningOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for LineAtInfinity {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleAtOrigin> for LineAtInfinity {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for LineAtInfinity {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for LineAtInfinity {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5227,6 +10115,30 @@ impl Sandwich<MultiVector> for LineAtInfinity {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for LineAtInfinity {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for LineAtInfinity {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for LineAtInfinity {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for LineAtInfinity {
     type Output = Origin;
 
@@ -5251,42 +10163,10 @@ impl Sandwich<RoundPoint> for LineAtInfinity {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for LineAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for LineAtInfinity {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for LineAtInfinity {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for LineAtInfinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for LineAtInfinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5299,10 +10179,74 @@ impl Sandwich<Sphere> for LineAtInfinity {
     }
 }
 
-impl Sandwich<SphereWeight> for LineAtInfinity {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for LineAtInfinity {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for LineAtInfinity {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for LineAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for LineAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for LineAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for LineAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for LineAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for LineAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for LineAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5315,6 +10259,14 @@ impl Sandwich<Circle> for LineAtOrigin {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for LineAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for LineAtOrigin {
     type Output = CircleAtInfinity;
 
@@ -5323,26 +10275,26 @@ impl Sandwich<CircleAtInfinity> for LineAtOrigin {
     }
 }
 
-impl Sandwich<CircleBulk> for LineAtOrigin {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for LineAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for LineAtOrigin {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for LineAtOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for LineAtOrigin {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for LineAtOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5355,6 +10307,14 @@ impl Sandwich<Dipole> for LineAtOrigin {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for LineAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for LineAtOrigin {
     type Output = DipoleAtInfinity;
 
@@ -5363,26 +10323,26 @@ impl Sandwich<DipoleAtInfinity> for LineAtOrigin {
     }
 }
 
-impl Sandwich<DipoleBulk> for LineAtOrigin {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for LineAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for LineAtOrigin {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for LineAtOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for LineAtOrigin {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for LineAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5483,6 +10443,30 @@ impl Sandwich<MultiVector> for LineAtOrigin {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for LineAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for LineAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for LineAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for LineAtOrigin {
     type Output = Origin;
 
@@ -5523,42 +10507,10 @@ impl Sandwich<RoundPoint> for LineAtOrigin {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for LineAtOrigin {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for LineAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for LineAtOrigin {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for LineAtOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for LineAtOrigin {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5571,10 +10523,18 @@ impl Sandwich<Sphere> for LineAtOrigin {
     }
 }
 
-impl Sandwich<SphereWeight> for LineAtOrigin {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for LineAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for LineAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5595,10 +10555,74 @@ impl Sandwich<Translator> for LineAtOrigin {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Motor {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Motor {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Motor {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Motor {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Motor {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Motor {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Motor {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Motor {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Motor {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5611,26 +10635,26 @@ impl Sandwich<CircleAtInfinity> for Motor {
     }
 }
 
-impl Sandwich<CircleBulk> for Motor {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Motor {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Motor {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Motor {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Motor {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Motor {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5643,6 +10667,14 @@ impl Sandwich<Dipole> for Motor {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Motor {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Motor {
     type Output = DipoleAtInfinity;
 
@@ -5651,26 +10683,26 @@ impl Sandwich<DipoleAtInfinity> for Motor {
     }
 }
 
-impl Sandwich<DipoleBulk> for Motor {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Motor {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Motor {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Motor {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Motor {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Motor {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5771,6 +10803,30 @@ impl Sandwich<MultiVector> for Motor {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Motor {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Motor {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Motor {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Motor {
     type Output = Origin;
 
@@ -5811,42 +10867,10 @@ impl Sandwich<RoundPoint> for Motor {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Motor {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Motor {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Motor {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Motor {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Motor {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5859,10 +10883,18 @@ impl Sandwich<Sphere> for Motor {
     }
 }
 
-impl Sandwich<SphereWeight> for Motor {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Motor {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Motor {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5883,10 +10915,74 @@ impl Sandwich<Translator> for Motor {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for MultiVector {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for MultiVector {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for MultiVector {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for MultiVector {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for MultiVector {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for MultiVector {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for MultiVector {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for MultiVector {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for MultiVector {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5899,26 +10995,26 @@ impl Sandwich<CircleAtInfinity> for MultiVector {
     }
 }
 
-impl Sandwich<CircleBulk> for MultiVector {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for MultiVector {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for MultiVector {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for MultiVector {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for MultiVector {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for MultiVector {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5931,6 +11027,14 @@ impl Sandwich<Dipole> for MultiVector {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for MultiVector {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for MultiVector {
     type Output = DipoleAtInfinity;
 
@@ -5939,26 +11043,26 @@ impl Sandwich<DipoleAtInfinity> for MultiVector {
     }
 }
 
-impl Sandwich<DipoleBulk> for MultiVector {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for MultiVector {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for MultiVector {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for MultiVector {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for MultiVector {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for MultiVector {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6059,6 +11163,30 @@ impl Sandwich<MultiVector> for MultiVector {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for MultiVector {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for MultiVector {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for MultiVector {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for MultiVector {
     type Output = Origin;
 
@@ -6099,42 +11227,10 @@ impl Sandwich<RoundPoint> for MultiVector {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for MultiVector {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for MultiVector {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for MultiVector {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for MultiVector {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for MultiVector {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6147,10 +11243,18 @@ impl Sandwich<Sphere> for MultiVector {
     }
 }
 
-impl Sandwich<SphereWeight> for MultiVector {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for MultiVector {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for MultiVector {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6171,10 +11275,850 @@ impl Sandwich<Translator> for MultiVector {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for NullCircleAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for NullCircleAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for NullCircleAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for NullCircleAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for NullCircleAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for NullCircleAtOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for NullCircleAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for NullCircleAtOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for NullCircleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for NullCircleAtOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for NullCircleAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for NullCircleAtOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for NullCircleAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for NullCircleAtOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for NullCircleAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for NullCircleAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for NullCircleAtOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for NullCircleAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for NullCircleAtOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for NullCircleAtOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for NullCircleAtOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for NullCircleAtOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for NullCircleAtOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for NullCircleAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for NullCircleAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for NullCircleAtOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for NullCircleAtOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for NullCircleAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for NullCircleAtOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for NullCircleAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for NullCircleAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for NullCircleAtOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for NullCircleAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for NullCircleAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for NullCircleAtOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for NullCircleAtOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for NullDipoleAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for NullDipoleAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for NullDipoleAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for NullDipoleAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for NullDipoleAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for NullDipoleAtOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for NullDipoleAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for NullDipoleAtOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for NullDipoleAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for NullDipoleAtOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for NullDipoleAtOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for NullDipoleAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for NullDipoleAtOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for NullDipoleAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for NullDipoleAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for NullDipoleAtOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for NullDipoleAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for NullDipoleAtOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for NullDipoleAtOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for NullDipoleAtOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for NullDipoleAtOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for NullDipoleAtOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for NullDipoleAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for NullDipoleAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for NullDipoleAtOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for NullDipoleAtOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for NullDipoleAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for NullDipoleAtOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for NullDipoleAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for NullDipoleAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for NullDipoleAtOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for NullDipoleAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for NullDipoleAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for NullDipoleAtOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for NullDipoleAtOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for NullSphereAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for NullSphereAtOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for NullSphereAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for NullSphereAtOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for NullSphereAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for NullSphereAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for NullSphereAtOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for NullSphereAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for NullSphereAtOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for NullSphereAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for NullSphereAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for NullSphereAtOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for NullSphereAtOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for NullSphereAtOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for NullSphereAtOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for NullSphereAtOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for NullSphereAtOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for NullSphereAtOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for NullSphereAtOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for NullSphereAtOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<Plane> for NullSphereAtOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for NullSphereAtOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for NullSphereAtOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for NullSphereAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for NullSphereAtOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for NullSphereAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for NullSphereAtOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for NullSphereAtOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Origin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Origin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Origin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6187,6 +12131,22 @@ impl Sandwich<CircleAtInfinity> for Origin {
     }
 }
 
+impl Sandwich<CircleAtOrigin> for Origin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for Origin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Origin {
     type Output = Dipole;
 
@@ -6195,10 +12155,34 @@ impl Sandwich<Dipole> for Origin {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Origin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Origin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for Origin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for Origin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6307,14 +12291,6 @@ impl Sandwich<RoundPoint> for Origin {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Origin {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Origin {
     type Output = RoundPointAtOrigin;
 
@@ -6323,18 +12299,18 @@ impl Sandwich<RoundPointAtOrigin> for Origin {
     }
 }
 
-impl Sandwich<SpacialCurvature> for Origin {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<Sphere> for Origin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for Origin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6355,10 +12331,74 @@ impl Sandwich<Translator> for Origin {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Plane {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Plane {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Plane {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Plane {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Plane {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Plane {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Plane {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Plane {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Plane {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6371,26 +12411,26 @@ impl Sandwich<CircleAtInfinity> for Plane {
     }
 }
 
-impl Sandwich<CircleBulk> for Plane {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Plane {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Plane {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Plane {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Plane {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Plane {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6403,6 +12443,14 @@ impl Sandwich<Dipole> for Plane {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Plane {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Plane {
     type Output = DipoleAtInfinity;
 
@@ -6411,26 +12459,26 @@ impl Sandwich<DipoleAtInfinity> for Plane {
     }
 }
 
-impl Sandwich<DipoleBulk> for Plane {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Plane {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Plane {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Plane {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Plane {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Plane {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6531,6 +12579,30 @@ impl Sandwich<MultiVector> for Plane {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Plane {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Plane {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Plane {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Plane {
     type Output = Origin;
 
@@ -6571,42 +12643,10 @@ impl Sandwich<RoundPoint> for Plane {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Plane {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Plane {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Plane {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Plane {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Plane {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6619,10 +12659,18 @@ impl Sandwich<Sphere> for Plane {
     }
 }
 
-impl Sandwich<SphereWeight> for Plane {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Plane {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Plane {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6643,10 +12691,74 @@ impl Sandwich<Translator> for Plane {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for PlaneAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for PlaneAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for PlaneAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for PlaneAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for PlaneAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for PlaneAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for PlaneAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for PlaneAtOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for PlaneAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6659,26 +12771,26 @@ impl Sandwich<CircleAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<CircleBulk> for PlaneAtOrigin {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for PlaneAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for PlaneAtOrigin {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for PlaneAtOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for PlaneAtOrigin {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for PlaneAtOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6691,6 +12803,14 @@ impl Sandwich<Dipole> for PlaneAtOrigin {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for PlaneAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for PlaneAtOrigin {
     type Output = DipoleAtInfinity;
 
@@ -6699,26 +12819,26 @@ impl Sandwich<DipoleAtInfinity> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<DipoleBulk> for PlaneAtOrigin {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for PlaneAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for PlaneAtOrigin {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for PlaneAtOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for PlaneAtOrigin {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for PlaneAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6819,6 +12939,30 @@ impl Sandwich<MultiVector> for PlaneAtOrigin {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for PlaneAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for PlaneAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for PlaneAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for PlaneAtOrigin {
     type Output = Origin;
 
@@ -6859,42 +13003,10 @@ impl Sandwich<RoundPoint> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for PlaneAtOrigin {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for PlaneAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for PlaneAtOrigin {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for PlaneAtOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for PlaneAtOrigin {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6907,10 +13019,18 @@ impl Sandwich<Sphere> for PlaneAtOrigin {
     }
 }
 
-impl Sandwich<SphereWeight> for PlaneAtOrigin {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for PlaneAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for PlaneAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6931,10 +13051,74 @@ impl Sandwich<Translator> for PlaneAtOrigin {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Rotor {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Rotor {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Rotor {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Rotor {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Rotor {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Rotor {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Rotor {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Rotor {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Rotor {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6947,26 +13131,26 @@ impl Sandwich<CircleAtInfinity> for Rotor {
     }
 }
 
-impl Sandwich<CircleBulk> for Rotor {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Rotor {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Rotor {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Rotor {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Rotor {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Rotor {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6979,6 +13163,14 @@ impl Sandwich<Dipole> for Rotor {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Rotor {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Rotor {
     type Output = DipoleAtInfinity;
 
@@ -6987,26 +13179,26 @@ impl Sandwich<DipoleAtInfinity> for Rotor {
     }
 }
 
-impl Sandwich<DipoleBulk> for Rotor {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Rotor {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Rotor {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Rotor {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Rotor {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Rotor {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7107,6 +13299,30 @@ impl Sandwich<MultiVector> for Rotor {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Rotor {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Rotor {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Rotor {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Rotor {
     type Output = Origin;
 
@@ -7147,42 +13363,10 @@ impl Sandwich<RoundPoint> for Rotor {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Rotor {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Rotor {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Rotor {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Rotor {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Rotor {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7195,10 +13379,18 @@ impl Sandwich<Sphere> for Rotor {
     }
 }
 
-impl Sandwich<SphereWeight> for Rotor {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Rotor {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Rotor {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7219,10 +13411,74 @@ impl Sandwich<Translator> for Rotor {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for RoundPoint {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for RoundPoint {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for RoundPoint {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for RoundPoint {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for RoundPoint {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for RoundPoint {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for RoundPoint {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for RoundPoint {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for RoundPoint {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7235,26 +13491,26 @@ impl Sandwich<CircleAtInfinity> for RoundPoint {
     }
 }
 
-impl Sandwich<CircleBulk> for RoundPoint {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for RoundPoint {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for RoundPoint {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for RoundPoint {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for RoundPoint {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for RoundPoint {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7267,6 +13523,14 @@ impl Sandwich<Dipole> for RoundPoint {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for RoundPoint {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for RoundPoint {
     type Output = DipoleAtInfinity;
 
@@ -7275,26 +13539,26 @@ impl Sandwich<DipoleAtInfinity> for RoundPoint {
     }
 }
 
-impl Sandwich<DipoleBulk> for RoundPoint {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for RoundPoint {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for RoundPoint {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for RoundPoint {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for RoundPoint {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for RoundPoint {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7395,6 +13659,30 @@ impl Sandwich<MultiVector> for RoundPoint {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for RoundPoint {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for RoundPoint {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for RoundPoint {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for RoundPoint {
     type Output = Origin;
 
@@ -7435,42 +13723,10 @@ impl Sandwich<RoundPoint> for RoundPoint {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for RoundPoint {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for RoundPoint {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for RoundPoint {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for RoundPoint {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for RoundPoint {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7483,10 +13739,18 @@ impl Sandwich<Sphere> for RoundPoint {
     }
 }
 
-impl Sandwich<SphereWeight> for RoundPoint {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for RoundPoint {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for RoundPoint {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7507,290 +13771,58 @@ impl Sandwich<Translator> for RoundPoint {
     }
 }
 
-impl Sandwich<Circle> for RoundPointAtInfinity {
-    type Output = Circle;
+impl Sandwich<AntiCircleOnOrigin> for RoundPointAtOrigin {
+    type Output = AntiCircleOnOrigin;
 
-    fn sandwich(self, other: Circle) -> Circle {
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleAtInfinity> for RoundPointAtInfinity {
-    type Output = CircleAtInfinity;
+impl Sandwich<AntiDipoleOnOrigin> for RoundPointAtOrigin {
+    type Output = AntiDipoleOnOrigin;
 
-    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleBulk> for RoundPointAtInfinity {
-    type Output = CircleBulk;
+impl Sandwich<AntiFlatPointAtOrigin> for RoundPointAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for RoundPointAtInfinity {
-    type Output = CircleCarrierAspect;
+impl Sandwich<AntiLineAtOrigin> for RoundPointAtOrigin {
+    type Output = AntiLineAtOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for RoundPointAtInfinity {
-    type Output = CircleWeight;
+impl Sandwich<AntiPlane> for RoundPointAtOrigin {
+    type Output = AntiPlane;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Dipole> for RoundPointAtInfinity {
-    type Output = Dipole;
+impl Sandwich<AntiPlaneAtOrigin> for RoundPointAtOrigin {
+    type Output = AntiPlaneAtOrigin;
 
-    fn sandwich(self, other: Dipole) -> Dipole {
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for RoundPointAtInfinity {
-    type Output = DipoleAtInfinity;
+impl Sandwich<AntiSphereOnOrigin> for RoundPointAtOrigin {
+    type Output = AntiSphereOnOrigin;
 
-    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleBulk> for RoundPointAtInfinity {
-    type Output = DipoleBulk;
-
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleCarrierAspect> for RoundPointAtInfinity {
-    type Output = DipoleCarrierAspect;
-
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleWeight> for RoundPointAtInfinity {
-    type Output = DipoleWeight;
-
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for RoundPointAtInfinity {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtInfinity> for RoundPointAtInfinity {
-    type Output = FlatPointAtInfinity;
-
-    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtOrigin> for RoundPointAtInfinity {
-    type Output = FlatPointAtOrigin;
-
-    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for RoundPointAtInfinity {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlectorAtInfinity> for RoundPointAtInfinity {
-    type Output = FlectorAtInfinity;
-
-    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Horizon> for RoundPointAtInfinity {
-    type Output = Horizon;
-
-    fn sandwich(self, other: Horizon) -> Horizon {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Infinity> for RoundPointAtInfinity {
-    type Output = Infinity;
-
-    fn sandwich(self, other: Infinity) -> Infinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for RoundPointAtInfinity {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtInfinity> for RoundPointAtInfinity {
-    type Output = LineAtInfinity;
-
-    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtOrigin> for RoundPointAtInfinity {
-    type Output = LineAtOrigin;
-
-    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for RoundPointAtInfinity {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for RoundPointAtInfinity {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Origin> for RoundPointAtInfinity {
-    type Output = Origin;
-
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Plane> for RoundPointAtInfinity {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<PlaneAtOrigin> for RoundPointAtInfinity {
-    type Output = PlaneAtOrigin;
-
-    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for RoundPointAtInfinity {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for RoundPointAtInfinity {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtInfinity> for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for RoundPointAtInfinity {
-    type Output = RoundPointAtOrigin;
-
-    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for RoundPointAtInfinity {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for RoundPointAtInfinity {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for RoundPointAtInfinity {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for RoundPointAtInfinity {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SphereWeight> for RoundPointAtInfinity {
-    type Output = SphereWeight;
-
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for RoundPointAtInfinity {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for RoundPointAtInfinity {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7803,6 +13835,14 @@ impl Sandwich<Circle> for RoundPointAtOrigin {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for RoundPointAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for RoundPointAtOrigin {
     type Output = CircleAtInfinity;
 
@@ -7811,26 +13851,26 @@ impl Sandwich<CircleAtInfinity> for RoundPointAtOrigin {
     }
 }
 
-impl Sandwich<CircleBulk> for RoundPointAtOrigin {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for RoundPointAtOrigin {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for RoundPointAtOrigin {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for RoundPointAtOrigin {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for RoundPointAtOrigin {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for RoundPointAtOrigin {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7843,6 +13883,14 @@ impl Sandwich<Dipole> for RoundPointAtOrigin {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for RoundPointAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for RoundPointAtOrigin {
     type Output = DipoleAtInfinity;
 
@@ -7851,26 +13899,26 @@ impl Sandwich<DipoleAtInfinity> for RoundPointAtOrigin {
     }
 }
 
-impl Sandwich<DipoleBulk> for RoundPointAtOrigin {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for RoundPointAtOrigin {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for RoundPointAtOrigin {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for RoundPointAtOrigin {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for RoundPointAtOrigin {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for RoundPointAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7971,6 +14019,30 @@ impl Sandwich<MultiVector> for RoundPointAtOrigin {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for RoundPointAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for RoundPointAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for RoundPointAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for RoundPointAtOrigin {
     type Output = Origin;
 
@@ -8011,42 +14083,10 @@ impl Sandwich<RoundPoint> for RoundPointAtOrigin {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for RoundPointAtOrigin {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for RoundPointAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for RoundPointAtOrigin {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for RoundPointAtOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for RoundPointAtOrigin {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -8059,10 +14099,18 @@ impl Sandwich<Sphere> for RoundPointAtOrigin {
     }
 }
 
-impl Sandwich<SphereWeight> for RoundPointAtOrigin {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for RoundPointAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for RoundPointAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -8083,579 +14131,59 @@ impl Sandwich<Translator> for RoundPointAtOrigin {
     }
 }
 
-impl Sandwich<Circle> for RoundPointBulk {
-    type Output = Circle;
+impl Sandwich<AntiCircleOnOrigin> for Scalar {
+    type Output = AntiCircleOnOrigin;
 
-    fn sandwich(self, other: Circle) -> Circle {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleAtInfinity> for RoundPointBulk {
-    type Output = CircleAtInfinity;
-
-    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleBulk> for RoundPointBulk {
-    type Output = CircleBulk;
-
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleCarrierAspect> for RoundPointBulk {
-    type Output = CircleCarrierAspect;
-
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleWeight> for RoundPointBulk {
-    type Output = CircleWeight;
-
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Dipole> for RoundPointBulk {
-    type Output = Dipole;
-
-    fn sandwich(self, other: Dipole) -> Dipole {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleAtInfinity> for RoundPointBulk {
-    type Output = DipoleAtInfinity;
-
-    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleBulk> for RoundPointBulk {
-    type Output = DipoleBulk;
-
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleCarrierAspect> for RoundPointBulk {
-    type Output = DipoleCarrierAspect;
-
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleWeight> for RoundPointBulk {
-    type Output = DipoleWeight;
-
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for RoundPointBulk {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtInfinity> for RoundPointBulk {
-    type Output = FlatPointAtInfinity;
-
-    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtOrigin> for RoundPointBulk {
-    type Output = FlatPointAtOrigin;
-
-    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for RoundPointBulk {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlectorAtInfinity> for RoundPointBulk {
-    type Output = FlectorAtInfinity;
-
-    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Horizon> for RoundPointBulk {
-    type Output = Horizon;
+impl Sandwich<AntiDipoleOnOrigin> for Scalar {
+    type Output = AntiDipoleOnOrigin;
 
-    fn sandwich(self, other: Horizon) -> Horizon {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Infinity> for RoundPointBulk {
-    type Output = Infinity;
-
-    fn sandwich(self, other: Infinity) -> Infinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for RoundPointBulk {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtInfinity> for RoundPointBulk {
-    type Output = LineAtInfinity;
-
-    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtOrigin> for RoundPointBulk {
-    type Output = LineAtOrigin;
-
-    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for RoundPointBulk {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for RoundPointBulk {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Origin> for RoundPointBulk {
-    type Output = Origin;
+impl Sandwich<AntiFlatPointAtOrigin> for Scalar {
+    type Output = AntiFlatPointAtOrigin;
 
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Plane> for RoundPointBulk {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<PlaneAtOrigin> for RoundPointBulk {
-    type Output = PlaneAtOrigin;
-
-    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for RoundPointBulk {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for RoundPointBulk {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtInfinity> for RoundPointBulk {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for RoundPointBulk {
-    type Output = RoundPointAtOrigin;
-
-    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for RoundPointBulk {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for RoundPointBulk {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for RoundPointBulk {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for RoundPointBulk {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SphereWeight> for RoundPointBulk {
-    type Output = SphereWeight;
-
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for RoundPointBulk {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for RoundPointBulk {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Circle> for RoundPointOnOrigin {
-    type Output = Circle;
-
-    fn sandwich(self, other: Circle) -> Circle {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleAtInfinity> for RoundPointOnOrigin {
-    type Output = CircleAtInfinity;
-
-    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleBulk> for RoundPointOnOrigin {
-    type Output = CircleBulk;
-
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleCarrierAspect> for RoundPointOnOrigin {
-    type Output = CircleCarrierAspect;
-
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<CircleWeight> for RoundPointOnOrigin {
-    type Output = CircleWeight;
-
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Dipole> for RoundPointOnOrigin {
-    type Output = Dipole;
-
-    fn sandwich(self, other: Dipole) -> Dipole {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleAtInfinity> for RoundPointOnOrigin {
-    type Output = DipoleAtInfinity;
-
-    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleBulk> for RoundPointOnOrigin {
-    type Output = DipoleBulk;
-
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleCarrierAspect> for RoundPointOnOrigin {
-    type Output = DipoleCarrierAspect;
-
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleWeight> for RoundPointOnOrigin {
-    type Output = DipoleWeight;
-
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for RoundPointOnOrigin {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtInfinity> for RoundPointOnOrigin {
-    type Output = FlatPointAtInfinity;
-
-    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtOrigin> for RoundPointOnOrigin {
-    type Output = FlatPointAtOrigin;
-
-    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for RoundPointOnOrigin {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlectorAtInfinity> for RoundPointOnOrigin {
-    type Output = FlectorAtInfinity;
-
-    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Horizon> for RoundPointOnOrigin {
-    type Output = Horizon;
-
-    fn sandwich(self, other: Horizon) -> Horizon {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Infinity> for RoundPointOnOrigin {
-    type Output = Infinity;
-
-    fn sandwich(self, other: Infinity) -> Infinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for RoundPointOnOrigin {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtInfinity> for RoundPointOnOrigin {
-    type Output = LineAtInfinity;
-
-    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtOrigin> for RoundPointOnOrigin {
-    type Output = LineAtOrigin;
-
-    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for RoundPointOnOrigin {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for RoundPointOnOrigin {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Origin> for RoundPointOnOrigin {
-    type Output = Origin;
+impl Sandwich<AntiLineAtOrigin> for Scalar {
+    type Output = AntiLineAtOrigin;
 
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Plane> for RoundPointOnOrigin {
-    type Output = Plane;
+impl Sandwich<AntiPlane> for Scalar {
+    type Output = AntiPlane;
 
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<PlaneAtOrigin> for RoundPointOnOrigin {
-    type Output = PlaneAtOrigin;
+impl Sandwich<AntiPlaneAtOrigin> for Scalar {
+    type Output = AntiPlaneAtOrigin;
 
-    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<Rotor> for RoundPointOnOrigin {
-    type Output = Rotor;
+impl Sandwich<AntiSphereOnOrigin> for Scalar {
+    type Output = AntiSphereOnOrigin;
 
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for RoundPointOnOrigin {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtInfinity> for RoundPointOnOrigin {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for RoundPointOnOrigin {
-    type Output = RoundPointAtOrigin;
-
-    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for RoundPointOnOrigin {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for RoundPointOnOrigin {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for RoundPointOnOrigin {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SphereWeight> for RoundPointOnOrigin {
-    type Output = SphereWeight;
-
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for RoundPointOnOrigin {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for RoundPointOnOrigin {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
@@ -8663,6 +14191,14 @@ impl Sandwich<Circle> for Scalar {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Scalar {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -8675,26 +14211,26 @@ impl Sandwich<CircleAtInfinity> for Scalar {
     }
 }
 
-impl Sandwich<CircleBulk> for Scalar {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Scalar {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Scalar {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Scalar {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<CircleWeight> for Scalar {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Scalar {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -8707,6 +14243,14 @@ impl Sandwich<Dipole> for Scalar {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Scalar {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Scalar {
     type Output = DipoleAtInfinity;
 
@@ -8715,26 +14259,26 @@ impl Sandwich<DipoleAtInfinity> for Scalar {
     }
 }
 
-impl Sandwich<DipoleBulk> for Scalar {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Scalar {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Scalar {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Scalar {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
 
-impl Sandwich<DipoleWeight> for Scalar {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Scalar {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -8743,7 +14287,7 @@ impl Sandwich<FlatPoint> for Scalar {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -8799,7 +14343,7 @@ impl Sandwich<Line> for Scalar {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
@@ -8831,6 +14375,30 @@ impl Sandwich<MultiVector> for Scalar {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for Scalar {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Scalar {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Scalar {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -8875,42 +14443,10 @@ impl Sandwich<RoundPoint> for Scalar {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Scalar {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Scalar {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Scalar {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Scalar {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Scalar {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -8923,10 +14459,18 @@ impl Sandwich<Sphere> for Scalar {
     }
 }
 
-impl Sandwich<SphereWeight> for Scalar {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Scalar {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Scalar {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
     }
 }
@@ -8947,290 +14491,58 @@ impl Sandwich<Translator> for Scalar {
     }
 }
 
-impl Sandwich<Circle> for SpacialCurvature {
-    type Output = Circle;
+impl Sandwich<AntiCircleOnOrigin> for Sphere {
+    type Output = AntiCircleOnOrigin;
 
-    fn sandwich(self, other: Circle) -> Circle {
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleAtInfinity> for SpacialCurvature {
-    type Output = CircleAtInfinity;
+impl Sandwich<AntiDipoleOnOrigin> for Sphere {
+    type Output = AntiDipoleOnOrigin;
 
-    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleBulk> for SpacialCurvature {
-    type Output = CircleBulk;
+impl Sandwich<AntiFlatPointAtOrigin> for Sphere {
+    type Output = AntiFlatPointAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for SpacialCurvature {
-    type Output = CircleCarrierAspect;
+impl Sandwich<AntiLineAtOrigin> for Sphere {
+    type Output = AntiLineAtOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for SpacialCurvature {
-    type Output = CircleWeight;
+impl Sandwich<AntiPlane> for Sphere {
+    type Output = AntiPlane;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<Dipole> for SpacialCurvature {
-    type Output = Dipole;
+impl Sandwich<AntiPlaneAtOrigin> for Sphere {
+    type Output = AntiPlaneAtOrigin;
 
-    fn sandwich(self, other: Dipole) -> Dipole {
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for SpacialCurvature {
-    type Output = DipoleAtInfinity;
+impl Sandwich<AntiSphereOnOrigin> for Sphere {
+    type Output = AntiSphereOnOrigin;
 
-    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleBulk> for SpacialCurvature {
-    type Output = DipoleBulk;
-
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleCarrierAspect> for SpacialCurvature {
-    type Output = DipoleCarrierAspect;
-
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<DipoleWeight> for SpacialCurvature {
-    type Output = DipoleWeight;
-
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPoint> for SpacialCurvature {
-    type Output = FlatPoint;
-
-    fn sandwich(self, other: FlatPoint) -> FlatPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtInfinity> for SpacialCurvature {
-    type Output = FlatPointAtInfinity;
-
-    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlatPointAtOrigin> for SpacialCurvature {
-    type Output = FlatPointAtOrigin;
-
-    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Flector> for SpacialCurvature {
-    type Output = Flector;
-
-    fn sandwich(self, other: Flector) -> Flector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<FlectorAtInfinity> for SpacialCurvature {
-    type Output = FlectorAtInfinity;
-
-    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Horizon> for SpacialCurvature {
-    type Output = Horizon;
-
-    fn sandwich(self, other: Horizon) -> Horizon {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Infinity> for SpacialCurvature {
-    type Output = Infinity;
-
-    fn sandwich(self, other: Infinity) -> Infinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Line> for SpacialCurvature {
-    type Output = Line;
-
-    fn sandwich(self, other: Line) -> Line {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtInfinity> for SpacialCurvature {
-    type Output = LineAtInfinity;
-
-    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<LineAtOrigin> for SpacialCurvature {
-    type Output = LineAtOrigin;
-
-    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Motor> for SpacialCurvature {
-    type Output = Motor;
-
-    fn sandwich(self, other: Motor) -> Motor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<MultiVector> for SpacialCurvature {
-    type Output = MultiVector;
-
-    fn sandwich(self, other: MultiVector) -> MultiVector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<Origin> for SpacialCurvature {
-    type Output = Origin;
-
-    fn sandwich(self, other: Origin) -> Origin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Plane> for SpacialCurvature {
-    type Output = Plane;
-
-    fn sandwich(self, other: Plane) -> Plane {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<PlaneAtOrigin> for SpacialCurvature {
-    type Output = PlaneAtOrigin;
-
-    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Rotor> for SpacialCurvature {
-    type Output = Rotor;
-
-    fn sandwich(self, other: Rotor) -> Rotor {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPoint> for SpacialCurvature {
-    type Output = RoundPoint;
-
-    fn sandwich(self, other: RoundPoint) -> RoundPoint {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtInfinity> for SpacialCurvature {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for SpacialCurvature {
-    type Output = RoundPointAtOrigin;
-
-    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for SpacialCurvature {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for SpacialCurvature {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for SpacialCurvature {
-    type Output = Sphere;
-
-    fn sandwich(self, other: Sphere) -> Sphere {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SphereWeight> for SpacialCurvature {
-    type Output = SphereWeight;
-
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Transflector> for SpacialCurvature {
-    type Output = Transflector;
-
-    fn sandwich(self, other: Transflector) -> Transflector {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Translator> for SpacialCurvature {
-    type Output = Translator;
-
-    fn sandwich(self, other: Translator) -> Translator {
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9243,6 +14555,14 @@ impl Sandwich<Circle> for Sphere {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for Sphere {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for Sphere {
     type Output = CircleAtInfinity;
 
@@ -9251,26 +14571,26 @@ impl Sandwich<CircleAtInfinity> for Sphere {
     }
 }
 
-impl Sandwich<CircleBulk> for Sphere {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Sphere {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Sphere {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Sphere {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Sphere {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Sphere {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9283,6 +14603,14 @@ impl Sandwich<Dipole> for Sphere {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Sphere {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Sphere {
     type Output = DipoleAtInfinity;
 
@@ -9291,26 +14619,26 @@ impl Sandwich<DipoleAtInfinity> for Sphere {
     }
 }
 
-impl Sandwich<DipoleBulk> for Sphere {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Sphere {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Sphere {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Sphere {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Sphere {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Sphere {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9411,6 +14739,30 @@ impl Sandwich<MultiVector> for Sphere {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Sphere {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Sphere {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Sphere {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Sphere {
     type Output = Origin;
 
@@ -9451,42 +14803,10 @@ impl Sandwich<RoundPoint> for Sphere {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Sphere {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Sphere {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Sphere {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Sphere {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Sphere {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9499,10 +14819,18 @@ impl Sandwich<Sphere> for Sphere {
     }
 }
 
-impl Sandwich<SphereWeight> for Sphere {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Sphere {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Sphere {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9523,7 +14851,63 @@ impl Sandwich<Translator> for Sphere {
     }
 }
 
-impl Sandwich<Circle> for SphereWeight {
+impl Sandwich<AntiCircleOnOrigin> for SphereAtOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for SphereAtOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for SphereAtOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for SphereAtOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for SphereAtOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for SphereAtOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for SphereAtOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for SphereAtOrigin {
     type Output = Circle;
 
     fn sandwich(self, other: Circle) -> Circle {
@@ -9531,7 +14915,15 @@ impl Sandwich<Circle> for SphereWeight {
     }
 }
 
-impl Sandwich<CircleAtInfinity> for SphereWeight {
+impl Sandwich<CircleAligningOrigin> for SphereAtOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for SphereAtOrigin {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
@@ -9539,7 +14931,31 @@ impl Sandwich<CircleAtInfinity> for SphereWeight {
     }
 }
 
-impl Sandwich<Dipole> for SphereWeight {
+impl Sandwich<CircleAtOrigin> for SphereAtOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for SphereAtOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for SphereAtOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for SphereAtOrigin {
     type Output = Dipole;
 
     fn sandwich(self, other: Dipole) -> Dipole {
@@ -9547,7 +14963,15 @@ impl Sandwich<Dipole> for SphereWeight {
     }
 }
 
-impl Sandwich<DipoleAtInfinity> for SphereWeight {
+impl Sandwich<DipoleAligningOrigin> for SphereAtOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for SphereAtOrigin {
     type Output = DipoleAtInfinity;
 
     fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
@@ -9555,7 +14979,31 @@ impl Sandwich<DipoleAtInfinity> for SphereWeight {
     }
 }
 
-impl Sandwich<FlatPoint> for SphereWeight {
+impl Sandwich<DipoleAtOrigin> for SphereAtOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for SphereAtOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for SphereAtOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for SphereAtOrigin {
     type Output = FlatPoint;
 
     fn sandwich(self, other: FlatPoint) -> FlatPoint {
@@ -9563,7 +15011,7 @@ impl Sandwich<FlatPoint> for SphereWeight {
     }
 }
 
-impl Sandwich<FlatPointAtInfinity> for SphereWeight {
+impl Sandwich<FlatPointAtInfinity> for SphereAtOrigin {
     type Output = FlatPointAtInfinity;
 
     fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
@@ -9571,7 +15019,15 @@ impl Sandwich<FlatPointAtInfinity> for SphereWeight {
     }
 }
 
-impl Sandwich<Flector> for SphereWeight {
+impl Sandwich<FlatPointAtOrigin> for SphereAtOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for SphereAtOrigin {
     type Output = Flector;
 
     fn sandwich(self, other: Flector) -> Flector {
@@ -9579,7 +15035,7 @@ impl Sandwich<Flector> for SphereWeight {
     }
 }
 
-impl Sandwich<FlectorAtInfinity> for SphereWeight {
+impl Sandwich<FlectorAtInfinity> for SphereAtOrigin {
     type Output = FlectorAtInfinity;
 
     fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
@@ -9587,7 +15043,7 @@ impl Sandwich<FlectorAtInfinity> for SphereWeight {
     }
 }
 
-impl Sandwich<Horizon> for SphereWeight {
+impl Sandwich<Horizon> for SphereAtOrigin {
     type Output = Horizon;
 
     fn sandwich(self, other: Horizon) -> Horizon {
@@ -9595,7 +15051,7 @@ impl Sandwich<Horizon> for SphereWeight {
     }
 }
 
-impl Sandwich<Infinity> for SphereWeight {
+impl Sandwich<Infinity> for SphereAtOrigin {
     type Output = Infinity;
 
     fn sandwich(self, other: Infinity) -> Infinity {
@@ -9603,7 +15059,7 @@ impl Sandwich<Infinity> for SphereWeight {
     }
 }
 
-impl Sandwich<Line> for SphereWeight {
+impl Sandwich<Line> for SphereAtOrigin {
     type Output = Line;
 
     fn sandwich(self, other: Line) -> Line {
@@ -9611,7 +15067,7 @@ impl Sandwich<Line> for SphereWeight {
     }
 }
 
-impl Sandwich<LineAtInfinity> for SphereWeight {
+impl Sandwich<LineAtInfinity> for SphereAtOrigin {
     type Output = LineAtInfinity;
 
     fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
@@ -9619,7 +15075,15 @@ impl Sandwich<LineAtInfinity> for SphereWeight {
     }
 }
 
-impl Sandwich<Motor> for SphereWeight {
+impl Sandwich<LineAtOrigin> for SphereAtOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for SphereAtOrigin {
     type Output = Motor;
 
     fn sandwich(self, other: Motor) -> Motor {
@@ -9627,7 +15091,7 @@ impl Sandwich<Motor> for SphereWeight {
     }
 }
 
-impl Sandwich<MultiVector> for SphereWeight {
+impl Sandwich<MultiVector> for SphereAtOrigin {
     type Output = MultiVector;
 
     fn sandwich(self, other: MultiVector) -> MultiVector {
@@ -9635,7 +15099,39 @@ impl Sandwich<MultiVector> for SphereWeight {
     }
 }
 
-impl Sandwich<Plane> for SphereWeight {
+impl Sandwich<NullCircleAtOrigin> for SphereAtOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for SphereAtOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for SphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for SphereAtOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for SphereAtOrigin {
     type Output = Plane;
 
     fn sandwich(self, other: Plane) -> Plane {
@@ -9643,7 +15139,15 @@ impl Sandwich<Plane> for SphereWeight {
     }
 }
 
-impl Sandwich<Rotor> for SphereWeight {
+impl Sandwich<PlaneAtOrigin> for SphereAtOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for SphereAtOrigin {
     type Output = Rotor;
 
     fn sandwich(self, other: Rotor) -> Rotor {
@@ -9651,7 +15155,7 @@ impl Sandwich<Rotor> for SphereWeight {
     }
 }
 
-impl Sandwich<RoundPoint> for SphereWeight {
+impl Sandwich<RoundPoint> for SphereAtOrigin {
     type Output = RoundPoint;
 
     fn sandwich(self, other: RoundPoint) -> RoundPoint {
@@ -9659,15 +15163,7 @@ impl Sandwich<RoundPoint> for SphereWeight {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for SphereWeight {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointAtOrigin> for SphereWeight {
+impl Sandwich<RoundPointAtOrigin> for SphereAtOrigin {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
@@ -9675,15 +15171,7 @@ impl Sandwich<RoundPointAtOrigin> for SphereWeight {
     }
 }
 
-impl Sandwich<SpacialCurvature> for SphereWeight {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<Sphere> for SphereWeight {
+impl Sandwich<Sphere> for SphereAtOrigin {
     type Output = Sphere;
 
     fn sandwich(self, other: Sphere) -> Sphere {
@@ -9691,7 +15179,23 @@ impl Sandwich<Sphere> for SphereWeight {
     }
 }
 
-impl Sandwich<Transflector> for SphereWeight {
+impl Sandwich<SphereAtOrigin> for SphereAtOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for SphereAtOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for SphereAtOrigin {
     type Output = Transflector;
 
     fn sandwich(self, other: Transflector) -> Transflector {
@@ -9699,10 +15203,426 @@ impl Sandwich<Transflector> for SphereWeight {
     }
 }
 
-impl Sandwich<Translator> for SphereWeight {
+impl Sandwich<Translator> for SphereAtOrigin {
     type Output = Translator;
 
     fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for SphereOnOrigin {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for SphereOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for SphereOnOrigin {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for SphereOnOrigin {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for SphereOnOrigin {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for SphereOnOrigin {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for SphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for SphereOnOrigin {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for SphereOnOrigin {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for SphereOnOrigin {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for SphereOnOrigin {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for SphereOnOrigin {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for SphereOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for SphereOnOrigin {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for SphereOnOrigin {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for SphereOnOrigin {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for SphereOnOrigin {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for SphereOnOrigin {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for SphereOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for SphereOnOrigin {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for SphereOnOrigin {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for SphereOnOrigin {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for SphereOnOrigin {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for SphereOnOrigin {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for SphereOnOrigin {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for SphereOnOrigin {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for SphereOnOrigin {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for SphereOnOrigin {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for SphereOnOrigin {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for SphereOnOrigin {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for SphereOnOrigin {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for SphereOnOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for SphereOnOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for SphereOnOrigin {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for SphereOnOrigin {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for SphereOnOrigin {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for SphereOnOrigin {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for SphereOnOrigin {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for SphereOnOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for SphereOnOrigin {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for SphereOnOrigin {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for SphereOnOrigin {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for SphereOnOrigin {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiCircleOnOrigin> for Transflector {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Transflector {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Transflector {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Transflector {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Transflector {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Transflector {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Transflector {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9715,6 +15635,14 @@ impl Sandwich<Circle> for Transflector {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for Transflector {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for Transflector {
     type Output = CircleAtInfinity;
 
@@ -9723,26 +15651,26 @@ impl Sandwich<CircleAtInfinity> for Transflector {
     }
 }
 
-impl Sandwich<CircleBulk> for Transflector {
-    type Output = CircleBulk;
+impl Sandwich<CircleAtOrigin> for Transflector {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Transflector {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleOnOrigin> for Transflector {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Transflector {
-    type Output = CircleWeight;
+impl Sandwich<CircleOrthogonalOrigin> for Transflector {
+    type Output = CircleOrthogonalOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9755,6 +15683,14 @@ impl Sandwich<Dipole> for Transflector {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Transflector {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Transflector {
     type Output = DipoleAtInfinity;
 
@@ -9763,26 +15699,26 @@ impl Sandwich<DipoleAtInfinity> for Transflector {
     }
 }
 
-impl Sandwich<DipoleBulk> for Transflector {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Transflector {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Transflector {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Transflector {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Transflector {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Transflector {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9883,6 +15819,30 @@ impl Sandwich<MultiVector> for Transflector {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Transflector {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Transflector {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Transflector {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Transflector {
     type Output = Origin;
 
@@ -9923,42 +15883,10 @@ impl Sandwich<RoundPoint> for Transflector {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Transflector {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Transflector {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Transflector {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Transflector {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Transflector {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9971,10 +15899,18 @@ impl Sandwich<Sphere> for Transflector {
     }
 }
 
-impl Sandwich<SphereWeight> for Transflector {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Transflector {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Transflector {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9995,6 +15931,62 @@ impl Sandwich<Translator> for Transflector {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Translator {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Translator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Translator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Translator {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Translator {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Translator {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Translator {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Circle> for Translator {
     type Output = Circle;
 
@@ -10003,34 +15995,42 @@ impl Sandwich<Circle> for Translator {
     }
 }
 
+impl Sandwich<CircleAligningOrigin> for Translator {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<CircleAtInfinity> for Translator {
     type Output = CircleAtInfinity;
 
     fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
-    }
-}
-
-impl Sandwich<CircleBulk> for Translator {
-    type Output = CircleBulk;
-
-    fn sandwich(self, other: CircleBulk) -> CircleBulk {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleCarrierAspect> for Translator {
-    type Output = CircleCarrierAspect;
+impl Sandwich<CircleAtOrigin> for Translator {
+    type Output = CircleAtOrigin;
 
-    fn sandwich(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<CircleWeight> for Translator {
-    type Output = CircleWeight;
+impl Sandwich<CircleOnOrigin> for Translator {
+    type Output = CircleOnOrigin;
 
-    fn sandwich(self, other: CircleWeight) -> CircleWeight {
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for Translator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -10043,6 +16043,14 @@ impl Sandwich<Dipole> for Translator {
     }
 }
 
+impl Sandwich<DipoleAligningOrigin> for Translator {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<DipoleAtInfinity> for Translator {
     type Output = DipoleAtInfinity;
 
@@ -10051,26 +16059,26 @@ impl Sandwich<DipoleAtInfinity> for Translator {
     }
 }
 
-impl Sandwich<DipoleBulk> for Translator {
-    type Output = DipoleBulk;
+impl Sandwich<DipoleAtOrigin> for Translator {
+    type Output = DipoleAtOrigin;
 
-    fn sandwich(self, other: DipoleBulk) -> DipoleBulk {
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleCarrierAspect> for Translator {
-    type Output = DipoleCarrierAspect;
+impl Sandwich<DipoleOnOrigin> for Translator {
+    type Output = DipoleOnOrigin;
 
-    fn sandwich(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
 
-impl Sandwich<DipoleWeight> for Translator {
-    type Output = DipoleWeight;
+impl Sandwich<DipoleOrthogonalOrigin> for Translator {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn sandwich(self, other: DipoleWeight) -> DipoleWeight {
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -10171,6 +16179,30 @@ impl Sandwich<MultiVector> for Translator {
     }
 }
 
+impl Sandwich<NullCircleAtOrigin> for Translator {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Translator {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Translator {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Origin> for Translator {
     type Output = Origin;
 
@@ -10211,42 +16243,10 @@ impl Sandwich<RoundPoint> for Translator {
     }
 }
 
-impl Sandwich<RoundPointAtInfinity> for Translator {
-    type Output = RoundPointAtInfinity;
-
-    fn sandwich(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
 impl Sandwich<RoundPointAtOrigin> for Translator {
     type Output = RoundPointAtOrigin;
 
     fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointBulk> for Translator {
-    type Output = RoundPointBulk;
-
-    fn sandwich(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<RoundPointOnOrigin> for Translator {
-    type Output = RoundPointOnOrigin;
-
-    fn sandwich(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
-    }
-}
-
-impl Sandwich<SpacialCurvature> for Translator {
-    type Output = SpacialCurvature;
-
-    fn sandwich(self, other: SpacialCurvature) -> SpacialCurvature {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -10259,10 +16259,18 @@ impl Sandwich<Sphere> for Translator {
     }
 }
 
-impl Sandwich<SphereWeight> for Translator {
-    type Output = SphereWeight;
+impl Sandwich<SphereAtOrigin> for Translator {
+    type Output = SphereAtOrigin;
 
-    fn sandwich(self, other: SphereWeight) -> SphereWeight {
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Translator {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -10283,10 +16291,74 @@ impl Sandwich<Translator> for Translator {
     }
 }
 
+impl PointInversion<AntiCircleOnOrigin> for FlatPoint {
+    type Output = AntiCircleOnOrigin;
+
+    fn point_inversion(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<AntiDipoleOnOrigin> for FlatPoint {
+    type Output = AntiDipoleOnOrigin;
+
+    fn point_inversion(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<AntiFlatPointAtOrigin> for FlatPoint {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn point_inversion(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<AntiLineAtOrigin> for FlatPoint {
+    type Output = AntiLineAtOrigin;
+
+    fn point_inversion(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<AntiPlane> for FlatPoint {
+    type Output = AntiPlane;
+
+    fn point_inversion(self, other: AntiPlane) -> AntiPlane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<AntiPlaneAtOrigin> for FlatPoint {
+    type Output = AntiPlaneAtOrigin;
+
+    fn point_inversion(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<AntiSphereOnOrigin> for FlatPoint {
+    type Output = AntiSphereOnOrigin;
+
+    fn point_inversion(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl PointInversion<Circle> for FlatPoint {
     type Output = Circle;
 
     fn point_inversion(self, other: Circle) -> Circle {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<CircleAligningOrigin> for FlatPoint {
+    type Output = CircleAligningOrigin;
+
+    fn point_inversion(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10299,26 +16371,26 @@ impl PointInversion<CircleAtInfinity> for FlatPoint {
     }
 }
 
-impl PointInversion<CircleBulk> for FlatPoint {
-    type Output = CircleBulk;
+impl PointInversion<CircleAtOrigin> for FlatPoint {
+    type Output = CircleAtOrigin;
 
-    fn point_inversion(self, other: CircleBulk) -> CircleBulk {
+    fn point_inversion(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl PointInversion<CircleCarrierAspect> for FlatPoint {
-    type Output = CircleCarrierAspect;
+impl PointInversion<CircleOnOrigin> for FlatPoint {
+    type Output = CircleOnOrigin;
 
-    fn point_inversion(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn point_inversion(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl PointInversion<CircleWeight> for FlatPoint {
-    type Output = CircleWeight;
+impl PointInversion<CircleOrthogonalOrigin> for FlatPoint {
+    type Output = CircleOrthogonalOrigin;
 
-    fn point_inversion(self, other: CircleWeight) -> CircleWeight {
+    fn point_inversion(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10331,6 +16403,14 @@ impl PointInversion<Dipole> for FlatPoint {
     }
 }
 
+impl PointInversion<DipoleAligningOrigin> for FlatPoint {
+    type Output = DipoleAligningOrigin;
+
+    fn point_inversion(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl PointInversion<DipoleAtInfinity> for FlatPoint {
     type Output = DipoleAtInfinity;
 
@@ -10339,26 +16419,26 @@ impl PointInversion<DipoleAtInfinity> for FlatPoint {
     }
 }
 
-impl PointInversion<DipoleBulk> for FlatPoint {
-    type Output = DipoleBulk;
+impl PointInversion<DipoleAtOrigin> for FlatPoint {
+    type Output = DipoleAtOrigin;
 
-    fn point_inversion(self, other: DipoleBulk) -> DipoleBulk {
+    fn point_inversion(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl PointInversion<DipoleCarrierAspect> for FlatPoint {
-    type Output = DipoleCarrierAspect;
+impl PointInversion<DipoleOnOrigin> for FlatPoint {
+    type Output = DipoleOnOrigin;
 
-    fn point_inversion(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn point_inversion(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl PointInversion<DipoleWeight> for FlatPoint {
-    type Output = DipoleWeight;
+impl PointInversion<DipoleOrthogonalOrigin> for FlatPoint {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn point_inversion(self, other: DipoleWeight) -> DipoleWeight {
+    fn point_inversion(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10459,6 +16539,30 @@ impl PointInversion<MultiVector> for FlatPoint {
     }
 }
 
+impl PointInversion<NullCircleAtOrigin> for FlatPoint {
+    type Output = NullCircleAtOrigin;
+
+    fn point_inversion(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<NullDipoleAtOrigin> for FlatPoint {
+    type Output = NullDipoleAtOrigin;
+
+    fn point_inversion(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<NullSphereAtOrigin> for FlatPoint {
+    type Output = NullSphereAtOrigin;
+
+    fn point_inversion(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl PointInversion<Origin> for FlatPoint {
     type Output = Origin;
 
@@ -10499,42 +16603,10 @@ impl PointInversion<RoundPoint> for FlatPoint {
     }
 }
 
-impl PointInversion<RoundPointAtInfinity> for FlatPoint {
-    type Output = RoundPointAtInfinity;
-
-    fn point_inversion(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.unitize().sandwich(other)
-    }
-}
-
 impl PointInversion<RoundPointAtOrigin> for FlatPoint {
     type Output = RoundPointAtOrigin;
 
     fn point_inversion(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl PointInversion<RoundPointBulk> for FlatPoint {
-    type Output = RoundPointBulk;
-
-    fn point_inversion(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl PointInversion<RoundPointOnOrigin> for FlatPoint {
-    type Output = RoundPointOnOrigin;
-
-    fn point_inversion(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl PointInversion<SpacialCurvature> for FlatPoint {
-    type Output = SpacialCurvature;
-
-    fn point_inversion(self, other: SpacialCurvature) -> SpacialCurvature {
         self.unitize().sandwich(other)
     }
 }
@@ -10547,10 +16619,18 @@ impl PointInversion<Sphere> for FlatPoint {
     }
 }
 
-impl PointInversion<SphereWeight> for FlatPoint {
-    type Output = SphereWeight;
+impl PointInversion<SphereAtOrigin> for FlatPoint {
+    type Output = SphereAtOrigin;
 
-    fn point_inversion(self, other: SphereWeight) -> SphereWeight {
+    fn point_inversion(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl PointInversion<SphereOnOrigin> for FlatPoint {
+    type Output = SphereOnOrigin;
+
+    fn point_inversion(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10571,10 +16651,74 @@ impl PointInversion<Translator> for FlatPoint {
     }
 }
 
+impl Reflect<AntiCircleOnOrigin> for Plane {
+    type Output = AntiCircleOnOrigin;
+
+    fn reflect(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiDipoleOnOrigin> for Plane {
+    type Output = AntiDipoleOnOrigin;
+
+    fn reflect(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiFlatPointAtOrigin> for Plane {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn reflect(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiLineAtOrigin> for Plane {
+    type Output = AntiLineAtOrigin;
+
+    fn reflect(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiPlane> for Plane {
+    type Output = AntiPlane;
+
+    fn reflect(self, other: AntiPlane) -> AntiPlane {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiPlaneAtOrigin> for Plane {
+    type Output = AntiPlaneAtOrigin;
+
+    fn reflect(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<AntiSphereOnOrigin> for Plane {
+    type Output = AntiSphereOnOrigin;
+
+    fn reflect(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl Reflect<Circle> for Plane {
     type Output = Circle;
 
     fn reflect(self, other: Circle) -> Circle {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<CircleAligningOrigin> for Plane {
+    type Output = CircleAligningOrigin;
+
+    fn reflect(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10587,26 +16731,26 @@ impl Reflect<CircleAtInfinity> for Plane {
     }
 }
 
-impl Reflect<CircleBulk> for Plane {
-    type Output = CircleBulk;
+impl Reflect<CircleAtOrigin> for Plane {
+    type Output = CircleAtOrigin;
 
-    fn reflect(self, other: CircleBulk) -> CircleBulk {
+    fn reflect(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl Reflect<CircleCarrierAspect> for Plane {
-    type Output = CircleCarrierAspect;
+impl Reflect<CircleOnOrigin> for Plane {
+    type Output = CircleOnOrigin;
 
-    fn reflect(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn reflect(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl Reflect<CircleWeight> for Plane {
-    type Output = CircleWeight;
+impl Reflect<CircleOrthogonalOrigin> for Plane {
+    type Output = CircleOrthogonalOrigin;
 
-    fn reflect(self, other: CircleWeight) -> CircleWeight {
+    fn reflect(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10619,6 +16763,14 @@ impl Reflect<Dipole> for Plane {
     }
 }
 
+impl Reflect<DipoleAligningOrigin> for Plane {
+    type Output = DipoleAligningOrigin;
+
+    fn reflect(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl Reflect<DipoleAtInfinity> for Plane {
     type Output = DipoleAtInfinity;
 
@@ -10627,26 +16779,26 @@ impl Reflect<DipoleAtInfinity> for Plane {
     }
 }
 
-impl Reflect<DipoleBulk> for Plane {
-    type Output = DipoleBulk;
+impl Reflect<DipoleAtOrigin> for Plane {
+    type Output = DipoleAtOrigin;
 
-    fn reflect(self, other: DipoleBulk) -> DipoleBulk {
+    fn reflect(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl Reflect<DipoleCarrierAspect> for Plane {
-    type Output = DipoleCarrierAspect;
+impl Reflect<DipoleOnOrigin> for Plane {
+    type Output = DipoleOnOrigin;
 
-    fn reflect(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn reflect(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.unitize().sandwich(other)
     }
 }
 
-impl Reflect<DipoleWeight> for Plane {
-    type Output = DipoleWeight;
+impl Reflect<DipoleOrthogonalOrigin> for Plane {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn reflect(self, other: DipoleWeight) -> DipoleWeight {
+    fn reflect(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10747,6 +16899,30 @@ impl Reflect<MultiVector> for Plane {
     }
 }
 
+impl Reflect<NullCircleAtOrigin> for Plane {
+    type Output = NullCircleAtOrigin;
+
+    fn reflect(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<NullDipoleAtOrigin> for Plane {
+    type Output = NullDipoleAtOrigin;
+
+    fn reflect(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<NullSphereAtOrigin> for Plane {
+    type Output = NullSphereAtOrigin;
+
+    fn reflect(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
 impl Reflect<Origin> for Plane {
     type Output = Origin;
 
@@ -10787,42 +16963,10 @@ impl Reflect<RoundPoint> for Plane {
     }
 }
 
-impl Reflect<RoundPointAtInfinity> for Plane {
-    type Output = RoundPointAtInfinity;
-
-    fn reflect(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.unitize().sandwich(other)
-    }
-}
-
 impl Reflect<RoundPointAtOrigin> for Plane {
     type Output = RoundPointAtOrigin;
 
     fn reflect(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl Reflect<RoundPointBulk> for Plane {
-    type Output = RoundPointBulk;
-
-    fn reflect(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl Reflect<RoundPointOnOrigin> for Plane {
-    type Output = RoundPointOnOrigin;
-
-    fn reflect(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.unitize().sandwich(other)
-    }
-}
-
-impl Reflect<SpacialCurvature> for Plane {
-    type Output = SpacialCurvature;
-
-    fn reflect(self, other: SpacialCurvature) -> SpacialCurvature {
         self.unitize().sandwich(other)
     }
 }
@@ -10835,10 +16979,18 @@ impl Reflect<Sphere> for Plane {
     }
 }
 
-impl Reflect<SphereWeight> for Plane {
-    type Output = SphereWeight;
+impl Reflect<SphereAtOrigin> for Plane {
+    type Output = SphereAtOrigin;
 
-    fn reflect(self, other: SphereWeight) -> SphereWeight {
+    fn reflect(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.unitize().sandwich(other)
+    }
+}
+
+impl Reflect<SphereOnOrigin> for Plane {
+    type Output = SphereOnOrigin;
+
+    fn reflect(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.unitize().sandwich(other)
     }
 }
@@ -10859,10 +17011,74 @@ impl Reflect<Translator> for Plane {
     }
 }
 
+impl Rotate<AntiCircleOnOrigin> for Rotor {
+    type Output = AntiCircleOnOrigin;
+
+    fn rotate(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<AntiDipoleOnOrigin> for Rotor {
+    type Output = AntiDipoleOnOrigin;
+
+    fn rotate(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<AntiFlatPointAtOrigin> for Rotor {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn rotate(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<AntiLineAtOrigin> for Rotor {
+    type Output = AntiLineAtOrigin;
+
+    fn rotate(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<AntiPlane> for Rotor {
+    type Output = AntiPlane;
+
+    fn rotate(self, other: AntiPlane) -> AntiPlane {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<AntiPlaneAtOrigin> for Rotor {
+    type Output = AntiPlaneAtOrigin;
+
+    fn rotate(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<AntiSphereOnOrigin> for Rotor {
+    type Output = AntiSphereOnOrigin;
+
+    fn rotate(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Rotate<Circle> for Rotor {
     type Output = Circle;
 
     fn rotate(self, other: Circle) -> Circle {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<CircleAligningOrigin> for Rotor {
+    type Output = CircleAligningOrigin;
+
+    fn rotate(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.sandwich(other)
     }
 }
@@ -10875,26 +17091,26 @@ impl Rotate<CircleAtInfinity> for Rotor {
     }
 }
 
-impl Rotate<CircleBulk> for Rotor {
-    type Output = CircleBulk;
+impl Rotate<CircleAtOrigin> for Rotor {
+    type Output = CircleAtOrigin;
 
-    fn rotate(self, other: CircleBulk) -> CircleBulk {
+    fn rotate(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.sandwich(other)
     }
 }
 
-impl Rotate<CircleCarrierAspect> for Rotor {
-    type Output = CircleCarrierAspect;
+impl Rotate<CircleOnOrigin> for Rotor {
+    type Output = CircleOnOrigin;
 
-    fn rotate(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn rotate(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.sandwich(other)
     }
 }
 
-impl Rotate<CircleWeight> for Rotor {
-    type Output = CircleWeight;
+impl Rotate<CircleOrthogonalOrigin> for Rotor {
+    type Output = CircleOrthogonalOrigin;
 
-    fn rotate(self, other: CircleWeight) -> CircleWeight {
+    fn rotate(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.sandwich(other)
     }
 }
@@ -10907,6 +17123,14 @@ impl Rotate<Dipole> for Rotor {
     }
 }
 
+impl Rotate<DipoleAligningOrigin> for Rotor {
+    type Output = DipoleAligningOrigin;
+
+    fn rotate(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Rotate<DipoleAtInfinity> for Rotor {
     type Output = DipoleAtInfinity;
 
@@ -10915,26 +17139,26 @@ impl Rotate<DipoleAtInfinity> for Rotor {
     }
 }
 
-impl Rotate<DipoleBulk> for Rotor {
-    type Output = DipoleBulk;
+impl Rotate<DipoleAtOrigin> for Rotor {
+    type Output = DipoleAtOrigin;
 
-    fn rotate(self, other: DipoleBulk) -> DipoleBulk {
+    fn rotate(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.sandwich(other)
     }
 }
 
-impl Rotate<DipoleCarrierAspect> for Rotor {
-    type Output = DipoleCarrierAspect;
+impl Rotate<DipoleOnOrigin> for Rotor {
+    type Output = DipoleOnOrigin;
 
-    fn rotate(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn rotate(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.sandwich(other)
     }
 }
 
-impl Rotate<DipoleWeight> for Rotor {
-    type Output = DipoleWeight;
+impl Rotate<DipoleOrthogonalOrigin> for Rotor {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn rotate(self, other: DipoleWeight) -> DipoleWeight {
+    fn rotate(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.sandwich(other)
     }
 }
@@ -11035,6 +17259,30 @@ impl Rotate<MultiVector> for Rotor {
     }
 }
 
+impl Rotate<NullCircleAtOrigin> for Rotor {
+    type Output = NullCircleAtOrigin;
+
+    fn rotate(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<NullDipoleAtOrigin> for Rotor {
+    type Output = NullDipoleAtOrigin;
+
+    fn rotate(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<NullSphereAtOrigin> for Rotor {
+    type Output = NullSphereAtOrigin;
+
+    fn rotate(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Rotate<Origin> for Rotor {
     type Output = Origin;
 
@@ -11075,42 +17323,10 @@ impl Rotate<RoundPoint> for Rotor {
     }
 }
 
-impl Rotate<RoundPointAtInfinity> for Rotor {
-    type Output = RoundPointAtInfinity;
-
-    fn rotate(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.sandwich(other)
-    }
-}
-
 impl Rotate<RoundPointAtOrigin> for Rotor {
     type Output = RoundPointAtOrigin;
 
     fn rotate(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<RoundPointBulk> for Rotor {
-    type Output = RoundPointBulk;
-
-    fn rotate(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<RoundPointOnOrigin> for Rotor {
-    type Output = RoundPointOnOrigin;
-
-    fn rotate(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.sandwich(other)
-    }
-}
-
-impl Rotate<SpacialCurvature> for Rotor {
-    type Output = SpacialCurvature;
-
-    fn rotate(self, other: SpacialCurvature) -> SpacialCurvature {
         self.sandwich(other)
     }
 }
@@ -11123,10 +17339,18 @@ impl Rotate<Sphere> for Rotor {
     }
 }
 
-impl Rotate<SphereWeight> for Rotor {
-    type Output = SphereWeight;
+impl Rotate<SphereAtOrigin> for Rotor {
+    type Output = SphereAtOrigin;
 
-    fn rotate(self, other: SphereWeight) -> SphereWeight {
+    fn rotate(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Rotate<SphereOnOrigin> for Rotor {
+    type Output = SphereOnOrigin;
+
+    fn rotate(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.sandwich(other)
     }
 }
@@ -11147,10 +17371,74 @@ impl Rotate<Translator> for Rotor {
     }
 }
 
+impl Transflect<AntiCircleOnOrigin> for Transflector {
+    type Output = AntiCircleOnOrigin;
+
+    fn transflect(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<AntiDipoleOnOrigin> for Transflector {
+    type Output = AntiDipoleOnOrigin;
+
+    fn transflect(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<AntiFlatPointAtOrigin> for Transflector {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn transflect(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<AntiLineAtOrigin> for Transflector {
+    type Output = AntiLineAtOrigin;
+
+    fn transflect(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<AntiPlane> for Transflector {
+    type Output = AntiPlane;
+
+    fn transflect(self, other: AntiPlane) -> AntiPlane {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<AntiPlaneAtOrigin> for Transflector {
+    type Output = AntiPlaneAtOrigin;
+
+    fn transflect(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<AntiSphereOnOrigin> for Transflector {
+    type Output = AntiSphereOnOrigin;
+
+    fn transflect(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Transflect<Circle> for Transflector {
     type Output = Circle;
 
     fn transflect(self, other: Circle) -> Circle {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<CircleAligningOrigin> for Transflector {
+    type Output = CircleAligningOrigin;
+
+    fn transflect(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.sandwich(other)
     }
 }
@@ -11163,26 +17451,26 @@ impl Transflect<CircleAtInfinity> for Transflector {
     }
 }
 
-impl Transflect<CircleBulk> for Transflector {
-    type Output = CircleBulk;
+impl Transflect<CircleAtOrigin> for Transflector {
+    type Output = CircleAtOrigin;
 
-    fn transflect(self, other: CircleBulk) -> CircleBulk {
+    fn transflect(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.sandwich(other)
     }
 }
 
-impl Transflect<CircleCarrierAspect> for Transflector {
-    type Output = CircleCarrierAspect;
+impl Transflect<CircleOnOrigin> for Transflector {
+    type Output = CircleOnOrigin;
 
-    fn transflect(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn transflect(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.sandwich(other)
     }
 }
 
-impl Transflect<CircleWeight> for Transflector {
-    type Output = CircleWeight;
+impl Transflect<CircleOrthogonalOrigin> for Transflector {
+    type Output = CircleOrthogonalOrigin;
 
-    fn transflect(self, other: CircleWeight) -> CircleWeight {
+    fn transflect(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.sandwich(other)
     }
 }
@@ -11195,6 +17483,14 @@ impl Transflect<Dipole> for Transflector {
     }
 }
 
+impl Transflect<DipoleAligningOrigin> for Transflector {
+    type Output = DipoleAligningOrigin;
+
+    fn transflect(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Transflect<DipoleAtInfinity> for Transflector {
     type Output = DipoleAtInfinity;
 
@@ -11203,26 +17499,26 @@ impl Transflect<DipoleAtInfinity> for Transflector {
     }
 }
 
-impl Transflect<DipoleBulk> for Transflector {
-    type Output = DipoleBulk;
+impl Transflect<DipoleAtOrigin> for Transflector {
+    type Output = DipoleAtOrigin;
 
-    fn transflect(self, other: DipoleBulk) -> DipoleBulk {
+    fn transflect(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.sandwich(other)
     }
 }
 
-impl Transflect<DipoleCarrierAspect> for Transflector {
-    type Output = DipoleCarrierAspect;
+impl Transflect<DipoleOnOrigin> for Transflector {
+    type Output = DipoleOnOrigin;
 
-    fn transflect(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn transflect(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.sandwich(other)
     }
 }
 
-impl Transflect<DipoleWeight> for Transflector {
-    type Output = DipoleWeight;
+impl Transflect<DipoleOrthogonalOrigin> for Transflector {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn transflect(self, other: DipoleWeight) -> DipoleWeight {
+    fn transflect(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.sandwich(other)
     }
 }
@@ -11323,6 +17619,30 @@ impl Transflect<MultiVector> for Transflector {
     }
 }
 
+impl Transflect<NullCircleAtOrigin> for Transflector {
+    type Output = NullCircleAtOrigin;
+
+    fn transflect(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<NullDipoleAtOrigin> for Transflector {
+    type Output = NullDipoleAtOrigin;
+
+    fn transflect(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<NullSphereAtOrigin> for Transflector {
+    type Output = NullSphereAtOrigin;
+
+    fn transflect(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Transflect<Origin> for Transflector {
     type Output = Origin;
 
@@ -11363,42 +17683,10 @@ impl Transflect<RoundPoint> for Transflector {
     }
 }
 
-impl Transflect<RoundPointAtInfinity> for Transflector {
-    type Output = RoundPointAtInfinity;
-
-    fn transflect(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.sandwich(other)
-    }
-}
-
 impl Transflect<RoundPointAtOrigin> for Transflector {
     type Output = RoundPointAtOrigin;
 
     fn transflect(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<RoundPointBulk> for Transflector {
-    type Output = RoundPointBulk;
-
-    fn transflect(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<RoundPointOnOrigin> for Transflector {
-    type Output = RoundPointOnOrigin;
-
-    fn transflect(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.sandwich(other)
-    }
-}
-
-impl Transflect<SpacialCurvature> for Transflector {
-    type Output = SpacialCurvature;
-
-    fn transflect(self, other: SpacialCurvature) -> SpacialCurvature {
         self.sandwich(other)
     }
 }
@@ -11411,10 +17699,18 @@ impl Transflect<Sphere> for Transflector {
     }
 }
 
-impl Transflect<SphereWeight> for Transflector {
-    type Output = SphereWeight;
+impl Transflect<SphereAtOrigin> for Transflector {
+    type Output = SphereAtOrigin;
 
-    fn transflect(self, other: SphereWeight) -> SphereWeight {
+    fn transflect(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Transflect<SphereOnOrigin> for Transflector {
+    type Output = SphereOnOrigin;
+
+    fn transflect(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.sandwich(other)
     }
 }
@@ -11435,10 +17731,74 @@ impl Transflect<Translator> for Transflector {
     }
 }
 
+impl Translate<AntiCircleOnOrigin> for Translator {
+    type Output = AntiCircleOnOrigin;
+
+    fn translate(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<AntiDipoleOnOrigin> for Translator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn translate(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<AntiFlatPointAtOrigin> for Translator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn translate(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<AntiLineAtOrigin> for Translator {
+    type Output = AntiLineAtOrigin;
+
+    fn translate(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<AntiPlane> for Translator {
+    type Output = AntiPlane;
+
+    fn translate(self, other: AntiPlane) -> AntiPlane {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<AntiPlaneAtOrigin> for Translator {
+    type Output = AntiPlaneAtOrigin;
+
+    fn translate(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<AntiSphereOnOrigin> for Translator {
+    type Output = AntiSphereOnOrigin;
+
+    fn translate(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Translate<Circle> for Translator {
     type Output = Circle;
 
     fn translate(self, other: Circle) -> Circle {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<CircleAligningOrigin> for Translator {
+    type Output = CircleAligningOrigin;
+
+    fn translate(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
         self.sandwich(other)
     }
 }
@@ -11451,26 +17811,26 @@ impl Translate<CircleAtInfinity> for Translator {
     }
 }
 
-impl Translate<CircleBulk> for Translator {
-    type Output = CircleBulk;
+impl Translate<CircleAtOrigin> for Translator {
+    type Output = CircleAtOrigin;
 
-    fn translate(self, other: CircleBulk) -> CircleBulk {
+    fn translate(self, other: CircleAtOrigin) -> CircleAtOrigin {
         self.sandwich(other)
     }
 }
 
-impl Translate<CircleCarrierAspect> for Translator {
-    type Output = CircleCarrierAspect;
+impl Translate<CircleOnOrigin> for Translator {
+    type Output = CircleOnOrigin;
 
-    fn translate(self, other: CircleCarrierAspect) -> CircleCarrierAspect {
+    fn translate(self, other: CircleOnOrigin) -> CircleOnOrigin {
         self.sandwich(other)
     }
 }
 
-impl Translate<CircleWeight> for Translator {
-    type Output = CircleWeight;
+impl Translate<CircleOrthogonalOrigin> for Translator {
+    type Output = CircleOrthogonalOrigin;
 
-    fn translate(self, other: CircleWeight) -> CircleWeight {
+    fn translate(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
         self.sandwich(other)
     }
 }
@@ -11483,6 +17843,14 @@ impl Translate<Dipole> for Translator {
     }
 }
 
+impl Translate<DipoleAligningOrigin> for Translator {
+    type Output = DipoleAligningOrigin;
+
+    fn translate(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Translate<DipoleAtInfinity> for Translator {
     type Output = DipoleAtInfinity;
 
@@ -11491,26 +17859,26 @@ impl Translate<DipoleAtInfinity> for Translator {
     }
 }
 
-impl Translate<DipoleBulk> for Translator {
-    type Output = DipoleBulk;
+impl Translate<DipoleAtOrigin> for Translator {
+    type Output = DipoleAtOrigin;
 
-    fn translate(self, other: DipoleBulk) -> DipoleBulk {
+    fn translate(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
         self.sandwich(other)
     }
 }
 
-impl Translate<DipoleCarrierAspect> for Translator {
-    type Output = DipoleCarrierAspect;
+impl Translate<DipoleOnOrigin> for Translator {
+    type Output = DipoleOnOrigin;
 
-    fn translate(self, other: DipoleCarrierAspect) -> DipoleCarrierAspect {
+    fn translate(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
         self.sandwich(other)
     }
 }
 
-impl Translate<DipoleWeight> for Translator {
-    type Output = DipoleWeight;
+impl Translate<DipoleOrthogonalOrigin> for Translator {
+    type Output = DipoleOrthogonalOrigin;
 
-    fn translate(self, other: DipoleWeight) -> DipoleWeight {
+    fn translate(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
         self.sandwich(other)
     }
 }
@@ -11611,6 +17979,30 @@ impl Translate<MultiVector> for Translator {
     }
 }
 
+impl Translate<NullCircleAtOrigin> for Translator {
+    type Output = NullCircleAtOrigin;
+
+    fn translate(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<NullDipoleAtOrigin> for Translator {
+    type Output = NullDipoleAtOrigin;
+
+    fn translate(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<NullSphereAtOrigin> for Translator {
+    type Output = NullSphereAtOrigin;
+
+    fn translate(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.sandwich(other)
+    }
+}
+
 impl Translate<Origin> for Translator {
     type Output = Origin;
 
@@ -11651,42 +18043,10 @@ impl Translate<RoundPoint> for Translator {
     }
 }
 
-impl Translate<RoundPointAtInfinity> for Translator {
-    type Output = RoundPointAtInfinity;
-
-    fn translate(self, other: RoundPointAtInfinity) -> RoundPointAtInfinity {
-        self.sandwich(other)
-    }
-}
-
 impl Translate<RoundPointAtOrigin> for Translator {
     type Output = RoundPointAtOrigin;
 
     fn translate(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<RoundPointBulk> for Translator {
-    type Output = RoundPointBulk;
-
-    fn translate(self, other: RoundPointBulk) -> RoundPointBulk {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<RoundPointOnOrigin> for Translator {
-    type Output = RoundPointOnOrigin;
-
-    fn translate(self, other: RoundPointOnOrigin) -> RoundPointOnOrigin {
-        self.sandwich(other)
-    }
-}
-
-impl Translate<SpacialCurvature> for Translator {
-    type Output = SpacialCurvature;
-
-    fn translate(self, other: SpacialCurvature) -> SpacialCurvature {
         self.sandwich(other)
     }
 }
@@ -11699,10 +18059,18 @@ impl Translate<Sphere> for Translator {
     }
 }
 
-impl Translate<SphereWeight> for Translator {
-    type Output = SphereWeight;
+impl Translate<SphereAtOrigin> for Translator {
+    type Output = SphereAtOrigin;
 
-    fn translate(self, other: SphereWeight) -> SphereWeight {
+    fn translate(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<SphereOnOrigin> for Translator {
+    type Output = SphereOnOrigin;
+
+    fn translate(self, other: SphereOnOrigin) -> SphereOnOrigin {
         self.sandwich(other)
     }
 }

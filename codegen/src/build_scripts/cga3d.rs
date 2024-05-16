@@ -15,6 +15,13 @@ pub fn script() -> std::io::Result<()> {
 //noinspection DuplicatedCode
 fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> {
 
+    //  Remember this heuristic, substituting dual objects as applicable:
+    //  -
+    //  "A dipole with imaginary radius behaves exactly like a circle with a real radius.
+    //   It can truly be treated like a circle, but is only called an AntiCircle (of real
+    //   radius) because of the grade mismatch. The grade mismatch is the only reason for
+    //   invoking AntiSpace. Otherwise, it is just a Circle."
+
     let mv_iter = [
         "Scalar:1",
         "AntiScalar:e12345",
@@ -23,30 +30,10 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         // Grade 1 is Certified
         "RoundPoint:e1,e2,e3|e4,e5",
         "Origin:e4",
-        // TODO explore concept of "Infinity = AntiHorizon = AntiPlaneAtInfinity"
-        //  .....oh...
-        //  I think I get it now!
-        //  -
-        //  If an AntiSphere of real radius acts and looks like a normal sphere of real radius in
-        //  every single way.... then Infinity is quite literally synonymous with the Horizon
-        //  in form an function, but it is just the AntiHorizon because of grade. The original
-        //  question I had about "but which direction is it??" is literally all directions in
-        //  the same way e3215 is in all directions. It is in all directions because e1 e2 and e3
-        //  are zero, rather than all present.
-        //  -
-        //  In general, remember this heuristic, substituting dual objects as applicable:
-        //  -
-        //  "A dipole with imaginary radius behaves exactly like a circle with a real radius.
-        //   It can truly be treated like a circle, but is only called an AntiCircle (of real
-        //   radius) because of the grade mismatch. The grade mismatch is the only reason for
-        //   invoking AntiSpace. Otherwise just treat it like a circle."
-        //  -
-        //  And so that heuristic makes a lot of sense out of e5 compared to e3215
-        "Infinity:e5",
+        "Infinity:e5", // Infinity = AntiHorizon = AntiPlaneAtInfinity
         "RoundPointAtOrigin:e4,e5",
         "AntiSphereOnOrigin:e1,e2,e3,e4",
-        // AntiPlane = AntiSphereOnInfinity
-        "AntiPlane:e1,e2,e3,e5",
+        "AntiPlane:e1,e2,e3,e5", // AntiPlane = AntiSphereOnInfinity
         "AntiPlaneAtOrigin:e1,e2,e3",
 
         // Grade 2 is Certified

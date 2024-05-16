@@ -25,7 +25,71 @@ pub trait AntiSupport {
     fn anti_support(self) -> Self::Output;
 }
 
+impl AntiSupport for AntiCircleOnOrigin {
+    type Output = Sphere;
+
+    fn anti_support(self) -> Sphere {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for AntiDipoleOnOrigin {
+    type Output = Sphere;
+
+    fn anti_support(self) -> Sphere {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for AntiFlatPointAtOrigin {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for AntiLineAtOrigin {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for AntiPlane {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for AntiPlaneAtOrigin {
+    type Output = Horizon;
+
+    fn anti_support(self) -> Horizon {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for AntiSphereOnOrigin {
+    type Output = Sphere;
+
+    fn anti_support(self) -> Sphere {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
 impl AntiSupport for Circle {
+    type Output = Sphere;
+
+    fn anti_support(self) -> Sphere {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for CircleAligningOrigin {
     type Output = Sphere;
 
     fn anti_support(self) -> Sphere {
@@ -41,15 +105,23 @@ impl AntiSupport for CircleAtInfinity {
     }
 }
 
-impl AntiSupport for CircleBulk {
-    type Output = Horizon;
+impl AntiSupport for CircleAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn anti_support(self) -> Horizon {
+    fn anti_support(self) -> SphereAtOrigin {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
 
-impl AntiSupport for CircleCarrierAspect {
+impl AntiSupport for CircleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn anti_support(self) -> SphereOnOrigin {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for CircleOrthogonalOrigin {
     type Output = Sphere;
 
     fn anti_support(self) -> Sphere {
@@ -57,15 +129,15 @@ impl AntiSupport for CircleCarrierAspect {
     }
 }
 
-impl AntiSupport for CircleWeight {
-    type Output = SphereWeight;
+impl AntiSupport for Dipole {
+    type Output = Sphere;
 
-    fn anti_support(self) -> SphereWeight {
+    fn anti_support(self) -> Sphere {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
 
-impl AntiSupport for Dipole {
+impl AntiSupport for DipoleAligningOrigin {
     type Output = Sphere;
 
     fn anti_support(self) -> Sphere {
@@ -81,26 +153,26 @@ impl AntiSupport for DipoleAtInfinity {
     }
 }
 
-impl AntiSupport for DipoleBulk {
-    type Output = Horizon;
+impl AntiSupport for DipoleAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn anti_support(self) -> Horizon {
+    fn anti_support(self) -> SphereAtOrigin {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
 
-impl AntiSupport for DipoleCarrierAspect {
+impl AntiSupport for DipoleOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn anti_support(self) -> SphereOnOrigin {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for DipoleOrthogonalOrigin {
     type Output = Sphere;
 
     fn anti_support(self) -> Sphere {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
-impl AntiSupport for DipoleWeight {
-    type Output = SphereWeight;
-
-    fn anti_support(self) -> SphereWeight {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -109,6 +181,14 @@ impl AntiSupport for DualNum {
     type Output = Horizon;
 
     fn anti_support(self) -> Horizon {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for FlatPoint {
+    type Output = Plane;
+
+    fn anti_support(self) -> Plane {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -145,10 +225,34 @@ impl AntiSupport for MultiVector {
     }
 }
 
-impl AntiSupport for Origin {
-    type Output = SphereWeight;
+impl AntiSupport for NullCircleAtOrigin {
+    type Output = NullSphereAtOrigin;
 
-    fn anti_support(self) -> SphereWeight {
+    fn anti_support(self) -> NullSphereAtOrigin {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for NullDipoleAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn anti_support(self) -> NullSphereAtOrigin {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+
+    fn anti_support(self) -> NullSphereAtOrigin {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for Origin {
+    type Output = NullSphereAtOrigin;
+
+    fn anti_support(self) -> NullSphereAtOrigin {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -169,34 +273,10 @@ impl AntiSupport for RoundPoint {
     }
 }
 
-impl AntiSupport for RoundPointAtInfinity {
-    type Output = Horizon;
-
-    fn anti_support(self) -> Horizon {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
 impl AntiSupport for RoundPointAtOrigin {
-    type Output = SpacialCurvature;
+    type Output = SphereAtOrigin;
 
-    fn anti_support(self) -> SpacialCurvature {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
-impl AntiSupport for RoundPointBulk {
-    type Output = Horizon;
-
-    fn anti_support(self) -> Horizon {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
-impl AntiSupport for RoundPointOnOrigin {
-    type Output = Sphere;
-
-    fn anti_support(self) -> Sphere {
+    fn anti_support(self) -> SphereAtOrigin {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -209,14 +289,6 @@ impl AntiSupport for Scalar {
     }
 }
 
-impl AntiSupport for SpacialCurvature {
-    type Output = SpacialCurvature;
-
-    fn anti_support(self) -> SpacialCurvature {
-        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
-    }
-}
-
 impl AntiSupport for Sphere {
     type Output = Sphere;
 
@@ -225,10 +297,18 @@ impl AntiSupport for Sphere {
     }
 }
 
-impl AntiSupport for SphereWeight {
-    type Output = SphereWeight;
+impl AntiSupport for SphereAtOrigin {
+    type Output = SphereAtOrigin;
 
-    fn anti_support(self) -> SphereWeight {
+    fn anti_support(self) -> SphereAtOrigin {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
+impl AntiSupport for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+
+    fn anti_support(self) -> SphereOnOrigin {
         self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
     }
 }
@@ -249,6 +329,14 @@ impl AntiSupport for Translator {
     }
 }
 
+impl Support for AntiPlane {
+    type Output = AntiPlane;
+
+    fn support(self) -> AntiPlane {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
 impl Support for AntiScalar {
     type Output = Origin;
 
@@ -265,18 +353,42 @@ impl Support for Circle {
     }
 }
 
-impl Support for CircleAtInfinity {
-    type Output = RoundPointAtInfinity;
+impl Support for CircleAligningOrigin {
+    type Output = RoundPoint;
 
-    fn support(self) -> RoundPointAtInfinity {
+    fn support(self) -> RoundPoint {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
-impl Support for CircleCarrierAspect {
-    type Output = RoundPointOnOrigin;
+impl Support for CircleAtInfinity {
+    type Output = RoundPoint;
 
-    fn support(self) -> RoundPointOnOrigin {
+    fn support(self) -> RoundPoint {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for CircleAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn support(self) -> RoundPointAtOrigin {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for CircleOnOrigin {
+    type Output = Origin;
+
+    fn support(self) -> Origin {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for CircleOrthogonalOrigin {
+    type Output = RoundPoint;
+
+    fn support(self) -> RoundPoint {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
@@ -289,18 +401,42 @@ impl Support for Dipole {
     }
 }
 
-impl Support for DipoleAtInfinity {
-    type Output = RoundPointAtInfinity;
+impl Support for DipoleAligningOrigin {
+    type Output = RoundPoint;
 
-    fn support(self) -> RoundPointAtInfinity {
+    fn support(self) -> RoundPoint {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
 
-impl Support for DipoleCarrierAspect {
-    type Output = RoundPointOnOrigin;
+impl Support for DipoleAtInfinity {
+    type Output = RoundPoint;
 
-    fn support(self) -> RoundPointOnOrigin {
+    fn support(self) -> RoundPoint {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for DipoleAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn support(self) -> RoundPointAtOrigin {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for DipoleOnOrigin {
+    type Output = Origin;
+
+    fn support(self) -> Origin {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for DipoleOrthogonalOrigin {
+    type Output = RoundPoint;
+
+    fn support(self) -> RoundPoint {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
@@ -441,31 +577,7 @@ impl Support for RoundPoint {
     }
 }
 
-impl Support for RoundPointAtInfinity {
-    type Output = RoundPointAtInfinity;
-
-    fn support(self) -> RoundPointAtInfinity {
-        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
-    }
-}
-
 impl Support for RoundPointAtOrigin {
-    type Output = RoundPointAtOrigin;
-
-    fn support(self) -> RoundPointAtOrigin {
-        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
-    }
-}
-
-impl Support for RoundPointOnOrigin {
-    type Output = RoundPointOnOrigin;
-
-    fn support(self) -> RoundPointOnOrigin {
-        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
-    }
-}
-
-impl Support for SpacialCurvature {
     type Output = RoundPointAtOrigin;
 
     fn support(self) -> RoundPointAtOrigin {
@@ -477,6 +589,22 @@ impl Support for Sphere {
     type Output = RoundPoint;
 
     fn support(self) -> RoundPoint {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for SphereAtOrigin {
+    type Output = RoundPointAtOrigin;
+
+    fn support(self) -> RoundPointAtOrigin {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for SphereOnOrigin {
+    type Output = Origin;
+
+    fn support(self) -> Origin {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }
