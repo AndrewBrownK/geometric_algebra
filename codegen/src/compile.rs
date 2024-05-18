@@ -20,6 +20,8 @@ macro_rules! result_of_trait {
 }
 
 pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
+    // TODO gain optimization insights at https://godbolt.org/
+    //  especially with uncertainty on which SIMD arrangements are most optimal
     match expression.content {
         ExpressionContent::Gather(mut inner_expression, indices) => {
             let is_all_consts = indices.iter().all(|it| match it {
@@ -1051,16 +1053,16 @@ pub fn derive_bulk_or_weight<'a, GA: GeometricAlgebraTrait>(
     algebra: &GA,
     name: &'static str,
     parameter_a: &Parameter<'a>,
-    projective_basis: &BasisElement,
+    origin_basis: &BasisElement,
     is_projective: bool,
-    flat_basis: Option<BasisElement>,
+    infinity_basis: Option<BasisElement>,
     is_flat: bool,
     registry: &'a MultiVectorClassRegistry,
 ) -> AstNode<'a> {
     let mut result_signature = Vec::new();
     for a_element in parameter_a.multi_vector_class().flat_basis().iter() {
-        let basis_is_projective = projective_basis.index == (a_element.index & projective_basis.index);
-        let basis_is_flat = if let Some(flat_basis) = &flat_basis {
+        let basis_is_projective = origin_basis.index == (a_element.index & origin_basis.index);
+        let basis_is_flat = if let Some(flat_basis) = &infinity_basis {
             flat_basis.index == (a_element.index & flat_basis.index)
         } else { true };
 
@@ -1075,7 +1077,8 @@ pub fn derive_bulk_or_weight<'a, GA: GeometricAlgebraTrait>(
     let mut param_a_signature = parameter_a.multi_vector_class().signature();
     param_a_signature.sort_unstable();
     if param_a_signature == result_signature {
-        return single_expression_single_trait_impl(name, &parameter_a, variable(&parameter_a));
+        let expression = variable(&parameter_a);
+        return single_trait_impl(name, &parameter_a, vec![], expression);
     }
 
     // Most objects have bulk and weight.
@@ -1178,6 +1181,7 @@ pub fn derive_bulk_or_weight<'a, GA: GeometricAlgebraTrait>(
     }
 }
 
+
 pub fn variable<'a>(param: &Parameter<'a>) -> Expression<'a> {
     Expression {
         size: 1,
@@ -1185,34 +1189,87 @@ pub fn variable<'a>(param: &Parameter<'a>) -> Expression<'a> {
         data_type_hint: Some(param.data_type.clone()),
     }
 }
-
-pub fn single_expression_pair_trait_impl<'a>(name: &'static str, parameter_a: &Parameter<'a>, parameter_b: &Parameter<'a>, expression: Expression<'a>) -> AstNode<'a> {
-    let data_type = match &expression.data_type_hint {
-        Some(dt) => dt.clone(),
-        _ => panic!("single_expression_pair_trait_impl for {name} requires data_type_hint on \"expression\" {expression:?}"),
+pub fn add_variable<'a>(vars: &mut Vec<(&'static str, Expression<'a>)>, name: &'static str, expr: Expression<'a>) -> Expression<'a> {
+    let result = Expression {
+        size: 1,
+        content: ExpressionContent::Variable(name),
+        data_type_hint: expr.data_type_hint.clone(),
     };
+    vars.push((name, expr));
+    return result;
+}
+
+
+pub fn pair_trait_impl<'a>(
+    name: &'static str,
+    parameter_a: &Parameter<'a>,
+    parameter_b: &Parameter<'a>,
+    variables: Vec<(&'static str, Expression<'a>)>,
+    return_expression: Expression<'a>
+) -> AstNode<'a> {
+    let data_type = match &return_expression.data_type_hint {
+        Some(dt) => dt.clone(),
+        _ => panic!("pair_trait_impl for {name} requires data_type_hint on \"expression\" {return_expression:?}"),
+    };
+    let mut body = vec![];
+    for (variable_name, variable_expression) in variables {
+        body.push(AstNode::VariableAssignment {
+            name: variable_name,
+            data_type: variable_expression.data_type_hint.clone(),
+            expression: Box::new(variable_expression),
+        });
+    }
+    body.push(AstNode::ReturnStatement { expression: Box::new(return_expression) });
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone(), parameter_b.clone()],
-        body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
+        body,
     }
 }
 
-pub fn single_expression_single_trait_impl<'a>(name: &'static str, parameter_a: &Parameter<'a>, expression: Expression<'a>) -> AstNode<'a> {
-    let data_type = match &expression.data_type_hint {
+pub fn single_trait_impl<'a>(
+    name: &'static str,
+    parameter_a: &Parameter<'a>,
+    variables: Vec<(&'static str, Expression<'a>)>,
+    return_expression: Expression<'a>
+) -> AstNode<'a> {
+    let data_type = match &return_expression.data_type_hint {
         Some(dt) => dt.clone(),
-        _ => panic!("single_expression_single_trait_impl for {name} requires data_type_hint on \"expression\" {expression:?}"),
+        _ => panic!("single_trait_impl for {name} requires data_type_hint on \"expression\" {return_expression:?}"),
     };
+    let mut body = vec![];
+    for (variable_name, variable_expression) in variables {
+        body.push(AstNode::VariableAssignment {
+            name: variable_name,
+            data_type: variable_expression.data_type_hint.clone(),
+            expression: Box::new(variable_expression),
+        });
+    }
+    body.push(AstNode::ReturnStatement { expression: Box::new(return_expression) });
     AstNode::TraitImplementation {
         result: Parameter { name, data_type },
         class: parameter_a.multi_vector_class(),
         parameters: vec![parameter_a.clone()],
-        body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
+        body,
     }
 }
 
-pub fn single_expression_class_trait_impl<'a>(name: &'static str, mvc: &'a MultiVectorClass, expression: Expression<'a>) -> AstNode<'a> {
+pub fn class_trait_impl<'a>(
+    name: &'static str,
+    mvc: &'a MultiVectorClass,
+    variables: Vec<(&'static str, Expression<'a>)>,
+    return_expression: Expression<'a>
+) -> AstNode<'a> {
+    let mut body = vec![];
+    for (variable_name, variable_expression) in variables {
+        body.push(AstNode::VariableAssignment {
+            name: variable_name,
+            data_type: variable_expression.data_type_hint.clone(),
+            expression: Box::new(variable_expression),
+        });
+    }
+    body.push(AstNode::ReturnStatement { expression: Box::new(return_expression) });
     AstNode::TraitImplementation {
         result: Parameter {
             name,
@@ -1220,7 +1277,7 @@ pub fn single_expression_class_trait_impl<'a>(name: &'static str, mvc: &'a Multi
         },
         class: mvc,
         parameters: vec![],
-        body: vec![AstNode::ReturnStatement { expression: Box::new(expression) }],
+        body,
     }
 }
 
@@ -1308,7 +1365,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             if class_name == "AntiScalar" {
                 name = "AntiSqrt";
             }
-            let sqrt = single_expression_single_trait_impl(name, &param_a, construct);
+            let sqrt = single_trait_impl(name, &param_a, vec![], construct);
             self.trait_impls.add_single_impl(name, param_a, sqrt);
         }
 
@@ -1369,7 +1426,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
                 let product = self.algebra.dialect().geometric_product.first()?;
                 let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
-                let the_impl = single_expression_single_trait_impl(name, &param_a, expr);
+                let the_impl = single_trait_impl(name, &param_a, vec![], expr);
                 self.trait_impls.add_single_impl(name, param_a, the_impl);
             };
         }
@@ -1385,7 +1442,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let inverse_norm_squared = self.trait_impls.get_pair_invocation("Div", one, dot)?;
                 let product = self.algebra.dialect().geometric_anti_product.first()?;
                 let expr = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_norm_squared)?;
-                let the_impl = single_expression_single_trait_impl(name, &param_a, expr);
+                let the_impl = single_trait_impl(name, &param_a, vec![], expr);
                 self.trait_impls.add_single_impl(name, param_a, the_impl);
             };
         }
@@ -1398,7 +1455,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let inverse_b = self.trait_impls.get_single_invocation("Inverse", variable(&param_b))?;
                 let product = self.algebra.dialect().geometric_product.first()?;
                 let product = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_b)?;
-                let the_impl = single_expression_pair_trait_impl(name, &param_a, &param_b, product);
+                let the_impl = pair_trait_impl(name, &param_a, &param_b, vec![], product);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, the_impl);
             };
         }
@@ -1409,9 +1466,52 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let inverse_b = self.trait_impls.get_single_invocation("AntiInverse", variable(&param_b))?;
                 let product = self.algebra.dialect().geometric_anti_product.first()?;
                 let product = self.trait_impls.get_pair_invocation(product, variable(&param_a), inverse_b)?;
-                let the_impl = single_expression_pair_trait_impl(name, &param_a, &param_b, product);
+                let the_impl = pair_trait_impl(name, &param_a, &param_b, vec![], product);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, the_impl);
             };
+        }
+
+        let origin_basis = {
+            let e4_idx = self.algebra.represented_dimensions() + 1;
+            self.algebra.parse(format!("e{e4_idx}").as_str())
+        };
+        let infinity_basis = if self.algebra.algebra_name().contains("cga") {
+            let e5_idx = self.algebra.represented_dimensions() + 2;
+            Some(self.algebra.parse(format!("e{e5_idx}").as_str()))
+        } else {
+            None
+        };
+        for param_a in registry.single_parameters() {
+            let mut bulk_name = "Bulk";
+            let mut weight_name = "Weight";
+
+            if self.algebra.algebra_name().starts_with("cga") {
+                bulk_name = "FlatBulk";
+                weight_name = "FlatWeight";
+            }
+
+            let bulk = derive_bulk_or_weight(&self.algebra, bulk_name, &param_a, &origin_basis, false, infinity_basis.clone(), true, registry);
+            if bulk != AstNode::None {
+                self.trait_impls.add_single_impl(bulk_name, param_a.clone(), bulk);
+            }
+
+            let weight = derive_bulk_or_weight(&self.algebra, weight_name, &param_a, &origin_basis, true, infinity_basis.clone(), true, registry);
+            if weight != AstNode::None {
+                self.trait_impls.add_single_impl(weight_name, param_a.clone(), weight);
+            }
+
+            if self.algebra.algebra_name().starts_with("cga") {
+
+                let round_bulk = derive_bulk_or_weight(&self.algebra, "RoundBulk", &param_a, &origin_basis, false, infinity_basis.clone(), false, registry);
+                if round_bulk != AstNode::None {
+                    self.trait_impls.add_single_impl("RoundBulk", param_a.clone(), round_bulk);
+                }
+
+                let round_weight = derive_bulk_or_weight(&self.algebra, "RoundWeight", &param_a, &origin_basis, true, infinity_basis.clone(), false, registry);
+                if round_weight != AstNode::None {
+                    self.trait_impls.add_single_impl("RoundWeight", param_a, round_weight);
+                }
+            }
         }
 
         Ok(())
@@ -1885,64 +1985,217 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
     /// Step 2: Create some basic norms
     pub fn basic_norms<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
+        let is_cga = self.algebra.algebra_name().starts_with("cga");
+
+        let flat_bulk = if is_cga { "FlatBulk" } else { "Bulk" };
+        let flat_weight = if is_cga { "FlatWeight" } else { "Weight" };
+        let round_bulk = "RoundBulk";
+        let round_weight = "RoundWeight";
+
+        let flat_bulk_norm_squared = if is_cga { "FlatBulkNormSquared" } else { "BulkNormSquared" };
+        let flat_bulk_norm = if is_cga { "FlatBulkNorm" } else { "BulkNorm" };
+        let flat_weight_norm_squared = if is_cga { "FlatWeightNormSquared" } else { "WeightNormSquared" };
+        let flat_weight_norm = if is_cga { "FlatWeightNorm" } else { "WeightNorm" };
+        let flat_norm_squared = if is_cga { "FlatNormSquared" } else { "NormSquared" };
+        let flat_norm = if is_cga { "FlatNorm" } else { "Norm" };
+        let unitized_flat_norm_squared = if is_cga { "UnitizedFlatNormSquared" } else { "UnitizedNormSquared" };
+        let unitized_flat_norm = if is_cga { "UnitizedFlatNorm" } else { "UnitizedNorm" };
+
+        let round_bulk_norm_squared = "RoundBulkNormSquared";
+        let round_bulk_norm = "RoundBulkNorm";
+        let round_weight_norm_squared = "RoundWeightNormSquared";
+        let round_weight_norm = "RoundWeightNorm";
+        let round_norm_squared = "RoundNormSquared";
+        let round_norm = "RoundNorm";
+        let unitized_round_norm_squared = "UnitizedRoundNormSquared";
+        let unitized_round_norm = "UnitizedRoundNorm";
+
+        // TODO the flat bulk/weight norms might need some coupling with the round weight in order
+        //  to be properly unitized. Not sure though. Will have to play around with it and test.
+        //  Yes according to page 198 all norms are weighted with the Round Weight Norm
+
+        let mut one_origin = None;
+        let mut one_infinity = None;
+        if is_cga {
+            let d = self.algebra.represented_dimensions();
+            let origin_idx = (1 as BasisElementIndex) << d;
+            let origin = registry.get_at_least(&[origin_idx]);
+            one_origin = match origin { None => None, Some(origin) => {
+                if origin.flat_basis().len() == 1 {
+                    self.trait_impls.get_class_invocation("Unit", origin)
+                } else {
+                    let mut body = vec![];
+                    for result_group in origin.grouped_basis.iter() {
+                        let size = result_group.len();
+                        let expression = Expression {
+                            size,
+                            content: ExpressionContent::Constant(
+                                DataType::SimdVector(size),
+                                result_group.iter().map(|element| if element.index == origin_idx { 1 } else { 0 }).collect(),
+                            ),
+                            data_type_hint: Some(DataType::SimdVector(size)),
+                        };
+                        body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+                    }
+                    Some(Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::MultiVector(origin)),
+                        content: ExpressionContent::InvokeClassMethod(origin, "Constructor", body),
+                    })
+                }
+            }};
+
+            let infinity_idx = (1 as BasisElementIndex) << (d + 1);
+            let infinity = registry.get_at_least(&[infinity_idx]);
+            one_infinity = match infinity { None => None, Some(infinity) => {
+                if infinity.flat_basis().len() == 1 {
+                    self.trait_impls.get_class_invocation("Unit", infinity)
+                } else {
+                    let mut body = vec![];
+                    for result_group in infinity.grouped_basis.iter() {
+                        let size = result_group.len();
+                        let expression = Expression {
+                            size,
+                            content: ExpressionContent::Constant(
+                                DataType::SimdVector(size),
+                                result_group.iter().map(|element| if element.index == infinity_idx { 1 } else { 0 }).collect(),
+                            ),
+                            data_type_hint: Some(DataType::SimdVector(size)),
+                        };
+                        body.push((DataType::SimdVector(size), *simplify_and_legalize(Box::new(expression))));
+                    }
+                    Some(Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::MultiVector(infinity)),
+                        content: ExpressionContent::InvokeClassMethod(infinity, "Constructor", body),
+                    })
+                }
+            }};
+        }
+
         for param_a in registry.single_parameters() {
-            let name = "BulkNormSquared";
             let _: Option<()> = try {
+                let mut flat_bulk = self.trait_impls.get_single_invocation(flat_bulk, variable(&param_a))?;
+                if is_cga {
+                    let wedge = self.algebra.dialect().exterior_product.first()?;
+                    let one_origin = one_origin.clone()?;
+                    flat_bulk = self.trait_impls.get_pair_invocation(wedge, flat_bulk, one_origin)?;
+                }
+                let mut vars = vec![];
+                let flat_bulk = add_variable(&mut vars, "flat_bulk_thing", flat_bulk);
                 let dot = self.algebra.dialect().dot_product.first()?;
-                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
-                let bulk_norm = single_expression_single_trait_impl(name, &param_a, dot);
-                self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
+                let dot = self.trait_impls.get_pair_invocation(dot, flat_bulk.clone(), flat_bulk)?;
+                let bulk_norm = single_trait_impl(flat_bulk_norm_squared, &param_a, vars, dot);
+                self.trait_impls.add_single_impl(flat_bulk_norm_squared, param_a.clone(), bulk_norm);
             };
         }
 
         for param_a in registry.single_parameters() {
-            let name = "WeightNormSquared";
             let _: Option<()> = try {
+                // TODO this is not right in CGA
+                let mut vars = vec![];
+                let flat_weight = self.trait_impls.get_single_invocation(flat_weight, variable(&param_a))?;
+                let flat_weight = add_variable(&mut vars, "flat_weight", flat_weight);
                 let dot = self.algebra.dialect().anti_dot_product.first()?;
-                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
-                let bulk_norm = single_expression_single_trait_impl(name, &param_a, dot);
-                self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
+                let dot = self.trait_impls.get_pair_invocation(dot, flat_weight.clone(), flat_weight)?;
+                let bulk_norm = single_trait_impl(flat_weight_norm_squared, &param_a, vars, dot);
+                self.trait_impls.add_single_impl(flat_weight_norm_squared, param_a.clone(), bulk_norm);
+            };
+        }
+
+        if is_cga {
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let dot = self.algebra.dialect().dot_product.first()?;
+
+                    let mut vars = vec![];
+                    let round_bulk = self.trait_impls.get_single_invocation(round_bulk, variable(&param_a))?;
+                    let round_bulk = add_variable(&mut vars, "round_bulk_carrier", round_bulk);
+                    let dot = self.trait_impls.get_pair_invocation(dot, round_bulk.clone(), round_bulk)?;
+                    let bulk_norm = single_trait_impl(round_bulk_norm_squared, &param_a, vars, dot);
+                    self.trait_impls.add_single_impl(round_bulk_norm_squared, param_a.clone(), bulk_norm);
+                };
+            }
+
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let wedge = self.algebra.dialect().exterior_product.first()?;
+                    let dot = self.algebra.dialect().anti_dot_product.first()?;
+                    let one_infinity = one_infinity.clone()?;
+
+                    let mut vars = vec![];
+                    let round_weight = self.trait_impls.get_single_invocation(round_weight, variable(&param_a))?;
+                    let carrier = self.trait_impls.get_pair_invocation(wedge, round_weight, one_infinity)?;
+                    let round_weight = add_variable(&mut vars, "round_weight_carrier", carrier);
+                    let dot = self.trait_impls.get_pair_invocation(dot, round_weight.clone(), round_weight)?;
+                    let bulk_norm = single_trait_impl(round_weight_norm_squared, &param_a, vars, dot);
+                    self.trait_impls.add_single_impl(round_weight_norm_squared, param_a.clone(), bulk_norm);
+                };
+            }
+        }
+
+        for param_a in registry.single_parameters() {
+            let _: Option<()> = try {
+                let flat_bulk_norm_squared = self.trait_impls.get_single_invocation(flat_bulk_norm_squared, variable(&param_a))?;
+                let m = self.trait_impls.get_single_invocation("Sqrt", flat_bulk_norm_squared)?;
+                let bulk_norm = single_trait_impl(flat_bulk_norm, &param_a, vec![], m);
+                self.trait_impls.add_single_impl(flat_bulk_norm, param_a.clone(), bulk_norm);
             };
         }
 
         for param_a in registry.single_parameters() {
-            let name = "BulkNorm";
             let _: Option<()> = try {
-                let dot = self.algebra.dialect().dot_product.first()?;
-                let dot = self.trait_impls.get_pair_invocation(dot, variable(&param_a), variable(&param_a))?;
-                let m = self.trait_impls.get_single_invocation("Sqrt", dot)?;
-                let bulk_norm = single_expression_single_trait_impl(name, &param_a, m);
-                self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
+                let flat_weight_norm_squared = self.trait_impls.get_single_invocation(flat_weight_norm_squared, variable(&param_a))?;
+                let m = self.trait_impls.get_single_invocation("AntiSqrt", flat_weight_norm_squared)?;
+                let bulk_norm = single_trait_impl(flat_weight_norm, &param_a, vec![], m);
+                self.trait_impls.add_single_impl(flat_weight_norm, param_a.clone(), bulk_norm);
             };
         }
 
-        for param_a in registry.single_parameters() {
-            let name = "WeightNorm";
-            let _: Option<()> = try {
-                let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
-                let anti_dot = self.trait_impls.get_pair_invocation(anti_dot, variable(&param_a), variable(&param_a))?;
-                let m = self.trait_impls.get_single_invocation("AntiSqrt", anti_dot)?;
-                let bulk_norm = single_expression_single_trait_impl(name, &param_a, m);
-                self.trait_impls.add_single_impl(name, param_a.clone(), bulk_norm);
-            };
+        if is_cga {
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let round_bulk_norm_squared = self.trait_impls.get_single_invocation(round_bulk_norm_squared, variable(&param_a))?;
+                    let m = self.trait_impls.get_single_invocation("Sqrt", round_bulk_norm_squared)?;
+                    let bulk_norm = single_trait_impl(round_bulk_norm, &param_a, vec![], m);
+                    self.trait_impls.add_single_impl(round_bulk_norm, param_a.clone(), bulk_norm);
+                };
+            }
+
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let round_weight_norm_squared = self.trait_impls.get_single_invocation(round_weight_norm_squared, variable(&param_a))?;
+                    let m = self.trait_impls.get_single_invocation("AntiSqrt", round_weight_norm_squared)?;
+                    let weight_norm = single_trait_impl(round_weight_norm, &param_a, vec![], m);
+                    self.trait_impls.add_single_impl(round_weight_norm, param_a.clone(), weight_norm);
+                };
+            }
         }
 
         for param_a in registry.single_parameters() {
-            let name = "GeometricNorm";
             let _: Option<()> = try {
-                let bn = self.trait_impls.get_single_invocation("BulkNorm", variable(&param_a))?;
-                let wn = self.trait_impls.get_single_invocation("WeightNorm", variable(&param_a))?;
+                let bn = self.trait_impls.get_single_invocation(flat_bulk_norm_squared, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(flat_weight_norm_squared, variable(&param_a))?;
                 let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
-                let gn = single_expression_single_trait_impl(name, &param_a, add);
-                self.trait_impls.add_single_impl(name, param_a.clone(), gn);
+                let gn = single_trait_impl(flat_norm_squared, &param_a, vec![], add);
+                self.trait_impls.add_single_impl(flat_norm_squared, param_a.clone(), gn);
             };
         }
 
         for param_a in registry.single_parameters() {
-            let name = "UnitizedNormSquared";
             let _: Option<()> = try {
-                let bn = self.trait_impls.get_single_invocation("BulkNormSquared", variable(&param_a))?;
-                let wn = self.trait_impls.get_single_invocation("WeightNormSquared", variable(&param_a))?;
+                let bn = self.trait_impls.get_single_invocation(flat_bulk_norm, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(flat_weight_norm, variable(&param_a))?;
+                let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
+                let gn = single_trait_impl(flat_norm, &param_a, vec![], add);
+                self.trait_impls.add_single_impl(flat_norm, param_a.clone(), gn);
+            };
+        }
+
+        for param_a in registry.single_parameters() {
+            let _: Option<()> = try {
+                let bn = self.trait_impls.get_single_invocation(flat_bulk_norm_squared, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation(flat_weight_norm_squared, variable(&param_a))?;
                 let access_bn = Expression {
                     size: 1,
                     data_type_hint: Some(DataType::SimdVector(1)),
@@ -1958,23 +2211,82 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
                 };
-                let uns = single_expression_single_trait_impl(name, &param_a, div);
-                self.trait_impls.add_single_impl(name, param_a.clone(), uns);
+                let uns = single_trait_impl(unitized_flat_norm_squared, &param_a, vec![], div);
+                self.trait_impls.add_single_impl(unitized_flat_norm_squared, param_a.clone(), uns);
             };
         }
 
         for param_a in registry.single_parameters() {
-            let name = "UnitizedNorm";
             let _: Option<()> = try {
-                let uns = self.trait_impls.get_single_invocation("UnitizedNormSquared", variable(&param_a))?;
+                let uns = self.trait_impls.get_single_invocation(unitized_flat_norm_squared, variable(&param_a))?;
                 let sqrt = Expression {
                     size: 1,
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: ExpressionContent::SquareRoot(Box::new(uns)),
                 };
-                let un = single_expression_single_trait_impl(name, &param_a, sqrt);
-                self.trait_impls.add_single_impl(name, param_a.clone(), un);
+                let un = single_trait_impl(unitized_flat_norm, &param_a, vec![], sqrt);
+                self.trait_impls.add_single_impl(unitized_flat_norm, param_a.clone(), un);
             };
+        }
+
+        if is_cga {
+
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let bn = self.trait_impls.get_single_invocation(round_bulk_norm_squared, variable(&param_a))?;
+                    let wn = self.trait_impls.get_single_invocation(round_weight_norm_squared, variable(&param_a))?;
+                    let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
+                    let gn = single_trait_impl(round_norm_squared, &param_a, vec![], add);
+                    self.trait_impls.add_single_impl(round_norm_squared, param_a.clone(), gn);
+                };
+            }
+
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let bn = self.trait_impls.get_single_invocation(round_bulk_norm, variable(&param_a))?;
+                    let wn = self.trait_impls.get_single_invocation(round_weight_norm, variable(&param_a))?;
+                    let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
+                    let gn = single_trait_impl(round_norm, &param_a, vec![], add);
+                    self.trait_impls.add_single_impl(round_norm, param_a.clone(), gn);
+                };
+            }
+
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let bn = self.trait_impls.get_single_invocation(round_bulk_norm_squared, variable(&param_a))?;
+                    let wn = self.trait_impls.get_single_invocation(round_weight_norm_squared, variable(&param_a))?;
+                    let access_bn = Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::SimdVector(1)),
+                        content: ExpressionContent::Access(Box::new(bn), 0),
+                    };
+                    let access_wn = Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::SimdVector(1)),
+                        content: ExpressionContent::Access(Box::new(wn), 0),
+                    };
+                    let div = Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::SimdVector(1)),
+                        content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
+                    };
+                    let uns = single_trait_impl(unitized_round_norm_squared, &param_a, vec![], div);
+                    self.trait_impls.add_single_impl(unitized_round_norm_squared, param_a.clone(), uns);
+                };
+            }
+
+            for param_a in registry.single_parameters() {
+                let _: Option<()> = try {
+                    let uns = self.trait_impls.get_single_invocation(unitized_round_norm_squared, variable(&param_a))?;
+                    let sqrt = Expression {
+                        size: 1,
+                        data_type_hint: Some(DataType::SimdVector(1)),
+                        content: ExpressionContent::SquareRoot(Box::new(uns)),
+                    };
+                    let un = single_trait_impl(unitized_round_norm, &param_a, vec![], sqrt);
+                    self.trait_impls.add_single_impl(unitized_round_norm, param_a.clone(), un);
+                };
+            }
         }
     }
 
@@ -1985,18 +2297,20 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
 
         // TODO here
-        // TODO hardly any of these are getting emitted
-
-        // TODO see page 197 of the book (and onward) for formulas to check against
-
-
+        //  hardly any of these are getting emitted
+        //  see page 197 of the book (and onward) for formulas to check against
+        //  I broke things in cga3d_min, so I should do this next.
+        //  according to page 204-205, the conformal conjugate might be useful in defining
+        //  the distance between the origin and the center position
 
         for param_a in registry.single_parameters() {
 
-            // TODO I broke things in cga3d_min, so I should do this next.
+            // let round_bulk_squared = self.trait_impls.get_single_invocation("RoundBulkNormSquared", variable(&param_a))?;
+            // let flat_weight_squared = self.trait_impls.get_single_invocation("WeightNormSquared", variable(&param_a))?;
+            // let add_stuff = self.trait_impls.get_pair_invocation("Add", round_bulk_squared, flat_weight_squared)?;
 
-            // TODO according to page 204-205, the conformal conjugate might be useful in defining
-            //  the distance between the origin and the center position
+
+
 
             let center = match self.trait_impls.get_single_invocation("Center", variable(&param_a)) {
                 None => continue,
@@ -2005,126 +2319,34 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let d = self.algebra.represented_dimensions();
             let projective_basis = BasisElement::from_index(1 << d as BasisElementIndex);
 
-            let center_bulk_norm_squared = "CenterBulkNormSquared";
-            let center_bulk_norm = "CenterBulkNorm";
-            let center_weight_norm_squared = "CenterWeightNormSquared";
-            let center_weight_norm = "CenterWeightNorm";
-            let center_geometric_norm = "CenterGeometricNorm";
-            let center_unitized_norm_squared = "CenterUnitizedNormSquared";
-            let center_unitized_norm = "CenterUnitizedNorm";
-
-            let radius_bulk_norm_squared = "RadiusBulkNormSquared";
-            let radius_bulk_norm = "RadiusBulkNorm";
-            let radius_weight_norm_squared = "RadiusWeightNormSquared";
-            let radius_weight_norm = "RadiusWeightNorm";
-            let radius_geometric_norm = "RadiusGeometricNorm";
-            let radius_unitized_norm_squared = "RadiusUnitizedNormSquared";
-            let radius_unitized_norm = "RadiusUnitizedNorm";
+            let center_norm_squared = "CenterNormSquared";
+            let center_norm = "CenterNorm";
+            let center_unitized_norm_squared = "UnitizedCenterNormSquared";
+            let center_unitized_norm = "UnitizedCenterNorm";
 
             let _: Option<()> = try {
-                let center = self.trait_impls.get_single_invocation("Center", variable(&param_a))?;
-                let center_data_type = center.data_type_hint.clone()?;
-                let center_mv = match center_data_type {
-                    DataType::MultiVector(mv) => mv,
-                    _ => continue,
-                };
-                if center_mv.class_name != "RoundPoint" {
-                    continue
-                }
 
+                // Center Norm Squared
 
-                // Center Bulk Norm Squared
-
-                let round_bulk = self.trait_impls.get_single_invocation("RoundBulk", center.clone())?;
-                let round_bulk_datatype = round_bulk.data_type_hint.clone()?;
-                let var_round_bulk = Expression {
-                    size: round_bulk.size.clone(),
-                    data_type_hint: Some(round_bulk_datatype.clone()),
-                    content: ExpressionContent::Variable("round_bulk"),
-                };
-                let assign_round_bulk = AstNode::VariableAssignment {
-                    name: "round_bulk",
-                    data_type: Some(round_bulk_datatype),
-                    expression: Box::new(round_bulk),
-                };
-                let dot = self.algebra.dialect().dot_product.first()?;
-                let rb_dot_rb = self.trait_impls.get_pair_invocation(dot, var_round_bulk.clone(), var_round_bulk)?;
-                let dot_datatype = rb_dot_rb.data_type_hint.clone()?;
-
-                let the_return = AstNode::ReturnStatement {
-                    expression: Box::new(rb_dot_rb.clone()),
-                };
-                let the_impl = AstNode::TraitImplementation {
-                    result: Parameter { name: center_bulk_norm_squared, data_type: dot_datatype.clone() },
-                    class: param_a.multi_vector_class(),
-                    parameters: vec![param_a.clone()],
-                    body: vec![assign_round_bulk.clone(), the_return],
-                };
-                self.trait_impls.add_single_impl(center_bulk_norm_squared, param_a.clone(), the_impl);
-
-
-                // Center Bulk Norm
-
-                let bns = self.trait_impls.get_single_invocation(center_bulk_norm_squared, variable(&param_a))?;
-                let sqrt = self.trait_impls.get_single_invocation("Sqrt", bns)?;
-                let the_impl = single_expression_single_trait_impl(center_bulk_norm, &param_a, sqrt);
-                self.trait_impls.add_single_impl(center_bulk_norm, param_a.clone(), the_impl);
-
-
-                // Center Weight Norm Squared
-
-                let round_weight = self.trait_impls.get_single_invocation("RoundWeight", center.clone())?;
-                let round_weight_datatype = round_weight.data_type_hint.clone()?;
-                let var_round_weight = Expression {
-                    size: round_weight.size.clone(),
-                    data_type_hint: Some(round_weight_datatype.clone()),
-                    content: ExpressionContent::Variable("round_weight"),
-                };
-                let assign_round_weight = AstNode::VariableAssignment {
-                    name: "round_weight",
-                    data_type: Some(round_weight_datatype),
-                    expression: Box::new(round_weight),
-                };
-                let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
-                // TODO cannot find Origin anti_dot Origin
-                // TODO IT'S TRUE.... ORIGIN ANTIDOT ORIGIN IS ZERO....
-                //  So I need to reformulate these round features entirely...
-                let rw_anti_dot_rw = self.trait_impls.get_pair_invocation(anti_dot, var_round_weight.clone(), var_round_weight)?;
-                let anti_dot_datatype = rw_anti_dot_rw.data_type_hint.clone()?;
-
-                let the_return = AstNode::ReturnStatement {
-                    expression: Box::new(rw_anti_dot_rw.clone()),
-                };
-                let the_impl = AstNode::TraitImplementation {
-                    result: Parameter { name: center_weight_norm_squared, data_type: anti_dot_datatype.clone() },
-                    class: param_a.multi_vector_class(),
-                    parameters: vec![param_a.clone()],
-                    body: vec![assign_round_weight.clone(), the_return],
-                };
-                self.trait_impls.add_single_impl(center_weight_norm_squared, param_a.clone(), the_impl);
-
-
-                // Center Weight Norm
-
-                let bns = self.trait_impls.get_single_invocation(center_weight_norm_squared, variable(&param_a))?;
-                let sqrt = self.trait_impls.get_single_invocation("AntiSqrt", bns)?;
-                let the_impl = single_expression_single_trait_impl(center_weight_norm, &param_a, sqrt);
-                self.trait_impls.add_single_impl(center_weight_norm, param_a.clone(), the_impl);
-
-
-                // Center Geometric Norm
-
-                let bn = self.trait_impls.get_single_invocation(center_bulk_norm, variable(&param_a))?;
-                let wn = self.trait_impls.get_single_invocation(center_weight_norm, variable(&param_a))?;
+                let bn = self.trait_impls.get_single_invocation("RoundBulkNormSquared", variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation("FlatWeightNormSquared", variable(&param_a))?;
+                // AntiDual to convert from AntiScalar to Scalar because the true weight is RoundWeightNormSquared
+                let wn = self.trait_impls.get_single_invocation("AntiDual", wn)?;
                 let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
-                let the_impl = single_expression_single_trait_impl(center_geometric_norm, &param_a, add);
-                self.trait_impls.add_single_impl(center_geometric_norm, param_a.clone(), the_impl);
+                let the_impl = single_trait_impl(center_norm_squared, &param_a, vec![], add);
+                self.trait_impls.add_single_impl(center_norm_squared, param_a.clone(), the_impl);
 
+                // Center Norm
+
+                let cns = self.trait_impls.get_single_invocation(center_norm_squared, variable(&param_a))?;
+                let cn = self.trait_impls.get_single_invocation("Sqrt", cns)?;
+                let the_impl = single_trait_impl(center_norm, &param_a, vec![], cn);
+                self.trait_impls.add_single_impl(center_norm, param_a.clone(), the_impl);
 
                 // Center Unitized Norm Squared
 
-                let bn = self.trait_impls.get_single_invocation(center_bulk_norm_squared, variable(&param_a))?;
-                let wn = self.trait_impls.get_single_invocation(center_weight_norm_squared, variable(&param_a))?;
+                let bn = self.trait_impls.get_single_invocation(center_norm_squared, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation("RoundWeightNormSquared", variable(&param_a))?;
                 let access_bn = Expression {
                     size: 1,
                     data_type_hint: Some(DataType::SimdVector(1)),
@@ -2140,7 +2362,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
                 };
-                let the_impl = single_expression_single_trait_impl(center_unitized_norm_squared, &param_a, div);
+                let the_impl = single_trait_impl(center_unitized_norm_squared, &param_a, vec![], div);
                 self.trait_impls.add_single_impl(center_unitized_norm_squared, param_a.clone(), the_impl);
 
 
@@ -2152,154 +2374,40 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: ExpressionContent::SquareRoot(Box::new(uns)),
                 };
-                let un = single_expression_single_trait_impl(center_unitized_norm, &param_a, sqrt);
+                let un = single_trait_impl(center_unitized_norm, &param_a, vec![], sqrt);
                 self.trait_impls.add_single_impl(center_unitized_norm, param_a.clone(), un);
+            };
 
+            let radius_norm_squared = "RadiusNormSquared";
+            let radius_norm = "RadiusNorm";
+            let radius_unitized_norm_squared = "UnitizedRadiusNormSquared";
+            let radius_unitized_norm = "UnitizedRadiusNorm";
 
-                // Radius Bulk Norm Squared
+            let _: Option<()> = try {
 
+                // Radius Norm Squared
 
-                let center_data_type = center.data_type_hint.clone()?;
-                let var_center = Expression {
-                    size: center.size.clone(),
-                    data_type_hint: Some(center_data_type.clone()),
-                    content: ExpressionContent::Variable("center"),
-                };
-                let assign_center = AstNode::VariableAssignment {
-                    name: "center",
-                    data_type: Some(center_data_type.clone()),
-                    expression: Box::new(center.clone())
-                };
-
-                let round_bulk = self.trait_impls.get_single_invocation("RoundBulk", center.clone())?;
-                let round_bulk_datatype = round_bulk.data_type_hint.clone()?;
-                let var_round_bulk = Expression {
-                    size: round_bulk.size.clone(),
-                    data_type_hint: Some(round_bulk_datatype.clone()),
-                    content: ExpressionContent::Variable("round_bulk"),
-                };
-                let assign_round_bulk = AstNode::VariableAssignment {
-                    name: "round_bulk",
-                    data_type: Some(round_bulk_datatype),
-                    expression: Box::new(round_bulk),
-                };
-                let dot = self.algebra.dialect().dot_product.first()?;
-                let rb_dot_rb = self.trait_impls.get_pair_invocation(dot, var_round_bulk.clone(), var_round_bulk)?;
-                let dot_data_type = rb_dot_rb.data_type_hint.clone()?;
-                // formula calls for "2 * aw * au"
-                // but when we invoke "center", the e5 component becomes "aw * au" instead of just "au"
-                // so by taking the "flat bulk" of the center result, we get the coefficient we need
-                // Just have to multiply it by 2. Or add it with itself.
-                // Ah... except the flat bulk is not a scalar... it is an e5... hmmm....
-                // Okay so yeah I have to manually dig into the insides of the thing either way.
-                let flat_bulk = self.trait_impls.get_single_invocation("Bulk", var_center.clone())?;
-                let scalar_mv = match rb_dot_rb.data_type_hint {
-                    Some(DataType::MultiVector(mv)) => mv,
-                    _ => None?
-                };
-                let e5_element = Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Access(Box::new(flat_bulk), 0)
-                };
-                let two = Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Constant(DataType::SimdVector(1), vec![2])
-                };
-                let two_aw_au = Expression {
-                    size: 1,
-                    data_type_hint: Some(DataType::SimdVector(1)),
-                    content: ExpressionContent::Multiply(Box::new(two), Box::new(e5_element)),
-                };
-                let two_aw_au_scalar = Expression {
-                    size: 1,
-                    data_type_hint: Some(dot_data_type.clone()),
-                    content: ExpressionContent::InvokeClassMethod(scalar_mv, "Constructor", vec![(DataType::SimdVector(1), two_aw_au)]),
-                };
-                let var_taas = Expression {
-                    size: 1,
-                    data_type_hint: Some(dot_data_type.clone()),
-                    content: ExpressionContent::Variable("two_aw_au"),
-                };
-                let assign_taas = AstNode::VariableAssignment {
-                    name: "two_aw_au",
-                    data_type: Some(dot_data_type.clone()),
-                    expression: Box::new(two_aw_au_scalar),
-                };
-                let sub = self.trait_impls.get_pair_invocation("Sub", var_taas, rb_dot_rb)?;
-
-                let the_return = AstNode::ReturnStatement {
-                    expression: Box::new(sub.clone()),
-                };
-                let the_impl = AstNode::TraitImplementation {
-                    result: Parameter { name: radius_bulk_norm_squared, data_type: DataType::MultiVector(scalar_mv) },
-                    class: param_a.multi_vector_class(),
-                    parameters: vec![param_a.clone()],
-                    body: vec![assign_center.clone(), assign_round_bulk, assign_taas, the_return],
-                };
-                self.trait_impls.add_single_impl(radius_bulk_norm_squared, param_a.clone(), the_impl);
-
-
-                // Radius Bulk Norm
-
-                let bns = self.trait_impls.get_single_invocation(radius_bulk_norm_squared, variable(&param_a))?;
-                let sqrt = self.trait_impls.get_single_invocation("Sqrt", bns)?;
-                let the_impl = single_expression_single_trait_impl(radius_bulk_norm, &param_a, sqrt);
-                self.trait_impls.add_single_impl(radius_bulk_norm, param_a.clone(), the_impl);
-
-
-                // Radius Weight Norm Squared
-
-                let round_weight = self.trait_impls.get_single_invocation("RoundWeight", center.clone())?;
-                let round_weight_datatype = round_weight.data_type_hint.clone()?;
-                let var_round_weight = Expression {
-                    size: round_weight.size.clone(),
-                    data_type_hint: Some(round_weight_datatype.clone()),
-                    content: ExpressionContent::Variable("round_weight"),
-                };
-                let assign_round_weight = AstNode::VariableAssignment {
-                    name: "round_weight",
-                    data_type: Some(round_weight_datatype),
-                    expression: Box::new(round_weight),
-                };
                 let anti_dot = self.algebra.dialect().anti_dot_product.first()?;
-                let rw_anti_dot_rw = self.trait_impls.get_pair_invocation(anti_dot, var_round_weight.clone(), var_round_weight)?;
-                let anti_dot_datatype = rw_anti_dot_rw.data_type_hint.clone()?;
+                let radius_stuff = self.trait_impls.get_pair_invocation(anti_dot, variable(&param_a), variable(&param_a))?;
+                // Not included in book... take the AntiDual so our result is a scalar instead of an AntiScalar,
+                // that wey we can more easily/intuitively add it with the RoundWeight to get proper scaling.
+                // (AntiDual of AntiScalar will turn into Scalar without negating yet again.)
+                let radius_stuff = self.trait_impls.get_single_invocation("AntiDual", radius_stuff)?;
+                let the_impl = single_trait_impl(radius_norm_squared, &param_a, vec![], radius_stuff);
+                self.trait_impls.add_single_impl(radius_norm_squared, param_a.clone(), the_impl);
 
-                let the_return = AstNode::ReturnStatement {
-                    expression: Box::new(rw_anti_dot_rw.clone()),
-                };
-                let the_impl = AstNode::TraitImplementation {
-                    result: Parameter { name: radius_weight_norm_squared, data_type: anti_dot_datatype.clone() },
-                    class: param_a.multi_vector_class(),
-                    parameters: vec![param_a.clone()],
-                    body: vec![assign_round_weight.clone(), the_return],
-                };
-                self.trait_impls.add_single_impl(radius_weight_norm_squared, param_a.clone(), the_impl);
+                // Radius Norm
 
-
-                // Radius Weight Norm
-
-                let wns = self.trait_impls.get_single_invocation(radius_weight_norm_squared, variable(&param_a))?;
-                let sqrt = self.trait_impls.get_single_invocation("AntiSqrt", wns)?;
-                let the_impl = single_expression_single_trait_impl(radius_weight_norm, &param_a, sqrt);
-                self.trait_impls.add_single_impl(radius_weight_norm, param_a.clone(), the_impl);
-
-
-                // Radius Geometric Norm
-
-                let bn = self.trait_impls.get_single_invocation(radius_bulk_norm, variable(&param_a))?;
-                let wn = self.trait_impls.get_single_invocation(radius_weight_norm, variable(&param_a))?;
-                let add = self.trait_impls.get_pair_invocation("Add", bn, wn)?;
-                let the_impl = single_expression_single_trait_impl(radius_geometric_norm, &param_a, add);
-                self.trait_impls.add_single_impl(radius_geometric_norm, param_a.clone(), the_impl);
+                let rns = self.trait_impls.get_single_invocation(radius_norm_squared, variable(&param_a))?;
+                let rn = self.trait_impls.get_single_invocation("Sqrt", rns)?;
+                let the_impl = single_trait_impl(radius_norm, &param_a, vec![], rn);
+                self.trait_impls.add_single_impl(radius_norm, param_a.clone(), the_impl);
 
 
                 // Radius Unitized Norm Squared
 
-                let bn = self.trait_impls.get_single_invocation(radius_bulk_norm_squared, variable(&param_a))?;
-                let wn = self.trait_impls.get_single_invocation(radius_weight_norm_squared, variable(&param_a))?;
+                let bn = self.trait_impls.get_single_invocation(radius_norm_squared, variable(&param_a))?;
+                let wn = self.trait_impls.get_single_invocation("RoundWeightNormSquared", variable(&param_a))?;
                 let access_bn = Expression {
                     size: 1,
                     data_type_hint: Some(DataType::SimdVector(1)),
@@ -2315,7 +2423,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: ExpressionContent::Divide(Box::new(access_bn), Box::new(access_wn)),
                 };
-                let the_impl = single_expression_single_trait_impl(radius_unitized_norm_squared, &param_a, div);
+                let the_impl = single_trait_impl(radius_unitized_norm_squared, &param_a, vec![], div);
                 self.trait_impls.add_single_impl(radius_unitized_norm_squared, param_a.clone(), the_impl);
 
 
@@ -2327,7 +2435,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     data_type_hint: Some(DataType::SimdVector(1)),
                     content: ExpressionContent::SquareRoot(Box::new(uns)),
                 };
-                let un = single_expression_single_trait_impl(radius_unitized_norm, &param_a, sqrt);
+                let un = single_trait_impl(radius_unitized_norm, &param_a, vec![], sqrt);
                 self.trait_impls.add_single_impl(radius_unitized_norm, param_a.clone(), un);
             };
         }
@@ -2338,6 +2446,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         &'s mut self, registry: &'r MultiVectorClassRegistry,
         sandwich_outputs: &BTreeMap<(&str, &str), &str>,
     ) {
+        let unitizing_weight_norm = if self.algebra.algebra_name().starts_with("cga") { "RoundWeightNorm" } else { "WeightNorm" };
 
         // Unitize
         for (param_a, param_b) in registry.pair_parameters() {
@@ -2348,7 +2457,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let gp = self.algebra.dialect().geometric_product.first()?;
                 let gp = self.trait_impls.get_pair_impl(gp, &param_a, &param_b)?;
-                let weight_norm = self.trait_impls.get_single_impl("WeightNorm", &param_a)?;
+                let weight_norm = self.trait_impls.get_single_impl(unitizing_weight_norm, &param_a)?;
                 let unitize = derive_unitize(name, gp, weight_norm, &param_a, &param_b);
                 self.trait_impls.add_single_impl(name, param_a.clone(), unitize);
             };
@@ -2411,7 +2520,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
-                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                let i = pair_trait_impl(name, &param_a, &param_b, vec![], sandwich);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
         }
@@ -2426,7 +2535,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let unitize = self.trait_impls.get_single_invocation("Unitize", variable(&param_a))?;
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", unitize, variable(&param_b))?;
-                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                let i = pair_trait_impl(name, &param_a, &param_b, vec![], sandwich);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
         }
@@ -2440,7 +2549,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "Transflect";
             let _: Option<()> = try {
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", variable(&param_a), variable(&param_b))?;
-                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                let i = pair_trait_impl(name, &param_a, &param_b, vec![], sandwich);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
         }
@@ -2454,7 +2563,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "Translate";
             let _: Option<()> = try {
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", variable(&param_a), variable(&param_b))?;
-                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                let i = pair_trait_impl(name, &param_a, &param_b, vec![], sandwich);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
         }
@@ -2468,44 +2577,9 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let name = "Rotate";
             let _: Option<()> = try {
                 let sandwich = self.trait_impls.get_pair_invocation("Sandwich", variable(&param_a), variable(&param_b))?;
-                let i = single_expression_pair_trait_impl(name, &param_a, &param_b, sandwich);
+                let i = pair_trait_impl(name, &param_a, &param_b, vec![], sandwich);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, i);
             };
-        }
-
-        let projective_basis = {
-            let e4_idx = self.algebra.represented_dimensions() + 1;
-            self.algebra.parse(format!("e{e4_idx}").as_str())
-        };
-        let flat_basis = if self.algebra.algebra_name().contains("cga") {
-            let e5_idx = self.algebra.represented_dimensions() + 2;
-            Some(self.algebra.parse(format!("e{e5_idx}").as_str()))
-        } else {
-            None
-        };
-        for param_a in registry.single_parameters() {
-            let bulk = derive_bulk_or_weight(&self.algebra, "Bulk", &param_a, &projective_basis, false, flat_basis.clone(), true, registry);
-            if bulk != AstNode::None {
-                self.trait_impls.add_single_impl("Bulk", param_a.clone(), bulk);
-            }
-
-            let weight = derive_bulk_or_weight(&self.algebra, "Weight", &param_a, &projective_basis, true, flat_basis.clone(), true, registry);
-            if weight != AstNode::None {
-                self.trait_impls.add_single_impl("Weight", param_a.clone(), weight);
-            }
-
-            if self.algebra.algebra_name().contains("cga") {
-
-                let round_bulk = derive_bulk_or_weight(&self.algebra, "RoundBulk", &param_a, &projective_basis, false, flat_basis.clone(), false, registry);
-                if round_bulk != AstNode::None {
-                    self.trait_impls.add_single_impl("RoundBulk", param_a.clone(), round_bulk);
-                }
-
-                let round_weight = derive_bulk_or_weight(&self.algebra, "RoundWeight", &param_a, &projective_basis, true, flat_basis.clone(), false, registry);
-                if round_weight != AstNode::None {
-                    self.trait_impls.add_single_impl("RoundWeight", param_a, round_weight);
-                }
-            }
         }
 
         // This has an almost annoying amount of nuance, but it really helps cut down on junk
@@ -2514,34 +2588,41 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let multiple_complements = self.algebra.has_multiple_complements();
         let aspects = ["Bulk", "Weight"];
         let complements = if multiple_complements { vec!["Right", "Left"] } else { vec![""] };
-        let round_aspects = if is_cga { vec!["", "Round"] } else { vec![""] };
+        let round_aspects = if is_cga { vec!["Flat", "Round"] } else { vec![""] };
         let static_names = [
             "BulkDual",
             "RightBulkDual",
             "LeftBulkDual",
+            "FlatBulkDual",
+            "RightFlatBulkDual",
+            "LeftFlatBulkDual",
             "RoundBulkDual",
             "RightRoundBulkDual",
             "LeftRoundBulkDual",
             "WeightDual",
             "RightWeightDual",
             "LeftWeightDual",
+            "FlatWeightDual",
+            "RightFlatWeightDual",
+            "LeftFlatWeightDual",
             "RoundWeightDual",
             "RightRoundWeightDual",
             "LeftRoundWeightDual",
         ];
 
         for round_aspect in round_aspects {
-            for leftOrRight in complements.iter() {
-                for bulkOrWeight in aspects.iter() {
-                    let name = format!("{leftOrRight}{round_aspect}{bulkOrWeight}Dual");
+            for left_or_right in complements.iter() {
+                for bulk_or_weight in aspects.iter() {
+                    let name = format!("{left_or_right}{round_aspect}{bulk_or_weight}Dual");
                     let static_name = static_names.iter().find(|it| **it == name.as_str())
                         .expect("You need to manually write out static names for this, it's not worth over-engineering the lifetimes here");
-                    let complement = format!("{leftOrRight}Complement");
+                    let complement = format!("{left_or_right}Complement");
                     for param_a in registry.single_parameters() {
                         let _: Option<()> = try {
-                            let aspect = self.trait_impls.get_single_invocation(bulkOrWeight, variable(&param_a))?;
+                            let bulk_or_weight = format!("{round_aspect}{bulk_or_weight}");
+                            let aspect = self.trait_impls.get_single_invocation(bulk_or_weight.as_str(), variable(&param_a))?;
                             let comp = self.trait_impls.get_single_invocation(complement.as_str(), aspect)?;
-                            let the_impl = single_expression_single_trait_impl(static_name, &param_a, comp);
+                            let the_impl = single_trait_impl(static_name, &param_a, vec![], comp);
                             self.trait_impls.add_single_impl(static_name, param_a, the_impl);
                         };
                     }
@@ -2599,7 +2680,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let _: Option<()> = try {
                     let rbd = self.trait_impls.get_single_invocation(dual, variable(&param_b))?;
                     let aw = self.trait_impls.get_pair_invocation(product, variable(&param_a), rbd)?;
-                    let bc = single_expression_pair_trait_impl(name, &param_a, &param_b, aw);
+                    let bc = pair_trait_impl(name, &param_a, &param_b, vec![], aw);
                     self.trait_impls.add_pair_impl(name, param_a, param_b, bc);
                 };
             }
@@ -2638,7 +2719,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
                 let we = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), anti_dual)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), we)?;
-                let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
+                let po = pair_trait_impl(name, &param_a, &param_b, vec![], anti_wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
@@ -2655,7 +2736,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
                 let wc = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), anti_dual)?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), wc)?;
-                let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
+                let apo = pair_trait_impl(name, &param_a, &param_b, vec![], wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
@@ -2672,7 +2753,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
                 let be = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), dual)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_b), be)?;
-                let po = single_expression_pair_trait_impl(name, &param_a, &param_b, anti_wedge);
+                let po = pair_trait_impl(name, &param_a, &param_b, vec![], anti_wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
@@ -2697,7 +2778,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
                 let bc = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), dual)?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_b), bc)?;
-                let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wedge);
+                let apo = pair_trait_impl(name, &param_a, &param_b, vec![], wedge);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
@@ -2717,7 +2798,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), variable(&param_b))?;
                 let we = self.trait_impls.get_pair_invocation(wedge, anti_wedge, anti_dual)?;
-                let po = single_expression_pair_trait_impl(name, &param_a, &param_b, we);
+                let po = pair_trait_impl(name, &param_a, &param_b, vec![], we);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
@@ -2735,7 +2816,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_b))?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), variable(&param_b))?;
                 let wc = self.trait_impls.get_pair_invocation(anti_wedge, wedge, anti_dual)?;
-                let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, wc);
+                let apo = pair_trait_impl(name, &param_a, &param_b, vec![], wc);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
@@ -2753,7 +2834,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), variable(&param_b))?;
                 let be = self.trait_impls.get_pair_invocation(wedge, anti_wedge, dual)?;
-                let po = single_expression_pair_trait_impl(name, &param_a, &param_b, be);
+                let po = pair_trait_impl(name, &param_a, &param_b, vec![], be);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, po);
             };
         }
@@ -2771,7 +2852,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let dual = self.trait_impls.get_single_invocation("Dual", variable(&param_b))?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), variable(&param_b))?;
                 let bc = self.trait_impls.get_pair_invocation(anti_wedge, wedge, dual)?;
-                let apo = single_expression_pair_trait_impl(name, &param_a, &param_b, bc);
+                let apo = pair_trait_impl(name, &param_a, &param_b, vec![], bc);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, apo);
             };
         }
@@ -2811,7 +2892,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let wedge = self.trait_impls.get_pair_invocation(wedge, origin, ad)?;
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), wedge)?;
-                let the_impl = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                let the_impl = single_trait_impl(name, &param_a, vec![], anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a, the_impl);
             };
         }
@@ -2828,7 +2909,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, origin_complement, dual)?;
                 let wedge = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge, variable(&param_a), anti_wedge)?;
-                let the_impl = single_expression_single_trait_impl(name, &param_a, wedge);
+                let the_impl = single_trait_impl(name, &param_a, vec![], wedge);
                 self.trait_impls.add_single_impl(name, param_a, the_impl);
             };
         }
@@ -2881,6 +2962,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         */
 
         for (param_a, param_b) in registry.pair_parameters() {
+
+            // Excluded in cga in an abundance of caution for now, since Distance is known not to work.
+            // It is very possible that angle measurement WILL work because "conformal" and everything,
+            // but I'll err on the side of not including it until I confirm
+            if self.algebra.algebra_name().starts_with("cga") { continue }
+
             let name = "CosineAngle";
             let _: Option<()> = try {
                 // Only allow angle between uniform Grade MultiVectorClasses.
@@ -2911,7 +2998,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
                 let plus = self.trait_impls.get_pair_invocation("Add", anti_wedge, wn)?;
 
-                let cosine = single_expression_pair_trait_impl(name, &param_a, &param_b, plus);
+                let cosine = pair_trait_impl(name, &param_a, &param_b, vec![], plus);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, cosine);
             };
         }
@@ -2975,21 +3062,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         }
 
-        // for (param_a, param_b) in registry.pair_parameters() {
-        //     let _: Option<()> = try {
-        //
-        //     };
-        // }
-
-        // Transflection?
-        // https://rigidgeometricalgebra.org/wiki/index.php?title=Transflection
-        // This is a sandwich operation of a special type of flector.
-        // We're not really motivated to create an additional trait that is only valid on a data condition rather than a
-        // typed representation. A better approach to this might be.... a "CanTransflect" trait or method
-        // on Flectors that returns Option<Flector> which is just Some(self) if it fulfills both the geometric
-        // property and the other flector requirement to be a transflection. In any case such methods do not seem
-        // incredibly necessary at this time, at least not yet.
-
         // Commutators?
         // https://rigidgeometricalgebra.org/wiki/index.php?title=Commutators
         // Doesn't seem to have a first-order purpose, and we already have implementations of the stuff it is useful for.
@@ -3046,7 +3118,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 };
                 let anti_wedge = self.algebra.dialect().exterior_anti_product.first()?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge, variable(&param_a), unit)?;
-                let attitude = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                let attitude = single_trait_impl(name, &param_a, vec![], anti_wedge);
 
                 self.trait_impls.add_single_impl(name, param_a.clone(), attitude);
             };
@@ -3055,7 +3127,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         for (param_a, param_b) in registry.pair_parameters() {
             // https://rigidgeometricalgebra.org/wiki/index.php?title=Euclidean_distance
 
-            // No distance formula in CGA yet
+            // No distance formula in CGA yet TODO make one
             // https://twitter.com/EricLengyel/status/1786624195402813549
             if self.algebra.algebra_name().starts_with("cga") { continue }
 
@@ -3090,52 +3162,98 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let weight_norm = self.trait_impls.get_single_invocation("WeightNorm", weight_wedge)?;
 
                 let add = self.trait_impls.get_pair_invocation("Add", bulk_term, weight_norm)?;
-                let ed = single_expression_pair_trait_impl(name, &param_a, &param_b, add);
+                let ed = pair_trait_impl(name, &param_a, &param_b, vec![], add);
                 self.trait_impls.add_pair_impl(name, param_a, param_b, ed);
             };
         }
 
         //TODO speculation on distance formula for CGA
-        // It seems very difficult
-        // The pattern used in RGA doesn't seem to translate well...
-        // that being bulk_norm(att(wedge(a,b)))/bulk_norm(wedge(att(a), att(b)))
-        // It just gets kind of incomprehensible when trying to consider that with circles or whatever
-        // So..... lets try new ideas. Here are a few starting ingredients..
-        // - It is tempting to look at the carrier geometry and be tempted to use it. But I don't
-        //   think it can be used directly, because it is too extensive on round objects.
-        // - However there IS a generalized pattern that might be useful.... take the container,
-        //   and take the carrier, and meet them. That is always the object itself. The container
-        //   is always a sphere. And it should be easy enough to make a formula for the distance
-        //   between spheres. That makes a first aproximation of distance. So if you can somehow
-        //   factor in the meet with a carrier too, the true distance between objects can't be
-        //   far off.
-        // - I want to assume (but haven't tested yet) that RoundPoints with zero radius accurately
-        //   obey euclidean distance already. Subtract, dot, square root. If this turns out to be
-        //   true, then it might also be true for RoundPoints with a radius as well. After such
-        //   is proven, it might be possible to get the distance of FlatPoints by converting them
-        //   into RoundPoints first. (More on that in a bit.) However the downside is, extending
-        //   this train of thought to dipoles is less encouraging, because it seems weird to create
-        //   two RoundPoints and then check all combinations of distance and return the min or
-        //   whatever. It might work for Dipoles, but really starts falling apart if we try to
-        //   carry the pattern to circles, or ask ourselves about signed distances.
-        // - Obviously (or maybe not so obvious to outside readers) I want to take SpacialCurvature
-        //   as a parameter for distance formulas. It was my intention to use dynamic
-        //   SpacialCurvature all along, but I think it's kind of uncanny and interesting that
-        //   the rga3d distance formula using attitudes has an implicit usage of a flat Horizon.
-        //   (Horizon is the flat variant of SpacialCurvature.) I think a great place to start here
-        //   is converting FlatPoints into RoundPoints (with zero radius) using SpacialCurvature,
-        //   where the resulting RoundPoint gives accurate distances.
+        // Basically, if it is possible at all, then it looks something like this:
+        // - take the meet of two objects
+        // - interpret the radius of the meet according to some SphereAtOrigin that represents
+        //   the curvature of your space
+        // - the SphereAtOrigin will be a Horizon for flat space, or have a real radius for
+        //   elliptic space, or imaginary radius for hyperbolic space
 
-        //TODO so.... let's start digging.
-        // - How do we convert a FlatPoint into a RoundPoint (zero radius) using a Horizon or
-        //   SpacialCurvature? It is an intuitive first step to perform a meet on the FlatPoint and
-        //   Horizon, but this only returns an Infinity (an e5). This might be a non-starter, or it
-        //   might just be incomplete. NOTABLY... A FlatPoint meeting a SphereWeight is a
-        //   RoundPointOnOrigin, which is a full RoundPoint except the e5 element. So if we add these
-        //   together, we get a full RoundPoint... and wouldn't you know it, SphereWeight + Horizon
-        //   = SpacialCurvature anyway. Well... that's sure cute. But we need to be able to get
-        //   a full and proper RoundPoint (zero radius) even when all we have is a Horizon.
+        /*
+        From Hamish Todd:
 
+        For your benefit: that list I gave at the start tells you what you're dealing with.
+        There are just quite a lot of different transformations, and it's important for you to
+        understand all of them (and the many others!) if you want to do CGA
+
+        One should ask questions like "what does it even mean to take the distance/angle/hyperbolic
+        angle between a point pair and a circle?"
+        The only reasonable response is: "angle/distance/hyperbolic angle are properties of a
+        transformation. So take the transformation between those two things and inspect that"
+        Transformation between is ofc basically geometric product
+        The measurement you want will be somewhere in there
+        But remember what we said recently... Measurement is a measure of last resort
+
+
+        Earlier Context:
+
+        hamish_todd — Today at 12:51 AM
+        I realized there's something you might be interested by, which I guess we would call "parabolic angle"
+        Euclidean distance is a special case of parabolic angle
+
+        andrew — Today at 12:52 AM
+        oh? something between the hyperbolic angle and normal circle angle?
+
+        hamish_todd — Today at 12:52 AM
+        Yes (which is also what distance is)
+
+        NecroMonster — Today at 12:53 AM
+        NO!
+        angle is normalized area
+
+        hamish_todd — Today at 12:53 AM
+        Haha what?
+
+        NecroMonster — Today at 12:53 AM
+        not a type of distance
+
+        hamish_todd — Today at 12:54 AM
+        Hrmmm, why?
+        I would say area is another thing, measurable in its own right. Different units!
+
+        NecroMonster — Today at 12:55 AM
+        thats why i added normalized
+        it gets rid of the units
+        it is very clear that hyperbolic angle is a type of area
+        directly from definition
+        and considering the fact the rate of change of angle is well modeled through bivectors...
+
+        hamish_todd — Today at 12:57 AM
+        Since we are in ⁠cga angle is a property of:
+        Simple rotations
+        Rotoreflections
+        Screw motions (they also have distance obv)
+        Double rotations (they have two angles)
+        Hyperbolic screws (angle and hyperbolic angle)
+        Rotoreflections have no bivector part
+        They appear in PGA too
+
+
+
+
+        And more:
+
+        Say you have a rotation, meaning a rotor, like 0.8+0.6e12 (antispace style)
+        Take the logarithm of that rotor and you get a bivector.
+        This bivector is a geometric object. It is the oriented angle.
+        The atan of its norm will be the absolute angle.
+
+
+         */
+
+        // So in other words...
+        // TODO figure out what these are, to better understand CGA angle as properties of transformations:
+        //  - Simple Rotations
+        //  - Rotoreflections (have no bivector part, appear in PGA too)
+        //  - Screw motions (also has distance)
+        //  - Double Rotations (has two angles)
+        //  - Hyperbolic Screws (angle and hyperbolic angle)
     }
 
     pub fn round_features<'s>(&'s mut self, registry: &'r MultiVectorClassRegistry) {
@@ -3197,7 +3315,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             let _: Option<()> = try {
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), one_infinity.clone())?;
-                let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
+                let carrier = single_trait_impl(name, &param_a, vec![], wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
 
@@ -3206,7 +3324,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
                 let anti_dual = self.trait_impls.get_single_invocation("AntiDual", variable(&param_a))?;
                 let wedge = self.trait_impls.get_pair_invocation(wedge_name, anti_dual, one_infinity.clone())?;
-                let carrier = single_expression_single_trait_impl(name, &param_a, wedge);
+                let carrier = single_trait_impl(name, &param_a, vec![], wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), carrier)
             };
 
@@ -3215,7 +3333,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let anti_wedge_name = self.algebra.dialect().exterior_anti_product.first()?;
                 let ccr = self.trait_impls.get_single_invocation("CoCarrier", variable(&param_a))?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge_name, ccr, variable(&param_a))?;
-                let center = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                let center = single_trait_impl(name, &param_a, vec![], anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), center)
             };
 
@@ -3225,7 +3343,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let car = self.trait_impls.get_single_invocation("Carrier", variable(&param_a))?;
                 let anti_dual = self.trait_impls.get_single_invocation("AntiDual", car)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(wedge_name, variable(&param_a), anti_dual)?;
-                let container = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                let container = single_trait_impl(name, &param_a, vec![], anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), container)
             };
         }
@@ -3248,7 +3366,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 let container = self.trait_impls.get_single_invocation("Container", dual)?;
                 let neg = self.trait_impls.get_single_invocation("Neg", container)?;
                 let anti_wedge = self.trait_impls.get_pair_invocation(anti_wedge_name, neg, car)?;
-                let partner = single_expression_single_trait_impl(name, &param_a, anti_wedge);
+                let partner = single_trait_impl(name, &param_a, vec![], anti_wedge);
                 self.trait_impls.add_single_impl(name, param_a.clone(), partner)
             };
         }
@@ -3285,40 +3403,21 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     }
 
     pub fn emit_component_wise_aspects(&mut self, emitter: &mut Emitter<std::fs::File>) -> std::io::Result<()> {
-        // Bulk, Weight, RoundBulk, RoundWeight
-
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "Bulk".to_string(),
-            params: 1,
-            docs: "
-            The Bulk of an object usually describes the object's relationship with the origin.
-            An object with a Bulk of zero contains the origin.
-            http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
-        "
-            .to_string(),
-        })?;
-
-        emitter.emit(&AstNode::TraitDefinition {
-            name: "Weight".to_string(),
-            params: 1,
-            docs: "
-            The Weight of an object usually describes the object's attitude and orientation.
-            An object with zero weight is contained by the horizon.
-            Also known as the attitude operator.
-            http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
-        "
-            .to_string(),
-        })?;
-
-        if self.algebra.algebra_name().contains("cga") {
+        // TODO make documentation dimension independent
+        // Bulk, Weight, FlatBulk, FlatWeight, RoundBulk, RoundWeight
+        if self.algebra.algebra_name().starts_with("cga") {
             emitter.emit(&AstNode::TraitDefinition {
                 name: "RoundBulk".to_string(),
                 params: 1,
                 docs: "
                 Round Bulk is a special type of bulk in CGA
+                All components of the RoundBulk lack factors of Origin (e4 in cga3d) and Infinity (e5 in cga3d).
+                It is equivalent to the bulk of the carrier geometry for round objects.
+                In other words, it is the distance from the origin to the carrier.
+                A round object with zero RoundBulk is aligned with the Origin (the carrier contains the Origin).
+                Some examples of objects without a RoundBulk are DipoleAligningOrigin, CircleAligningOrigin, or flat objects.
                 https://conformalgeometricalgebra.com/wiki/index.php?title=Main_Page
-            "
-                .to_string(),
+                ".to_string(),
             })?;
 
             emitter.emit(&AstNode::TraitDefinition {
@@ -3326,16 +3425,67 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 params: 1,
                 docs: "
                 Round Weight is a special type of weight in CGA
+                All components of the RoundWeight include the factor Origin (e4 in cga3d), but not Infinity (e5 in cga3d).
+                It is equivalent to the weight of the carrier geometry for round objects.
+                In other words, it is the orientation of the carrier.
+                A round object with zero RoundWeight is at Infinity (the carrier is contained by the Horizon).
+                Some examples of objects without a RoundWeight are DipoleAtInfinity, CircleAtInfinity, or flat objects.
                 https://conformalgeometricalgebra.com/wiki/index.php?title=Main_Page
-            "
-                .to_string(),
+                ".to_string(),
+            })?;
+
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "FlatBulk".to_string(),
+                params: 1,
+                docs: "
+                FlatBulk is a type of bulk in CGA.
+                All components of the FlatBulk include the factor Infinity (e5 in cga3d), but not Origin (e4 in cga3d).
+                For flat objects, the meaning is the same as `Bulk` in rigid geometric algebra.
+
+                The Bulk of an object usually describes the object's relationship with the origin.
+                An object with a Bulk of zero contains the origin.
+                http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+                ".to_string(),
+            })?;
+
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "FlatWeight".to_string(),
+                params: 1,
+                docs: "
+                FlatWeight is a type of weight in CGA.
+                All components of the FlatWeight contain factors of Origin (e4 in cga3d) and Infinity (e5 in cga3d).
+                For flat objects, the meaning is the same as `Weight` in rigid geometric algebra.
+
+                The Weight of an object usually describes the object's attitude and orientation.
+                An object with zero weight is contained by the horizon.
+                Also known as the attitude operator.
+                http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+                ".to_string(),
+            })?;
+        } else {
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Bulk".to_string(),
+                params: 1,
+                docs: "
+                The Bulk of an object usually describes the object's relationship with the origin.
+                An object with a Bulk of zero contains the origin.
+                http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+                ".to_string(),
+            })?;
+
+            emitter.emit(&AstNode::TraitDefinition {
+                name: "Weight".to_string(),
+                params: 1,
+                docs: "
+                The Weight of an object usually describes the object's attitude and orientation.
+                An object with zero weight is contained by the horizon.
+                Also known as the attitude operator.
+                http://rigidgeometricalgebra.org/wiki/index.php?title=Bulk_and_weight
+                ".to_string(),
             })?;
         }
 
-        // TODO rename so that in cga RoundBulk is called Bulk
-        //  and FlatBulk is the qualified trait, and
-        //  obviously same for Weight
-        let trait_names = ["Bulk", "Weight", "RoundBulk", "RoundWeight"];
+        let trait_names = ["Bulk", "Weight", "FlatBulk", "FlatWeight", "RoundBulk", "RoundWeight"];
         self.emit_exact_name_match_trait_impls(&trait_names, emitter)?;
         Ok(())
     }
@@ -3541,7 +3691,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let multiple_complements = self.algebra.has_multiple_complements();
         let aspects = ["Bulk", "Weight"];
         let complements = if multiple_complements { vec!["Right", "Left"] } else { vec![""] };
-        let round_aspects = if is_cga { vec!["", "Round"] } else { vec![""] };
+        let round_aspects = if is_cga { vec!["Flat", "Round"] } else { vec![""] };
 
         let mut trait_names = BTreeSet::new();
         for round_aspect in round_aspects {
@@ -3549,8 +3699,12 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 for bulkOrWeight in aspects.iter() {
                     let name = format!("{leftOrRight}{round_aspect}{bulkOrWeight}Dual");
                     let explain = "Get the complement of an aspect of an object.";
-                    let pro_tip = if is_degenerate && round_aspect.is_empty() {
+                    let pro_tip = if is_degenerate && round_aspect != "Round" {
                         let (rbd, rwd, comp) = match *leftOrRight {
+                            // TODO do I even really want aspect duals in cga anyway? or at all?
+                            //  TODO besides.. shouldn't the implementations use Dual instead of RightComplement?
+                            "Right" if is_cga => ("RightFlatBulkDual", "RightFlatWeightDual", "RightComplement"),
+                            "" if is_cga => ("FlatBulkDual", "FlatWeightDual", "Complement"),
                             "Right" => ("RightBulkDual", "RightWeightDual", "RightComplement"),
                             "" => ("BulkDual", "WeightDual", "Complement"),
                             _ => ("", "", ""),
@@ -3666,44 +3820,117 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 trait_names.insert(name.to_string());
             }
         }
+        let is_cga = self.algebra.algebra_name().starts_with("cga");
         for name in &trait_names {
+            let is_weight = name.contains("Weight");
+            let is_bulk = name.contains("Bulk");
+            let is_radius = name.contains("Radius");
+            let is_center = name.contains("Center");
+            let is_unitized = name.contains("Unitized");
+            let is_squared = name.contains("Squared");
+            let squared = if is_squared { "Squared" } else { "" };
+            let squared_ = if is_squared { "squared " } else { "" };
+
             // Even though CGA has its own unique norms, there is not a page dedicated to them on the CGA wiki yet.
-            let docs = format!(
-                "
+            let mut docs = format!("
                 {name}
-                https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm
-            "
-            );
+                https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm");
+
+            // TODO it is possible that FlatBulk and FlatWeight also need to be combined with the
+            //  RoundWeightNorm, even though with respect to flat objects it is easy to get
+            //  tunnel vision on the FlatWeightNorm alone. Gotta play with it to figure it out.
+
+            if is_weight {
+                docs = format!("
+                    {name}
+                    Note that this does not provide a unitized orientation unless your object
+                    is unitized first. Sometimes you want the weight norm before unitization
+                    so you can perform unitization later.
+                    https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm");
+            }
+            if is_bulk {
+                docs = format!("
+                    {name}
+                    Note that this does not measure unitized distance {squared_}unless you combine
+                    it with the corresponding weight norm. You can do this by unitizing the object
+                    before taking this {name}, or adding the corresponding weight norm and
+                    unitizing the resulting DualNum.
+                    https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm");
+            }
+            if is_radius && !is_unitized {
+                docs = format!("
+                    {name}
+                    Note that this does not measure unitized distance {squared_}unless you
+                    combine it with the RoundWeightNorm{squared}. You can do this by unitizing
+                    the object before taking this {name}, or adding the RoundWeightNorm{squared}
+                    and unitizing the resulting DualNum, or just invoking Unitized{name} instead.
+                    https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm");
+            }
+            if is_center && !is_unitized {
+                docs = format!("
+                    {name}
+                    Note that this does not measure unitized distance {squared_}unless you
+                    combine it with the RoundWeightNorm{squared}. You can do this by unitizing
+                    the object before taking this {name}, or adding the RoundWeightNorm{squared}
+                    and unitizing the resulting DualNum, or just invoking Unitized{name} instead.
+                    https://rigidgeometricalgebra.org/wiki/index.php?title=Geometric_norm");
+            }
+
             emitter.emit(&AstNode::TraitDefinition {
-                name: name.clone(),
+                name: name.to_string(),
                 params: 1,
                 docs,
             })?;
         }
 
-        self.emit_exact_name_match_trait_impls(&["BulkNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["BulkNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["WeightNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["WeightNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["GeometricNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["UnitizedNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["UnitizedNorm"], emitter)?;
+        // Why not emit them like this? Well, because of dependency ordering.
+        // After we add trait impl inlining, we can output them in whatever order.
 
-        self.emit_exact_name_match_trait_impls(&["CenterBulkNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["CenterBulkNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["CenterWeightNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["CenterWeightNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["CenterGeometricNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["CenterUnitizedNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["CenterUnitizedNorm"], emitter)?;
+        // for trait_name in trait_names {
+        //     self.emit_exact_name_match_trait_impls(&[trait_name.as_str()], emitter)?;
+        // }
 
-        self.emit_exact_name_match_trait_impls(&["RadiusBulkNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["RadiusBulkNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["RadiusWeightNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["RadiusWeightNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["RadiusGeometricNorm"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["RadiusUnitizedNormSquared"], emitter)?;
-        self.emit_exact_name_match_trait_impls(&["RadiusUnitizedNorm"], emitter)?;
+        if !self.algebra.algebra_name().starts_with("cga") {
+
+            self.emit_exact_name_match_trait_impls(&["BulkNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["BulkNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["WeightNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["WeightNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["NormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["Norm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedNorm"], emitter)?;
+
+        } else {
+
+            self.emit_exact_name_match_trait_impls(&["RoundBulkNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["RoundBulkNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["RoundWeightNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["RoundWeightNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["RoundNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["RoundNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedRoundNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedRoundNorm"], emitter)?;
+
+            self.emit_exact_name_match_trait_impls(&["FlatBulkNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["FlatBulkNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["FlatWeightNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["FlatWeightNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["FlatNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["FlatNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedFlatNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedFlatNorm"], emitter)?;
+
+            self.emit_exact_name_match_trait_impls(&["CenterNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["CenterNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedCenterNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedCenterNorm"], emitter)?;
+
+            self.emit_exact_name_match_trait_impls(&["RadiusNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["RadiusNorm"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedRadiusNormSquared"], emitter)?;
+            self.emit_exact_name_match_trait_impls(&["UnitizedRadiusNorm"], emitter)?;
+        }
 
         Ok(())
     }

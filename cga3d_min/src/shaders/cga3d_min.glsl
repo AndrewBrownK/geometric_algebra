@@ -4666,44 +4666,88 @@ Scalar sphere__dot__sphere(Sphere self, Sphere other) {
     return Scalar(0.0 - self.g0.x * other.g0.x - self.g0.y * other.g0.y - self.g0.z * other.g0.z + self.g1.x * other.g1.y + self.g1.y * other.g1.x);
 }
 
-Circle circle__bulk(Circle self) {
+Circle circle__flat_bulk(Circle self) {
     return Circle(vec4(0.0), vec3(0.0), self.g2);
 }
 
-Dipole dipole__bulk(Dipole self) {
+Dipole dipole__flat_bulk(Dipole self) {
     return Dipole(vec3(0.0), vec3(0.0), self.g2 * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
-FlatPoint flat_point__bulk(FlatPoint self) {
+FlatPoint flat_point__flat_bulk(FlatPoint self) {
     return FlatPoint(self.g0 * vec4(1.0, 1.0, 1.0, 0.0));
 }
 
-Flector flector__bulk(Flector self) {
+Flector flector__flat_bulk(Flector self) {
     return Flector(self.g0 * vec4(1.0, 1.0, 1.0, 0.0), self.g1 * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
-Line line__bulk(Line self) {
+Line line__flat_bulk(Line self) {
     return Line(vec3(0.0), self.g1);
 }
 
-Motor motor__bulk(Motor self) {
+Motor motor__flat_bulk(Motor self) {
     return Motor(vec4(0.0), self.g1);
 }
 
-MultiVector multi_vector__bulk(MultiVector self) {
+MultiVector multi_vector__flat_bulk(MultiVector self) {
     return MultiVector(vec2(0.0), vec3(0.0), self.g2 * vec2(0.0, 1.0), vec3(0.0), vec3(0.0), self.g5 * vec4(1.0, 1.0, 1.0, 0.0), vec4(0.0), vec3(0.0), self.g8, vec3(0.0), self.g10 * vec2(0.0, 1.0));
 }
 
-Plane plane__bulk(Plane self) {
+Plane plane__flat_bulk(Plane self) {
     return Plane(self.g0 * vec4(0.0, 0.0, 0.0, 1.0));
 }
 
-RoundPoint round_point__bulk(RoundPoint self) {
+RoundPoint round_point__flat_bulk(RoundPoint self) {
     return RoundPoint(vec3(0.0), self.g1 * vec2(0.0, 1.0));
 }
 
-Sphere sphere__bulk(Sphere self) {
+Sphere sphere__flat_bulk(Sphere self) {
     return Sphere(vec3(0.0), self.g1 * vec2(0.0, 1.0));
+}
+
+AntiScalar anti_scalar__flat_weight(AntiScalar self) {
+    return self;
+}
+
+Circle circle__flat_weight(Circle self) {
+    return Circle(vec4(0.0), self.g1, vec3(0.0));
+}
+
+Dipole dipole__flat_weight(Dipole self) {
+    return Dipole(vec3(0.0), vec3(0.0), self.g2 * vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+DualNum dual_num__flat_weight(DualNum self) {
+    return DualNum(self.g0 * vec2(0.0, 1.0));
+}
+
+FlatPoint flat_point__flat_weight(FlatPoint self) {
+    return FlatPoint(self.g0 * vec4(0.0, 0.0, 0.0, 1.0));
+}
+
+Flector flector__flat_weight(Flector self) {
+    return Flector(self.g0 * vec4(0.0, 0.0, 0.0, 1.0), self.g1 * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Line line__flat_weight(Line self) {
+    return Line(self.g0, vec3(0.0));
+}
+
+Motor motor__flat_weight(Motor self) {
+    return Motor(self.g0, vec3(0.0));
+}
+
+MultiVector multi_vector__flat_weight(MultiVector self) {
+    return MultiVector(self.g0 * vec2(0.0, 1.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g5 * vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0), self.g7, vec3(0.0), self.g9, vec2(0.0));
+}
+
+Plane plane__flat_weight(Plane self) {
+    return Plane(self.g0 * vec4(1.0, 1.0, 1.0, 0.0));
+}
+
+Sphere sphere__flat_weight(Sphere self) {
+    return Sphere(self.g0, vec2(0.0));
 }
 
 Circle circle__round_bulk(Circle self) {
@@ -4748,50 +4792,6 @@ RoundPoint round_point__round_weight(RoundPoint self) {
 
 Sphere sphere__round_weight(Sphere self) {
     return Sphere(vec3(0.0), self.g1 * vec2(1.0, 0.0));
-}
-
-AntiScalar anti_scalar__weight(AntiScalar self) {
-    return self;
-}
-
-Circle circle__weight(Circle self) {
-    return Circle(vec4(0.0), self.g1, vec3(0.0));
-}
-
-Dipole dipole__weight(Dipole self) {
-    return Dipole(vec3(0.0), vec3(0.0), self.g2 * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-DualNum dual_num__weight(DualNum self) {
-    return DualNum(self.g0 * vec2(0.0, 1.0));
-}
-
-FlatPoint flat_point__weight(FlatPoint self) {
-    return FlatPoint(self.g0 * vec4(0.0, 0.0, 0.0, 1.0));
-}
-
-Flector flector__weight(Flector self) {
-    return Flector(self.g0 * vec4(0.0, 0.0, 0.0, 1.0), self.g1 * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-Line line__weight(Line self) {
-    return Line(self.g0, vec3(0.0));
-}
-
-Motor motor__weight(Motor self) {
-    return Motor(self.g0, vec3(0.0));
-}
-
-MultiVector multi_vector__weight(MultiVector self) {
-    return MultiVector(self.g0 * vec2(0.0, 1.0), vec3(0.0), vec2(0.0), vec3(0.0), vec3(0.0), self.g5 * vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0), self.g7, vec3(0.0), self.g9, vec2(0.0));
-}
-
-Plane plane__weight(Plane self) {
-    return Plane(self.g0 * vec4(1.0, 1.0, 1.0, 0.0));
-}
-
-Sphere sphere__weight(Sphere self) {
-    return Sphere(self.g0, vec2(0.0));
 }
 
 Scalar anti_scalar__anti_dual(AntiScalar self) {
@@ -5262,172 +5262,132 @@ Sphere sphere__reversal(Sphere self) {
     return self;
 }
 
-Dipole circle__bulk_dual(Circle self) {
-    return circle__complement(circle__bulk(self));
+Dipole circle__flat_bulk_dual(Circle self) {
+    return circle__complement(circle__flat_bulk(self));
 }
 
-Circle dipole__bulk_dual(Dipole self) {
-    return dipole__complement(dipole__bulk(self));
+Circle dipole__flat_bulk_dual(Dipole self) {
+    return dipole__complement(dipole__flat_bulk(self));
 }
 
-Circle flat_point__bulk_dual(FlatPoint self) {
-    return flat_point__complement(flat_point__bulk(self));
+Circle flat_point__flat_bulk_dual(FlatPoint self) {
+    return flat_point__complement(flat_point__flat_bulk(self));
 }
 
-MultiVector flector__bulk_dual(Flector self) {
-    return flector__complement(flector__bulk(self));
+MultiVector flector__flat_bulk_dual(Flector self) {
+    return flector__complement(flector__flat_bulk(self));
 }
 
-Dipole line__bulk_dual(Line self) {
-    return line__complement(line__bulk(self));
+Dipole line__flat_bulk_dual(Line self) {
+    return line__complement(line__flat_bulk(self));
 }
 
-MultiVector motor__bulk_dual(Motor self) {
-    return motor__complement(motor__bulk(self));
+MultiVector motor__flat_bulk_dual(Motor self) {
+    return motor__complement(motor__flat_bulk(self));
 }
 
-MultiVector multi_vector__bulk_dual(MultiVector self) {
-    return multi_vector__complement(multi_vector__bulk(self));
+MultiVector multi_vector__flat_bulk_dual(MultiVector self) {
+    return multi_vector__complement(multi_vector__flat_bulk(self));
 }
 
-RoundPoint plane__bulk_dual(Plane self) {
-    return plane__complement(plane__bulk(self));
+RoundPoint plane__flat_bulk_dual(Plane self) {
+    return plane__complement(plane__flat_bulk(self));
 }
 
-Sphere round_point__bulk_dual(RoundPoint self) {
-    return round_point__complement(round_point__bulk(self));
+Sphere round_point__flat_bulk_dual(RoundPoint self) {
+    return round_point__complement(round_point__flat_bulk(self));
 }
 
-RoundPoint sphere__bulk_dual(Sphere self) {
-    return sphere__complement(sphere__bulk(self));
+RoundPoint sphere__flat_bulk_dual(Sphere self) {
+    return sphere__complement(sphere__flat_bulk(self));
+}
+
+Scalar anti_scalar__flat_weight_dual(AntiScalar self) {
+    return anti_scalar__complement(anti_scalar__flat_weight(self));
+}
+
+Dipole circle__flat_weight_dual(Circle self) {
+    return circle__complement(circle__flat_weight(self));
+}
+
+Circle dipole__flat_weight_dual(Dipole self) {
+    return dipole__complement(dipole__flat_weight(self));
+}
+
+DualNum dual_num__flat_weight_dual(DualNum self) {
+    return dual_num__complement(dual_num__flat_weight(self));
+}
+
+Circle flat_point__flat_weight_dual(FlatPoint self) {
+    return flat_point__complement(flat_point__flat_weight(self));
+}
+
+MultiVector flector__flat_weight_dual(Flector self) {
+    return flector__complement(flector__flat_weight(self));
+}
+
+Dipole line__flat_weight_dual(Line self) {
+    return line__complement(line__flat_weight(self));
+}
+
+MultiVector motor__flat_weight_dual(Motor self) {
+    return motor__complement(motor__flat_weight(self));
+}
+
+MultiVector multi_vector__flat_weight_dual(MultiVector self) {
+    return multi_vector__complement(multi_vector__flat_weight(self));
+}
+
+RoundPoint plane__flat_weight_dual(Plane self) {
+    return plane__complement(plane__flat_weight(self));
+}
+
+RoundPoint sphere__flat_weight_dual(Sphere self) {
+    return sphere__complement(sphere__flat_weight(self));
 }
 
 Dipole circle__round_bulk_dual(Circle self) {
-    return circle__complement(circle__bulk(self));
+    return circle__complement(circle__round_bulk(self));
 }
 
 Circle dipole__round_bulk_dual(Dipole self) {
-    return dipole__complement(dipole__bulk(self));
+    return dipole__complement(dipole__round_bulk(self));
 }
 
-Circle flat_point__round_bulk_dual(FlatPoint self) {
-    return flat_point__complement(flat_point__bulk(self));
-}
-
-MultiVector flector__round_bulk_dual(Flector self) {
-    return flector__complement(flector__bulk(self));
-}
-
-Dipole line__round_bulk_dual(Line self) {
-    return line__complement(line__bulk(self));
-}
-
-MultiVector motor__round_bulk_dual(Motor self) {
-    return motor__complement(motor__bulk(self));
+DualNum dual_num__round_bulk_dual(DualNum self) {
+    return dual_num__complement(dual_num__round_bulk(self));
 }
 
 MultiVector multi_vector__round_bulk_dual(MultiVector self) {
-    return multi_vector__complement(multi_vector__bulk(self));
-}
-
-RoundPoint plane__round_bulk_dual(Plane self) {
-    return plane__complement(plane__bulk(self));
+    return multi_vector__complement(multi_vector__round_bulk(self));
 }
 
 Sphere round_point__round_bulk_dual(RoundPoint self) {
-    return round_point__complement(round_point__bulk(self));
+    return round_point__complement(round_point__round_bulk(self));
 }
 
-RoundPoint sphere__round_bulk_dual(Sphere self) {
-    return sphere__complement(sphere__bulk(self));
-}
-
-Scalar anti_scalar__round_weight_dual(AntiScalar self) {
-    return anti_scalar__complement(anti_scalar__weight(self));
+AntiScalar scalar__round_bulk_dual(Scalar self) {
+    return scalar__complement(scalar__round_bulk(self));
 }
 
 Dipole circle__round_weight_dual(Circle self) {
-    return circle__complement(circle__weight(self));
+    return circle__complement(circle__round_weight(self));
 }
 
 Circle dipole__round_weight_dual(Dipole self) {
-    return dipole__complement(dipole__weight(self));
-}
-
-DualNum dual_num__round_weight_dual(DualNum self) {
-    return dual_num__complement(dual_num__weight(self));
-}
-
-Circle flat_point__round_weight_dual(FlatPoint self) {
-    return flat_point__complement(flat_point__weight(self));
-}
-
-MultiVector flector__round_weight_dual(Flector self) {
-    return flector__complement(flector__weight(self));
-}
-
-Dipole line__round_weight_dual(Line self) {
-    return line__complement(line__weight(self));
-}
-
-MultiVector motor__round_weight_dual(Motor self) {
-    return motor__complement(motor__weight(self));
+    return dipole__complement(dipole__round_weight(self));
 }
 
 MultiVector multi_vector__round_weight_dual(MultiVector self) {
-    return multi_vector__complement(multi_vector__weight(self));
+    return multi_vector__complement(multi_vector__round_weight(self));
 }
 
-RoundPoint plane__round_weight_dual(Plane self) {
-    return plane__complement(plane__weight(self));
+Sphere round_point__round_weight_dual(RoundPoint self) {
+    return round_point__complement(round_point__round_weight(self));
 }
 
 RoundPoint sphere__round_weight_dual(Sphere self) {
-    return sphere__complement(sphere__weight(self));
-}
-
-Scalar anti_scalar__weight_dual(AntiScalar self) {
-    return anti_scalar__complement(anti_scalar__weight(self));
-}
-
-Dipole circle__weight_dual(Circle self) {
-    return circle__complement(circle__weight(self));
-}
-
-Circle dipole__weight_dual(Dipole self) {
-    return dipole__complement(dipole__weight(self));
-}
-
-DualNum dual_num__weight_dual(DualNum self) {
-    return dual_num__complement(dual_num__weight(self));
-}
-
-Circle flat_point__weight_dual(FlatPoint self) {
-    return flat_point__complement(flat_point__weight(self));
-}
-
-MultiVector flector__weight_dual(Flector self) {
-    return flector__complement(flector__weight(self));
-}
-
-Dipole line__weight_dual(Line self) {
-    return line__complement(line__weight(self));
-}
-
-MultiVector motor__weight_dual(Motor self) {
-    return motor__complement(motor__weight(self));
-}
-
-MultiVector multi_vector__weight_dual(MultiVector self) {
-    return multi_vector__complement(multi_vector__weight(self));
-}
-
-RoundPoint plane__weight_dual(Plane self) {
-    return plane__complement(plane__weight(self));
-}
-
-RoundPoint sphere__weight_dual(Sphere self) {
-    return sphere__complement(sphere__weight(self));
+    return sphere__complement(sphere__round_weight(self));
 }
 
 int anti_scalar__anti_grade() {
@@ -5972,730 +5932,664 @@ Scalar scalar__tanh(Scalar self) {
     return Scalar(tanh(self.g0));
 }
 
-Scalar anti_scalar__bulk_norm_squared(AntiScalar self) {
-    return anti_scalar__dot__anti_scalar(self, self);
+Scalar circle__round_bulk_norm_squared(Circle self) {
+    Circle round_bulk_carrier = circle__round_bulk(self);
+    return circle__dot__circle(round_bulk_carrier, round_bulk_carrier);
 }
 
-Scalar circle__bulk_norm_squared(Circle self) {
-    return circle__dot__circle(self, self);
+Scalar dipole__round_bulk_norm_squared(Dipole self) {
+    Dipole round_bulk_carrier = dipole__round_bulk(self);
+    return dipole__dot__dipole(round_bulk_carrier, round_bulk_carrier);
 }
 
-Scalar dipole__bulk_norm_squared(Dipole self) {
-    return dipole__dot__dipole(self, self);
+Scalar dual_num__round_bulk_norm_squared(DualNum self) {
+    DualNum round_bulk_carrier = dual_num__round_bulk(self);
+    return dual_num__dot__dual_num(round_bulk_carrier, round_bulk_carrier);
 }
 
-Scalar dual_num__bulk_norm_squared(DualNum self) {
-    return dual_num__dot__dual_num(self, self);
+Scalar multi_vector__round_bulk_norm_squared(MultiVector self) {
+    MultiVector round_bulk_carrier = multi_vector__round_bulk(self);
+    return multi_vector__dot__multi_vector(round_bulk_carrier, round_bulk_carrier);
 }
 
-Scalar flat_point__bulk_norm_squared(FlatPoint self) {
-    return flat_point__dot__flat_point(self, self);
+Scalar round_point__round_bulk_norm_squared(RoundPoint self) {
+    RoundPoint round_bulk_carrier = round_point__round_bulk(self);
+    return round_point__dot__round_point(round_bulk_carrier, round_bulk_carrier);
 }
 
-Scalar flector__bulk_norm_squared(Flector self) {
-    return flector__dot__flector(self, self);
+Scalar scalar__round_bulk_norm_squared(Scalar self) {
+    Scalar round_bulk_carrier = scalar__round_bulk(self);
+    return scalar__dot__scalar(round_bulk_carrier, round_bulk_carrier);
 }
 
-Scalar line__bulk_norm_squared(Line self) {
-    return line__dot__line(self, self);
+Scalar circle__round_bulk_norm(Circle self) {
+    return scalar__sqrt(circle__round_bulk_norm_squared(self));
 }
 
-Scalar motor__bulk_norm_squared(Motor self) {
-    return motor__dot__motor(self, self);
+Scalar dipole__round_bulk_norm(Dipole self) {
+    return scalar__sqrt(dipole__round_bulk_norm_squared(self));
 }
 
-Scalar multi_vector__bulk_norm_squared(MultiVector self) {
-    return multi_vector__dot__multi_vector(self, self);
+Scalar dual_num__round_bulk_norm(DualNum self) {
+    return scalar__sqrt(dual_num__round_bulk_norm_squared(self));
 }
 
-Scalar plane__bulk_norm_squared(Plane self) {
-    return plane__dot__plane(self, self);
+Scalar multi_vector__round_bulk_norm(MultiVector self) {
+    return scalar__sqrt(multi_vector__round_bulk_norm_squared(self));
 }
 
-Scalar round_point__bulk_norm_squared(RoundPoint self) {
-    return round_point__dot__round_point(self, self);
+Scalar round_point__round_bulk_norm(RoundPoint self) {
+    return scalar__sqrt(round_point__round_bulk_norm_squared(self));
 }
 
-Scalar scalar__bulk_norm_squared(Scalar self) {
-    return scalar__dot__scalar(self, self);
+Scalar scalar__round_bulk_norm(Scalar self) {
+    return scalar__sqrt(scalar__round_bulk_norm_squared(self));
 }
 
-Scalar sphere__bulk_norm_squared(Sphere self) {
-    return sphere__dot__sphere(self, self);
+AntiScalar circle__round_weight_norm_squared(Circle self) {
+    Sphere round_weight_carrier = circle__wedge__round_point(circle__round_weight(self), RoundPoint(vec3(0.0), vec2(0.0, 1.0)));
+    return sphere__anti_dot__sphere(round_weight_carrier, round_weight_carrier);
 }
 
-Scalar anti_scalar__bulk_norm(AntiScalar self) {
-    return scalar__sqrt(anti_scalar__dot__anti_scalar(self, self));
+AntiScalar dipole__round_weight_norm_squared(Dipole self) {
+    Circle round_weight_carrier = dipole__wedge__round_point(dipole__round_weight(self), RoundPoint(vec3(0.0), vec2(0.0, 1.0)));
+    return circle__anti_dot__circle(round_weight_carrier, round_weight_carrier);
 }
 
-Scalar circle__bulk_norm(Circle self) {
-    return scalar__sqrt(circle__dot__circle(self, self));
+AntiScalar multi_vector__round_weight_norm_squared(MultiVector self) {
+    MultiVector round_weight_carrier = multi_vector__wedge__round_point(multi_vector__round_weight(self), RoundPoint(vec3(0.0), vec2(0.0, 1.0)));
+    return multi_vector__anti_dot__multi_vector(round_weight_carrier, round_weight_carrier);
 }
 
-Scalar dipole__bulk_norm(Dipole self) {
-    return scalar__sqrt(dipole__dot__dipole(self, self));
+AntiScalar round_point__round_weight_norm_squared(RoundPoint self) {
+    Dipole round_weight_carrier = round_point__wedge__round_point(round_point__round_weight(self), RoundPoint(vec3(0.0), vec2(0.0, 1.0)));
+    return dipole__anti_dot__dipole(round_weight_carrier, round_weight_carrier);
 }
 
-Scalar dual_num__bulk_norm(DualNum self) {
-    return scalar__sqrt(dual_num__dot__dual_num(self, self));
+AntiScalar sphere__round_weight_norm_squared(Sphere self) {
+    AntiScalar round_weight_carrier = sphere__wedge__round_point(sphere__round_weight(self), RoundPoint(vec3(0.0), vec2(0.0, 1.0)));
+    return anti_scalar__anti_dot__anti_scalar(round_weight_carrier, round_weight_carrier);
 }
 
-Scalar flat_point__bulk_norm(FlatPoint self) {
-    return scalar__sqrt(flat_point__dot__flat_point(self, self));
+AntiScalar circle__round_weight_norm(Circle self) {
+    return anti_scalar__anti_sqrt(circle__round_weight_norm_squared(self));
 }
 
-Scalar flector__bulk_norm(Flector self) {
-    return scalar__sqrt(flector__dot__flector(self, self));
+AntiScalar dipole__round_weight_norm(Dipole self) {
+    return anti_scalar__anti_sqrt(dipole__round_weight_norm_squared(self));
 }
 
-Scalar line__bulk_norm(Line self) {
-    return scalar__sqrt(line__dot__line(self, self));
+AntiScalar multi_vector__round_weight_norm(MultiVector self) {
+    return anti_scalar__anti_sqrt(multi_vector__round_weight_norm_squared(self));
 }
 
-Scalar motor__bulk_norm(Motor self) {
-    return scalar__sqrt(motor__dot__motor(self, self));
+AntiScalar round_point__round_weight_norm(RoundPoint self) {
+    return anti_scalar__anti_sqrt(round_point__round_weight_norm_squared(self));
 }
 
-Scalar multi_vector__bulk_norm(MultiVector self) {
-    return scalar__sqrt(multi_vector__dot__multi_vector(self, self));
+AntiScalar sphere__round_weight_norm(Sphere self) {
+    return anti_scalar__anti_sqrt(sphere__round_weight_norm_squared(self));
 }
 
-Scalar plane__bulk_norm(Plane self) {
-    return scalar__sqrt(plane__dot__plane(self, self));
+DualNum circle__round_norm_squared(Circle self) {
+    return scalar__add__anti_scalar(circle__round_bulk_norm_squared(self), circle__round_weight_norm_squared(self));
 }
 
-Scalar round_point__bulk_norm(RoundPoint self) {
-    return scalar__sqrt(round_point__dot__round_point(self, self));
+DualNum dipole__round_norm_squared(Dipole self) {
+    return scalar__add__anti_scalar(dipole__round_bulk_norm_squared(self), dipole__round_weight_norm_squared(self));
 }
 
-Scalar scalar__bulk_norm(Scalar self) {
-    return scalar__sqrt(scalar__dot__scalar(self, self));
+DualNum multi_vector__round_norm_squared(MultiVector self) {
+    return scalar__add__anti_scalar(multi_vector__round_bulk_norm_squared(self), multi_vector__round_weight_norm_squared(self));
 }
 
-Scalar sphere__bulk_norm(Sphere self) {
-    return scalar__sqrt(sphere__dot__sphere(self, self));
+DualNum round_point__round_norm_squared(RoundPoint self) {
+    return scalar__add__anti_scalar(round_point__round_bulk_norm_squared(self), round_point__round_weight_norm_squared(self));
 }
 
-AntiScalar anti_scalar__weight_norm_squared(AntiScalar self) {
-    return anti_scalar__anti_dot__anti_scalar(self, self);
+DualNum circle__round_norm(Circle self) {
+    return scalar__add__anti_scalar(circle__round_bulk_norm(self), circle__round_weight_norm(self));
 }
 
-AntiScalar circle__weight_norm_squared(Circle self) {
-    return circle__anti_dot__circle(self, self);
+DualNum dipole__round_norm(Dipole self) {
+    return scalar__add__anti_scalar(dipole__round_bulk_norm(self), dipole__round_weight_norm(self));
 }
 
-AntiScalar dipole__weight_norm_squared(Dipole self) {
-    return dipole__anti_dot__dipole(self, self);
+DualNum multi_vector__round_norm(MultiVector self) {
+    return scalar__add__anti_scalar(multi_vector__round_bulk_norm(self), multi_vector__round_weight_norm(self));
 }
 
-AntiScalar dual_num__weight_norm_squared(DualNum self) {
-    return dual_num__anti_dot__dual_num(self, self);
+DualNum round_point__round_norm(RoundPoint self) {
+    return scalar__add__anti_scalar(round_point__round_bulk_norm(self), round_point__round_weight_norm(self));
 }
 
-AntiScalar flat_point__weight_norm_squared(FlatPoint self) {
-    return flat_point__anti_dot__flat_point(self, self);
+float circle__unitized_round_norm_squared(Circle self) {
+    return circle__round_bulk_norm_squared(self).g0 / circle__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar flector__weight_norm_squared(Flector self) {
-    return flector__anti_dot__flector(self, self);
+float dipole__unitized_round_norm_squared(Dipole self) {
+    return dipole__round_bulk_norm_squared(self).g0 / dipole__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar line__weight_norm_squared(Line self) {
-    return line__anti_dot__line(self, self);
+float multi_vector__unitized_round_norm_squared(MultiVector self) {
+    return multi_vector__round_bulk_norm_squared(self).g0 / multi_vector__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar motor__weight_norm_squared(Motor self) {
-    return motor__anti_dot__motor(self, self);
+float round_point__unitized_round_norm_squared(RoundPoint self) {
+    return round_point__round_bulk_norm_squared(self).g0 / round_point__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar multi_vector__weight_norm_squared(MultiVector self) {
-    return multi_vector__anti_dot__multi_vector(self, self);
+float circle__unitized_round_norm(Circle self) {
+    return sqrt(circle__unitized_round_norm_squared(self));
 }
 
-AntiScalar plane__weight_norm_squared(Plane self) {
-    return plane__anti_dot__plane(self, self);
+float dipole__unitized_round_norm(Dipole self) {
+    return sqrt(dipole__unitized_round_norm_squared(self));
 }
 
-AntiScalar round_point__weight_norm_squared(RoundPoint self) {
-    return round_point__anti_dot__round_point(self, self);
+float multi_vector__unitized_round_norm(MultiVector self) {
+    return sqrt(multi_vector__unitized_round_norm_squared(self));
 }
 
-AntiScalar scalar__weight_norm_squared(Scalar self) {
-    return scalar__anti_dot__scalar(self, self);
+float round_point__unitized_round_norm(RoundPoint self) {
+    return sqrt(round_point__unitized_round_norm_squared(self));
 }
 
-AntiScalar sphere__weight_norm_squared(Sphere self) {
-    return sphere__anti_dot__sphere(self, self);
+Scalar circle__flat_bulk_norm_squared(Circle self) {
+    Sphere flat_bulk_thing = circle__wedge__round_point(circle__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return sphere__dot__sphere(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar anti_scalar__weight_norm(AntiScalar self) {
-    return anti_scalar__anti_sqrt(anti_scalar__anti_dot__anti_scalar(self, self));
+Scalar dipole__flat_bulk_norm_squared(Dipole self) {
+    Circle flat_bulk_thing = dipole__wedge__round_point(dipole__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return circle__dot__circle(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar circle__weight_norm(Circle self) {
-    return anti_scalar__anti_sqrt(circle__anti_dot__circle(self, self));
+Scalar flat_point__flat_bulk_norm_squared(FlatPoint self) {
+    Line flat_bulk_thing = flat_point__wedge__round_point(flat_point__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return line__dot__line(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar dipole__weight_norm(Dipole self) {
-    return anti_scalar__anti_sqrt(dipole__anti_dot__dipole(self, self));
+Scalar flector__flat_bulk_norm_squared(Flector self) {
+    Motor flat_bulk_thing = flector__wedge__round_point(flector__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return motor__dot__motor(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar dual_num__weight_norm(DualNum self) {
-    return anti_scalar__anti_sqrt(dual_num__anti_dot__dual_num(self, self));
+Scalar line__flat_bulk_norm_squared(Line self) {
+    Plane flat_bulk_thing = line__wedge__round_point(line__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return plane__dot__plane(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar flat_point__weight_norm(FlatPoint self) {
-    return anti_scalar__anti_sqrt(flat_point__anti_dot__flat_point(self, self));
+Scalar motor__flat_bulk_norm_squared(Motor self) {
+    Plane flat_bulk_thing = motor__wedge__round_point(motor__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return plane__dot__plane(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar flector__weight_norm(Flector self) {
-    return anti_scalar__anti_sqrt(flector__anti_dot__flector(self, self));
+Scalar multi_vector__flat_bulk_norm_squared(MultiVector self) {
+    MultiVector flat_bulk_thing = multi_vector__wedge__round_point(multi_vector__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return multi_vector__dot__multi_vector(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar line__weight_norm(Line self) {
-    return anti_scalar__anti_sqrt(line__anti_dot__line(self, self));
+Scalar plane__flat_bulk_norm_squared(Plane self) {
+    AntiScalar flat_bulk_thing = plane__wedge__round_point(plane__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return anti_scalar__dot__anti_scalar(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar motor__weight_norm(Motor self) {
-    return anti_scalar__anti_sqrt(motor__anti_dot__motor(self, self));
+Scalar round_point__flat_bulk_norm_squared(RoundPoint self) {
+    Dipole flat_bulk_thing = round_point__wedge__round_point(round_point__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return dipole__dot__dipole(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar multi_vector__weight_norm(MultiVector self) {
-    return anti_scalar__anti_sqrt(multi_vector__anti_dot__multi_vector(self, self));
+Scalar sphere__flat_bulk_norm_squared(Sphere self) {
+    AntiScalar flat_bulk_thing = sphere__wedge__round_point(sphere__flat_bulk(self), RoundPoint(vec3(0.0), vec2(1.0, 0.0)));
+    return anti_scalar__dot__anti_scalar(flat_bulk_thing, flat_bulk_thing);
 }
 
-AntiScalar plane__weight_norm(Plane self) {
-    return anti_scalar__anti_sqrt(plane__anti_dot__plane(self, self));
+Scalar circle__flat_bulk_norm(Circle self) {
+    return scalar__sqrt(circle__flat_bulk_norm_squared(self));
 }
 
-AntiScalar round_point__weight_norm(RoundPoint self) {
-    return anti_scalar__anti_sqrt(round_point__anti_dot__round_point(self, self));
+Scalar dipole__flat_bulk_norm(Dipole self) {
+    return scalar__sqrt(dipole__flat_bulk_norm_squared(self));
 }
 
-AntiScalar scalar__weight_norm(Scalar self) {
-    return anti_scalar__anti_sqrt(scalar__anti_dot__scalar(self, self));
+Scalar flat_point__flat_bulk_norm(FlatPoint self) {
+    return scalar__sqrt(flat_point__flat_bulk_norm_squared(self));
 }
 
-AntiScalar sphere__weight_norm(Sphere self) {
-    return anti_scalar__anti_sqrt(sphere__anti_dot__sphere(self, self));
+Scalar flector__flat_bulk_norm(Flector self) {
+    return scalar__sqrt(flector__flat_bulk_norm_squared(self));
 }
 
-DualNum anti_scalar__geometric_norm(AntiScalar self) {
-    return scalar__add__anti_scalar(anti_scalar__bulk_norm(self), anti_scalar__weight_norm(self));
+Scalar line__flat_bulk_norm(Line self) {
+    return scalar__sqrt(line__flat_bulk_norm_squared(self));
 }
 
-DualNum circle__geometric_norm(Circle self) {
-    return scalar__add__anti_scalar(circle__bulk_norm(self), circle__weight_norm(self));
+Scalar motor__flat_bulk_norm(Motor self) {
+    return scalar__sqrt(motor__flat_bulk_norm_squared(self));
 }
 
-DualNum dipole__geometric_norm(Dipole self) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(self), dipole__weight_norm(self));
+Scalar multi_vector__flat_bulk_norm(MultiVector self) {
+    return scalar__sqrt(multi_vector__flat_bulk_norm_squared(self));
 }
 
-DualNum dual_num__geometric_norm(DualNum self) {
-    return scalar__add__anti_scalar(dual_num__bulk_norm(self), dual_num__weight_norm(self));
+Scalar plane__flat_bulk_norm(Plane self) {
+    return scalar__sqrt(plane__flat_bulk_norm_squared(self));
 }
 
-DualNum flat_point__geometric_norm(FlatPoint self) {
-    return scalar__add__anti_scalar(flat_point__bulk_norm(self), flat_point__weight_norm(self));
+Scalar round_point__flat_bulk_norm(RoundPoint self) {
+    return scalar__sqrt(round_point__flat_bulk_norm_squared(self));
 }
 
-DualNum flector__geometric_norm(Flector self) {
-    return scalar__add__anti_scalar(flector__bulk_norm(self), flector__weight_norm(self));
+Scalar sphere__flat_bulk_norm(Sphere self) {
+    return scalar__sqrt(sphere__flat_bulk_norm_squared(self));
 }
 
-DualNum line__geometric_norm(Line self) {
-    return scalar__add__anti_scalar(line__bulk_norm(self), line__weight_norm(self));
+AntiScalar anti_scalar__flat_weight_norm_squared(AntiScalar self) {
+    AntiScalar flat_weight = anti_scalar__flat_weight(self);
+    return anti_scalar__anti_dot__anti_scalar(flat_weight, flat_weight);
 }
 
-DualNum motor__geometric_norm(Motor self) {
-    return scalar__add__anti_scalar(motor__bulk_norm(self), motor__weight_norm(self));
+AntiScalar circle__flat_weight_norm_squared(Circle self) {
+    Circle flat_weight = circle__flat_weight(self);
+    return circle__anti_dot__circle(flat_weight, flat_weight);
 }
 
-DualNum multi_vector__geometric_norm(MultiVector self) {
-    return scalar__add__anti_scalar(multi_vector__bulk_norm(self), multi_vector__weight_norm(self));
+AntiScalar dipole__flat_weight_norm_squared(Dipole self) {
+    Dipole flat_weight = dipole__flat_weight(self);
+    return dipole__anti_dot__dipole(flat_weight, flat_weight);
 }
 
-DualNum plane__geometric_norm(Plane self) {
-    return scalar__add__anti_scalar(plane__bulk_norm(self), plane__weight_norm(self));
+AntiScalar dual_num__flat_weight_norm_squared(DualNum self) {
+    DualNum flat_weight = dual_num__flat_weight(self);
+    return dual_num__anti_dot__dual_num(flat_weight, flat_weight);
 }
 
-DualNum round_point__geometric_norm(RoundPoint self) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(self), round_point__weight_norm(self));
+AntiScalar flat_point__flat_weight_norm_squared(FlatPoint self) {
+    FlatPoint flat_weight = flat_point__flat_weight(self);
+    return flat_point__anti_dot__flat_point(flat_weight, flat_weight);
 }
 
-DualNum scalar__geometric_norm(Scalar self) {
-    return scalar__add__anti_scalar(scalar__bulk_norm(self), scalar__weight_norm(self));
+AntiScalar flector__flat_weight_norm_squared(Flector self) {
+    Flector flat_weight = flector__flat_weight(self);
+    return flector__anti_dot__flector(flat_weight, flat_weight);
 }
 
-DualNum sphere__geometric_norm(Sphere self) {
-    return scalar__add__anti_scalar(sphere__bulk_norm(self), sphere__weight_norm(self));
+AntiScalar line__flat_weight_norm_squared(Line self) {
+    Line flat_weight = line__flat_weight(self);
+    return line__anti_dot__line(flat_weight, flat_weight);
 }
 
-float anti_scalar__unitized_norm_squared(AntiScalar self) {
-    return anti_scalar__bulk_norm_squared(self).g0 / anti_scalar__weight_norm_squared(self).g0;
+AntiScalar motor__flat_weight_norm_squared(Motor self) {
+    Motor flat_weight = motor__flat_weight(self);
+    return motor__anti_dot__motor(flat_weight, flat_weight);
 }
 
-float circle__unitized_norm_squared(Circle self) {
-    return circle__bulk_norm_squared(self).g0 / circle__weight_norm_squared(self).g0;
+AntiScalar multi_vector__flat_weight_norm_squared(MultiVector self) {
+    MultiVector flat_weight = multi_vector__flat_weight(self);
+    return multi_vector__anti_dot__multi_vector(flat_weight, flat_weight);
 }
 
-float dipole__unitized_norm_squared(Dipole self) {
-    return dipole__bulk_norm_squared(self).g0 / dipole__weight_norm_squared(self).g0;
+AntiScalar plane__flat_weight_norm_squared(Plane self) {
+    Plane flat_weight = plane__flat_weight(self);
+    return plane__anti_dot__plane(flat_weight, flat_weight);
 }
 
-float dual_num__unitized_norm_squared(DualNum self) {
-    return dual_num__bulk_norm_squared(self).g0 / dual_num__weight_norm_squared(self).g0;
+AntiScalar sphere__flat_weight_norm_squared(Sphere self) {
+    Sphere flat_weight = sphere__flat_weight(self);
+    return sphere__anti_dot__sphere(flat_weight, flat_weight);
 }
 
-float flat_point__unitized_norm_squared(FlatPoint self) {
-    return flat_point__bulk_norm_squared(self).g0 / flat_point__weight_norm_squared(self).g0;
+AntiScalar anti_scalar__flat_weight_norm(AntiScalar self) {
+    return anti_scalar__anti_sqrt(anti_scalar__flat_weight_norm_squared(self));
 }
 
-float flector__unitized_norm_squared(Flector self) {
-    return flector__bulk_norm_squared(self).g0 / flector__weight_norm_squared(self).g0;
+AntiScalar circle__flat_weight_norm(Circle self) {
+    return anti_scalar__anti_sqrt(circle__flat_weight_norm_squared(self));
 }
 
-float line__unitized_norm_squared(Line self) {
-    return line__bulk_norm_squared(self).g0 / line__weight_norm_squared(self).g0;
+AntiScalar dipole__flat_weight_norm(Dipole self) {
+    return anti_scalar__anti_sqrt(dipole__flat_weight_norm_squared(self));
 }
 
-float motor__unitized_norm_squared(Motor self) {
-    return motor__bulk_norm_squared(self).g0 / motor__weight_norm_squared(self).g0;
+AntiScalar dual_num__flat_weight_norm(DualNum self) {
+    return anti_scalar__anti_sqrt(dual_num__flat_weight_norm_squared(self));
 }
 
-float multi_vector__unitized_norm_squared(MultiVector self) {
-    return multi_vector__bulk_norm_squared(self).g0 / multi_vector__weight_norm_squared(self).g0;
+AntiScalar flat_point__flat_weight_norm(FlatPoint self) {
+    return anti_scalar__anti_sqrt(flat_point__flat_weight_norm_squared(self));
 }
 
-float plane__unitized_norm_squared(Plane self) {
-    return plane__bulk_norm_squared(self).g0 / plane__weight_norm_squared(self).g0;
+AntiScalar flector__flat_weight_norm(Flector self) {
+    return anti_scalar__anti_sqrt(flector__flat_weight_norm_squared(self));
 }
 
-float round_point__unitized_norm_squared(RoundPoint self) {
-    return round_point__bulk_norm_squared(self).g0 / round_point__weight_norm_squared(self).g0;
+AntiScalar line__flat_weight_norm(Line self) {
+    return anti_scalar__anti_sqrt(line__flat_weight_norm_squared(self));
 }
 
-float scalar__unitized_norm_squared(Scalar self) {
-    return scalar__bulk_norm_squared(self).g0 / scalar__weight_norm_squared(self).g0;
+AntiScalar motor__flat_weight_norm(Motor self) {
+    return anti_scalar__anti_sqrt(motor__flat_weight_norm_squared(self));
 }
 
-float sphere__unitized_norm_squared(Sphere self) {
-    return sphere__bulk_norm_squared(self).g0 / sphere__weight_norm_squared(self).g0;
+AntiScalar multi_vector__flat_weight_norm(MultiVector self) {
+    return anti_scalar__anti_sqrt(multi_vector__flat_weight_norm_squared(self));
 }
 
-float anti_scalar__unitized_norm(AntiScalar self) {
-    return sqrt(anti_scalar__unitized_norm_squared(self));
+AntiScalar plane__flat_weight_norm(Plane self) {
+    return anti_scalar__anti_sqrt(plane__flat_weight_norm_squared(self));
 }
 
-float circle__unitized_norm(Circle self) {
-    return sqrt(circle__unitized_norm_squared(self));
+AntiScalar sphere__flat_weight_norm(Sphere self) {
+    return anti_scalar__anti_sqrt(sphere__flat_weight_norm_squared(self));
 }
 
-float dipole__unitized_norm(Dipole self) {
-    return sqrt(dipole__unitized_norm_squared(self));
+DualNum circle__flat_norm_squared(Circle self) {
+    return scalar__add__anti_scalar(circle__flat_bulk_norm_squared(self), circle__flat_weight_norm_squared(self));
 }
 
-float dual_num__unitized_norm(DualNum self) {
-    return sqrt(dual_num__unitized_norm_squared(self));
+DualNum dipole__flat_norm_squared(Dipole self) {
+    return scalar__add__anti_scalar(dipole__flat_bulk_norm_squared(self), dipole__flat_weight_norm_squared(self));
 }
 
-float flat_point__unitized_norm(FlatPoint self) {
-    return sqrt(flat_point__unitized_norm_squared(self));
+DualNum flat_point__flat_norm_squared(FlatPoint self) {
+    return scalar__add__anti_scalar(flat_point__flat_bulk_norm_squared(self), flat_point__flat_weight_norm_squared(self));
 }
 
-float flector__unitized_norm(Flector self) {
-    return sqrt(flector__unitized_norm_squared(self));
+DualNum flector__flat_norm_squared(Flector self) {
+    return scalar__add__anti_scalar(flector__flat_bulk_norm_squared(self), flector__flat_weight_norm_squared(self));
 }
 
-float line__unitized_norm(Line self) {
-    return sqrt(line__unitized_norm_squared(self));
+DualNum line__flat_norm_squared(Line self) {
+    return scalar__add__anti_scalar(line__flat_bulk_norm_squared(self), line__flat_weight_norm_squared(self));
 }
 
-float motor__unitized_norm(Motor self) {
-    return sqrt(motor__unitized_norm_squared(self));
+DualNum motor__flat_norm_squared(Motor self) {
+    return scalar__add__anti_scalar(motor__flat_bulk_norm_squared(self), motor__flat_weight_norm_squared(self));
 }
 
-float multi_vector__unitized_norm(MultiVector self) {
-    return sqrt(multi_vector__unitized_norm_squared(self));
+DualNum multi_vector__flat_norm_squared(MultiVector self) {
+    return scalar__add__anti_scalar(multi_vector__flat_bulk_norm_squared(self), multi_vector__flat_weight_norm_squared(self));
 }
 
-float plane__unitized_norm(Plane self) {
-    return sqrt(plane__unitized_norm_squared(self));
+DualNum plane__flat_norm_squared(Plane self) {
+    return scalar__add__anti_scalar(plane__flat_bulk_norm_squared(self), plane__flat_weight_norm_squared(self));
 }
 
-float round_point__unitized_norm(RoundPoint self) {
-    return sqrt(round_point__unitized_norm_squared(self));
+DualNum sphere__flat_norm_squared(Sphere self) {
+    return scalar__add__anti_scalar(sphere__flat_bulk_norm_squared(self), sphere__flat_weight_norm_squared(self));
 }
 
-float scalar__unitized_norm(Scalar self) {
-    return sqrt(scalar__unitized_norm_squared(self));
+DualNum circle__flat_norm(Circle self) {
+    return scalar__add__anti_scalar(circle__flat_bulk_norm(self), circle__flat_weight_norm(self));
 }
 
-float sphere__unitized_norm(Sphere self) {
-    return sqrt(sphere__unitized_norm_squared(self));
+DualNum dipole__flat_norm(Dipole self) {
+    return scalar__add__anti_scalar(dipole__flat_bulk_norm(self), dipole__flat_weight_norm(self));
 }
 
-Scalar circle__center_bulk_norm_squared(Circle self) {
-    RoundPoint round_bulk = round_point__round_bulk(circle__center(self));
-    return round_point__dot__round_point(round_bulk, round_bulk);
+DualNum flat_point__flat_norm(FlatPoint self) {
+    return scalar__add__anti_scalar(flat_point__flat_bulk_norm(self), flat_point__flat_weight_norm(self));
 }
 
-Scalar dipole__center_bulk_norm_squared(Dipole self) {
-    RoundPoint round_bulk = round_point__round_bulk(dipole__center(self));
-    return round_point__dot__round_point(round_bulk, round_bulk);
+DualNum flector__flat_norm(Flector self) {
+    return scalar__add__anti_scalar(flector__flat_bulk_norm(self), flector__flat_weight_norm(self));
 }
 
-Scalar dual_num__center_bulk_norm_squared(DualNum self) {
-    RoundPoint round_bulk = round_point__round_bulk(dual_num__center(self));
-    return round_point__dot__round_point(round_bulk, round_bulk);
+DualNum line__flat_norm(Line self) {
+    return scalar__add__anti_scalar(line__flat_bulk_norm(self), line__flat_weight_norm(self));
 }
 
-Scalar round_point__center_bulk_norm_squared(RoundPoint self) {
-    RoundPoint round_bulk = round_point__round_bulk(round_point__center(self));
-    return round_point__dot__round_point(round_bulk, round_bulk);
+DualNum motor__flat_norm(Motor self) {
+    return scalar__add__anti_scalar(motor__flat_bulk_norm(self), motor__flat_weight_norm(self));
 }
 
-Scalar sphere__center_bulk_norm_squared(Sphere self) {
-    RoundPoint round_bulk = round_point__round_bulk(sphere__center(self));
-    return round_point__dot__round_point(round_bulk, round_bulk);
+DualNum multi_vector__flat_norm(MultiVector self) {
+    return scalar__add__anti_scalar(multi_vector__flat_bulk_norm(self), multi_vector__flat_weight_norm(self));
 }
 
-Scalar circle__center_bulk_norm(Circle self) {
-    return scalar__sqrt(circle__center_bulk_norm_squared(self));
+DualNum plane__flat_norm(Plane self) {
+    return scalar__add__anti_scalar(plane__flat_bulk_norm(self), plane__flat_weight_norm(self));
 }
 
-Scalar dipole__center_bulk_norm(Dipole self) {
-    return scalar__sqrt(dipole__center_bulk_norm_squared(self));
+DualNum sphere__flat_norm(Sphere self) {
+    return scalar__add__anti_scalar(sphere__flat_bulk_norm(self), sphere__flat_weight_norm(self));
 }
 
-Scalar dual_num__center_bulk_norm(DualNum self) {
-    return scalar__sqrt(dual_num__center_bulk_norm_squared(self));
+float circle__unitized_flat_norm_squared(Circle self) {
+    return circle__flat_bulk_norm_squared(self).g0 / circle__flat_weight_norm_squared(self).g0;
 }
 
-Scalar round_point__center_bulk_norm(RoundPoint self) {
-    return scalar__sqrt(round_point__center_bulk_norm_squared(self));
+float dipole__unitized_flat_norm_squared(Dipole self) {
+    return dipole__flat_bulk_norm_squared(self).g0 / dipole__flat_weight_norm_squared(self).g0;
 }
 
-Scalar sphere__center_bulk_norm(Sphere self) {
-    return scalar__sqrt(sphere__center_bulk_norm_squared(self));
+float flat_point__unitized_flat_norm_squared(FlatPoint self) {
+    return flat_point__flat_bulk_norm_squared(self).g0 / flat_point__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar circle__center_weight_norm_squared(Circle self) {
-    RoundPoint round_weight = round_point__round_weight(circle__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+float flector__unitized_flat_norm_squared(Flector self) {
+    return flector__flat_bulk_norm_squared(self).g0 / flector__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar dipole__center_weight_norm_squared(Dipole self) {
-    RoundPoint round_weight = round_point__round_weight(dipole__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+float line__unitized_flat_norm_squared(Line self) {
+    return line__flat_bulk_norm_squared(self).g0 / line__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar dual_num__center_weight_norm_squared(DualNum self) {
-    RoundPoint round_weight = round_point__round_weight(dual_num__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+float motor__unitized_flat_norm_squared(Motor self) {
+    return motor__flat_bulk_norm_squared(self).g0 / motor__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar round_point__center_weight_norm_squared(RoundPoint self) {
-    RoundPoint round_weight = round_point__round_weight(round_point__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+float multi_vector__unitized_flat_norm_squared(MultiVector self) {
+    return multi_vector__flat_bulk_norm_squared(self).g0 / multi_vector__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar sphere__center_weight_norm_squared(Sphere self) {
-    RoundPoint round_weight = round_point__round_weight(sphere__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+float plane__unitized_flat_norm_squared(Plane self) {
+    return plane__flat_bulk_norm_squared(self).g0 / plane__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar circle__center_weight_norm(Circle self) {
-    return anti_scalar__anti_sqrt(circle__center_weight_norm_squared(self));
+float sphere__unitized_flat_norm_squared(Sphere self) {
+    return sphere__flat_bulk_norm_squared(self).g0 / sphere__flat_weight_norm_squared(self).g0;
 }
 
-AntiScalar dipole__center_weight_norm(Dipole self) {
-    return anti_scalar__anti_sqrt(dipole__center_weight_norm_squared(self));
+float circle__unitized_flat_norm(Circle self) {
+    return sqrt(circle__unitized_flat_norm_squared(self));
 }
 
-AntiScalar dual_num__center_weight_norm(DualNum self) {
-    return anti_scalar__anti_sqrt(dual_num__center_weight_norm_squared(self));
+float dipole__unitized_flat_norm(Dipole self) {
+    return sqrt(dipole__unitized_flat_norm_squared(self));
 }
 
-AntiScalar round_point__center_weight_norm(RoundPoint self) {
-    return anti_scalar__anti_sqrt(round_point__center_weight_norm_squared(self));
+float flat_point__unitized_flat_norm(FlatPoint self) {
+    return sqrt(flat_point__unitized_flat_norm_squared(self));
 }
 
-AntiScalar sphere__center_weight_norm(Sphere self) {
-    return anti_scalar__anti_sqrt(sphere__center_weight_norm_squared(self));
+float flector__unitized_flat_norm(Flector self) {
+    return sqrt(flector__unitized_flat_norm_squared(self));
 }
 
-DualNum circle__center_geometric_norm(Circle self) {
-    return scalar__add__anti_scalar(circle__center_bulk_norm(self), circle__center_weight_norm(self));
+float line__unitized_flat_norm(Line self) {
+    return sqrt(line__unitized_flat_norm_squared(self));
 }
 
-DualNum dipole__center_geometric_norm(Dipole self) {
-    return scalar__add__anti_scalar(dipole__center_bulk_norm(self), dipole__center_weight_norm(self));
+float motor__unitized_flat_norm(Motor self) {
+    return sqrt(motor__unitized_flat_norm_squared(self));
 }
 
-DualNum dual_num__center_geometric_norm(DualNum self) {
-    return scalar__add__anti_scalar(dual_num__center_bulk_norm(self), dual_num__center_weight_norm(self));
+float multi_vector__unitized_flat_norm(MultiVector self) {
+    return sqrt(multi_vector__unitized_flat_norm_squared(self));
 }
 
-DualNum round_point__center_geometric_norm(RoundPoint self) {
-    return scalar__add__anti_scalar(round_point__center_bulk_norm(self), round_point__center_weight_norm(self));
+float plane__unitized_flat_norm(Plane self) {
+    return sqrt(plane__unitized_flat_norm_squared(self));
 }
 
-DualNum sphere__center_geometric_norm(Sphere self) {
-    return scalar__add__anti_scalar(sphere__center_bulk_norm(self), sphere__center_weight_norm(self));
+float sphere__unitized_flat_norm(Sphere self) {
+    return sqrt(sphere__unitized_flat_norm_squared(self));
 }
 
-float circle__center_unitized_norm_squared(Circle self) {
-    return circle__center_bulk_norm_squared(self).g0 / circle__center_weight_norm_squared(self).g0;
+Scalar circle__center_norm_squared(Circle self) {
+    return scalar__add__scalar(circle__round_bulk_norm_squared(self), anti_scalar__anti_dual(circle__flat_weight_norm_squared(self)));
 }
 
-float dipole__center_unitized_norm_squared(Dipole self) {
-    return dipole__center_bulk_norm_squared(self).g0 / dipole__center_weight_norm_squared(self).g0;
+Scalar dipole__center_norm_squared(Dipole self) {
+    return scalar__add__scalar(dipole__round_bulk_norm_squared(self), anti_scalar__anti_dual(dipole__flat_weight_norm_squared(self)));
 }
 
-float dual_num__center_unitized_norm_squared(DualNum self) {
-    return dual_num__center_bulk_norm_squared(self).g0 / dual_num__center_weight_norm_squared(self).g0;
+Scalar dual_num__center_norm_squared(DualNum self) {
+    return scalar__add__scalar(dual_num__round_bulk_norm_squared(self), anti_scalar__anti_dual(dual_num__flat_weight_norm_squared(self)));
 }
 
-float round_point__center_unitized_norm_squared(RoundPoint self) {
-    return round_point__center_bulk_norm_squared(self).g0 / round_point__center_weight_norm_squared(self).g0;
+Scalar multi_vector__center_norm_squared(MultiVector self) {
+    return scalar__add__scalar(multi_vector__round_bulk_norm_squared(self), anti_scalar__anti_dual(multi_vector__flat_weight_norm_squared(self)));
 }
 
-float sphere__center_unitized_norm_squared(Sphere self) {
-    return sphere__center_bulk_norm_squared(self).g0 / sphere__center_weight_norm_squared(self).g0;
+Scalar circle__center_norm(Circle self) {
+    return scalar__sqrt(circle__center_norm_squared(self));
 }
 
-float circle__center_unitized_norm(Circle self) {
-    return sqrt(circle__center_unitized_norm_squared(self));
+Scalar dipole__center_norm(Dipole self) {
+    return scalar__sqrt(dipole__center_norm_squared(self));
 }
 
-float dipole__center_unitized_norm(Dipole self) {
-    return sqrt(dipole__center_unitized_norm_squared(self));
+Scalar dual_num__center_norm(DualNum self) {
+    return scalar__sqrt(dual_num__center_norm_squared(self));
 }
 
-float dual_num__center_unitized_norm(DualNum self) {
-    return sqrt(dual_num__center_unitized_norm_squared(self));
+Scalar multi_vector__center_norm(MultiVector self) {
+    return scalar__sqrt(multi_vector__center_norm_squared(self));
 }
 
-float round_point__center_unitized_norm(RoundPoint self) {
-    return sqrt(round_point__center_unitized_norm_squared(self));
+float circle__unitized_center_norm_squared(Circle self) {
+    return circle__center_norm_squared(self).g0 / circle__round_weight_norm_squared(self).g0;
 }
 
-float sphere__center_unitized_norm(Sphere self) {
-    return sqrt(sphere__center_unitized_norm_squared(self));
+float dipole__unitized_center_norm_squared(Dipole self) {
+    return dipole__center_norm_squared(self).g0 / dipole__round_weight_norm_squared(self).g0;
 }
 
-Scalar circle__radius_bulk_norm_squared(Circle self) {
-    RoundPoint center = circle__center(self);
-    RoundPoint round_bulk = round_point__round_bulk(circle__center(self));
-    Scalar two_aw_au = Scalar(2.0 * round_point__bulk(center).g0);
-    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+float multi_vector__unitized_center_norm_squared(MultiVector self) {
+    return multi_vector__center_norm_squared(self).g0 / multi_vector__round_weight_norm_squared(self).g0;
 }
 
-Scalar dipole__radius_bulk_norm_squared(Dipole self) {
-    RoundPoint center = dipole__center(self);
-    RoundPoint round_bulk = round_point__round_bulk(dipole__center(self));
-    Scalar two_aw_au = Scalar(2.0 * round_point__bulk(center).g0);
-    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+float circle__unitized_center_norm(Circle self) {
+    return sqrt(circle__unitized_center_norm_squared(self));
 }
 
-Scalar dual_num__radius_bulk_norm_squared(DualNum self) {
-    RoundPoint center = dual_num__center(self);
-    RoundPoint round_bulk = round_point__round_bulk(dual_num__center(self));
-    Scalar two_aw_au = Scalar(2.0 * round_point__bulk(center).g0);
-    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+float dipole__unitized_center_norm(Dipole self) {
+    return sqrt(dipole__unitized_center_norm_squared(self));
 }
 
-Scalar round_point__radius_bulk_norm_squared(RoundPoint self) {
-    RoundPoint center = round_point__center(self);
-    RoundPoint round_bulk = round_point__round_bulk(round_point__center(self));
-    Scalar two_aw_au = Scalar(2.0 * round_point__bulk(center).g0);
-    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+float multi_vector__unitized_center_norm(MultiVector self) {
+    return sqrt(multi_vector__unitized_center_norm_squared(self));
 }
 
-Scalar sphere__radius_bulk_norm_squared(Sphere self) {
-    RoundPoint center = sphere__center(self);
-    RoundPoint round_bulk = round_point__round_bulk(sphere__center(self));
-    Scalar two_aw_au = Scalar(2.0 * round_point__bulk(center).g0);
-    return scalar__sub__scalar(two_aw_au, round_point__dot__round_point(round_bulk, round_bulk));
+Scalar circle__radius_norm_squared(Circle self) {
+    return anti_scalar__anti_dual(circle__anti_dot__circle(self, self));
 }
 
-Scalar circle__radius_bulk_norm(Circle self) {
-    return scalar__sqrt(circle__radius_bulk_norm_squared(self));
+Scalar dipole__radius_norm_squared(Dipole self) {
+    return anti_scalar__anti_dual(dipole__anti_dot__dipole(self, self));
 }
 
-Scalar dipole__radius_bulk_norm(Dipole self) {
-    return scalar__sqrt(dipole__radius_bulk_norm_squared(self));
+Scalar dual_num__radius_norm_squared(DualNum self) {
+    return anti_scalar__anti_dual(dual_num__anti_dot__dual_num(self, self));
 }
 
-Scalar dual_num__radius_bulk_norm(DualNum self) {
-    return scalar__sqrt(dual_num__radius_bulk_norm_squared(self));
+Scalar multi_vector__radius_norm_squared(MultiVector self) {
+    return anti_scalar__anti_dual(multi_vector__anti_dot__multi_vector(self, self));
 }
 
-Scalar round_point__radius_bulk_norm(RoundPoint self) {
-    return scalar__sqrt(round_point__radius_bulk_norm_squared(self));
+Scalar round_point__radius_norm_squared(RoundPoint self) {
+    return anti_scalar__anti_dual(round_point__anti_dot__round_point(self, self));
 }
 
-Scalar sphere__radius_bulk_norm(Sphere self) {
-    return scalar__sqrt(sphere__radius_bulk_norm_squared(self));
+Scalar sphere__radius_norm_squared(Sphere self) {
+    return anti_scalar__anti_dual(sphere__anti_dot__sphere(self, self));
 }
 
-AntiScalar circle__radius_weight_norm_squared(Circle self) {
-    RoundPoint round_weight = round_point__round_weight(circle__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+Scalar circle__radius_norm(Circle self) {
+    return scalar__sqrt(circle__radius_norm_squared(self));
 }
 
-AntiScalar dipole__radius_weight_norm_squared(Dipole self) {
-    RoundPoint round_weight = round_point__round_weight(dipole__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+Scalar dipole__radius_norm(Dipole self) {
+    return scalar__sqrt(dipole__radius_norm_squared(self));
 }
 
-AntiScalar dual_num__radius_weight_norm_squared(DualNum self) {
-    RoundPoint round_weight = round_point__round_weight(dual_num__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+Scalar dual_num__radius_norm(DualNum self) {
+    return scalar__sqrt(dual_num__radius_norm_squared(self));
 }
 
-AntiScalar round_point__radius_weight_norm_squared(RoundPoint self) {
-    RoundPoint round_weight = round_point__round_weight(round_point__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+Scalar multi_vector__radius_norm(MultiVector self) {
+    return scalar__sqrt(multi_vector__radius_norm_squared(self));
 }
 
-AntiScalar sphere__radius_weight_norm_squared(Sphere self) {
-    RoundPoint round_weight = round_point__round_weight(sphere__center(self));
-    return round_point__anti_dot__round_point(round_weight, round_weight);
+Scalar round_point__radius_norm(RoundPoint self) {
+    return scalar__sqrt(round_point__radius_norm_squared(self));
 }
 
-AntiScalar circle__radius_weight_norm(Circle self) {
-    return anti_scalar__anti_sqrt(circle__radius_weight_norm_squared(self));
+Scalar sphere__radius_norm(Sphere self) {
+    return scalar__sqrt(sphere__radius_norm_squared(self));
 }
 
-AntiScalar dipole__radius_weight_norm(Dipole self) {
-    return anti_scalar__anti_sqrt(dipole__radius_weight_norm_squared(self));
+float circle__unitized_radius_norm_squared(Circle self) {
+    return circle__radius_norm_squared(self).g0 / circle__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar dual_num__radius_weight_norm(DualNum self) {
-    return anti_scalar__anti_sqrt(dual_num__radius_weight_norm_squared(self));
+float dipole__unitized_radius_norm_squared(Dipole self) {
+    return dipole__radius_norm_squared(self).g0 / dipole__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar round_point__radius_weight_norm(RoundPoint self) {
-    return anti_scalar__anti_sqrt(round_point__radius_weight_norm_squared(self));
+float multi_vector__unitized_radius_norm_squared(MultiVector self) {
+    return multi_vector__radius_norm_squared(self).g0 / multi_vector__round_weight_norm_squared(self).g0;
 }
 
-AntiScalar sphere__radius_weight_norm(Sphere self) {
-    return anti_scalar__anti_sqrt(sphere__radius_weight_norm_squared(self));
+float round_point__unitized_radius_norm_squared(RoundPoint self) {
+    return round_point__radius_norm_squared(self).g0 / round_point__round_weight_norm_squared(self).g0;
 }
 
-DualNum circle__radius_geometric_norm(Circle self) {
-    return scalar__add__anti_scalar(circle__radius_bulk_norm(self), circle__radius_weight_norm(self));
+float sphere__unitized_radius_norm_squared(Sphere self) {
+    return sphere__radius_norm_squared(self).g0 / sphere__round_weight_norm_squared(self).g0;
 }
 
-DualNum dipole__radius_geometric_norm(Dipole self) {
-    return scalar__add__anti_scalar(dipole__radius_bulk_norm(self), dipole__radius_weight_norm(self));
+float circle__unitized_radius_norm(Circle self) {
+    return sqrt(circle__unitized_radius_norm_squared(self));
 }
 
-DualNum dual_num__radius_geometric_norm(DualNum self) {
-    return scalar__add__anti_scalar(dual_num__radius_bulk_norm(self), dual_num__radius_weight_norm(self));
+float dipole__unitized_radius_norm(Dipole self) {
+    return sqrt(dipole__unitized_radius_norm_squared(self));
 }
 
-DualNum round_point__radius_geometric_norm(RoundPoint self) {
-    return scalar__add__anti_scalar(round_point__radius_bulk_norm(self), round_point__radius_weight_norm(self));
+float multi_vector__unitized_radius_norm(MultiVector self) {
+    return sqrt(multi_vector__unitized_radius_norm_squared(self));
 }
 
-DualNum sphere__radius_geometric_norm(Sphere self) {
-    return scalar__add__anti_scalar(sphere__radius_bulk_norm(self), sphere__radius_weight_norm(self));
+float round_point__unitized_radius_norm(RoundPoint self) {
+    return sqrt(round_point__unitized_radius_norm_squared(self));
 }
 
-float circle__radius_unitized_norm_squared(Circle self) {
-    return circle__radius_bulk_norm_squared(self).g0 / circle__radius_weight_norm_squared(self).g0;
-}
-
-float dipole__radius_unitized_norm_squared(Dipole self) {
-    return dipole__radius_bulk_norm_squared(self).g0 / dipole__radius_weight_norm_squared(self).g0;
-}
-
-float dual_num__radius_unitized_norm_squared(DualNum self) {
-    return dual_num__radius_bulk_norm_squared(self).g0 / dual_num__radius_weight_norm_squared(self).g0;
-}
-
-float round_point__radius_unitized_norm_squared(RoundPoint self) {
-    return round_point__radius_bulk_norm_squared(self).g0 / round_point__radius_weight_norm_squared(self).g0;
-}
-
-float sphere__radius_unitized_norm_squared(Sphere self) {
-    return sphere__radius_bulk_norm_squared(self).g0 / sphere__radius_weight_norm_squared(self).g0;
-}
-
-float circle__radius_unitized_norm(Circle self) {
-    return sqrt(circle__radius_unitized_norm_squared(self));
-}
-
-float dipole__radius_unitized_norm(Dipole self) {
-    return sqrt(dipole__radius_unitized_norm_squared(self));
-}
-
-float dual_num__radius_unitized_norm(DualNum self) {
-    return sqrt(dual_num__radius_unitized_norm_squared(self));
-}
-
-float round_point__radius_unitized_norm(RoundPoint self) {
-    return sqrt(round_point__radius_unitized_norm_squared(self));
-}
-
-float sphere__radius_unitized_norm(Sphere self) {
-    return sqrt(sphere__radius_unitized_norm_squared(self));
-}
-
-AntiScalar anti_scalar__unitize(AntiScalar self) {
-    return anti_scalar__wedge_dot__scalar(self, Scalar(1.0 / anti_scalar__weight_norm(self).g0));
+float sphere__unitized_radius_norm(Sphere self) {
+    return sqrt(sphere__unitized_radius_norm_squared(self));
 }
 
 Circle circle__unitize(Circle self) {
-    return circle__wedge_dot__scalar(self, Scalar(1.0 / circle__weight_norm(self).g0));
+    return circle__wedge_dot__scalar(self, Scalar(1.0 / circle__round_weight_norm(self).g0));
 }
 
 Dipole dipole__unitize(Dipole self) {
-    return dipole__wedge_dot__scalar(self, Scalar(1.0 / dipole__weight_norm(self).g0));
-}
-
-DualNum dual_num__unitize(DualNum self) {
-    return dual_num__wedge_dot__scalar(self, Scalar(1.0 / dual_num__weight_norm(self).g0));
-}
-
-FlatPoint flat_point__unitize(FlatPoint self) {
-    return flat_point__wedge_dot__scalar(self, Scalar(1.0 / flat_point__weight_norm(self).g0));
-}
-
-Flector flector__unitize(Flector self) {
-    return flector__wedge_dot__scalar(self, Scalar(1.0 / flector__weight_norm(self).g0));
-}
-
-Line line__unitize(Line self) {
-    return line__wedge_dot__scalar(self, Scalar(1.0 / line__weight_norm(self).g0));
-}
-
-Motor motor__unitize(Motor self) {
-    return motor__wedge_dot__scalar(self, Scalar(1.0 / motor__weight_norm(self).g0));
+    return dipole__wedge_dot__scalar(self, Scalar(1.0 / dipole__round_weight_norm(self).g0));
 }
 
 MultiVector multi_vector__unitize(MultiVector self) {
-    return multi_vector__wedge_dot__scalar(self, Scalar(1.0 / multi_vector__weight_norm(self).g0));
-}
-
-Plane plane__unitize(Plane self) {
-    return plane__wedge_dot__scalar(self, Scalar(1.0 / plane__weight_norm(self).g0));
+    return multi_vector__wedge_dot__scalar(self, Scalar(1.0 / multi_vector__round_weight_norm(self).g0));
 }
 
 RoundPoint round_point__unitize(RoundPoint self) {
-    return round_point__wedge_dot__scalar(self, Scalar(1.0 / round_point__weight_norm(self).g0));
-}
-
-Scalar scalar__unitize(Scalar self) {
-    return scalar__wedge_dot__scalar(self, Scalar(1.0 / scalar__weight_norm(self).g0));
+    return round_point__wedge_dot__scalar(self, Scalar(1.0 / round_point__round_weight_norm(self).g0));
 }
 
 Sphere sphere__unitize(Sphere self) {
-    return sphere__wedge_dot__scalar(self, Scalar(1.0 / sphere__weight_norm(self).g0));
+    return sphere__wedge_dot__scalar(self, Scalar(1.0 / sphere__round_weight_norm(self).g0));
 }
 
 Circle anti_scalar__sandwich__circle(AntiScalar self, Circle other) {
@@ -7216,86 +7110,6 @@ RoundPoint sphere__sandwich__round_point(Sphere self, RoundPoint other) {
 
 Sphere sphere__sandwich__sphere(Sphere self, Sphere other) {
     return multi_vector__into__sphere(multi_vector__anti_wedge_dot__sphere(sphere__anti_wedge_dot__sphere(self, other), sphere__anti_reversal(self)));
-}
-
-Circle flat_point__point_inversion__circle(FlatPoint self, Circle other) {
-    return flat_point__sandwich__circle(flat_point__unitize(self), other);
-}
-
-Dipole flat_point__point_inversion__dipole(FlatPoint self, Dipole other) {
-    return flat_point__sandwich__dipole(flat_point__unitize(self), other);
-}
-
-FlatPoint flat_point__point_inversion__flat_point(FlatPoint self, FlatPoint other) {
-    return flat_point__sandwich__flat_point(flat_point__unitize(self), other);
-}
-
-Flector flat_point__point_inversion__flector(FlatPoint self, Flector other) {
-    return flat_point__sandwich__flector(flat_point__unitize(self), other);
-}
-
-Line flat_point__point_inversion__line(FlatPoint self, Line other) {
-    return flat_point__sandwich__line(flat_point__unitize(self), other);
-}
-
-Motor flat_point__point_inversion__motor(FlatPoint self, Motor other) {
-    return flat_point__sandwich__motor(flat_point__unitize(self), other);
-}
-
-MultiVector flat_point__point_inversion__multi_vector(FlatPoint self, MultiVector other) {
-    return flat_point__sandwich__multi_vector(flat_point__unitize(self), other);
-}
-
-Plane flat_point__point_inversion__plane(FlatPoint self, Plane other) {
-    return flat_point__sandwich__plane(flat_point__unitize(self), other);
-}
-
-RoundPoint flat_point__point_inversion__round_point(FlatPoint self, RoundPoint other) {
-    return flat_point__sandwich__round_point(flat_point__unitize(self), other);
-}
-
-Sphere flat_point__point_inversion__sphere(FlatPoint self, Sphere other) {
-    return flat_point__sandwich__sphere(flat_point__unitize(self), other);
-}
-
-Circle plane__reflect__circle(Plane self, Circle other) {
-    return plane__sandwich__circle(plane__unitize(self), other);
-}
-
-Dipole plane__reflect__dipole(Plane self, Dipole other) {
-    return plane__sandwich__dipole(plane__unitize(self), other);
-}
-
-FlatPoint plane__reflect__flat_point(Plane self, FlatPoint other) {
-    return plane__sandwich__flat_point(plane__unitize(self), other);
-}
-
-Flector plane__reflect__flector(Plane self, Flector other) {
-    return plane__sandwich__flector(plane__unitize(self), other);
-}
-
-Line plane__reflect__line(Plane self, Line other) {
-    return plane__sandwich__line(plane__unitize(self), other);
-}
-
-Motor plane__reflect__motor(Plane self, Motor other) {
-    return plane__sandwich__motor(plane__unitize(self), other);
-}
-
-MultiVector plane__reflect__multi_vector(Plane self, MultiVector other) {
-    return plane__sandwich__multi_vector(plane__unitize(self), other);
-}
-
-Plane plane__reflect__plane(Plane self, Plane other) {
-    return plane__sandwich__plane(plane__unitize(self), other);
-}
-
-RoundPoint plane__reflect__round_point(Plane self, RoundPoint other) {
-    return plane__sandwich__round_point(plane__unitize(self), other);
-}
-
-Sphere plane__reflect__sphere(Plane self, Sphere other) {
-    return plane__sandwich__sphere(plane__unitize(self), other);
 }
 
 AntiScalar anti_scalar__geometric_anti_quotient__anti_scalar(AntiScalar self, AntiScalar other) {
@@ -11752,346 +11566,5 @@ RoundPoint round_point__support(RoundPoint self) {
 
 RoundPoint sphere__support(Sphere self) {
     return sphere__anti_wedge__dipole(self, round_point__wedge__round_point(RoundPoint(vec3(0.0), vec2(1.0, 0.0)), sphere__anti_dual(self)));
-}
-
-DualNum circle__cosine_angle__circle(Circle self, Circle other) {
-    return scalar__add__anti_scalar(circle__anti_wedge__dipole(self, circle__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(circle__weight_norm(self), circle__weight_norm(other)));
-}
-
-DualNum circle__cosine_angle__dipole(Circle self, Dipole other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(circle__anti_wedge__circle(self, dipole__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(circle__weight_norm(self), dipole__weight_norm(other)));
-}
-
-DualNum circle__cosine_angle__flat_point(Circle self, FlatPoint other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(circle__anti_wedge__circle(self, flat_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(circle__weight_norm(self), flat_point__weight_norm(other)));
-}
-
-DualNum circle__cosine_angle__line(Circle self, Line other) {
-    return scalar__add__anti_scalar(circle__anti_wedge__dipole(self, line__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(circle__weight_norm(self), line__weight_norm(other)));
-}
-
-DualNum circle__cosine_angle__round_point(Circle self, RoundPoint other) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(circle__anti_wedge__sphere(self, round_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(circle__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum dipole__cosine_angle__dipole(Dipole self, Dipole other) {
-    return scalar__add__anti_scalar(dipole__anti_wedge__circle(self, dipole__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(dipole__weight_norm(self), dipole__weight_norm(other)));
-}
-
-DualNum dipole__cosine_angle__flat_point(Dipole self, FlatPoint other) {
-    return scalar__add__anti_scalar(dipole__anti_wedge__circle(self, flat_point__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(dipole__weight_norm(self), flat_point__weight_norm(other)));
-}
-
-DualNum dipole__cosine_angle__round_point(Dipole self, RoundPoint other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(dipole__anti_wedge__sphere(self, round_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(dipole__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum flat_point__cosine_angle__dipole(FlatPoint self, Dipole other) {
-    return scalar__add__anti_scalar(flat_point__anti_wedge__circle(self, dipole__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(flat_point__weight_norm(self), dipole__weight_norm(other)));
-}
-
-DualNum flat_point__cosine_angle__flat_point(FlatPoint self, FlatPoint other) {
-    return scalar__add__anti_scalar(flat_point__anti_wedge__circle(self, flat_point__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(flat_point__weight_norm(self), flat_point__weight_norm(other)));
-}
-
-DualNum flat_point__cosine_angle__round_point(FlatPoint self, RoundPoint other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(flat_point__anti_wedge__sphere(self, round_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(flat_point__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum line__cosine_angle__circle(Line self, Circle other) {
-    return scalar__add__anti_scalar(line__anti_wedge__dipole(self, circle__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(line__weight_norm(self), circle__weight_norm(other)));
-}
-
-DualNum line__cosine_angle__dipole(Line self, Dipole other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(line__anti_wedge__circle(self, dipole__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(line__weight_norm(self), dipole__weight_norm(other)));
-}
-
-DualNum line__cosine_angle__flat_point(Line self, FlatPoint other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(line__anti_wedge__circle(self, flat_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(line__weight_norm(self), flat_point__weight_norm(other)));
-}
-
-DualNum line__cosine_angle__line(Line self, Line other) {
-    return scalar__add__anti_scalar(line__anti_wedge__dipole(self, line__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(line__weight_norm(self), line__weight_norm(other)));
-}
-
-DualNum line__cosine_angle__round_point(Line self, RoundPoint other) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(line__anti_wedge__sphere(self, round_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(line__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__circle(Plane self, Circle other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(plane__anti_wedge__dipole(self, circle__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), circle__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__dipole(Plane self, Dipole other) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(plane__anti_wedge__circle(self, dipole__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), dipole__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__flat_point(Plane self, FlatPoint other) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(plane__anti_wedge__circle(self, flat_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), flat_point__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__line(Plane self, Line other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(plane__anti_wedge__dipole(self, line__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), line__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__plane(Plane self, Plane other) {
-    return scalar__add__anti_scalar(plane__anti_wedge__round_point(self, plane__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), plane__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__round_point(Plane self, RoundPoint other) {
-    return scalar__add__anti_scalar(circle__bulk_norm(plane__anti_wedge__sphere(self, round_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum plane__cosine_angle__sphere(Plane self, Sphere other) {
-    return scalar__add__anti_scalar(plane__anti_wedge__round_point(self, sphere__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(plane__weight_norm(self), sphere__weight_norm(other)));
-}
-
-DualNum round_point__cosine_angle__round_point(RoundPoint self, RoundPoint other) {
-    return scalar__add__anti_scalar(round_point__anti_wedge__sphere(self, round_point__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(round_point__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__circle(Sphere self, Circle other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(sphere__anti_wedge__dipole(self, circle__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), circle__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__dipole(Sphere self, Dipole other) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(sphere__anti_wedge__circle(self, dipole__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), dipole__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__flat_point(Sphere self, FlatPoint other) {
-    return scalar__add__anti_scalar(dipole__bulk_norm(sphere__anti_wedge__circle(self, flat_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), flat_point__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__line(Sphere self, Line other) {
-    return scalar__add__anti_scalar(round_point__bulk_norm(sphere__anti_wedge__dipole(self, line__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), line__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__plane(Sphere self, Plane other) {
-    return scalar__add__anti_scalar(sphere__anti_wedge__round_point(self, plane__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), plane__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__round_point(Sphere self, RoundPoint other) {
-    return scalar__add__anti_scalar(circle__bulk_norm(sphere__anti_wedge__sphere(self, round_point__anti_dual(other))), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), round_point__weight_norm(other)));
-}
-
-DualNum sphere__cosine_angle__sphere(Sphere self, Sphere other) {
-    return scalar__add__anti_scalar(sphere__anti_wedge__round_point(self, sphere__anti_dual(other)), anti_scalar__anti_wedge_dot__anti_scalar(sphere__weight_norm(self), sphere__weight_norm(other)));
-}
-
-DualNum circle__sine_angle__circle(Circle self, Circle other) {
-    DualNum cos = circle__cosine_angle__circle(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum circle__sine_angle__dipole(Circle self, Dipole other) {
-    DualNum cos = circle__cosine_angle__dipole(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum circle__sine_angle__flat_point(Circle self, FlatPoint other) {
-    DualNum cos = circle__cosine_angle__flat_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum circle__sine_angle__line(Circle self, Line other) {
-    DualNum cos = circle__cosine_angle__line(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum circle__sine_angle__round_point(Circle self, RoundPoint other) {
-    DualNum cos = circle__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum dipole__sine_angle__dipole(Dipole self, Dipole other) {
-    DualNum cos = dipole__cosine_angle__dipole(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum dipole__sine_angle__flat_point(Dipole self, FlatPoint other) {
-    DualNum cos = dipole__cosine_angle__flat_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum dipole__sine_angle__round_point(Dipole self, RoundPoint other) {
-    DualNum cos = dipole__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum flat_point__sine_angle__dipole(FlatPoint self, Dipole other) {
-    DualNum cos = flat_point__cosine_angle__dipole(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum flat_point__sine_angle__flat_point(FlatPoint self, FlatPoint other) {
-    DualNum cos = flat_point__cosine_angle__flat_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum flat_point__sine_angle__round_point(FlatPoint self, RoundPoint other) {
-    DualNum cos = flat_point__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum line__sine_angle__circle(Line self, Circle other) {
-    DualNum cos = line__cosine_angle__circle(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum line__sine_angle__dipole(Line self, Dipole other) {
-    DualNum cos = line__cosine_angle__dipole(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum line__sine_angle__flat_point(Line self, FlatPoint other) {
-    DualNum cos = line__cosine_angle__flat_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum line__sine_angle__line(Line self, Line other) {
-    DualNum cos = line__cosine_angle__line(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum line__sine_angle__round_point(Line self, RoundPoint other) {
-    DualNum cos = line__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__circle(Plane self, Circle other) {
-    DualNum cos = plane__cosine_angle__circle(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__dipole(Plane self, Dipole other) {
-    DualNum cos = plane__cosine_angle__dipole(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__flat_point(Plane self, FlatPoint other) {
-    DualNum cos = plane__cosine_angle__flat_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__line(Plane self, Line other) {
-    DualNum cos = plane__cosine_angle__line(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__plane(Plane self, Plane other) {
-    DualNum cos = plane__cosine_angle__plane(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__round_point(Plane self, RoundPoint other) {
-    DualNum cos = plane__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum plane__sine_angle__sphere(Plane self, Sphere other) {
-    DualNum cos = plane__cosine_angle__sphere(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum round_point__sine_angle__round_point(RoundPoint self, RoundPoint other) {
-    DualNum cos = round_point__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__circle(Sphere self, Circle other) {
-    DualNum cos = sphere__cosine_angle__circle(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__dipole(Sphere self, Dipole other) {
-    DualNum cos = sphere__cosine_angle__dipole(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__flat_point(Sphere self, FlatPoint other) {
-    DualNum cos = sphere__cosine_angle__flat_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__line(Sphere self, Line other) {
-    DualNum cos = sphere__cosine_angle__line(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__plane(Sphere self, Plane other) {
-    DualNum cos = sphere__cosine_angle__plane(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__round_point(Sphere self, RoundPoint other) {
-    DualNum cos = sphere__cosine_angle__round_point(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
-}
-
-DualNum sphere__sine_angle__sphere(Sphere self, Sphere other) {
-    DualNum cos = sphere__cosine_angle__sphere(self, other);
-    DualNum cos_squared = dual_num__wedge_dot__dual_num(cos, cos);
-    DualNum sub = dual_num__sub__dual_num(dual_num__unit(), cos_squared);
-    return dual_num__sqrt(sub);
 }
 

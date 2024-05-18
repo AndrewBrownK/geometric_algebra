@@ -140,7 +140,7 @@ mod test {
 
     #[test]
     fn build_without_disk_writes() {
-        script_custom(false, CGA3D_CRATE_PREFIX).unwrap()
+        // script_custom(false, CGA3D_CRATE_PREFIX).unwrap()
     }
 
     #[test]

@@ -18911,278 +18911,344 @@ fn scalar__tanh(self_: Scalar) -> Scalar {
 }
 
 fn dual_num__bulk_norm_squared(self_: DualNum) -> Scalar {
-    return dual_num__dot__dual_num(self_, self_);
+    let flat_bulk_thing: Scalar = dual_num__bulk(self_);
+    return scalar__dot__scalar(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn flector__bulk_norm_squared(self_: Flector) -> Scalar {
-    return flector__dot__flector(self_, self_);
+    let flat_bulk_thing: FlectorAtInfinity = flector__bulk(self_);
+    return flector_at_infinity__dot__flector_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn flector_at_infinity__bulk_norm_squared(self_: FlectorAtInfinity) -> Scalar {
-    return flector_at_infinity__dot__flector_at_infinity(self_, self_);
+    let flat_bulk_thing: FlectorAtInfinity = flector_at_infinity__bulk(self_);
+    return flector_at_infinity__dot__flector_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn horizon__bulk_norm_squared(self_: Horizon) -> Scalar {
-    return horizon__dot__horizon(self_, self_);
+    let flat_bulk_thing: Horizon = horizon__bulk(self_);
+    return horizon__dot__horizon(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn line__bulk_norm_squared(self_: Line) -> Scalar {
-    return line__dot__line(self_, self_);
+    let flat_bulk_thing: LineAtInfinity = line__bulk(self_);
+    return line_at_infinity__dot__line_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn line_at_infinity__bulk_norm_squared(self_: LineAtInfinity) -> Scalar {
-    return line_at_infinity__dot__line_at_infinity(self_, self_);
+    let flat_bulk_thing: LineAtInfinity = line_at_infinity__bulk(self_);
+    return line_at_infinity__dot__line_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn motor__bulk_norm_squared(self_: Motor) -> Scalar {
-    return motor__dot__motor(self_, self_);
+    let flat_bulk_thing: LineAtInfinity = motor__bulk(self_);
+    return line_at_infinity__dot__line_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn multi_vector__bulk_norm_squared(self_: MultiVector) -> Scalar {
-    return multi_vector__dot__multi_vector(self_, self_);
+    let flat_bulk_thing: MultiVectorAtInfinity = multi_vector__bulk(self_);
+    return multi_vector_at_infinity__dot__multi_vector_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn multi_vector_at_infinity__bulk_norm_squared(self_: MultiVectorAtInfinity) -> Scalar {
-    return multi_vector_at_infinity__dot__multi_vector_at_infinity(self_, self_);
+    let flat_bulk_thing: MultiVectorAtInfinity = multi_vector_at_infinity__bulk(self_);
+    return multi_vector_at_infinity__dot__multi_vector_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn plane__bulk_norm_squared(self_: Plane) -> Scalar {
-    return plane__dot__plane(self_, self_);
+    let flat_bulk_thing: Horizon = plane__bulk(self_);
+    return horizon__dot__horizon(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn point__bulk_norm_squared(self_: Point) -> Scalar {
-    return point__dot__point(self_, self_);
+    let flat_bulk_thing: PointAtInfinity = point__bulk(self_);
+    return point_at_infinity__dot__point_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn point_at_infinity__bulk_norm_squared(self_: PointAtInfinity) -> Scalar {
-    return point_at_infinity__dot__point_at_infinity(self_, self_);
+    let flat_bulk_thing: PointAtInfinity = point_at_infinity__bulk(self_);
+    return point_at_infinity__dot__point_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn scalar__bulk_norm_squared(self_: Scalar) -> Scalar {
-    return scalar__dot__scalar(self_, self_);
+    let flat_bulk_thing: Scalar = scalar__bulk(self_);
+    return scalar__dot__scalar(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn transflector__bulk_norm_squared(self_: Transflector) -> Scalar {
-    return transflector__dot__transflector(self_, self_);
+    let flat_bulk_thing: FlectorAtInfinity = transflector__bulk(self_);
+    return flector_at_infinity__dot__flector_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn translator__bulk_norm_squared(self_: Translator) -> Scalar {
-    return translator__dot__translator(self_, self_);
+    let flat_bulk_thing: LineAtInfinity = translator__bulk(self_);
+    return line_at_infinity__dot__line_at_infinity(flat_bulk_thing, flat_bulk_thing);
 }
 
 fn dual_num__bulk_norm(self_: DualNum) -> Scalar {
-    return scalar__sqrt(dual_num__dot__dual_num(self_, self_));
+    return scalar__sqrt(dual_num__bulk_norm_squared(self_));
 }
 
 fn flector__bulk_norm(self_: Flector) -> Scalar {
-    return scalar__sqrt(flector__dot__flector(self_, self_));
+    return scalar__sqrt(flector__bulk_norm_squared(self_));
 }
 
 fn flector_at_infinity__bulk_norm(self_: FlectorAtInfinity) -> Scalar {
-    return scalar__sqrt(flector_at_infinity__dot__flector_at_infinity(self_, self_));
+    return scalar__sqrt(flector_at_infinity__bulk_norm_squared(self_));
 }
 
 fn horizon__bulk_norm(self_: Horizon) -> Scalar {
-    return scalar__sqrt(horizon__dot__horizon(self_, self_));
+    return scalar__sqrt(horizon__bulk_norm_squared(self_));
 }
 
 fn line__bulk_norm(self_: Line) -> Scalar {
-    return scalar__sqrt(line__dot__line(self_, self_));
+    return scalar__sqrt(line__bulk_norm_squared(self_));
 }
 
 fn line_at_infinity__bulk_norm(self_: LineAtInfinity) -> Scalar {
-    return scalar__sqrt(line_at_infinity__dot__line_at_infinity(self_, self_));
+    return scalar__sqrt(line_at_infinity__bulk_norm_squared(self_));
 }
 
 fn motor__bulk_norm(self_: Motor) -> Scalar {
-    return scalar__sqrt(motor__dot__motor(self_, self_));
+    return scalar__sqrt(motor__bulk_norm_squared(self_));
 }
 
 fn multi_vector__bulk_norm(self_: MultiVector) -> Scalar {
-    return scalar__sqrt(multi_vector__dot__multi_vector(self_, self_));
+    return scalar__sqrt(multi_vector__bulk_norm_squared(self_));
 }
 
 fn multi_vector_at_infinity__bulk_norm(self_: MultiVectorAtInfinity) -> Scalar {
-    return scalar__sqrt(multi_vector_at_infinity__dot__multi_vector_at_infinity(self_, self_));
+    return scalar__sqrt(multi_vector_at_infinity__bulk_norm_squared(self_));
 }
 
 fn plane__bulk_norm(self_: Plane) -> Scalar {
-    return scalar__sqrt(plane__dot__plane(self_, self_));
+    return scalar__sqrt(plane__bulk_norm_squared(self_));
 }
 
 fn point__bulk_norm(self_: Point) -> Scalar {
-    return scalar__sqrt(point__dot__point(self_, self_));
+    return scalar__sqrt(point__bulk_norm_squared(self_));
 }
 
 fn point_at_infinity__bulk_norm(self_: PointAtInfinity) -> Scalar {
-    return scalar__sqrt(point_at_infinity__dot__point_at_infinity(self_, self_));
+    return scalar__sqrt(point_at_infinity__bulk_norm_squared(self_));
 }
 
 fn scalar__bulk_norm(self_: Scalar) -> Scalar {
-    return scalar__sqrt(scalar__dot__scalar(self_, self_));
+    return scalar__sqrt(scalar__bulk_norm_squared(self_));
 }
 
 fn transflector__bulk_norm(self_: Transflector) -> Scalar {
-    return scalar__sqrt(transflector__dot__transflector(self_, self_));
+    return scalar__sqrt(transflector__bulk_norm_squared(self_));
 }
 
 fn translator__bulk_norm(self_: Translator) -> Scalar {
-    return scalar__sqrt(translator__dot__translator(self_, self_));
+    return scalar__sqrt(translator__bulk_norm_squared(self_));
 }
 
 fn anti_scalar__weight_norm_squared(self_: AntiScalar) -> AntiScalar {
-    return anti_scalar__anti_dot__anti_scalar(self_, self_);
+    let flat_weight: AntiScalar = anti_scalar__weight(self_);
+    return anti_scalar__anti_dot__anti_scalar(flat_weight, flat_weight);
 }
 
 fn dual_num__weight_norm_squared(self_: DualNum) -> AntiScalar {
-    return dual_num__anti_dot__dual_num(self_, self_);
+    let flat_weight: AntiScalar = dual_num__weight(self_);
+    return anti_scalar__anti_dot__anti_scalar(flat_weight, flat_weight);
 }
 
 fn flector__weight_norm_squared(self_: Flector) -> AntiScalar {
-    return flector__anti_dot__flector(self_, self_);
+    let flat_weight: Flector = flector__weight(self_);
+    return flector__anti_dot__flector(flat_weight, flat_weight);
 }
 
 fn line__weight_norm_squared(self_: Line) -> AntiScalar {
-    return line__anti_dot__line(self_, self_);
+    let flat_weight: LineAtOrigin = line__weight(self_);
+    return line_at_origin__anti_dot__line_at_origin(flat_weight, flat_weight);
 }
 
 fn line_at_origin__weight_norm_squared(self_: LineAtOrigin) -> AntiScalar {
-    return line_at_origin__anti_dot__line_at_origin(self_, self_);
+    let flat_weight: LineAtOrigin = line_at_origin__weight(self_);
+    return line_at_origin__anti_dot__line_at_origin(flat_weight, flat_weight);
 }
 
 fn motor__weight_norm_squared(self_: Motor) -> AntiScalar {
-    return motor__anti_dot__motor(self_, self_);
+    let flat_weight: Rotor = motor__weight(self_);
+    return rotor__anti_dot__rotor(flat_weight, flat_weight);
 }
 
 fn multi_vector__weight_norm_squared(self_: MultiVector) -> AntiScalar {
-    return multi_vector__anti_dot__multi_vector(self_, self_);
+    let flat_weight: MultiVectorAtOrigin = multi_vector__weight(self_);
+    return multi_vector_at_origin__anti_dot__multi_vector_at_origin(flat_weight, flat_weight);
 }
 
 fn multi_vector_at_origin__weight_norm_squared(self_: MultiVectorAtOrigin) -> AntiScalar {
-    return multi_vector_at_origin__anti_dot__multi_vector_at_origin(self_, self_);
+    let flat_weight: MultiVectorAtOrigin = multi_vector_at_origin__weight(self_);
+    return multi_vector_at_origin__anti_dot__multi_vector_at_origin(flat_weight, flat_weight);
 }
 
 fn origin__weight_norm_squared(self_: Origin) -> AntiScalar {
-    return origin__anti_dot__origin(self_, self_);
+    let flat_weight: Origin = origin__weight(self_);
+    return origin__anti_dot__origin(flat_weight, flat_weight);
 }
 
 fn plane__weight_norm_squared(self_: Plane) -> AntiScalar {
-    return plane__anti_dot__plane(self_, self_);
+    let flat_weight: PlaneAtOrigin = plane__weight(self_);
+    return plane_at_origin__anti_dot__plane_at_origin(flat_weight, flat_weight);
 }
 
 fn plane_at_origin__weight_norm_squared(self_: PlaneAtOrigin) -> AntiScalar {
-    return plane_at_origin__anti_dot__plane_at_origin(self_, self_);
+    let flat_weight: PlaneAtOrigin = plane_at_origin__weight(self_);
+    return plane_at_origin__anti_dot__plane_at_origin(flat_weight, flat_weight);
 }
 
 fn point__weight_norm_squared(self_: Point) -> AntiScalar {
-    return point__anti_dot__point(self_, self_);
+    let flat_weight: Origin = point__weight(self_);
+    return origin__anti_dot__origin(flat_weight, flat_weight);
 }
 
 fn rotor__weight_norm_squared(self_: Rotor) -> AntiScalar {
-    return rotor__anti_dot__rotor(self_, self_);
+    let flat_weight: Rotor = rotor__weight(self_);
+    return rotor__anti_dot__rotor(flat_weight, flat_weight);
 }
 
 fn transflector__weight_norm_squared(self_: Transflector) -> AntiScalar {
-    return transflector__anti_dot__transflector(self_, self_);
+    let flat_weight: PlaneAtOrigin = transflector__weight(self_);
+    return plane_at_origin__anti_dot__plane_at_origin(flat_weight, flat_weight);
 }
 
 fn translator__weight_norm_squared(self_: Translator) -> AntiScalar {
-    return translator__anti_dot__translator(self_, self_);
+    let flat_weight: AntiScalar = translator__weight(self_);
+    return anti_scalar__anti_dot__anti_scalar(flat_weight, flat_weight);
 }
 
 fn anti_scalar__weight_norm(self_: AntiScalar) -> AntiScalar {
-    return anti_scalar__anti_sqrt(anti_scalar__anti_dot__anti_scalar(self_, self_));
+    return anti_scalar__anti_sqrt(anti_scalar__weight_norm_squared(self_));
 }
 
 fn dual_num__weight_norm(self_: DualNum) -> AntiScalar {
-    return anti_scalar__anti_sqrt(dual_num__anti_dot__dual_num(self_, self_));
+    return anti_scalar__anti_sqrt(dual_num__weight_norm_squared(self_));
 }
 
 fn flector__weight_norm(self_: Flector) -> AntiScalar {
-    return anti_scalar__anti_sqrt(flector__anti_dot__flector(self_, self_));
+    return anti_scalar__anti_sqrt(flector__weight_norm_squared(self_));
 }
 
 fn line__weight_norm(self_: Line) -> AntiScalar {
-    return anti_scalar__anti_sqrt(line__anti_dot__line(self_, self_));
+    return anti_scalar__anti_sqrt(line__weight_norm_squared(self_));
 }
 
 fn line_at_origin__weight_norm(self_: LineAtOrigin) -> AntiScalar {
-    return anti_scalar__anti_sqrt(line_at_origin__anti_dot__line_at_origin(self_, self_));
+    return anti_scalar__anti_sqrt(line_at_origin__weight_norm_squared(self_));
 }
 
 fn motor__weight_norm(self_: Motor) -> AntiScalar {
-    return anti_scalar__anti_sqrt(motor__anti_dot__motor(self_, self_));
+    return anti_scalar__anti_sqrt(motor__weight_norm_squared(self_));
 }
 
 fn multi_vector__weight_norm(self_: MultiVector) -> AntiScalar {
-    return anti_scalar__anti_sqrt(multi_vector__anti_dot__multi_vector(self_, self_));
+    return anti_scalar__anti_sqrt(multi_vector__weight_norm_squared(self_));
 }
 
 fn multi_vector_at_origin__weight_norm(self_: MultiVectorAtOrigin) -> AntiScalar {
-    return anti_scalar__anti_sqrt(multi_vector_at_origin__anti_dot__multi_vector_at_origin(self_, self_));
+    return anti_scalar__anti_sqrt(multi_vector_at_origin__weight_norm_squared(self_));
 }
 
 fn origin__weight_norm(self_: Origin) -> AntiScalar {
-    return anti_scalar__anti_sqrt(origin__anti_dot__origin(self_, self_));
+    return anti_scalar__anti_sqrt(origin__weight_norm_squared(self_));
 }
 
 fn plane__weight_norm(self_: Plane) -> AntiScalar {
-    return anti_scalar__anti_sqrt(plane__anti_dot__plane(self_, self_));
+    return anti_scalar__anti_sqrt(plane__weight_norm_squared(self_));
 }
 
 fn plane_at_origin__weight_norm(self_: PlaneAtOrigin) -> AntiScalar {
-    return anti_scalar__anti_sqrt(plane_at_origin__anti_dot__plane_at_origin(self_, self_));
+    return anti_scalar__anti_sqrt(plane_at_origin__weight_norm_squared(self_));
 }
 
 fn point__weight_norm(self_: Point) -> AntiScalar {
-    return anti_scalar__anti_sqrt(point__anti_dot__point(self_, self_));
+    return anti_scalar__anti_sqrt(point__weight_norm_squared(self_));
 }
 
 fn rotor__weight_norm(self_: Rotor) -> AntiScalar {
-    return anti_scalar__anti_sqrt(rotor__anti_dot__rotor(self_, self_));
+    return anti_scalar__anti_sqrt(rotor__weight_norm_squared(self_));
 }
 
 fn transflector__weight_norm(self_: Transflector) -> AntiScalar {
-    return anti_scalar__anti_sqrt(transflector__anti_dot__transflector(self_, self_));
+    return anti_scalar__anti_sqrt(transflector__weight_norm_squared(self_));
 }
 
 fn translator__weight_norm(self_: Translator) -> AntiScalar {
-    return anti_scalar__anti_sqrt(translator__anti_dot__translator(self_, self_));
+    return anti_scalar__anti_sqrt(translator__weight_norm_squared(self_));
 }
 
-fn dual_num__geometric_norm(self_: DualNum) -> DualNum {
+fn dual_num__norm_squared(self_: DualNum) -> DualNum {
+    return scalar__add__anti_scalar(dual_num__bulk_norm_squared(self_), dual_num__weight_norm_squared(self_));
+}
+
+fn flector__norm_squared(self_: Flector) -> DualNum {
+    return scalar__add__anti_scalar(flector__bulk_norm_squared(self_), flector__weight_norm_squared(self_));
+}
+
+fn line__norm_squared(self_: Line) -> DualNum {
+    return scalar__add__anti_scalar(line__bulk_norm_squared(self_), line__weight_norm_squared(self_));
+}
+
+fn motor__norm_squared(self_: Motor) -> DualNum {
+    return scalar__add__anti_scalar(motor__bulk_norm_squared(self_), motor__weight_norm_squared(self_));
+}
+
+fn multi_vector__norm_squared(self_: MultiVector) -> DualNum {
+    return scalar__add__anti_scalar(multi_vector__bulk_norm_squared(self_), multi_vector__weight_norm_squared(self_));
+}
+
+fn plane__norm_squared(self_: Plane) -> DualNum {
+    return scalar__add__anti_scalar(plane__bulk_norm_squared(self_), plane__weight_norm_squared(self_));
+}
+
+fn point__norm_squared(self_: Point) -> DualNum {
+    return scalar__add__anti_scalar(point__bulk_norm_squared(self_), point__weight_norm_squared(self_));
+}
+
+fn transflector__norm_squared(self_: Transflector) -> DualNum {
+    return scalar__add__anti_scalar(transflector__bulk_norm_squared(self_), transflector__weight_norm_squared(self_));
+}
+
+fn translator__norm_squared(self_: Translator) -> DualNum {
+    return scalar__add__anti_scalar(translator__bulk_norm_squared(self_), translator__weight_norm_squared(self_));
+}
+
+fn dual_num__norm(self_: DualNum) -> DualNum {
     return scalar__add__anti_scalar(dual_num__bulk_norm(self_), dual_num__weight_norm(self_));
 }
 
-fn flector__geometric_norm(self_: Flector) -> DualNum {
+fn flector__norm(self_: Flector) -> DualNum {
     return scalar__add__anti_scalar(flector__bulk_norm(self_), flector__weight_norm(self_));
 }
 
-fn line__geometric_norm(self_: Line) -> DualNum {
+fn line__norm(self_: Line) -> DualNum {
     return scalar__add__anti_scalar(line__bulk_norm(self_), line__weight_norm(self_));
 }
 
-fn motor__geometric_norm(self_: Motor) -> DualNum {
+fn motor__norm(self_: Motor) -> DualNum {
     return scalar__add__anti_scalar(motor__bulk_norm(self_), motor__weight_norm(self_));
 }
 
-fn multi_vector__geometric_norm(self_: MultiVector) -> DualNum {
+fn multi_vector__norm(self_: MultiVector) -> DualNum {
     return scalar__add__anti_scalar(multi_vector__bulk_norm(self_), multi_vector__weight_norm(self_));
 }
 
-fn plane__geometric_norm(self_: Plane) -> DualNum {
+fn plane__norm(self_: Plane) -> DualNum {
     return scalar__add__anti_scalar(plane__bulk_norm(self_), plane__weight_norm(self_));
 }
 
-fn point__geometric_norm(self_: Point) -> DualNum {
+fn point__norm(self_: Point) -> DualNum {
     return scalar__add__anti_scalar(point__bulk_norm(self_), point__weight_norm(self_));
 }
 
-fn transflector__geometric_norm(self_: Transflector) -> DualNum {
+fn transflector__norm(self_: Transflector) -> DualNum {
     return scalar__add__anti_scalar(transflector__bulk_norm(self_), transflector__weight_norm(self_));
 }
 
-fn translator__geometric_norm(self_: Translator) -> DualNum {
+fn translator__norm(self_: Translator) -> DualNum {
     return scalar__add__anti_scalar(translator__bulk_norm(self_), translator__weight_norm(self_));
 }
 

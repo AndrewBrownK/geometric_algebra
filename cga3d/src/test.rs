@@ -1,18 +1,21 @@
 use crate::characteristics::{AntiSqrt, Attitude, Sqrt};
 use crate::metrics::Distance;
-use crate::norms::{BulkNorm, UnitizedNorm, WeightNorm};
 use crate::products::dot::{AntiDot, Dot};
 use crate::products::exterior::{Meet, Wedge};
-use crate::products::geometric::WedgeDot;
 use crate::unitize::Unitize;
-use crate::{FlatPoint, Horizon, Infinity, Origin, RoundPoint, RoundPointOnOrigin};
+use crate::{FlatPoint, Horizon, Infinity, Origin, RoundPoint};
 use projective_ga::Unit;
 use std::ops::Add;
 
 #[test]
 fn round_point_distances() {
-    // TODO new problem.... RoundPoints don't have very many distance implementations.
-    // TODO FlatPoints are same situation. Only have distance with Circles?
+    //TODO speculation on distance formula for CGA
+    // Basically, if it is possible at all, then it looks something like this:
+    // - take the meet of two objects
+    // - interpret the radius of the meet according to some SphereAtOrigin that represents
+    //   the curvature of your space
+    // - the SphereAtOrigin will be a Horizon for flat space, or have a real radius for
+    //   elliptic space, or imaginary radius for hyperbolic space
 
     // RoundPoint with real radius
     // 3, 0, 0 (radius of real 3)
@@ -20,11 +23,6 @@ fn round_point_distances() {
     // If you do the above with a radius of imaginary 3, you get an imaginary distance for all results.
 
     // RoundPoints with zero radius
-
-    // TODO none of the distances measured here care about the e5 parameter
-    //  So the distance formula is measuring the distance between the centers of each
-    //  RoundPoint, and not considering the radius.
-
     let b = RoundPoint::new(-3.0, 0.0, 0.0, 1.0, 4.5);
     let c = RoundPoint::new(-2.0, 0.0, 0.0, 1.0, 2.0);
     let d = RoundPoint::new(-1.0, 0.0, 0.0, 1.0, 0.5);
@@ -56,20 +54,16 @@ fn round_point_distances() {
     let j = FlatPoint::new(5.0, 0.0, 0.0, 1.0);
     let k = FlatPoint::new(6.0, 0.0, 0.0, 1.0);
 
-    for mut some_point in vec![b, c, d, e, f, g, h, i, j, k] {
-        // TODO.... apparently.... FlatPoints have an imaginary weight norm?
-        //  FlatPoint.anti_dot(FlatPoint) is negative, which then we have to take square root
-        //  to find the weight norm.... So any attempt to unitize (requiring division by weight norm)
-        //  results in NaN...
-        println!("some_point before: {some_point:?}");
-        some_point = some_point.unitize();
-        println!("some_point after: {some_point:?}");
-
-        let round_a = some_point.meet(Horizon::unit());
-        println!("Conversion of some_point: {round_a:?}");
-        // let distance = a.distance(some_point).unitized_norm();
-        // println!("FlatPoint distance is {distance}");
-    }
+    // for mut some_point in vec![b, c, d, e, f, g, h, i, j, k] {
+    //     println!("some_point before: {some_point:?}");
+    //     some_point = some_point.unitize();
+    //     println!("some_point after: {some_point:?}");
+    //
+    //     let round_a = some_point.meet(Horizon::unit());
+    //     println!("Conversion of some_point: {round_a:?}");
+    //     // let distance = a.distance(some_point).unitized_norm();
+    //     // println!("FlatPoint distance is {distance}");
+    // }
 }
 
 fn distance_speculation() {

@@ -132,6 +132,7 @@ use crate::products::geometric::*;",
         "
 use crate::*;
 use crate::characteristics::*;
+use crate::aspects::*;
 use crate::products::dot::*;",
     )?;
     code_gen.emit_norms(&mut emitter)?;

@@ -7,7 +7,6 @@ pub struct TraitImpls<'a> {
     pub class_level: BTreeMap<(String, String), AstNode<'a>>,
     pub single_args: BTreeMap<(String, String), AstNode<'a>>,
     pub pair_args: BTreeMap<(String, String, String), AstNode<'a>>,
-    // TODO inlined_single_args, inlined_pair_args
 }
 
 impl<'a> TraitImpls<'a> {

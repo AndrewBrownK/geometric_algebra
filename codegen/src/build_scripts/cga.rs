@@ -119,7 +119,7 @@ use std::ops::{Add, Div, Mul, Neg, Sub};",
 use projective_ga::{simd::*, *};
 use crate::*;
 use std::ops::{Add, Div, Mul, Neg, Sub};
-use crate::aspects::{Bulk, Weight, RoundBulk, RoundWeight};
+use crate::aspects::{FlatBulk, FlatWeight, RoundBulk, RoundWeight};
 use crate::involutions::*;",
     )?;
     code_gen.emit_aspect_duals(&mut emitter)?;
@@ -141,6 +141,8 @@ use crate::involutions::*;",
 use crate::*;
 use crate::characteristics::*;
 use crate::aspects::*;
+use crate::involutions::*;
+use crate::products::exterior::*;
 use crate::products::dot::*;",
     )?;
     code_gen.emit_norms(&mut emitter)?;
@@ -149,7 +151,7 @@ use crate::products::dot::*;",
     emitter.emit_rust_preamble(
         "
 use crate::*;
-use crate::norms::WeightNorm;
+use crate::norms::RoundWeightNorm;
 use crate::products::geometric::*;",
     )?;
     code_gen.emit_unitize(&mut emitter)?;

@@ -5,7 +5,7 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
-use crate::norms::WeightNorm;
+use crate::norms::RoundWeightNorm;
 use crate::products::geometric::*;
 use crate::*;
 
@@ -16,25 +16,13 @@ pub trait Unitize {
     fn unitize(self) -> Self::Output;
 }
 
-impl Unitize for AntiScalar {
-    type Output = AntiScalar;
-
-    fn unitize(self) -> AntiScalar {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
 impl Unitize for Circle {
     type Output = Circle;
 
     fn unitize(self) -> Circle {
         self.wedge_dot(Scalar {
             groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
+                g0: 1.0 / self.round_weight_norm().group0(),
             },
         })
     }
@@ -46,67 +34,7 @@ impl Unitize for Dipole {
     fn unitize(self) -> Dipole {
         self.wedge_dot(Scalar {
             groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for DualNum {
-    type Output = DualNum;
-
-    fn unitize(self) -> DualNum {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for FlatPoint {
-    type Output = FlatPoint;
-
-    fn unitize(self) -> FlatPoint {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Flector {
-    type Output = Flector;
-
-    fn unitize(self) -> Flector {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Line {
-    type Output = Line;
-
-    fn unitize(self) -> Line {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Motor {
-    type Output = Motor;
-
-    fn unitize(self) -> Motor {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
+                g0: 1.0 / self.round_weight_norm().group0(),
             },
         })
     }
@@ -118,19 +46,7 @@ impl Unitize for MultiVector {
     fn unitize(self) -> MultiVector {
         self.wedge_dot(Scalar {
             groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Plane {
-    type Output = Plane;
-
-    fn unitize(self) -> Plane {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
+                g0: 1.0 / self.round_weight_norm().group0(),
             },
         })
     }
@@ -142,19 +58,7 @@ impl Unitize for RoundPoint {
     fn unitize(self) -> RoundPoint {
         self.wedge_dot(Scalar {
             groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
-            },
-        })
-    }
-}
-
-impl Unitize for Scalar {
-    type Output = Scalar;
-
-    fn unitize(self) -> Scalar {
-        self.wedge_dot(Scalar {
-            groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
+                g0: 1.0 / self.round_weight_norm().group0(),
             },
         })
     }
@@ -166,7 +70,7 @@ impl Unitize for Sphere {
     fn unitize(self) -> Sphere {
         self.wedge_dot(Scalar {
             groups: ScalarGroups {
-                g0: 1.0 / self.weight_norm().group0(),
+                g0: 1.0 / self.round_weight_norm().group0(),
             },
         })
     }
