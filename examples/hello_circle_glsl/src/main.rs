@@ -3,6 +3,7 @@ use std::error::Error;
 use std::fmt::Debug;
 use std::fs;
 use std::io::Read;
+use naga::ShaderStage;
 
 use naga_oil::compose::NagaModuleDescriptor;
 use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
@@ -77,23 +78,34 @@ impl App {
         let window_size = window.inner_size();
         self.size = window_size.clone();
 
-
-        let wgsl_entry_path = "examples/hello_circle/src/shader.wgsl";
-        let wgsl_entry = fs::read_to_string(wgsl_entry_path).unwrap();
+        let glsl_frag_entry_path = "examples/hello_circle_glsl/src/shader.frag.glsl";
+        let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
         let naga_module_descriptor = NagaModuleDescriptor {
-            source: wgsl_entry.as_str(),
-            file_path: wgsl_entry_path,
+            source: glsl_entry.as_str(),
+            file_path: glsl_frag_entry_path,
             ..Default::default()
         };
 
-        let naga_module = cga3d_min::shaders::wgsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
+        // TODO stack overflow. Random guess based on experience, it is probably here.
+        //  The problem is that glsl gets processed by naga in recursive techniques
+        //  that can overflow the stack if you have too many consecutive binary operations,
+        //  like vector additions. Might be able to mitigate the issue with a manual build step.
+        let naga_module = cga3d_min::shaders::glsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
 
 
+        let glsl_vert_shader = include_str!("shader.vert.glsl");
 
         // Load the shaders from disk
-        let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+        let vert_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
-            // source: wgpu::ShaderSource::Wgsl(Cow::Borrowed(include_str!("shader.wgsl"))),
+            source: wgpu::ShaderSource::Glsl {
+                shader: Cow::Owned(glsl_vert_shader.to_string()),
+                stage: ShaderStage::Vertex,
+                defines: Default::default(),
+            }
+        });
+        let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+            label: None,
             source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),
         });
 
@@ -140,13 +152,13 @@ impl App {
             label: None,
             layout: Some(&pipeline_layout),
             vertex: wgpu::VertexState {
-                module: &shader,
-                entry_point: "vs_main",
+                module: &vert_shader,
+                entry_point: "main",
                 buffers: &[],
             },
             fragment: Some(wgpu::FragmentState {
-                module: &shader,
-                entry_point: "fs_main",
+                module: &frag_shader,
+                entry_point: "main",
                 targets: &[Some(swapchain_format.into())],
             }),
             primitive: wgpu::PrimitiveState::default(),
@@ -193,9 +205,9 @@ impl App {
                 rpass.set_pipeline(&render_pipeline);
                 rpass.set_bind_group(0, &bg, &[]);
 
-                // Render 6 vertices as a quad that takes up the entire screen.
+                // Render a single triangle takes up the entire screen.
                 // Actual round objects will be rendered in the fragment shader.
-                rpass.draw(0..6, 0..1);
+                rpass.draw(0..3, 0..1);
             }
 
             queue.submit(Some(encoder.finish()));

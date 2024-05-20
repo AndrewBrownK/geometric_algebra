@@ -18,11 +18,8 @@ struct VertexOutput {
 
 @vertex
 fn vs_main(@builtin(vertex_index) in_vertex_index: u32) -> VertexOutput {
-    let expand = 3.0;
     // Full screen triangle
-    // 0   ->   -1, -1   ->   -3, -3
-    // 1   ->    0,  1   ->    0,  3
-    // 2   ->    1, -1   ->    3, -3
+    let expand = 3.0;
     let x = f32(i32(in_vertex_index) - 1);
     let y = f32(i32(in_vertex_index & 1u) * 2 - 1);
     var out: VertexOutput;
@@ -75,7 +72,7 @@ fn fs_main(vertex: VertexOutput) -> @location(0) vec4<f32> {
     // Join the first pair
     let left_to_top_dipole = cga::roundPoint_wedge_roundPoint(left, top);
 
-    // Joint the remaining point
+    // Join the remaining point
     let circle = cga::dipole_wedge_roundPoint(left_to_top_dipole, right);
 
     // Now that we have our circle, we can determine what we want to do with this fragment
@@ -97,6 +94,6 @@ fn fs_main(vertex: VertexOutput) -> @location(0) vec4<f32> {
     // And lastly, make pixels more bright the closer they are to the circle.
     let destructive_circle_color = vec4<f32>(1.0) - vec4<f32>(abs(radius_squared) * 100.0);
     var circle_color = destructive_circle_color;
-//    circle_color = max(vec4<f32>(0.0), destructive_circle_color);
+    // circle_color = max(vec4<f32>(0.0), destructive_circle_color);
     return background_color + circle_color;
 }

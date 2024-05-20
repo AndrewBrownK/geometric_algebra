@@ -34,6 +34,7 @@ pub fn wgsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     naga_oil::compose::ComposableModuleDescriptor {{
         source: {upper_snake_case_name}_WGSL_SRC,
         file_path: \"{algebra_name}/src/shaders/{algebra_name}.wgsl\",
+        language: naga_oil::compose::ShaderLanguage::Wgsl,
         ..Default::default()
     }}
 }}
@@ -71,6 +72,7 @@ pub fn glsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     naga_oil::compose::ComposableModuleDescriptor {{
         source: {upper_snake_case_name}_GLSL_SRC,
         file_path: \"{algebra_name}/src/shaders/{algebra_name}.glsl\",
+        language: naga_oil::compose::ShaderLanguage::Glsl,
         ..Default::default()
     }}
 }}

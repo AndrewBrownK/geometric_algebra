@@ -20,5 +20,5 @@ wgsl-out = []
 
 [dependencies]
 projective_ga = { path = "../projective_ga" }
-naga_oil = { version =  "0.13.0", features = ["prune"] }
+naga_oil = { version =  "0.13.0", features = ["prune", "glsl"] }
 naga = "0.19.2"

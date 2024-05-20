@@ -26,6 +26,7 @@ pub fn wgsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     naga_oil::compose::ComposableModuleDescriptor {
         source: RGA3D_WGSL_SRC,
         file_path: "rga3d/src/shaders/rga3d.wgsl",
+        language: ShaderLanguage::Wgsl,
         ..Default::default()
     }
 }
@@ -63,6 +64,7 @@ pub fn glsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     naga_oil::compose::ComposableModuleDescriptor {
         source: RGA3D_GLSL_SRC,
         file_path: "rga3d/src/shaders/rga3d.glsl",
+        language: ShaderLanguage::Glsl,
         ..Default::default()
     }
 }

@@ -6,7 +6,7 @@ edition = "2021"
 license = "MIT"
 publish = false
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# TODO clean up any unused dependencies
 
 [dependencies]
 winit = "0.30.0"

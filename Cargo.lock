@@ -739,6 +739,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "hello_circle_glsl"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "cga3d_min",
+ "env_logger",
+ "naga",
+ "naga_oil",
+ "pollster",
+ "tracing",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wgpu",
+ "winit",
+]
+
+[[package]]
+name = "hello_rust_circle"
+version = "0.1.0"
+dependencies = [
+ "cga3d_min",
+]
+
+[[package]]
 name = "hermit-abi"
 version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
