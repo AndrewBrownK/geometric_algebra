@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::error::Error;
 use std::fmt::Debug;
-use std::fs;
+use std::{fs, thread};
 use std::io::Read;
 use naga::ShaderStage;
 
@@ -78,20 +78,29 @@ impl App {
         let window_size = window.inner_size();
         self.size = window_size.clone();
 
-        let glsl_frag_entry_path = "examples/hello_circle_glsl/src/shader.frag.glsl";
-        let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
-        let naga_module_descriptor = NagaModuleDescriptor {
-            source: glsl_entry.as_str(),
-            file_path: glsl_frag_entry_path,
-            ..Default::default()
-        };
+        let (tx, mut rx) = std::sync::mpsc::channel();
+        thread::Builder::new()
+            .name("glsl composition".to_string())
+            // glsl composition uses recursion and needs larger stack size
+            .stack_size(32*1024*1024)
+            .spawn(move || {
 
-        // TODO stack overflow. Random guess based on experience, it is probably here.
-        //  The problem is that glsl gets processed by naga in recursive techniques
-        //  that can overflow the stack if you have too many consecutive binary operations,
-        //  like vector additions. Might be able to mitigate the issue with a manual build step.
-        let naga_module = cga3d_min::shaders::glsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
-
+                let glsl_frag_entry_path = "examples/hello_circle_glsl/src/shader.frag.glsl";
+                let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
+                let naga_module_descriptor = NagaModuleDescriptor {
+                    source: glsl_entry.as_str(),
+                    file_path: glsl_frag_entry_path,
+                    ..Default::default()
+                };
+                // TODO
+                //  ComposerError { inner: GlslParseError([Error { kind: SemanticError("Missing entry point"), meta: Span { start: 0, end: 0 } }]), source: Module { name: "cga3d_min", offset: 13, defs: {} } }
+                let naga_module = cga3d_min::shaders::glsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
+                tx.send(naga_module).expect("must tx naga_module successfully");
+            })
+            .expect("We need multithreading, in order to get a larger stack size, in order to compose wgsl");
+        let naga_module = async {
+            rx.recv().expect("Need glsl naga module")
+        }.await;
 
         let glsl_vert_shader = include_str!("shader.vert.glsl");
 
