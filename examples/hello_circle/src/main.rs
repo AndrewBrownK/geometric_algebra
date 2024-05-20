@@ -1,14 +1,14 @@
 use std::borrow::Cow;
-use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::Debug;
 use std::fs;
 use std::io::Read;
 
-use naga_oil::compose::{ComposableModuleDescriptor, Composer, NagaModuleDescriptor};
-use naga_oil::prune::PartReq;
-use wgpu::{Instance, InstanceDescriptor, SurfaceTargetUnsafe};
+use naga_oil::compose::NagaModuleDescriptor;
+use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
+use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::application::ApplicationHandler;
+use winit::dpi::PhysicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
 use winit::window::{
@@ -25,13 +25,15 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 struct App {
     window: Option<Window>,
-    handle_redraw: Box<dyn FnMut(&ActiveEventLoop, WindowId, WindowEvent)>
+    handle_redraw: Box<dyn FnMut(&ActiveEventLoop, WindowId, WindowEvent)>,
+    size: PhysicalSize<u32>,
 }
 impl App {
     fn new() -> Self {
         App {
             window: None,
-            handle_redraw: Box::new(|_, _, _| {})
+            handle_redraw: Box::new(|_, _, _| {}),
+            size: PhysicalSize { width: 1u32, height: 1u32 }
         }
     }
 }
@@ -48,6 +50,9 @@ impl ApplicationHandler for App {
                 self.handle_redraw.as_mut()(event_loop, id, event);
                 self.window.as_ref().unwrap().request_redraw()
             },
+            WindowEvent::Resized(new_size) => {
+                self.size = new_size;
+            }
             _ => (),
         }
     }
@@ -70,9 +75,10 @@ impl App {
         let adapter = instance.request_adapter(&Default::default()).await.unwrap();
         let (device, queue) = adapter.request_device(&Default::default(), None).await.unwrap();
         let window_size = window.inner_size();
+        self.size = window_size.clone();
 
 
-        let wgsl_entry_path = "examples/src/shader.wgsl";
+        let wgsl_entry_path = "examples/hello_circle/src/shader.wgsl";
         let wgsl_entry = fs::read_to_string(wgsl_entry_path).unwrap();
         let naga_module_descriptor = NagaModuleDescriptor {
             source: wgsl_entry.as_str(),
@@ -91,9 +97,39 @@ impl App {
             source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),
         });
 
+        let bg_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
+            label: None,
+            entries: &[BindGroupLayoutEntry {
+                binding: 0,
+                visibility: wgpu::ShaderStages::FRAGMENT,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            }],
+        });
+
+        let screen_ratio_buffer = device.create_buffer_init(&BufferInitDescriptor {
+            label: None,
+            contents: bytemuck::cast_slice(&[window_size.width as f32, window_size.height as f32]),
+            usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+        });
+        let bg = device.create_bind_group(&BindGroupDescriptor {
+            label: None,
+            layout: &bg_layout,
+            entries: &[
+                wgpu::BindGroupEntry {
+                    binding: 0,
+                    resource: wgpu::BindingResource::Buffer(screen_ratio_buffer.as_entire_buffer_binding()),
+                },
+            ],
+        });
+
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: None,
-            bind_group_layouts: &[],
+            bind_group_layouts: &[&bg_layout],
             push_constant_ranges: &[],
         });
 
@@ -127,7 +163,6 @@ impl App {
         window.request_redraw();
         self.window = Some(window);
 
-        // TODO render a circle instead of a triangle
         self.handle_redraw = Box::new(move |event_loop, id, event| {
             let frame = surface
                 .get_current_texture()
@@ -156,7 +191,11 @@ impl App {
                         occlusion_query_set: None,
                     });
                 rpass.set_pipeline(&render_pipeline);
-                rpass.draw(0..3, 0..1);
+                rpass.set_bind_group(0, &bg, &[]);
+
+                // Render 6 vertices as a quad that takes up the entire screen.
+                // Actual round objects will be rendered in the fragment shader.
+                rpass.draw(0..6, 0..1);
             }
 
             queue.submit(Some(encoder.finish()));

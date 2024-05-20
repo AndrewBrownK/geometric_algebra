@@ -1,8 +1,10 @@
+use std::io::Write;
 use crate::ast::GatherData;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
-    emit::{camel_to_snake_case, emit_indentation},
+    emit::{emit_indentation},
 };
+use crate::emit::lower_camel_case;
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
@@ -26,14 +28,14 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             match &expression.content {
                 ExpressionContent::InvokeInstanceMethod(result_class, inner_expression, method_name, _) => {
                     if let DataType::MultiVector(result_class) = result_class {
-                        camel_to_snake_case(collector, &result_class.class_name)?;
-                        collector.write_all(b"__")?;
+                        lower_camel_case(collector, &result_class.class_name)?;
+                        collector.write_all(b"_")?;
                     }
-                    camel_to_snake_case(collector, method_name)?;
+                    lower_camel_case(collector, method_name)?;
                     for (argument_class, _argument) in arguments.iter() {
                         if let DataType::MultiVector(argument_class) = argument_class {
-                            collector.write_all(b"__")?;
-                            camel_to_snake_case(collector, &argument_class.class_name)?;
+                            collector.write_all(b"_")?;
+                            lower_camel_case(collector, &argument_class.class_name)?;
                         }
                     }
                     collector.write_all(b"(")?;
@@ -46,9 +48,9 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                     if *method_name == "Constructor" {
                         collector.write_fmt(format_args!("{}", &class.class_name))?;
                     } else {
-                        camel_to_snake_case(collector, &class.class_name)?;
-                        collector.write_all(b"__")?;
-                        camel_to_snake_case(collector, method_name)?;
+                        lower_camel_case(collector, &class.class_name)?;
+                        collector.write_all(b"_")?;
+                        lower_camel_case(collector, method_name)?;
                     }
                     collector.write_all(b"(")?;
                 }
@@ -63,9 +65,9 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             collector.write_all(b")")?;
         }
         ExpressionContent::Conversion(source_class, destination_class, inner_expression) => {
-            camel_to_snake_case(collector, &source_class.class_name)?;
-            collector.write_all(b"__into__")?;
-            camel_to_snake_case(collector, &destination_class.class_name)?;
+            lower_camel_case(collector, &source_class.class_name)?;
+            collector.write_all(b"_into_")?;
+            lower_camel_case(collector, &destination_class.class_name)?;
             collector.write_all(b"(")?;
             emit_expression(collector, inner_expression)?;
             collector.write_all(b")")?;
@@ -81,7 +83,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
         }
         ExpressionContent::Access(inner_expression, array_index) => {
             emit_expression(collector, inner_expression)?;
-            collector.write_fmt(format_args!(".g{}", array_index))?;
+            collector.write_fmt(format_args!(".g{}_", array_index))?;
         }
         ExpressionContent::Swizzle(inner_expression, indices) => {
             emit_expression(collector, inner_expression)?;
@@ -105,7 +107,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                             collector.write_all(b"-")?;
                         }
                         emit_expression(collector, inner_expression)?;
-                        collector.write_fmt(format_args!(".g{}", gd.group))?;
+                        collector.write_fmt(format_args!(".g{}_", gd.group))?;
                         if gd.group_size > 1 {
                             collector.write_fmt(format_args!(".{}", COMPONENT[gd.element]))?;
                         }
@@ -300,7 +302,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 }
                 collector.write_all(b"\n")?;
                 emit_indentation(collector, indentation + 1)?;
-                collector.write_fmt(format_args!(" g{}: ", i))?;
+                collector.write_fmt(format_args!(" g{}_: ", i))?;
                 emit_data_type(collector, &DataType::SimdVector(group.len()))?;
                 collector.write(b",\n")?;
             }
@@ -344,33 +346,33 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"fn ")?;
             match parameters.len() {
                 0 => {
-                    camel_to_snake_case(collector, class.class_name.as_str())?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, result.name)?;
+                    lower_camel_case(collector, class.class_name.as_str())?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, result.name)?;
                 },
                 1 if result.name == "Into" => {
-                    camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, result.name)?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, &result.data_type.data_class_name())?;
+                    lower_camel_case(collector, &parameters[0].data_type.data_class_name())?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, result.name)?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, &result.data_type.data_class_name())?;
                 }
                 1 => {
-                    camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, result.name)?;
+                    lower_camel_case(collector, &parameters[0].data_type.data_class_name())?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, result.name)?;
                 },
                 2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {
-                    camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, result.name)?;
+                    lower_camel_case(collector, &parameters[0].data_type.data_class_name())?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, result.name)?;
                 },
                 2 => {
-                    camel_to_snake_case(collector, &parameters[0].data_type.data_class_name())?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, result.name)?;
-                    collector.write_all(b"__")?;
-                    camel_to_snake_case(collector, &parameters[1].data_type.data_class_name())?;
+                    lower_camel_case(collector, &parameters[0].data_type.data_class_name())?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, result.name)?;
+                    collector.write_all(b"_")?;
+                    lower_camel_case(collector, &parameters[1].data_type.data_class_name())?;
                 }
                 _ => unreachable!(),
             }

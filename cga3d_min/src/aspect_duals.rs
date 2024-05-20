@@ -55,7 +55,7 @@ impl FlatBulkDual for Circle {
     type Output = Dipole;
 
     fn flat_bulk_dual(self) -> Dipole {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -63,7 +63,7 @@ impl FlatBulkDual for Dipole {
     type Output = Circle;
 
     fn flat_bulk_dual(self) -> Circle {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -71,7 +71,7 @@ impl FlatBulkDual for FlatPoint {
     type Output = Circle;
 
     fn flat_bulk_dual(self) -> Circle {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -79,7 +79,7 @@ impl FlatBulkDual for Flector {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -87,7 +87,7 @@ impl FlatBulkDual for Line {
     type Output = Dipole;
 
     fn flat_bulk_dual(self) -> Dipole {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -95,7 +95,7 @@ impl FlatBulkDual for Motor {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -103,7 +103,7 @@ impl FlatBulkDual for MultiVector {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -111,7 +111,7 @@ impl FlatBulkDual for Plane {
     type Output = RoundPoint;
 
     fn flat_bulk_dual(self) -> RoundPoint {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -119,7 +119,7 @@ impl FlatBulkDual for RoundPoint {
     type Output = Sphere;
 
     fn flat_bulk_dual(self) -> Sphere {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -127,7 +127,7 @@ impl FlatBulkDual for Sphere {
     type Output = RoundPoint;
 
     fn flat_bulk_dual(self) -> RoundPoint {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -135,7 +135,7 @@ impl FlatWeightDual for AntiScalar {
     type Output = Scalar;
 
     fn flat_weight_dual(self) -> Scalar {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -143,7 +143,7 @@ impl FlatWeightDual for Circle {
     type Output = Dipole;
 
     fn flat_weight_dual(self) -> Dipole {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -151,7 +151,7 @@ impl FlatWeightDual for Dipole {
     type Output = Circle;
 
     fn flat_weight_dual(self) -> Circle {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -159,7 +159,7 @@ impl FlatWeightDual for DualNum {
     type Output = DualNum;
 
     fn flat_weight_dual(self) -> DualNum {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -167,7 +167,7 @@ impl FlatWeightDual for FlatPoint {
     type Output = Circle;
 
     fn flat_weight_dual(self) -> Circle {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -175,7 +175,7 @@ impl FlatWeightDual for Flector {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -183,7 +183,7 @@ impl FlatWeightDual for Line {
     type Output = Dipole;
 
     fn flat_weight_dual(self) -> Dipole {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -191,7 +191,7 @@ impl FlatWeightDual for Motor {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -199,7 +199,7 @@ impl FlatWeightDual for MultiVector {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -207,7 +207,7 @@ impl FlatWeightDual for Plane {
     type Output = RoundPoint;
 
     fn flat_weight_dual(self) -> RoundPoint {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -215,7 +215,7 @@ impl FlatWeightDual for Sphere {
     type Output = RoundPoint;
 
     fn flat_weight_dual(self) -> RoundPoint {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -223,7 +223,7 @@ impl RoundBulkDual for Circle {
     type Output = Dipole;
 
     fn round_bulk_dual(self) -> Dipole {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -231,7 +231,7 @@ impl RoundBulkDual for Dipole {
     type Output = Circle;
 
     fn round_bulk_dual(self) -> Circle {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -239,7 +239,7 @@ impl RoundBulkDual for DualNum {
     type Output = DualNum;
 
     fn round_bulk_dual(self) -> DualNum {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -247,7 +247,7 @@ impl RoundBulkDual for MultiVector {
     type Output = MultiVector;
 
     fn round_bulk_dual(self) -> MultiVector {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -255,7 +255,7 @@ impl RoundBulkDual for RoundPoint {
     type Output = Sphere;
 
     fn round_bulk_dual(self) -> Sphere {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -263,7 +263,7 @@ impl RoundBulkDual for Scalar {
     type Output = AntiScalar;
 
     fn round_bulk_dual(self) -> AntiScalar {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -271,7 +271,7 @@ impl RoundWeightDual for Circle {
     type Output = Dipole;
 
     fn round_weight_dual(self) -> Dipole {
-        self.round_weight().complement()
+        self.round_weight().dual()
     }
 }
 
@@ -279,7 +279,7 @@ impl RoundWeightDual for Dipole {
     type Output = Circle;
 
     fn round_weight_dual(self) -> Circle {
-        self.round_weight().complement()
+        self.round_weight().dual()
     }
 }
 
@@ -287,7 +287,7 @@ impl RoundWeightDual for MultiVector {
     type Output = MultiVector;
 
     fn round_weight_dual(self) -> MultiVector {
-        self.round_weight().complement()
+        self.round_weight().dual()
     }
 }
 
@@ -295,7 +295,7 @@ impl RoundWeightDual for RoundPoint {
     type Output = Sphere;
 
     fn round_weight_dual(self) -> Sphere {
-        self.round_weight().complement()
+        self.round_weight().dual()
     }
 }
 
@@ -303,6 +303,6 @@ impl RoundWeightDual for Sphere {
     type Output = RoundPoint;
 
     fn round_weight_dual(self) -> RoundPoint {
-        self.round_weight().complement()
+        self.round_weight().dual()
     }
 }

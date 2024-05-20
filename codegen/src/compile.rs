@@ -20,8 +20,6 @@ macro_rules! result_of_trait {
 }
 
 pub fn simplify_and_legalize(expression: Box<Expression>) -> Box<Expression> {
-    // TODO gain optimization insights at https://godbolt.org/
-    //  especially with uncertainty on which SIMD arrangements are most optimal
     match expression.content {
         ExpressionContent::Gather(mut inner_expression, indices) => {
             let is_all_consts = indices.iter().all(|it| match it {
@@ -2092,7 +2090,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
 
         for param_a in registry.single_parameters() {
             let _: Option<()> = try {
-                // TODO this is not right in CGA
                 let mut vars = vec![];
                 let flat_weight = self.trait_impls.get_single_invocation(flat_weight, variable(&param_a))?;
                 let flat_weight = add_variable(&mut vars, "flat_weight", flat_weight);
@@ -2294,14 +2291,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
     /// These items require some special insight per Geometric Algebra, for example if there are
     /// multiple/special projective dimensions with different meanings.
     pub fn fancy_norms(&mut self, registry: &'r MultiVectorClassRegistry) {
-
-
-        // TODO here
-        //  hardly any of these are getting emitted
-        //  see page 197 of the book (and onward) for formulas to check against
-        //  I broke things in cga3d_min, so I should do this next.
-        //  according to page 204-205, the conformal conjugate might be useful in defining
-        //  the distance between the origin and the center position
 
         for param_a in registry.single_parameters() {
 
@@ -2616,7 +2605,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                     let name = format!("{left_or_right}{round_aspect}{bulk_or_weight}Dual");
                     let static_name = static_names.iter().find(|it| **it == name.as_str())
                         .expect("You need to manually write out static names for this, it's not worth over-engineering the lifetimes here");
-                    let complement = format!("{left_or_right}Complement");
+                    // TODO I kind of want to remove aspect duals from cga
+                    let complement = if is_cga { format!("{left_or_right}Dual") } else { format!("{left_or_right}Complement") };
                     for param_a in registry.single_parameters() {
                         let _: Option<()> = try {
                             let bulk_or_weight = format!("{round_aspect}{bulk_or_weight}");
@@ -3301,16 +3291,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // The object is round
 
 
-
-            // TODO a lot of these have "simpler" more direct implementations per object
-            //  You can see on the tables on the wiki pages
-            //  It is nice to have old reliable formulas that always work
-            //  but it might also be nice to (eventually) write out most direct formulations
-            //  instead, since they'll definitely use less CPU power. The same could possibly
-            //  be said for almost all other trait impls. So maybe the right solution is
-            //  an alternate version of "simplify_and_legalize" that inlines trait
-            //  invocations.
-
             let name = "Carrier";
             let _: Option<()> = try {
                 let wedge_name = self.algebra.dialect().exterior_product.first()?;
@@ -3703,8 +3683,8 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                         let (rbd, rwd, comp) = match *leftOrRight {
                             // TODO do I even really want aspect duals in cga anyway? or at all?
                             //  TODO besides.. shouldn't the implementations use Dual instead of RightComplement?
-                            "Right" if is_cga => ("RightFlatBulkDual", "RightFlatWeightDual", "RightComplement"),
-                            "" if is_cga => ("FlatBulkDual", "FlatWeightDual", "Complement"),
+                            "Right" if is_cga => ("RightFlatBulkDual", "RightFlatWeightDual", "Dual"),
+                            "" if is_cga => ("FlatBulkDual", "FlatWeightDual", "Dual"),
                             "Right" => ("RightBulkDual", "RightWeightDual", "RightComplement"),
                             "" => ("BulkDual", "WeightDual", "Complement"),
                             _ => ("", "", ""),

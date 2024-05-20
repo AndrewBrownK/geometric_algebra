@@ -21,6 +21,18 @@ pub fn camel_to_snake_case<W: Write>(collector: &mut W, name: &str) -> std::io::
     Ok(())
 }
 
+pub fn lower_camel_case<W: Write>(collector: &mut W, name: &str) -> std::io::Result<()> {
+    let mut the_chars = name.chars();
+    let first_char = match the_chars.next() {
+        None => return Ok(()),
+        Some(c) => c,
+    };
+    let first_char = first_char.to_lowercase();
+    collector.write_all(first_char.to_string().as_bytes())?;
+    collector.write_all(the_chars.as_str().as_bytes())?;
+    Ok(())
+}
+
 pub fn emit_indentation<W: Write>(collector: &mut W, indentation: usize) -> std::io::Result<()> {
     for _ in 0..indentation {
         collector.write_all(b"    ")?;

@@ -52,106 +52,106 @@ pub trait RoundWeightDual {
 }
 
 impl FlatBulkDual for AntiPlane {
-    type Output = NullSphereAtOrigin;
+    type Output = Horizon;
 
-    fn flat_bulk_dual(self) -> NullSphereAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Horizon {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Circle {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for CircleAligningOrigin {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for CircleAtInfinity {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for CircleAtOrigin {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for CircleOrthogonalOrigin {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Dipole {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for DipoleAligningOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for DipoleAtInfinity {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for DipoleAtOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for DipoleOrthogonalOrigin {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for FlatPoint {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for FlatPointAtInfinity {
-    type Output = NullCircleAtOrigin;
+    type Output = LineAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullCircleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> LineAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
@@ -159,7 +159,7 @@ impl FlatBulkDual for Flector {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
@@ -167,47 +167,47 @@ impl FlatBulkDual for FlectorAtInfinity {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Horizon {
-    type Output = Origin;
+    type Output = Infinity;
 
-    fn flat_bulk_dual(self) -> Origin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Infinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Infinity {
-    type Output = NullSphereAtOrigin;
+    type Output = Horizon;
 
-    fn flat_bulk_dual(self) -> NullSphereAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Horizon {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Line {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for LineAtInfinity {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Motor {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
@@ -215,47 +215,47 @@ impl FlatBulkDual for MultiVector {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Plane {
-    type Output = Origin;
+    type Output = Infinity;
 
-    fn flat_bulk_dual(self) -> Origin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Infinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for RoundPoint {
-    type Output = NullSphereAtOrigin;
+    type Output = Horizon;
 
-    fn flat_bulk_dual(self) -> NullSphereAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Horizon {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for RoundPointAtOrigin {
-    type Output = NullSphereAtOrigin;
+    type Output = Horizon;
 
-    fn flat_bulk_dual(self) -> NullSphereAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Horizon {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Sphere {
-    type Output = Origin;
+    type Output = Infinity;
 
-    fn flat_bulk_dual(self) -> Origin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Infinity {
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for SphereAtOrigin {
-    type Output = Origin;
+    type Output = Infinity;
 
-    fn flat_bulk_dual(self) -> Origin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> Infinity {
+        self.flat_bulk().dual()
     }
 }
 
@@ -263,15 +263,15 @@ impl FlatBulkDual for Transflector {
     type Output = MultiVector;
 
     fn flat_bulk_dual(self) -> MultiVector {
-        self.flat_bulk().complement()
+        self.flat_bulk().dual()
     }
 }
 
 impl FlatBulkDual for Translator {
-    type Output = NullDipoleAtOrigin;
+    type Output = FlatPointAtInfinity;
 
-    fn flat_bulk_dual(self) -> NullDipoleAtOrigin {
-        self.flat_bulk().complement()
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
     }
 }
 
@@ -279,7 +279,7 @@ impl FlatWeightDual for AntiScalar {
     type Output = Scalar;
 
     fn flat_weight_dual(self) -> Scalar {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -287,7 +287,7 @@ impl FlatWeightDual for Circle {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -295,7 +295,7 @@ impl FlatWeightDual for CircleAligningOrigin {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -303,7 +303,7 @@ impl FlatWeightDual for CircleAtInfinity {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -311,7 +311,7 @@ impl FlatWeightDual for CircleOnOrigin {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -319,7 +319,7 @@ impl FlatWeightDual for Dipole {
     type Output = AntiFlatPointAtOrigin;
 
     fn flat_weight_dual(self) -> AntiFlatPointAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -327,7 +327,7 @@ impl FlatWeightDual for DipoleAligningOrigin {
     type Output = AntiFlatPointAtOrigin;
 
     fn flat_weight_dual(self) -> AntiFlatPointAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -335,7 +335,7 @@ impl FlatWeightDual for DipoleAtInfinity {
     type Output = AntiFlatPointAtOrigin;
 
     fn flat_weight_dual(self) -> AntiFlatPointAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -343,7 +343,7 @@ impl FlatWeightDual for DipoleOnOrigin {
     type Output = AntiFlatPointAtOrigin;
 
     fn flat_weight_dual(self) -> AntiFlatPointAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -351,7 +351,7 @@ impl FlatWeightDual for DualNum {
     type Output = Scalar;
 
     fn flat_weight_dual(self) -> Scalar {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -359,7 +359,7 @@ impl FlatWeightDual for FlatPoint {
     type Output = AntiFlatPointAtOrigin;
 
     fn flat_weight_dual(self) -> AntiFlatPointAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -367,7 +367,7 @@ impl FlatWeightDual for FlatPointAtOrigin {
     type Output = AntiFlatPointAtOrigin;
 
     fn flat_weight_dual(self) -> AntiFlatPointAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -375,7 +375,7 @@ impl FlatWeightDual for Flector {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -383,7 +383,7 @@ impl FlatWeightDual for Line {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -391,7 +391,7 @@ impl FlatWeightDual for LineAtOrigin {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -399,7 +399,7 @@ impl FlatWeightDual for Motor {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -407,7 +407,7 @@ impl FlatWeightDual for MultiVector {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -415,7 +415,7 @@ impl FlatWeightDual for Plane {
     type Output = AntiPlaneAtOrigin;
 
     fn flat_weight_dual(self) -> AntiPlaneAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -423,7 +423,7 @@ impl FlatWeightDual for PlaneAtOrigin {
     type Output = AntiPlaneAtOrigin;
 
     fn flat_weight_dual(self) -> AntiPlaneAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -431,7 +431,7 @@ impl FlatWeightDual for Rotor {
     type Output = MultiVector;
 
     fn flat_weight_dual(self) -> MultiVector {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -439,7 +439,7 @@ impl FlatWeightDual for Sphere {
     type Output = AntiPlaneAtOrigin;
 
     fn flat_weight_dual(self) -> AntiPlaneAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -447,7 +447,7 @@ impl FlatWeightDual for SphereOnOrigin {
     type Output = AntiPlaneAtOrigin;
 
     fn flat_weight_dual(self) -> AntiPlaneAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -455,7 +455,7 @@ impl FlatWeightDual for Transflector {
     type Output = AntiPlaneAtOrigin;
 
     fn flat_weight_dual(self) -> AntiPlaneAtOrigin {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -463,7 +463,7 @@ impl FlatWeightDual for Translator {
     type Output = Scalar;
 
     fn flat_weight_dual(self) -> Scalar {
-        self.flat_weight().complement()
+        self.flat_weight().dual()
     }
 }
 
@@ -471,7 +471,7 @@ impl RoundBulkDual for AntiCircleOnOrigin {
     type Output = LineAtOrigin;
 
     fn round_bulk_dual(self) -> LineAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -479,7 +479,7 @@ impl RoundBulkDual for AntiDipoleOnOrigin {
     type Output = FlatPointAtOrigin;
 
     fn round_bulk_dual(self) -> FlatPointAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -487,7 +487,7 @@ impl RoundBulkDual for AntiFlatPointAtOrigin {
     type Output = FlatPointAtOrigin;
 
     fn round_bulk_dual(self) -> FlatPointAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -495,7 +495,7 @@ impl RoundBulkDual for AntiLineAtOrigin {
     type Output = LineAtOrigin;
 
     fn round_bulk_dual(self) -> LineAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -503,7 +503,7 @@ impl RoundBulkDual for AntiPlane {
     type Output = PlaneAtOrigin;
 
     fn round_bulk_dual(self) -> PlaneAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -511,7 +511,7 @@ impl RoundBulkDual for AntiPlaneAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn round_bulk_dual(self) -> PlaneAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -519,7 +519,7 @@ impl RoundBulkDual for AntiSphereOnOrigin {
     type Output = PlaneAtOrigin;
 
     fn round_bulk_dual(self) -> PlaneAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -527,7 +527,7 @@ impl RoundBulkDual for Circle {
     type Output = FlatPointAtOrigin;
 
     fn round_bulk_dual(self) -> FlatPointAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -535,7 +535,7 @@ impl RoundBulkDual for CircleAtInfinity {
     type Output = FlatPointAtOrigin;
 
     fn round_bulk_dual(self) -> FlatPointAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -543,7 +543,7 @@ impl RoundBulkDual for CircleOrthogonalOrigin {
     type Output = FlatPointAtOrigin;
 
     fn round_bulk_dual(self) -> FlatPointAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -551,7 +551,7 @@ impl RoundBulkDual for Dipole {
     type Output = LineAtOrigin;
 
     fn round_bulk_dual(self) -> LineAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -559,7 +559,7 @@ impl RoundBulkDual for DipoleAtInfinity {
     type Output = LineAtOrigin;
 
     fn round_bulk_dual(self) -> LineAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -567,7 +567,7 @@ impl RoundBulkDual for DipoleOrthogonalOrigin {
     type Output = LineAtOrigin;
 
     fn round_bulk_dual(self) -> LineAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -575,7 +575,7 @@ impl RoundBulkDual for DualNum {
     type Output = AntiScalar;
 
     fn round_bulk_dual(self) -> AntiScalar {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -583,7 +583,7 @@ impl RoundBulkDual for MultiVector {
     type Output = MultiVector;
 
     fn round_bulk_dual(self) -> MultiVector {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -591,7 +591,7 @@ impl RoundBulkDual for RoundPoint {
     type Output = PlaneAtOrigin;
 
     fn round_bulk_dual(self) -> PlaneAtOrigin {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
@@ -599,111 +599,111 @@ impl RoundBulkDual for Scalar {
     type Output = AntiScalar;
 
     fn round_bulk_dual(self) -> AntiScalar {
-        self.round_bulk().complement()
+        self.round_bulk().dual()
     }
 }
 
 impl RoundWeightDual for AntiCircleOnOrigin {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for AntiDipoleOnOrigin {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for AntiSphereOnOrigin {
-    type Output = Horizon;
+    type Output = NullSphereAtOrigin;
 
-    fn round_weight_dual(self) -> Horizon {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullSphereAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for Circle {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for CircleAligningOrigin {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for CircleAtOrigin {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for CircleOnOrigin {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for CircleOrthogonalOrigin {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for Dipole {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for DipoleAligningOrigin {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for DipoleAtOrigin {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for DipoleOnOrigin {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for DipoleOrthogonalOrigin {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
@@ -711,78 +711,78 @@ impl RoundWeightDual for MultiVector {
     type Output = MultiVector;
 
     fn round_weight_dual(self) -> MultiVector {
-        self.round_weight().complement()
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for NullCircleAtOrigin {
-    type Output = FlatPointAtInfinity;
+    type Output = NullDipoleAtOrigin;
 
-    fn round_weight_dual(self) -> FlatPointAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for NullDipoleAtOrigin {
-    type Output = LineAtInfinity;
+    type Output = NullCircleAtOrigin;
 
-    fn round_weight_dual(self) -> LineAtInfinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullCircleAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for NullSphereAtOrigin {
-    type Output = Infinity;
+    type Output = Origin;
 
-    fn round_weight_dual(self) -> Infinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> Origin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for Origin {
-    type Output = Horizon;
+    type Output = NullSphereAtOrigin;
 
-    fn round_weight_dual(self) -> Horizon {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullSphereAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for RoundPoint {
-    type Output = Horizon;
+    type Output = NullSphereAtOrigin;
 
-    fn round_weight_dual(self) -> Horizon {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullSphereAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for RoundPointAtOrigin {
-    type Output = Horizon;
+    type Output = NullSphereAtOrigin;
 
-    fn round_weight_dual(self) -> Horizon {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> NullSphereAtOrigin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for Sphere {
-    type Output = Infinity;
+    type Output = Origin;
 
-    fn round_weight_dual(self) -> Infinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> Origin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for SphereAtOrigin {
-    type Output = Infinity;
+    type Output = Origin;
 
-    fn round_weight_dual(self) -> Infinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> Origin {
+        self.round_weight().dual()
     }
 }
 
 impl RoundWeightDual for SphereOnOrigin {
-    type Output = Infinity;
+    type Output = Origin;
 
-    fn round_weight_dual(self) -> Infinity {
-        self.round_weight().complement()
+    fn round_weight_dual(self) -> Origin {
+        self.round_weight().dual()
     }
 }

@@ -33,7 +33,22 @@ pub fn cga_script(
     code_gen.round_features(&registry);
     code_gen.fancy_norms(&registry);
     code_gen.attitude_and_dependencies(&registry);
+
+    // TODO conformal conjugate (page 204-205)
+
     // TODO impose constraints on page 235
+    //  The gist is that the flat half of the object must be contained in the carrier of the object,
+    //  which is specified by the round half of the object. So this means you can't combine
+    //  any arbitrary round half and flat half, they have to be compatible. There's a tangential
+    //  question of "what even is the object if the constraint is violated?", but setting that
+    //  aside from now, how can we impose constraints? Well this hearkens to another question,
+    //  which is "what are the valid ways to construct an object?" The answer to that question is,
+    //  it is preferred to construct objects using the join operation. If you only construct
+    //  objects that way, then hypothetically they should stay valid and maintain the constraints.
+    //  However let's suppose you construct an object with raw coefficients, or otherwise
+    //  violate the constraints somehow anyway. What then? Well from here you basically have two
+    //  choices. You can decide if the carrier or flat part is more correct, and which type of
+    //  (anti)projection you want to use to bring the wrong half in line with the correct half.
 
 
     let mut file_path = Path::new("src/").to_path_buf();
