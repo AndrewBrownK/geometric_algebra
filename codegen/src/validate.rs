@@ -22,8 +22,6 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     // Trim the naga_oil directive off the front
     let naga_oil_directive = format!("#define_import_path {algebra_name}\n\n");
     glsl_contents.replace_range(0..naga_oil_directive.len(), "");
-    // Append a dummy entry point
-    glsl_contents.push_str("\nvoid main() {}");
 
     // Parse and validate the naga module
     let module = match glsl_frontend.parse(&options, glsl_contents.as_str()) {

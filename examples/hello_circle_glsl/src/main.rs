@@ -5,7 +5,7 @@ use std::{fs, thread};
 use std::io::Read;
 use naga::ShaderStage;
 
-use naga_oil::compose::NagaModuleDescriptor;
+use naga_oil::compose::{NagaModuleDescriptor, ShaderType};
 use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::application::ApplicationHandler;
@@ -90,6 +90,7 @@ impl App {
                 let naga_module_descriptor = NagaModuleDescriptor {
                     source: glsl_entry.as_str(),
                     file_path: glsl_frag_entry_path,
+                    shader_type: ShaderType::GlslFragment,
                     ..Default::default()
                 };
                 // TODO

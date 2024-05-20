@@ -1,5 +1,7 @@
 #define_import_path rga3d
 
+void main() {}
+
 //
 // AUTO-GENERATED - DO NOT MODIFY
 //

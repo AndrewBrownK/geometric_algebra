@@ -5,8 +5,6 @@
 // https://github.com/AndrewBrownK/projective_ga/
 //
 
-use naga_oil::compose::ShaderLanguage;
-
 /// Include the full wgsl source file (which may be several megabytes in size) in your rust binary.
 /// It is recommended to compose and prune your shaders during your app build, instead of your app
 /// runtime. (Hint: Enable this feature in [build-dependencies], but not [dependencies].)
@@ -28,7 +26,7 @@ pub fn wgsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     naga_oil::compose::ComposableModuleDescriptor {
         source: CGA3D_MIN_WGSL_SRC,
         file_path: "cga3d_min/src/shaders/cga3d_min.wgsl",
-        language: ShaderLanguage::Wgsl,
+        language: naga_oil::compose::ShaderLanguage::Wgsl,
         ..Default::default()
     }
 }
@@ -66,7 +64,7 @@ pub fn glsl_composable_module_descriptor() -> naga_oil::compose::ComposableModul
     naga_oil::compose::ComposableModuleDescriptor {
         source: CGA3D_MIN_GLSL_SRC,
         file_path: "cga3d_min/src/shaders/cga3d_min.glsl",
-        language: ShaderLanguage::Glsl,
+        language: naga_oil::compose::ShaderLanguage::Glsl,
         ..Default::default()
     }
 }
