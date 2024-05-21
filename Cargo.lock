@@ -747,6 +747,7 @@ dependencies = [
  "env_logger",
  "naga",
  "naga_oil",
+ "parking_lot",
  "pollster",
  "tracing",
  "wasm-bindgen",

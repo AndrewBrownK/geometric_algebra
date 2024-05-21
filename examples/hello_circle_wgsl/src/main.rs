@@ -3,8 +3,10 @@ use std::error::Error;
 use std::fmt::Debug;
 use std::fs;
 use std::io::Read;
+use std::sync::{Arc};
 
 use naga_oil::compose::NagaModuleDescriptor;
+use parking_lot::Mutex;
 use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
 use winit::application::ApplicationHandler;
@@ -26,14 +28,14 @@ fn main() -> Result<(), Box<dyn Error>> {
 struct App {
     window: Option<Window>,
     handle_redraw: Box<dyn FnMut(&ActiveEventLoop, WindowId, WindowEvent)>,
-    size: PhysicalSize<u32>,
+    size: Arc<Mutex<PhysicalSize<u32>>>,
 }
 impl App {
     fn new() -> Self {
         App {
             window: None,
             handle_redraw: Box::new(|_, _, _| {}),
-            size: PhysicalSize { width: 1u32, height: 1u32 }
+            size: Arc::new(Mutex::new(PhysicalSize { width: 1u32, height: 1u32 }))
         }
     }
 }
@@ -51,7 +53,8 @@ impl ApplicationHandler for App {
                 self.window.as_ref().unwrap().request_redraw()
             },
             WindowEvent::Resized(new_size) => {
-                self.size = new_size;
+                let mut size = self.size.lock();
+                *size = new_size;
             }
             _ => (),
         }
@@ -75,7 +78,7 @@ impl App {
         let adapter = instance.request_adapter(&Default::default()).await.unwrap();
         let (device, queue) = adapter.request_device(&Default::default(), None).await.unwrap();
         let window_size = window.inner_size();
-        self.size = window_size.clone();
+        self.size = Arc::new(Mutex::new(window_size.clone()));
 
 
         let wgsl_entry_path = "examples/hello_circle_wgsl/src/shader.wgsl";
@@ -154,15 +157,33 @@ impl App {
             multiview: None,
         });
 
-        let config = surface
+        let mut surface_configuration = surface
             .get_default_config(&adapter, window_size.width, window_size.height)
             .unwrap();
-        surface.configure(&device, &config);
+        surface.configure(&device, &surface_configuration);
 
         window.request_redraw();
         self.window = Some(window);
+        let window_size = self.size.clone();
 
         self.handle_redraw = Box::new(move |event_loop, id, event| {
+            let window_size = window_size.lock();
+            if window_size.width != surface_configuration.width
+                || window_size.height != surface_configuration.height {
+
+                surface_configuration.width = window_size.width;
+                surface_configuration.height = window_size.height;
+                surface.configure(&device, &surface_configuration);
+
+                queue.write_buffer(
+                    &screen_ratio_buffer,
+                    0,
+                    bytemuck::cast_slice(&[window_size.width as f32, window_size.height as f32])
+                )
+            }
+            drop(window_size);
+
+
             let frame = surface
                 .get_current_texture()
                 .expect("Failed to acquire next swap chain texture");
