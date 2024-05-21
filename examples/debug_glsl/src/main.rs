@@ -90,11 +90,6 @@ impl App {
             }
         });
 
-
-        // TODO yeah the problem is definitely triggered by something between
-        //  this line and the next comment with a to-do
-
-
         let glsl_frag_entry_path = "examples/debug_glsl/src/shader.frag.glsl";
         let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
         let naga_module_descriptor = NagaModuleDescriptor {
@@ -111,32 +106,31 @@ impl App {
             ..Default::default()
         }).unwrap();
         let mut naga_module = composer.make_naga_module(naga_module_descriptor).unwrap();
+
+
+
+
+
+        // TODO it's definitely caused by the pruning.
+        //  The "initializer doesn't match variable type" problem
+        //  goes away when commenting out this pruning bit.
+
         let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
         for ep in naga_module.entry_points.iter() {
             pruner.add_entrypoint(ep, std::collections::HashMap::new(), Some(naga_oil::prune::PartReq::All));
         }
         naga_module = pruner.rewrite();
 
+        // TODO this comment is a fence
+
+
+
+
+
         let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
             source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),
         });
-
-
-
-        // TODO not reproduced with the following:
-        // let glsl_frag_shader = include_str!("shader.frag.glsl");
-        // let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
-        //     label: None,
-        //     source: wgpu::ShaderSource::Glsl {
-        //         shader: Cow::Owned(glsl_frag_shader.to_string()),
-        //         stage: ShaderStage::Fragment,
-        //         defines: Default::default(),
-        //     },
-        // });
-
-
-
 
         let bg_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
             label: None,
