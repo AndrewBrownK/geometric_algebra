@@ -1,10 +1,10 @@
+use std::{fs, thread};
 use std::borrow::Cow;
 use std::error::Error;
 use std::fmt::Debug;
-use std::{fs, thread};
 use std::io::Read;
-use naga::ShaderStage;
 
+use naga::ShaderStage;
 use naga_oil::compose::{NagaModuleDescriptor, ShaderType};
 use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
@@ -78,9 +78,6 @@ impl App {
         let window_size = window.inner_size();
         self.size = window_size.clone();
 
-        // TODO there's some kind of really bad parsing error going on here that is
-        //  fricken difficult to debug
-
         let (tx, mut rx) = std::sync::mpsc::channel();
         thread::Builder::new()
             .name("glsl composition".to_string())
@@ -88,7 +85,7 @@ impl App {
             .stack_size(32*1024*1024)
             .spawn(move || {
 
-                let glsl_frag_entry_path = "examples/hello_circle_glsl/src/shader.frag.glsl";
+                let glsl_frag_entry_path = "examples/debug_glsl/src/shader.frag.glsl";
                 let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
                 let naga_module_descriptor = NagaModuleDescriptor {
                     source: glsl_entry.as_str(),
@@ -96,7 +93,19 @@ impl App {
                     shader_type: ShaderType::GlslFragment,
                     ..Default::default()
                 };
-                let naga_module = cga3d_min::shaders::glsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
+                let mut composer = naga_oil::compose::Composer::default();
+                composer.add_composable_module(naga_oil::compose::ComposableModuleDescriptor {
+                    source: include_str!("cga3d_min.glsl"),
+                    file_path: "cga3d_min.glsl",
+                    language: naga_oil::compose::ShaderLanguage::Glsl,
+                    ..Default::default()
+                }).unwrap();
+                let mut naga_module = composer.make_naga_module(naga_module_descriptor).unwrap();
+                let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
+                for ep in naga_module.entry_points.iter() {
+                    pruner.add_entrypoint(ep, std::collections::HashMap::new(), Some(naga_oil::prune::PartReq::All));
+                }
+                naga_module = pruner.rewrite();
                 tx.send(naga_module).expect("must tx naga_module successfully");
             })
             .expect("We need multithreading, in order to get a larger stack size, in order to compose wgsl");
@@ -115,6 +124,8 @@ impl App {
                 defines: Default::default(),
             }
         });
+
+
         let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
             source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),

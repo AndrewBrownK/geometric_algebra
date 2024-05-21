@@ -124,7 +124,7 @@ impl<W: Write> Emitter<W> {
     pub fn emit_shader_preamble(&mut self, algebra_name: &str) -> std::io::Result<()> {
         if self.actually_emit {
             if let Some(gc) = &mut self.glsl_collector {
-                gc.write_fmt(format_args!("#define_import_path {algebra_name}\n\n"))?;
+                gc.write_fmt(format_args!("#version 450\n#define_import_path {algebra_name}\n\n"))?;
                 gc.write_all(b"void main() {}\n\n")?;
 
                 gc.write_all(CODEGEN_DISCLAIMER.as_bytes())?;

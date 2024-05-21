@@ -11,4 +11,5 @@ members = [
     "examples/hello_circle_wgsl",
     "examples/hello_circle_glsl",
     "examples/hello_circle_rust",
+    "examples/debug_glsl",
 ]

@@ -487,6 +487,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e8566979429cf69b49a5c740c60791108e86440e8be149bbea4fe54d2c32d6e2"
 
 [[package]]
+name = "debug_glsl"
+version = "0.1.0"
+dependencies = [
+ "bytemuck",
+ "cga3d_min",
+ "env_logger",
+ "naga",
+ "naga_oil",
+ "pollster",
+ "tracing",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wgpu",
+ "winit",
+]
+
+[[package]]
 name = "dispatch"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
