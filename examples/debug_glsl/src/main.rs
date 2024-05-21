@@ -1,5 +1,6 @@
 use std::{fs, thread};
 use std::borrow::Cow;
+use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::Debug;
 use std::io::Read;
@@ -90,6 +91,14 @@ impl App {
             }
         });
 
+
+
+
+
+
+        // TODO but also see if removing the library composition helps anyway,
+        //  or if the pruning causes problems even without composition
+
         let glsl_frag_entry_path = "examples/debug_glsl/src/shader.frag.glsl";
         let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
         let naga_module_descriptor = NagaModuleDescriptor {
@@ -98,26 +107,17 @@ impl App {
             shader_type: ShaderType::GlslFragment,
             ..Default::default()
         };
+
         let mut composer = naga_oil::compose::Composer::default();
-        composer.add_composable_module(naga_oil::compose::ComposableModuleDescriptor {
-            source: include_str!("cga3d_min.glsl"),
-            file_path: "cga3d_min.glsl",
-            language: naga_oil::compose::ShaderLanguage::Glsl,
-            ..Default::default()
-        }).unwrap();
         let mut naga_module = composer.make_naga_module(naga_module_descriptor).unwrap();
 
-
-
-
-
-        // TODO it's definitely caused by the pruning.
+        // TODO it's almost certainly caused by the pruning.
         //  The "initializer doesn't match variable type" problem
         //  goes away when commenting out this pruning bit.
 
         let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
         for ep in naga_module.entry_points.iter() {
-            pruner.add_entrypoint(ep, std::collections::HashMap::new(), Some(naga_oil::prune::PartReq::All));
+            pruner.add_entrypoint(ep, HashMap::new(), Some(naga_oil::prune::PartReq::All));
         }
         naga_module = pruner.rewrite();
 
