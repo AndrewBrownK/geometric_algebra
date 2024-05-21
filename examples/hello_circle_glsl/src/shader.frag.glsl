@@ -2,6 +2,16 @@
 #version 450
 
 
+// TODO trying to debug why I can't get a color output
+//#version 450
+//layout(location = 0) out vec4 fragColor;
+//void main() {
+//    fragColor = vec4(0.0, 0.0, 100.0, 100.0); // Hardcoded blue color
+//}
+
+
+
+
 // Quick refresher on shader stages:
 // 1) Objects start in homogenous space, perhaps also known as "view space"
 // 2) In the vertex shader, you project this space so the view frustum = the normalized device coordinates (NDC) box.
@@ -40,22 +50,6 @@ void main() {
 
     // Start by constructing a Circle.
     // We'll create our circle by joining 3 RoundPoints.
-
-    /*
-    TODO
-        wgpu error: Validation Error
-        Caused by:
-            In Device::create_shader_module
-        Shader validation error:
-          ┌─ :1:1
-          │
-        1 │
-          │   naga::Type [6]
-            Function [12] 'main' is invalid
-            Local variable [9] 'left' is invalid
-            Initializer doesn't match the variable type
-    */
-
 
     // Create 3 round points
     cga::RoundPoint left = cga::RoundPoint(vec3(-1.0, 0.0, 0.0), vec2(1.0, 0.5));

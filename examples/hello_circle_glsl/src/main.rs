@@ -78,9 +78,6 @@ impl App {
         let window_size = window.inner_size();
         self.size = window_size.clone();
 
-        // TODO there's some kind of really bad parsing error going on here that is
-        //  fricken difficult to debug
-
         let (tx, mut rx) = std::sync::mpsc::channel();
         thread::Builder::new()
             .name("glsl composition".to_string())
@@ -100,9 +97,7 @@ impl App {
                 tx.send(naga_module).expect("must tx naga_module successfully");
             })
             .expect("We need multithreading, in order to get a larger stack size, in order to compose wgsl");
-        let naga_module = async {
-            rx.recv().expect("Need glsl naga module")
-        }.await;
+        let naga_module = rx.recv().expect("Need glsl naga module");
 
         let glsl_vert_shader = include_str!("shader.vert.glsl");
 

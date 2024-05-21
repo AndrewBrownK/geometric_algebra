@@ -20,7 +20,7 @@ pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     glsl_file.read_to_string(&mut glsl_contents).unwrap();
 
     // Trim the naga_oil directive off the front
-    let naga_oil_directive = format!("#define_import_path {algebra_name}\n\n");
+    let naga_oil_directive = format!("#version 450\n#define_import_path {algebra_name}\n\n");
     glsl_contents.replace_range(0..naga_oil_directive.len(), "");
 
     // Parse and validate the naga module
