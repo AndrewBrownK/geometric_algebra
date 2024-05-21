@@ -6,10 +6,9 @@ members = [
     "rga3d",
     "cga3d",
     "cga3d_min",
-    "examples/build_shader_manually",
     "examples/build_shader_automatically",
     "examples/hello_circle_wgsl",
     "examples/hello_circle_glsl",
     "examples/hello_circle_rust",
-    "examples/debug_glsl",
+    "examples/debug_glsl", "examples/camera_and_instancing",
 ]

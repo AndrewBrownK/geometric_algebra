@@ -10,17 +10,30 @@ publish = false
 
 [build-dependencies]
 # Build Phase: enable include-wgsl-src
+# naga_oil limits the version of wgpu and naga we can use
 cga3d_min = { path = "../../cga3d_min", features = ["include-wgsl-src"] }
+naga_oil = { version = "0.13.0", features = ["prune"] }
+naga = { version = "0.19.2", features = ["spv-out"]}
+bytemuck = "1.16.0"
+
+
+# TODO clean up any unused dependencies
 
 [dependencies]
-# Runtime: exclude include-wgsl-src
-cga3d_min = { path = "../../cga3d_min" }
-# Tell wgpu to allow spirv shader input, or whatever type of composed output you prefer
-wgpu = { version = "0.19.4", features = ["spirv"] }
-
 winit = "0.30.0"
 wasm-bindgen = "0.2.92"
 env_logger = "0.11.3"
 wasm-bindgen-futures = "0.4.42"
 tracing = "0.1.40"
 pollster = "0.3.0"
+parking_lot = "0.12.2"
+
+# If we still wanted to use the rust aspect of cga3d_min,
+# we could do so without including the wgsl in the resulting binary
+# cga3d_min = { path = "../../cga3d_min" }
+
+# naga_oil limits the version of wgpu and naga we can use
+naga_oil = { version = "0.13.0", features = ["prune"] }
+naga = "0.19.2"
+wgpu = { version = "0.19.4", features = ["spirv"] }
+bytemuck = "1.16.0"
