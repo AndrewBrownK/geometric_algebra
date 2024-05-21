@@ -1,6 +1,9 @@
 [package]
 name = "camera_and_instancing"
 version = "0.1.0"
+authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
 edition = "2021"
+license = "MIT"
+publish = false
 
 [dependencies]

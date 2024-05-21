@@ -1,19 +1,13 @@
 [package]
-name = "hello_circle"
+name = "hello_circle_wgsl"
 version = "0.1.0"
 authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
 edition = "2021"
 license = "MIT"
 publish = false
 
-# TODO clean up any unused dependencies
-
 [dependencies]
 winit = "0.30.0"
-wasm-bindgen = "0.2.92"
-env_logger = "0.11.3"
-wasm-bindgen-futures = "0.4.42"
-tracing = "0.1.40"
 pollster = "0.3.0"
 parking_lot = "0.12.2"
 cga3d_min = { path = "../../cga3d_min", features = ["include-wgsl-src"] }

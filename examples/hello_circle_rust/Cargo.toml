@@ -1,7 +1,10 @@
 [package]
-name = "hello_rust_circle"
+name = "hello_circle_rust"
 version = "0.1.0"
+authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
 edition = "2021"
+license = "MIT"
+publish = false
 
 [dependencies]
 cga3d_min = { path = "../../cga3d_min" }

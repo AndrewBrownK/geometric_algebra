@@ -55,8 +55,6 @@ pub fn wgsl_compose_with_entrypoints(naga_module_descriptor: naga_oil::compose::
     // - So if we skip validation, the Naga IR stays correct, and we just hope everything is okay.
     // - Then if you really want to do validation, you can do it after composition instead of
     //   during composition.
-    // TODO verify the post-composition validation actually does work.
-    // composer.validate = false;
     composer.add_composable_module(wgsl_composable_module_descriptor()).unwrap();
     let mut naga_module = composer.make_naga_module(naga_module_descriptor)?;
     let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
@@ -83,7 +81,7 @@ pub fn glsl_compose_with_entrypoints(naga_module_descriptor: naga_oil::compose::
     composer.add_composable_module(glsl_composable_module_descriptor()).unwrap();
     let mut naga_module = composer.make_naga_module(naga_module_descriptor)?;
 
-    // TODO pruning seems to corrupt glsl modules, giving us absurd/incorrect
+    // Pruning seems to corrupt glsl modules, giving us absurd/incorrect
     //  \"Initializer doesn't match the variable type\" validation errors
     // let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
     // for ep in naga_module.entry_points.iter() {{
