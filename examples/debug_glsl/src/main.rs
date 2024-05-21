@@ -78,43 +78,8 @@ impl App {
         let window_size = window.inner_size();
         self.size = window_size.clone();
 
-        let (tx, mut rx) = std::sync::mpsc::channel();
-        thread::Builder::new()
-            .name("glsl composition".to_string())
-            // glsl composition uses recursion and needs larger stack size
-            .stack_size(32*1024*1024)
-            .spawn(move || {
-
-                let glsl_frag_entry_path = "examples/debug_glsl/src/shader.frag.glsl";
-                let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
-                let naga_module_descriptor = NagaModuleDescriptor {
-                    source: glsl_entry.as_str(),
-                    file_path: glsl_frag_entry_path,
-                    shader_type: ShaderType::GlslFragment,
-                    ..Default::default()
-                };
-                let mut composer = naga_oil::compose::Composer::default();
-                composer.add_composable_module(naga_oil::compose::ComposableModuleDescriptor {
-                    source: include_str!("cga3d_min.glsl"),
-                    file_path: "cga3d_min.glsl",
-                    language: naga_oil::compose::ShaderLanguage::Glsl,
-                    ..Default::default()
-                }).unwrap();
-                let mut naga_module = composer.make_naga_module(naga_module_descriptor).unwrap();
-                let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
-                for ep in naga_module.entry_points.iter() {
-                    pruner.add_entrypoint(ep, std::collections::HashMap::new(), Some(naga_oil::prune::PartReq::All));
-                }
-                naga_module = pruner.rewrite();
-                tx.send(naga_module).expect("must tx naga_module successfully");
-            })
-            .expect("We need multithreading, in order to get a larger stack size, in order to compose wgsl");
-        let naga_module = async {
-            rx.recv().expect("Need glsl naga module")
-        }.await;
 
         let glsl_vert_shader = include_str!("shader.vert.glsl");
-
         // Load the shaders from disk
         let vert_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
@@ -126,10 +91,52 @@ impl App {
         });
 
 
+        // TODO yeah the problem is definitely triggered by something between
+        //  this line and the next comment with a to-do
+
+
+        let glsl_frag_entry_path = "examples/debug_glsl/src/shader.frag.glsl";
+        let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
+        let naga_module_descriptor = NagaModuleDescriptor {
+            source: glsl_entry.as_str(),
+            file_path: glsl_frag_entry_path,
+            shader_type: ShaderType::GlslFragment,
+            ..Default::default()
+        };
+        let mut composer = naga_oil::compose::Composer::default();
+        composer.add_composable_module(naga_oil::compose::ComposableModuleDescriptor {
+            source: include_str!("cga3d_min.glsl"),
+            file_path: "cga3d_min.glsl",
+            language: naga_oil::compose::ShaderLanguage::Glsl,
+            ..Default::default()
+        }).unwrap();
+        let mut naga_module = composer.make_naga_module(naga_module_descriptor).unwrap();
+        let mut pruner = naga_oil::prune::Pruner::new(&naga_module);
+        for ep in naga_module.entry_points.iter() {
+            pruner.add_entrypoint(ep, std::collections::HashMap::new(), Some(naga_oil::prune::PartReq::All));
+        }
+        naga_module = pruner.rewrite();
+
         let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
             source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),
         });
+
+
+
+        // TODO not reproduced with the following:
+        // let glsl_frag_shader = include_str!("shader.frag.glsl");
+        // let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
+        //     label: None,
+        //     source: wgpu::ShaderSource::Glsl {
+        //         shader: Cow::Owned(glsl_frag_shader.to_string()),
+        //         stage: ShaderStage::Fragment,
+        //         defines: Default::default(),
+        //     },
+        // });
+
+
+
 
         let bg_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
             label: None,
