@@ -85,7 +85,7 @@ impl App {
             .stack_size(32*1024*1024)
             .spawn(move || {
 
-                let glsl_frag_entry_path = "examples/hello_circle_glsl/src/shader.frag.glsl";
+                let glsl_frag_entry_path = "examples/broken_glsl/hello_circle_glsl/src/shader.frag.glsl";
                 let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
                 let naga_module_descriptor = NagaModuleDescriptor {
                     source: glsl_entry.as_str(),

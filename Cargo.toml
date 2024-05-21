@@ -8,8 +8,8 @@ members = [
     "cga3d_min",
     "examples/compile_to_spirv",
     "examples/hello_circle_wgsl",
-    "examples/hello_circle_glsl",
     "examples/hello_circle_rust",
-    "examples/debug_glsl",
+    "examples/broken_glsl/hello_circle_glsl",
+    "examples/broken_glsl/debug_glsl",
     "examples/camera_and_instancing",
 ]

@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 winit = "0.30.0"
 pollster = "0.3.0"
-cga3d_min = { path = "../../cga3d_min", features = ["include-glsl-src"] }
+cga3d_min = { path = "../../../cga3d_min", features = ["include-glsl-src"] }
 
 # naga_oil limits the version of wgpu and naga we can use
 naga_oil = { version = "0.13.0", features = ["prune", "glsl"] }

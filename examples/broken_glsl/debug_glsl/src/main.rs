@@ -99,7 +99,7 @@ impl App {
         // TODO but also see if removing the library composition helps anyway,
         //  or if the pruning causes problems even without composition
 
-        let glsl_frag_entry_path = "examples/debug_glsl/src/shader.frag.glsl";
+        let glsl_frag_entry_path = "examples/broken_glsl/debug_glsl/src/shader.frag.glsl";
         let glsl_entry = fs::read_to_string(glsl_frag_entry_path).unwrap();
         let naga_module_descriptor = NagaModuleDescriptor {
             source: glsl_entry.as_str(),
