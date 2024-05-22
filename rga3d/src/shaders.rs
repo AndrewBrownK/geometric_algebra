@@ -54,6 +54,10 @@ pub fn wgsl_compose_with_entrypoints(naga_module_descriptor: naga_oil::compose::
 /// Compose wgsl, validate the module, and output a SPIR-V file for each entry point.
 /// Half for utility, half for example, a pattern like this is useful in build.rs.
 /// If you'd like to customize any of the options, you can copy and/or inline this function.
+// TODO it is kind of a presumptuous/risky move to choose default options, even though the
+//  succinctness can be nice. So it's probably best to atomize this function into
+//  smaller itty-bitty parts that only add in assumptions layer by layer. Maybe the factory/builder
+//  pattern can help keep things succinct.
 #[cfg(feature = "wgsl-compose")]
 pub fn wgsl_compose_validate_and_spirv<P: AsRef<Path>, S: Into<String>>(wgsl_file_path: &str, spirv_outputs: Vec<(P, S, ShaderStage)>) -> anyhow::Result<()> {
     let shader_src = fs::read_to_string(wgsl_file_path)?;

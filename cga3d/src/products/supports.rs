@@ -129,6 +129,14 @@ impl AntiSupport for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiSupport for Dilator {
+    type Output = MultiVector;
+
+    fn anti_support(self) -> MultiVector {
+        self.wedge(Origin::unit().complement().anti_wedge(self.dual()))
+    }
+}
+
 impl AntiSupport for Dipole {
     type Output = Sphere;
 
@@ -389,6 +397,14 @@ impl Support for CircleOrthogonalOrigin {
     type Output = RoundPoint;
 
     fn support(self) -> RoundPoint {
+        self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
+    }
+}
+
+impl Support for Dilator {
+    type Output = MultiVector;
+
+    fn support(self) -> MultiVector {
         self.anti_wedge(Origin::unit().wedge(self.anti_dual()))
     }
 }

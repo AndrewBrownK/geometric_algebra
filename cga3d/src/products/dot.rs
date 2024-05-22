@@ -283,6 +283,18 @@ impl AntiDot<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     }
 }
 
+impl AntiDot<Dilator> for AntiDipoleOnOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group3()[0] - self.group0()[1] * other.group3()[1] - self.group0()[2] * other.group3()[2] + self.group0()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for AntiDipoleOnOrigin {
     type Output = AntiScalar;
 
@@ -398,6 +410,18 @@ impl AntiDot<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for AntiFlatPointAtOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group3()[3],
             },
         }
     }
@@ -635,6 +659,18 @@ impl AntiDot<AntiScalar> for AntiScalar {
     type Output = AntiScalar;
 
     fn anti_dot(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for AntiScalar {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: self.group0() * other.group0(),
@@ -928,6 +964,28 @@ impl AntiDot<CircleOrthogonalOrigin> for Circle {
     }
 }
 
+impl AntiDot<Dilator> for Circle {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group3()[0]
+                    - self.group0()[1] * other.group3()[1]
+                    - self.group0()[2] * other.group3()[2]
+                    - self.group1()[0] * other.group2()[0]
+                    - self.group1()[1] * other.group2()[1]
+                    - self.group1()[2] * other.group2()[2]
+                    - self.group2()[0] * other.group1()[0]
+                    - self.group2()[1] * other.group1()[1]
+                    - self.group2()[2] * other.group1()[2]
+                    + self.group2()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for Circle {
     type Output = AntiScalar;
 
@@ -1172,6 +1230,27 @@ impl AntiDot<CircleOrthogonalOrigin> for CircleAligningOrigin {
     }
 }
 
+impl AntiDot<Dilator> for CircleAligningOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group3()[0]
+                    - self.group0()[1] * other.group3()[1]
+                    - self.group0()[2] * other.group3()[2]
+                    - self.group1()[0] * other.group2()[0]
+                    - self.group1()[1] * other.group2()[1]
+                    - self.group1()[2] * other.group2()[2]
+                    - self.group2()[0] * other.group1()[0]
+                    - self.group2()[1] * other.group1()[1]
+                    - self.group2()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for CircleAligningOrigin {
     type Output = AntiScalar;
 
@@ -1404,6 +1483,25 @@ impl AntiDot<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl AntiDot<Dilator> for CircleAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group2()[0]
+                    - self.group0()[1] * other.group2()[1]
+                    - self.group0()[2] * other.group2()[2]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    + self.group1()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for CircleAtInfinity {
     type Output = AntiScalar;
 
@@ -1591,6 +1689,24 @@ impl AntiDot<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl AntiDot<Dilator> for CircleAtOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group3()[0]
+                    - self.group0()[1] * other.group3()[1]
+                    - self.group0()[2] * other.group3()[2]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for CircleAtOrigin {
     type Output = AntiScalar;
 
@@ -1754,6 +1870,24 @@ impl AntiDot<CircleOrthogonalOrigin> for CircleOnOrigin {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for CircleOnOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group3()[0]
+                    - self.group0()[1] * other.group3()[1]
+                    - self.group0()[2] * other.group3()[2]
+                    - self.group1()[0] * other.group2()[0]
+                    - self.group1()[1] * other.group2()[1]
+                    - self.group1()[2] * other.group2()[2],
             },
         }
     }
@@ -1983,6 +2117,25 @@ impl AntiDot<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiDot<Dilator> for CircleOrthogonalOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group3()[0]
+                    - self.group0()[1] * other.group3()[1]
+                    - self.group0()[2] * other.group3()[2]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    + self.group1()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for CircleOrthogonalOrigin {
     type Output = AntiScalar;
 
@@ -2057,6 +2210,311 @@ impl AntiDot<Translator> for CircleOrthogonalOrigin {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group0()[0] - self.group0()[1] * other.group0()[1] - self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<AntiDipoleOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: AntiDipoleOnOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group3()[0] * other.group0()[0] - self.group3()[1] * other.group0()[1] - self.group3()[2] * other.group0()[2] + self.group3()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<AntiFlatPointAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: AntiFlatPointAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group3()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<AntiScalar> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: AntiScalar) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl AntiDot<Circle> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Circle) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group1()[0] * other.group2()[0]
+                    - self.group1()[1] * other.group2()[1]
+                    - self.group1()[2] * other.group2()[2]
+                    - self.group2()[0] * other.group1()[0]
+                    - self.group2()[1] * other.group1()[1]
+                    - self.group2()[2] * other.group1()[2]
+                    - self.group3()[0] * other.group0()[0]
+                    - self.group3()[1] * other.group0()[1]
+                    - self.group3()[2] * other.group0()[2]
+                    + self.group3()[3] * other.group2()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleAligningOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAligningOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group1()[0] * other.group2()[0]
+                    - self.group1()[1] * other.group2()[1]
+                    - self.group1()[2] * other.group2()[2]
+                    - self.group2()[0] * other.group1()[0]
+                    - self.group2()[1] * other.group1()[1]
+                    - self.group2()[2] * other.group1()[2]
+                    - self.group3()[0] * other.group0()[0]
+                    - self.group3()[1] * other.group0()[1]
+                    - self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleAtInfinity> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    - self.group2()[0] * other.group0()[0]
+                    - self.group2()[1] * other.group0()[1]
+                    - self.group2()[2] * other.group0()[2]
+                    + self.group3()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    - self.group3()[0] * other.group0()[0]
+                    - self.group3()[1] * other.group0()[1]
+                    - self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleOnOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group2()[0] * other.group1()[0]
+                    - self.group2()[1] * other.group1()[1]
+                    - self.group2()[2] * other.group1()[2]
+                    - self.group3()[0] * other.group0()[0]
+                    - self.group3()[1] * other.group0()[1]
+                    - self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<CircleOrthogonalOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    - self.group3()[0] * other.group0()[0]
+                    - self.group3()[1] * other.group0()[1]
+                    - self.group3()[2] * other.group0()[2]
+                    + self.group3()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()
+                    - self.group1()[0] * other.group3()[0]
+                    - self.group1()[1] * other.group3()[1]
+                    - self.group1()[2] * other.group3()[2]
+                    - self.group2()[0] * other.group2()[0]
+                    - self.group2()[1] * other.group2()[1]
+                    - self.group2()[2] * other.group2()[2]
+                    - self.group3()[0] * other.group1()[0]
+                    - self.group3()[1] * other.group1()[1]
+                    - self.group3()[2] * other.group1()[2]
+                    + self.group3()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<DualNum> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: DualNum) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()[1],
+            },
+        }
+    }
+}
+
+impl AntiDot<Line> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Line) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    - self.group2()[0] * other.group0()[0]
+                    - self.group2()[1] * other.group0()[1]
+                    - self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<LineAtInfinity> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: LineAtInfinity) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<LineAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: LineAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Motor> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Motor) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()[3]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2]
+                    - self.group2()[0] * other.group0()[0]
+                    - self.group2()[1] * other.group0()[1]
+                    - self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<MultiVector> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: MultiVector) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()[1]
+                    - self.group1()[0] * other.group8()[0]
+                    - self.group1()[1] * other.group8()[1]
+                    - self.group1()[2] * other.group8()[2]
+                    - self.group2()[0] * other.group7()[0]
+                    - self.group2()[1] * other.group7()[1]
+                    - self.group2()[2] * other.group7()[2]
+                    - self.group3()[0] * other.group6()[0]
+                    - self.group3()[1] * other.group6()[1]
+                    - self.group3()[2] * other.group6()[2]
+                    + self.group3()[3] * other.group8()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<NullCircleAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: NullCircleAtOrigin) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group3()[0] * other.group0()[0] - self.group3()[1] * other.group0()[1] - self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Rotor> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Rotor) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()[3] - self.group2()[0] * other.group0()[0] - self.group2()[1] * other.group0()[1] - self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Translator> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Translator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0() * other.group0()[3] - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -3273,6 +3731,18 @@ impl AntiDot<AntiScalar> for DualNum {
     }
 }
 
+impl AntiDot<Dilator> for DualNum {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[1] * other.group0(),
+            },
+        }
+    }
+}
+
 impl AntiDot<DualNum> for DualNum {
     type Output = AntiScalar;
 
@@ -4279,6 +4749,24 @@ impl AntiDot<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl AntiDot<Dilator> for Line {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0
+                    - self.group0()[0] * other.group2()[0]
+                    - self.group0()[1] * other.group2()[1]
+                    - self.group0()[2] * other.group2()[2]
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<Line> for Line {
     type Output = AntiScalar;
 
@@ -4429,6 +4917,18 @@ impl AntiDot<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl AntiDot<Dilator> for LineAtInfinity {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl AntiDot<MultiVector> for LineAtInfinity {
     type Output = AntiScalar;
 
@@ -4496,6 +4996,18 @@ impl AntiDot<CircleOnOrigin> for LineAtOrigin {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for LineAtOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2],
             },
         }
     }
@@ -4670,6 +5182,21 @@ impl AntiDot<CircleOrthogonalOrigin> for Motor {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group1()[0] * other.group0()[0] - self.group1()[1] * other.group0()[1] - self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for Motor {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0()
+                    - self.group1()[0] * other.group1()[0]
+                    - self.group1()[1] * other.group1()[1]
+                    - self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -4987,6 +5514,28 @@ impl AntiDot<CircleOrthogonalOrigin> for MultiVector {
                     - self.group8()[1] * other.group0()[1]
                     - self.group8()[2] * other.group0()[2]
                     + self.group8()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for MultiVector {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: self.group0()[1] * other.group0()
+                    - self.group6()[0] * other.group3()[0]
+                    - self.group6()[1] * other.group3()[1]
+                    - self.group6()[2] * other.group3()[2]
+                    - self.group7()[0] * other.group2()[0]
+                    - self.group7()[1] * other.group2()[1]
+                    - self.group7()[2] * other.group2()[2]
+                    - self.group8()[0] * other.group1()[0]
+                    - self.group8()[1] * other.group1()[1]
+                    - self.group8()[2] * other.group1()[2]
+                    + self.group8()[3] * other.group3()[3],
             },
         }
     }
@@ -5536,6 +6085,18 @@ impl AntiDot<CircleOrthogonalOrigin> for NullCircleAtOrigin {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for NullCircleAtOrigin {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group3()[0] - self.group0()[1] * other.group3()[1] - self.group0()[2] * other.group3()[2],
             },
         }
     }
@@ -6136,6 +6697,18 @@ impl AntiDot<CircleOnOrigin> for Rotor {
         AntiScalar {
             groups: AntiScalarGroups {
                 g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl AntiDot<Dilator> for Rotor {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group2()[0] - self.group0()[1] * other.group2()[1] - self.group0()[2] * other.group2()[2] + self.group0()[3] * other.group0(),
             },
         }
     }
@@ -7103,6 +7676,18 @@ impl AntiDot<CircleOrthogonalOrigin> for Translator {
     }
 }
 
+impl AntiDot<Dilator> for Translator {
+    type Output = AntiScalar;
+
+    fn anti_dot(self, other: Dilator) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups {
+                g0: 0.0 - self.group0()[0] * other.group1()[0] - self.group0()[1] * other.group1()[1] - self.group0()[2] * other.group1()[2] + self.group0()[3] * other.group0(),
+            },
+        }
+    }
+}
+
 impl AntiDot<DualNum> for Translator {
     type Output = AntiScalar;
 
@@ -7439,6 +8024,18 @@ impl Dot<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     }
 }
 
+impl Dot<Dilator> for AntiDipoleOnOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0] + self.group0()[1] * other.group3()[1] + self.group0()[2] * other.group3()[2] - self.group0()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for AntiDipoleOnOrigin {
     type Output = Scalar;
 
@@ -7554,6 +8151,18 @@ impl Dot<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for AntiFlatPointAtOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group3()[3],
             },
         }
     }
@@ -7791,6 +8400,18 @@ impl Dot<AntiScalar> for AntiScalar {
     type Output = Scalar;
 
     fn dot(self, other: AntiScalar) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for AntiScalar {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
         Scalar {
             groups: ScalarGroups {
                 g0: 0.0 - self.group0() * other.group0(),
@@ -8078,6 +8699,27 @@ impl Dot<CircleOrthogonalOrigin> for Circle {
     }
 }
 
+impl Dot<Dilator> for Circle {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0]
+                    + self.group0()[1] * other.group3()[1]
+                    + self.group0()[2] * other.group3()[2]
+                    + self.group1()[0] * other.group2()[0]
+                    + self.group1()[1] * other.group2()[1]
+                    + self.group1()[2] * other.group2()[2]
+                    + self.group2()[0] * other.group1()[0]
+                    + self.group2()[1] * other.group1()[1]
+                    + self.group2()[2] * other.group1()[2]
+                    - self.group2()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for Circle {
     type Output = Scalar;
 
@@ -8313,6 +8955,26 @@ impl Dot<CircleOrthogonalOrigin> for CircleAligningOrigin {
     }
 }
 
+impl Dot<Dilator> for CircleAligningOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0]
+                    + self.group0()[1] * other.group3()[1]
+                    + self.group0()[2] * other.group3()[2]
+                    + self.group1()[0] * other.group2()[0]
+                    + self.group1()[1] * other.group2()[1]
+                    + self.group1()[2] * other.group2()[2]
+                    + self.group2()[0] * other.group1()[0]
+                    + self.group2()[1] * other.group1()[1]
+                    + self.group2()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for CircleAligningOrigin {
     type Output = Scalar;
 
@@ -8539,6 +9201,24 @@ impl Dot<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl Dot<Dilator> for CircleAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group2()[0]
+                    + self.group0()[1] * other.group2()[1]
+                    + self.group0()[2] * other.group2()[2]
+                    + self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    - self.group1()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for CircleAtInfinity {
     type Output = Scalar;
 
@@ -8721,6 +9401,23 @@ impl Dot<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl Dot<Dilator> for CircleAtOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0]
+                    + self.group0()[1] * other.group3()[1]
+                    + self.group0()[2] * other.group3()[2]
+                    + self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for CircleAtOrigin {
     type Output = Scalar;
 
@@ -8880,6 +9577,23 @@ impl Dot<CircleOrthogonalOrigin> for CircleOnOrigin {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for CircleOnOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0]
+                    + self.group0()[1] * other.group3()[1]
+                    + self.group0()[2] * other.group3()[2]
+                    + self.group1()[0] * other.group2()[0]
+                    + self.group1()[1] * other.group2()[1]
+                    + self.group1()[2] * other.group2()[2],
             },
         }
     }
@@ -9102,6 +9816,24 @@ impl Dot<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl Dot<Dilator> for CircleOrthogonalOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0]
+                    + self.group0()[1] * other.group3()[1]
+                    + self.group0()[2] * other.group3()[2]
+                    + self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    - self.group1()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for CircleOrthogonalOrigin {
     type Output = Scalar;
 
@@ -9175,6 +9907,304 @@ impl Dot<Translator> for CircleOrthogonalOrigin {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<AntiDipoleOnOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: AntiDipoleOnOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group3()[0] * other.group0()[0] + self.group3()[1] * other.group0()[1] + self.group3()[2] * other.group0()[2] - self.group3()[3] * other.group0()[3],
+            },
+        }
+    }
+}
+
+impl Dot<AntiFlatPointAtOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: AntiFlatPointAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group3()[3] * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<AntiScalar> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: AntiScalar) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0(),
+            },
+        }
+    }
+}
+
+impl Dot<Circle> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: Circle) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group2()[0]
+                    + self.group1()[1] * other.group2()[1]
+                    + self.group1()[2] * other.group2()[2]
+                    + self.group2()[0] * other.group1()[0]
+                    + self.group2()[1] * other.group1()[1]
+                    + self.group2()[2] * other.group1()[2]
+                    + self.group3()[0] * other.group0()[0]
+                    + self.group3()[1] * other.group0()[1]
+                    + self.group3()[2] * other.group0()[2]
+                    - self.group3()[3] * other.group2()[3],
+            },
+        }
+    }
+}
+
+impl Dot<CircleAligningOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAligningOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group2()[0]
+                    + self.group1()[1] * other.group2()[1]
+                    + self.group1()[2] * other.group2()[2]
+                    + self.group2()[0] * other.group1()[0]
+                    + self.group2()[1] * other.group1()[1]
+                    + self.group2()[2] * other.group1()[2]
+                    + self.group3()[0] * other.group0()[0]
+                    + self.group3()[1] * other.group0()[1]
+                    + self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<CircleAtInfinity> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    + self.group2()[0] * other.group0()[0]
+                    + self.group2()[1] * other.group0()[1]
+                    + self.group2()[2] * other.group0()[2]
+                    - self.group3()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<CircleAtOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    + self.group3()[0] * other.group0()[0]
+                    + self.group3()[1] * other.group0()[1]
+                    + self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<CircleOnOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleOnOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group2()[0] * other.group1()[0]
+                    + self.group2()[1] * other.group1()[1]
+                    + self.group2()[2] * other.group1()[2]
+                    + self.group3()[0] * other.group0()[0]
+                    + self.group3()[1] * other.group0()[1]
+                    + self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<CircleOrthogonalOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: CircleOrthogonalOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    + self.group3()[0] * other.group0()[0]
+                    + self.group3()[1] * other.group0()[1]
+                    + self.group3()[2] * other.group0()[2]
+                    - self.group3()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()
+                    + self.group1()[0] * other.group3()[0]
+                    + self.group1()[1] * other.group3()[1]
+                    + self.group1()[2] * other.group3()[2]
+                    + self.group2()[0] * other.group2()[0]
+                    + self.group2()[1] * other.group2()[1]
+                    + self.group2()[2] * other.group2()[2]
+                    + self.group3()[0] * other.group1()[0]
+                    + self.group3()[1] * other.group1()[1]
+                    + self.group3()[2] * other.group1()[2]
+                    - self.group3()[3] * other.group3()[3],
+            },
+        }
+    }
+}
+
+impl Dot<DualNum> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: DualNum) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[1],
+            },
+        }
+    }
+}
+
+impl Dot<Line> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: Line) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    + self.group2()[0] * other.group0()[0]
+                    + self.group2()[1] * other.group0()[1]
+                    + self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<LineAtInfinity> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: LineAtInfinity) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<LineAtOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: LineAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group2()[0] * other.group0()[0] + self.group2()[1] * other.group0()[1] + self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Motor> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: Motor) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[3]
+                    + self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2]
+                    + self.group2()[0] * other.group0()[0]
+                    + self.group2()[1] * other.group0()[1]
+                    + self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<MultiVector> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: MultiVector) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[1]
+                    + self.group1()[0] * other.group8()[0]
+                    + self.group1()[1] * other.group8()[1]
+                    + self.group1()[2] * other.group8()[2]
+                    + self.group2()[0] * other.group7()[0]
+                    + self.group2()[1] * other.group7()[1]
+                    + self.group2()[2] * other.group7()[2]
+                    + self.group3()[0] * other.group6()[0]
+                    + self.group3()[1] * other.group6()[1]
+                    + self.group3()[2] * other.group6()[2]
+                    - self.group3()[3] * other.group8()[3],
+            },
+        }
+    }
+}
+
+impl Dot<NullCircleAtOrigin> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: NullCircleAtOrigin) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group3()[0] * other.group0()[0] + self.group3()[1] * other.group0()[1] + self.group3()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Rotor> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: Rotor) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[3] + self.group2()[0] * other.group0()[0] + self.group2()[1] * other.group0()[1] + self.group2()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Translator> for Dilator {
+    type Output = Scalar;
+
+    fn dot(self, other: Translator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0() * other.group0()[3] + self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
             },
         }
     }
@@ -10419,6 +11449,18 @@ impl Dot<AntiScalar> for DualNum {
     }
 }
 
+impl Dot<Dilator> for DualNum {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0(),
+            },
+        }
+    }
+}
+
 impl Dot<DualNum> for DualNum {
     type Output = Scalar;
 
@@ -11423,6 +12465,23 @@ impl Dot<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl Dot<Dilator> for Line {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group2()[0]
+                    + self.group0()[1] * other.group2()[1]
+                    + self.group0()[2] * other.group2()[2]
+                    + self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl Dot<Line> for Line {
     type Output = Scalar;
 
@@ -11572,6 +12631,18 @@ impl Dot<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl Dot<Dilator> for LineAtInfinity {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
 impl Dot<MultiVector> for LineAtInfinity {
     type Output = Scalar;
 
@@ -11639,6 +12710,18 @@ impl Dot<CircleOnOrigin> for LineAtOrigin {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for LineAtOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2],
             },
         }
     }
@@ -11810,6 +12893,21 @@ impl Dot<CircleOrthogonalOrigin> for Motor {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group1()[0] * other.group0()[0] + self.group1()[1] * other.group0()[1] + self.group1()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for Motor {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2] - self.group0()[3] * other.group0()
+                    + self.group1()[0] * other.group1()[0]
+                    + self.group1()[1] * other.group1()[1]
+                    + self.group1()[2] * other.group1()[2],
             },
         }
     }
@@ -12122,6 +13220,28 @@ impl Dot<CircleOrthogonalOrigin> for MultiVector {
                     + self.group8()[1] * other.group0()[1]
                     + self.group8()[2] * other.group0()[2]
                     - self.group8()[3] * other.group1()[3],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for MultiVector {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: 0.0 - self.group0()[1] * other.group0()
+                    + self.group6()[0] * other.group3()[0]
+                    + self.group6()[1] * other.group3()[1]
+                    + self.group6()[2] * other.group3()[2]
+                    + self.group7()[0] * other.group2()[0]
+                    + self.group7()[1] * other.group2()[1]
+                    + self.group7()[2] * other.group2()[2]
+                    + self.group8()[0] * other.group1()[0]
+                    + self.group8()[1] * other.group1()[1]
+                    + self.group8()[2] * other.group1()[2]
+                    - self.group8()[3] * other.group3()[3],
             },
         }
     }
@@ -12676,6 +13796,18 @@ impl Dot<CircleOrthogonalOrigin> for NullCircleAtOrigin {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for NullCircleAtOrigin {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group3()[0] + self.group0()[1] * other.group3()[1] + self.group0()[2] * other.group3()[2],
             },
         }
     }
@@ -13277,6 +14409,18 @@ impl Dot<CircleOnOrigin> for Rotor {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for Rotor {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group2()[0] + self.group0()[1] * other.group2()[1] + self.group0()[2] * other.group2()[2] - self.group0()[3] * other.group0(),
             },
         }
     }
@@ -14241,6 +15385,18 @@ impl Dot<CircleOrthogonalOrigin> for Translator {
         Scalar {
             groups: ScalarGroups {
                 g0: self.group0()[0] * other.group0()[0] + self.group0()[1] * other.group0()[1] + self.group0()[2] * other.group0()[2],
+            },
+        }
+    }
+}
+
+impl Dot<Dilator> for Translator {
+    type Output = Scalar;
+
+    fn dot(self, other: Dilator) -> Scalar {
+        Scalar {
+            groups: ScalarGroups {
+                g0: self.group0()[0] * other.group1()[0] + self.group0()[1] * other.group1()[1] + self.group0()[2] * other.group1()[2] - self.group0()[3] * other.group0(),
             },
         }
     }

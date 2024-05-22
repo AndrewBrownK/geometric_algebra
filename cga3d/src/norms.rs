@@ -314,6 +314,15 @@ impl RoundBulkNormSquared for CircleOrthogonalOrigin {
     }
 }
 
+impl RoundBulkNormSquared for Dilator {
+    type Output = Scalar;
+
+    fn round_bulk_norm_squared(self) -> Scalar {
+        let mut round_bulk_carrier: AntiFlatPointAtOrigin = self.round_bulk();
+        round_bulk_carrier.dot(round_bulk_carrier)
+    }
+}
+
 impl RoundBulkNormSquared for Dipole {
     type Output = Scalar;
 
@@ -457,6 +466,14 @@ impl RoundBulkNorm for CircleOrthogonalOrigin {
     }
 }
 
+impl RoundBulkNorm for Dilator {
+    type Output = Scalar;
+
+    fn round_bulk_norm(self) -> Scalar {
+        self.round_bulk_norm_squared().sqrt()
+    }
+}
+
 impl RoundBulkNorm for Dipole {
     type Output = Scalar;
 
@@ -577,6 +594,15 @@ impl RoundWeightNormSquared for CircleOnOrigin {
 }
 
 impl RoundWeightNormSquared for CircleOrthogonalOrigin {
+    type Output = AntiScalar;
+
+    fn round_weight_norm_squared(self) -> AntiScalar {
+        let mut round_weight_carrier: PlaneAtOrigin = self.round_weight().wedge(Infinity::unit());
+        round_weight_carrier.anti_dot(round_weight_carrier)
+    }
+}
+
+impl RoundWeightNormSquared for Dilator {
     type Output = AntiScalar;
 
     fn round_weight_norm_squared(self) -> AntiScalar {
@@ -784,6 +810,14 @@ impl RoundWeightNorm for CircleOrthogonalOrigin {
     }
 }
 
+impl RoundWeightNorm for Dilator {
+    type Output = AntiScalar;
+
+    fn round_weight_norm(self) -> AntiScalar {
+        self.round_weight_norm_squared().anti_sqrt()
+    }
+}
+
 impl RoundWeightNorm for Dipole {
     type Output = AntiScalar;
 
@@ -944,6 +978,14 @@ impl RoundNormSquared for CircleOrthogonalOrigin {
     }
 }
 
+impl RoundNormSquared for Dilator {
+    type Output = DualNum;
+
+    fn round_norm_squared(self) -> DualNum {
+        self.round_bulk_norm_squared().add(self.round_weight_norm_squared())
+    }
+}
+
 impl RoundNormSquared for Dipole {
     type Output = DualNum;
 
@@ -1009,6 +1051,14 @@ impl RoundNorm for Circle {
 }
 
 impl RoundNorm for CircleOrthogonalOrigin {
+    type Output = DualNum;
+
+    fn round_norm(self) -> DualNum {
+        self.round_bulk_norm().add(self.round_weight_norm())
+    }
+}
+
+impl RoundNorm for Dilator {
     type Output = DualNum;
 
     fn round_norm(self) -> DualNum {
@@ -1088,6 +1138,14 @@ impl UnitizedRoundNormSquared for CircleOrthogonalOrigin {
     }
 }
 
+impl UnitizedRoundNormSquared for Dilator {
+    type Output = f32;
+
+    fn unitized_round_norm_squared(self) -> f32 {
+        self.round_bulk_norm_squared().group0() / self.round_weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedRoundNormSquared for Dipole {
     type Output = f32;
 
@@ -1153,6 +1211,14 @@ impl UnitizedRoundNorm for Circle {
 }
 
 impl UnitizedRoundNorm for CircleOrthogonalOrigin {
+    type Output = f32;
+
+    fn unitized_round_norm(self) -> f32 {
+        self.unitized_round_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedRoundNorm for Dilator {
     type Output = f32;
 
     fn unitized_round_norm(self) -> f32 {
@@ -1238,6 +1304,15 @@ impl FlatBulkNormSquared for CircleAtOrigin {
 }
 
 impl FlatBulkNormSquared for CircleOrthogonalOrigin {
+    type Output = Scalar;
+
+    fn flat_bulk_norm_squared(self) -> Scalar {
+        let mut flat_bulk_thing: PlaneAtOrigin = self.flat_bulk().wedge(Origin::unit());
+        flat_bulk_thing.dot(flat_bulk_thing)
+    }
+}
+
+impl FlatBulkNormSquared for Dilator {
     type Output = Scalar;
 
     fn flat_bulk_norm_squared(self) -> Scalar {
@@ -1492,6 +1567,14 @@ impl FlatBulkNorm for CircleOrthogonalOrigin {
     }
 }
 
+impl FlatBulkNorm for Dilator {
+    type Output = Scalar;
+
+    fn flat_bulk_norm(self) -> Scalar {
+        self.flat_bulk_norm_squared().sqrt()
+    }
+}
+
 impl FlatBulkNorm for Dipole {
     type Output = Scalar;
 
@@ -1713,6 +1796,15 @@ impl FlatWeightNormSquared for CircleOnOrigin {
     }
 }
 
+impl FlatWeightNormSquared for Dilator {
+    type Output = AntiScalar;
+
+    fn flat_weight_norm_squared(self) -> AntiScalar {
+        let mut flat_weight: Rotor = self.flat_weight();
+        flat_weight.anti_dot(flat_weight)
+    }
+}
+
 impl FlatWeightNormSquared for Dipole {
     type Output = AntiScalar;
 
@@ -1924,6 +2016,14 @@ impl FlatWeightNorm for CircleOnOrigin {
     }
 }
 
+impl FlatWeightNorm for Dilator {
+    type Output = AntiScalar;
+
+    fn flat_weight_norm(self) -> AntiScalar {
+        self.flat_weight_norm_squared().anti_sqrt()
+    }
+}
+
 impl FlatWeightNorm for Dipole {
     type Output = AntiScalar;
 
@@ -2100,6 +2200,14 @@ impl FlatNormSquared for CircleAtInfinity {
     }
 }
 
+impl FlatNormSquared for Dilator {
+    type Output = DualNum;
+
+    fn flat_norm_squared(self) -> DualNum {
+        self.flat_bulk_norm_squared().add(self.flat_weight_norm_squared())
+    }
+}
+
 impl FlatNormSquared for Dipole {
     type Output = DualNum;
 
@@ -2213,6 +2321,14 @@ impl FlatNorm for CircleAligningOrigin {
 }
 
 impl FlatNorm for CircleAtInfinity {
+    type Output = DualNum;
+
+    fn flat_norm(self) -> DualNum {
+        self.flat_bulk_norm().add(self.flat_weight_norm())
+    }
+}
+
+impl FlatNorm for Dilator {
     type Output = DualNum;
 
     fn flat_norm(self) -> DualNum {
@@ -2340,6 +2456,14 @@ impl UnitizedFlatNormSquared for CircleAtInfinity {
     }
 }
 
+impl UnitizedFlatNormSquared for Dilator {
+    type Output = f32;
+
+    fn unitized_flat_norm_squared(self) -> f32 {
+        self.flat_bulk_norm_squared().group0() / self.flat_weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedFlatNormSquared for Dipole {
     type Output = f32;
 
@@ -2460,6 +2584,14 @@ impl UnitizedFlatNorm for CircleAtInfinity {
     }
 }
 
+impl UnitizedFlatNorm for Dilator {
+    type Output = f32;
+
+    fn unitized_flat_norm(self) -> f32 {
+        self.unitized_flat_norm_squared().sqrt()
+    }
+}
+
 impl UnitizedFlatNorm for Dipole {
     type Output = f32;
 
@@ -2572,6 +2704,14 @@ impl CenterNormSquared for CircleAtInfinity {
     }
 }
 
+impl CenterNormSquared for Dilator {
+    type Output = Scalar;
+
+    fn center_norm_squared(self) -> Scalar {
+        self.round_bulk_norm_squared().add(self.flat_weight_norm_squared().anti_dual())
+    }
+}
+
 impl CenterNormSquared for Dipole {
     type Output = Scalar;
 
@@ -2620,6 +2760,14 @@ impl CenterNorm for CircleAtInfinity {
     }
 }
 
+impl CenterNorm for Dilator {
+    type Output = Scalar;
+
+    fn center_norm(self) -> Scalar {
+        self.center_norm_squared().sqrt()
+    }
+}
+
 impl CenterNorm for Dipole {
     type Output = Scalar;
 
@@ -2660,6 +2808,14 @@ impl UnitizedCenterNormSquared for Circle {
     }
 }
 
+impl UnitizedCenterNormSquared for Dilator {
+    type Output = f32;
+
+    fn unitized_center_norm_squared(self) -> f32 {
+        self.center_norm_squared().group0() / self.round_weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedCenterNormSquared for Dipole {
     type Output = f32;
 
@@ -2677,6 +2833,14 @@ impl UnitizedCenterNormSquared for MultiVector {
 }
 
 impl UnitizedCenterNorm for Circle {
+    type Output = f32;
+
+    fn unitized_center_norm(self) -> f32 {
+        self.unitized_center_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedCenterNorm for Dilator {
     type Output = f32;
 
     fn unitized_center_norm(self) -> f32 {
@@ -2765,6 +2929,14 @@ impl RadiusNormSquared for CircleOnOrigin {
 }
 
 impl RadiusNormSquared for CircleOrthogonalOrigin {
+    type Output = Scalar;
+
+    fn radius_norm_squared(self) -> Scalar {
+        self.anti_dot(self).anti_dual()
+    }
+}
+
+impl RadiusNormSquared for Dilator {
     type Output = Scalar;
 
     fn radius_norm_squared(self) -> Scalar {
@@ -2948,6 +3120,14 @@ impl RadiusNorm for CircleOrthogonalOrigin {
     }
 }
 
+impl RadiusNorm for Dilator {
+    type Output = Scalar;
+
+    fn radius_norm(self) -> Scalar {
+        self.radius_norm_squared().sqrt()
+    }
+}
+
 impl RadiusNorm for Dipole {
     type Output = Scalar;
 
@@ -3116,6 +3296,14 @@ impl UnitizedRadiusNormSquared for CircleOrthogonalOrigin {
     }
 }
 
+impl UnitizedRadiusNormSquared for Dilator {
+    type Output = f32;
+
+    fn unitized_radius_norm_squared(self) -> f32 {
+        self.radius_norm_squared().group0() / self.round_weight_norm_squared().group0()
+    }
+}
+
 impl UnitizedRadiusNormSquared for Dipole {
     type Output = f32;
 
@@ -3261,6 +3449,14 @@ impl UnitizedRadiusNorm for CircleOnOrigin {
 }
 
 impl UnitizedRadiusNorm for CircleOrthogonalOrigin {
+    type Output = f32;
+
+    fn unitized_radius_norm(self) -> f32 {
+        self.unitized_radius_norm_squared().sqrt()
+    }
+}
+
+impl UnitizedRadiusNorm for Dilator {
     type Output = f32;
 
     fn unitized_radius_norm(self) -> f32 {

@@ -96,6 +96,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl Expansion<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for AntiCircleOnOrigin {
     type Output = AntiScalar;
 
@@ -352,6 +360,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     }
 }
 
+impl Expansion<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for AntiDipoleOnOrigin {
     type Output = MultiVector;
 
@@ -516,6 +532,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -708,6 +732,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiLineAtOrigin {
     type Output = Sphere;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -972,6 +1004,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiPlane {
     type Output = CircleAligningOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -1328,6 +1368,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for AntiPlaneAtOrigin {
     type Output = Sphere;
 
@@ -1656,6 +1704,14 @@ impl Expansion<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
     }
 }
 
+impl Expansion<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for AntiSphereOnOrigin {
     type Output = Sphere;
 
@@ -1968,6 +2024,14 @@ impl Expansion<CircleOrthogonalOrigin> for Circle {
     }
 }
 
+impl Expansion<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for Circle {
     type Output = MultiVector;
 
@@ -2164,6 +2228,14 @@ impl Expansion<CircleOrthogonalOrigin> for CircleAligningOrigin {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -2376,6 +2448,14 @@ impl Expansion<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl Expansion<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for CircleAtInfinity {
     type Output = MultiVector;
 
@@ -2568,6 +2648,14 @@ impl Expansion<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for CircleAtOrigin {
     type Output = MultiVector;
 
@@ -2748,6 +2836,14 @@ impl Expansion<CircleOrthogonalOrigin> for CircleOnOrigin {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -2944,6 +3040,14 @@ impl Expansion<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl Expansion<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for CircleOrthogonalOrigin {
     type Output = MultiVector;
 
@@ -3080,6 +3184,222 @@ impl Expansion<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl Expansion<AntiDipoleOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: AntiDipoleOnOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<AntiFlatPointAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: AntiFlatPointAtOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Circle> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: Circle) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<CircleAligningOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: CircleAligningOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<CircleAtInfinity> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: CircleAtInfinity) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<CircleAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: CircleAtOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<CircleOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: CircleOnOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<CircleOrthogonalOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Flector) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: FlectorAtInfinity) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Horizon> for Dilator {
+    type Output = Plane;
+
+    fn expansion(self, other: Horizon) -> Plane {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Line> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: Line) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<LineAtInfinity> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: LineAtInfinity) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<LineAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: LineAtOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Motor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: MultiVector) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<NullCircleAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn expansion(self, other: NullCircleAtOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<NullSphereAtOrigin> for Dilator {
+    type Output = SphereOnOrigin;
+
+    fn expansion(self, other: NullSphereAtOrigin) -> SphereOnOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Plane> for Dilator {
+    type Output = Sphere;
+
+    fn expansion(self, other: Plane) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<PlaneAtOrigin> for Dilator {
+    type Output = Sphere;
+
+    fn expansion(self, other: PlaneAtOrigin) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Rotor) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Sphere> for Dilator {
+    type Output = Sphere;
+
+    fn expansion(self, other: Sphere) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<SphereAtOrigin> for Dilator {
+    type Output = Sphere;
+
+    fn expansion(self, other: SphereAtOrigin) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<SphereOnOrigin> for Dilator {
+    type Output = Sphere;
+
+    fn expansion(self, other: SphereOnOrigin) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Transflector) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Translator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<AntiCircleOnOrigin> for Dipole {
     type Output = AntiScalar;
 
@@ -3156,6 +3476,14 @@ impl Expansion<CircleOrthogonalOrigin> for Dipole {
     type Output = Sphere;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -3444,6 +3772,14 @@ impl Expansion<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     type Output = PlaneAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> PlaneAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -3752,6 +4088,14 @@ impl Expansion<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl Expansion<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for DipoleAtInfinity {
     type Output = AntiScalar;
 
@@ -4032,6 +4376,14 @@ impl Expansion<CircleOrthogonalOrigin> for DipoleAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for DipoleAtOrigin {
     type Output = AntiScalar;
 
@@ -4292,6 +4644,14 @@ impl Expansion<CircleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = PlaneAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> PlaneAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -4576,6 +4936,14 @@ impl Expansion<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
     }
 }
 
+impl Expansion<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for DipoleOrthogonalOrigin {
     type Output = AntiScalar;
 
@@ -4856,6 +5224,14 @@ impl Expansion<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl Expansion<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for FlatPoint {
     type Output = AntiScalar;
 
@@ -5120,6 +5496,14 @@ impl Expansion<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl Expansion<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for FlatPointAtInfinity {
     type Output = AntiScalar;
 
@@ -5336,6 +5720,14 @@ impl Expansion<CircleOnOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for FlatPointAtOrigin {
     type Output = AntiScalar;
 
@@ -5548,6 +5940,14 @@ impl Expansion<CircleOrthogonalOrigin> for Flector {
     type Output = PlaneAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> PlaneAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -5816,6 +6216,14 @@ impl Expansion<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl Expansion<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for FlectorAtInfinity {
     type Output = AntiScalar;
 
@@ -6000,6 +6408,14 @@ impl Expansion<Translator> for FlectorAtInfinity {
     }
 }
 
+impl Expansion<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -6156,6 +6572,14 @@ impl Expansion<CircleOrthogonalOrigin> for Infinity {
     type Output = LineAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> LineAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -6440,6 +6864,14 @@ impl Expansion<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl Expansion<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for Line {
     type Output = MultiVector;
 
@@ -6616,6 +7048,14 @@ impl Expansion<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl Expansion<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -6756,6 +7196,14 @@ impl Expansion<CircleOnOrigin> for LineAtOrigin {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOnOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -6916,6 +7364,14 @@ impl Expansion<CircleOrthogonalOrigin> for Motor {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -7148,6 +7604,14 @@ impl Expansion<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -7448,6 +7912,14 @@ impl Expansion<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for NullCircleAtOrigin {
     type Output = MultiVector;
 
@@ -7612,6 +8084,14 @@ impl Expansion<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     type Output = PlaneAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> PlaneAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -7800,6 +8280,14 @@ impl Expansion<Translator> for NullDipoleAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for NullSphereAtOrigin {
     type Output = MultiVector;
 
@@ -7940,6 +8428,14 @@ impl Expansion<CircleOrthogonalOrigin> for Origin {
     type Output = LineAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> LineAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -8168,6 +8664,14 @@ impl Expansion<Translator> for Origin {
     }
 }
 
+impl Expansion<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for Plane {
     type Output = MultiVector;
 
@@ -8268,6 +8772,14 @@ impl Expansion<Translator> for Plane {
     type Output = MultiVector;
 
     fn expansion(self, other: Translator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -8388,6 +8900,14 @@ impl Expansion<CircleOnOrigin> for Rotor {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOnOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -8596,6 +9116,14 @@ impl Expansion<CircleOrthogonalOrigin> for RoundPoint {
     type Output = CircleAligningOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -8936,6 +9464,14 @@ impl Expansion<CircleOrthogonalOrigin> for RoundPointAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Dipole> for RoundPointAtOrigin {
     type Output = Sphere;
 
@@ -9192,6 +9728,14 @@ impl Expansion<Translator> for RoundPointAtOrigin {
     }
 }
 
+impl Expansion<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for Sphere {
     type Output = MultiVector;
 
@@ -9304,6 +9848,14 @@ impl Expansion<Translator> for Sphere {
     }
 }
 
+impl Expansion<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
 impl Expansion<Flector> for SphereAtOrigin {
     type Output = MultiVector;
 
@@ -9404,6 +9956,14 @@ impl Expansion<Translator> for SphereAtOrigin {
     type Output = MultiVector;
 
     fn expansion(self, other: Translator) -> MultiVector {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -9572,6 +10132,14 @@ impl Expansion<CircleOrthogonalOrigin> for Transflector {
     type Output = PlaneAtOrigin;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> PlaneAtOrigin {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }
@@ -9804,6 +10372,14 @@ impl Expansion<CircleOrthogonalOrigin> for Translator {
     type Output = AntiScalar;
 
     fn expansion(self, other: CircleOrthogonalOrigin) -> AntiScalar {
+        self.wedge(other.anti_dual())
+    }
+}
+
+impl Expansion<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn expansion(self, other: Dilator) -> MultiVector {
         self.wedge(other.anti_dual())
     }
 }

@@ -3826,6 +3826,125 @@ impl std::fmt::Debug for FlectorAtInfinity {
 }
 
 #[derive(Clone, Copy)]
+struct DilatorGroups {
+    /// e12345
+    g0: f32,
+    /// e234, -e134, e124
+    g1: Simd32x3,
+    /// -e145, -e245, -e345
+    g2: Simd32x3,
+    /// e235, -e135, e125, -e123
+    g3: Simd32x4,
+}
+
+#[derive(Clone, Copy)]
+pub union Dilator {
+    groups: DilatorGroups,
+    /// e12345, e234, -e134, e124, 0, -e145, -e245, -e345, 0, e235, -e135, e125, -e123
+    elements: [f32; 13],
+}
+
+impl Dilator {
+    #[allow(clippy::too_many_arguments)]
+    pub const fn new(e12345: f32, e234: f32, neg_e134: f32, e124: f32, neg_e145: f32, neg_e245: f32, neg_e345: f32, e235: f32, neg_e135: f32, e125: f32, neg_e123: f32) -> Self {
+        Self {
+            elements: [e12345, e234, neg_e134, e124, 0.0, neg_e145, neg_e245, neg_e345, 0.0, e235, neg_e135, e125, neg_e123],
+        }
+    }
+    pub const fn from_groups(g0: f32, g1: Simd32x3, g2: Simd32x3, g3: Simd32x4) -> Self {
+        Self {
+            groups: DilatorGroups { g0, g1, g2, g3 },
+        }
+    }
+    #[inline(always)]
+    pub fn group0(&self) -> f32 {
+        unsafe { self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group0_mut(&mut self) -> &mut f32 {
+        unsafe { &mut self.groups.g0 }
+    }
+    #[inline(always)]
+    pub fn group1(&self) -> Simd32x3 {
+        unsafe { self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g1 }
+    }
+    #[inline(always)]
+    pub fn group2(&self) -> Simd32x3 {
+        unsafe { self.groups.g2 }
+    }
+    #[inline(always)]
+    pub fn group2_mut(&mut self) -> &mut Simd32x3 {
+        unsafe { &mut self.groups.g2 }
+    }
+    #[inline(always)]
+    pub fn group3(&self) -> Simd32x4 {
+        unsafe { self.groups.g3 }
+    }
+    #[inline(always)]
+    pub fn group3_mut(&mut self) -> &mut Simd32x4 {
+        unsafe { &mut self.groups.g3 }
+    }
+}
+
+const DILATOR_INDEX_REMAP: [usize; 11] = [0, 1, 2, 3, 5, 6, 7, 9, 10, 11, 12];
+
+impl std::ops::Index<usize> for Dilator {
+    type Output = f32;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        unsafe { &self.elements[DILATOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::ops::IndexMut<usize> for Dilator {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        unsafe { &mut self.elements[DILATOR_INDEX_REMAP[index]] }
+    }
+}
+
+impl std::convert::From<Dilator> for [f32; 11] {
+    fn from(vector: Dilator) -> Self {
+        unsafe {
+            [
+                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[5], vector.elements[6], vector.elements[7], vector.elements[9],
+                vector.elements[10], vector.elements[11], vector.elements[12],
+            ]
+        }
+    }
+}
+
+impl std::convert::From<[f32; 11]> for Dilator {
+    fn from(array: [f32; 11]) -> Self {
+        Self {
+            elements: [array[0], array[1], array[2], array[3], 0.0, array[4], array[5], array[6], 0.0, array[7], array[8], array[9], array[10]],
+        }
+    }
+}
+
+impl std::fmt::Debug for Dilator {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter
+            .debug_struct("Dilator")
+            .field("e12345", &self[0])
+            .field("e234", &self[1])
+            .field("-e134", &self[2])
+            .field("e124", &self[3])
+            .field("-e145", &self[4])
+            .field("-e245", &self[5])
+            .field("-e345", &self[6])
+            .field("e235", &self[7])
+            .field("-e135", &self[8])
+            .field("e125", &self[9])
+            .field("-e123", &self[10])
+            .finish()
+    }
+}
+
+#[derive(Clone, Copy)]
 struct MultiVectorGroups {
     /// 1, e12345
     g0: Simd32x2,
@@ -4232,6 +4351,19 @@ impl One for CircleOrthogonalOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl One for Dilator {
+    fn one() -> Self {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0,
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
             },
         }
     }
@@ -4687,6 +4819,19 @@ impl Unit for CircleOrthogonalOrigin {
     }
 }
 
+impl Unit for Dilator {
+    fn unit() -> Self {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 1.0,
+                g1: Simd32x3::from(1.0),
+                g2: Simd32x3::from(1.0),
+                g3: Simd32x4::from(1.0),
+            },
+        }
+    }
+}
+
 impl Unit for Dipole {
     fn unit() -> Self {
         Dipole {
@@ -5132,6 +5277,19 @@ impl Zero for CircleOrthogonalOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: Simd32x3::from(0.0),
                 g1: Simd32x4::from(0.0),
+            },
+        }
+    }
+}
+
+impl Zero for Dilator {
+    fn zero() -> Self {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0,
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0),
             },
         }
     }
@@ -5620,6 +5778,21 @@ impl Neg for CircleOrthogonalOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Neg for Dilator {
+    type Output = Dilator;
+
+    fn neg(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: -self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
             },
         }
     }
@@ -6339,6 +6512,28 @@ impl Add<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: self.group1(),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -7144,22 +7339,15 @@ impl Add<AntiPlaneAtOrigin> for AntiDipoleOnOrigin {
 }
 
 impl Add<AntiScalar> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             },
         }
     }
@@ -7264,6 +7452,21 @@ impl Add<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
                 g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiDipoleOnOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g2: other.group2(),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + other.group3(),
             },
         }
     }
@@ -7619,22 +7822,15 @@ impl Add<LineAtOrigin> for AntiDipoleOnOrigin {
 }
 
 impl Add<Motor> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -7791,22 +7987,15 @@ impl Add<PlaneAtOrigin> for AntiDipoleOnOrigin {
 }
 
 impl Add<Rotor> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             },
         }
     }
@@ -7967,22 +8156,15 @@ impl Add<Transflector> for AntiDipoleOnOrigin {
 }
 
 impl Add<Translator> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -8107,22 +8289,15 @@ impl Add<AntiPlaneAtOrigin> for AntiFlatPointAtOrigin {
 }
 
 impl Add<AntiScalar> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
             },
         }
     }
@@ -8226,6 +8401,21 @@ impl Add<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: other.group0(),
                 g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiFlatPointAtOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + other.group3(),
             },
         }
     }
@@ -8579,22 +8769,15 @@ impl Add<LineAtOrigin> for AntiFlatPointAtOrigin {
 }
 
 impl Add<Motor> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -8745,22 +8928,15 @@ impl Add<PlaneAtOrigin> for AntiFlatPointAtOrigin {
 }
 
 impl Add<Rotor> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
             },
         }
     }
@@ -8921,22 +9097,15 @@ impl Add<Transflector> for AntiFlatPointAtOrigin {
 }
 
 impl Add<Translator> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -9230,6 +9399,28 @@ impl Add<CircleOrthogonalOrigin> for AntiLineAtOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -10184,6 +10375,28 @@ impl Add<CircleOrthogonalOrigin> for AntiPlane {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -11192,6 +11405,28 @@ impl Add<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl Add<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
@@ -11925,44 +12160,30 @@ impl Add<AntiCircleOnOrigin> for AntiScalar {
 }
 
 impl Add<AntiDipoleOnOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Add<AntiFlatPointAtOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
+    fn add(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -12075,132 +12296,105 @@ impl Add<AntiSphereOnOrigin> for AntiScalar {
 }
 
 impl Add<Circle> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: other.group2(),
             },
         }
     }
 }
 
 impl Add<CircleAligningOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleAtInfinity> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
+    fn add(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: other.group0(),
-                g8: other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: other.group0(),
+                g3: other.group1(),
             },
         }
     }
 }
 
 impl Add<CircleAtOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleOnOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: other.group1(),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl Add<CircleOrthogonalOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiScalar {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
             },
         }
     }
@@ -12577,22 +12771,15 @@ impl Add<MultiVector> for AntiScalar {
 }
 
 impl Add<NullCircleAtOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: other.group0(),
+                g2: Simd32x3::from(0.0),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -13160,6 +13347,28 @@ impl Add<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -14013,22 +14222,15 @@ impl Add<AntiPlaneAtOrigin> for Circle {
 }
 
 impl Add<AntiScalar> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: self.group2(),
             },
         }
     }
@@ -14173,6 +14375,21 @@ impl Add<CircleOrthogonalOrigin> for Circle {
 impl AddAssign<CircleOrthogonalOrigin> for Circle {
     fn add_assign(&mut self, other: CircleOrthogonalOrigin) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<Dilator> for Circle {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: self.group1() + other.group2(),
+                g3: self.group2() + other.group3(),
+            },
+        }
     }
 }
 
@@ -14545,22 +14762,15 @@ impl AddAssign<LineAtOrigin> for Circle {
 }
 
 impl Add<Motor> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group2() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -14719,22 +14929,15 @@ impl Add<PlaneAtOrigin> for Circle {
 }
 
 impl Add<Rotor> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group2(),
             },
         }
     }
@@ -14895,22 +15098,15 @@ impl Add<Transflector> for Circle {
 }
 
 impl Add<Translator> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: self.group2() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -15033,22 +15229,15 @@ impl Add<AntiPlaneAtOrigin> for CircleAligningOrigin {
 }
 
 impl Add<AntiScalar> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
             },
         }
     }
@@ -15173,6 +15362,21 @@ impl Add<CircleOrthogonalOrigin> for CircleAligningOrigin {
                 g0: self.group0() + other.group0(),
                 g1: self.group1(),
                 g2: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for CircleAligningOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: self.group1() + other.group2(),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + other.group3(),
             },
         }
     }
@@ -15547,22 +15751,15 @@ impl AddAssign<LineAtOrigin> for CircleAligningOrigin {
 }
 
 impl Add<Motor> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -15721,22 +15918,15 @@ impl Add<PlaneAtOrigin> for CircleAligningOrigin {
 }
 
 impl Add<Rotor> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
             },
         }
     }
@@ -15897,22 +16087,15 @@ impl Add<Transflector> for CircleAligningOrigin {
 }
 
 impl Add<Translator> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -16040,22 +16223,15 @@ impl Add<AntiPlaneAtOrigin> for CircleAtInfinity {
 }
 
 impl Add<AntiScalar> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0(),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0(),
+                g3: self.group1(),
             },
         }
     }
@@ -16167,6 +16343,21 @@ impl Add<CircleOrthogonalOrigin> for CircleAtInfinity {
                 g0: other.group0(),
                 g1: self.group0(),
                 g2: self.group1() + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for CircleAtInfinity {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0() + other.group2(),
+                g3: self.group1() + other.group3(),
             },
         }
     }
@@ -16538,22 +16729,15 @@ impl AddAssign<LineAtOrigin> for CircleAtInfinity {
 }
 
 impl Add<Motor> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -16706,22 +16890,15 @@ impl Add<PlaneAtOrigin> for CircleAtInfinity {
 }
 
 impl Add<Rotor> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1(),
             },
         }
     }
@@ -16882,22 +17059,15 @@ impl Add<Transflector> for CircleAtInfinity {
 }
 
 impl Add<Translator> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0(),
-                g8: self.group1() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0(),
+                g3: self.group1() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -17018,22 +17188,15 @@ impl Add<AntiPlaneAtOrigin> for CircleAtOrigin {
 }
 
 impl Add<AntiScalar> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -17144,6 +17307,21 @@ impl Add<CircleOrthogonalOrigin> for CircleAtOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group0() + other.group0(),
                 g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for CircleAtOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group3(),
             },
         }
     }
@@ -17505,22 +17683,15 @@ impl Add<LineAtOrigin> for CircleAtOrigin {
 }
 
 impl Add<Motor> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -17678,22 +17849,15 @@ impl Add<PlaneAtOrigin> for CircleAtOrigin {
 }
 
 impl Add<Rotor> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -17854,22 +18018,15 @@ impl Add<Transflector> for CircleAtOrigin {
 }
 
 impl Add<Translator> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -17992,22 +18149,15 @@ impl Add<AntiPlaneAtOrigin> for CircleOnOrigin {
 }
 
 impl Add<AntiScalar> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -18119,6 +18269,21 @@ impl Add<CircleOrthogonalOrigin> for CircleOnOrigin {
                 g0: self.group0() + other.group0(),
                 g1: self.group1(),
                 g2: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for CircleOnOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: self.group1() + other.group2(),
+                g3: other.group3(),
             },
         }
     }
@@ -18480,22 +18645,15 @@ impl AddAssign<LineAtOrigin> for CircleOnOrigin {
 }
 
 impl Add<Motor> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -18653,22 +18811,15 @@ impl Add<PlaneAtOrigin> for CircleOnOrigin {
 }
 
 impl Add<Rotor> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -18829,22 +18980,15 @@ impl Add<Transflector> for CircleOnOrigin {
 }
 
 impl Add<Translator> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -18977,22 +19121,15 @@ impl Add<AntiPlaneAtOrigin> for CircleOrthogonalOrigin {
 }
 
 impl Add<AntiScalar> for CircleOrthogonalOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: self.group1(),
             },
         }
     }
@@ -19111,6 +19248,21 @@ impl Add<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
 impl AddAssign<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     fn add_assign(&mut self, other: CircleOrthogonalOrigin) {
         *self = (*self).add(other);
+    }
+}
+
+impl Add<Dilator> for CircleOrthogonalOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
+                g3: self.group1() + other.group3(),
+            },
+        }
     }
 }
 
@@ -19470,22 +19622,15 @@ impl Add<LineAtOrigin> for CircleOrthogonalOrigin {
 }
 
 impl Add<Motor> for CircleOrthogonalOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -19643,22 +19788,15 @@ impl Add<PlaneAtOrigin> for CircleOrthogonalOrigin {
 }
 
 impl Add<Rotor> for CircleOrthogonalOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1(),
             },
         }
     }
@@ -19819,24 +19957,1078 @@ impl Add<Transflector> for CircleOrthogonalOrigin {
 }
 
 impl Add<Translator> for CircleOrthogonalOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: self.group1() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<AntiCircleOnOrigin> for Dilator {
     type Output = MultiVector;
 
-    fn add(self, other: Translator) -> MultiVector {
+    fn add(self, other: AntiCircleOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: other.group1(),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<AntiDipoleOnOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2(),
+                g3: self.group3() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiDipoleOnOrigin> for Dilator {
+    fn add_assign(&mut self, other: AntiDipoleOnOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<AntiFlatPointAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiFlatPointAtOrigin> for Dilator {
+    fn add_assign(&mut self, other: AntiFlatPointAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<AntiLineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiLineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: other.group0(),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<AntiPlane> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiPlane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<AntiPlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiPlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<AntiScalar> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl AddAssign<AntiScalar> for Dilator {
+    fn add_assign(&mut self, other: AntiScalar) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<AntiSphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: AntiSphereOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Circle> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2() + other.group1(),
+                g3: self.group3() + other.group2(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Circle> for Dilator {
+    fn add_assign(&mut self, other: Circle) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleAligningOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2() + other.group1(),
+                g3: self.group3() + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleAligningOrigin> for Dilator {
+    fn add_assign(&mut self, other: CircleAligningOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleAtInfinity> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + other.group0(),
+                g3: self.group3() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleAtInfinity> for Dilator {
+    fn add_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+                g3: self.group3() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleAtOrigin> for Dilator {
+    fn add_assign(&mut self, other: CircleAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleOnOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2() + other.group1(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleOnOrigin> for Dilator {
+    fn add_assign(&mut self, other: CircleOnOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<CircleOrthogonalOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+                g3: self.group3() + other.group1(),
+            },
+        }
+    }
+}
+
+impl AddAssign<CircleOrthogonalOrigin> for Dilator {
+    fn add_assign(&mut self, other: CircleOrthogonalOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Dilator> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() + other.group0(),
+                g1: self.group1() + other.group1(),
+                g2: self.group2() + other.group2(),
+                g3: self.group3() + other.group3(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Dilator> for Dilator {
+    fn add_assign(&mut self, other: Dilator) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Dipole> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
+                g4: other.group1(),
+                g5: Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAligningOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
+                g4: other.group0(),
+                g5: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: other.group1(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DipoleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: DipoleOrthogonalOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: other.group1(),
+                g5: other.group2(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<DualNum> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: self.group1() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
+    }
+}
+
+impl Add<FlatPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: other.group0(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<FlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Horizon> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Add<Infinity> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Line> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: Line) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + other.group0(),
+                g3: self.group3() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Line> for Dilator {
+    fn add_assign(&mut self, other: Line) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtInfinity> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: LineAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtInfinity> for Dilator {
+    fn add_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<LineAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: LineAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() + other.group0(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl AddAssign<LineAtOrigin> for Dilator {
+    fn add_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Motor> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() + other.group0()[3],
+                g1: self.group1(),
+                g2: self.group2() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group3() + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Motor> for Dilator {
+    fn add_assign(&mut self, other: Motor) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
+                g4: other.group4(),
+                g5: other.group5(),
+                g6: self.group1() + other.group6(),
+                g7: self.group2() + other.group7(),
+                g8: self.group3() + other.group8(),
+                g9: other.group9(),
+                g10: other.group10(),
+            },
+        }
+    }
+}
+
+impl Add<NullCircleAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() + other.group0(),
+                g2: self.group2(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl AddAssign<NullCircleAtOrigin> for Dilator {
+    fn add_assign(&mut self, other: NullCircleAtOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<NullDipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: NullDipoleAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<NullSphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: NullSphereAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Origin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Plane> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<PlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Rotor> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() + other.group0()[3],
+                g1: self.group1(),
+                g2: self.group2() + Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Rotor> for Dilator {
+    fn add_assign(&mut self, other: Rotor) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<RoundPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<RoundPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: other.group0(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Scalar> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) + Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Sphere> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: other.group0(),
+                g10: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<SphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: SphereAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: other.group0(),
+            },
+        }
+    }
+}
+
+impl Add<SphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: SphereOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn add(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: other.group0(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Translator> for Dilator {
+    type Output = Dilator;
+
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() + other.group0()[3],
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() + Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl AddAssign<Translator> for Dilator {
+    fn add_assign(&mut self, other: Translator) {
+        *self = (*self).add(other);
     }
 }
 
@@ -20137,6 +21329,28 @@ impl Add<CircleOrthogonalOrigin> for Dipole {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
+                g4: self.group1(),
+                g5: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -21164,6 +22378,28 @@ impl Add<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     }
 }
 
+impl Add<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for DipoleAligningOrigin {
     type Output = Dipole;
 
@@ -22164,6 +23400,28 @@ impl Add<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl Add<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+                g4: self.group0(),
+                g5: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -23144,6 +24402,28 @@ impl Add<CircleOrthogonalOrigin> for DipoleAtOrigin {
     }
 }
 
+impl Add<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: self.group1(),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -24108,6 +25388,28 @@ impl Add<CircleOrthogonalOrigin> for DipoleOnOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -25088,6 +26390,28 @@ impl Add<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: self.group1(),
+                g5: self.group2(),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -26084,6 +27408,28 @@ impl Add<CircleOrthogonalOrigin> for DualNum {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for DualNum {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -27122,6 +28468,28 @@ impl Add<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl Add<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -28034,6 +29402,28 @@ impl Add<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl Add<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -28925,6 +30315,28 @@ impl Add<CircleOrthogonalOrigin> for FlatPointAtOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -29840,6 +31252,28 @@ impl Add<CircleOrthogonalOrigin> for Flector {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g10: Simd32x2::from([0.0, self.group1()[3]]),
             },
@@ -30876,6 +32310,28 @@ impl Add<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl Add<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -31866,6 +33322,28 @@ impl Add<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl Add<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()]),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for Horizon {
     type Output = MultiVector;
 
@@ -32768,6 +34246,28 @@ impl Add<CircleOrthogonalOrigin> for Infinity {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -33723,6 +35223,21 @@ impl Add<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl Add<Dilator> for Line {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0() + other.group2(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group3(),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for Line {
     type Output = MultiVector;
 
@@ -34656,6 +36171,21 @@ impl Add<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl Add<Dilator> for LineAtInfinity {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group3(),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -35576,6 +37106,21 @@ impl Add<CircleOrthogonalOrigin> for LineAtOrigin {
     }
 }
 
+impl Add<Dilator> for LineAtOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: other.group1(),
+                g2: self.group0() + other.group2(),
+                g3: other.group3(),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -36288,44 +37833,30 @@ impl Add<AntiCircleOnOrigin> for Motor {
 }
 
 impl Add<AntiDipoleOnOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Add<AntiFlatPointAtOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn add(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -36439,132 +37970,105 @@ impl Add<AntiSphereOnOrigin> for Motor {
 }
 
 impl Add<Circle> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group2(),
             },
         }
     }
 }
 
 impl Add<CircleAligningOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleAtInfinity> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn add(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group1(),
             },
         }
     }
 }
 
 impl Add<CircleAtOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleOnOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleOrthogonalOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Motor {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3] + other.group0(),
+                g1: other.group1(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group2(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) + other.group3(),
             },
         }
     }
@@ -36977,22 +38481,15 @@ impl Add<MultiVector> for Motor {
 }
 
 impl Add<NullCircleAtOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -37688,6 +39185,34 @@ impl Add<CircleOrthogonalOrigin> for MultiVector {
 
 impl AddAssign<CircleOrthogonalOrigin> for MultiVector {
     fn add_assign(&mut self, other: CircleOrthogonalOrigin) {
+        *self = (*self).add(other);
+    }
+}
+
+impl Add<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() + Simd32x2::from([0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() + other.group1(),
+                g7: self.group7() + other.group2(),
+                g8: self.group8() + other.group3(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl AddAssign<Dilator> for MultiVector {
+    fn add_assign(&mut self, other: Dilator) {
         *self = (*self).add(other);
     }
 }
@@ -38757,22 +40282,15 @@ impl Add<AntiPlaneAtOrigin> for NullCircleAtOrigin {
 }
 
 impl Add<AntiScalar> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -38876,6 +40394,21 @@ impl Add<CircleOrthogonalOrigin> for NullCircleAtOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group0() + other.group0(),
                 g1: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for NullCircleAtOrigin {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0(),
+                g1: self.group0() + other.group1(),
+                g2: other.group2(),
+                g3: other.group3(),
             },
         }
     }
@@ -39230,22 +40763,15 @@ impl Add<LineAtOrigin> for NullCircleAtOrigin {
 }
 
 impl Add<Motor> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -39402,22 +40928,15 @@ impl Add<PlaneAtOrigin> for NullCircleAtOrigin {
 }
 
 impl Add<Rotor> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -39578,22 +41097,15 @@ impl Add<Transflector> for NullCircleAtOrigin {
 }
 
 impl Add<Translator> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -39882,6 +41394,28 @@ impl Add<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -40861,6 +42395,28 @@ impl Add<CircleOrthogonalOrigin> for NullSphereAtOrigin {
     }
 }
 
+impl Add<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for NullSphereAtOrigin {
     type Output = MultiVector;
 
@@ -41819,6 +43375,28 @@ impl Add<CircleOrthogonalOrigin> for Origin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -42849,6 +44427,28 @@ impl Add<CircleOrthogonalOrigin> for Plane {
     }
 }
 
+impl Add<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for Plane {
     type Output = MultiVector;
 
@@ -43803,6 +45403,28 @@ impl Add<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl Add<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: self.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -44458,44 +46080,30 @@ impl Add<AntiCircleOnOrigin> for Rotor {
 }
 
 impl Add<AntiDipoleOnOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Add<AntiFlatPointAtOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn add(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -44608,132 +46216,105 @@ impl Add<AntiSphereOnOrigin> for Rotor {
 }
 
 impl Add<Circle> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g3: other.group2(),
             },
         }
     }
 }
 
 impl Add<CircleAligningOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
+                g3: Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleAtInfinity> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn add(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
-                g8: other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group0(),
+                g3: other.group1(),
             },
         }
     }
 }
 
 impl Add<CircleAtOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleOnOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group1(),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl Add<CircleOrthogonalOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Rotor {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3] + other.group0(),
+                g1: other.group1(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) + other.group2(),
+                g3: other.group3(),
             },
         }
     }
@@ -45127,22 +46708,15 @@ impl Add<MultiVector> for Rotor {
 }
 
 impl Add<NullCircleAtOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn add(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -45735,6 +47309,28 @@ impl Add<CircleOrthogonalOrigin> for RoundPoint {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -46752,6 +48348,28 @@ impl Add<CircleOrthogonalOrigin> for RoundPointAtOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -47777,6 +49395,28 @@ impl Add<CircleOrthogonalOrigin> for Scalar {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Scalar {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) + Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -48826,6 +50466,28 @@ impl Add<CircleOrthogonalOrigin> for Sphere {
     }
 }
 
+impl Add<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: self.group0(),
+                g10: self.group1(),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for Sphere {
     type Output = MultiVector;
 
@@ -49861,6 +51523,28 @@ impl Add<CircleOrthogonalOrigin> for SphereAtOrigin {
     }
 }
 
+impl Add<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for SphereAtOrigin {
     type Output = MultiVector;
 
@@ -50862,6 +52546,28 @@ impl Add<CircleOrthogonalOrigin> for SphereOnOrigin {
                 g6: other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: other.group1(),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([self.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
                 g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g10: Simd32x2::from([self.group0()[3], 0.0]),
             },
@@ -51877,6 +53583,28 @@ impl Add<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl Add<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn add(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: other.group1(),
+                g7: other.group2(),
+                g8: other.group3(),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Add<Dipole> for Transflector {
     type Output = MultiVector;
 
@@ -52603,44 +54331,30 @@ impl Add<AntiCircleOnOrigin> for Translator {
 }
 
 impl Add<AntiDipoleOnOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Add<AntiFlatPointAtOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn add(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -52753,132 +54467,105 @@ impl Add<AntiSphereOnOrigin> for Translator {
 }
 
 impl Add<Circle> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group2(),
             },
         }
     }
 }
 
 impl Add<CircleAligningOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleAtInfinity> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn add(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: other.group0(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: other.group0(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group1(),
             },
         }
     }
 }
 
 impl Add<CircleAtOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleOnOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: other.group1(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: other.group1(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }
 }
 
 impl Add<CircleOrthogonalOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group1(),
+            },
+        }
+    }
+}
+
+impl Add<Dilator> for Translator {
+    type Output = Dilator;
+
+    fn add(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3] + other.group0(),
+                g1: other.group1(),
+                g2: other.group2(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) + other.group3(),
             },
         }
     }
@@ -53272,22 +54959,15 @@ impl Add<MultiVector> for Translator {
 }
 
 impl Add<NullCircleAtOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn add(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn add(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }
@@ -53845,6 +55525,27 @@ impl Div<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
 
 impl DivAssign<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     fn div_assign(&mut self, other: CircleOrthogonalOrigin) {
+        *self = (*self).div(other);
+    }
+}
+
+impl Div<Dilator> for Dilator {
+    type Output = Dilator;
+
+    fn div(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() / other.group0(),
+                g1: self.group1() / other.group1(),
+                g2: self.group2() / other.group2(),
+                g3: self.group3() / other.group3(),
+            },
+        }
+    }
+}
+
+impl DivAssign<Dilator> for Dilator {
+    fn div_assign(&mut self, other: Dilator) {
         *self = (*self).div(other);
     }
 }
@@ -54838,6 +56539,168 @@ impl Into<NullCircleAtOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl Into<AntiDipoleOnOrigin> for Dilator {
+    fn into(self) -> AntiDipoleOnOrigin {
+        AntiDipoleOnOrigin {
+            groups: AntiDipoleOnOriginGroups {
+                g0: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group3()[3]]),
+            },
+        }
+    }
+}
+
+impl Into<AntiFlatPointAtOrigin> for Dilator {
+    fn into(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group3()[3] },
+        }
+    }
+}
+
+impl Into<AntiScalar> for Dilator {
+    fn into(self) -> AntiScalar {
+        AntiScalar {
+            groups: AntiScalarGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl Into<Circle> for Dilator {
+    fn into(self) -> Circle {
+        Circle {
+            groups: CircleGroups {
+                g0: self.group1(),
+                g1: self.group2(),
+                g2: self.group3(),
+            },
+        }
+    }
+}
+
+impl Into<CircleAligningOrigin> for Dilator {
+    fn into(self) -> CircleAligningOrigin {
+        CircleAligningOrigin {
+            groups: CircleAligningOriginGroups {
+                g0: self.group1(),
+                g1: self.group2(),
+                g2: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<CircleAtInfinity> for Dilator {
+    fn into(self) -> CircleAtInfinity {
+        CircleAtInfinity {
+            groups: CircleAtInfinityGroups {
+                g0: self.group2(),
+                g1: self.group3(),
+            },
+        }
+    }
+}
+
+impl Into<CircleAtOrigin> for Dilator {
+    fn into(self) -> CircleAtOrigin {
+        CircleAtOrigin {
+            groups: CircleAtOriginGroups {
+                g0: self.group1(),
+                g1: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<CircleOnOrigin> for Dilator {
+    fn into(self) -> CircleOnOrigin {
+        CircleOnOrigin {
+            groups: CircleOnOriginGroups {
+                g0: self.group1(),
+                g1: self.group2(),
+            },
+        }
+    }
+}
+
+impl Into<CircleOrthogonalOrigin> for Dilator {
+    fn into(self) -> CircleOrthogonalOrigin {
+        CircleOrthogonalOrigin {
+            groups: CircleOrthogonalOriginGroups {
+                g0: self.group1(),
+                g1: self.group3(),
+            },
+        }
+    }
+}
+
+impl Into<Line> for Dilator {
+    fn into(self) -> Line {
+        Line {
+            groups: LineGroups {
+                g0: self.group2(),
+                g1: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<LineAtInfinity> for Dilator {
+    fn into(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<LineAtOrigin> for Dilator {
+    fn into(self) -> LineAtOrigin {
+        LineAtOrigin {
+            groups: LineAtOriginGroups { g0: self.group2() },
+        }
+    }
+}
+
+impl Into<Motor> for Dilator {
+    fn into(self) -> Motor {
+        Motor {
+            groups: MotorGroups {
+                g0: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group0()]),
+                g1: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+            },
+        }
+    }
+}
+
+impl Into<NullCircleAtOrigin> for Dilator {
+    fn into(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl Into<Rotor> for Dilator {
+    fn into(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group0()]),
+            },
+        }
+    }
+}
+
+impl Into<Translator> for Dilator {
+    fn into(self) -> Translator {
+        Translator {
+            groups: TranslatorGroups {
+                g0: Simd32x4::from([self.group3()[0], self.group3()[1], self.group3()[2], self.group0()]),
+            },
+        }
+    }
+}
+
 impl Into<AntiCircleOnOrigin> for Dipole {
     fn into(self) -> AntiCircleOnOrigin {
         AntiCircleOnOrigin {
@@ -55447,6 +57310,19 @@ impl Into<CircleOrthogonalOrigin> for MultiVector {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group6(),
                 g1: self.group8(),
+            },
+        }
+    }
+}
+
+impl Into<Dilator> for MultiVector {
+    fn into(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[1],
+                g1: self.group6(),
+                g2: self.group7(),
+                g3: self.group8(),
             },
         }
     }
@@ -56276,6 +58152,27 @@ impl Mul<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
 
 impl MulAssign<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     fn mul_assign(&mut self, other: CircleOrthogonalOrigin) {
+        *self = (*self).mul(other);
+    }
+}
+
+impl Mul<Dilator> for Dilator {
+    type Output = Dilator;
+
+    fn mul(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() * other.group0(),
+                g1: self.group1() * other.group1(),
+                g2: self.group2() * other.group2(),
+                g3: self.group3() * other.group3(),
+            },
+        }
+    }
+}
+
+impl MulAssign<Dilator> for Dilator {
+    fn mul_assign(&mut self, other: Dilator) {
         *self = (*self).mul(other);
     }
 }
@@ -57217,6 +59114,28 @@ impl Sub<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl Sub<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: self.group1(),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for AntiCircleOnOrigin {
     type Output = Dipole;
 
@@ -58015,22 +59934,15 @@ impl Sub<AntiPlaneAtOrigin> for AntiDipoleOnOrigin {
 }
 
 impl Sub<AntiScalar> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             },
         }
     }
@@ -58135,6 +60047,21 @@ impl Sub<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
                 g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for AntiDipoleOnOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - other.group3(),
             },
         }
     }
@@ -58490,22 +60417,15 @@ impl Sub<LineAtOrigin> for AntiDipoleOnOrigin {
 }
 
 impl Sub<Motor> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -58662,22 +60582,15 @@ impl Sub<PlaneAtOrigin> for AntiDipoleOnOrigin {
 }
 
 impl Sub<Rotor> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
             },
         }
     }
@@ -58838,22 +60751,15 @@ impl Sub<Transflector> for AntiDipoleOnOrigin {
 }
 
 impl Sub<Translator> for AntiDipoleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -58978,22 +60884,15 @@ impl Sub<AntiPlaneAtOrigin> for AntiFlatPointAtOrigin {
 }
 
 impl Sub<AntiScalar> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
             },
         }
     }
@@ -59097,6 +60996,21 @@ impl Sub<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for AntiFlatPointAtOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - other.group3(),
             },
         }
     }
@@ -59450,22 +61364,15 @@ impl Sub<LineAtOrigin> for AntiFlatPointAtOrigin {
 }
 
 impl Sub<Motor> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -59616,22 +61523,15 @@ impl Sub<PlaneAtOrigin> for AntiFlatPointAtOrigin {
 }
 
 impl Sub<Rotor> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
             },
         }
     }
@@ -59792,22 +61692,15 @@ impl Sub<Transflector> for AntiFlatPointAtOrigin {
 }
 
 impl Sub<Translator> for AntiFlatPointAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -60101,6 +61994,28 @@ impl Sub<CircleOrthogonalOrigin> for AntiLineAtOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: self.group0(),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -61055,6 +62970,28 @@ impl Sub<CircleOrthogonalOrigin> for AntiPlane {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([0.0, self.group0()[3]]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -62063,6 +64000,28 @@ impl Sub<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl Sub<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: self.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
@@ -62796,44 +64755,30 @@ impl Sub<AntiCircleOnOrigin> for AntiScalar {
 }
 
 impl Sub<AntiDipoleOnOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Sub<AntiFlatPointAtOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
+    fn sub(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -62946,132 +64891,105 @@ impl Sub<AntiSphereOnOrigin> for AntiScalar {
 }
 
 impl Sub<Circle> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x4::from(0.0) - other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
+                g3: Simd32x4::from(0.0) - other.group2(),
             },
         }
     }
 }
 
 impl Sub<CircleAligningOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleAtInfinity> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
+    fn sub(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0) - other.group0(),
-                g8: Simd32x4::from(0.0) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0) - other.group0(),
+                g3: Simd32x4::from(0.0) - other.group1(),
             },
         }
     }
 }
 
 impl Sub<CircleAtOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleOnOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl Sub<CircleOrthogonalOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for AntiScalar {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from(0.0) - other.group3(),
             },
         }
     }
@@ -63448,22 +65366,15 @@ impl Sub<MultiVector> for AntiScalar {
 }
 
 impl Sub<NullCircleAtOrigin> for AntiScalar {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -64031,6 +65942,28 @@ impl Sub<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g2: Simd32x2::from([self.group0()[3], 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -64884,22 +66817,15 @@ impl Sub<AntiPlaneAtOrigin> for Circle {
 }
 
 impl Sub<AntiScalar> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: self.group2(),
             },
         }
     }
@@ -65044,6 +66970,21 @@ impl Sub<CircleOrthogonalOrigin> for Circle {
 impl SubAssign<CircleOrthogonalOrigin> for Circle {
     fn sub_assign(&mut self, other: CircleOrthogonalOrigin) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Dilator> for Circle {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: self.group1() - other.group2(),
+                g3: self.group2() - other.group3(),
+            },
+        }
     }
 }
 
@@ -65416,22 +67357,15 @@ impl SubAssign<LineAtOrigin> for Circle {
 }
 
 impl Sub<Motor> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group2() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -65590,22 +67524,15 @@ impl Sub<PlaneAtOrigin> for Circle {
 }
 
 impl Sub<Rotor> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group2(),
             },
         }
     }
@@ -65766,22 +67693,15 @@ impl Sub<Transflector> for Circle {
 }
 
 impl Sub<Translator> for Circle {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: self.group2() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: self.group2() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -65904,22 +67824,15 @@ impl Sub<AntiPlaneAtOrigin> for CircleAligningOrigin {
 }
 
 impl Sub<AntiScalar> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
             },
         }
     }
@@ -66044,6 +67957,21 @@ impl Sub<CircleOrthogonalOrigin> for CircleAligningOrigin {
                 g0: self.group0() - other.group0(),
                 g1: self.group1(),
                 g2: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for CircleAligningOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: self.group1() - other.group2(),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - other.group3(),
             },
         }
     }
@@ -66418,22 +68346,15 @@ impl SubAssign<LineAtOrigin> for CircleAligningOrigin {
 }
 
 impl Sub<Motor> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -66592,22 +68513,15 @@ impl Sub<PlaneAtOrigin> for CircleAligningOrigin {
 }
 
 impl Sub<Rotor> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]),
             },
         }
     }
@@ -66768,22 +68682,15 @@ impl Sub<Transflector> for CircleAligningOrigin {
 }
 
 impl Sub<Translator> for CircleAligningOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], 0.0]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -66911,22 +68818,15 @@ impl Sub<AntiPlaneAtOrigin> for CircleAtInfinity {
 }
 
 impl Sub<AntiScalar> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0(),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0(),
+                g3: self.group1(),
             },
         }
     }
@@ -67038,6 +68938,21 @@ impl Sub<CircleOrthogonalOrigin> for CircleAtInfinity {
                 g0: Simd32x3::from(0.0) - other.group0(),
                 g1: self.group0(),
                 g2: self.group1() - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for CircleAtInfinity {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0() - other.group2(),
+                g3: self.group1() - other.group3(),
             },
         }
     }
@@ -67409,22 +69324,15 @@ impl SubAssign<LineAtOrigin> for CircleAtInfinity {
 }
 
 impl Sub<Motor> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -67577,22 +69485,15 @@ impl Sub<PlaneAtOrigin> for CircleAtInfinity {
 }
 
 impl Sub<Rotor> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1(),
             },
         }
     }
@@ -67753,22 +69654,15 @@ impl Sub<Transflector> for CircleAtInfinity {
 }
 
 impl Sub<Translator> for CircleAtInfinity {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: self.group0(),
-                g8: self.group1() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: self.group0(),
+                g3: self.group1() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -67889,22 +69783,15 @@ impl Sub<AntiPlaneAtOrigin> for CircleAtOrigin {
 }
 
 impl Sub<AntiScalar> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -68015,6 +69902,21 @@ impl Sub<CircleOrthogonalOrigin> for CircleAtOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group0() - other.group0(),
                 g1: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for CircleAtOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group3(),
             },
         }
     }
@@ -68376,22 +70278,15 @@ impl Sub<LineAtOrigin> for CircleAtOrigin {
 }
 
 impl Sub<Motor> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -68549,22 +70444,15 @@ impl Sub<PlaneAtOrigin> for CircleAtOrigin {
 }
 
 impl Sub<Rotor> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -68725,22 +70613,15 @@ impl Sub<Transflector> for CircleAtOrigin {
 }
 
 impl Sub<Translator> for CircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -68863,22 +70744,15 @@ impl Sub<AntiPlaneAtOrigin> for CircleOnOrigin {
 }
 
 impl Sub<AntiScalar> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0(),
+                g2: self.group1(),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -68990,6 +70864,21 @@ impl Sub<CircleOrthogonalOrigin> for CircleOnOrigin {
                 g0: self.group0() - other.group0(),
                 g1: self.group1(),
                 g2: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for CircleOnOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: self.group1() - other.group2(),
+                g3: Simd32x4::from(0.0) - other.group3(),
             },
         }
     }
@@ -69351,22 +71240,15 @@ impl SubAssign<LineAtOrigin> for CircleOnOrigin {
 }
 
 impl Sub<Motor> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -69524,22 +71406,15 @@ impl Sub<PlaneAtOrigin> for CircleOnOrigin {
 }
 
 impl Sub<Rotor> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -69700,22 +71575,15 @@ impl Sub<Transflector> for CircleOnOrigin {
 }
 
 impl Sub<Translator> for CircleOnOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: self.group1(),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -69848,22 +71716,15 @@ impl Sub<AntiPlaneAtOrigin> for CircleOrthogonalOrigin {
 }
 
 impl Sub<AntiScalar> for CircleOrthogonalOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: self.group1(),
             },
         }
     }
@@ -69982,6 +71843,21 @@ impl Sub<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
 impl SubAssign<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     fn sub_assign(&mut self, other: CircleOrthogonalOrigin) {
         *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Dilator> for CircleOrthogonalOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: self.group1() - other.group3(),
+            },
+        }
     }
 }
 
@@ -70341,22 +72217,15 @@ impl Sub<LineAtOrigin> for CircleOrthogonalOrigin {
 }
 
 impl Sub<Motor> for CircleOrthogonalOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -70514,22 +72383,15 @@ impl Sub<PlaneAtOrigin> for CircleOrthogonalOrigin {
 }
 
 impl Sub<Rotor> for CircleOrthogonalOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: self.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group1(),
             },
         }
     }
@@ -70690,24 +72552,1078 @@ impl Sub<Transflector> for CircleOrthogonalOrigin {
 }
 
 impl Sub<Translator> for CircleOrthogonalOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: self.group1() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<AntiCircleOnOrigin> for Dilator {
     type Output = MultiVector;
 
-    fn sub(self, other: Translator) -> MultiVector {
+    fn sub(self, other: AntiCircleOnOrigin) -> MultiVector {
         MultiVector {
             groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<AntiDipoleOnOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: self.group2(),
+                g3: self.group3() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiDipoleOnOrigin> for Dilator {
+    fn sub_assign(&mut self, other: AntiDipoleOnOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiFlatPointAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiFlatPointAtOrigin> for Dilator {
+    fn sub_assign(&mut self, other: AntiFlatPointAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiLineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiLineAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<AntiPlane> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiPlane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<AntiPlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiPlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<AntiScalar> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl SubAssign<AntiScalar> for Dilator {
+    fn sub_assign(&mut self, other: AntiScalar) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<AntiSphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: AntiSphereOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0()[3], 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Circle> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2() - other.group1(),
+                g3: self.group3() - other.group2(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Circle> for Dilator {
+    fn sub_assign(&mut self, other: Circle) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleAligningOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2() - other.group1(),
+                g3: self.group3() - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleAligningOrigin> for Dilator {
+    fn sub_assign(&mut self, other: CircleAligningOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleAtInfinity> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - other.group0(),
+                g3: self.group3() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleAtInfinity> for Dilator {
+    fn sub_assign(&mut self, other: CircleAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+                g3: self.group3() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleAtOrigin> for Dilator {
+    fn sub_assign(&mut self, other: CircleAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleOnOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2() - other.group1(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleOnOrigin> for Dilator {
+    fn sub_assign(&mut self, other: CircleOnOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<CircleOrthogonalOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+                g3: self.group3() - other.group1(),
+            },
+        }
+    }
+}
+
+impl SubAssign<CircleOrthogonalOrigin> for Dilator {
+    fn sub_assign(&mut self, other: CircleOrthogonalOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Dilator> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() - other.group0(),
+                g1: self.group1() - other.group1(),
+                g2: self.group2() - other.group2(),
+                g3: self.group3() - other.group3(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Dilator> for Dilator {
+    fn sub_assign(&mut self, other: Dilator) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Dipole> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dipole) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x3::from(0.0) - Simd32x3::from([other.group2()[0], other.group2()[1], other.group2()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAligningOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group1()[3]]),
+                g4: Simd32x3::from(0.0) - other.group0(),
+                g5: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - other.group1(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - other.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DipoleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DipoleOrthogonalOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0) - other.group1(),
+                g5: Simd32x3::from(0.0) - other.group2(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<DualNum> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: DualNum) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
                 g1: Simd32x3::from(0.0),
                 g2: Simd32x2::from(0.0),
                 g3: Simd32x4::from(0.0),
                 g4: Simd32x3::from(0.0),
                 g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: self.group1() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
         }
+    }
+}
+
+impl Sub<FlatPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - other.group0(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<FlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlatPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Flector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: FlectorAtInfinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Horizon> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Horizon) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+            },
+        }
+    }
+}
+
+impl Sub<Infinity> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Infinity) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Line> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: Line) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - other.group0(),
+                g3: self.group3() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Line> for Dilator {
+    fn sub_assign(&mut self, other: Line) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtInfinity> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: LineAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtInfinity> for Dilator {
+    fn sub_assign(&mut self, other: LineAtInfinity) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<LineAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: LineAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1(),
+                g2: self.group2() - other.group0(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl SubAssign<LineAtOrigin> for Dilator {
+    fn sub_assign(&mut self, other: LineAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Motor> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() - other.group0()[3],
+                g1: self.group1(),
+                g2: self.group2() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group3() - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Motor> for Dilator {
+    fn sub_assign(&mut self, other: Motor) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: MultiVector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x2::from(0.0) - other.group2(),
+                g3: Simd32x4::from(0.0) - other.group3(),
+                g4: Simd32x3::from(0.0) - other.group4(),
+                g5: Simd32x3::from(0.0) - other.group5(),
+                g6: self.group1() - other.group6(),
+                g7: self.group2() - other.group7(),
+                g8: self.group3() - other.group8(),
+                g9: Simd32x3::from(0.0) - other.group9(),
+                g10: Simd32x2::from(0.0) - other.group10(),
+            },
+        }
+    }
+}
+
+impl Sub<NullCircleAtOrigin> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() - other.group0(),
+                g2: self.group2(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl SubAssign<NullCircleAtOrigin> for Dilator {
+    fn sub_assign(&mut self, other: NullCircleAtOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<NullDipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: NullDipoleAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<NullSphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: NullSphereAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Origin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Origin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - Simd32x2::from([other.group0(), 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Plane> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Plane) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<PlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: PlaneAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0) - other.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Rotor> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() - other.group0()[3],
+                g1: self.group1(),
+                g2: self.group2() - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Rotor> for Dilator {
+    fn sub_assign(&mut self, other: Rotor) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<RoundPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPoint) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x2::from(0.0) - other.group1(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<RoundPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: RoundPointAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0) - other.group0(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Scalar> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Scalar) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]) - Simd32x2::from([other.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Sphere> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Sphere) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0) - other.group0(),
+                g10: Simd32x2::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<SphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: SphereAtOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0) - other.group0(),
+            },
+        }
+    }
+}
+
+impl Sub<SphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: SphereOnOrigin) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([other.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn sub(self, other: Transflector) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([0.0, self.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0) - other.group0(),
+                g6: self.group1(),
+                g7: self.group2(),
+                g8: self.group3(),
+                g9: Simd32x3::from(0.0) - Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]]),
+                g10: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Translator> for Dilator {
+    type Output = Dilator;
+
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0() - other.group0()[3],
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3() - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
+            },
+        }
+    }
+}
+
+impl SubAssign<Translator> for Dilator {
+    fn sub_assign(&mut self, other: Translator) {
+        *self = (*self).sub(other);
     }
 }
 
@@ -71008,6 +73924,28 @@ impl Sub<CircleOrthogonalOrigin> for Dipole {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]]),
+                g4: self.group1(),
+                g5: Simd32x3::from([self.group2()[0], self.group2()[1], self.group2()[2]]),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -72035,6 +74973,28 @@ impl Sub<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     }
 }
 
+impl Sub<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for DipoleAligningOrigin {
     type Output = Dipole;
 
@@ -73035,6 +75995,28 @@ impl Sub<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl Sub<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group1()[3]]),
+                g4: self.group0(),
+                g5: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -74015,6 +76997,28 @@ impl Sub<CircleOrthogonalOrigin> for DipoleAtOrigin {
     }
 }
 
+impl Sub<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: self.group1(),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -74979,6 +77983,28 @@ impl Sub<CircleOrthogonalOrigin> for DipoleOnOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group0(),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -75959,6 +78985,28 @@ impl Sub<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: self.group1(),
+                g5: self.group2(),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -76955,6 +80003,28 @@ impl Sub<CircleOrthogonalOrigin> for DualNum {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for DualNum {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -77993,6 +81063,28 @@ impl Sub<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl Sub<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -78905,6 +81997,28 @@ impl Sub<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl Sub<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -79796,6 +82910,28 @@ impl Sub<CircleOrthogonalOrigin> for FlatPointAtOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -80711,6 +83847,28 @@ impl Sub<CircleOrthogonalOrigin> for Flector {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([0.0, 0.0, 0.0, self.group0()[3]]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g10: Simd32x2::from([0.0, self.group1()[3]]),
             },
@@ -81747,6 +84905,28 @@ impl Sub<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl Sub<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -82737,6 +85917,28 @@ impl Sub<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl Sub<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([0.0, self.group0()]),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for Horizon {
     type Output = MultiVector;
 
@@ -83639,6 +86841,28 @@ impl Sub<CircleOrthogonalOrigin> for Infinity {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([0.0, self.group0()]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -84594,6 +87818,21 @@ impl Sub<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl Sub<Dilator> for Line {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0() - other.group2(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group3(),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for Line {
     type Output = MultiVector;
 
@@ -85527,6 +88766,21 @@ impl Sub<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl Sub<Dilator> for LineAtInfinity {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group3(),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -86447,6 +89701,21 @@ impl Sub<CircleOrthogonalOrigin> for LineAtOrigin {
     }
 }
 
+impl Sub<Dilator> for LineAtOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: self.group0() - other.group2(),
+                g3: Simd32x4::from(0.0) - other.group3(),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for LineAtOrigin {
     type Output = MultiVector;
 
@@ -87159,44 +90428,30 @@ impl Sub<AntiCircleOnOrigin> for Motor {
 }
 
 impl Sub<AntiDipoleOnOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Sub<AntiFlatPointAtOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn sub(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -87310,132 +90565,105 @@ impl Sub<AntiSphereOnOrigin> for Motor {
 }
 
 impl Sub<Circle> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group2(),
             },
         }
     }
 }
 
 impl Sub<CircleAligningOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleAtInfinity> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn sub(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group1(),
             },
         }
     }
 }
 
 impl Sub<CircleAtOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleOnOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleOrthogonalOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Motor {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3] - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2(),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]) - other.group3(),
             },
         }
     }
@@ -87848,22 +91076,15 @@ impl Sub<MultiVector> for Motor {
 }
 
 impl Sub<NullCircleAtOrigin> for Motor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], 0.0]),
             },
         }
     }
@@ -88559,6 +91780,34 @@ impl Sub<CircleOrthogonalOrigin> for MultiVector {
 
 impl SubAssign<CircleOrthogonalOrigin> for MultiVector {
     fn sub_assign(&mut self, other: CircleOrthogonalOrigin) {
+        *self = (*self).sub(other);
+    }
+}
+
+impl Sub<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: self.group0() - Simd32x2::from([0.0, other.group0()]),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+                g4: self.group4(),
+                g5: self.group5(),
+                g6: self.group6() - other.group1(),
+                g7: self.group7() - other.group2(),
+                g8: self.group8() - other.group3(),
+                g9: self.group9(),
+                g10: self.group10(),
+            },
+        }
+    }
+}
+
+impl SubAssign<Dilator> for MultiVector {
+    fn sub_assign(&mut self, other: Dilator) {
         *self = (*self).sub(other);
     }
 }
@@ -89628,22 +92877,15 @@ impl Sub<AntiPlaneAtOrigin> for NullCircleAtOrigin {
 }
 
 impl Sub<AntiScalar> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiScalar) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: AntiScalar) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -89747,6 +92989,21 @@ impl Sub<CircleOrthogonalOrigin> for NullCircleAtOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group0() - other.group0(),
                 g1: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for NullCircleAtOrigin {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0(),
+                g1: self.group0() - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from(0.0) - other.group3(),
             },
         }
     }
@@ -90101,22 +93358,15 @@ impl Sub<LineAtOrigin> for NullCircleAtOrigin {
 }
 
 impl Sub<Motor> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Motor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Motor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
@@ -90273,22 +93523,15 @@ impl Sub<PlaneAtOrigin> for NullCircleAtOrigin {
 }
 
 impl Sub<Rotor> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Rotor) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: Rotor) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -90449,22 +93692,15 @@ impl Sub<Transflector> for NullCircleAtOrigin {
 }
 
 impl Sub<Translator> for NullCircleAtOrigin {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Translator) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: self.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Translator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: 0.0 - other.group0()[3],
+                g1: self.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], 0.0]),
             },
         }
     }
@@ -90753,6 +93989,28 @@ impl Sub<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -91732,6 +94990,28 @@ impl Sub<CircleOrthogonalOrigin> for NullSphereAtOrigin {
     }
 }
 
+impl Sub<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from([self.group0(), 0.0]),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for NullSphereAtOrigin {
     type Output = MultiVector;
 
@@ -92690,6 +95970,28 @@ impl Sub<CircleOrthogonalOrigin> for Origin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from([self.group0(), 0.0]),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -93720,6 +97022,28 @@ impl Sub<CircleOrthogonalOrigin> for Plane {
     }
 }
 
+impl Sub<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([0.0, self.group0()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for Plane {
     type Output = MultiVector;
 
@@ -94674,6 +97998,28 @@ impl Sub<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl Sub<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: self.group0(),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for PlaneAtOrigin {
     type Output = MultiVector;
 
@@ -95329,44 +98675,30 @@ impl Sub<AntiCircleOnOrigin> for Rotor {
 }
 
 impl Sub<AntiDipoleOnOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Sub<AntiFlatPointAtOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn sub(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -95479,132 +98811,105 @@ impl Sub<AntiSphereOnOrigin> for Rotor {
 }
 
 impl Sub<Circle> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x4::from(0.0) - other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g3: Simd32x4::from(0.0) - other.group2(),
             },
         }
     }
 }
 
 impl Sub<CircleAligningOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleAtInfinity> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn sub(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
-                g8: Simd32x4::from(0.0) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group0(),
+                g3: Simd32x4::from(0.0) - other.group1(),
             },
         }
     }
 }
 
 impl Sub<CircleAtOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from(0.0) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleOnOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group1(),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
 }
 
 impl Sub<CircleOrthogonalOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from(0.0) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g3: Simd32x4::from(0.0) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Rotor {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3] - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) - other.group2(),
+                g3: Simd32x4::from(0.0) - other.group3(),
             },
         }
     }
@@ -95998,22 +99303,15 @@ impl Sub<MultiVector> for Rotor {
 }
 
 impl Sub<NullCircleAtOrigin> for Rotor {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
+    fn sub(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
-                g8: Simd32x4::from(0.0),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -96606,6 +99904,28 @@ impl Sub<CircleOrthogonalOrigin> for RoundPoint {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: self.group0(),
+                g2: self.group1(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -97623,6 +100943,28 @@ impl Sub<CircleOrthogonalOrigin> for RoundPointAtOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: self.group0(),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -98648,6 +101990,28 @@ impl Sub<CircleOrthogonalOrigin> for Scalar {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Scalar {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from(0.0),
                 g10: Simd32x2::from(0.0),
             },
@@ -99697,6 +103061,28 @@ impl Sub<CircleOrthogonalOrigin> for Sphere {
     }
 }
 
+impl Sub<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: self.group0(),
+                g10: self.group1(),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for Sphere {
     type Output = MultiVector;
 
@@ -100732,6 +104118,28 @@ impl Sub<CircleOrthogonalOrigin> for SphereAtOrigin {
     }
 }
 
+impl Sub<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from(0.0),
+                g10: self.group0(),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for SphereAtOrigin {
     type Output = MultiVector;
 
@@ -101733,6 +105141,28 @@ impl Sub<CircleOrthogonalOrigin> for SphereOnOrigin {
                 g6: Simd32x3::from(0.0) - other.group0(),
                 g7: Simd32x3::from(0.0),
                 g8: Simd32x4::from(0.0) - other.group1(),
+                g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
+                g10: Simd32x2::from([self.group0()[3], 0.0]),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: Simd32x3::from(0.0),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
                 g9: Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]),
                 g10: Simd32x2::from([self.group0()[3], 0.0]),
             },
@@ -102748,6 +106178,28 @@ impl Sub<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl Sub<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn sub(self, other: Dilator) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from(0.0) - Simd32x2::from([0.0, other.group0()]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from(0.0),
+                g4: Simd32x3::from(0.0),
+                g5: self.group0(),
+                g6: Simd32x3::from(0.0) - other.group1(),
+                g7: Simd32x3::from(0.0) - other.group2(),
+                g8: Simd32x4::from(0.0) - other.group3(),
+                g9: Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]]),
+                g10: Simd32x2::from([0.0, self.group1()[3]]),
+            },
+        }
+    }
+}
+
 impl Sub<Dipole> for Transflector {
     type Output = MultiVector;
 
@@ -103474,44 +106926,30 @@ impl Sub<AntiCircleOnOrigin> for Translator {
 }
 
 impl Sub<AntiDipoleOnOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiDipoleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: AntiDipoleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()[3]]),
             },
         }
     }
 }
 
 impl Sub<AntiFlatPointAtOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: AntiFlatPointAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn sub(self, other: AntiFlatPointAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([0.0, 0.0, 0.0, other.group0()]),
             },
         }
     }
@@ -103624,132 +107062,105 @@ impl Sub<AntiSphereOnOrigin> for Translator {
 }
 
 impl Sub<Circle> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: Circle) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: Circle) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group2(),
             },
         }
     }
 }
 
 impl Sub<CircleAligningOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAligningOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAligningOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([other.group2()[0], other.group2()[1], other.group2()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleAtInfinity> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtInfinity) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
+    fn sub(self, other: CircleAtInfinity) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
                 g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0),
-                g7: Simd32x3::from(0.0) - other.group0(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+                g2: Simd32x3::from(0.0) - other.group0(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group1(),
             },
         }
     }
 }
 
 impl Sub<CircleAtOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleOnOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOnOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0) - other.group1(),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOnOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0) - other.group1(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }
 }
 
 impl Sub<CircleOrthogonalOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: CircleOrthogonalOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group1(),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: CircleOrthogonalOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group1(),
+            },
+        }
+    }
+}
+
+impl Sub<Dilator> for Translator {
+    type Output = Dilator;
+
+    fn sub(self, other: Dilator) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3] - other.group0(),
+                g1: Simd32x3::from(0.0) - other.group1(),
+                g2: Simd32x3::from(0.0) - other.group2(),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]) - other.group3(),
             },
         }
     }
@@ -104143,22 +107554,15 @@ impl Sub<MultiVector> for Translator {
 }
 
 impl Sub<NullCircleAtOrigin> for Translator {
-    type Output = MultiVector;
+    type Output = Dilator;
 
-    fn sub(self, other: NullCircleAtOrigin) -> MultiVector {
-        MultiVector {
-            groups: MultiVectorGroups {
-                g0: Simd32x2::from([0.0, self.group0()[3]]),
-                g1: Simd32x3::from(0.0),
-                g2: Simd32x2::from(0.0),
-                g3: Simd32x4::from(0.0),
-                g4: Simd32x3::from(0.0),
-                g5: Simd32x3::from(0.0),
-                g6: Simd32x3::from(0.0) - other.group0(),
-                g7: Simd32x3::from(0.0),
-                g8: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
-                g9: Simd32x3::from(0.0),
-                g10: Simd32x2::from(0.0),
+    fn sub(self, other: NullCircleAtOrigin) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0()[3],
+                g1: Simd32x3::from(0.0) - other.group0(),
+                g2: Simd32x3::from(0.0),
+                g3: Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], 0.0]),
             },
         }
     }

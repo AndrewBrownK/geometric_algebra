@@ -961,6 +961,14 @@ impl Attitude for CircleOrthogonalOrigin {
     }
 }
 
+impl Attitude for Dilator {
+    type Output = MultiVector;
+
+    fn attitude(self) -> MultiVector {
+        self.anti_wedge(Horizon::unit())
+    }
+}
+
 impl Attitude for Dipole {
     type Output = AntiPlane;
 
@@ -1289,6 +1297,14 @@ impl Carrier for CircleOrthogonalOrigin {
     }
 }
 
+impl Carrier for Dilator {
+    type Output = Plane;
+
+    fn carrier(self) -> Plane {
+        self.wedge(Infinity::unit())
+    }
+}
+
 impl Carrier for Dipole {
     type Output = Line;
 
@@ -1501,6 +1517,14 @@ impl CoCarrier for CircleOrthogonalOrigin {
     type Output = LineAtOrigin;
 
     fn co_carrier(self) -> LineAtOrigin {
+        self.anti_dual().wedge(Infinity::unit())
+    }
+}
+
+impl CoCarrier for Dilator {
+    type Output = MultiVector;
+
+    fn co_carrier(self) -> MultiVector {
         self.anti_dual().wedge(Infinity::unit())
     }
 }
@@ -1734,6 +1758,14 @@ impl Center for CircleOrthogonalOrigin {
     type Output = RoundPoint;
 
     fn center(self) -> RoundPoint {
+        self.co_carrier().anti_wedge(self)
+    }
+}
+
+impl Center for Dilator {
+    type Output = MultiVector;
+
+    fn center(self) -> MultiVector {
         self.co_carrier().anti_wedge(self)
     }
 }
@@ -1978,6 +2010,14 @@ impl Container for CircleOrthogonalOrigin {
     }
 }
 
+impl Container for Dilator {
+    type Output = Sphere;
+
+    fn container(self) -> Sphere {
+        self.wedge(self.carrier().anti_dual())
+    }
+}
+
 impl Container for Dipole {
     type Output = Sphere;
 
@@ -2182,6 +2222,14 @@ impl Partner for CircleOrthogonalOrigin {
     type Output = Circle;
 
     fn partner(self) -> Circle {
+        self.dual().container().neg().anti_wedge(self.carrier())
+    }
+}
+
+impl Partner for Dilator {
+    type Output = MultiVector;
+
+    fn partner(self) -> MultiVector {
         self.dual().container().neg().anti_wedge(self.carrier())
     }
 }
@@ -2414,6 +2462,14 @@ impl AntiInverse for CircleOrthogonalOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_inverse(self) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
+    }
+}
+
+impl AntiInverse for Dilator {
+    type Output = Dilator;
+
+    fn anti_inverse(self) -> Dilator {
         self.geometric_anti_product(AntiScalar::unit().div(self.anti_dot(self)))
     }
 }
@@ -2732,6 +2788,14 @@ impl Inverse for CircleOrthogonalOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn inverse(self) -> CircleOrthogonalOrigin {
+        self.geometric_product(Scalar::unit().div(self.dot(self)))
+    }
+}
+
+impl Inverse for Dilator {
+    type Output = Dilator;
+
+    fn inverse(self) -> Dilator {
         self.geometric_product(Scalar::unit().div(self.dot(self)))
     }
 }

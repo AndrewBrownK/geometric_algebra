@@ -123,6 +123,18 @@ impl FlatBulk for CircleOrthogonalOrigin {
     }
 }
 
+impl FlatBulk for Dilator {
+    type Output = LineAtInfinity;
+
+    fn flat_bulk(self) -> LineAtInfinity {
+        LineAtInfinity {
+            groups: LineAtInfinityGroups {
+                g0: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+            },
+        }
+    }
+}
+
 impl FlatBulk for Dipole {
     type Output = FlatPointAtInfinity;
 
@@ -403,6 +415,18 @@ impl FlatWeight for CircleOnOrigin {
     fn flat_weight(self) -> LineAtOrigin {
         LineAtOrigin {
             groups: LineAtOriginGroups { g0: self.group1() },
+        }
+    }
+}
+
+impl FlatWeight for Dilator {
+    type Output = Rotor;
+
+    fn flat_weight(self) -> Rotor {
+        Rotor {
+            groups: RotorGroups {
+                g0: Simd32x4::from([self.group2()[0], self.group2()[1], self.group2()[2], self.group0()]),
+            },
         }
     }
 }
@@ -708,6 +732,16 @@ impl RoundBulk for CircleOrthogonalOrigin {
     }
 }
 
+impl RoundBulk for Dilator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn round_bulk(self) -> AntiFlatPointAtOrigin {
+        AntiFlatPointAtOrigin {
+            groups: AntiFlatPointAtOriginGroups { g0: self.group3()[3] },
+        }
+    }
+}
+
 impl RoundBulk for Dipole {
     type Output = AntiLineAtOrigin;
 
@@ -866,6 +900,16 @@ impl RoundWeight for CircleOrthogonalOrigin {
     fn round_weight(self) -> NullCircleAtOrigin {
         NullCircleAtOrigin {
             groups: NullCircleAtOriginGroups { g0: self.group0() },
+        }
+    }
+}
+
+impl RoundWeight for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn round_weight(self) -> NullCircleAtOrigin {
+        NullCircleAtOrigin {
+            groups: NullCircleAtOriginGroups { g0: self.group1() },
         }
     }
 }

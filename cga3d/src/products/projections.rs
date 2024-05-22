@@ -84,6 +84,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for AntiCircleOnOrigin {
     type Output = Dipole;
 
@@ -312,6 +320,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiDipoleOnOrigin 
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -548,6 +564,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiFlatPointAtOrig
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for AntiFlatPointAtOrigin {
     type Output = Circle;
 
@@ -684,6 +708,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for AntiLineAtOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for AntiLineAtOrigin {
     type Output = Dipole;
 
@@ -796,6 +828,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for AntiPlane {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Flector> for AntiPlane {
     type Output = MultiVector;
 
@@ -900,6 +940,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Flector> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
@@ -984,6 +1032,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for AntiSphereOnOrigin {
     type Output = AntiSphereOnOrigin;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1168,6 +1224,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Circle {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1464,6 +1528,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleAligningOrigi
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -1772,6 +1844,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for CircleAtInfinity {
     type Output = Circle;
 
@@ -2044,6 +2124,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for CircleAtOrigin {
     type Output = Circle;
 
@@ -2312,6 +2400,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -2596,6 +2692,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleOrthogonalOri
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for CircleOrthogonalOrigin {
     type Output = Circle;
 
@@ -2780,6 +2884,358 @@ impl AntiProjectOrthogonallyOnto<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<AntiCircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiCircleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<AntiDipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiDipoleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<AntiFlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiFlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<AntiLineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiLineAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<AntiPlane> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiPlane) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<AntiPlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiPlaneAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Circle> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleAligningOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dipole> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleAligningOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<DipoleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: DipoleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Infinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Line> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<LineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<NullCircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: NullCircleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<NullDipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: NullDipoleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Origin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Plane> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<PlaneAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: PlaneAtOrigin) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<RoundPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Sphere> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: SphereAtOrigin) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<SphereOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_orthogonally_onto(self, other: SphereOnOrigin) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<AntiCircleOnOrigin> for Dipole {
     type Output = AntiCircleOnOrigin;
 
@@ -2816,6 +3272,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for Dipole {
     type Output = Dipole;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> Dipole {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3016,6 +3480,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for DipoleAligningOrigin {
     type Output = Dipole;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> Dipole {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3228,6 +3700,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for DipoleAtInfinity {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -3412,6 +3892,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for DipoleAtOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -3592,6 +4080,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for DipoleOnOrigin {
     type Output = NullDipoleAtOrigin;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> NullDipoleAtOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -3788,6 +4284,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for DipoleOrthogonalOrigin 
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for DipoleOrthogonalOrigin {
     type Output = Dipole;
 
@@ -3980,6 +4484,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for FlatPoint {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -4164,6 +4676,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -4312,6 +4832,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for FlatPointAtOrigin {
     type Output = NullDipoleAtOrigin;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> NullDipoleAtOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4536,6 +5064,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Flector {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -4876,6 +5412,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -5164,6 +5708,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for Horizon {
     type Output = Sphere;
 
@@ -5356,6 +5908,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for Infinity {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Flector> for Infinity {
     type Output = MultiVector;
 
@@ -5528,6 +6088,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Line {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -5796,6 +6364,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for LineAtInfinity {
     type Output = Circle;
 
@@ -6008,6 +6584,14 @@ impl AntiProjectOrthogonallyOnto<CircleOnOrigin> for LineAtOrigin {
     type Output = CircleOnOrigin;
 
     fn anti_project_orthogonally_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -6264,6 +6848,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Motor {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -6592,6 +7184,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -6932,6 +7532,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for NullCircleAtOrigin 
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for NullCircleAtOrigin {
     type Output = Circle;
 
@@ -7104,6 +7712,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for NullDipoleAtOrigin {
     type Output = NullDipoleAtOrigin;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> NullDipoleAtOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -7340,6 +7956,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for NullSphereAtOrigin 
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for NullSphereAtOrigin {
     type Output = Sphere;
 
@@ -7532,6 +8156,14 @@ impl AntiProjectOrthogonallyOnto<AntiPlane> for Origin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Flector> for Origin {
     type Output = MultiVector;
 
@@ -7712,6 +8344,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Plane {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -8036,6 +8676,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for PlaneAtOrigin {
     type Output = Sphere;
 
@@ -8324,6 +8972,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Rotor {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for Rotor {
     type Output = MultiVector;
 
@@ -8564,6 +9220,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for RoundPoint {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Flector> for RoundPoint {
     type Output = MultiVector;
 
@@ -8664,6 +9328,14 @@ impl AntiProjectOrthogonallyOnto<AntiSphereOnOrigin> for RoundPointAtOrigin {
     type Output = AntiSphereOnOrigin;
 
     fn anti_project_orthogonally_onto(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -8856,6 +9528,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Sphere {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -9220,6 +9900,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for SphereAtOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for SphereAtOrigin {
     type Output = Sphere;
 
@@ -9556,6 +10244,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for SphereOnOrigin {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for SphereOnOrigin {
     type Output = Sphere;
 
@@ -9880,6 +10576,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Transflector {
     type Output = Sphere;
 
     fn anti_project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
+impl AntiProjectOrthogonallyOnto<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.anti_dual()))
     }
 }
@@ -10212,6 +10916,14 @@ impl AntiProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Translator {
     }
 }
 
+impl AntiProjectOrthogonallyOnto<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.anti_dual()))
+    }
+}
+
 impl AntiProjectOrthogonallyOnto<Dipole> for Translator {
     type Output = MultiVector;
 
@@ -10468,6 +11180,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for AntiCircleOnOrigin {
     type Output = Dipole;
 
@@ -10696,6 +11416,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -10932,6 +11660,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for AntiFlatPointAtOrigin {
     type Output = Circle;
 
@@ -11068,6 +11804,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for AntiLineAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for AntiLineAtOrigin {
     type Output = Dipole;
 
@@ -11180,6 +11924,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for AntiPlane {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Flector> for AntiPlane {
     type Output = MultiVector;
 
@@ -11284,6 +12036,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Flector> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
@@ -11368,6 +12128,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for AntiSphereOnOrigin {
     type Output = AntiSphereOnOrigin;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11552,6 +12320,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Circle {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -11848,6 +12624,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for CircleAligningOrigin 
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -12156,6 +12940,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for CircleAtInfinity {
     type Output = Circle;
 
@@ -12428,6 +13220,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for CircleAtOrigin {
     type Output = Circle;
 
@@ -12696,6 +13496,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for CircleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -12980,6 +13788,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for CircleOrthogonalOrigi
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for CircleOrthogonalOrigin {
     type Output = Circle;
 
@@ -13164,6 +13980,358 @@ impl AntiProjectViaHorizonOnto<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<AntiCircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiCircleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<AntiDipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiDipoleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<AntiFlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiFlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<AntiLineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiLineAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<AntiPlane> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiPlane) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<AntiPlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiPlaneAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Circle> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Circle) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: CircleAligningOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: CircleAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: CircleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: CircleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dipole> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dipole) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleAligningOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleOnOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<DipoleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: DipoleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlatPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: FlatPoint) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlatPointAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: FlatPointAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: FlatPointAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Flector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Infinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Infinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Line> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Line) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtInfinity) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<LineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: LineAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Motor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: MultiVector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<NullCircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: NullCircleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<NullDipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: NullDipoleAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Origin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Origin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Plane> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Plane) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<PlaneAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: PlaneAtOrigin) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Rotor) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPoint) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<RoundPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: RoundPointAtOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Sphere> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: Sphere) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SphereAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: SphereAtOrigin) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<SphereOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn anti_project_via_horizon_onto(self, other: SphereOnOrigin) -> AntiScalar {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Transflector) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Translator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<AntiCircleOnOrigin> for Dipole {
     type Output = AntiCircleOnOrigin;
 
@@ -13200,6 +14368,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for Dipole {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> Dipole {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -13400,6 +14576,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for DipoleAligningOrigin {
     type Output = Dipole;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> Dipole {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -13612,6 +14796,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for DipoleAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -13796,6 +14988,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for DipoleAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -13976,6 +15176,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for DipoleOnOrigin {
     type Output = NullDipoleAtOrigin;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> NullDipoleAtOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -14172,6 +15380,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for DipoleOrthogonalOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for DipoleOrthogonalOrigin {
     type Output = Dipole;
 
@@ -14364,6 +15580,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for FlatPoint {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -14548,6 +15772,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -14696,6 +15928,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for FlatPointAtOrigin {
     type Output = NullDipoleAtOrigin;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> NullDipoleAtOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -14920,6 +16160,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Flector {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -15260,6 +16508,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for FlectorAtInfinity {
     type Output = MultiVector;
 
@@ -15548,6 +16804,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for Horizon {
     type Output = Sphere;
 
@@ -15740,6 +17004,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for Infinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Flector> for Infinity {
     type Output = MultiVector;
 
@@ -15912,6 +17184,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Line {
     type Output = CircleOrthogonalOrigin;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -16180,6 +17460,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for LineAtInfinity {
     type Output = Circle;
 
@@ -16392,6 +17680,14 @@ impl AntiProjectViaHorizonOnto<CircleOnOrigin> for LineAtOrigin {
     type Output = CircleOnOrigin;
 
     fn anti_project_via_horizon_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -16648,6 +17944,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Motor {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -16976,6 +18280,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -17316,6 +18628,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for NullCircleAtOrigin {
     type Output = Circle;
 
@@ -17488,6 +18808,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for NullDipoleAtOrigin {
     type Output = NullDipoleAtOrigin;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> NullDipoleAtOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -17724,6 +19052,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for NullSphereAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for NullSphereAtOrigin {
     type Output = Sphere;
 
@@ -17916,6 +19252,14 @@ impl AntiProjectViaHorizonOnto<AntiPlane> for Origin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Flector> for Origin {
     type Output = MultiVector;
 
@@ -18096,6 +19440,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Plane {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -18420,6 +19772,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for PlaneAtOrigin {
     type Output = Sphere;
 
@@ -18708,6 +20068,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Rotor {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for Rotor {
     type Output = MultiVector;
 
@@ -18948,6 +20316,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for RoundPoint {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Flector> for RoundPoint {
     type Output = MultiVector;
 
@@ -19048,6 +20424,14 @@ impl AntiProjectViaHorizonOnto<AntiSphereOnOrigin> for RoundPointAtOrigin {
     type Output = AntiSphereOnOrigin;
 
     fn anti_project_via_horizon_onto(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -19240,6 +20624,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Sphere {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -19604,6 +20996,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for SphereAtOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for SphereAtOrigin {
     type Output = Sphere;
 
@@ -19940,6 +21340,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for SphereOnOrigin {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for SphereOnOrigin {
     type Output = Sphere;
 
@@ -20264,6 +21672,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Transflector {
     type Output = Sphere;
 
     fn anti_project_via_horizon_onto(self, other: CircleOrthogonalOrigin) -> Sphere {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
+impl AntiProjectViaHorizonOnto<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
         other.wedge(self.anti_wedge(other.dual()))
     }
 }
@@ -20596,6 +22012,14 @@ impl AntiProjectViaHorizonOnto<CircleOrthogonalOrigin> for Translator {
     }
 }
 
+impl AntiProjectViaHorizonOnto<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn anti_project_via_horizon_onto(self, other: Dilator) -> MultiVector {
+        other.wedge(self.anti_wedge(other.dual()))
+    }
+}
+
 impl AntiProjectViaHorizonOnto<Dipole> for Translator {
     type Output = MultiVector;
 
@@ -20892,6 +22316,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for AntiCircleOnOrigin {
     type Output = Dipole;
 
@@ -21132,6 +22564,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for AntiDipoleOnOrigin {
     type Output = MultiVector;
 
@@ -21288,6 +22728,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -21464,6 +22912,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiLineAtOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -21696,6 +23152,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiPlane {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -22028,6 +23492,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for AntiPlaneAtOrigin {
     type Output = RoundPoint;
 
@@ -22304,6 +23776,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -22596,6 +24076,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Circle {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for Circle {
     type Output = MultiVector;
 
@@ -22792,6 +24280,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleAligningOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -23004,6 +24500,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for CircleAtInfinity {
     type Output = MultiVector;
 
@@ -23188,6 +24692,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for CircleAtOrigin {
     type Output = MultiVector;
 
@@ -23368,6 +24880,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -23564,6 +25084,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for CircleOrthogonalOrigin 
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for CircleOrthogonalOrigin {
     type Output = MultiVector;
 
@@ -23700,6 +25228,222 @@ impl ProjectOrthogonallyOnto<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<AntiDipoleOnOrigin> for Dilator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn project_orthogonally_onto(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<AntiFlatPointAtOrigin> for Dilator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn project_orthogonally_onto(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Circle> for Dilator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<CircleAligningOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn project_orthogonally_onto(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<CircleAtInfinity> for Dilator {
+    type Output = CircleAtInfinity;
+
+    fn project_orthogonally_onto(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<CircleAtOrigin> for Dilator {
+    type Output = CircleAtOrigin;
+
+    fn project_orthogonally_onto(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<CircleOnOrigin> for Dilator {
+    type Output = CircleOnOrigin;
+
+    fn project_orthogonally_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Horizon> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn project_orthogonally_onto(self, other: Horizon) -> LineAtInfinity {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Line> for Dilator {
+    type Output = Line;
+
+    fn project_orthogonally_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<LineAtInfinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn project_orthogonally_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<LineAtOrigin> for Dilator {
+    type Output = LineAtOrigin;
+
+    fn project_orthogonally_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<NullCircleAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn project_orthogonally_onto(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<NullSphereAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn project_orthogonally_onto(self, other: NullSphereAtOrigin) -> NullCircleAtOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Plane> for Dilator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Plane) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<PlaneAtOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn project_orthogonally_onto(self, other: PlaneAtOrigin) -> CircleAligningOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Sphere> for Dilator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SphereAtOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn project_orthogonally_onto(self, other: SphereAtOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<SphereOnOrigin> for Dilator {
+    type Output = Circle;
+
+    fn project_orthogonally_onto(self, other: SphereOnOrigin) -> Circle {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Transflector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<AntiCircleOnOrigin> for Dipole {
     type Output = AntiCircleOnOrigin;
 
@@ -23776,6 +25520,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Dipole {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -24064,6 +25816,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -24372,6 +26132,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -24636,6 +26404,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for DipoleAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -24896,6 +26672,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -25180,6 +26964,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin 
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for DipoleOrthogonalOrigin {
     type Output = Dipole;
 
@@ -25460,6 +27252,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -25724,6 +27524,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -25940,6 +27748,14 @@ impl ProjectOrthogonallyOnto<CircleOnOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for FlatPointAtOrigin {
     type Output = Dipole;
 
@@ -26152,6 +27968,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Flector {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -26420,6 +28244,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for FlectorAtInfinity {
     type Output = Dipole;
 
@@ -26604,6 +28436,14 @@ impl ProjectOrthogonallyOnto<Translator> for FlectorAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -26760,6 +28600,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Infinity {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -27044,6 +28892,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for Line {
     type Output = MultiVector;
 
@@ -27220,6 +29076,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -27360,6 +29224,14 @@ impl ProjectOrthogonallyOnto<CircleOnOrigin> for LineAtOrigin {
     type Output = CircleOnOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -27520,6 +29392,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Motor {
     type Output = CircleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -27752,6 +29632,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -28052,6 +29940,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for NullCircleAtOrigin {
     type Output = MultiVector;
 
@@ -28216,6 +30112,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -28404,6 +30308,14 @@ impl ProjectOrthogonallyOnto<Translator> for NullDipoleAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for NullSphereAtOrigin {
     type Output = MultiVector;
 
@@ -28544,6 +30456,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Origin {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -28772,6 +30692,14 @@ impl ProjectOrthogonallyOnto<Translator> for Origin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for Plane {
     type Output = MultiVector;
 
@@ -28872,6 +30800,14 @@ impl ProjectOrthogonallyOnto<Translator> for Plane {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -28992,6 +30928,14 @@ impl ProjectOrthogonallyOnto<CircleOnOrigin> for Rotor {
     type Output = CircleOnOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -29200,6 +31144,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -29540,6 +31492,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for RoundPointAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Dipole> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
@@ -29796,6 +31756,14 @@ impl ProjectOrthogonallyOnto<Translator> for RoundPointAtOrigin {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for Sphere {
     type Output = MultiVector;
 
@@ -29908,6 +31876,14 @@ impl ProjectOrthogonallyOnto<Translator> for Sphere {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for SphereAtOrigin {
     type Output = MultiVector;
 
@@ -30008,6 +31984,14 @@ impl ProjectOrthogonallyOnto<Translator> for SphereAtOrigin {
     type Output = MultiVector;
 
     fn project_orthogonally_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -30176,6 +32160,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Transflector {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_orthogonally_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
+impl ProjectOrthogonallyOnto<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.anti_dual()))
     }
 }
@@ -30412,6 +32404,14 @@ impl ProjectOrthogonallyOnto<CircleOrthogonalOrigin> for Translator {
     }
 }
 
+impl ProjectOrthogonallyOnto<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn project_orthogonally_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.anti_dual()))
+    }
+}
+
 impl ProjectOrthogonallyOnto<Flector> for Translator {
     type Output = MultiVector;
 
@@ -30600,6 +32600,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -30844,6 +32852,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for AntiDipoleOnOrigin {
     type Output = MultiVector;
 
@@ -31000,6 +33016,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -31176,6 +33200,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiLineAtOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -31408,6 +33440,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiPlane {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -31740,6 +33780,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for AntiPlaneAtOrigin {
     type Output = RoundPoint;
 
@@ -32016,6 +34064,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -32308,6 +34364,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Circle {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for Circle {
     type Output = MultiVector;
 
@@ -32504,6 +34568,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for CircleAligningOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -32716,6 +34788,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for CircleAtInfinity {
     type Output = MultiVector;
 
@@ -32900,6 +34980,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for CircleAtOrigin {
     type Output = MultiVector;
 
@@ -33080,6 +35168,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for CircleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -33276,6 +35372,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for CircleOrthogonalOrigin {
     type Output = MultiVector;
 
@@ -33412,6 +35516,222 @@ impl ProjectViaOriginOnto<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<AntiDipoleOnOrigin> for Dilator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn project_via_origin_onto(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<AntiFlatPointAtOrigin> for Dilator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn project_via_origin_onto(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Circle> for Dilator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Circle) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<CircleAligningOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn project_via_origin_onto(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<CircleAtInfinity> for Dilator {
+    type Output = CircleAtInfinity;
+
+    fn project_via_origin_onto(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<CircleAtOrigin> for Dilator {
+    type Output = CircleAtOrigin;
+
+    fn project_via_origin_onto(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<CircleOnOrigin> for Dilator {
+    type Output = CircleOnOrigin;
+
+    fn project_via_origin_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Flector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: FlectorAtInfinity) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Horizon> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: Horizon) -> LineAtInfinity {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Line> for Dilator {
+    type Output = Line;
+
+    fn project_via_origin_onto(self, other: Line) -> Line {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<LineAtInfinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn project_via_origin_onto(self, other: LineAtInfinity) -> LineAtInfinity {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<LineAtOrigin> for Dilator {
+    type Output = LineAtOrigin;
+
+    fn project_via_origin_onto(self, other: LineAtOrigin) -> LineAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Motor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: MultiVector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<NullCircleAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn project_via_origin_onto(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<NullSphereAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn project_via_origin_onto(self, other: NullSphereAtOrigin) -> NullCircleAtOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Plane> for Dilator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Plane) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<PlaneAtOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn project_via_origin_onto(self, other: PlaneAtOrigin) -> CircleAligningOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Rotor) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Sphere> for Dilator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: Sphere) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SphereAtOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn project_via_origin_onto(self, other: SphereAtOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<SphereOnOrigin> for Dilator {
+    type Output = Circle;
+
+    fn project_via_origin_onto(self, other: SphereOnOrigin) -> Circle {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Transflector) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<AntiCircleOnOrigin> for Dipole {
     type Output = AntiCircleOnOrigin;
 
@@ -33488,6 +35808,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Dipole {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -33776,6 +36104,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -34084,6 +36420,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -34348,6 +36692,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for DipoleAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -34608,6 +36960,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -34892,6 +37252,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for DipoleOrthogonalOrigin {
     type Output = Dipole;
 
@@ -35172,6 +37540,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -35436,6 +37812,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -35652,6 +38036,14 @@ impl ProjectViaOriginOnto<CircleOnOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for FlatPointAtOrigin {
     type Output = Dipole;
 
@@ -35864,6 +38256,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Flector {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -36132,6 +38532,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for FlectorAtInfinity {
     type Output = Dipole;
 
@@ -36316,6 +38724,14 @@ impl ProjectViaOriginOnto<Translator> for FlectorAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for Horizon {
     type Output = MultiVector;
 
@@ -36472,6 +38888,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Infinity {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -36756,6 +39180,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Line {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for Line {
     type Output = MultiVector;
 
@@ -36932,6 +39364,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for LineAtInfinity {
     type Output = MultiVector;
 
@@ -37072,6 +39512,14 @@ impl ProjectViaOriginOnto<CircleOnOrigin> for LineAtOrigin {
     type Output = CircleOnOrigin;
 
     fn project_via_origin_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -37232,6 +39680,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Motor {
     type Output = CircleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -37464,6 +39920,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for MultiVector {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -37764,6 +40228,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for NullCircleAtOrigin {
     type Output = MultiVector;
 
@@ -37928,6 +40400,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -38116,6 +40596,14 @@ impl ProjectViaOriginOnto<Translator> for NullDipoleAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for NullSphereAtOrigin {
     type Output = MultiVector;
 
@@ -38256,6 +40744,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Origin {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -38484,6 +40980,14 @@ impl ProjectViaOriginOnto<Translator> for Origin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for Plane {
     type Output = MultiVector;
 
@@ -38584,6 +41088,14 @@ impl ProjectViaOriginOnto<Translator> for Plane {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -38704,6 +41216,14 @@ impl ProjectViaOriginOnto<CircleOnOrigin> for Rotor {
     type Output = CircleOnOrigin;
 
     fn project_via_origin_onto(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -38912,6 +41432,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for RoundPoint {
     type Output = RoundPoint;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -39252,6 +41780,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for RoundPointAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Dipole> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
@@ -39508,6 +42044,14 @@ impl ProjectViaOriginOnto<Translator> for RoundPointAtOrigin {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for Sphere {
     type Output = MultiVector;
 
@@ -39620,6 +42164,14 @@ impl ProjectViaOriginOnto<Translator> for Sphere {
     }
 }
 
+impl ProjectViaOriginOnto<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
 impl ProjectViaOriginOnto<Flector> for SphereAtOrigin {
     type Output = MultiVector;
 
@@ -39720,6 +42272,14 @@ impl ProjectViaOriginOnto<Translator> for SphereAtOrigin {
     type Output = MultiVector;
 
     fn project_via_origin_onto(self, other: Translator) -> MultiVector {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -39888,6 +42448,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Transflector {
     type Output = DipoleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }
@@ -40120,6 +42688,14 @@ impl ProjectViaOriginOnto<CircleOrthogonalOrigin> for Translator {
     type Output = CircleOrthogonalOrigin;
 
     fn project_via_origin_onto(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        other.anti_wedge(self.wedge(other.dual()))
+    }
+}
+
+impl ProjectViaOriginOnto<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn project_via_origin_onto(self, other: Dilator) -> MultiVector {
         other.anti_wedge(self.wedge(other.dual()))
     }
 }

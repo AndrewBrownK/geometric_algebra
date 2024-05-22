@@ -171,6 +171,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl Sandwich<Dilator> for AntiCircleOnOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for AntiCircleOnOrigin {
     type Output = Dipole;
 
@@ -527,6 +535,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for AntiDipoleOnOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -891,6 +907,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiFlatPointAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for AntiFlatPointAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for AntiFlatPointAtOrigin {
     type Output = Dipole;
 
@@ -1247,6 +1271,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiLineAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for AntiLineAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -1611,6 +1643,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiPlane {
     }
 }
 
+impl Sandwich<Dilator> for AntiPlane {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for AntiPlane {
     type Output = Dipole;
 
@@ -1967,6 +2007,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for AntiPlaneAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -2331,6 +2379,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiScalar {
     }
 }
 
+impl Sandwich<Dilator> for AntiScalar {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
 impl Sandwich<Dipole> for AntiScalar {
     type Output = Dipole;
 
@@ -2687,6 +2743,14 @@ impl Sandwich<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for AntiSphereOnOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3051,6 +3115,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Circle {
     }
 }
 
+impl Sandwich<Dilator> for Circle {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Circle {
     type Output = Dipole;
 
@@ -3407,6 +3479,14 @@ impl Sandwich<CircleOrthogonalOrigin> for CircleAligningOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for CircleAligningOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -3771,6 +3851,14 @@ impl Sandwich<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl Sandwich<Dilator> for CircleAtInfinity {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for CircleAtInfinity {
     type Output = Dipole;
 
@@ -4127,6 +4215,14 @@ impl Sandwich<CircleOrthogonalOrigin> for CircleAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for CircleAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -4491,6 +4587,14 @@ impl Sandwich<CircleOrthogonalOrigin> for CircleOnOrigin {
     }
 }
 
+impl Sandwich<Dilator> for CircleOnOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for CircleOnOrigin {
     type Output = Dipole;
 
@@ -4851,6 +4955,14 @@ impl Sandwich<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl Sandwich<Dilator> for CircleOrthogonalOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for CircleOrthogonalOrigin {
     type Output = Dipole;
 
@@ -5107,6 +5219,374 @@ impl Sandwich<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl Sandwich<AntiCircleOnOrigin> for Dilator {
+    type Output = AntiCircleOnOrigin;
+
+    fn sandwich(self, other: AntiCircleOnOrigin) -> AntiCircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiDipoleOnOrigin> for Dilator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn sandwich(self, other: AntiDipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiFlatPointAtOrigin> for Dilator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn sandwich(self, other: AntiFlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiLineAtOrigin> for Dilator {
+    type Output = AntiLineAtOrigin;
+
+    fn sandwich(self, other: AntiLineAtOrigin) -> AntiLineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlane> for Dilator {
+    type Output = AntiPlane;
+
+    fn sandwich(self, other: AntiPlane) -> AntiPlane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiPlaneAtOrigin> for Dilator {
+    type Output = AntiPlaneAtOrigin;
+
+    fn sandwich(self, other: AntiPlaneAtOrigin) -> AntiPlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<AntiSphereOnOrigin> for Dilator {
+    type Output = AntiSphereOnOrigin;
+
+    fn sandwich(self, other: AntiSphereOnOrigin) -> AntiSphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Circle> for Dilator {
+    type Output = Circle;
+
+    fn sandwich(self, other: Circle) -> Circle {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAligningOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn sandwich(self, other: CircleAligningOrigin) -> CircleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtInfinity> for Dilator {
+    type Output = CircleAtInfinity;
+
+    fn sandwich(self, other: CircleAtInfinity) -> CircleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleAtOrigin> for Dilator {
+    type Output = CircleAtOrigin;
+
+    fn sandwich(self, other: CircleAtOrigin) -> CircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOnOrigin> for Dilator {
+    type Output = CircleOnOrigin;
+
+    fn sandwich(self, other: CircleOnOrigin) -> CircleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<CircleOrthogonalOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Dilator {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dipole> for Dilator {
+    type Output = Dipole;
+
+    fn sandwich(self, other: Dipole) -> Dipole {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAligningOrigin> for Dilator {
+    type Output = DipoleAligningOrigin;
+
+    fn sandwich(self, other: DipoleAligningOrigin) -> DipoleAligningOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtInfinity> for Dilator {
+    type Output = DipoleAtInfinity;
+
+    fn sandwich(self, other: DipoleAtInfinity) -> DipoleAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleAtOrigin> for Dilator {
+    type Output = DipoleAtOrigin;
+
+    fn sandwich(self, other: DipoleAtOrigin) -> DipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOnOrigin> for Dilator {
+    type Output = DipoleOnOrigin;
+
+    fn sandwich(self, other: DipoleOnOrigin) -> DipoleOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<DipoleOrthogonalOrigin> for Dilator {
+    type Output = DipoleOrthogonalOrigin;
+
+    fn sandwich(self, other: DipoleOrthogonalOrigin) -> DipoleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPoint> for Dilator {
+    type Output = FlatPoint;
+
+    fn sandwich(self, other: FlatPoint) -> FlatPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtInfinity> for Dilator {
+    type Output = FlatPointAtInfinity;
+
+    fn sandwich(self, other: FlatPointAtInfinity) -> FlatPointAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlatPointAtOrigin> for Dilator {
+    type Output = FlatPointAtOrigin;
+
+    fn sandwich(self, other: FlatPointAtOrigin) -> FlatPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Flector> for Dilator {
+    type Output = Flector;
+
+    fn sandwich(self, other: Flector) -> Flector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<FlectorAtInfinity> for Dilator {
+    type Output = FlectorAtInfinity;
+
+    fn sandwich(self, other: FlectorAtInfinity) -> FlectorAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Horizon> for Dilator {
+    type Output = Horizon;
+
+    fn sandwich(self, other: Horizon) -> Horizon {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Infinity> for Dilator {
+    type Output = Infinity;
+
+    fn sandwich(self, other: Infinity) -> Infinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Line> for Dilator {
+    type Output = Line;
+
+    fn sandwich(self, other: Line) -> Line {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtInfinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn sandwich(self, other: LineAtInfinity) -> LineAtInfinity {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<LineAtOrigin> for Dilator {
+    type Output = LineAtOrigin;
+
+    fn sandwich(self, other: LineAtOrigin) -> LineAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Motor> for Dilator {
+    type Output = Motor;
+
+    fn sandwich(self, other: Motor) -> Motor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn sandwich(self, other: MultiVector) -> MultiVector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal())
+    }
+}
+
+impl Sandwich<NullCircleAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn sandwich(self, other: NullCircleAtOrigin) -> NullCircleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullDipoleAtOrigin> for Dilator {
+    type Output = NullDipoleAtOrigin;
+
+    fn sandwich(self, other: NullDipoleAtOrigin) -> NullDipoleAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<NullSphereAtOrigin> for Dilator {
+    type Output = NullSphereAtOrigin;
+
+    fn sandwich(self, other: NullSphereAtOrigin) -> NullSphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Origin> for Dilator {
+    type Output = Origin;
+
+    fn sandwich(self, other: Origin) -> Origin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Plane> for Dilator {
+    type Output = Plane;
+
+    fn sandwich(self, other: Plane) -> Plane {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<PlaneAtOrigin> for Dilator {
+    type Output = PlaneAtOrigin;
+
+    fn sandwich(self, other: PlaneAtOrigin) -> PlaneAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Rotor> for Dilator {
+    type Output = Rotor;
+
+    fn sandwich(self, other: Rotor) -> Rotor {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPoint> for Dilator {
+    type Output = RoundPoint;
+
+    fn sandwich(self, other: RoundPoint) -> RoundPoint {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<RoundPointAtOrigin> for Dilator {
+    type Output = RoundPointAtOrigin;
+
+    fn sandwich(self, other: RoundPointAtOrigin) -> RoundPointAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Sphere> for Dilator {
+    type Output = Sphere;
+
+    fn sandwich(self, other: Sphere) -> Sphere {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereAtOrigin> for Dilator {
+    type Output = SphereAtOrigin;
+
+    fn sandwich(self, other: SphereAtOrigin) -> SphereAtOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<SphereOnOrigin> for Dilator {
+    type Output = SphereOnOrigin;
+
+    fn sandwich(self, other: SphereOnOrigin) -> SphereOnOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Transflector> for Dilator {
+    type Output = Transflector;
+
+    fn sandwich(self, other: Transflector) -> Transflector {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Translator> for Dilator {
+    type Output = Translator;
+
+    fn sandwich(self, other: Translator) -> Translator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<AntiCircleOnOrigin> for Dipole {
     type Output = AntiCircleOnOrigin;
 
@@ -5207,6 +5687,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Dipole {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Dipole {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -5571,6 +6059,14 @@ impl Sandwich<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     }
 }
 
+impl Sandwich<Dilator> for DipoleAligningOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for DipoleAligningOrigin {
     type Output = Dipole;
 
@@ -5927,6 +6423,14 @@ impl Sandwich<CircleOrthogonalOrigin> for DipoleAtInfinity {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for DipoleAtInfinity {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -6291,6 +6795,14 @@ impl Sandwich<CircleOrthogonalOrigin> for DipoleAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for DipoleAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for DipoleAtOrigin {
     type Output = Dipole;
 
@@ -6647,6 +7159,14 @@ impl Sandwich<CircleOrthogonalOrigin> for DipoleOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for DipoleOnOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7011,6 +7531,14 @@ impl Sandwich<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
     }
 }
 
+impl Sandwich<Dilator> for DipoleOrthogonalOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for DipoleOrthogonalOrigin {
     type Output = Dipole;
 
@@ -7367,6 +7895,14 @@ impl Sandwich<CircleOrthogonalOrigin> for DualNum {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for DualNum {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -7731,6 +8267,14 @@ impl Sandwich<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl Sandwich<Dilator> for FlatPoint {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -8059,6 +8603,14 @@ impl Sandwich<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl Sandwich<Dilator> for FlatPointAtInfinity {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -8319,6 +8871,14 @@ impl Sandwich<CircleOrthogonalOrigin> for FlatPointAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for FlatPointAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -8683,6 +9243,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Flector {
     }
 }
 
+impl Sandwich<Dilator> for Flector {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Flector {
     type Output = Dipole;
 
@@ -9011,6 +9579,14 @@ impl Sandwich<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl Sandwich<Dilator> for FlectorAtInfinity {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for FlectorAtInfinity {
     type Output = Dipole;
 
@@ -9251,6 +9827,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl Sandwich<Dilator> for Horizon {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Horizon {
     type Output = Dipole;
 
@@ -9455,6 +10039,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Infinity {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Infinity {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -9695,6 +10287,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Line {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Line {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -10043,6 +10643,14 @@ impl Sandwich<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl Sandwich<Dilator> for LineAtInfinity {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for LineAtInfinity {
     type Output = Dipole;
 
@@ -10295,6 +10903,14 @@ impl Sandwich<CircleOrthogonalOrigin> for LineAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for LineAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -10659,6 +11275,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Motor {
     }
 }
 
+impl Sandwich<Dilator> for Motor {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Motor {
     type Output = Dipole;
 
@@ -11019,6 +11643,14 @@ impl Sandwich<CircleOrthogonalOrigin> for MultiVector {
     }
 }
 
+impl Sandwich<Dilator> for MultiVector {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for MultiVector {
     type Output = Dipole;
 
@@ -11363,6 +11995,14 @@ impl Sandwich<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for NullCircleAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for NullCircleAtOrigin {
     type Output = Dipole;
 
@@ -11659,6 +12299,14 @@ impl Sandwich<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for NullDipoleAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for NullDipoleAtOrigin {
     type Output = Dipole;
 
@@ -11915,6 +12563,14 @@ impl Sandwich<CircleOrthogonalOrigin> for NullSphereAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for NullSphereAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for NullSphereAtOrigin {
     type Output = Dipole;
 
@@ -12143,6 +12799,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Origin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Origin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -12431,6 +13095,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Plane {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Plane {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -12795,6 +13467,14 @@ impl Sandwich<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for PlaneAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for PlaneAtOrigin {
     type Output = Dipole;
 
@@ -13151,6 +13831,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Rotor {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Rotor {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -13515,6 +14203,14 @@ impl Sandwich<CircleOrthogonalOrigin> for RoundPoint {
     }
 }
 
+impl Sandwich<Dilator> for RoundPoint {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for RoundPoint {
     type Output = Dipole;
 
@@ -13871,6 +14567,14 @@ impl Sandwich<CircleOrthogonalOrigin> for RoundPointAtOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for RoundPointAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -14235,6 +14939,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Scalar {
     }
 }
 
+impl Sandwich<Dilator> for Scalar {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Scalar {
     type Output = Dipole;
 
@@ -14591,6 +15303,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Sphere {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Sphere {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -14955,6 +15675,14 @@ impl Sandwich<CircleOrthogonalOrigin> for SphereAtOrigin {
     }
 }
 
+impl Sandwich<Dilator> for SphereAtOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for SphereAtOrigin {
     type Output = Dipole;
 
@@ -15311,6 +16039,14 @@ impl Sandwich<CircleOrthogonalOrigin> for SphereOnOrigin {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for SphereOnOrigin {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -15675,6 +16411,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl Sandwich<Dilator> for Transflector {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
 impl Sandwich<Dipole> for Transflector {
     type Output = Dipole;
 
@@ -16031,6 +16775,14 @@ impl Sandwich<CircleOrthogonalOrigin> for Translator {
     type Output = CircleOrthogonalOrigin;
 
     fn sandwich(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
+    }
+}
+
+impl Sandwich<Dilator> for Translator {
+    type Output = Dilator;
+
+    fn sandwich(self, other: Dilator) -> Dilator {
         self.geometric_anti_product(other).geometric_anti_product(self.anti_reversal()).into()
     }
 }
@@ -16395,6 +17147,14 @@ impl Rotate<CircleOrthogonalOrigin> for Rotor {
     }
 }
 
+impl Rotate<Dilator> for Rotor {
+    type Output = Dilator;
+
+    fn rotate(self, other: Dilator) -> Dilator {
+        self.sandwich(other)
+    }
+}
+
 impl Rotate<Dipole> for Rotor {
     type Output = Dipole;
 
@@ -16755,6 +17515,14 @@ impl Transflect<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl Transflect<Dilator> for Transflector {
+    type Output = Dilator;
+
+    fn transflect(self, other: Dilator) -> Dilator {
+        self.sandwich(other)
+    }
+}
+
 impl Transflect<Dipole> for Transflector {
     type Output = Dipole;
 
@@ -17111,6 +17879,14 @@ impl Translate<CircleOrthogonalOrigin> for Translator {
     type Output = CircleOrthogonalOrigin;
 
     fn translate(self, other: CircleOrthogonalOrigin) -> CircleOrthogonalOrigin {
+        self.sandwich(other)
+    }
+}
+
+impl Translate<Dilator> for Translator {
+    type Output = Dilator;
+
+    fn translate(self, other: Dilator) -> Dilator {
         self.sandwich(other)
     }
 }

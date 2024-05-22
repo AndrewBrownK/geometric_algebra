@@ -112,6 +112,18 @@ impl Unitize for CircleOrthogonalOrigin {
     }
 }
 
+impl Unitize for Dilator {
+    type Output = Dilator;
+
+    fn unitize(self) -> Dilator {
+        self.geometric_product(Scalar {
+            groups: ScalarGroups {
+                g0: 1.0 / self.round_weight_norm().group0(),
+            },
+        })
+    }
+}
+
 impl Unitize for Dipole {
     type Output = Dipole;
 

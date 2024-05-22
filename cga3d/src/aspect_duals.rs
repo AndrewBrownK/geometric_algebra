@@ -99,6 +99,14 @@ impl FlatBulkDual for CircleOrthogonalOrigin {
     }
 }
 
+impl FlatBulkDual for Dilator {
+    type Output = FlatPointAtInfinity;
+
+    fn flat_bulk_dual(self) -> FlatPointAtInfinity {
+        self.flat_bulk().dual()
+    }
+}
+
 impl FlatBulkDual for Dipole {
     type Output = LineAtInfinity;
 
@@ -311,6 +319,14 @@ impl FlatWeightDual for CircleOnOrigin {
     type Output = AntiLineAtOrigin;
 
     fn flat_weight_dual(self) -> AntiLineAtOrigin {
+        self.flat_weight().dual()
+    }
+}
+
+impl FlatWeightDual for Dilator {
+    type Output = MultiVector;
+
+    fn flat_weight_dual(self) -> MultiVector {
         self.flat_weight().dual()
     }
 }
@@ -547,6 +563,14 @@ impl RoundBulkDual for CircleOrthogonalOrigin {
     }
 }
 
+impl RoundBulkDual for Dilator {
+    type Output = FlatPointAtOrigin;
+
+    fn round_bulk_dual(self) -> FlatPointAtOrigin {
+        self.round_bulk().dual()
+    }
+}
+
 impl RoundBulkDual for Dipole {
     type Output = LineAtOrigin;
 
@@ -660,6 +684,14 @@ impl RoundWeightDual for CircleOnOrigin {
 }
 
 impl RoundWeightDual for CircleOrthogonalOrigin {
+    type Output = NullDipoleAtOrigin;
+
+    fn round_weight_dual(self) -> NullDipoleAtOrigin {
+        self.round_weight().dual()
+    }
+}
+
+impl RoundWeightDual for Dilator {
     type Output = NullDipoleAtOrigin;
 
     fn round_weight_dual(self) -> NullDipoleAtOrigin {

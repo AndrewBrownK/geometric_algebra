@@ -131,6 +131,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for AntiCircleOnOrigin {
     type Output = Dipole;
 
@@ -619,6 +627,14 @@ impl AntiRejectOrthogonallyFrom<CircleOnOrigin> for AntiLineAtOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for AntiLineAtOrigin {
     type Output = Dipole;
 
@@ -863,6 +879,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for AntiPlane {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -1187,6 +1211,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for AntiPlaneAtOrigin {
     type Output = RoundPoint;
 
@@ -1471,6 +1503,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -2707,6 +2747,190 @@ impl AntiRejectOrthogonallyFrom<Transflector> for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<AntiCircleOnOrigin> for Dilator {
+    type Output = CircleOnOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: AntiCircleOnOrigin) -> CircleOnOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<AntiLineAtOrigin> for Dilator {
+    type Output = LineAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: AntiLineAtOrigin) -> LineAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<AntiPlane> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_orthogonally_from(self, other: AntiPlane) -> Circle {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<AntiPlaneAtOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: AntiPlaneAtOrigin) -> CircleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<AntiSphereOnOrigin> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_orthogonally_from(self, other: AntiSphereOnOrigin) -> Circle {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dipole> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_orthogonally_from(self, other: Dipole) -> Circle {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<DipoleAligningOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: DipoleAligningOrigin) -> CircleOrthogonalOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<DipoleAtInfinity> for Dilator {
+    type Output = CircleAtInfinity;
+
+    fn anti_reject_orthogonally_from(self, other: DipoleAtInfinity) -> CircleAtInfinity {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<DipoleAtOrigin> for Dilator {
+    type Output = CircleAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: DipoleAtOrigin) -> CircleAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<DipoleOnOrigin> for Dilator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: DipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<DipoleOrthogonalOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: DipoleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<FlatPoint> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: FlatPoint) -> CircleOrthogonalOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<FlatPointAtInfinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn anti_reject_orthogonally_from(self, other: FlatPointAtInfinity) -> LineAtInfinity {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<FlatPointAtOrigin> for Dilator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: FlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Flector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: FlectorAtInfinity) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Infinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn anti_reject_orthogonally_from(self, other: Infinity) -> LineAtInfinity {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<NullDipoleAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: NullDipoleAtOrigin) -> NullCircleAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Origin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: Origin) -> NullCircleAtOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<RoundPoint> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_orthogonally_from(self, other: RoundPoint) -> Circle {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<RoundPointAtOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reject_orthogonally_from(self, other: RoundPointAtOrigin) -> CircleOrthogonalOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Transflector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<AntiCircleOnOrigin> for Dipole {
     type Output = Dipole;
 
@@ -2807,6 +3031,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for Dipole {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3115,6 +3347,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleAligningOrigin
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for DipoleAligningOrigin {
     type Output = Dipole;
 
@@ -3395,6 +3635,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -3655,6 +3903,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleAtOrigin {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -3931,6 +4187,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleOnOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for DipoleOnOrigin {
     type Output = Dipole;
 
@@ -4167,6 +4431,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleOrthogonalOrig
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -4475,6 +4747,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -4659,6 +4939,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlatPointAtInfinity 
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -4835,6 +5123,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for FlatPointAtOrigin {
     type Output = Dipole;
 
@@ -4975,6 +5271,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for Flector {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -5159,6 +5463,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlectorAtInfinity {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -5399,6 +5711,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for Infinity {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -6083,6 +6403,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for MultiVector {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for MultiVector {
     type Output = MultiVector;
 
@@ -6555,6 +6883,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for NullDipoleAtOrigin {
     type Output = Dipole;
 
@@ -6831,6 +7167,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for Origin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -7291,6 +7635,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for RoundPoint {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for RoundPoint {
     type Output = RoundPoint;
 
@@ -7647,6 +7999,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
+impl AntiRejectOrthogonallyFrom<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.anti_dual())
     }
 }
@@ -8139,6 +8499,14 @@ impl AntiRejectOrthogonallyFrom<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl AntiRejectOrthogonallyFrom<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.anti_dual())
+    }
+}
+
 impl AntiRejectOrthogonallyFrom<Dipole> for Transflector {
     type Output = Dipole;
 
@@ -8431,6 +8799,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -8923,6 +9299,14 @@ impl AntiRejectViaHorizonFrom<CircleOnOrigin> for AntiLineAtOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for AntiLineAtOrigin {
     type Output = Dipole;
 
@@ -9167,6 +9551,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for AntiPlane {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -9491,6 +9883,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for AntiPlaneAtOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for AntiPlaneAtOrigin {
     type Output = RoundPoint;
 
@@ -9775,6 +10175,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for AntiSphereOnOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -11011,6 +11419,190 @@ impl AntiRejectViaHorizonFrom<Transflector> for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<AntiCircleOnOrigin> for Dilator {
+    type Output = CircleOnOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: AntiCircleOnOrigin) -> CircleOnOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<AntiLineAtOrigin> for Dilator {
+    type Output = LineAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: AntiLineAtOrigin) -> LineAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<AntiPlane> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_via_horizon_from(self, other: AntiPlane) -> Circle {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<AntiPlaneAtOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: AntiPlaneAtOrigin) -> CircleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<AntiSphereOnOrigin> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_via_horizon_from(self, other: AntiSphereOnOrigin) -> Circle {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dipole> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_via_horizon_from(self, other: Dipole) -> Circle {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<DipoleAligningOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: DipoleAligningOrigin) -> CircleOrthogonalOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<DipoleAtInfinity> for Dilator {
+    type Output = CircleAtInfinity;
+
+    fn anti_reject_via_horizon_from(self, other: DipoleAtInfinity) -> CircleAtInfinity {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<DipoleAtOrigin> for Dilator {
+    type Output = CircleAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: DipoleAtOrigin) -> CircleAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<DipoleOnOrigin> for Dilator {
+    type Output = AntiDipoleOnOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: DipoleOnOrigin) -> AntiDipoleOnOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<DipoleOrthogonalOrigin> for Dilator {
+    type Output = CircleAligningOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: DipoleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<FlatPoint> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: FlatPoint) -> CircleOrthogonalOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<FlatPointAtInfinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn anti_reject_via_horizon_from(self, other: FlatPointAtInfinity) -> LineAtInfinity {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<FlatPointAtOrigin> for Dilator {
+    type Output = AntiFlatPointAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: FlatPointAtOrigin) -> AntiFlatPointAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Flector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: FlectorAtInfinity) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Infinity> for Dilator {
+    type Output = LineAtInfinity;
+
+    fn anti_reject_via_horizon_from(self, other: Infinity) -> LineAtInfinity {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: MultiVector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<NullDipoleAtOrigin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: NullDipoleAtOrigin) -> NullCircleAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Origin> for Dilator {
+    type Output = NullCircleAtOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: Origin) -> NullCircleAtOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<RoundPoint> for Dilator {
+    type Output = Circle;
+
+    fn anti_reject_via_horizon_from(self, other: RoundPoint) -> Circle {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<RoundPointAtOrigin> for Dilator {
+    type Output = CircleOrthogonalOrigin;
+
+    fn anti_reject_via_horizon_from(self, other: RoundPointAtOrigin) -> CircleOrthogonalOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Transflector) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<AntiCircleOnOrigin> for Dipole {
     type Output = Dipole;
 
@@ -11111,6 +11703,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for Dipole {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -11419,6 +12019,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for DipoleAligningOrigin {
     type Output = Dipole;
 
@@ -11699,6 +12307,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for DipoleAtInfinity {
     type Output = Dipole;
 
@@ -11959,6 +12575,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for DipoleAtOrigin {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -12235,6 +12859,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for DipoleOnOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for DipoleOnOrigin {
     type Output = Dipole;
 
@@ -12471,6 +13103,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -12779,6 +13419,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for FlatPoint {
     type Output = Dipole;
 
@@ -12963,6 +13611,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for FlatPointAtInfinity {
     type Output = Dipole;
 
@@ -13139,6 +13795,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for FlatPointAtOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for FlatPointAtOrigin {
     type Output = Dipole;
 
@@ -13279,6 +13943,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for Flector {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -13463,6 +14135,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for FlectorAtInfinity {
     type Output = DipoleAligningOrigin;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -13703,6 +14383,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for Infinity {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -14387,6 +15075,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for MultiVector {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for MultiVector {
     type Output = MultiVector;
 
@@ -14859,6 +15555,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for NullDipoleAtOrigin {
     type Output = Dipole;
 
@@ -15135,6 +15839,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for Origin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -15595,6 +16307,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for RoundPoint {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for RoundPoint {
     type Output = RoundPoint;
 
@@ -15951,6 +16671,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for RoundPointAtOrigin {
     type Output = RoundPoint;
 
     fn anti_reject_via_horizon_from(self, other: CircleOrthogonalOrigin) -> RoundPoint {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
+impl AntiRejectViaHorizonFrom<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
         self.wedge(other).anti_wedge(other.dual())
     }
 }
@@ -16443,6 +17171,14 @@ impl AntiRejectViaHorizonFrom<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl AntiRejectViaHorizonFrom<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn anti_reject_via_horizon_from(self, other: Dilator) -> MultiVector {
+        self.wedge(other).anti_wedge(other.dual())
+    }
+}
+
 impl AntiRejectViaHorizonFrom<Dipole> for Transflector {
     type Output = Dipole;
 
@@ -16699,6 +17435,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for AntiCircleOnOrigin {
     type Output = MultiVector;
 
@@ -16871,6 +17615,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     type Output = CircleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -17107,6 +17859,14 @@ impl RejectOrthogonallyFrom<CircleOnOrigin> for AntiFlatPointAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for AntiFlatPointAtOrigin {
     type Output = Circle;
 
@@ -17283,6 +18043,14 @@ impl RejectOrthogonallyFrom<CircleOnOrigin> for AntiLineAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for AntiLineAtOrigin {
     type Output = MultiVector;
 
@@ -17375,6 +18143,14 @@ impl RejectOrthogonallyFrom<Translator> for AntiLineAtOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -17475,6 +18251,14 @@ impl RejectOrthogonallyFrom<Translator> for AntiPlane {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
@@ -17551,6 +18335,14 @@ impl RejectOrthogonallyFrom<Translator> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -17735,6 +18527,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Circle {
     type Output = CircleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -18043,6 +18843,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for CircleAligningOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for CircleAligningOrigin {
     type Output = Circle;
 
@@ -18339,6 +19147,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for CircleAtInfinity {
     type Output = Circle;
 
@@ -18599,6 +19415,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for CircleAtOrigin {
     type Output = CircleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -18899,6 +19723,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for CircleOnOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for CircleOnOrigin {
     type Output = Circle;
 
@@ -19147,6 +19979,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for CircleOrthogonalOrigin {
     type Output = Circle;
 
@@ -19371,6 +20211,358 @@ impl RejectOrthogonallyFrom<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<AntiCircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: AntiCircleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<AntiDipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: AntiDipoleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<AntiFlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: AntiFlatPointAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<AntiLineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: AntiLineAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<AntiPlane> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_orthogonally_from(self, other: AntiPlane) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<AntiPlaneAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_orthogonally_from(self, other: AntiPlaneAtOrigin) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<AntiSphereOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_orthogonally_from(self, other: AntiSphereOnOrigin) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Circle> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Circle) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: CircleAligningOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: CircleAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: CircleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: CircleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dipole> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: DipoleAligningOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: DipoleAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: DipoleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: DipoleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<DipoleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: DipoleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlatPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: FlatPoint) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlatPointAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: FlatPointAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: FlatPointAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Horizon> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Horizon) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Line> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Line) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<LineAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: LineAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<LineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: LineAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<NullCircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: NullCircleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<NullDipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: NullDipoleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<NullSphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: NullSphereAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Plane> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Plane) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<PlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: PlaneAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<RoundPoint> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_orthogonally_from(self, other: RoundPoint) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<RoundPointAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_orthogonally_from(self, other: RoundPointAtOrigin) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Sphere> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Sphere) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SphereAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<SphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: SphereOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<AntiDipoleOnOrigin> for Dipole {
     type Output = DipoleOnOrigin;
 
@@ -19431,6 +20623,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Dipole {
     type Output = DipoleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -19643,6 +20843,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for DipoleAligningOrigin {
     type Output = MultiVector;
 
@@ -19843,6 +21051,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for DipoleAtInfinity {
     type Output = MultiVector;
 
@@ -20023,6 +21239,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleAtOrigin {
     type Output = DipoleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -20219,6 +21443,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleOnOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for DipoleOnOrigin {
     type Output = MultiVector;
 
@@ -20391,6 +21623,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
     type Output = DipoleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -20603,6 +21843,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for FlatPoint {
     type Output = MultiVector;
 
@@ -20763,6 +22011,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -20903,6 +22159,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlatPointAtOrigin {
     type Output = DipoleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -21095,6 +22359,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Flector {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -21403,6 +22675,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for FlectorAtInfinity {
     type Output = Sphere;
 
@@ -21691,6 +22971,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for Horizon {
     type Output = Sphere;
 
@@ -21907,6 +23195,14 @@ impl RejectOrthogonallyFrom<Translator> for Horizon {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Motor> for Infinity {
     type Output = MultiVector;
 
@@ -22047,6 +23343,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Line {
     type Output = CircleAligningOrigin;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -22299,6 +23603,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for LineAtInfinity {
     type Output = Circle;
 
@@ -22547,6 +23859,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for LineAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for LineAtOrigin {
     type Output = Circle;
 
@@ -22775,6 +24095,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Motor {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -23107,6 +24435,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for MultiVector {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for MultiVector {
     type Output = MultiVector;
 
@@ -23411,6 +24747,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for NullCircleAtOrigin {
     type Output = Circle;
 
@@ -23635,6 +24979,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for NullDipoleAtOrigin {
     type Output = MultiVector;
 
@@ -23807,6 +25159,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for NullSphereAtOrigin {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -24035,6 +25395,14 @@ impl RejectOrthogonallyFrom<Translator> for NullSphereAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for Origin {
     type Output = MultiVector;
 
@@ -24223,6 +25591,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Plane {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -24555,6 +25931,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for PlaneAtOrigin {
     type Output = Sphere;
 
@@ -24835,6 +26219,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Rotor {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for Rotor {
     type Output = MultiVector;
 
@@ -25051,6 +26443,14 @@ impl RejectOrthogonallyFrom<Translator> for Rotor {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Flector> for RoundPoint {
     type Output = MultiVector;
 
@@ -25159,6 +26559,14 @@ impl RejectOrthogonallyFrom<Translator> for RoundPoint {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -25367,6 +26775,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Sphere {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -25703,6 +27119,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for SphereAtOrigin {
     type Output = Sphere;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -26067,6 +27491,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for SphereOnOrigin {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for SphereOnOrigin {
     type Output = Sphere;
 
@@ -26391,6 +27823,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Transflector {
     type Output = MultiVector;
 
     fn reject_orthogonally_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
+impl RejectOrthogonallyFrom<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.anti_dual())
     }
 }
@@ -26723,6 +28163,14 @@ impl RejectOrthogonallyFrom<CircleOrthogonalOrigin> for Translator {
     }
 }
 
+impl RejectOrthogonallyFrom<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn reject_orthogonally_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.anti_dual())
+    }
+}
+
 impl RejectOrthogonallyFrom<Dipole> for Translator {
     type Output = MultiVector;
 
@@ -26987,6 +28435,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for AntiCircleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for AntiCircleOnOrigin {
     type Output = MultiVector;
 
@@ -27159,6 +28615,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     type Output = CircleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for AntiDipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -27395,6 +28859,14 @@ impl RejectViaOriginFrom<CircleOnOrigin> for AntiFlatPointAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for AntiFlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for AntiFlatPointAtOrigin {
     type Output = Circle;
 
@@ -27571,6 +29043,14 @@ impl RejectViaOriginFrom<CircleOnOrigin> for AntiLineAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for AntiLineAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for AntiLineAtOrigin {
     type Output = MultiVector;
 
@@ -27663,6 +29143,14 @@ impl RejectViaOriginFrom<Translator> for AntiLineAtOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for AntiPlane {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -27763,6 +29251,14 @@ impl RejectViaOriginFrom<Translator> for AntiPlane {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for AntiPlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
@@ -27839,6 +29335,14 @@ impl RejectViaOriginFrom<Translator> for AntiPlaneAtOrigin {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for AntiSphereOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -28023,6 +29527,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Circle {
     type Output = CircleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Circle {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -28331,6 +29843,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for CircleAligningOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for CircleAligningOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for CircleAligningOrigin {
     type Output = Circle;
 
@@ -28627,6 +30147,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for CircleAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for CircleAtInfinity {
     type Output = Circle;
 
@@ -28887,6 +30415,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for CircleAtOrigin {
     type Output = CircleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for CircleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -29187,6 +30723,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for CircleOnOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for CircleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for CircleOnOrigin {
     type Output = Circle;
 
@@ -29435,6 +30979,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for CircleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for CircleOrthogonalOrigin {
     type Output = Circle;
 
@@ -29659,6 +31211,358 @@ impl RejectViaOriginFrom<Translator> for CircleOrthogonalOrigin {
     }
 }
 
+impl RejectViaOriginFrom<AntiCircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: AntiCircleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<AntiDipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: AntiDipoleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<AntiFlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: AntiFlatPointAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<AntiLineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: AntiLineAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<AntiPlane> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_via_origin_from(self, other: AntiPlane) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<AntiPlaneAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_via_origin_from(self, other: AntiPlaneAtOrigin) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<AntiSphereOnOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_via_origin_from(self, other: AntiSphereOnOrigin) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Circle> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Circle) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: CircleAligningOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: CircleAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: CircleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: CircleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dipole> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dipole) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleAligningOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: DipoleAligningOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: DipoleAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: DipoleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: DipoleOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<DipoleOrthogonalOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: DipoleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlatPoint> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: FlatPoint) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlatPointAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: FlatPointAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlatPointAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: FlatPointAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Flector> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Flector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<FlectorAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: FlectorAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Horizon> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Horizon) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Line> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Line) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<LineAtInfinity> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: LineAtInfinity) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<LineAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: LineAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Motor> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Motor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<MultiVector> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: MultiVector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<NullCircleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: NullCircleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<NullDipoleAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: NullDipoleAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<NullSphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: NullSphereAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Plane> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Plane) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<PlaneAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: PlaneAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Rotor> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Rotor) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<RoundPoint> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_via_origin_from(self, other: RoundPoint) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<RoundPointAtOrigin> for Dilator {
+    type Output = AntiScalar;
+
+    fn reject_via_origin_from(self, other: RoundPointAtOrigin) -> AntiScalar {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Sphere> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Sphere) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SphereAtOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SphereAtOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<SphereOnOrigin> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: SphereOnOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Transflector> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Transflector) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Translator> for Dilator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<AntiDipoleOnOrigin> for Dipole {
     type Output = DipoleOnOrigin;
 
@@ -29719,6 +31623,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Dipole {
     type Output = DipoleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Dipole {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -29931,6 +31843,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for DipoleAligningOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for DipoleAligningOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for DipoleAligningOrigin {
     type Output = MultiVector;
 
@@ -30131,6 +32051,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for DipoleAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for DipoleAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for DipoleAtInfinity {
     type Output = MultiVector;
 
@@ -30311,6 +32239,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for DipoleAtOrigin {
     type Output = DipoleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for DipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -30507,6 +32443,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for DipoleOnOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for DipoleOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for DipoleOnOrigin {
     type Output = MultiVector;
 
@@ -30679,6 +32623,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
     type Output = DipoleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for DipoleOrthogonalOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -30891,6 +32843,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for FlatPoint {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for FlatPoint {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for FlatPoint {
     type Output = MultiVector;
 
@@ -31051,6 +33011,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for FlatPointAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for FlatPointAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for FlatPointAtInfinity {
     type Output = MultiVector;
 
@@ -31191,6 +33159,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for FlatPointAtOrigin {
     type Output = DipoleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> DipoleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for FlatPointAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -31383,6 +33359,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Flector {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Flector {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -31691,6 +33675,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for FlectorAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for FlectorAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for FlectorAtInfinity {
     type Output = Sphere;
 
@@ -31979,6 +33971,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Horizon {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for Horizon {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for Horizon {
     type Output = Sphere;
 
@@ -32195,6 +34195,14 @@ impl RejectViaOriginFrom<Translator> for Horizon {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for Infinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Motor> for Infinity {
     type Output = MultiVector;
 
@@ -32335,6 +34343,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Line {
     type Output = CircleAligningOrigin;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> CircleAligningOrigin {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Line {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -32587,6 +34603,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for LineAtInfinity {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for LineAtInfinity {
     type Output = Circle;
 
@@ -32835,6 +34859,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for LineAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for LineAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for LineAtOrigin {
     type Output = Circle;
 
@@ -33063,6 +35095,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Motor {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Motor {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -33395,6 +35435,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for MultiVector {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for MultiVector {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for MultiVector {
     type Output = MultiVector;
 
@@ -33699,6 +35747,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for NullCircleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for NullCircleAtOrigin {
     type Output = Circle;
 
@@ -33923,6 +35979,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for NullDipoleAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for NullDipoleAtOrigin {
     type Output = MultiVector;
 
@@ -34095,6 +36159,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for NullSphereAtOrigin {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for NullSphereAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -34323,6 +36395,14 @@ impl RejectViaOriginFrom<Translator> for NullSphereAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for Origin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for Origin {
     type Output = MultiVector;
 
@@ -34511,6 +36591,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Plane {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Plane {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -34843,6 +36931,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for PlaneAtOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for PlaneAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for PlaneAtOrigin {
     type Output = Sphere;
 
@@ -35123,6 +37219,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Rotor {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for Rotor {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for Rotor {
     type Output = MultiVector;
 
@@ -35339,6 +37443,14 @@ impl RejectViaOriginFrom<Translator> for Rotor {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for RoundPoint {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Flector> for RoundPoint {
     type Output = MultiVector;
 
@@ -35447,6 +37559,14 @@ impl RejectViaOriginFrom<Translator> for RoundPoint {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: Translator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for RoundPointAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -35655,6 +37775,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Sphere {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Sphere {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -35991,6 +38119,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for SphereAtOrigin {
     type Output = Sphere;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> Sphere {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for SphereAtOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }
@@ -36355,6 +38491,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for SphereOnOrigin {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for SphereOnOrigin {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for SphereOnOrigin {
     type Output = Sphere;
 
@@ -36683,6 +38827,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Transflector {
     }
 }
 
+impl RejectViaOriginFrom<Dilator> for Transflector {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
 impl RejectViaOriginFrom<Dipole> for Transflector {
     type Output = Sphere;
 
@@ -37007,6 +39159,14 @@ impl RejectViaOriginFrom<CircleOrthogonalOrigin> for Translator {
     type Output = MultiVector;
 
     fn reject_via_origin_from(self, other: CircleOrthogonalOrigin) -> MultiVector {
+        self.anti_wedge(other).wedge(other.dual())
+    }
+}
+
+impl RejectViaOriginFrom<Dilator> for Translator {
+    type Output = MultiVector;
+
+    fn reject_via_origin_from(self, other: Dilator) -> MultiVector {
         self.anti_wedge(other).wedge(other.dual())
     }
 }

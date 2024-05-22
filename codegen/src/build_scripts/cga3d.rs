@@ -80,7 +80,29 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
         "Transflector:e15,e25,e35|e4235,e4315,e4125,e3215",
         "FlectorAtInfinity:e15,e25,e35,e3215",
+        // TODO do I prefer Dilator condensed, or separated by grade?
+        "Dilator:e12345|e423,e431,e412|e415,e425,e435|e235,e315,e125,e321",
 
+        // TODO better names (and condensing) for these compositions
+        // TODO instead of writing these out manually, generate them dynamically
+        //  after we get the new AST and algebra definitions running.
+        //  Additionally it might be a good idea to completely separate uniform grade objects
+        //  from mixed grade objects, so the endless combinatorial pair implementations can
+        //  slow down a little.
+        // "LineXLineThing:e12345,e5|e415,e425,e435|e235,e315,e125",
+        // "FlatPointPlaneThing:e5|e415,e425,e435|e235,e315,e125",
+        // "RoundPointPlaneThing:1|e41,e42,e43,e45|e23,e31,e12|e15,e25,e35",
+        // "DipolePlaneThing:e1,e2,e3|e4,e5|e423,e431,e412|e415,e425,e435|e235,e315,e125,e321",
+        // "CirclePlaneThing:e41,e42,e43,e45|e23,e31,e12|e15,e25,e35|e4235,e4315,e4125|e1234,e3215",
+        // "SpherePlaneThing:e12345|e423,e431,e412|e415,e425,e435|e235,e315,e125,e321",
+        // "RoundPointFlatPointThing:e23,e31,e12|e15,e25,e35|e4235,e4315,e4125|e1234,e3215",
+        // "DipoleFlatPointThing:1,e12345|e1,e2,e3|e4,e5|\
+        //     e423,e431,e412|e415,e425,e435|e235,e315,e125,e321|e4235,e4315,e4125",
+
+
+
+        // TODO I could condense a couple of the vec2s
+        //  although it is helpful during development to have grades separated
         "MultiVector:\
             1,e12345|\
             e1,e2,e3|e4,e5|\

@@ -248,6 +248,28 @@ impl AntiDual for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiDual for Dilator {
+    type Output = MultiVector;
+
+    fn anti_dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([-self.group1()[0], -self.group1()[1], -self.group1()[2], self.group3()[3]]),
+                g4: self.group2() * Simd32x3::from(-1.0),
+                g5: Simd32x3::from([-self.group3()[0], self.group3()[1], self.group3()[2]]),
+                g6: Simd32x3::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
+            },
+        }
+    }
+}
+
 impl AntiDual for Dipole {
     type Output = Circle;
 
@@ -876,6 +898,21 @@ impl AntiReversal for CircleOrthogonalOrigin {
     }
 }
 
+impl AntiReversal for Dilator {
+    type Output = Dilator;
+
+    fn anti_reversal(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl AntiReversal for Dipole {
     type Output = Dipole;
 
@@ -1415,6 +1452,21 @@ impl Automorphism for CircleOrthogonalOrigin {
     }
 }
 
+impl Automorphism for Dilator {
+    type Output = Dilator;
+
+    fn automorphism(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: -self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
 impl Automorphism for Dipole {
     type Output = Dipole;
 
@@ -1911,6 +1963,28 @@ impl Complement for CircleOrthogonalOrigin {
             groups: DipoleAligningOriginGroups {
                 g0: Simd32x3::from([-self.group1()[0], self.group1()[1], self.group1()[2]]),
                 g1: Simd32x4::from([-self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]]),
+            },
+        }
+    }
+}
+
+impl Complement for Dilator {
+    type Output = MultiVector;
+
+    fn complement(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
+                g4: self.group2() * Simd32x3::from(-1.0),
+                g5: self.group1() * Simd32x3::from(-1.0),
+                g6: Simd32x3::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -2538,6 +2612,21 @@ impl ConformalConjugate for CircleOrthogonalOrigin {
     }
 }
 
+impl ConformalConjugate for Dilator {
+    type Output = Dilator;
+
+    fn conformal_conjugate(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: -self.group0(),
+                g1: self.group1(),
+                g2: self.group2() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from([-1.0, -1.0, -1.0, 1.0]),
+            },
+        }
+    }
+}
+
 impl ConformalConjugate for Dipole {
     type Output = Dipole;
 
@@ -3078,6 +3167,21 @@ impl Conjugation for CircleOrthogonalOrigin {
     }
 }
 
+impl Conjugation for Dilator {
+    type Output = Dilator;
+
+    fn conjugation(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: -self.group0(),
+                g1: self.group1(),
+                g2: self.group2(),
+                g3: self.group3(),
+            },
+        }
+    }
+}
+
 impl Conjugation for Dipole {
     type Output = Dipole;
 
@@ -3565,6 +3669,14 @@ impl DoubleComplement for CircleOrthogonalOrigin {
     }
 }
 
+impl DoubleComplement for Dilator {
+    type Output = Dilator;
+
+    fn double_complement(self) -> Dilator {
+        self
+    }
+}
+
 impl DoubleComplement for Dipole {
     type Output = Dipole;
 
@@ -4003,6 +4115,28 @@ impl Dual for CircleOrthogonalOrigin {
             groups: DipoleAligningOriginGroups {
                 g0: self.group0(),
                 g1: self.group1() * Simd32x4::from([1.0, 1.0, 1.0, -1.0]),
+            },
+        }
+    }
+}
+
+impl Dual for Dilator {
+    type Output = MultiVector;
+
+    fn dual(self) -> MultiVector {
+        MultiVector {
+            groups: MultiVectorGroups {
+                g0: Simd32x2::from([-self.group0(), 0.0]),
+                g1: Simd32x3::from(0.0),
+                g2: Simd32x2::from(0.0),
+                g3: Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], -self.group3()[3]]),
+                g4: self.group2(),
+                g5: Simd32x3::from([self.group3()[0], self.group3()[1], self.group3()[2]]),
+                g6: Simd32x3::from(0.0),
+                g7: Simd32x3::from(0.0),
+                g8: Simd32x4::from(0.0),
+                g9: Simd32x3::from(0.0),
+                g10: Simd32x2::from(0.0),
             },
         }
     }
@@ -4631,6 +4765,21 @@ impl Reversal for CircleOrthogonalOrigin {
             groups: CircleOrthogonalOriginGroups {
                 g0: self.group0() * Simd32x3::from(-1.0),
                 g1: self.group1() * Simd32x4::from(-1.0),
+            },
+        }
+    }
+}
+
+impl Reversal for Dilator {
+    type Output = Dilator;
+
+    fn reversal(self) -> Dilator {
+        Dilator {
+            groups: DilatorGroups {
+                g0: self.group0(),
+                g1: self.group1() * Simd32x3::from(-1.0),
+                g2: self.group2() * Simd32x3::from(-1.0),
+                g3: self.group3() * Simd32x4::from(-1.0),
             },
         }
     }
