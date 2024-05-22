@@ -11,14 +11,13 @@ publish = false
 
 [features]
 default = []
-include-wgsl-src = []
-include-glsl-src = []
-glsl-out = []
-spv-out = []
-wgsl-out = []
+wgsl-compose = []
+glsl-compose = []
 
 
 [dependencies]
 projective_ga = { path = "../projective_ga" }
 naga_oil = { version =  "0.13.0", features = ["prune", "glsl"] }
 naga = "0.19.2"
+anyhow = "1.0.86"
+bytemuck = "1.16.0"

@@ -1,5 +1,5 @@
 [package]
-name = "build_shader_automatically"
+name = "compile_to_spirv"
 version = "0.1.0"
 authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>"]
 edition = "2021"
@@ -9,10 +9,11 @@ publish = false
 [build-dependencies]
 # Build Phase: enable include-wgsl-src
 # naga_oil limits the version of wgpu and naga we can use
-cga3d_min = { path = "../../cga3d_min", features = ["include-wgsl-src"] }
+cga3d_min = { path = "../../cga3d_min", features = ["wgsl-compose"] }
 naga_oil = { version = "0.13.0", features = ["prune"] }
 naga = { version = "0.19.2", features = ["spv-out"]}
 bytemuck = "1.16.0"
+anyhow = "1.0.81"
 
 [dependencies]
 winit = "0.30.0"

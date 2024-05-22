@@ -10,7 +10,7 @@ publish = false
 winit = "0.30.0"
 pollster = "0.3.0"
 parking_lot = "0.12.2"
-cga3d_min = { path = "../../cga3d_min", features = ["include-wgsl-src"] }
+cga3d_min = { path = "../../cga3d_min", features = ["wgsl-compose"] }
 
 # naga_oil limits the version of wgpu and naga we can use
 naga_oil = { version = "0.13.0", features = ["prune"] }
