@@ -8,8 +8,8 @@ use crate::ast2::basis::BasisSignature;
 use crate::ast2::datatype::{DataType, Float, FloatVec, Integer};
 
 pub trait ExpressionOf<'vars, DT>: PartialEq + Into<AnyExpression>  {
-    fn get_datatype(&'vars self) -> DataType;
-    fn ty(&'vars self) -> DT;
+    fn get_datatype(&self) -> DataType;
+    fn ty(&self) -> DT;
 }
 
 
@@ -20,7 +20,7 @@ impl<'vars> ExpressionOf<'vars, Integer> for ConstInteger {
         DataType::Integer
     }
 
-    fn ty(&'vars self) -> Integer {
+    fn ty(&self) -> Integer {
         Integer
     }
 }
@@ -33,7 +33,7 @@ impl<'vars> ExpressionOf<'vars, Float> for ConstFloat {
         DataType::Float
     }
 
-    fn ty(&'vars self) -> Float {
+    fn ty(&self) -> Float {
         Float
     }
 }
@@ -44,7 +44,7 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec2 {
         DataType::Simd(FloatVec::Vec2)
     }
 
-    fn ty(&'vars self) -> FloatVec {
+    fn ty(&self) -> FloatVec {
         FloatVec::Vec2
     }
 }
@@ -55,7 +55,7 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec3 {
         DataType::Simd(FloatVec::Vec3)
     }
 
-    fn ty(&'vars self) -> FloatVec {
+    fn ty(&self) -> FloatVec {
         FloatVec::Vec3
     }
 }
@@ -66,7 +66,7 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec4 {
         DataType::Simd(FloatVec::Vec4)
     }
 
-    fn ty(&'vars self) -> FloatVec {
+    fn ty(&self) -> FloatVec {
         FloatVec::Vec4
     }
 }
@@ -78,7 +78,7 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVecN {
         DataType::Simd(self.ty())
     }
 
-    fn ty(&'vars self) -> FloatVec {
+    fn ty(&self) -> FloatVec {
         match self.0.len() {
             1 => FloatVec::Just1Float,
             2 => FloatVec::Vec2,
@@ -126,7 +126,7 @@ impl<'vars> ExpressionOf<'vars, Float> for SumOfProductsRaw<'vars> {
         DataType::Float
     }
 
-    fn ty(&'vars self) -> Float {
+    fn ty(&self) -> Float {
         Float
     }
 }
@@ -142,7 +142,7 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for SumOfProductsGrouped {
         todo!();
     }
 
-    fn ty(&'vars self) -> FloatVec {
+    fn ty(&self) -> FloatVec {
         todo!()
     }
 }
@@ -155,11 +155,11 @@ struct ConstructRaw {
     values: BTreeMap<BasisSignature, AnyExpression>
 }
 impl<'vars> ExpressionOf<'vars, Arc<MultiVectorClass>> for ConstructRaw {
-    fn get_datatype(&'vars self) -> DataType {
+    fn get_datatype(&self) -> DataType {
         DataType::MultiVector(self.multi_vector_class.clone())
     }
 
-    fn ty(&'vars self) -> Arc<MultiVectorClass> {
+    fn ty(&self) -> Arc<MultiVectorClass> {
         self.multi_vector_class.clone()
     }
 }
@@ -170,11 +170,11 @@ struct ConstructGrouped {
     values: Vec<AnyExpression>
 }
 impl<'vars> ExpressionOf<'vars, Arc<MultiVectorClass>> for ConstructGrouped {
-    fn get_datatype(&'vars self) -> DataType {
+    fn get_datatype(&self) -> DataType {
         DataType::MultiVector(self.multi_vector_class.clone())
     }
 
-    fn ty(&'vars self) -> Arc<MultiVectorClass> {
+    fn ty(&self) -> Arc<MultiVectorClass> {
         self.multi_vector_class.clone()
     }
 }
@@ -210,7 +210,7 @@ impl<'vars> ExpressionOf<'vars, DataType> for AnyExpression {
         }
     }
 
-    fn ty(&'vars self) -> DataType {
+    fn ty(&self) -> DataType {
         self.get_datatype()
     }
 }
@@ -311,11 +311,11 @@ struct RawSumOfProductsRaw {
     ), ConstFloat>
 }
 impl<'vars> ExpressionOf<'vars, Float> for RawSumOfProductsRaw {
-    fn get_datatype(&'vars self) -> DataType {
+    fn get_datatype(&self) -> DataType {
         DataType::Float
     }
 
-    fn ty(&'vars self) -> Float {
+    fn ty(&self) -> Float {
         Float
     }
 }

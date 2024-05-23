@@ -35,7 +35,7 @@ impl<'var, DT> ExpressionOf<'var, DT> for VariableInvocation<'var, DT> where
         self.var.ty.clone().into()
     }
 
-    fn ty(&'var self) -> DT {
+    fn ty(&self) -> DT {
         self.var.ty.clone()
     }
 }
