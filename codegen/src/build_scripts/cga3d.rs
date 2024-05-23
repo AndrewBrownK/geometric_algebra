@@ -80,6 +80,11 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
         "Transflector:e15,e25,e35|e4235,e4315,e4125,e3215",
         "FlectorAtInfinity:e15,e25,e35,e3215",
+
+        // TODO actually you can't be sure this is a true dilator, and not any other conformal
+        //  transformation. Because this is the AntiWedgeDot(Sphere, Sphere), and you don't
+        //  yet know if they are concentric. So if you want a distinct Dilator type, you can only
+        //  do so at the Origin using consecutive SphereAtOrigin.
         // TODO do I prefer Dilator condensed, or separated by grade?
         "Dilator:e12345|e423,e431,e412|e415,e425,e435|e235,e315,e125,e321",
 

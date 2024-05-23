@@ -5,6 +5,19 @@ authors = ["Alexander Meißner <AlexanderMeissner@gmx.net>", "Andrew Brown <Andr
 edition = "2021"
 publish = false
 
+[features]
+default = []
+# TODO most of these features are planned, not yet implemented
+wedge-is-join = []
+wedge-is-meet = []
+zero-indexed-bases = []
+prefer-blanket-impls = []
+specialize-on-blankets = ["prefer-blanket-impls"]
+
 [dependencies]
 naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }
 anyhow = "1.0.81"
+parking_lot = "0.12.2"
+bitflags = "2.5.0"
+#frunk = "0.4.2"
+async-trait = "0.1.80"

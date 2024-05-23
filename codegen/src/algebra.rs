@@ -484,7 +484,7 @@ impl MultiVectorClassRegistry {
     }
 }
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, PartialOrd, Ord)]
 pub struct MultiVectorClass {
     pub class_name: String,
     pub grouped_basis: Vec<Vec<BasisElement>>,
