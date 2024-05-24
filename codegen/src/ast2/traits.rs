@@ -168,6 +168,31 @@ impl<'impls, Vars> TraitImplBuilder<'impls, Vars, HasNotReturned> {
         return (VariableInvocation { var: variable_declaration, }, new_self);
     }
 
+    pub fn invoke_trait_22<
+        T: TraitDef_2Class_2Param,
+        Expr1: ExpressionOf<Arc<MultiVectorClass>>,
+        Expr2: ExpressionOf<Arc<MultiVectorClass>>,
+    >(&mut self, the_trait: T, expr1: Expr1, expr2: Expr2) -> ()
+        where
+
+    {
+        // self.registry.all.get(&(the_trait.na))
+
+        ()
+    }
+
+    pub fn invoke_trait_11<
+        T: TraitDef_1Class_1Param,
+        Expr1: ExpressionOf<Arc<MultiVectorClass>>,
+    >(&mut self, the_trait: T, expr1: Expr1) -> ()
+        where
+
+    {
+        // self.registry.all.get(&(the_trait.na))
+
+        ()
+    }
+
     pub fn return_expr<'var, DT, Expr: ExpressionOf<'var, DT>>(
         self, expr: Expr
     ) -> Option<TraitImplBuilder<'impls, (), HasReturned>> {

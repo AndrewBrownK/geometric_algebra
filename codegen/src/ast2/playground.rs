@@ -41,10 +41,11 @@ impl TraitDef_2Class_2Param for Expansion {
     type Other = AnyClasses;
 
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
+        mut b: TraitImplBuilder<'impls, (), HasNotReturned>,
         slf: MultiVectorParam,
         other: MultiVectorParam
     ) -> Option<TraitImplBuilder<'impls, (), HasReturned>> {
+        let anti_dual = b.invoke_trait_11(AntiDual, other);
         // let anti_dual = traits.invoke(AntiDual, (other,)).await?;
         // let anti_dual = builder.assign_var("anti_dual", anti_dual).await?;
         // let wedge = traits.invoke(Wedge, (self_, anti_dual)).await?;
