@@ -1,9 +1,9 @@
 use std::sync::Arc;
 use async_trait::async_trait;
 use crate::algebra::{MultiVectorClass, MultiVectorClassRegistry};
-use crate::ast2::MultiVectorParam;
-use crate::ast2::datatype::AnyClasses;
-use crate::ast2::expressions::TraitResult;
+use crate::ast2::{Variable};
+use crate::ast2::datatype::{AnyClasses, MultiVector};
+use crate::ast2::expressions::{MultiVectorExpr, TraitResult};
 use crate::ast2::traits::{HasNotReturned, HasReturned, InvokeTrait11, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitDefinition, TraitImplBuilder, TraitImplRegistry};
 
 
@@ -50,17 +50,17 @@ struct Expansion;
 impl TraitDef_2Class_2Param for Wedge {
     type Owner = AnyClasses;
     type Other = AnyClasses;
-    type Output = Arc<MultiVectorClass>;
+    type Output = MultiVector;
 
     fn result_type(result: &Self::Output) -> TraitResult {
         TraitResult::AnyClass(result)
     }
 
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
-        slf: MultiVectorParam,
-        other: MultiVectorParam
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>> {
+        b: TraitImplBuilder<'impls, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
         return None;
     }
 }
@@ -68,16 +68,16 @@ impl TraitDef_2Class_2Param for Wedge {
 #[async_trait]
 impl TraitDef_1Class_1Param for AntiDual {
     type Owner = AnyClasses;
-    type Output = Arc<MultiVectorClass>;
+    type Output = MultiVector;
 
     fn result_type(result: &Self::Output) -> TraitResult {
         TraitResult::AnyClass(result)
     }
 
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
-        slf: MultiVectorParam
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>> {
+        b: TraitImplBuilder<'impls, HasNotReturned>,
+        slf: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
         return None;
     }
 }
@@ -86,21 +86,27 @@ impl TraitDef_1Class_1Param for AntiDual {
 impl TraitDef_2Class_2Param for Expansion {
     type Owner = AnyClasses;
     type Other = AnyClasses;
-    type Output = Arc<MultiVectorClass>;
+    type Output = MultiVector;
 
     fn result_type(result: &Self::Output) -> TraitResult {
         TraitResult::AnyClass(result)
     }
 
     async fn general_impl<'impls>(
-        mut b: TraitImplBuilder<'impls, (), HasNotReturned>,
-        slf: MultiVectorParam,
-        other: MultiVectorParam
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>> {
+        mut b: TraitImplBuilder<'impls, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
         // TODO so here's an idea... raw expressions should be limited to 1, and
         //  creating a var is how you make them cloneable/copyable
-        let anti_dual = b.invoke_trait(AntiDual, other).await?;
-        let (anti_dual, mut b) = b.assign_var("anti_dual", anti_dual);
+        let anti_dual = AntiDual::invoke(&mut b, other).await?;
+        let anti_dual = b.variable("anti_dual", anti_dual);
+        let wedge = Wedge::invoke(&mut b, slf, anti_dual).await?;
+
+
+
+        // TODO I might not need to consume the builder if I can read the type from the passed in expression
+        // let (anti_dual, mut b) = b.var("anti_dual", anti_dual);
         // TODO if it really doesn't like duplicate 'invoke_trait' that much, I might have to
         //  move that to the trait defs themselves. Which is fine. Could change the method name
         //  to 'invoke' instead of 'invoke_trait' and that could be nice.

@@ -4,19 +4,19 @@ use async_trait::async_trait;
 use std::marker::PhantomData;
 use parking_lot::RwLock;
 use crate::algebra::MultiVectorClass;
-use crate::ast2::datatype::{ClassesFromRegistry, DataType};
-use crate::ast2::{MultiVectorParam, RawVariableDeclaration, VariableDeclaration, VariableInvocation};
-use crate::ast2::expressions::{AnyExpression, ExpressionOf, TraitResultType, TraitResult, ClassExpr, InstanceBy, Expression2};
+use crate::ast2::datatype::{ExpressionType, ClassesFromRegistry, MultiVector};
+use crate::ast2::{MultiVectorParam, RawVariableDeclaration, RawVariableInvocation, Variable};
+use crate::ast2::expressions::{TraitResultType, TraitResult, MultiVectorExpr, Expression, AnyExpression};
 
 enum TraitTypeConsensus {
     NoVotes,
-    AllAgree(DataType),
+    AllAgree(ExpressionType),
     Disagreement
 }
 
 enum TraitParam {
     Generic(TraitConstraint),
-    Fixed(DataType)
+    Fixed(ExpressionType)
 }
 
 pub struct TraitConstraint {
@@ -55,9 +55,9 @@ pub trait TraitDef_1Class_0Param {
     type Output: TraitResultType;
     fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
+        b: TraitImplBuilder<'impls, HasNotReturned>,
         owner: Arc<MultiVectorClass>,
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>>;
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
 }
 
 #[async_trait]
@@ -67,9 +67,9 @@ pub trait TraitDef_1Class_1Param {
     type Output: TraitResultType;
     fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
-        slf: MultiVectorParam,
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>>;
+        b: TraitImplBuilder<'impls, HasNotReturned>,
+        slf: Variable<MultiVector>,
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
 }
 
 #[async_trait]
@@ -80,10 +80,10 @@ pub trait TraitDef_2Class_1Param {
     type Output: TraitResultType;
     fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
-        slf: MultiVectorParam,
-        other: Arc<MultiVectorParam>,
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>>;
+        b: TraitImplBuilder<'impls, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: MultiVector,
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
 }
 
 #[async_trait]
@@ -94,26 +94,20 @@ pub trait TraitDef_2Class_2Param {
     type Output: TraitResultType;
     fn result_type(result: Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
-        b: TraitImplBuilder<'impls, (), HasNotReturned>,
-        slf: MultiVectorParam,
-        other: MultiVectorParam,
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>>;
-}
-
-
-pub struct TraitDefBuilder {
-    // TODO
+        b: TraitImplBuilder<'impls, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>,
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
 }
 
 
 pub struct RawTraitImplementation {
     definition: Arc<RawTraitDefinition>,
-    output: DataType,
     // TODO transitive dependencies to avoid cycles (maybe just a feature of the builder)
     dependencies: Vec<Arc<RawTraitImplementation>>,
     owner: TraitParam,
     owner_is_param: bool,
-    other_params: Vec<DataType>,
+    other_params: Vec<TraitParam>,
     variables: FastHashMap<String, RawVariableDeclaration>,
     return_expression: AnyExpression,
     specialized_override: bool,
@@ -134,65 +128,105 @@ pub struct HasNotReturned;
 
 pub struct HasReturned;
 
-pub struct TraitImplBuilder<'impls, Vars, ReturnStatus> {
+pub enum CommentOrVariableDeclaration {
+    Comment(String),
+    VarDec(Arc<RawVariableDeclaration>)
+}
+
+pub struct TraitImplBuilder<'impls, ReturnStatus> {
     registry: &'impls TraitImplRegistry,
     trait_def: Arc<RawTraitDefinition>,
-    variables: Vars,
-    raw_variables: Vec<(String, RawVariableDeclaration)>,
+    inline_dependencies: bool,
+    variables: FastHashMap<String, Arc<RawVariableDeclaration>>,
+    lines: Vec<CommentOrVariableDeclaration>,
+    return_comment: Option<String>,
     return_expr: Option<AnyExpression>,
     return_status: PhantomData<ReturnStatus>,
 }
 
-impl<'impls, Vars> TraitImplBuilder<'impls, Vars, HasNotReturned> {
-    pub fn assign_var<'vars, Ty, Expr, V>(
-        mut self, var_name: V, var_expr: Expr
-    ) -> (
-        VariableInvocation<'vars, Ty>,
-        TraitImplBuilder<'impls, (Arc<VariableDeclaration<'vars, Ty>>, Vars), HasNotReturned>
-    ) where
-        V: Into<String>,
-        Expr: Expression2<Ty>,
-        Ty: Clone + Into<DataType> {
+impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
 
-        // TODO obviously check for unique variable name, and mangle if necessary
-        let fixed_name = var_name;
-        let ty: Ty = var_expr.ty().clone();
-        let expr = Some(var_expr.into());
-        let variable_declaration = VariableDeclaration {
-            name: fixed_name.clone(),
-            ty,
-            phantom: PhantomData,
-            expr,
-        };
-        self.raw_variables.push((fixed_name.clone(), variable_declaration.clone().into()));
-        let variable_declaration = Arc::new(variable_declaration);
-        let mut new_self = TraitImplBuilder {
-            registry: self.registry,
-            trait_def: self.trait_def,
-            variables: (variable_declaration.clone(), self.variables),
-            raw_variables: self.raw_variables,
-            return_expr: self.return_expr,
-            return_status: self.return_status,
-        };
-        return (VariableInvocation { var: variable_declaration, }, new_self);
+    fn make_var_name_unique(&mut self, var_name: String) -> String {
+        // TODO
+        var_name
     }
 
-    pub fn return_expr<'var, DT, Expr: ExpressionOf<'var, DT>>(
+    pub fn comment<C: Into<String>>(&mut self, comment: C) {
+        self.lines.push(CommentOrVariableDeclaration::Comment(comment.into()))
+    }
+
+    pub fn variable<
+        'var,
+        V: Into<String>,
+        ExprType,
+        Expr: Expression<ExprType>
+    >(
+        &'var mut self,
+        var_name: V,
+        expr: Expr
+    ) -> Variable<'var, ExprType> {
+        let var_name = var_name.into();
+        let unique_name = self.make_var_name_unique(var_name);
+        let decl = Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: unique_name.clone(),
+            expr: Some(expr.into_any_expression()),
+        });
+        let existing = self.variables.insert(unique_name, decl.clone());
+        assert!(existing.is_none(), "Variable {unique_name} is already taken");
+        self.lines.push(CommentOrVariableDeclaration::VarDec(decl.clone()));
+        Variable {
+            expr_type: PhantomData,
+            decl: decl.as_ref(),
+        }
+    }
+
+    // pub fn comment_variable<
+    //     C: Into<String>,
+    //     V: Into<String>,
+    //     Expr
+    // >(
+    //     &mut self,
+    //     comment: C,
+    //     var_name: V,
+    //     expr: Expr
+    // ) -> Variable<Expr> {
+    // }
+
+
+    pub fn return_expr<ExprType, Expr: Expression<ExprType>>(
         self, expr: Expr
-    ) -> Option<TraitImplBuilder<'impls, (), HasReturned>> {
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
         return Some(TraitImplBuilder {
             registry: self.registry,
             trait_def: self.trait_def,
-            variables: (),
-            raw_variables: self.raw_variables,
-            return_expr: Some(expr.into()),
+            inline_dependencies: false,
+            variables: self.variables,
+            lines: self.lines,
+            return_comment: None,
+            return_expr: Some(expr.into_any_expression()),
+            return_status: PhantomData,
+        })
+    }
+
+    pub fn comment_return<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
+        self, comment: C, expr: Expr
+    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
+        return Some(TraitImplBuilder {
+            registry: self.registry,
+            trait_def: self.trait_def,
+            inline_dependencies: false,
+            variables: self.variables,
+            lines: self.lines,
+            return_comment: Some(comment.into()),
+            return_expr: Some(expr.into_any_expression()),
             return_status: PhantomData,
         })
     }
 }
 
 
-impl<'impls> TraitImplBuilder<'impls, (), HasReturned> {
+impl<'impls> TraitImplBuilder<'impls, HasReturned> {
     fn register(self, impls: &mut TraitImplRegistry) {
         let thing = &mut impls.all;
         let trait_name = self.trait_def.name.clone();
@@ -203,8 +237,24 @@ impl<'impls> TraitImplBuilder<'impls, (), HasReturned> {
 }
 
 
-impl<'impls> From<TraitImplBuilder<'impls, (), HasReturned>> for RawTraitImplementation {
-    fn from(value: TraitImplBuilder<'impls, (), HasReturned>) -> Self {
+
+
+
+
+
+
+
+#[async_trait]
+pub trait InvokeTrait10: TraitDef_1Class_0Param {
+    async fn invoke(
+        b: &mut TraitImplBuilder<HasNotReturned>,
+        owner: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
+}
+
+#[async_trait]
+impl<T: TraitDef_1Class_0Param> InvokeTrait10 for T {
+    async fn invoke(b: &mut TraitImplBuilder<HasNotReturned>, owner: MultiVector) -> Option<<Self::Output as TraitResultType>::ExprType> {
         todo!()
     }
 }
@@ -214,38 +264,17 @@ impl<'impls> From<TraitImplBuilder<'impls, (), HasReturned>> for RawTraitImpleme
 
 
 #[async_trait]
-pub trait InvokeTrait10<T: TraitDef_1Class_0Param> {
-    async fn invoke_trait(
-        &mut self, t: T, owner: Arc<MultiVectorClass>
-    ) -> Option<<T::Output as TraitResultType>::ExprType>;
-}
-
-#[async_trait]
-impl<'impls, Vars, T: TraitDef_1Class_0Param> InvokeTrait10<T> for TraitImplBuilder<'impls, Vars, HasNotReturned> {
-    async fn invoke_trait(&mut self, t: T, owner: Arc<MultiVectorClass>) -> Option<<T::Output as TraitResultType>::ExprType> {
-        // TODO add trait dependency, and/or here might be the spot for trait inlining
-
-        todo!()
-    }
-}
-
-
-
-
-
-#[async_trait]
-pub trait InvokeTrait11<T: TraitDef_1Class_1Param> {
-    async fn invoke_trait<
-        Owner: Into<InstanceBy>>(
-        &mut self, t: T, owner: Owner
-    ) -> Option<<T::Output as TraitResultType>::ExprType>;
+pub trait InvokeTrait11: TraitDef_1Class_1Param {
+    async fn invoke<Expr: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>,
+        owner: Expr
+    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
 }
 #[async_trait]
-impl<'impls, Vars, T: TraitDef_1Class_1Param> InvokeTrait11<T> for TraitImplBuilder<'impls, Vars, HasNotReturned> {
-    async fn invoke_trait<Owner: Into<InstanceBy>>(&mut self, t: T, owner: Owner) -> Option<<T::Output as TraitResultType>::ExprType> {
-        // TODO add trait dependency, and/or here might be the spot for trait inlining
-        let owner = owner.into();
-
+impl<T: TraitDef_1Class_1Param> InvokeTrait11 for T {
+    async fn invoke<Expr: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
+    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
         todo!()
     }
 }
@@ -254,23 +283,34 @@ impl<'impls, Vars, T: TraitDef_1Class_1Param> InvokeTrait11<T> for TraitImplBuil
 
 
 #[async_trait]
-pub trait InvokeTrait21<T: TraitDef_2Class_1Param> {
-    async fn invoke_trait<
-        Owner: Into<InstanceBy>>(
-        &mut self, t: T, owner: Owner, other: Arc<MultiVectorClass>
-    ) -> Option<<T::Output as TraitResultType>::ExprType>;
+pub trait InvokeTrait21: TraitDef_2Class_1Param {
+    async fn invoke<Expr: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>,
+        owner: Expr,
+        other: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
 }
 #[async_trait]
-pub trait InvokeTrait22<T: TraitDef_2Class_2Param> {
-    async fn invoke_trait<
-        Owner: Into<InstanceBy>,
-        Other: Into<InstanceBy>>(
-        &mut self, t: T, owner: Owner, other: Other
-    ) -> Option<<T::Output as TraitResultType>::ExprType>;
+impl<T: TraitDef_2Class_1Param> InvokeTrait21 for T {
+    async fn invoke<Expr: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr, other: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+        todo!()
+    }
 }
 #[async_trait]
-impl<'impls, Vars, T: TraitDef_2Class_2Param> InvokeTrait22<T> for TraitImplBuilder<'impls, Vars, HasNotReturned> {
-    async fn invoke_trait<Owner: Into<InstanceBy>, Other: Into<InstanceBy>>(&mut self, t: T, owner: Owner, other: Other) -> Option<<T::Output as TraitResultType>::ExprType> {
+pub trait InvokeTrait22: TraitDef_2Class_2Param {
+    async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>,
+        owner: Expr1,
+        other: Expr2
+    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
+}
+#[async_trait]
+impl<T: TraitDef_2Class_2Param> InvokeTrait22 for T {
+    async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr1, other: Expr2
+    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
         todo!()
     }
 }
