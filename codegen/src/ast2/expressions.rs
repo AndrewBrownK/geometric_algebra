@@ -17,37 +17,33 @@ enum ClassGroup {
     Vec4(BasisSignature, BasisSignature, BasisSignature, BasisSignature)
 }
 
-pub trait TraitResultType: Debug {
+pub trait TraitResultType: Debug + Sized {
     type ExprType;
     fn into_expr_10(self, trait_name: TraitName, owner: MultiVector) -> Self::ExprType {
-        panic!("into_expr_0 is not yet supported for {self:?}, but needed for {trait_name}")
+        panic!("into_expr_0 is not yet supported for {self:?}, but needed for {trait_name:?}")
     }
     fn into_expr_11(self, trait_name: TraitName, owner: MultiVectorExpr) -> Self::ExprType {
-        panic!("into_expr_11 is not yet supported for {self:?}, but needed for {trait_name}")
+        panic!("into_expr_11 is not yet supported for {self:?}, but needed for {trait_name:?}")
     }
     fn into_expr_21(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVector) -> Self::ExprType {
-        panic!("into_expr_21 is not yet supported for {self:?}, but needed for {trait_name}")
+        panic!("into_expr_21 is not yet supported for {self:?}, but needed for {trait_name:?}")
     }
     fn into_expr_22(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVectorExpr) -> Self::ExprType {
-        panic!("into_expr_22 is not yet supported for {self:?}, but needed for {trait_name}")
+        panic!("into_expr_22 is not yet supported for {self:?}, but needed for {trait_name:?}")
     }
 
 }
 impl TraitResultType for Integer {
     type ExprType = IntExpr;
     fn into_expr_10(self, trait_name: TraitName, owner: MultiVector) -> IntExpr {
-        IntExpr {
-            via: IntExpr::TraitInvoke10ToInt(trait_name, owner),
-        }
+        IntExpr::TraitInvoke10ToInt(trait_name, owner)
     }
 }
 impl TraitResultType for Float {
     type ExprType = FloatExpr;
 
     fn into_expr_11(self, trait_name: TraitName, owner: MultiVectorExpr) -> FloatExpr {
-        FloatExpr {
-            via: FloatExpr::TraitInvoke11ToFloat(trait_name, owner),
-        }
+        FloatExpr::TraitInvoke11ToFloat(trait_name, owner)
     }
 }
 impl TraitResultType for MultiVector {
@@ -57,21 +53,21 @@ impl TraitResultType for MultiVector {
         MultiVectorExpr {
             // TODO result of trait
             mv_class: todo!(),
-            expr: MultiVectorVia::TraitInvoke11ToClass(trait_name, *owner),
+            expr: Box::new(MultiVectorVia::TraitInvoke11ToClass(trait_name, owner)),
         }
     }
     fn into_expr_21(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVector) -> MultiVectorExpr {
         MultiVectorExpr {
             // TODO result of trait
             mv_class: todo!(),
-            expr: MultiVectorVia::TraitInvoke21ToClass(trait_name, *owner, other),
+            expr: Box::new(MultiVectorVia::TraitInvoke21ToClass(trait_name, owner, other)),
         }
     }
     fn into_expr_22(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVectorExpr) -> MultiVectorExpr {
         MultiVectorExpr {
             // TODO result of trait
             mv_class: todo!(),
-            expr: MultiVectorVia::TraitInvoke22ToClass(trait_name, *owner, other),
+            expr: Box::new(MultiVectorVia::TraitInvoke22ToClass(trait_name, owner, other)),
         }
     }
 }
@@ -97,9 +93,9 @@ pub enum IntExpr {
 pub enum FloatExpr {
     Variable(RawVariableInvocation),
     Zero, One, NegOne, Two, Half,
-    AccessVec2(Vec2Expr, u8),
-    AccessVec3(Vec3Expr, u8),
-    AccessVec4(Vec4Expr, u8),
+    AccessVec2(Box<Vec2Expr>, u8),
+    AccessVec3(Box<Vec3Expr>, u8),
+    AccessVec4(Box<Vec4Expr>, u8),
     // e.g. UnitizedNorm
     TraitInvoke11ToFloat(TraitName, MultiVectorExpr),
     // TODO sum of o products
@@ -161,7 +157,7 @@ pub enum AnyExpression {
 }
 
 
-pub trait Expression<ExprType> {
+pub trait Expression<ExprType>: Send {
     fn into_any_expression(self) -> AnyExpression;
     fn strong_expression_type(&self) -> ExprType;
     fn soft_expression_type(&self) -> ExpressionType;
@@ -245,7 +241,7 @@ impl Expression<MultiVector> for MultiVectorExpr {
     }
 }
 
-impl Expression<Integer> for Variable<Integer> {
+impl<'var> Expression<Integer> for Variable<'var, Integer> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Int(IntExpr::Variable(RawVariableInvocation { decl }))
@@ -259,7 +255,7 @@ impl Expression<Integer> for Variable<Integer> {
         ExpressionType::Int(Integer)
     }
 }
-impl Expression<Float> for Variable<Float> {
+impl<'var> Expression<Float> for Variable<'var, Float> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Float(FloatExpr::Variable(RawVariableInvocation { decl }))
@@ -273,7 +269,7 @@ impl Expression<Float> for Variable<Float> {
         ExpressionType::Float(Float)
     }
 }
-impl Expression<Vec2> for Variable<Vec2> {
+impl<'var> Expression<Vec2> for Variable<'var, Vec2> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec2(Vec2Expr::Variable(RawVariableInvocation { decl }))
@@ -287,7 +283,7 @@ impl Expression<Vec2> for Variable<Vec2> {
         ExpressionType::Vec2(Vec2)
     }
 }
-impl Expression<Vec3> for Variable<Vec3> {
+impl<'var> Expression<Vec3> for Variable<'var, Vec3> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec3(Vec3Expr::Variable(RawVariableInvocation { decl }))
@@ -301,7 +297,7 @@ impl Expression<Vec3> for Variable<Vec3> {
         ExpressionType::Vec3(Vec3)
     }
 }
-impl Expression<Vec4> for Variable<Vec4> {
+impl<'var> Expression<Vec4> for Variable<'var, Vec4> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec4(Vec4Expr::Variable(RawVariableInvocation { decl }))
@@ -315,7 +311,7 @@ impl Expression<Vec4> for Variable<Vec4> {
         ExpressionType::Vec4(Vec4)
     }
 }
-impl Expression<MultiVector> for Variable<MultiVector> {
+impl<'var> Expression<MultiVector> for Variable<'var, MultiVector> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Class(MultiVectorExpr {

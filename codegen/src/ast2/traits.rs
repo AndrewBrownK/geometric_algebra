@@ -4,9 +4,9 @@ use async_trait::async_trait;
 use std::marker::PhantomData;
 use parking_lot::RwLock;
 use crate::algebra::MultiVectorClass;
-use crate::ast2::datatype::{ExpressionType, ClassesFromRegistry, MultiVector};
-use crate::ast2::{MultiVectorParam, RawVariableDeclaration, RawVariableInvocation, Variable};
-use crate::ast2::expressions::{TraitResultType, TraitResult, MultiVectorExpr, Expression, AnyExpression};
+use crate::ast2::datatype::{ExpressionType, ClassesFromRegistry, MultiVector, AnyClasses};
+use crate::ast2::{RawVariableDeclaration, Variable};
+use crate::ast2::expressions::{TraitResultType, TraitResult, Expression, AnyExpression};
 
 enum TraitTypeConsensus {
     NoVotes,
@@ -51,8 +51,9 @@ pub struct TraitDefinition<Inherits, Owner, Inputs, /*Output*/> {
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_1Class_0Param {
-    type Owner: ClassesFromRegistry;
+    type Owner: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
+    // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
@@ -63,41 +64,60 @@ pub trait TraitDef_1Class_0Param {
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_1Class_1Param {
-    type Owner: ClassesFromRegistry;
+    type Owner: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
+    // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
+    async fn invoke<Expr: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
+    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+        todo!()
+    }
 }
 
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_2Class_1Param {
-    type Owner: ClassesFromRegistry;
-    type Other: ClassesFromRegistry;
+    type Owner: ClassesFromRegistry = AnyClasses;
+    type Other: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
+    // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
+    async fn invoke<Expr: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr, other: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+        todo!()
+    }
 }
 
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_2Class_2Param {
-    type Owner: ClassesFromRegistry;
-    type Other: ClassesFromRegistry;
+    type Owner: ClassesFromRegistry = AnyClasses;
+    type Other: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
-    fn result_type(result: Self::Output) -> TraitResult;
+    // TODO I feel that this bit is still awkward
+    fn result_type(result: &Self::Output) -> TraitResult;
     async fn general_impl<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
+
+    async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr1, other: Expr2
+    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+        todo!()
+    }
 }
 
 
@@ -176,8 +196,8 @@ impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
         assert!(existing.is_none(), "Variable {unique_name} is already taken");
         self.lines.push(CommentOrVariableDeclaration::VarDec(decl.clone()));
         Variable {
-            expr_type: PhantomData,
-            decl: decl.as_ref(),
+            expr_type: expr.strong_expression_type(),
+            decl: &decl,
         }
     }
 
@@ -228,11 +248,11 @@ impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
 
 impl<'impls> TraitImplBuilder<'impls, HasReturned> {
     fn register(self, impls: &mut TraitImplRegistry) {
-        let thing = &mut impls.all;
-        let trait_name = self.trait_def.name.clone();
-        let class_names = vec![];
-        let raw = Arc::new(self.into());
-        thing.insert((trait_name, class_names), raw);
+        // let thing = &mut impls.all;
+        // let trait_name = self.trait_def.name.clone();
+        // let class_names = vec![];
+        // let raw = Arc::new(self.into());
+        // thing.insert((trait_name, class_names), raw);
     }
 }
 
@@ -241,76 +261,3 @@ impl<'impls> TraitImplBuilder<'impls, HasReturned> {
 
 
 
-
-
-
-#[async_trait]
-pub trait InvokeTrait10: TraitDef_1Class_0Param {
-    async fn invoke(
-        b: &mut TraitImplBuilder<HasNotReturned>,
-        owner: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
-}
-
-#[async_trait]
-impl<T: TraitDef_1Class_0Param> InvokeTrait10 for T {
-    async fn invoke(b: &mut TraitImplBuilder<HasNotReturned>, owner: MultiVector) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
-    }
-}
-
-
-
-
-
-#[async_trait]
-pub trait InvokeTrait11: TraitDef_1Class_1Param {
-    async fn invoke<Expr: Expression<MultiVector>>(
-        b: &mut TraitImplBuilder<HasNotReturned>,
-        owner: Expr
-    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
-}
-#[async_trait]
-impl<T: TraitDef_1Class_1Param> InvokeTrait11 for T {
-    async fn invoke<Expr: Expression<MultiVector>>(
-        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
-    }
-}
-
-
-
-
-#[async_trait]
-pub trait InvokeTrait21: TraitDef_2Class_1Param {
-    async fn invoke<Expr: Expression<MultiVector>>(
-        b: &mut TraitImplBuilder<HasNotReturned>,
-        owner: Expr,
-        other: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
-}
-#[async_trait]
-impl<T: TraitDef_2Class_1Param> InvokeTrait21 for T {
-    async fn invoke<Expr: Expression<MultiVector>>(
-        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr, other: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
-    }
-}
-#[async_trait]
-pub trait InvokeTrait22: TraitDef_2Class_2Param {
-    async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
-        b: &mut TraitImplBuilder<HasNotReturned>,
-        owner: Expr1,
-        other: Expr2
-    ) -> Option<<Self::Output as TraitResultType>::ExprType>;
-}
-#[async_trait]
-impl<T: TraitDef_2Class_2Param> InvokeTrait22 for T {
-    async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
-        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr1, other: Expr2
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
-    }
-}
