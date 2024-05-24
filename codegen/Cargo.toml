@@ -10,9 +10,9 @@ default = []
 # TODO most of these features are planned, not yet implemented
 wedge-is-join = []
 wedge-is-meet = []
-zero-indexed-bases = []
 prefer-blanket-impls = []
 specialize-on-blankets = ["prefer-blanket-impls"]
+very-large-bases = []
 
 [dependencies]
 naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }

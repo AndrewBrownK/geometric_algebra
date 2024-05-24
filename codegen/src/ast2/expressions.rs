@@ -6,7 +6,7 @@ use crate::ast2::basis::BasisSignature;
 use crate::ast2::datatype::{DataType, Float, FloatVec, Integer};
 use crate::ast2::RawVariableInvocation;
 
-pub trait ExpressionOf<'vars, DT>: PartialEq + Into<AnyExpression>  {
+pub trait ExpressionOf<DT>: PartialEq + Into<AnyExpression>  {
     fn get_datatype(&self) -> DataType;
     fn ty(&self) -> DT;
 }
@@ -14,8 +14,86 @@ pub trait ExpressionOf<'vars, DT>: PartialEq + Into<AnyExpression>  {
 
 
 
+struct TraitName {
+    name: String,
+}
+enum ClassGroup {
+    JustFloat(BasisSignature),
+    Vec2(BasisSignature, BasisSignature),
+    Vec3(BasisSignature, BasisSignature, BasisSignature),
+    Vec4(BasisSignature, BasisSignature, BasisSignature, BasisSignature)
+}
 
 
+
+
+struct IntExpr {
+    via: IntBy
+}
+enum IntBy {
+    Variable(RawVariableInvocation),
+    Literal(u32),
+    // e.g. Grade
+    TraitInvoke10ToInt(TraitName, InstanceBy),
+}
+struct FloatExpr {
+    via: FloatBy
+}
+enum FloatBy {
+    Variable(RawVariableInvocation),
+    Zero,
+    One,
+    NegOne,
+    Two,
+    Half,
+    AccessVec2(Vec2By, u8),
+    AccessVec3(Vec3By, u8),
+    AccessVec4(Vec4By, u8),
+    // e.g. UnitizedNorm
+    TraitInvoke11ToFloat(TraitName, InstanceBy),
+}
+struct Vec2Expr {
+    via: Vec2By
+}
+enum Vec2By {
+    Variable(RawVariableInvocation),
+    Gather1(FloatBy),
+    Gather2(FloatBy, FloatBy),
+}
+struct Vec3Expr {
+    via: Vec3By
+}
+enum Vec3By {
+    Variable(RawVariableInvocation),
+    Gather1(FloatBy),
+    Gather3(FloatBy, FloatBy, FloatBy),
+}
+struct Vec4Expr {
+    via: Vec4By
+}
+enum Vec4By {
+    Variable(RawVariableInvocation),
+    Gather1(FloatBy),
+    Gather4(FloatBy, FloatBy, FloatBy, FloatBy),
+}
+struct ClassExpr {
+    via: InstanceBy
+}
+enum ClassGroupBy {
+    JustFloat(FloatBy),
+    Vec2(Vec2By),
+    Vec3(Vec3By),
+    Vec4(Vec4By)
+}
+struct ClassElementBy(BasisSignature, FloatBy);
+enum InstanceBy {
+    Variable(RawVariableInvocation),
+    Construct(Vec<ClassGroupBy>),
+    // e.g. Into
+    TraitInvoke21ToClass(TraitName, InstanceBy),
+    // e.g. Wedge
+    TraitInvoke22ToClass(TraitName, InstanceBy, InstanceBy)
+}
 
 
 
