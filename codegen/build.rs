@@ -56,7 +56,7 @@ impl BasisSignature {
             }
         }
 
-        let mut line = format!("    pub const e{combined_basis}: BasisSignature = BasisSignature::from_bits_retain(0b{num:016b});\n");
+        let line = format!("    pub const e{combined_basis}: BasisSignature = BasisSignature::from_bits_retain(0b{num:016b});\n");
         f.write(line.as_bytes()).unwrap();
     }
 

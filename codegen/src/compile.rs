@@ -562,7 +562,7 @@ pub fn derive_product<'a>(name: &'static str, product: &Product, parameter_a: &P
     // Needed (for example) in order to get geometric product on Motor x Line
     // without having to predefine every intermediate type of product
 
-    let mut result_class = registry.get_at_least(&result_signature);
+    let result_class = registry.get_at_least(&result_signature);
 
     let result_class = match result_class {
         Some(rc) => rc,
@@ -1567,7 +1567,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
         let access_scalar = ExpressionContent::Access(Box::new(variable(&scalar_param)), 0);
         let access_anti_scalar = ExpressionContent::Access(Box::new(variable(&anti_scalar_param)), 0);
 
-        let mut construct_scalar = |a: ExpressionContent<'r>| {
+        let construct_scalar = |a: ExpressionContent<'r>| {
             return Expression {
                 size: 1,
                 data_type_hint: Some(scalar_param.data_type.clone()),
@@ -1588,7 +1588,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         };
 
-        let mut construct_anti_scalar = |a: ExpressionContent<'r>| {
+        let construct_anti_scalar = |a: ExpressionContent<'r>| {
             return Expression {
                 size: 1,
                 data_type_hint: Some(anti_scalar_param.data_type.clone()),
@@ -1609,7 +1609,7 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         };
 
-        let mut construct_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+        let construct_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
             return Expression {
                 size: 1,
                 data_type_hint: Some(dual_num_param.data_type.clone()),
@@ -1635,17 +1635,17 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             };
         };
 
-        let mut return_scalar = |a: ExpressionContent<'r>| {
+        let return_scalar = |a: ExpressionContent<'r>| {
             return AstNode::ReturnStatement {
                 expression: Box::new(construct_scalar(a)),
             };
         };
-        let mut return_anti_scalar = |a: ExpressionContent<'r>| {
+        let return_anti_scalar = |a: ExpressionContent<'r>| {
             return AstNode::ReturnStatement {
                 expression: Box::new(construct_anti_scalar(a)),
             };
         };
-        let mut return_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
+        let return_dual_num = |a: ExpressionContent<'r>, b: ExpressionContent<'r>| {
             return AstNode::ReturnStatement {
                 expression: Box::new(construct_dual_num(a, b)),
             };
@@ -2298,15 +2298,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
             // let flat_weight_squared = self.trait_impls.get_single_invocation("WeightNormSquared", variable(&param_a))?;
             // let add_stuff = self.trait_impls.get_pair_invocation("Add", round_bulk_squared, flat_weight_squared)?;
 
-
-
-
-            let center = match self.trait_impls.get_single_invocation("Center", variable(&param_a)) {
-                None => continue,
-                Some(c) => c
-            };
-            let d = self.algebra.represented_dimensions();
-            let projective_basis = BasisElement::from_index(1 << d as BasisElementIndex);
 
             let center_norm_squared = "CenterNormSquared";
             let center_norm = "CenterNorm";
@@ -3800,7 +3791,6 @@ impl<'r, GA: GeometricAlgebraTrait> CodeGenerator<'r, GA> {
                 trait_names.insert(name.to_string());
             }
         }
-        let is_cga = self.algebra.algebra_name().starts_with("cga");
         for name in &trait_names {
             let is_weight = name.contains("Weight");
             let is_bulk = name.contains("Bulk");

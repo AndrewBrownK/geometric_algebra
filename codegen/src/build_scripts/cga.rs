@@ -1,9 +1,9 @@
 use std::collections::BTreeMap;
 use std::path::Path;
-use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
+
+use crate::algebra::{MultiVectorClassRegistry, read_multi_vector_from_str};
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
-use crate::algebra::{GeometricAlgebraTrait, MultiVectorClassRegistry, read_multi_vector_from_str};
 use crate::compile::CodeGenerator;
 use crate::emit::Emitter;
 use crate::shader_support::emit_shader_support;

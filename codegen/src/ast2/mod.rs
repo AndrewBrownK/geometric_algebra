@@ -1,8 +1,5 @@
-use std::marker::PhantomData;
 use std::sync::Arc;
 
-use crate::algebra::MultiVectorClass;
-use crate::ast2::datatype::ClassesFromRegistry;
 use crate::ast2::expressions::AnyExpression;
 
 mod basis;

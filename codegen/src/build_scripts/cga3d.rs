@@ -1,8 +1,6 @@
 use std::collections::BTreeMap;
-use std::io::Write;
 
 use crate::algebra::dialect::Dialect;
-use crate::algebra::GeometricAlgebraTrait;
 use crate::build_scripts::cga::cga_script;
 
 const CGA3D: &str = "cga3d";
@@ -162,7 +160,8 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 #[cfg(test)]
 mod test {
     use std::path::Path;
-    use crate::build_scripts::cga3d::{CGA3D, CGA3D_CRATE_PREFIX, script_custom};
+
+    use crate::build_scripts::cga3d::{CGA3D, CGA3D_CRATE_PREFIX};
     use crate::validate::{validate_glsl, validate_wgsl};
 
     #[test]

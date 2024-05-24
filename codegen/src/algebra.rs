@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display, Formatter, Write};
+use std::fmt::{Debug, Display, Formatter};
 use crate::algebra::dialect::Dialect;
 use crate::ast::{DataType, Parameter};
 use basis_element::{BasisElement, BasisElementIndex};
@@ -185,7 +185,7 @@ impl Involution {
             let infinity = (1 as BasisElementIndex) << (dimensions - 1);
             result.push((
                 "ConformalConjugate",
-                involution.negated(|grade, index| {
+                involution.negated(|_, index| {
                     (index & infinity) == infinity
                 }),
                 "\nConformal Conjugates\nSee chapter 4.5.4 of the book (page 204).",
@@ -312,7 +312,7 @@ impl Product {
         let scalar_result_only: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
             product_grade == 0 && (factor_a_grade == factor_b_grade)
         };
-        let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, factor_a_grade, factor_b_grade, product_grade| {
+        let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, _, _, product_grade| {
             product_grade == max_grade
         };
 
@@ -492,7 +492,7 @@ pub struct MultiVectorClass {
 
 pub fn read_multi_vector_from_str<GA: GeometricAlgebraTrait>(multi_vector_descriptor: &str, algebra: &GA) -> MultiVectorClass {
     let mut multi_vector_descriptor_iter = multi_vector_descriptor.split(':');
-    let mut class_name = multi_vector_descriptor_iter.next().unwrap().to_owned();
+    let class_name = multi_vector_descriptor_iter.next().unwrap().to_owned();
     let mvc = MultiVectorClass {
         class_name,
         grouped_basis: multi_vector_descriptor_iter

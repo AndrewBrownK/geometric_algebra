@@ -1,4 +1,3 @@
-use std::io::Write;
 use crate::ast::GatherData;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent, Parameter},
@@ -240,8 +239,8 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
             collector.write_all(match &expression.content {
                 ExpressionContent::Add(_, _) => b" + ",
                 ExpressionContent::Subtract(_, _) => b" - ",
-                ExpressionContent::Multiply(_, r) => b" * ",
-                ExpressionContent::Divide(_, r) => b" / ",
+                ExpressionContent::Multiply(_, _) => b" * ",
+                ExpressionContent::Divide(_, _) => b" / ",
                 ExpressionContent::LessThan(_, _) => b" < ",
                 ExpressionContent::Equal(_, _) => b" == ",
                 ExpressionContent::LogicAnd(_, _) => b" & ",

@@ -201,7 +201,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
             let mut b = b.clone();
             a.index = a.index & non_projective;
             b.index = b.index & non_projective;
-            let mut result = a.primitive_product(&b, &self.surface_generator_squares);
+            let result = a.primitive_product(&b, &self.surface_generator_squares);
             assert_eq!(result.index & projective, 0);
             return vec![result];
         }
@@ -257,7 +257,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         let a = self.right_complement(a);
         let b = self.right_complement(b);
         let mut results = self.product(&a, &b);
-        for mut r in results.iter_mut() {
+        for r in results.iter_mut() {
             *r = self.left_complement(&r);
         }
         return results;

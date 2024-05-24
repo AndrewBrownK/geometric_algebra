@@ -1,11 +1,8 @@
-use std::collections::{BTreeMap, BTreeSet};
-use crate::algebra::basis_element::BasisElement;
+use std::collections::BTreeMap;
 
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;
-
-
 
 #[test]
 fn conformal_3d_right_complements() {

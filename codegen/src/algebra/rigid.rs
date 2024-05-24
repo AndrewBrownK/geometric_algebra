@@ -1,4 +1,3 @@
-use std::ops::Index;
 use crate::algebra::basis_element::{BasisElement, BasisElementIndex};
 use crate::algebra::dialect::Dialect;
 use crate::algebra::GeometricAlgebraTrait;

@@ -1,11 +1,10 @@
-use std::sync::Arc;
 use async_trait::async_trait;
-use crate::algebra::{MultiVectorClass, MultiVectorClassRegistry};
-use crate::ast2::{Variable};
-use crate::ast2::datatype::{AnyClasses, MultiVector};
-use crate::ast2::expressions::{MultiVectorExpr, TraitResult};
-use crate::ast2::traits::{HasNotReturned, HasReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitDefinition, TraitImplBuilder, TraitImplRegistry};
 
+use crate::algebra::MultiVectorClassRegistry;
+use crate::ast2::datatype::MultiVector;
+use crate::ast2::expressions::TraitResult;
+use crate::ast2::traits::{HasNotReturned, HasReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry};
+use crate::ast2::Variable;
 
 struct TraitAlias {
     alias_name: String,

@@ -1,8 +1,6 @@
 use std::fmt::Debug;
-use std::sync::Arc;
 
-use crate::algebra::MultiVectorClass;
-use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
+use crate::ast2::{RawVariableInvocation, Variable};
 use crate::ast2::basis::BasisSignature;
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 

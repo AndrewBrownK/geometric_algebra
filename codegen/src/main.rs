@@ -2,7 +2,6 @@
 #![feature(iter_intersperse)]
 #![feature(exit_status_error)]
 #![feature(associated_type_defaults)]
-#![feature(specialization)]
 
 mod algebra;
 mod ast;

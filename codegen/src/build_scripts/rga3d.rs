@@ -1,5 +1,4 @@
 use std::collections::BTreeMap;
-use std::io::Write;
 
 use crate::algebra::dialect::Dialect;
 use crate::build_scripts::rga::rga_script;
@@ -108,7 +107,7 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 #[cfg(test)]
 mod test {
     use std::path::Path;
-    use crate::build_scripts::rga3d::{RGA3D, RGA3D_CRATE_PREFIX, script_custom};
+    use crate::build_scripts::rga3d::{RGA3D, RGA3D_CRATE_PREFIX};
     use crate::validate::{validate_glsl, validate_wgsl};
 
     #[test]
