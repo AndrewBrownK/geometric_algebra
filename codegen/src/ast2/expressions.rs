@@ -1,10 +1,11 @@
 use std::collections::BTreeMap;
+use std::fmt::Debug;
 use std::sync::Arc;
 
 use crate::algebra::MultiVectorClass;
 use crate::ast2::basis::BasisSignature;
 use crate::ast2::datatype::{DataType, Float, FloatVec, Integer};
-use crate::ast2::RawVariableInvocation;
+use crate::ast2::{RawVariableInvocation, VariableInvocation};
 
 pub trait ExpressionOf<DT>: PartialEq + Into<AnyExpression>  {
     fn get_datatype(&self) -> DataType;
@@ -14,6 +15,7 @@ pub trait ExpressionOf<DT>: PartialEq + Into<AnyExpression>  {
 
 
 
+#[derive(PartialEq, Eq, Hash, Clone, Debug, PartialOrd, Ord)]
 struct TraitName {
     name: String,
 }
@@ -24,22 +26,82 @@ enum ClassGroup {
     Vec4(BasisSignature, BasisSignature, BasisSignature, BasisSignature)
 }
 
+pub trait TraitResultType: Debug {
+    type ExprType;
+    fn into_expr_10(self, trait_name: TraitName, owner: Arc<MultiVectorClass>) -> Self::ExprType {
+        panic!("into_expr_0 is not yet supported for {self:?}, but needed for {trait_name}")
+    }
+    fn into_expr_11(self, trait_name: TraitName, owner: InstanceBy) -> Self::ExprType {
+        panic!("into_expr_11 is not yet supported for {self:?}, but needed for {trait_name}")
+    }
+    fn into_expr_21(self, trait_name: TraitName, owner: InstanceBy, other: Arc<MultiVectorClass>) -> Self::ExprType {
+        panic!("into_expr_21 is not yet supported for {self:?}, but needed for {trait_name}")
+    }
+    fn into_expr_22(self, trait_name: TraitName, owner: InstanceBy, other: InstanceBy) -> Self::ExprType {
+        panic!("into_expr_22 is not yet supported for {self:?}, but needed for {trait_name}")
+    }
+
+}
+impl TraitResultType for Integer {
+    type ExprType = IntExpr;
+    fn into_expr_10(self, trait_name: TraitName, owner: Arc<MultiVectorClass>) -> IntExpr {
+        IntExpr {
+            via: IntBy::TraitInvoke10ToInt(trait_name, owner),
+        }
+    }
+}
+impl TraitResultType for Float {
+    type ExprType = FloatExpr;
+
+    fn into_expr_11(self, trait_name: TraitName, owner: InstanceBy) -> FloatExpr {
+        FloatExpr {
+            via: FloatBy::TraitInvoke11ToFloat(trait_name, owner),
+        }
+    }
+}
+impl TraitResultType for Arc<MultiVectorClass> {
+    type ExprType = ClassExpr;
+
+    fn into_expr_11(self, trait_name: TraitName, owner: InstanceBy) -> ClassExpr {
+        ClassExpr {
+            via: InstanceBy::TraitInvoke11ToClass(trait_name, owner),
+        }
+    }
+    fn into_expr_21(self, trait_name: TraitName, owner: InstanceBy, other: Arc<MultiVectorClass>) -> ClassExpr {
+        ClassExpr {
+            via: InstanceBy::TraitInvoke21ToClass(trait_name, owner, other),
+        }
+    }
+    fn into_expr_22(self, trait_name: TraitName, owner: InstanceBy, other: InstanceBy) -> ClassExpr {
+        ClassExpr {
+            via: InstanceBy::TraitInvoke22ToClass(trait_name, owner, other),
+        }
+    }
+}
+
+pub enum TraitResult<'authentic> {
+    Int(&'authentic Integer),
+    Float(&'authentic Float),
+    OwnerClass(&'authentic Arc<MultiVectorClass>),
+    OtherClass(&'authentic Arc<MultiVectorClass>),
+    AnyClass(&'authentic Arc<MultiVectorClass>),
+}
 
 
 
-struct IntExpr {
+pub struct IntExpr {
     via: IntBy
 }
-enum IntBy {
+pub enum IntBy {
     Variable(RawVariableInvocation),
     Literal(u32),
     // e.g. Grade
-    TraitInvoke10ToInt(TraitName, InstanceBy),
+    TraitInvoke10ToInt(TraitName, Arc<MultiVectorClass>),
 }
-struct FloatExpr {
+pub struct FloatExpr {
     via: FloatBy
 }
-enum FloatBy {
+pub enum FloatBy {
     Variable(RawVariableInvocation),
     Zero,
     One,
@@ -52,48 +114,76 @@ enum FloatBy {
     // e.g. UnitizedNorm
     TraitInvoke11ToFloat(TraitName, InstanceBy),
 }
-struct Vec2Expr {
+pub struct Vec2Expr {
     via: Vec2By
 }
-enum Vec2By {
+pub enum Vec2By {
     Variable(RawVariableInvocation),
     Gather1(FloatBy),
     Gather2(FloatBy, FloatBy),
 }
-struct Vec3Expr {
+pub struct Vec3Expr {
     via: Vec3By
 }
-enum Vec3By {
+pub enum Vec3By {
     Variable(RawVariableInvocation),
     Gather1(FloatBy),
     Gather3(FloatBy, FloatBy, FloatBy),
 }
-struct Vec4Expr {
+pub struct Vec4Expr {
     via: Vec4By
 }
-enum Vec4By {
+pub enum Vec4By {
     Variable(RawVariableInvocation),
     Gather1(FloatBy),
     Gather4(FloatBy, FloatBy, FloatBy, FloatBy),
 }
-struct ClassExpr {
+pub struct ClassExpr {
     via: InstanceBy
 }
-enum ClassGroupBy {
+pub enum ClassGroupBy {
     JustFloat(FloatBy),
     Vec2(Vec2By),
     Vec3(Vec3By),
     Vec4(Vec4By)
 }
-struct ClassElementBy(BasisSignature, FloatBy);
-enum InstanceBy {
+pub struct ClassElementBy(BasisSignature, FloatBy);
+pub enum InstanceBy {
     Variable(RawVariableInvocation),
     Construct(Vec<ClassGroupBy>),
+    // e.g. Involutions
+    TraitInvoke11ToClass(TraitName, InstanceBy),
     // e.g. Into
-    TraitInvoke21ToClass(TraitName, InstanceBy),
+    TraitInvoke21ToClass(TraitName, InstanceBy, Arc<MultiVectorClass>),
     // e.g. Wedge
-    TraitInvoke22ToClass(TraitName, InstanceBy, InstanceBy)
+    TraitInvoke22ToClass(TraitName, InstanceBy, InstanceBy),
 }
+
+
+
+pub trait Expression2<ExprType> {}
+impl Expression2<Integer> for IntExpr {}
+impl Expression2<Float> for FloatExpr {}
+// TODO vecs
+impl Expression2<()> for Vec2Expr {}
+impl Expression2<()> for Vec3Expr {}
+impl Expression2<()> for Vec4Expr {}
+impl Expression2<Arc<MultiVectorClass>> for ClassExpr {}
+
+
+
+
+impl From<ClassExpr> for InstanceBy {
+    fn from(value: ClassExpr) -> Self {
+        value.via
+    }
+}
+impl<'vars> From<VariableInvocation<'vars, Arc<MultiVectorClass>>> for InstanceBy {
+    fn from(value: VariableInvocation<'vars, Arc<MultiVectorClass>>) -> Self {
+        InstanceBy::Variable(value.into())
+    }
+}
+
 
 
 

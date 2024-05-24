@@ -1,4 +1,3 @@
-use std::io::Write;
 
 bitflags::bitflags! {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
