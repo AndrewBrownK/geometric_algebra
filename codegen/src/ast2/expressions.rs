@@ -1,11 +1,10 @@
 use std::collections::BTreeMap;
-use std::marker::PhantomData;
 use std::sync::Arc;
 
 use crate::algebra::MultiVectorClass;
-use crate::ast2::{RawVariableInvocation, VariableInvocation};
 use crate::ast2::basis::BasisSignature;
 use crate::ast2::datatype::{DataType, Float, FloatVec, Integer};
+use crate::ast2::RawVariableInvocation;
 
 pub trait ExpressionOf<'vars, DT>: PartialEq + Into<AnyExpression>  {
     fn get_datatype(&self) -> DataType;
@@ -13,8 +12,122 @@ pub trait ExpressionOf<'vars, DT>: PartialEq + Into<AnyExpression>  {
 }
 
 
+
+
+
+
+
+
+
+
+
+
 #[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
 pub struct ConstInteger(u32);
+
+#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
+pub enum ConstFloat {
+    One, Zero, NegOne
+}
+#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
+pub struct ConstVec2(ConstFloat, ConstFloat);
+#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
+pub struct ConstVec3(ConstFloat, ConstFloat, ConstFloat);
+#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
+pub struct ConstVec4(ConstFloat, ConstFloat, ConstFloat, ConstFloat);
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+pub struct ConstVecN(Vec<ConstFloat>);
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+struct AccessBasis<Expr: ExpressionOf<Arc<MultiVectorClass>>>(Expr, BasisSignature, );
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+struct RawAccessBasis(AnyExpression, BasisSignature);
+#[derive(PartialEq, Eq, Clone, Debug)]
+struct AccessBasisFlat<Expr: ExpressionOf<Arc<MultiVectorClass>>>(Expr, u8);
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+struct RawAccessBasisFlat(AnyExpression, u8);
+#[derive(PartialEq, Eq, Clone, Debug)]
+struct AccessBasisGroup<Expr: ExpressionOf<Arc<MultiVectorClass>>>(Expr, u8);
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+struct RawAccessBasisGroup(AnyExpression, u8);
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct SumOfProductsFloat<Expr1: ExpressionOf<Float>, Expr2: ExpressionOf<Float>, > {
+    values: BTreeMap<(Expr1, Expr2), ConstFloat>
+}
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct RawSumOfProductsFloat {
+    values: BTreeMap<(AnyExpression, AnyExpression), ConstFloat>
+}
+
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+struct ConstructRaw {
+    multi_vector_class: Arc<MultiVectorClass>,
+    values: BTreeMap<BasisSignature, AnyExpression>
+}
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+struct ConstructGrouped {
+    multi_vector_class: Arc<MultiVectorClass>,
+    values: Vec<AnyExpression>
+}
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+pub enum SomeMVC {
+    ConstructedRaw(ConstructRaw),
+    ConstructedGrouped(ConstructGrouped),
+    Var(RawVariableInvocation),
+}
+
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct SumOfProductsSimd<Expr1: ExpressionOf<FloatVec>, Expr2: ExpressionOf<FloatVec>, > {
+    values: BTreeMap<(Expr1, Expr2), ConstVecN>
+}
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+struct RawSumOfProductsSimd {
+    values: BTreeMap<(AnyExpression, AnyExpression), ConstVecN>
+}
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+pub enum TraitInv {
+    TraitInv10(String, Arc<MultiVectorClass>, DataType),
+    TraitInv11(String, SomeMVC, DataType),
+    TraitInv21(String, SomeMVC, Arc<MultiVectorClass>, DataType),
+    TraitInv22(String, SomeMVC, SomeMVC, DataType),
+}
+
+// TODO new strategy...
+//  You might notice the pattern that there is basically one variant per data type
+//  but that is not about expressions, that is about data types
+//  So maybe I should organize this differently, and ExpressionOf should be slightly different too
+//  Maybe I should have a "variety" of structs (that consolidate into an enum) that are of the
+//  nature "expression of type", but then inside each of those is an associated "expression by means"
+//  which is all of the different ways you can get an expression of that type.
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
+pub enum AnyExpression {
+    CI(ConstInteger),
+    CF(ConstFloat),
+    CV2(ConstVec2),
+    CV3(ConstVec3),
+    CV4(ConstVec4),
+    CVN(ConstVecN),
+    MVC(SomeMVC),
+    TI(TraitInv),
+    AB(RawAccessBasis),
+    ABF(RawAccessBasisFlat),
+    ABG(RawAccessBasisGroup),
+    SOPF(RawSumOfProductsFloat),
+    SOPG(RawSumOfProductsSimd),
+}
+
+
+
+
+
+
+
+
+
+
+
 impl<'vars> ExpressionOf<'vars, Integer> for ConstInteger {
     fn get_datatype(&self) -> DataType {
         DataType::Integer
@@ -23,10 +136,6 @@ impl<'vars> ExpressionOf<'vars, Integer> for ConstInteger {
     fn ty(&self) -> Integer {
         Integer
     }
-}
-#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
-pub enum ConstFloat {
-    One, Zero, NegOne
 }
 impl<'vars> ExpressionOf<'vars, Float> for ConstFloat {
     fn get_datatype(&self) -> DataType {
@@ -37,8 +146,6 @@ impl<'vars> ExpressionOf<'vars, Float> for ConstFloat {
         Float
     }
 }
-#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
-pub struct ConstVec2(ConstFloat, ConstFloat);
 impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec2 {
     fn get_datatype(&self) -> DataType {
         DataType::Simd(FloatVec::Vec2)
@@ -48,8 +155,6 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec2 {
         FloatVec::Vec2
     }
 }
-#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
-pub struct ConstVec3(ConstFloat, ConstFloat, ConstFloat);
 impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec3 {
     fn get_datatype(&self) -> DataType {
         DataType::Simd(FloatVec::Vec3)
@@ -59,8 +164,6 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec3 {
         FloatVec::Vec3
     }
 }
-#[derive(PartialEq, Eq, Copy, Clone, Debug, PartialOrd, Ord)]
-pub struct ConstVec4(ConstFloat, ConstFloat, ConstFloat, ConstFloat);
 impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec4 {
     fn get_datatype(&self) -> DataType {
         DataType::Simd(FloatVec::Vec4)
@@ -71,8 +174,6 @@ impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVec4 {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-pub struct ConstVecN(Vec<ConstFloat>);
 impl<'vars> ExpressionOf<'vars, FloatVec> for ConstVecN {
     fn get_datatype(&self) -> DataType {
         DataType::Simd(self.ty())
@@ -109,13 +210,6 @@ impl From<ConstFloat> for ConstVecN {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
-struct AccessBasis<Expr: ExpressionOf<Arc<MultiVectorClass>>>(
-    Expr,
-    BasisSignature,
-);
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-struct RawAccessBasis(AnyExpression, BasisSignature);
 impl<Expr: ExpressionOf<Arc<MultiVectorClass>>> From<AccessBasis<Expr>> for RawAccessBasis {
     fn from(value: AccessBasis<Expr>) -> Self {
         RawAccessBasis(
@@ -137,13 +231,6 @@ impl<'vars, Expr: ExpressionOf<Arc<MultiVectorClass>>> ExpressionOf<Float> for A
 
 
 
-#[derive(PartialEq, Eq, Clone, Debug)]
-struct AccessBasisFlat<Expr: ExpressionOf<Arc<MultiVectorClass>>>(
-    Expr,
-    u8
-);
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-struct RawAccessBasisFlat(AnyExpression, u8);
 impl<Expr: ExpressionOf<Arc<MultiVectorClass>>> From<AccessBasisFlat<Expr>> for RawAccessBasisFlat {
     fn from(value: AccessBasisFlat<Expr>) -> Self {
         RawAccessBasisFlat(
@@ -156,13 +243,6 @@ impl<Expr: ExpressionOf<Arc<MultiVectorClass>>> From<AccessBasisFlat<Expr>> for 
 
 
 
-#[derive(PartialEq, Eq, Clone, Debug)]
-struct AccessBasisGroup<Expr: ExpressionOf<Arc<MultiVectorClass>>>(
-    Expr,
-    u8
-);
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-struct RawAccessBasisGroup(AnyExpression, u8);
 impl<Expr: ExpressionOf<Arc<MultiVectorClass>>> From<AccessBasisGroup<Expr>> for RawAccessBasisGroup {
     fn from(value: AccessBasisGroup<Expr>) -> Self {
         RawAccessBasisGroup(
@@ -176,14 +256,6 @@ impl<Expr: ExpressionOf<Arc<MultiVectorClass>>> From<AccessBasisGroup<Expr>> for
 
 
 
-
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct SumOfProductsFloat<
-    Expr1: ExpressionOf<Float>,
-    Expr2: ExpressionOf<Float>,
-> {
-    values: BTreeMap<(Expr1, Expr2), ConstFloat>
-}
 impl<'vars, Expr1, Expr2> ExpressionOf<'vars, Float> for SumOfProductsFloat<Expr1, Expr2> where
     Expr1: PartialEq,
     Expr2: PartialEq {
@@ -194,10 +266,6 @@ impl<'vars, Expr1, Expr2> ExpressionOf<'vars, Float> for SumOfProductsFloat<Expr
     fn ty(&self) -> Float {
         Float
     }
-}
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct RawSumOfProductsFloat {
-    values: BTreeMap<(AnyExpression, AnyExpression), ConstFloat>
 }
 impl<Expr1, Expr2> From<SumOfProductsFloat<Expr1, Expr2>> for RawSumOfProductsFloat {
     fn from(value: SumOfProductsFloat<Expr1, Expr2>) -> Self {
@@ -215,17 +283,6 @@ impl<Expr1, Expr2> From<SumOfProductsFloat<Expr1, Expr2>> for RawSumOfProductsFl
 
 
 
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-struct SumOfProductsSimd<
-    Expr1: ExpressionOf<FloatVec>,
-    Expr2: ExpressionOf<FloatVec>,
-> {
-    values: BTreeMap<(
-        Expr1,
-        Expr2
-    ), ConstVecN>
-}
 impl<'vars,
     Expr1: ExpressionOf<FloatVec>,
     Expr2: ExpressionOf<FloatVec>,
@@ -237,10 +294,6 @@ impl<'vars,
     fn ty(&self) -> FloatVec {
         todo!()
     }
-}
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct RawSumOfProductsSimd {
-    values: BTreeMap<(AnyExpression, AnyExpression), ConstVecN>
 }
 impl<Expr1, Expr2> From<SumOfProductsSimd<Expr1, Expr2>> for RawSumOfProductsSimd {
     fn from(value: SumOfProductsSimd<Expr1, Expr2>) -> Self {
@@ -261,12 +314,6 @@ impl<Expr1, Expr2> From<SumOfProductsSimd<Expr1, Expr2>> for RawSumOfProductsSim
 
 
 
-
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-struct ConstructRaw {
-    multi_vector_class: Arc<MultiVectorClass>,
-    values: BTreeMap<BasisSignature, AnyExpression>
-}
 impl<'vars> ExpressionOf<'vars, Arc<MultiVectorClass>> for ConstructRaw {
     fn get_datatype(&self) -> DataType {
         DataType::MultiVector(self.multi_vector_class.clone())
@@ -277,11 +324,6 @@ impl<'vars> ExpressionOf<'vars, Arc<MultiVectorClass>> for ConstructRaw {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-struct ConstructGrouped {
-    multi_vector_class: Arc<MultiVectorClass>,
-    values: Vec<AnyExpression>
-}
 impl<'vars> ExpressionOf<'vars, Arc<MultiVectorClass>> for ConstructGrouped {
     fn get_datatype(&self) -> DataType {
         DataType::MultiVector(self.multi_vector_class.clone())
@@ -292,12 +334,6 @@ impl<'vars> ExpressionOf<'vars, Arc<MultiVectorClass>> for ConstructGrouped {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-pub enum SomeMVC {
-    ConstructedRaw(ConstructRaw),
-    ConstructedGrouped(ConstructGrouped),
-    Var(RawVariableInvocation),
-}
 
 impl<'vars> ExpressionOf<'vars, DataType> for SomeMVC {
     fn get_datatype(&self) -> DataType {
@@ -309,13 +345,6 @@ impl<'vars> ExpressionOf<'vars, DataType> for SomeMVC {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-pub enum TraitInv {
-    TraitInv10(String, Arc<MultiVectorClass>, DataType),
-    TraitInv11(String, SomeMVC, DataType),
-    TraitInv21(String, SomeMVC, Arc<MultiVectorClass>, DataType),
-    TraitInv22(String, SomeMVC, SomeMVC, DataType),
-}
 
 impl<'vars> ExpressionOf<'vars, DataType> for TraitInv {
     fn get_datatype(&self) -> DataType {
@@ -332,30 +361,6 @@ impl<'vars> ExpressionOf<'vars, DataType> for TraitInv {
     }
 }
 
-
-// TODO new strategy...
-//  You might notice the pattern that there is basically one variant per data type
-//  but that is not about expressions, that is about data types
-//  So maybe I should organize this differently, and ExpressionOf should be slightly different too
-//  Maybe I should have a "variety" of structs (that consolidate into an enum) that are of the
-//  nature "expression of type", but then inside each of those is an associated "expression by means"
-//  which is all of the different ways you can get an expression of that type.
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord)]
-pub enum AnyExpression {
-    CI(ConstInteger),
-    CF(ConstFloat),
-    CV2(ConstVec2),
-    CV3(ConstVec3),
-    CV4(ConstVec4),
-    CVN(ConstVecN),
-    MVC(SomeMVC),
-    TI(TraitInv),
-    AB(RawAccessBasis),
-    ABF(RawAccessBasisFlat),
-    ABG(RawAccessBasisGroup),
-    SOPF(RawSumOfProductsFloat),
-    SOPG(RawSumOfProductsSimd),
-}
 impl<'vars> ExpressionOf<'vars, DataType> for AnyExpression {
     fn get_datatype(&self) -> DataType {
         match self {
@@ -492,12 +497,6 @@ impl<Expr: ExpressionOf<Arc<MultiVectorClass>>> From<AccessBasisGroup<Expr>> for
 }
 
 
-// impl<'var, DT: Clone + Into<DataType>> From<VariableInvocation<'var, DT>> for AnyExpression {
-//     fn from(value: VariableInvocation<'var, DT>) -> Self {
-//         let value = value.into();
-//         AnyExpression::Var(value)
-//     }
-// }
 
 impl From<RawSumOfProductsFloat> for AnyExpression {
     fn from(value: RawSumOfProductsFloat) -> Self {
@@ -525,68 +524,3 @@ impl<Expr1, Expr2> From<SumOfProductsSimd<Expr1, Expr2>> for AnyExpression {
     }
 }
 
-
-
-
-//
-// #[derive(PartialEq, Eq, Clone, Debug)]
-// struct RawConstructRaw {
-//     multi_vector_class: Arc<MultiVectorClass>,
-//     values: BTreeMap<BasisSignature, RawAnyExpression>
-// }
-// #[derive(PartialEq, Eq, Clone, Debug)]
-// struct RawConstructGrouped {
-//     multi_vector_class: Arc<MultiVectorClass>,
-//     values: Vec<RawAnyExpression>
-// }
-//
-// #[derive(Clone, Debug, PartialEq, Eq)]
-// struct RawSumOfProductsGrouped {
-//     values: BTreeMap<(
-//         RawAnyExpression,
-//         RawAnyExpression,
-//     ), ConstVecN>
-// }
-// #[derive(Clone, Debug, PartialEq, Eq)]
-// struct RawSumOfProductsRaw {
-//     values: BTreeMap<(
-//         (RawVariableInvocation, BasisSignature),
-//         (RawVariableInvocation, BasisSignature),
-//     ), ConstFloat>
-// }
-// impl<'vars> ExpressionOf<'vars, Float> for RawSumOfProductsRaw {
-//     fn get_datatype(&self) -> DataType {
-//         DataType::Float
-//     }
-//
-//     fn ty(&self) -> Float {
-//         Float
-//     }
-// }
-// impl<'vars> From<SumOfProductsFloat<'vars>> for RawSumOfProductsRaw {
-//     fn from(value: SumOfProductsFloat<'vars>) -> Self {
-//         let mut values = BTreeMap::new();
-//         for (((var_1, sig_1), (var_2, sig_2)), c) in value.values {
-//             values.insert(((var_1.into(), sig_1), (var_2.into(), sig_2)), c);
-//         }
-//
-//         return RawSumOfProductsRaw {
-//             values
-//         }
-//     }
-// }
-
-// AnyExpression but without lifetimes
-// #[derive(Clone, Debug, PartialEq, Eq)]
-// pub enum RawAnyExpression {
-//     CI(ConstInteger),
-//     CF(ConstFloat),
-//     CV2(ConstVec2),
-//     CV3(ConstVec3),
-//     CV4(ConstVec4),
-//     CVN(ConstVecN),
-//     ClassRaw(RawConstructRaw),
-//     ClassGrouped(RawConstructGrouped),
-//     SOPR(RawSumOfProductsRaw),
-//     SOPG(RawSumOfProductsGrouped),
-// }
