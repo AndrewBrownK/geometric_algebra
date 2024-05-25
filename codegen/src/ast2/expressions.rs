@@ -15,23 +15,27 @@ enum ClassGroup {
 
 pub trait TraitResultType: Debug + Sized {
     type ExprType;
-    fn into_expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
+    #[allow(unused)]
+    fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
         panic!("into_expr_0 is needed (but not supported) for {trait_name:?}")
     }
-    fn into_expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
+    #[allow(unused)]
+    fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
         panic!("into_expr_11 is needed (but not supported) for {trait_name:?}")
     }
-    fn into_expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
+    #[allow(unused)]
+    fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
         panic!("into_expr_21 is needed (but not supported) for {trait_name:?}")
     }
-    fn into_expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
+    #[allow(unused)]
+    fn expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
         panic!("into_expr_22 is needed (but not supported) for {trait_name:?}")
     }
 
 }
 impl TraitResultType for Integer {
     type ExprType = IntExpr;
-    fn into_expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> IntExpr {
+    fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> IntExpr {
         assert!(mv_out.is_none(), "Confused Trait output: Expected Integer, found MultiVector");
         IntExpr::TraitInvoke10ToInt(trait_name, owner)
     }
@@ -39,7 +43,7 @@ impl TraitResultType for Integer {
 impl TraitResultType for Float {
     type ExprType = FloatExpr;
 
-    fn into_expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> FloatExpr {
+    fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> FloatExpr {
         assert!(mv_out.is_none(), "Confused Trait output: Expected Float, found MultiVector");
         FloatExpr::TraitInvoke11ToFloat(trait_name, owner)
     }
@@ -47,7 +51,7 @@ impl TraitResultType for Float {
 impl TraitResultType for MultiVector {
     type ExprType = MultiVectorExpr;
 
-    fn into_expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
+    fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect(
             "Confused Trait output: Expected MultiVector, but None provided."
         );
@@ -56,7 +60,7 @@ impl TraitResultType for MultiVector {
             expr: Box::new(MultiVectorVia::TraitInvoke11ToClass(trait_name, owner)),
         }
     }
-    fn into_expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> MultiVectorExpr {
+    fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect(
             "Confused Trait output: Expected MultiVector, but None provided."
         );
@@ -65,7 +69,7 @@ impl TraitResultType for MultiVector {
             expr: Box::new(MultiVectorVia::TraitInvoke21ToClass(trait_name, owner, other)),
         }
     }
-    fn into_expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
+    fn expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect(
             "Confused Trait output: Expected MultiVector, but None provided."
         );
@@ -150,6 +154,19 @@ pub enum AnyExpression {
     Vec4(Vec4Expr),
     Class(MultiVectorExpr),
 }
+impl AnyExpression {
+    pub fn expression_type(&self) -> ExpressionType {
+        match self {
+            AnyExpression::Int(_) => ExpressionType::Int(Integer),
+            AnyExpression::Float(_) => ExpressionType::Float(Float),
+            AnyExpression::Vec2(_) => ExpressionType::Vec2(Vec2),
+            AnyExpression::Vec3(_) => ExpressionType::Vec3(Vec3),
+            AnyExpression::Vec4(_) => ExpressionType::Vec4(Vec4),
+            AnyExpression::Class(mv) => ExpressionType::Class(mv.mv_class.clone()),
+        }
+    }
+}
+
 
 
 pub trait Expression<ExprType>: Send {

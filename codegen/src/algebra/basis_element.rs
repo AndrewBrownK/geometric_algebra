@@ -42,7 +42,7 @@ impl BasisElement {
 
             // Update the remaining indices for 'a' and 'b'
             remaining_a_index &= !(1 << index);
-            remaining_b_index ^= (1 << index);
+            remaining_b_index ^= 1 << index;
         }
 
         // Calculate the coefficient for the product

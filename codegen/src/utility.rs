@@ -28,8 +28,8 @@ impl<T: Clone> Clone for AwaitOrClone<T> {
 
 impl<T: Clone> AwaitOrClone<T> {
     pub async fn await_clone(&self) -> Result<T, RecvError> {
-        let rec = match self {
-            AwaitOrClone::InProgress(rec) => (*rec).clone(),
+        let mut rec = match self {
+            AwaitOrClone::InProgress(rec) => (*rec).resubscribe(),
             AwaitOrClone::Done(arc) => return Ok(arc.clone())
         };
         rec.recv().await
@@ -57,17 +57,20 @@ impl<V: Clone> AsyncMapResult<V> {
     }
 }
 
-impl<K: Hash, V: Clone> AsyncMap<K, V> {
+impl<
+    K: Eq + Hash + Clone + Send + Sync + 'static,
+    V: Clone + Send + Sync + 'static,
+> AsyncMap<K, V> {
     // TODO instead of returning a DoItYourself, consider accepting an FnOnce here instead
     //  and then the consumer can just await a result no matter how you slice it, instead
     //  of matching on 4 cases and sticking creation logic there, and having the weird send back
     //  that updates the map too. Just use an FnOnce instead. Basically, the user is fallible to
     //  use the sender that they are somewhat obligated to use.
 
-    pub async fn get_or_create_or_panic<F: Future<Output=V>>(&self, k: K, f: F) -> V {
+    pub async fn get_or_create_or_panic<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> V {
         self.get_or_create(k, f).await.get_or_panic().await
     }
-    pub async fn get_or_create<F: Future<Output=V>>(&self, k: K, f: F) -> AsyncMapResult<V> {
+    pub async fn get_or_create<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> AsyncMapResult<V> {
         let read = self.0.read();
         match read.get(&k) {
             Some(existing) => {
