@@ -12,7 +12,7 @@ pub struct Vec2;
 pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Vec4;
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, Hash)]
 pub struct MultiVector(Arc<MultiVectorClass>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -3,11 +3,7 @@ use std::fmt::Debug;
 use crate::ast2::{RawVariableInvocation, Variable};
 use crate::ast2::basis::BasisSignature;
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
-
-#[derive(PartialEq, Eq, Hash, Clone, Debug, PartialOrd, Ord)]
-struct TraitName {
-    name: String,
-}
+use crate::ast2::traits::TraitKey;
 
 // TODO use this somehow
 enum ClassGroup {
@@ -19,54 +15,62 @@ enum ClassGroup {
 
 pub trait TraitResultType: Debug + Sized {
     type ExprType;
-    fn into_expr_10(self, trait_name: TraitName, owner: MultiVector) -> Self::ExprType {
-        panic!("into_expr_0 is not yet supported for {self:?}, but needed for {trait_name:?}")
+    fn into_expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
+        panic!("into_expr_0 is needed (but not supported) for {trait_name:?}")
     }
-    fn into_expr_11(self, trait_name: TraitName, owner: MultiVectorExpr) -> Self::ExprType {
-        panic!("into_expr_11 is not yet supported for {self:?}, but needed for {trait_name:?}")
+    fn into_expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
+        panic!("into_expr_11 is needed (but not supported) for {trait_name:?}")
     }
-    fn into_expr_21(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVector) -> Self::ExprType {
-        panic!("into_expr_21 is not yet supported for {self:?}, but needed for {trait_name:?}")
+    fn into_expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
+        panic!("into_expr_21 is needed (but not supported) for {trait_name:?}")
     }
-    fn into_expr_22(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVectorExpr) -> Self::ExprType {
-        panic!("into_expr_22 is not yet supported for {self:?}, but needed for {trait_name:?}")
+    fn into_expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
+        panic!("into_expr_22 is needed (but not supported) for {trait_name:?}")
     }
 
 }
 impl TraitResultType for Integer {
     type ExprType = IntExpr;
-    fn into_expr_10(self, trait_name: TraitName, owner: MultiVector) -> IntExpr {
+    fn into_expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> IntExpr {
+        assert!(mv_out.is_none(), "Confused Trait output: Expected Integer, found MultiVector");
         IntExpr::TraitInvoke10ToInt(trait_name, owner)
     }
 }
 impl TraitResultType for Float {
     type ExprType = FloatExpr;
 
-    fn into_expr_11(self, trait_name: TraitName, owner: MultiVectorExpr) -> FloatExpr {
+    fn into_expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> FloatExpr {
+        assert!(mv_out.is_none(), "Confused Trait output: Expected Float, found MultiVector");
         FloatExpr::TraitInvoke11ToFloat(trait_name, owner)
     }
 }
 impl TraitResultType for MultiVector {
     type ExprType = MultiVectorExpr;
 
-    fn into_expr_11(self, trait_name: TraitName, owner: MultiVectorExpr) -> MultiVectorExpr {
+    fn into_expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
+        let mv_class = mv_out.expect(
+            "Confused Trait output: Expected MultiVector, but None provided."
+        );
         MultiVectorExpr {
-            // TODO result of trait
-            mv_class: todo!(),
+            mv_class,
             expr: Box::new(MultiVectorVia::TraitInvoke11ToClass(trait_name, owner)),
         }
     }
-    fn into_expr_21(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVector) -> MultiVectorExpr {
+    fn into_expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> MultiVectorExpr {
+        let mv_class = mv_out.expect(
+            "Confused Trait output: Expected MultiVector, but None provided."
+        );
         MultiVectorExpr {
-            // TODO result of trait
-            mv_class: todo!(),
+            mv_class,
             expr: Box::new(MultiVectorVia::TraitInvoke21ToClass(trait_name, owner, other)),
         }
     }
-    fn into_expr_22(self, trait_name: TraitName, owner: MultiVectorExpr, other: MultiVectorExpr) -> MultiVectorExpr {
+    fn into_expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
+        let mv_class = mv_out.expect(
+            "Confused Trait output: Expected MultiVector, but None provided."
+        );
         MultiVectorExpr {
-            // TODO result of trait
-            mv_class: todo!(),
+            mv_class,
             expr: Box::new(MultiVectorVia::TraitInvoke22ToClass(trait_name, owner, other)),
         }
     }
@@ -87,7 +91,7 @@ pub enum IntExpr {
     Variable(RawVariableInvocation),
     Literal(u32),
     // e.g. Grade
-    TraitInvoke10ToInt(TraitName, MultiVector),
+    TraitInvoke10ToInt(TraitKey, MultiVector),
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum FloatExpr {
@@ -97,7 +101,7 @@ pub enum FloatExpr {
     AccessVec3(Box<Vec3Expr>, u8),
     AccessVec4(Box<Vec4Expr>, u8),
     // e.g. UnitizedNorm
-    TraitInvoke11ToFloat(TraitName, MultiVectorExpr),
+    TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
     // TODO sum of o products
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -138,11 +142,11 @@ pub enum MultiVectorVia {
     Variable(RawVariableInvocation),
     Construct(Vec<MultiVectorGroupExpr>),
     // e.g. Involutions
-    TraitInvoke11ToClass(TraitName, MultiVectorExpr),
+    TraitInvoke11ToClass(TraitKey, MultiVectorExpr),
     // e.g. Into
-    TraitInvoke21ToClass(TraitName, MultiVectorExpr, MultiVector),
+    TraitInvoke21ToClass(TraitKey, MultiVectorExpr, MultiVector),
     // e.g. Wedge
-    TraitInvoke22ToClass(TraitName, MultiVectorExpr, MultiVectorExpr),
+    TraitInvoke22ToClass(TraitKey, MultiVectorExpr, MultiVectorExpr),
 }
 
 

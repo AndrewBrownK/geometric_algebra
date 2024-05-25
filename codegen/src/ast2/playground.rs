@@ -1,47 +1,22 @@
 use async_trait::async_trait;
 
 use crate::algebra::MultiVectorClassRegistry;
-use crate::ast2::basis::{GeneratorSquares, PrimaryBasis};
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::expressions::TraitResult;
-use crate::ast2::traits::{HasNotReturned, HasReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry};
+use crate::ast2::expressions::{Expression, TraitResult};
+use crate::ast2::traits::{HasNotReturned, HasReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry, TraitKey, TraitNames};
 use crate::ast2::Variable;
 
-struct TraitAlias {
-    alias_name: String,
-    mention_in_documentation: bool,
-    share_main_trait_in_rust_and_delegate_by_default: bool,
-    output_distinct_trait_in_rust: bool,
-    output_in_shaders: bool
+
+struct Wedge {
+    names: TraitNames
 }
-impl TraitAlias {
-    fn usual(alias_name: String) -> Self {
-        Self::new(alias_name, true, true, false, true)
-    }
-    fn usual_except_shaders(alias_name: String) -> Self {
-        Self::new(alias_name, true, true, false, false)
-    }
-    fn docs_only(alias_name: String) -> Self {
-        Self::new(alias_name, true, false, false, false)
-    }
-    fn new(alias_name: String, docs: bool, share: bool, distinct: bool, shaders: bool) -> Self {
-        TraitAlias {
-            alias_name,
-            mention_in_documentation: docs,
-            share_main_trait_in_rust_and_delegate_by_default: share,
-            output_distinct_trait_in_rust: distinct,
-            output_in_shaders: shaders
+impl Default for Wedge {
+    fn default() -> Self {
+        Wedge {
+            names: TraitNames::just("Wedge")
         }
     }
 }
-struct TraitNamesAndStuff {
-    trait_name: String,
-    aliases: Vec<TraitAlias>,
-}
-
-
-
-struct Wedge;
 struct AntiDual;
 struct Expansion;
 
@@ -54,11 +29,15 @@ impl TraitDef_2Class_2Param for Wedge {
         TraitResult::AnyClass(result)
     }
 
+    fn trait_names(&self) -> TraitNames {
+        self.names.clone()
+    }
+
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
+    ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
         return None;
     }
 }
@@ -71,10 +50,14 @@ impl TraitDef_1Class_1Param for AntiDual {
         TraitResult::AnyClass(result)
     }
 
+    fn trait_names(&self) -> TraitNames {
+        TraitNames::just("AntiDual")
+    }
+
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
+    ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
         return None;
     }
 }
@@ -87,14 +70,18 @@ impl TraitDef_2Class_2Param for Expansion {
         TraitResult::AnyClass(result)
     }
 
+    fn trait_names(&self) -> TraitNames {
+        TraitNames::just("23%#4Expansion df silly willy")
+    }
+
     async fn general_implementation<'impls>(
         mut b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
-        let anti_dual = AntiDual::invoke(&mut b, other).await?;
+    ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        let anti_dual = AntiDual.invoke(&mut b, other).await?;
         let anti_dual = b.variable("anti_dual", anti_dual);
-        let wedge = Wedge::invoke(&mut b, slf, anti_dual).await?;
+        let wedge = Wedge::default().invoke(&mut b, slf, anti_dual).await?;
         b.comment_return("Hello comment", wedge)
     }
 }

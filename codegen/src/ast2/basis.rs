@@ -136,6 +136,13 @@ impl BasisElement {
         self
     }
 
+    pub fn grade(&self) -> u8 {
+        self.signature.bits().count_ones() as u8
+    }
+
+    /// Wedge product, but "primitive" in the sense that all BasisElements
+    /// are assumed to be entirely independent, and there's nothing fancy
+    /// like merged e+ and e- into e4 and e5 going on.
     pub fn primitive_wedge(
         &self,
         other: &BasisElement,
@@ -199,6 +206,9 @@ impl BasisElement {
         }
     }
 
+    /// AntiWedge product, but "primitive" in the sense that all BasisElements
+    /// are assumed to be entirely independent, and there's nothing fancy
+    /// like merged e+ and e- into e4 and e5 going on.
     pub fn primitive_anti_wedge(
         &self,
         other: &BasisElement,
@@ -378,6 +388,14 @@ impl GeneratorSquares {
 
     pub fn square(&self, basis: PrimaryBasis) -> i8 {
         self.raw_squares[(basis as u8) as usize]
+    }
+
+    pub fn wedge(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+        a.primitive_wedge(&b, &self)
+    }
+
+    pub fn anti_wedge(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+        a.primitive_anti_wedge(&b, &self)
     }
 }
 
