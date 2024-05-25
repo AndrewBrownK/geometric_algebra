@@ -12,6 +12,7 @@ mod validate;
 mod shader_support;
 mod ast2;
 mod algebra2;
+mod utility;
 
 mod build_scripts {
     pub mod cga;

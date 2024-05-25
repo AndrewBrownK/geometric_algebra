@@ -1,16 +1,20 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use std::collections::hash_map::Entry;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use either::Either;
 use lazy_static::lazy_static;
-use naga::FastHashMap;
 use parking_lot::RwLock;
 use regex::Regex;
-
+use tokio::io::AsyncReadExt;
+use tokio::sync::broadcast;
+use tokio::sync::broadcast::error::RecvError;
 use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, TraitResultType};
+use crate::utility::{AsyncMap, AsyncMapResult, AwaitOrClone};
 
 enum TraitTypeConsensus {
     NoVotes,
@@ -28,9 +32,8 @@ pub struct TraitConstraint {
 }
 
 pub struct RawTraitDefinition {
-    name: String,
-    aliases: Vec<String>,
     documentation: String,
+    names: TraitNames,
     inherits: Vec<Arc<RawTraitDefinition>>,
 
     owner: Arc<RwLock<TraitTypeConsensus>>,
@@ -57,23 +60,48 @@ pub trait TraitDef_1Class_0Param {
         b: &mut TraitImplBuilder<HasNotReturned>,
         owner: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+        let trait_key = self.trait_names().trait_key;
+        if b.cycle_detector.contains(&(trait_key, owner.clone(), None)) {
+            let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
+            panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
+        } else {
+            b.cycle_detector.insert((trait_key.clone(), owner.clone(), None));
+        }
         if b.inline_dependencies {
             return self.inline(b, owner).await;
         }
-        let trait_key = self.trait_names().trait_key;
-        let impl_key = (trait_key.clone(), owner.clone());
-        let mut raw_impl = b.registry.traits10.get(&impl_key);
-        let Some(raw_impl) = b.registry.traits10.get(&impl_key) else {
-            // Create and register the implementation
-            // TODO actually create impl
+
+
+        let f = async {
             todo!()
         };
+        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), f).await;
+
+
+        let impl_key = (trait_key.clone(), owner.clone());
+        let f = async {
+            // Create and register the implementation
+            // TODO don't forget to add initial variables in traits that do have params
+            let mut fresh_variable_scope = HashMap::new();
+            let builder = TraitImplBuilder::new(
+                the_def,
+                b.registry,
+                false,
+                &mut fresh_variable_scope,
+                b.cycle_detector.clone()
+            );
+            // Do not early return because we have to share None results too
+            // So await.map() instead of await?;
+            let trait_impl = Self::general_implementation(builder, owner.clone()).await?;
+            Some(trait_impl.register10(trait_key.clone(), owner));
+        };
+        let the_impl = b.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
 
         // We have an implementation. Great. Let's add the dependency.
-        if let Some(_) = b.traits10_dependencies.insert(impl_key, raw_impl.clone()) {
+        if let Some(_) = b.traits10_dependencies.insert(impl_key, the_impl.clone()) {
             // We already had the dependency. No problem.
         }
-        let mv_result = match &raw_impl.return_expression {
+        let mv_result = match &the_impl.return_expr {
             AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
             _ => None,
         };
@@ -190,19 +218,21 @@ pub trait TraitDef_2Class_2Param {
 
 pub struct RawTraitImplementation {
     definition: Arc<RawTraitDefinition>,
-    // TODO transitive dependencies to avoid cycles (maybe just a feature of the builder)
-    dependencies: Vec<Arc<RawTraitImplementation>>,
+
+    traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
+    traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
+    traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
+    traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
+
     owner: TraitParam,
     owner_is_param: bool,
     other_params: Vec<TraitParam>,
-    variables: FastHashMap<String, RawVariableDeclaration>,
-    return_expression: AnyExpression,
-    specialized_override: bool,
+    lines: Vec<CommentOrVariableDeclaration>,
+    return_comment: Option<String>,
+    return_expr: AnyExpression,
+    // TODO handle specialized overriding, but maybe don't need this property here. Not sure yet.
+    // specialized_override: bool,
 }
-
-pub struct TraitDefRegistry(
-    FastHashMap<String, Arc<RawTraitDefinition>>
-);
 
 /// Each TraitKey should be the final name of a trait, and correspond
 /// to exactly one trait item in rust. It should be in UpperCamelCase
@@ -280,12 +310,25 @@ impl TraitAlias {
 }
 
 
-
+// TODO let the impl registry hold a reference (or Arc) to the definition registry too
+#[derive(Clone)]
 pub struct TraitImplRegistry {
-    traits10: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    traits11: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    traits21: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
-    traits22: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
+    defs: TraitDefRegistry,
+    // The use of options is to help short circuit the forgoing of implementations
+    // that we've already determined cannot exist. Basically, the map might get fat with
+    // None entries, but should save us a bit of compute cycles from repeatedly attempting
+    // and failing to generate some trait implementations.
+    traits10: AsyncMap<(TraitKey, MultiVector), Option<Arc<RawTraitImplementation>>>,
+    traits11: AsyncMap<(TraitKey, MultiVector), Option<Arc<RawTraitImplementation>>>,
+    traits21: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
+    traits22: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
+}
+#[derive(Clone)]
+pub struct TraitDefRegistry {
+    traits10: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
+    traits11: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
+    traits21: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
+    traits22: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
 }
 
 
@@ -296,24 +339,49 @@ pub enum CommentOrVariableDeclaration {
     VarDec(Arc<RawVariableDeclaration>)
 }
 
-pub struct TraitImplBuilder<'impls, ReturnStatus> {
-    registry: &'impls TraitImplRegistry,
+pub struct TraitImplBuilder<'build_ctx, ReturnStatus> {
+    registry: &'build_ctx TraitImplRegistry,
     trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
 
+    // TODO cycle detection
+    cycle_detector: HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
-    variables: HashMap<String, Arc<RawVariableDeclaration>>,
+    variables: &'build_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
     return_expr: Option<AnyExpression>,
     return_status: PhantomData<ReturnStatus>,
 }
 
-impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
+impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
+    fn new(
+        trait_def: Arc<RawTraitDefinition>,
+        registry: &'build_ctx TraitImplRegistry,
+        inline_dependencies: bool,
+        variables: &'build_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
+        cycle_detector: HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
+    ) -> Self {
+        TraitImplBuilder {
+            registry,
+            trait_def,
+            inline_dependencies,
+            cycle_detector,
+            traits10_dependencies: Default::default(),
+            traits11_dependencies: Default::default(),
+            traits21_dependencies: Default::default(),
+            traits22_dependencies: Default::default(),
+            variables,
+            lines: vec![],
+            return_comment: None,
+            return_expr: None,
+            return_status: PhantomData,
+        }
+    }
 
     fn make_var_name_unique(&mut self, var_name: String) -> String {
         // TODO
@@ -379,22 +447,22 @@ impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
     // TODO return type should really match the trait definition, it can't just be any type.
     pub fn return_expr<ExprType, Expr: Expression<ExprType>>(
         self, expr: Expr
-    ) -> Option<TraitImplBuilder<'impls, ExprType>> {
+    ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {
         self.comment_return_impl(None::<String>, expr)
     }
 
     pub fn comment_return<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: C, expr: Expr
-    ) -> Option<TraitImplBuilder<'impls, ExprType>> {
+    ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {
         self.comment_return_impl(Some(comment), expr)
     }
 
     fn comment_return_impl<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: Option<C>, expr: Expr
-    ) -> Option<TraitImplBuilder<'impls, ExprType>> {
+    ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {
         return Some(TraitImplBuilder {
             registry: self.registry,
-            trait_def: self.trait_def,
+            // trait_def: self.trait_def,
             inline_dependencies: false,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -410,15 +478,31 @@ impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
 }
 
 
-// impl<'impls> TraitImplBuilder<'impls, HasReturned> {
-//     fn register(self, impls: &mut TraitImplRegistry) {
-//         // let thing = &mut impls.all;
-//         // let trait_name = self.trait_def.name.clone();
-//         // let class_names = vec![];
-//         // let raw = Arc::new(self.into());
-//         // thing.insert((trait_name, class_names), raw);
-//     }
-// }
+impl<'impls, T> TraitImplBuilder<'impls, T> {
+    fn register10(
+        self, tk: TraitKey, owner: MultiVector
+    ) -> Arc<RawTraitImplementation> {
+        let result = Arc::new(RawTraitImplementation {
+            definition: self.trait_def,
+            traits10_dependencies: self.traits10_dependencies,
+            traits11_dependencies: self.traits11_dependencies,
+            traits21_dependencies: self.traits21_dependencies,
+            traits22_dependencies: self.traits22_dependencies,
+            owner: TraitParam::Fixed(ExpressionType::Class(owner.clone())),
+            owner_is_param: false,
+            other_params: vec![],
+            lines: self.lines,
+            return_comment: self.return_comment,
+            // This shouldn't be a problem because of type level state and function visibilities
+            return_expr: self.return_expr.expect("Must have return expression in order to register"),
+        });
+        let existing = self.registry.traits10.insert((tk, owner), result.clone());
+        if existing.is_some() {
+            panic!("It is inefficient to generate redundant trait implementations ({tk:?}). Use better concurrency control.")
+        }
+        return result;
+    }
+}
 
 
 

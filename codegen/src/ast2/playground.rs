@@ -53,12 +53,14 @@ impl TraitDef_1Class_1Param for AntiDual {
     }
 }
 
+
+
 #[async_trait]
 impl TraitDef_2Class_2Param for Expansion {
     type Output = MultiVector;
 
     fn trait_names(&self) -> TraitNames {
-        TraitNames::just("23%#4Expansion df silly willy")
+        TraitNames::just("Expansion")
     }
 
     async fn general_implementation<'impls>(
@@ -68,10 +70,12 @@ impl TraitDef_2Class_2Param for Expansion {
     ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
         let anti_dual = AntiDual.invoke(&mut b, other).await?;
         let anti_dual = b.variable("anti_dual", anti_dual);
-        let wedge = Wedge::default().invoke(&mut b, slf, anti_dual).await?;
+        let wedge = Wedge::default().inline(&mut b, slf, anti_dual).await?;
         b.comment_return("Hello comment", wedge)
     }
 }
+
+
 
 #[test]
 fn thingy() {
