@@ -1,5 +1,7 @@
 use std::cmp::Ordering;
 use std::fmt::{Debug, Display, Formatter, Write};
+use rand::Rng;
+use crate::algebra::basis_element;
 
 bitflags::bitflags! {
     #[derive(Clone, Copy, PartialEq, Eq)]
@@ -67,6 +69,19 @@ impl Display for BasisSignature {
     }
 }
 
+impl BasisSignature {
+    fn to_primary_bases(&self) -> Vec<PrimaryBasis> {
+        let mut result = vec![];
+        for basis in PrimaryBasis::array() {
+            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            if self.contains(sig) {
+                result.push(basis);
+            }
+        }
+        result
+    }
+}
+
 
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -124,15 +139,121 @@ impl BasisElement {
     pub fn primitive_wedge(
         &self,
         other: &BasisElement,
-        anti_scalar: &BasisElement,
-        generator_squares: &[i8]
+        generator_squares: &GeneratorSquares,
     ) -> BasisElement {
-        let a = self;
-
-
-        return a.clone();
+        let a = self.signature.to_primary_bases();
+        let b = other.signature.to_primary_bases();
+        let mut sign = self.coefficient * other.coefficient;
+        let mut result_elements = vec![];
+        let mut a_idx = 0;
+        let mut b_idx = 0;
+        while a_idx < a.len() || b_idx < b.len() {
+            if a_idx >= a.len() {
+                result_elements.push(b[b_idx]);
+                b_idx += 1;
+                continue
+            }
+            if b_idx >= b.len() {
+                result_elements.push(a[a_idx]);
+                a_idx += 1;
+                continue
+            }
+            let a_ = a[a_idx];
+            let b_ = b[b_idx];
+            match a_.cmp(&b_) {
+                Ordering::Less => {
+                    result_elements.push(a_);
+                    a_idx += 1;
+                }
+                Ordering::Equal => {
+                    sign *= generator_squares.square(a_);
+                    if sign == 0 {
+                        return BasisElement::zero()
+                    }
+                    // Must move b_ at least to the right of a_.
+                    // Which negates the sign each step.
+                    let swaps = ((a.len() - a_idx) - 1) as u32;
+                    sign *= i8::pow(-1, swaps % 2);
+                    a_idx += 1;
+                    b_idx += 1;
+                }
+                Ordering::Greater => {
+                    // Must move b_ all the way to left of a_.
+                    // Which negates the sign each step.
+                    result_elements.push(b_);
+                    let swaps = (a.len() - a_idx) as u32;
+                    sign *= i8::pow(-1, swaps % 2);
+                    b_idx += 1;
+                }
+            }
+        }
+        let mut result_sig = 0u16;
+        for primary_basis in result_elements {
+            let additional_sig = 1u16 << (primary_basis as u8);
+            result_sig = result_sig | additional_sig;
+        }
+        let signature = BasisSignature::from_bits_retain(result_sig);
+        BasisElement {
+            coefficient: sign,
+            signature,
+        }
     }
 }
+
+#[test]
+fn new_basis_elements_wedge() {
+    let mut rng = rand::thread_rng();
+    for _ in 0..100 {
+        let mut a: u16 = rng.gen();
+        let mut b: u16 = rng.gen();
+        let a_s: i8 = rng.gen::<i8>().signum();
+        let b_s: i8 = rng.gen::<i8>().signum();
+        let d: usize = (rng.gen::<usize>() % 15) + 1;
+        for remove_d in d..16 {
+            a = a & !(1u16 << remove_d);
+            b = b & !(1u16 << remove_d);
+        }
+
+        let mut squares = GeneratorSquares::empty();
+        for _ in 0..d {
+            let basis = squares.next_available_basis().unwrap();
+            let sq: i8 = ((rng.gen::<i8>().max(i8::MIN + 1).abs() % 5) - 2).signum();
+            squares = squares.append([(basis, sq)]).unwrap();
+        }
+        println!("Squares: {squares:?}");
+        println!("a: {a_s} {a:016b}");
+        println!("b: {b_s} {b:016b}");
+
+        let old_a = basis_element::BasisElement {
+            coefficient: a_s as isize,
+            index: a,
+        };
+        let old_b = basis_element::BasisElement {
+            coefficient: b_s as isize,
+            index: b,
+        };
+
+        let mut new_a = BasisElement::from(BasisSignature::from_bits_retain(a));
+        new_a.coefficient = a_s;
+        let mut new_b = BasisElement::from(BasisSignature::from_bits_retain(b));
+        new_b.coefficient = b_s;
+
+        let sq: Vec<_> = squares.raw_squares[0..d].iter().map(|it| it.clone() as isize).collect();
+        let old_product = old_a.primitive_product(&old_b, sq.as_slice());
+        let new_product = new_a.primitive_wedge(&new_b, &squares);
+
+        let old_coefficient = old_product.coefficient;
+        let old_sig = old_product.index;
+        let new_coefficient = new_product.coefficient as isize;
+        let new_sig = new_product.signature.bits();
+        println!("old result: {old_coefficient} {old_sig:016b}");
+        println!("new result: {new_coefficient} {new_sig:016b}");
+
+        assert_eq!(old_coefficient, new_coefficient, "coefficients mismatch");
+        assert_eq!(old_sig, new_sig, "signature mismatch");
+    }
+}
+
 
 #[repr(u8)]
 #[allow(non_camel_case_types)]
@@ -230,6 +351,10 @@ impl GeneratorSquares {
             raw_squares[(basis as u8) as usize] = square;
         }
         Self { active_bases, raw_squares }
+    }
+
+    pub fn square(&self, basis: PrimaryBasis) -> i8 {
+        self.raw_squares[(basis as u8) as usize]
     }
 }
 

@@ -51,6 +51,13 @@ impl BasisElement {
             .map(|i| generator_squares[i])
             .fold(a.coefficient * b.coefficient * if commutations % 2 == 0 { 1 } else { -1 }, |acc, val| acc * val);
 
+        if coefficient == 0 {
+            return BasisElement {
+                coefficient,
+                index: 0u16,
+            }
+        }
+
         // Return the new BasisElement with the calculated coefficient and index
         BasisElement {
             coefficient,
