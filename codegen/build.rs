@@ -22,17 +22,9 @@ fn main() {
 /// smaller and easier to compile, and only gets chunky if you are insane and want to do
 /// 9+ dimensional stuff
 fn generate_multi_bases() {
-
-
     let out_dir = &env::var("OUT_DIR").unwrap();
-    let dest_path = Path::new(out_dir).join("generated_multi_bases.rs");
+    let dest_path = Path::new(out_dir).join("generated_elements.rs");
     let mut f = File::create(dest_path).unwrap();
-
-    f.write_all(b"
-#[allow(non_upper_case_globals)]
-impl BasisSignature {
-").unwrap();
-
 
     let mut max = u8::MAX as u16;
     if cfg!(feature = "very-large-bases") {
@@ -45,22 +37,14 @@ impl BasisSignature {
         })
     });
     for num in numbers {
-        if num.count_ones() < 2 {
-            continue
-        }
-
-        let mut combined_basis = String::new();
+        let mut combined_basis = if num == 0 { "scalar".to_string() } else { "e".to_string() };
         for i in 0..16 {
             if num & (1 << i) != 0 {
                 combined_basis.push(char::from_digit(i, 16).unwrap());
             }
         }
 
-        let line = format!("    pub const e{combined_basis}: BasisSignature = BasisSignature::from_bits_retain(0b{num:016b});\n");
+        let line = format!("    pub const {combined_basis}: BasisElement = element(BasisSignature::from_bits_retain(0b{num:016b}));\n");
         f.write(line.as_bytes()).unwrap();
     }
-
-    f.write_all(b"
-}
-").unwrap();
 }

@@ -55,10 +55,11 @@ pub trait TraitDef_1Class_0Param {
     type Output: TraitResultType;
     // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
-        owner: Arc<MultiVectorClass>,
+        owner: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
+    // TODO invokes
 }
 
 #[async_trait]
@@ -68,10 +69,12 @@ pub trait TraitDef_1Class_1Param {
     type Output: TraitResultType;
     // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, HasReturned>>;
+
+    // TODO give bool option to inline or not, then create variants of invoke that just say it outright
     async fn invoke<Expr: Expression<MultiVector>>(
         b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
     ) -> Option<<Self::Output as TraitResultType>::ExprType> {
@@ -87,7 +90,7 @@ pub trait TraitDef_2Class_1Param {
     type Output: TraitResultType;
     // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector,
@@ -107,7 +110,7 @@ pub trait TraitDef_2Class_2Param {
     type Output: TraitResultType;
     // TODO I feel that this bit is still awkward
     fn result_type(result: &Self::Output) -> TraitResult;
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>,
@@ -176,29 +179,26 @@ impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
     }
 
     pub fn variable<
-        'var,
         V: Into<String>,
         ExprType,
         Expr: Expression<ExprType>
     >(
-        &'var mut self,
+        &mut self,
         var_name: V,
         expr: Expr
-    ) -> Variable<'var, ExprType> {
+    ) -> Variable<ExprType> {
         let var_name = var_name.into();
         let unique_name = self.make_var_name_unique(var_name);
+        let expr_type = expr.strong_expression_type();
         let decl = Arc::new(RawVariableDeclaration {
             comment: None,
             name: unique_name.clone(),
             expr: Some(expr.into_any_expression()),
         });
-        let existing = self.variables.insert(unique_name, decl.clone());
+        let existing = self.variables.insert(unique_name.clone(), decl.clone());
         assert!(existing.is_none(), "Variable {unique_name} is already taken");
         self.lines.push(CommentOrVariableDeclaration::VarDec(decl.clone()));
-        Variable {
-            expr_type: expr.strong_expression_type(),
-            decl: &decl,
-        }
+        Variable { expr_type, decl, }
     }
 
     // pub fn comment_variable<

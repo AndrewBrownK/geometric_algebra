@@ -8,6 +8,8 @@ use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, V
 struct TraitName {
     name: String,
 }
+
+// TODO use this somehow
 enum ClassGroup {
     JustFloat(BasisSignature),
     Vec2(BasisSignature, BasisSignature),
@@ -239,7 +241,7 @@ impl Expression<MultiVector> for MultiVectorExpr {
     }
 }
 
-impl<'var> Expression<Integer> for Variable<'var, Integer> {
+impl Expression<Integer> for Variable<Integer> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Int(IntExpr::Variable(RawVariableInvocation { decl }))
@@ -253,7 +255,7 @@ impl<'var> Expression<Integer> for Variable<'var, Integer> {
         ExpressionType::Int(Integer)
     }
 }
-impl<'var> Expression<Float> for Variable<'var, Float> {
+impl Expression<Float> for Variable<Float> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Float(FloatExpr::Variable(RawVariableInvocation { decl }))
@@ -267,7 +269,7 @@ impl<'var> Expression<Float> for Variable<'var, Float> {
         ExpressionType::Float(Float)
     }
 }
-impl<'var> Expression<Vec2> for Variable<'var, Vec2> {
+impl Expression<Vec2> for Variable<Vec2> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec2(Vec2Expr::Variable(RawVariableInvocation { decl }))
@@ -281,7 +283,7 @@ impl<'var> Expression<Vec2> for Variable<'var, Vec2> {
         ExpressionType::Vec2(Vec2)
     }
 }
-impl<'var> Expression<Vec3> for Variable<'var, Vec3> {
+impl Expression<Vec3> for Variable<Vec3> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec3(Vec3Expr::Variable(RawVariableInvocation { decl }))
@@ -295,7 +297,7 @@ impl<'var> Expression<Vec3> for Variable<'var, Vec3> {
         ExpressionType::Vec3(Vec3)
     }
 }
-impl<'var> Expression<Vec4> for Variable<'var, Vec4> {
+impl Expression<Vec4> for Variable<Vec4> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec4(Vec4Expr::Variable(RawVariableInvocation { decl }))
@@ -309,7 +311,7 @@ impl<'var> Expression<Vec4> for Variable<'var, Vec4> {
         ExpressionType::Vec4(Vec4)
     }
 }
-impl<'var> Expression<MultiVector> for Variable<'var, MultiVector> {
+impl Expression<MultiVector> for Variable<MultiVector> {
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Class(MultiVectorExpr {

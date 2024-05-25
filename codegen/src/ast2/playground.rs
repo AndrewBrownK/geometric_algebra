@@ -53,7 +53,7 @@ impl TraitDef_2Class_2Param for Wedge {
         TraitResult::AnyClass(result)
     }
 
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
@@ -70,7 +70,7 @@ impl TraitDef_1Class_1Param for AntiDual {
         TraitResult::AnyClass(result)
     }
 
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>
     ) -> Option<TraitImplBuilder<'impls, HasReturned>> {
@@ -86,7 +86,7 @@ impl TraitDef_2Class_2Param for Expansion {
         TraitResult::AnyClass(result)
     }
 
-    async fn general_impl<'impls>(
+    async fn general_implementation<'impls>(
         mut b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
@@ -100,7 +100,12 @@ impl TraitDef_2Class_2Param for Expansion {
 
 #[test]
 fn thingy() {
-    // TODO
+    use crate::ast2::basis::elements::*;
+    let s = scalar;
+    let a = e12.negate();
+    let b = e23;
+    let c = e3215;
+    println!("Here are some things: {s} {a} {b} {c}")
 }
 
 
