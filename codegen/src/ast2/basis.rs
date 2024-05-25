@@ -198,6 +198,21 @@ impl BasisElement {
             signature,
         }
     }
+
+    pub fn primitive_anti_wedge(
+        &self,
+        other: &BasisElement,
+        generator_squares: &GeneratorSquares,
+    ) -> BasisElement {
+        let mut a = self.clone();
+        let mut b = other.clone();
+        let anti_scalar_signature = generator_squares.anti_scalar().signature;
+        a.signature = anti_scalar_signature - a.signature;
+        b.signature = anti_scalar_signature - b.signature;
+        let mut result = a.primitive_wedge(&b, generator_squares);
+        result.signature = anti_scalar_signature - result.signature;
+        return result;
+    }
 }
 
 #[test]
@@ -239,8 +254,8 @@ fn new_basis_elements_wedge() {
         new_b.coefficient = b_s;
 
         let sq: Vec<_> = squares.raw_squares[0..d].iter().map(|it| it.clone() as isize).collect();
-        let old_product = old_a.primitive_product(&old_b, sq.as_slice());
-        let new_product = new_a.primitive_wedge(&new_b, &squares);
+        let old_product = old_a.primitive_anti_product(&old_b, sq.as_slice());
+        let new_product = new_a.primitive_anti_wedge(&new_b, &squares);
 
         let old_coefficient = old_product.coefficient;
         let old_sig = old_product.index;
@@ -294,6 +309,14 @@ pub struct GeneratorSquares {
     raw_squares: [i8; 16],
 }
 impl GeneratorSquares {
+    pub fn anti_scalar(&self) -> BasisElement {
+        let signature = self.active_bases.clone();
+        BasisElement {
+            coefficient: 1,
+            signature,
+        }
+    }
+
     pub fn next_available_basis(&self) -> anyhow::Result<PrimaryBasis> {
         let mut emptying_signature = self.active_bases.clone();
 
