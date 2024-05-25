@@ -134,6 +134,105 @@ impl BasisElement {
     }
 }
 
+#[repr(u8)]
+#[allow(non_camel_case_types)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
+pub enum PrimaryBasis {
+    e0 = 0,
+    e1 = 1,
+    e2 = 2,
+    e3 = 3,
+    e4 = 4,
+    e5 = 5,
+    e6 = 6,
+    e7 = 7,
+    e8 = 8,
+    e9 = 9,
+    eA = 10,
+    eB = 11,
+    eC = 12,
+    eD = 13,
+    eE = 14,
+    eF = 15,
+}
+impl PrimaryBasis {
+    fn array() -> [Self; 16] {
+        [
+            PrimaryBasis::e0, PrimaryBasis::e1, PrimaryBasis::e2, PrimaryBasis::e3,
+            PrimaryBasis::e4, PrimaryBasis::e5, PrimaryBasis::e6, PrimaryBasis::e7,
+            PrimaryBasis::e8, PrimaryBasis::e9, PrimaryBasis::eA, PrimaryBasis::eB,
+            PrimaryBasis::eC, PrimaryBasis::eD, PrimaryBasis::eE, PrimaryBasis::eF,
+        ]
+    }
+
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GeneratorSquares {
+    active_bases: BasisSignature,
+    raw_squares: [i8; 16],
+}
+impl GeneratorSquares {
+    pub fn next_available_basis(&self) -> anyhow::Result<PrimaryBasis> {
+        let mut emptying_signature = self.active_bases.clone();
+
+        // The way this works, if the active_bases is not empty and starts at e1 (or higher) instead
+        // of e0, then it will skip over e0 (etc.) unless it runs out of bases all the way to eF,
+        // and then it will loop around and try the lower bases again.
+        for basis in PrimaryBasis::array().into_iter().chain(PrimaryBasis::array()) {
+            if emptying_signature.is_empty() {
+                return Ok(basis)
+            }
+            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            emptying_signature.remove(sig);
+        }
+        Err(anyhow::format_err!("There are no more available PrimaryBasis for {self:?}."))
+    }
+
+    pub fn empty() -> Self {
+        Self {
+            active_bases: BasisSignature::empty(),
+            raw_squares: [0i8; 16]
+        }
+    }
+
+    pub fn new<const N: usize>(generator_squares: [(PrimaryBasis, i8); N]) -> Self {
+        let mut active_bases = BasisSignature::empty();
+        let mut raw_squares = [0i8; 16];
+        for (basis, square) in generator_squares {
+            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            active_bases = active_bases.union(sig);
+            raw_squares[(basis as u8) as usize] = square;
+        }
+        Self { active_bases, raw_squares }
+    }
+
+    pub fn append<const N: usize>(self, generator_squares: [(PrimaryBasis, i8); N]) -> anyhow::Result<Self> {
+        let mut active_bases = self.active_bases;
+        let mut raw_squares = self.raw_squares;
+        for (basis, square) in generator_squares {
+            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            if active_bases.contains(sig) {
+                return Err(anyhow::format_err!("The PrimaryBasis {basis:?} is already taken on {self:?}"))
+            }
+            active_bases = active_bases.union(sig);
+            raw_squares[(basis as u8) as usize] = square;
+        }
+        Ok(Self { active_bases, raw_squares })
+    }
+
+    pub fn overwrite<const N: usize>(self, generator_squares: [(PrimaryBasis, i8); N]) -> Self {
+        let mut active_bases = self.active_bases;
+        let mut raw_squares = self.raw_squares;
+        for (basis, square) in generator_squares {
+            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            active_bases = active_bases.union(sig);
+            raw_squares[(basis as u8) as usize] = square;
+        }
+        Self { active_bases, raw_squares }
+    }
+}
+
 #[allow(non_upper_case_globals, dead_code)]
 pub mod elements {
     use crate::ast2::basis::*;

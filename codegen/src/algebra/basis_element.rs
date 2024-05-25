@@ -21,7 +21,7 @@ impl BasisElement {
         Self { coefficient: 1, index }
     }
 
-    pub fn component_bases(&self) -> impl Iterator<Item = usize> + '_ {
+    pub fn component_bases(&self) -> impl Iterator<Item=usize> + '_ {
         (0..std::mem::size_of::<BasisElementIndex>() * 8).filter(move |index| (self.index >> index) & 1 != 0)
     }
 
@@ -30,17 +30,28 @@ impl BasisElement {
         let mut commutations = 0;
         let mut remaining_a_index = a.index;
         let mut remaining_b_index = b.index;
+
+        // Iterate over the component bases of 'a'
         for index in a.component_bases() {
+            // Calculate the 'hurdles' for 'a' and 'b'
             let hurdles_a = remaining_a_index & (BasisElementIndex::MAX << (index + 1));
             let hurdles_b = remaining_b_index & ((1 << index) - 1);
-            commutations = commutations + BasisElement::from_index(hurdles_a | hurdles_b).grade();
-            remaining_a_index = remaining_a_index & !(1 << index);
-            remaining_b_index = remaining_b_index ^ (1 << index);
+
+            // Update the commutation count based on the grade of the combined hurdles
+            commutations += BasisElement::from_index(hurdles_a | hurdles_b).grade();
+
+            // Update the remaining indices for 'a' and 'b'
+            remaining_a_index &= !(1 << index);
+            remaining_b_index ^= (1 << index);
         }
+
+        // Calculate the coefficient for the product
         let coefficient = BasisElement::from_index(a.index & b.index)
             .component_bases()
             .map(|i| generator_squares[i])
-            .fold(a.coefficient * b.coefficient * if commutations % 2 == 0 { 1 } else { -1 }, |a, b| a * b);
+            .fold(a.coefficient * b.coefficient * if commutations % 2 == 0 { 1 } else { -1 }, |acc, val| acc * val);
+
+        // Return the new BasisElement with the calculated coefficient and index
         BasisElement {
             coefficient,
             index: a.index ^ b.index,

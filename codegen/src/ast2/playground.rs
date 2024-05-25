@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 
 use crate::algebra::MultiVectorClassRegistry;
+use crate::ast2::basis::{GeneratorSquares, PrimaryBasis};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::expressions::TraitResult;
 use crate::ast2::traits::{HasNotReturned, HasReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry};
@@ -105,7 +106,15 @@ fn thingy() {
     let a = e12.negate();
     let b = e23;
     let c = e3215;
-    println!("Here are some things: {s} {a} {b} {c}")
+    println!("Here are some things: {s} {a} {b} {c}");
+
+
+    // let mut sq = GeneratorSquares::empty();
+    // for i in 0..17 {
+    //     let b = sq.next_available_basis().unwrap();
+    //     sq = sq.append([(b, 0)]).unwrap();
+    //     sq.append([(PrimaryBasis::e3, 0)]).unwrap();
+    // }
 }
 
 
