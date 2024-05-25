@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use crate::ast2::expressions::AnyExpression;
 
-mod basis;
 mod datatype;
 mod playground;
 mod traits;

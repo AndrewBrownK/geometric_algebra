@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use crate::ast2::{RawVariableInvocation, Variable};
-use crate::ast2::basis::BasisSignature;
+use crate::algebra2::basis::BasisSignature;
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::traits::TraitKey;
 
@@ -75,15 +75,6 @@ impl TraitResultType for MultiVector {
         }
     }
 }
-
-pub enum TraitResult<'authentic> {
-    Int(&'authentic Integer),
-    Float(&'authentic Float),
-    OwnerClass(&'authentic MultiVector),
-    OtherClass(&'authentic MultiVector),
-    AnyClass(&'authentic MultiVector),
-}
-
 
 
 #[derive(PartialEq, Eq, Clone, Debug)]

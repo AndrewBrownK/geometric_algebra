@@ -401,7 +401,7 @@ impl GeneratorSquares {
 
 #[allow(non_upper_case_globals, dead_code)]
 pub mod elements {
-    use crate::ast2::basis::*;
+    use crate::algebra2::basis::*;
 
     const fn element(signature: BasisSignature) -> BasisElement {
         BasisElement {

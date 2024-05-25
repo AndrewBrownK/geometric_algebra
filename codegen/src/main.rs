@@ -11,6 +11,7 @@ mod impls;
 mod validate;
 mod shader_support;
 mod ast2;
+mod algebra2;
 
 mod build_scripts {
     pub mod cga;

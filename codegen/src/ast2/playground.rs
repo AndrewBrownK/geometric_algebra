@@ -2,8 +2,7 @@ use async_trait::async_trait;
 
 use crate::algebra::MultiVectorClassRegistry;
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::expressions::{Expression, TraitResult};
-use crate::ast2::traits::{HasNotReturned, HasReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry, TraitKey, TraitNames};
+use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry, TraitKey, TraitNames};
 use crate::ast2::Variable;
 
 
@@ -25,10 +24,6 @@ struct Expansion;
 impl TraitDef_2Class_2Param for Wedge {
     type Output = MultiVector;
 
-    fn result_type(result: &Self::Output) -> TraitResult {
-        TraitResult::AnyClass(result)
-    }
-
     fn trait_names(&self) -> TraitNames {
         self.names.clone()
     }
@@ -46,10 +41,6 @@ impl TraitDef_2Class_2Param for Wedge {
 impl TraitDef_1Class_1Param for AntiDual {
     type Output = MultiVector;
 
-    fn result_type(result: &Self::Output) -> TraitResult {
-        TraitResult::AnyClass(result)
-    }
-
     fn trait_names(&self) -> TraitNames {
         TraitNames::just("AntiDual")
     }
@@ -65,10 +56,6 @@ impl TraitDef_1Class_1Param for AntiDual {
 #[async_trait]
 impl TraitDef_2Class_2Param for Expansion {
     type Output = MultiVector;
-
-    fn result_type(result: &Self::Output) -> TraitResult {
-        TraitResult::AnyClass(result)
-    }
 
     fn trait_names(&self) -> TraitNames {
         TraitNames::just("23%#4Expansion df silly willy")
@@ -88,7 +75,7 @@ impl TraitDef_2Class_2Param for Expansion {
 
 #[test]
 fn thingy() {
-    use crate::ast2::basis::elements::*;
+    use crate::algebra2::basis::elements::*;
     let s = scalar;
     let a = e12.negate();
     let b = e23;

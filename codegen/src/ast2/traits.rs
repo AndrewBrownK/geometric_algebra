@@ -6,11 +6,11 @@ use async_trait::async_trait;
 use lazy_static::lazy_static;
 use naga::FastHashMap;
 use parking_lot::RwLock;
-use regex::{Regex, RegexBuilder};
+use regex::Regex;
 
-use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, Integer, MultiVector};
-use crate::ast2::expressions::{AnyExpression, Expression, TraitResult, TraitResultType};
 use crate::ast2::{RawVariableDeclaration, Variable};
+use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
+use crate::ast2::expressions::{AnyExpression, Expression, TraitResultType};
 
 enum TraitTypeConsensus {
     NoVotes,
@@ -45,8 +45,6 @@ pub struct RawTraitDefinition {
 pub trait TraitDef_1Class_0Param {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
-    // TODO I feel that this bit is still awkward
-    fn result_type(result: &Self::Output) -> TraitResult;
     fn trait_names(&self) -> TraitNames;
 
     async fn general_implementation<'impls>(
@@ -97,8 +95,6 @@ pub trait TraitDef_1Class_0Param {
 pub trait TraitDef_1Class_1Param {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
-    // TODO I feel that this bit is still awkward
-    fn result_type(result: &Self::Output) -> TraitResult;
     fn trait_names(&self) -> TraitNames;
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
@@ -129,8 +125,6 @@ pub trait TraitDef_2Class_1Param {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Other: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
-    // TODO I feel that this bit is still awkward
-    fn result_type(result: &Self::Output) -> TraitResult;
     fn trait_names(&self) -> TraitNames;
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
@@ -164,8 +158,6 @@ pub trait TraitDef_2Class_2Param {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Other: ClassesFromRegistry = AnyClasses;
     type Output: TraitResultType;
-    // TODO I feel that this bit is still awkward
-    fn result_type(result: &Self::Output) -> TraitResult;
     fn trait_names(&self) -> TraitNames;
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
@@ -299,8 +291,6 @@ pub struct TraitImplRegistry {
 
 pub struct HasNotReturned;
 
-pub struct HasReturned;
-
 pub enum CommentOrVariableDeclaration {
     Comment(String),
     VarDec(Arc<RawVariableDeclaration>)
@@ -420,15 +410,15 @@ impl<'impls> TraitImplBuilder<'impls, HasNotReturned> {
 }
 
 
-impl<'impls> TraitImplBuilder<'impls, HasReturned> {
-    fn register(self, impls: &mut TraitImplRegistry) {
-        // let thing = &mut impls.all;
-        // let trait_name = self.trait_def.name.clone();
-        // let class_names = vec![];
-        // let raw = Arc::new(self.into());
-        // thing.insert((trait_name, class_names), raw);
-    }
-}
+// impl<'impls> TraitImplBuilder<'impls, HasReturned> {
+//     fn register(self, impls: &mut TraitImplRegistry) {
+//         // let thing = &mut impls.all;
+//         // let trait_name = self.trait_def.name.clone();
+//         // let class_names = vec![];
+//         // let raw = Arc::new(self.into());
+//         // thing.insert((trait_name, class_names), raw);
+//     }
+// }
 
 
 
