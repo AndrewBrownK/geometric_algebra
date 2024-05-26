@@ -4,7 +4,6 @@ use std::future::Future;
 use std::hash::Hash;
 use std::sync::Arc;
 
-use parking_lot::RwLock;
 use tokio::sync::broadcast;
 use tokio::sync::broadcast::error::RecvError;
 
@@ -39,7 +38,7 @@ impl<T: Clone> AwaitOrClone<T> {
 
 
 #[derive(Clone)]
-pub struct AsyncMap<K: Hash, V: Clone>(Arc<RwLock<HashMap<K, AwaitOrClone<V>>>>);
+pub struct AsyncMap<K: Hash, V: Clone>(Arc<tokio::sync::RwLock<HashMap<K, AwaitOrClone<V>>>>);
 pub enum AsyncMapResult<V> {
     AlreadyDone(V),
     ItsOnTheWay(broadcast::Receiver<V>),
@@ -52,7 +51,8 @@ impl<V: Clone> AsyncMapResult<V> {
             AsyncMapResult::ItsOnTheWay(mut thingy) => {
                 thingy.recv().await.expect("AsyncMapResult recv error")
             }
-            AsyncMapResult::Oops(err) => panic!("AsyncMapResult oopsie: {err:?}")
+            AsyncMapResult::Oops(err) => panic!("AsyncMapResult oopsie: {err:?}"),
+            // _ => panic!()
         }
     }
 }
@@ -61,17 +61,12 @@ impl<
     K: Eq + Hash + Clone + Send + Sync + 'static,
     V: Clone + Send + Sync + 'static,
 > AsyncMap<K, V> {
-    // TODO instead of returning a DoItYourself, consider accepting an FnOnce here instead
-    //  and then the consumer can just await a result no matter how you slice it, instead
-    //  of matching on 4 cases and sticking creation logic there, and having the weird send back
-    //  that updates the map too. Just use an FnOnce instead. Basically, the user is fallible to
-    //  use the sender that they are somewhat obligated to use.
-
     pub async fn get_or_create_or_panic<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> V {
         self.get_or_create(k, f).await.get_or_panic().await
     }
     pub async fn get_or_create<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> AsyncMapResult<V> {
-        let read = self.0.read();
+
+        let read = self.0.read().await;
         match read.get(&k) {
             Some(existing) => {
                 let result = existing.clone();
@@ -83,7 +78,7 @@ impl<
             }
             None => {
                 drop(read);
-                let mut write = self.0.write();
+                let mut write = self.0.write().await;
                 match write.entry(k.clone()) {
                     Entry::Occupied(occ) => {
                         let impl_started = occ.get().clone();
@@ -97,10 +92,10 @@ impl<
                         let (s, r) = broadcast::channel(1);
                         vac.insert(AwaitOrClone::InProgress(r.resubscribe()));
                         drop(write);
-                        let self_ = (*self).clone();
+                        let self_ = self.clone();
                         tokio::spawn( async move {
                             let v = f.await;
-                            let mut write = self_.0.write();
+                            let mut write = self_.0.write().await;
                             write.entry(k.clone())
                                 .and_modify(|it| *it = AwaitOrClone::Done(v.clone()))
                                 .or_insert_with(|| AwaitOrClone::Done(v.clone()));

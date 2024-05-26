@@ -45,7 +45,6 @@ pub enum TraitParam {
     Fixed(ExpressionType)
 }
 
-// TODO I gotta start constructing these
 pub struct RawTraitDefinition {
     documentation: String,
     names: TraitNames,
@@ -73,10 +72,10 @@ pub trait TraitDef_1Class_0Param {
         owner: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> Arc<RawTraitDefinition> {
+    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
-            names: self.trait_names(),
+            names: trait_names,
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: false,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -100,17 +99,20 @@ pub trait TraitDef_1Class_0Param {
             return self.inline(b, owner).await;
         }
 
-        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async { self.def() }).await;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner.clone());
         let owner_clone = owner.clone();
         let trait_key_clone = trait_key.clone();
+        let registry = b.registry.clone();
+        let cycle_detector_clone = b.cycle_detector.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let builder = TraitImplBuilder::new(
-                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let trait_impl = Self::general_implementation(builder, owner_clone.clone()).await?;
             Some(trait_impl.into_trait10(trait_key_clone, owner_clone))
@@ -156,10 +158,10 @@ pub trait TraitDef_1Class_1Param {
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> Arc<RawTraitDefinition> {
+    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
-            names: self.trait_names(),
+            names: trait_names,
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -184,13 +186,15 @@ pub trait TraitDef_1Class_1Param {
             return self.inline(b, owner_param).await;
         }
 
-        let f = async { self.def() };
-        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), f).await;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
         let trait_key_clone = trait_key.clone();
+        let registry = b.registry.clone();
+        let cycle_detector_clone = b.cycle_detector.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -201,7 +205,7 @@ pub trait TraitDef_1Class_1Param {
             });
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -252,10 +256,10 @@ pub trait TraitDef_2Class_1Param {
         other: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> Arc<RawTraitDefinition> {
+    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
-            names: self.trait_names(),
+            names: trait_names,
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -283,13 +287,16 @@ pub trait TraitDef_2Class_1Param {
             return self.inline(b, owner_param, other_class.clone()).await;
         }
 
-        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async { self.def() }).await;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
         let owner_class_clone = owner_class.clone();
         let other_class_clone = other_class.clone();
         let trait_key_clone = trait_key.clone();
+        let registry = b.registry.clone();
+        let cycle_detector_clone = b.cycle_detector.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -300,7 +307,7 @@ pub trait TraitDef_2Class_1Param {
             });
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -352,10 +359,10 @@ pub trait TraitDef_2Class_2Param {
         other: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> Arc<RawTraitDefinition> {
+    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
-            names: self.trait_names(),
+            names: trait_names,
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -384,13 +391,16 @@ pub trait TraitDef_2Class_2Param {
             return self.inline(b, owner_param, other_param).await;
         }
 
-        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async { self.def() }).await;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
         let owner_class_clone = owner_class.clone();
         let other_class_clone = other_class.clone();
         let trait_key_clone = trait_key.clone();
+        let registry = b.registry.clone();
+        let cycle_detector_clone = b.cycle_detector.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -407,7 +417,7 @@ pub trait TraitDef_2Class_2Param {
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             fresh_variable_scope.insert("other".to_string(), declare_other.clone());
             let builder = TraitImplBuilder::new(
-                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -548,7 +558,6 @@ impl TraitAlias {
 }
 
 
-// TODO let the impl registry hold a reference (or Arc) to the definition registry too
 #[derive(Clone)]
 pub struct TraitImplRegistry {
     defs: TraitDefRegistry,
@@ -582,8 +591,7 @@ pub struct TraitImplBuilder<'build_ctx, ReturnStatus> {
     trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
 
-    // TODO cycle detection
-    cycle_detector: HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
+    cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
@@ -602,7 +610,7 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
         registry: &'build_ctx TraitImplRegistry,
         inline_dependencies: bool,
         variables: &'build_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
-        cycle_detector: HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
+        cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     ) -> Self {
         TraitImplBuilder {
             registry,
