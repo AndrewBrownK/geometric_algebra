@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::marker::PhantomData;
 use std::ops::Deref;
@@ -145,6 +146,18 @@ pub trait TraitDef_1Class_0Param {
         owner: MultiVector
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
+        let impl_key = (trait_key.clone(), owner.clone());
+
+        // Double Option/None: First is no impl attempted yet, Second is impl determined absent
+        if let Some(Some(raw_impl)) = b.registry.traits10.get(&impl_key).await {
+            // It is faster to inline here, rather than copying existing impls,
+            // because variable substitution involves copying and mutating an entire AST.
+            // So the only time we want to copy an AST is if it is specialized.
+            if raw_impl.specialized {
+                return b.inline_by_copy_existing_10::<Self>(&trait_key, raw_impl)
+            }
+        }
+
         let trait_names = self.trait_names();
         let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let builder = TraitImplBuilder::new(
@@ -247,9 +260,22 @@ pub trait TraitDef_1Class_1Param {
     }
     async fn inline<Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
+        b: &mut TraitImplBuilder<HasNotReturned>,
+        owner: Expr
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
+        let impl_key = (trait_key.clone(), owner.strong_expression_type());
+
+        // Double Option/None: First is no impl attempted yet, Second is impl determined absent
+        if let Some(Some(raw_impl)) = b.registry.traits11.get(&impl_key).await {
+            // It is faster to inline here, rather than copying existing impls,
+            // because variable substitution involves copying and mutating an entire AST.
+            // So the only time we want to copy an AST is if it is specialized.
+            if raw_impl.specialized {
+                return b.inline_by_copy_existing_11::<Self, _>(&trait_key, raw_impl, owner)
+            }
+        }
+
         let trait_names = self.trait_names();
         let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let mut builder = TraitImplBuilder::new(
@@ -360,9 +386,23 @@ pub trait TraitDef_2Class_1Param {
 
     async fn inline<Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr, other: MultiVector
+        b: &mut TraitImplBuilder<HasNotReturned>,
+        owner: Expr,
+        other: MultiVector
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
+        let impl_key = (trait_key.clone(), owner.strong_expression_type(), other.clone());
+
+        // Double Option/None: First is no impl attempted yet, Second is impl determined absent
+        if let Some(Some(raw_impl)) = b.registry.traits21.get(&impl_key).await {
+            // It is faster to inline here, rather than copying existing impls,
+            // because variable substitution involves copying and mutating an entire AST.
+            // So the only time we want to copy an AST is if it is specialized.
+            if raw_impl.specialized {
+                return b.inline_by_copy_existing_21::<Self, _>(&trait_key, raw_impl, owner)
+            }
+        }
+
         let trait_names = self.trait_names();
         let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let mut builder = TraitImplBuilder::new(
@@ -490,12 +530,23 @@ pub trait TraitDef_2Class_2Param {
         other: Expr2
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
+        let impl_key = (trait_key.clone(), owner.strong_expression_type(), other.strong_expression_type());
+
+        // Double Option/None: First is no impl attempted yet, Second is impl determined absent
+        if let Some(Some(raw_impl)) = b.registry.traits22.get(&impl_key).await {
+            // It is faster to inline here, rather than copying existing impls,
+            // because variable substitution involves copying and mutating an entire AST.
+            // So the only time we want to copy an AST is if it is specialized.
+            if raw_impl.specialized {
+                return b.inline_by_copy_existing_22::<Self, _, _>(&trait_key, raw_impl, owner, other)
+            }
+        }
+
         let trait_names = self.trait_names();
         let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
         let mut builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
-        // TODO manual overrides/specialization looks like it will be tricky.
         let owner = builder.coerce_variable("self", owner);
         let other = builder.coerce_variable("other", other);
         let trait_impl = Self::general_implementation(builder, owner, other).await?;
@@ -520,8 +571,7 @@ pub struct RawTraitImplementation {
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
     return_expr: AnyExpression,
-    // TODO handle specialized overriding, but maybe don't need this property here. Not sure yet.
-    // specialized_override: bool,
+    specialized: bool,
 }
 
 /// Each TraitKey should be the final name of a trait, and correspond
@@ -672,6 +722,7 @@ pub struct TraitDefRegistry {
     //  RawTraitDefinitions and manually inline those. Maybe would be annoying, but not the
     //  end of the world. Can't be worse than destructure inlining, which I was planning to do
     //  anyway.
+    //  Yeah, I'm thinking I'll just copy RawTraitImplementation for specialized inlining
 
     traits10: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits11: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
@@ -682,15 +733,18 @@ pub struct TraitDefRegistry {
 
 pub struct HasNotReturned;
 
+#[derive(Clone)]
 pub enum CommentOrVariableDeclaration {
-    Comment(String),
+    Comment(Cow<'static, String>),
     VarDec(Arc<RawVariableDeclaration>)
 }
 
 pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
+    // TODO statistics tracker for fun
     registry: TraitImplRegistry,
     trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
+    specialized: bool,
 
     cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
@@ -698,6 +752,8 @@ pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
+    // TODO idea... key this on (String, usize) instead of just String
+    //  could make life a lot easier when I want group access like "circle_g3_02"
     variables: &'impl_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
@@ -717,6 +773,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
             registry,
             trait_def,
             inline_dependencies,
+            specialized: false,
             cycle_detector,
             traits10_dependencies: Default::default(),
             traits11_dependencies: Default::default(),
@@ -730,6 +787,10 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         }
     }
 
+    pub fn mark_as_specialized_implementation(&mut self) {
+        self.specialized = true;
+    }
+
     fn make_var_name_unique(&mut self, var_name: String) -> String {
         let mut unique_name = var_name.to_string();
         let mut counter = 1;
@@ -741,7 +802,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     }
 
     pub fn comment<C: Into<String>>(&mut self, comment: C) {
-        self.lines.push(CommentOrVariableDeclaration::Comment(comment.into()))
+        self.lines.push(CommentOrVariableDeclaration::Comment(Cow::Owned(comment.into())))
     }
 
     pub fn variable<
@@ -784,7 +845,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         let var_name = var_name.into();
         let unique_name = self.make_var_name_unique(var_name);
         let decl = Arc::new(RawVariableDeclaration {
-            comment: comment.map(|it| it.into()),
+            comment: comment.map(|it| Cow::Owned(it.into())),
             name: unique_name.clone(),
             expr: Some(expr),
         });
@@ -832,7 +893,170 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
             return_comment: comment.map(|it| it.into()),
             return_expr: Some(expr.into_any_expression()),
             return_type,
+            specialized: self.specialized,
         })
+    }
+
+    fn inline_by_copy_existing_10<
+        T: TraitDef_1Class_0Param + ?Sized,
+    >(
+        &mut self,
+        trait_key: &TraitKey,
+        raw_impl: Arc<RawTraitImplementation>,
+    ) -> Option<Variable<T::Output>> {
+        let mut var_replacements: Vec<(Arc<RawVariableDeclaration>, Arc<RawVariableDeclaration>)> = vec![];
+        self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
+        let mut return_expr = raw_impl.return_expr.clone();
+        for (old, new) in var_replacements.iter() {
+            // Update all variables used in this expression
+            return_expr.substitute_variable(old.clone(), new.clone());
+        }
+        let return_expr_type = T::Output::of_expr(&return_expr)?;
+        let var = self.comment_variable_impl(
+            raw_impl.return_comment.clone(),
+            trait_key.as_lower_snake(),
+            return_expr_type,
+            return_expr
+        );
+        Some(var)
+    }
+
+    fn inline_by_copy_existing_11<
+        T: TraitDef_1Class_1Param + ?Sized,
+        Expr: Expression<MultiVector>
+    >(
+        &mut self,
+        trait_key: &TraitKey,
+        raw_impl: Arc<RawTraitImplementation>,
+        owner: Expr,
+    ) -> Option<Variable<T::Output>> {
+        let new_self = self.coerce_variable("self", owner).decl;
+        let old_self =  Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: "self".to_string(),
+            expr: None,
+        });
+        let mut var_replacements = vec![(old_self, new_self)];
+        self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
+        let mut return_expr = raw_impl.return_expr.clone();
+        for (old, new) in var_replacements.iter() {
+            // Update all variables used in this expression
+            return_expr.substitute_variable(old.clone(), new.clone());
+        }
+        let return_expr_type = T::Output::of_expr(&return_expr)?;
+        let var = self.comment_variable_impl(
+            raw_impl.return_comment.clone(),
+            trait_key.as_lower_snake(),
+            return_expr_type,
+            return_expr
+        );
+        Some(var)
+    }
+
+    fn inline_by_copy_existing_21<
+        T: TraitDef_2Class_1Param + ?Sized,
+        Expr: Expression<MultiVector>
+    >(
+        &mut self,
+        trait_key: &TraitKey,
+        raw_impl: Arc<RawTraitImplementation>,
+        owner: Expr,
+    ) -> Option<Variable<T::Output>> {
+        let new_self = self.coerce_variable("self", owner).decl;
+        let old_self =  Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: "self".to_string(),
+            expr: None,
+        });
+        let mut var_replacements = vec![(old_self, new_self)];
+        self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
+        let mut return_expr = raw_impl.return_expr.clone();
+        for (old, new) in var_replacements.iter() {
+            // Update all variables used in this expression
+            return_expr.substitute_variable(old.clone(), new.clone());
+        }
+        let return_expr_type = T::Output::of_expr(&return_expr)?;
+        let var = self.comment_variable_impl(
+            raw_impl.return_comment.clone(),
+            trait_key.as_lower_snake(),
+            return_expr_type,
+            return_expr
+        );
+        Some(var)
+    }
+
+    fn inline_by_copy_existing_22<
+        T: TraitDef_2Class_2Param + ?Sized,
+        Expr1: Expression<MultiVector>,
+        Expr2: Expression<MultiVector>,
+    >(
+        &mut self,
+        trait_key: &TraitKey,
+        raw_impl: Arc<RawTraitImplementation>,
+        owner: Expr1,
+        other: Expr2,
+    ) -> Option<Variable<T::Output>> {
+        let new_self = self.coerce_variable("self", owner).decl;
+        let new_other = self.coerce_variable("other", other).decl;
+        let old_self =  Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: "self".to_string(),
+            expr: None,
+        });
+        let old_other =  Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: "other".to_string(),
+            expr: None,
+        });
+        let mut var_replacements = vec![(old_self, new_self), (old_other, new_other)];
+        self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
+        let mut return_expr = raw_impl.return_expr.clone();
+        for (old, new) in var_replacements.iter() {
+            // Update all variables used in this expression
+            return_expr.substitute_variable(old.clone(), new.clone());
+        }
+        let return_expr_type = T::Output::of_expr(&return_expr)?;
+        let var = self.comment_variable_impl(
+            raw_impl.return_comment.clone(),
+            trait_key.as_lower_snake(),
+            return_expr_type,
+            return_expr
+        );
+        Some(var)
+    }
+
+    fn inline_the_lines(
+        &mut self,
+        var_replacements: &mut Vec<(Arc<RawVariableDeclaration>, Arc<RawVariableDeclaration>)>,
+        lines: &Vec<CommentOrVariableDeclaration>,
+    ) {
+        for line in lines.iter() {
+            match line {
+                CommentOrVariableDeclaration::Comment(c) => {
+                    self.lines.push(CommentOrVariableDeclaration::Comment(c.clone()))
+                }
+                CommentOrVariableDeclaration::VarDec(old_decl) => {
+                    let new_var_comment = old_decl.comment.clone();
+                    let new_var_name = self.make_var_name_unique(old_decl.name.clone());
+                    let mut new_var_expr = old_decl.expr.clone()
+                        .expect("Non-Parameter Variables are always initialized");
+                    for (old, new) in var_replacements.iter() {
+                        // Update all variables used in this expression
+                        new_var_expr.substitute_variable(old.clone(), new.clone());
+                    }
+                    // And create the new replacement declaration for this variable
+                    let new_decl = Arc::new(RawVariableDeclaration {
+                        comment: new_var_comment,
+                        name: new_var_name,
+                        expr: Some(new_var_expr),
+                    });
+                    // Then add it to the list
+                    var_replacements.push((old_decl.clone(), new_decl.clone()));
+                    // Then add it to lines
+                    self.lines.push(CommentOrVariableDeclaration::VarDec(new_decl))
+                }
+            }
+        }
     }
 }
 
@@ -855,6 +1079,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            specialized: self.specialized,
         });
     }
 
@@ -875,6 +1100,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            specialized: self.specialized,
         });
     }
 
@@ -895,6 +1121,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            specialized: self.specialized,
         });
     }
 
@@ -915,6 +1142,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            specialized: self.specialized,
         });
     }
 }

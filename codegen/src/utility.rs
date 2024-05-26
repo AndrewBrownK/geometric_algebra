@@ -61,6 +61,13 @@ impl<
     K: Eq + Hash + Clone + Send + Sync + 'static,
     V: Clone + Send + Sync + 'static,
 > AsyncMap<K, V> {
+    pub async fn get(&self, k: &K) -> Option<V> {
+        let guard = self.0.read().await;
+        let awaiter = guard.get(k).cloned()?;
+        drop(guard);
+        awaiter.await_clone().await.ok()
+    }
+
     pub async fn get_or_create_or_panic<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> V {
         self.get_or_create(k, f).await.get_or_panic().await
     }

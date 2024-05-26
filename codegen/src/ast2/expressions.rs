@@ -1,8 +1,9 @@
 use std::fmt::Debug;
+use std::sync::Arc;
 use either::Either;
 
 use crate::algebra2::basis::BasisSignature;
-use crate::ast2::{RawVariableInvocation, Variable};
+use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::traits::TraitKey;
 
@@ -14,7 +15,7 @@ enum ClassGroup {
     Vec4(BasisSignature, BasisSignature, BasisSignature, BasisSignature)
 }
 
-pub trait TraitResultType: Debug + Sized {
+pub trait TraitResultType: Clone + Debug + Sized {
     type Expr: Expression<Self>;
     #[allow(unused)]
     fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {
@@ -44,6 +45,8 @@ pub trait TraitResultType: Debug + Sized {
     fn inlined_expr_22(var: Variable<Self>) -> Self::Expr {
         panic!("inlined_expr_22 is needed (but not supported)")
     }
+
+    fn of_expr(expr: &AnyExpression) -> Option<Self>;
 }
 impl TraitResultType for Integer {
     type Expr = IntExpr;
@@ -56,6 +59,13 @@ impl TraitResultType for Integer {
         IntExpr::Variable(RawVariableInvocation {
             decl: var.decl,
         })
+    }
+
+    fn of_expr(expr: &AnyExpression) -> Option<Self> {
+        match expr {
+            AnyExpression::Int(_) => Some(Self),
+            _ => None,
+        }
     }
 }
 impl TraitResultType for Float {
@@ -70,6 +80,13 @@ impl TraitResultType for Float {
         FloatExpr::Variable(RawVariableInvocation {
             decl: var.decl,
         })
+    }
+
+    fn of_expr(expr: &AnyExpression) -> Option<Self> {
+        match expr {
+            AnyExpression::Float(_) => Some(Self),
+            _ => None,
+        }
     }
 }
 impl TraitResultType for MultiVector {
@@ -124,6 +141,13 @@ impl TraitResultType for MultiVector {
             expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
                 decl: var.decl,
             })),
+        }
+    }
+
+    fn of_expr(expr: &AnyExpression) -> Option<Self> {
+        match expr {
+            AnyExpression::Class(mv_expr) => Some(mv_expr.mv_class.clone()),
+            _ => None,
         }
     }
 }
@@ -213,6 +237,10 @@ impl AnyExpression {
             AnyExpression::Class(mv) => ExpressionType::Class(mv.mv_class.clone()),
         }
     }
+
+    pub fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 
 
@@ -227,6 +255,8 @@ pub trait Expression<ExprType>: Send + Sized {
 
     // TODO it seems this method is not used
     fn soft_expression_type(&self) -> ExpressionType;
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>);
 }
 
 /// This helps unify Variable<MultiVector> and MultiVectorExpr
@@ -277,6 +307,10 @@ impl Expression<Integer> for IntExpr {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Int(Integer)
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 impl Expression<Float> for FloatExpr {
 
@@ -316,6 +350,10 @@ impl Expression<Float> for FloatExpr {
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Float(Float)
+    }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
     }
 }
 impl Expression<Vec2> for Vec2Expr {
@@ -357,6 +395,10 @@ impl Expression<Vec2> for Vec2Expr {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec2(Vec2)
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 impl Expression<Vec3> for Vec3Expr {
 
@@ -396,6 +438,10 @@ impl Expression<Vec3> for Vec3Expr {
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec3(Vec3)
+    }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
     }
 }
 impl Expression<Vec4> for Vec4Expr {
@@ -437,6 +483,10 @@ impl Expression<Vec4> for Vec4Expr {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec4(Vec4)
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 impl Expression<MultiVector> for MultiVectorExpr {
 
@@ -477,6 +527,10 @@ impl Expression<MultiVector> for MultiVectorExpr {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Class(self.strong_expression_type())
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 
 impl Expression<Integer> for Variable<Integer> {
@@ -514,6 +568,10 @@ impl Expression<Integer> for Variable<Integer> {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Int(Integer)
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 impl Expression<Float> for Variable<Float> {
 
@@ -549,6 +607,10 @@ impl Expression<Float> for Variable<Float> {
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Float(Float)
+    }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
     }
 }
 impl Expression<Vec2> for Variable<Vec2> {
@@ -586,6 +648,10 @@ impl Expression<Vec2> for Variable<Vec2> {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec2(Vec2)
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 impl Expression<Vec3> for Variable<Vec3> {
 
@@ -622,6 +688,10 @@ impl Expression<Vec3> for Variable<Vec3> {
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec3(Vec3)
     }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
+    }
 }
 impl Expression<Vec4> for Variable<Vec4> {
 
@@ -657,6 +727,10 @@ impl Expression<Vec4> for Variable<Vec4> {
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec4(Vec4)
+    }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
     }
 }
 impl Expression<MultiVector> for Variable<MultiVector> {
@@ -708,6 +782,10 @@ impl Expression<MultiVector> for Variable<MultiVector> {
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Class(self.strong_expression_type())
+    }
+
+    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+        todo!()
     }
 }
 

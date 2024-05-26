@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::sync::Arc;
 
 use crate::ast2::expressions::AnyExpression;
@@ -17,7 +18,7 @@ pub struct Variable<ExprType> {
 
 #[derive(Clone, Debug, PartialEq, Eq,)]
 struct RawVariableDeclaration {
-    comment: Option<String>,
+    comment: Option<Cow<'static, String>>,
     name: String,
     expr: Option<AnyExpression>
 }
