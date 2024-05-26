@@ -1,6 +1,5 @@
 use std::borrow::Cow;
-use std::collections::{HashMap, HashSet};
-use std::marker::PhantomData;
+use std::collections::HashMap;
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -10,7 +9,7 @@ use lazy_static::lazy_static;
 use parking_lot::RwLock;
 use regex::Regex;
 
-use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
+use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, TraitResultType};
 use crate::utility::AsyncMap;
@@ -118,7 +117,7 @@ pub trait TraitDef_1Class_0Param {
                 the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let trait_impl = Self::general_implementation(builder, owner_clone.clone()).await?;
-            Some(trait_impl.into_trait10(trait_key_clone, owner_clone))
+            Some(trait_impl.into_trait10(owner_clone))
         };
         let the_impl = b.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner.clone());
@@ -232,7 +231,7 @@ pub trait TraitDef_1Class_1Param {
                 decl: declare_self,
             };
             let trait_impl = Self::general_implementation(builder, var_self).await?;
-            Some(trait_impl.into_trait11(trait_key_clone, owner_class_clone))
+            Some(trait_impl.into_trait11(owner_class_clone))
         };
         let the_impl = b.registry.traits11.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -353,7 +352,7 @@ pub trait TraitDef_2Class_1Param {
                 decl: declare_self,
             };
             let trait_impl = Self::general_implementation(builder, var_self, other_class_clone.clone()).await?;
-            Some(trait_impl.into_trait21(trait_key_clone, owner_class_clone, other_class_clone.clone()))
+            Some(trait_impl.into_trait21(owner_class_clone, other_class_clone.clone()))
         };
         let the_impl = b.registry.traits21.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -483,7 +482,7 @@ pub trait TraitDef_2Class_2Param {
                 decl: declare_other,
             };
             let trait_impl = Self::general_implementation(builder, var_self, var_other).await?;
-            Some(trait_impl.into_trait22(trait_key_clone.clone(), owner_class_clone.clone(), other_class_clone.clone()))
+            Some(trait_impl.into_trait22(owner_class_clone.clone(), other_class_clone.clone()))
         };
         let the_impl = b.registry.traits22.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner_class.clone());
@@ -1017,7 +1016,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
 
 impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     fn into_trait10(
-        self, tk: TraitKey, owner: MultiVector,
+        self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
         return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
@@ -1038,7 +1037,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     }
 
     fn into_trait11(
-        self, tk: TraitKey, owner: MultiVector,
+        self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
         return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
@@ -1059,7 +1058,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     }
 
     fn into_trait21(
-        self, tk: TraitKey, owner: MultiVector, other: MultiVector,
+        self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
         return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
@@ -1080,7 +1079,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     }
 
     fn into_trait22(
-        self, tk: TraitKey, owner: MultiVector, other: MultiVector,
+        self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
         return Arc::new(RawTraitImplementation {
             definition: self.trait_def,

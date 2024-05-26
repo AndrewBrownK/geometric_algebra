@@ -2,6 +2,7 @@
 #![feature(iter_intersperse)]
 #![feature(exit_status_error)]
 #![feature(associated_type_defaults)]
+#![feature(generic_const_exprs)]
 
 mod algebra;
 mod ast;

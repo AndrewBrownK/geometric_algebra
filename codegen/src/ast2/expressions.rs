@@ -2,18 +2,9 @@ use std::fmt::Debug;
 use std::sync::Arc;
 use either::Either;
 
-use crate::algebra2::basis::BasisSignature;
 use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::traits::TraitKey;
-
-// TODO use this somehow
-enum ClassGroup {
-    JustFloat(BasisSignature),
-    Vec2(BasisSignature, BasisSignature),
-    Vec3(BasisSignature, BasisSignature, BasisSignature),
-    Vec4(BasisSignature, BasisSignature, BasisSignature, BasisSignature)
-}
 
 pub trait TraitResultType: Clone + Debug + Sized {
     type Expr: Expression<Self>;
@@ -21,28 +12,28 @@ pub trait TraitResultType: Clone + Debug + Sized {
     fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {
         panic!("expr_10 is needed (but not supported) for {trait_name:?}")
     }
-    fn inlined_expr_10(var: Variable<Self>) -> Self::Expr {
+    fn inlined_expr_10(_var: Variable<Self>) -> Self::Expr {
         panic!("inlined_expr_10 is needed (but not supported)")
     }
     #[allow(unused)]
     fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::Expr {
         panic!("expr_11 is needed (but not supported) for {trait_name:?}")
     }
-    fn inlined_expr_11(var: Variable<Self>) -> Self::Expr {
+    fn inlined_expr_11(_var: Variable<Self>) -> Self::Expr {
         panic!("inlined_expr_11 is needed (but not supported)")
     }
     #[allow(unused)]
     fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {
         panic!("expr_21 is needed (but not supported) for {trait_name:?}")
     }
-    fn inlined_expr_21(var: Variable<Self>) -> Self::Expr {
+    fn inlined_expr_21(_var: Variable<Self>) -> Self::Expr {
         panic!("inlined_expr_21 is needed (but not supported)")
     }
     #[allow(unused)]
     fn expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::Expr {
         panic!("expr_22 is needed (but not supported) for {trait_name:?}")
     }
-    fn inlined_expr_22(var: Variable<Self>) -> Self::Expr {
+    fn inlined_expr_22(_var: Variable<Self>) -> Self::Expr {
         panic!("inlined_expr_22 is needed (but not supported)")
     }
 

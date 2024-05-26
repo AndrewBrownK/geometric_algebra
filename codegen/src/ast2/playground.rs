@@ -1,8 +1,7 @@
 use async_trait::async_trait;
 
-use crate::algebra::MultiVectorClassRegistry;
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitImplRegistry, TraitNames};
+use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitNames};
 use crate::ast2::Variable;
 
 struct Wedge {

@@ -1,10 +1,12 @@
 use std::cmp::Ordering;
 use std::fmt::{Debug, Display, Formatter};
+
 use rand::Rng;
+
 use crate::algebra::basis_element;
 
 bitflags::bitflags! {
-    #[derive(Clone, Copy, PartialEq, Eq)]
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
     pub struct BasisSignature: u16 {
         const scalar = 0x0;
         const e0 = 0x1;
@@ -25,6 +27,13 @@ bitflags::bitflags! {
         const eF = 0x8000;
     }
 }
+
+impl Default for BasisSignature {
+    fn default() -> Self {
+        BasisSignature::scalar
+    }
+}
+
 
 impl PartialOrd for BasisSignature {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -84,7 +93,7 @@ impl BasisSignature {
 
 
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct BasisElement {
     coefficient: i8,
     signature: BasisSignature,
@@ -113,6 +122,14 @@ impl Display for BasisElement {
         }
     }
 }
+impl Default for BasisElement {
+    fn default() -> Self {
+        Self {
+            coefficient: 0,
+            signature: BasisSignature::scalar,
+        }
+    }
+}
 
 impl From<BasisSignature> for BasisElement {
     fn from(signature: BasisSignature) -> Self {
@@ -124,6 +141,14 @@ impl From<BasisSignature> for BasisElement {
 }
 
 impl BasisElement {
+    pub fn coefficient(&self) -> i8 {
+        self.coefficient
+    }
+
+    pub fn signature(&self) -> BasisSignature {
+        self.signature
+    }
+
     pub const fn zero() -> Self {
         Self {
             coefficient: 0,
