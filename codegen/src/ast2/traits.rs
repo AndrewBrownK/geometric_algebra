@@ -150,7 +150,6 @@ pub trait TraitDef_1Class_0Param {
         let builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
-        // TODO manual overrides/specialization looks like it will be tricky.
         let trait_impl = Self::general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.release_context().finish_inline(b, var_name)
@@ -256,7 +255,6 @@ pub trait TraitDef_1Class_1Param {
         let mut builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
-        // TODO manual overrides/specialization looks like it will be tricky.
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = Self::general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
@@ -370,7 +368,6 @@ pub trait TraitDef_2Class_1Param {
         let mut builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
-        // TODO manual overrides/specialization looks like it will be tricky.
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = Self::general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
@@ -652,6 +649,30 @@ pub struct TraitImplRegistry {
 }
 #[derive(Clone)]
 pub struct TraitDefRegistry {
+    // TODO so suppose Expansion depends on Wedge, and calls it directly
+    //  but for some combination of classes, we have a manually written optimized Wedge
+    //  How will that call to Wedge find the specialized Wedge that it can inline?
+    //  Well for the purposes of inlining, it'd be helpful if all manually written impls
+    //  were also done as TraitDef_XClass_YParam. Then it could be inlined as many times
+    //  as we want very easily. The only question is "how to find specific wedge from general wedge"
+    //  Well... every TraitDef gets access tot he registry through the builder they borrow.
+    //  So if the registry also has the specialized TraitDefs... then we can add a boolean
+    //  method to each TraitDef that asks "is_specialized", then if is specialized, don't look
+    //  up other specializations, but if not specialized, then check for specializations, and
+    //  somehow this TraitDefRegistry (or something) is where you find it.
+    //  It looks EXTREMELY unlikely that any of the TraitDefs will be compatible to trait objects.
+    //  So.... it seems tricky to figure out. I might need.... like an...
+    //  HList type level registry" that can still be accessed or looked up using a TraitKey
+    //  and couple of MultiVectors. Or maybe it won't just be keyed by MultiVector... but
+    //  the entire plethora that implements ClassesFromRegistry. For example maybe the formula
+    //  for something is simpler if two objects have the same grade. Ugh... Yeah....
+    //  this is looking increasingly bleak. Other options are.... always include manual
+    //  specialization inside the general_implementation. Because I mean, you have the MultiVectors
+    //  right there, you can check what you need to check. Lastly, we can dig into the
+    //  RawTraitDefinitions and manually inline those. Maybe would be annoying, but not the
+    //  end of the world. Can't be worse than destructure inlining, which I was planning to do
+    //  anyway.
+
     traits10: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits11: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits21: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,

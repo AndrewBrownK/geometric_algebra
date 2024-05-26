@@ -28,17 +28,27 @@ pub enum ExpressionType {
 
 
 pub trait ClassesFromRegistry {
-    fn include_class(mvc: &MultiVectorClass) -> bool;
+    fn include_class(&self, mvc: &MultiVectorClass) -> bool;
 }
 pub struct NoParam;
 impl ClassesFromRegistry for NoParam {
-    fn include_class(_: &MultiVectorClass) -> bool {
+    fn include_class(&self, _: &MultiVectorClass) -> bool {
         false
     }
 }
 pub struct AnyClasses;
 impl ClassesFromRegistry for AnyClasses {
-    fn include_class(_: &MultiVectorClass) -> bool {
+    fn include_class(&self, _: &MultiVectorClass) -> bool {
         true
+    }
+}
+
+
+
+/// Good for manual implementations
+pub struct Specifically(MultiVector);
+impl ClassesFromRegistry for Specifically {
+    fn include_class(&self, mvc: &MultiVectorClass) -> bool {
+        mvc == self.0.0.as_ref()
     }
 }
