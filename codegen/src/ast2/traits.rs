@@ -153,7 +153,7 @@ pub trait TraitDef_1Class_0Param {
         // TODO manual overrides/specialization looks like it will be tricky.
         let trait_impl = Self::general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.into_append().append_to(b, var_name)
+        trait_impl.release_context().finish_inline(b, var_name)
     }
 }
 
@@ -260,7 +260,7 @@ pub trait TraitDef_1Class_1Param {
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = Self::general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.into_append().append_to(b, var_name)
+        trait_impl.release_context().finish_inline(b, var_name)
     }
 }
 
@@ -374,7 +374,7 @@ pub trait TraitDef_2Class_1Param {
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = Self::general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.into_append().append_to(b, var_name)
+        trait_impl.release_context().finish_inline(b, var_name)
     }
 }
 
@@ -503,7 +503,7 @@ pub trait TraitDef_2Class_2Param {
         let other = builder.coerce_variable("other", other);
         let trait_impl = Self::general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.into_append().append_to(b, var_name)
+        trait_impl.release_context().finish_inline(b, var_name)
     }
 }
 
@@ -898,7 +898,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     }
 }
 
-pub struct BuilderAppend<ReturnType> {
+pub struct InlineFinisher<ReturnType> {
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
     return_expr: Option<AnyExpression>,
@@ -906,8 +906,8 @@ pub struct BuilderAppend<ReturnType> {
 }
 
 impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
-    fn into_append(self) -> BuilderAppend<ExprType> {
-        BuilderAppend {
+    fn release_context(self) -> InlineFinisher<ExprType> {
+        InlineFinisher {
             lines: self.lines,
             return_comment: self.return_comment,
             return_expr: self.return_expr,
@@ -916,8 +916,8 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     }
 }
 
-impl<ExprType> BuilderAppend<ExprType> {
-    fn append_to<V: Into<String>>(self, b: &mut TraitImplBuilder<HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+impl<ExprType> InlineFinisher<ExprType> {
+    fn finish_inline<V: Into<String>>(self, b: &mut TraitImplBuilder<HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
         for line in self.lines {
             b.lines.push(line);
         }
