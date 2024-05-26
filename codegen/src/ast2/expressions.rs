@@ -254,6 +254,7 @@ pub trait Expression<ExprType>: Send + Sized {
     fn try_into_variable(self) -> Either<Self, Variable<ExprType>>;
 
     // TODO it seems this method is not used
+    //  Well, ExpressionType is used. So hold off deleting this until you're sure you don't need it.
     fn soft_expression_type(&self) -> ExpressionType;
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>);

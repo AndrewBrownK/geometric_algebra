@@ -699,31 +699,6 @@ pub struct TraitImplRegistry {
 }
 #[derive(Clone)]
 pub struct TraitDefRegistry {
-    // TODO so suppose Expansion depends on Wedge, and calls it directly
-    //  but for some combination of classes, we have a manually written optimized Wedge
-    //  How will that call to Wedge find the specialized Wedge that it can inline?
-    //  Well for the purposes of inlining, it'd be helpful if all manually written impls
-    //  were also done as TraitDef_XClass_YParam. Then it could be inlined as many times
-    //  as we want very easily. The only question is "how to find specific wedge from general wedge"
-    //  Well... every TraitDef gets access tot he registry through the builder they borrow.
-    //  So if the registry also has the specialized TraitDefs... then we can add a boolean
-    //  method to each TraitDef that asks "is_specialized", then if is specialized, don't look
-    //  up other specializations, but if not specialized, then check for specializations, and
-    //  somehow this TraitDefRegistry (or something) is where you find it.
-    //  It looks EXTREMELY unlikely that any of the TraitDefs will be compatible to trait objects.
-    //  So.... it seems tricky to figure out. I might need.... like an...
-    //  HList type level registry" that can still be accessed or looked up using a TraitKey
-    //  and couple of MultiVectors. Or maybe it won't just be keyed by MultiVector... but
-    //  the entire plethora that implements ClassesFromRegistry. For example maybe the formula
-    //  for something is simpler if two objects have the same grade. Ugh... Yeah....
-    //  this is looking increasingly bleak. Other options are.... always include manual
-    //  specialization inside the general_implementation. Because I mean, you have the MultiVectors
-    //  right there, you can check what you need to check. Lastly, we can dig into the
-    //  RawTraitDefinitions and manually inline those. Maybe would be annoying, but not the
-    //  end of the world. Can't be worse than destructure inlining, which I was planning to do
-    //  anyway.
-    //  Yeah, I'm thinking I'll just copy RawTraitImplementation for specialized inlining
-
     traits10: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits11: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits21: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
@@ -752,9 +727,7 @@ pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
-    // TODO idea... key this on (String, usize) instead of just String
-    //  could make life a lot easier when I want group access like "circle_g3_02"
-    variables: &'impl_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
+    variables: &'impl_ctx mut HashMap<(String, usize), Arc<RawVariableDeclaration>>,
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
     return_expr: Option<AnyExpression>,
@@ -766,7 +739,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         trait_def: Arc<RawTraitDefinition>,
         registry: TraitImplRegistry,
         inline_dependencies: bool,
-        variables: &'impl_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
+        variables: &'impl_ctx mut HashMap<(String, usize), Arc<RawVariableDeclaration>>,
         cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     ) -> Self {
         TraitImplBuilder {
@@ -791,14 +764,12 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         self.specialized = true;
     }
 
-    fn make_var_name_unique(&mut self, var_name: String) -> String {
-        let mut unique_name = var_name.to_string();
-        let mut counter = 1;
-        while self.variables.contains_key(&unique_name) {
-            unique_name = format!("{}_{}", var_name, format!("{:02}", counter));
-            counter += 1;
+    fn make_var_name_unique(&mut self, var_name: String) -> (String, usize) {
+        let mut key = (var_name.to_string(), 0);
+        while self.variables.contains_key(&mut key) {
+            key.1 += 1;
         }
-        unique_name
+        key
     }
 
     pub fn comment<C: Into<String>>(&mut self, comment: C) {
@@ -1037,7 +1008,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
                 }
                 CommentOrVariableDeclaration::VarDec(old_decl) => {
                     let new_var_comment = old_decl.comment.clone();
-                    let new_var_name = self.make_var_name_unique(old_decl.name.clone());
+                    let new_var_name = self.make_var_name_unique(old_decl.name.0.clone());
                     let mut new_var_expr = old_decl.expr.clone()
                         .expect("Non-Parameter Variables are always initialized");
                     for (old, new) in var_replacements.iter() {

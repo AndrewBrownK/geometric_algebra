@@ -19,7 +19,7 @@ pub struct Variable<ExprType> {
 #[derive(Clone, Debug, PartialEq, Eq,)]
 struct RawVariableDeclaration {
     comment: Option<Cow<'static, String>>,
-    name: String,
+    name: (String, usize),
     expr: Option<AnyExpression>
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
