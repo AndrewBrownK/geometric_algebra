@@ -129,8 +129,8 @@ pub enum MultiVectorGroupExpr {
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct MultiVectorExpr {
-    mv_class: MultiVector,
-    expr: Box<MultiVectorVia>
+    pub mv_class: MultiVector,
+    pub expr: Box<MultiVectorVia>
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum MultiVectorVia {
@@ -174,7 +174,18 @@ pub trait Expression<ExprType>: Send {
     fn strong_expression_type(&self) -> ExprType;
     fn soft_expression_type(&self) -> ExpressionType;
 }
+
+/// This helps unify Variable<MultiVector> and MultiVectorExpr
+pub fn extract_multivector_expr<Expr: Expression<MultiVector>>(expr: Expr) -> MultiVectorExpr {
+    match expr.into_any_expression() {
+        AnyExpression::Class(mve) => mve,
+        _ => unreachable!("Expression<MultiVector> will always create AnyExpression::Class")
+    }
+}
+
+
 impl Expression<Integer> for IntExpr {
+
     fn into_any_expression(self) -> AnyExpression {
         AnyExpression::Int(self)
     }
@@ -188,6 +199,7 @@ impl Expression<Integer> for IntExpr {
     }
 }
 impl Expression<Float> for FloatExpr {
+
     fn into_any_expression(self) -> AnyExpression {
         AnyExpression::Float(self)
     }
@@ -201,6 +213,7 @@ impl Expression<Float> for FloatExpr {
     }
 }
 impl Expression<Vec2> for Vec2Expr {
+
     fn into_any_expression(self) -> AnyExpression {
         AnyExpression::Vec2(self)
     }
@@ -214,6 +227,7 @@ impl Expression<Vec2> for Vec2Expr {
     }
 }
 impl Expression<Vec3> for Vec3Expr {
+
     fn into_any_expression(self) -> AnyExpression {
         AnyExpression::Vec3(self)
     }
@@ -227,6 +241,7 @@ impl Expression<Vec3> for Vec3Expr {
     }
 }
 impl Expression<Vec4> for Vec4Expr {
+
     fn into_any_expression(self) -> AnyExpression {
         AnyExpression::Vec4(self)
     }
@@ -240,6 +255,7 @@ impl Expression<Vec4> for Vec4Expr {
     }
 }
 impl Expression<MultiVector> for MultiVectorExpr {
+
     fn into_any_expression(self) -> AnyExpression {
         AnyExpression::Class(self)
     }
@@ -254,6 +270,7 @@ impl Expression<MultiVector> for MultiVectorExpr {
 }
 
 impl Expression<Integer> for Variable<Integer> {
+
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Int(IntExpr::Variable(RawVariableInvocation { decl }))
@@ -268,6 +285,7 @@ impl Expression<Integer> for Variable<Integer> {
     }
 }
 impl Expression<Float> for Variable<Float> {
+
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Float(FloatExpr::Variable(RawVariableInvocation { decl }))
@@ -282,6 +300,7 @@ impl Expression<Float> for Variable<Float> {
     }
 }
 impl Expression<Vec2> for Variable<Vec2> {
+
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec2(Vec2Expr::Variable(RawVariableInvocation { decl }))
@@ -296,6 +315,7 @@ impl Expression<Vec2> for Variable<Vec2> {
     }
 }
 impl Expression<Vec3> for Variable<Vec3> {
+
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec3(Vec3Expr::Variable(RawVariableInvocation { decl }))
@@ -310,6 +330,7 @@ impl Expression<Vec3> for Variable<Vec3> {
     }
 }
 impl Expression<Vec4> for Variable<Vec4> {
+
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Vec4(Vec4Expr::Variable(RawVariableInvocation { decl }))
@@ -324,6 +345,7 @@ impl Expression<Vec4> for Variable<Vec4> {
     }
 }
 impl Expression<MultiVector> for Variable<MultiVector> {
+
     fn into_any_expression(self) -> AnyExpression {
         let decl = self.decl.clone();
         AnyExpression::Class(MultiVectorExpr {
@@ -340,7 +362,6 @@ impl Expression<MultiVector> for Variable<MultiVector> {
         ExpressionType::Class(self.strong_expression_type())
     }
 }
-
 
 
 

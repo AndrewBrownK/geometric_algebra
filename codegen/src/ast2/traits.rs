@@ -10,7 +10,7 @@ use regex::Regex;
 
 use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
-use crate::ast2::expressions::{AnyExpression, Expression, TraitResultType};
+use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, TraitResultType};
 use crate::utility::AsyncMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -73,14 +73,14 @@ pub trait TraitDef_1Class_0Param {
         owner: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> RawTraitDefinition {
-        RawTraitDefinition {
+    fn def(&self) -> Arc<RawTraitDefinition> {
+        Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: false,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-        }
+        })
     }
 
     async fn invoke(
@@ -89,28 +89,31 @@ pub trait TraitDef_1Class_0Param {
         owner: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::ExprType> {
         let trait_key = self.trait_names().trait_key;
-        if b.cycle_detector.contains(&(trait_key, owner.clone(), None)) {
+        let cycle_detector_key = (trait_key.clone(), owner.clone(), None);
+        if b.cycle_detector.contains(&cycle_detector_key) {
             let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert((trait_key.clone(), owner.clone(), None));
+            b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
             return self.inline(b, owner).await;
         }
 
         let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async { self.def() }).await;
+        let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner.clone());
-        let f = async {
+        let owner_clone = owner.clone();
+        let trait_key_clone = trait_key.clone();
+        let f = async move {
             // Create and register the implementation
-            // TODO don't forget to add initial variables in traits that do have params
             let mut fresh_variable_scope = HashMap::new();
             let builder = TraitImplBuilder::new(
-                the_def, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
             );
-            let trait_impl = Self::general_implementation(builder, owner.clone()).await?;
-            Some(trait_impl.register10(trait_key.clone(), owner.clone()))
+            let trait_impl = Self::general_implementation(builder, owner_clone.clone()).await?;
+            Some(trait_impl.into_trait10(trait_key_clone, owner_clone))
         };
         let the_impl = b.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
         let owner_type = ExpressionType::Class(owner.clone());
@@ -153,14 +156,14 @@ pub trait TraitDef_1Class_1Param {
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> RawTraitDefinition {
-        RawTraitDefinition {
+    fn def(&self) -> Arc<RawTraitDefinition> {
+        Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-        }
+        })
     }
 
     async fn invoke<Expr: Expression<MultiVector>>(
@@ -170,11 +173,12 @@ pub trait TraitDef_1Class_1Param {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.strong_expression_type();
         let owner_param = owner;
-        if b.cycle_detector.contains(&(trait_key, owner_class.clone(), None)) {
+        let cycle_detector_key = (trait_key.clone(), owner_class.clone(), None);
+        if b.cycle_detector.contains(&cycle_detector_key) {
             let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert((trait_key.clone(), owner_class, None));
+            b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
             return self.inline(b, owner_param).await;
@@ -182,9 +186,12 @@ pub trait TraitDef_1Class_1Param {
 
         let f = async { self.def() };
         let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), f).await;
+        let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone());
-        let f = async {
+        let owner_class_clone = owner_class.clone();
+        let trait_key_clone = trait_key.clone();
+        let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = Arc::new(RawVariableDeclaration {
@@ -194,17 +201,17 @@ pub trait TraitDef_1Class_1Param {
             });
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                the_def, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
             );
             let var_self: Variable<MultiVector> = Variable {
-                expr_type: owner_class.clone(),
+                expr_type: owner_class_clone.clone(),
                 decl: declare_self,
             };
             let trait_impl = Self::general_implementation(builder, var_self).await?;
-            Some(trait_impl.register11(trait_key.clone(), owner.clone()))
+            Some(trait_impl.into_trait11(trait_key_clone, owner_class_clone))
         };
         let the_impl = b.registry.traits11.get_or_create_or_panic(impl_key.clone(), f).await?;
-        let owner_type = ExpressionType::Class(owner.clone());
+        let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
@@ -218,6 +225,7 @@ pub trait TraitDef_1Class_1Param {
             AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
             _ => None,
         };
+        let owner_param = extract_multivector_expr(owner_param);
         let invocation_expression = <Self::Output as TraitResultType>::expr_11(trait_key.clone(), owner_param, mv_result);
 
         Some(invocation_expression)
@@ -244,14 +252,14 @@ pub trait TraitDef_2Class_1Param {
         other: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> RawTraitDefinition {
-        RawTraitDefinition {
+    fn def(&self) -> Arc<RawTraitDefinition> {
+        Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-        }
+        })
     }
 
     async fn invoke<Expr: Expression<MultiVector>>(
@@ -264,20 +272,25 @@ pub trait TraitDef_2Class_1Param {
         let owner_class = owner.strong_expression_type();
         let owner_param = owner;
         let other_class = other;
-        if b.cycle_detector.contains(&(trait_key, owner_class.clone(), Some(other_class.clone()))) {
+        let cycle_detector_key = (trait_key.clone(), owner_class.clone(), Some(other_class.clone()));
+        if b.cycle_detector.contains(&cycle_detector_key) {
             let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert((trait_key.clone(), owner_class, Some(other_class.clone())));
+            b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
             return self.inline(b, owner_param, other_class.clone()).await;
         }
 
         let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async { self.def() }).await;
+        let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
-        let f = async {
+        let owner_class_clone = owner_class.clone();
+        let other_class_clone = other_class.clone();
+        let trait_key_clone = trait_key.clone();
+        let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = Arc::new(RawVariableDeclaration {
@@ -287,17 +300,17 @@ pub trait TraitDef_2Class_1Param {
             });
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                the_def, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
             );
             let var_self: Variable<MultiVector> = Variable {
-                expr_type: owner_class.clone(),
+                expr_type: owner_class_clone.clone(),
                 decl: declare_self,
             };
-            let trait_impl = Self::general_implementation(builder, var_self, other_class.clone()).await?;
-            Some(trait_impl.register21(trait_key.clone(), owner_class.clone(), other_class.clone()))
+            let trait_impl = Self::general_implementation(builder, var_self, other_class_clone.clone()).await?;
+            Some(trait_impl.into_trait21(trait_key_clone, owner_class_clone, other_class_clone.clone()))
         };
         let the_impl = b.registry.traits21.get_or_create_or_panic(impl_key.clone(), f).await?;
-        let owner_type = ExpressionType::Class(owner.clone());
+        let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
@@ -311,6 +324,7 @@ pub trait TraitDef_2Class_1Param {
             AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
             _ => None,
         };
+        let owner_param = extract_multivector_expr(owner_param);
         let invocation_expression = <Self::Output as TraitResultType>::expr_21(trait_key.clone(), owner_param, other_class, mv_result);
 
         Some(invocation_expression)
@@ -338,14 +352,14 @@ pub trait TraitDef_2Class_2Param {
         other: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
 
-    fn def(&self) -> RawTraitDefinition {
-        RawTraitDefinition {
+    fn def(&self) -> Arc<RawTraitDefinition> {
+        Arc::new(RawTraitDefinition {
             documentation: Self::general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-        }
+        })
     }
 
     async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
@@ -359,20 +373,25 @@ pub trait TraitDef_2Class_2Param {
         let owner_param = owner;
         let other_class = other.strong_expression_type();
         let other_param = other;
-        if b.cycle_detector.contains(&(trait_key, owner_class.clone(), Some(other_class.clone()))) {
+        let cycle_detector_key = (trait_key.clone(), owner_class.clone(), Some(other_class.clone()));
+        if b.cycle_detector.contains(&cycle_detector_key) {
             let all_in_cycle = b.cycle_detector.iter().collect::<Vec<_>>();
             panic!("Cycle detected at trait {trait_key:?}: {all_in_cycle:?}")
         } else {
-            b.cycle_detector.insert((trait_key.clone(), owner_class, Some(other_class.clone())));
+            b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
-            return self.inline(b, owner_param, other_class.clone()).await;
+            return self.inline(b, owner_param, other_param).await;
         }
 
         let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async { self.def() }).await;
+        let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
-        let f = async {
+        let owner_class_clone = owner_class.clone();
+        let other_class_clone = other_class.clone();
+        let trait_key_clone = trait_key.clone();
+        let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = Arc::new(RawVariableDeclaration {
@@ -388,10 +407,10 @@ pub trait TraitDef_2Class_2Param {
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             fresh_variable_scope.insert("other".to_string(), declare_other.clone());
             let builder = TraitImplBuilder::new(
-                the_def, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
+                the_def_clone, b.registry, false, &mut fresh_variable_scope, b.cycle_detector.clone()
             );
             let var_self: Variable<MultiVector> = Variable {
-                expr_type: owner_class.clone(),
+                expr_type: owner_class_clone.clone(),
                 decl: declare_self,
             };
             let var_other: Variable<MultiVector> = Variable {
@@ -399,10 +418,10 @@ pub trait TraitDef_2Class_2Param {
                 decl: declare_other,
             };
             let trait_impl = Self::general_implementation(builder, var_self, var_other).await?;
-            Some(trait_impl.register22(trait_key.clone(), owner_class.clone(), other_class.clone()))
+            Some(trait_impl.into_trait22(trait_key_clone.clone(), owner_class_clone.clone(), other_class_clone.clone()))
         };
         let the_impl = b.registry.traits22.get_or_create_or_panic(impl_key.clone(), f).await?;
-        let owner_type = ExpressionType::Class(owner.clone());
+        let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
@@ -416,6 +435,8 @@ pub trait TraitDef_2Class_2Param {
             AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
             _ => None,
         };
+        let owner_param = extract_multivector_expr(owner_param);
+        let other_param = extract_multivector_expr(other_param);
         let invocation_expression = <Self::Output as TraitResultType>::expr_22(trait_key.clone(), owner_param, other_param, mv_result);
 
         Some(invocation_expression)
@@ -698,10 +719,10 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
 
 
 impl<'impls, T> TraitImplBuilder<'impls, T> {
-    fn register10(
+    fn into_trait10(
         self, tk: TraitKey, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        let result = Arc::new(RawTraitImplementation {
+        return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -716,17 +737,12 @@ impl<'impls, T> TraitImplBuilder<'impls, T> {
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
         });
-        let existing = self.registry.traits10.insert((tk, owner), result.clone());
-        if existing.is_some() {
-            panic!("It is inefficient to generate redundant trait implementations ({tk:?}). Use better concurrency control.")
-        }
-        return result;
     }
 
-    fn register11(
+    fn into_trait11(
         self, tk: TraitKey, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        let result = Arc::new(RawTraitImplementation {
+        return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -741,17 +757,12 @@ impl<'impls, T> TraitImplBuilder<'impls, T> {
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
         });
-        let existing = self.registry.traits11.insert((tk, owner), result.clone());
-        if existing.is_some() {
-            panic!("It is inefficient to generate redundant trait implementations ({tk:?}). Use better concurrency control.")
-        }
-        return result;
     }
 
-    fn register21(
+    fn into_trait21(
         self, tk: TraitKey, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        let result = Arc::new(RawTraitImplementation {
+        return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -766,17 +777,12 @@ impl<'impls, T> TraitImplBuilder<'impls, T> {
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
         });
-        let existing = self.registry.traits21.insert((tk, owner, other), result.clone());
-        if existing.is_some() {
-            panic!("It is inefficient to generate redundant trait implementations ({tk:?}). Use better concurrency control.")
-        }
-        return result;
     }
 
-    fn register22(
+    fn into_trait22(
         self, tk: TraitKey, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        let result = Arc::new(RawTraitImplementation {
+        return Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -784,18 +790,13 @@ impl<'impls, T> TraitImplBuilder<'impls, T> {
             traits22_dependencies: self.traits22_dependencies,
             owner: TraitParam::Fixed(ExpressionType::Class(owner.clone())),
             owner_is_param: true,
-            other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
+            other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other.clone()))],
             other_var_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
             lines: self.lines,
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
         });
-        let existing = self.registry.traits22.insert((tk, owner, other), result.clone());
-        if existing.is_some() {
-            panic!("It is inefficient to generate redundant trait implementations ({tk:?}). Use better concurrency control.")
-        }
-        return result;
     }
 }
 
