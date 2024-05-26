@@ -1,7 +1,8 @@
 use std::fmt::Debug;
+use either::Either;
 
-use crate::ast2::{RawVariableInvocation, Variable};
 use crate::algebra2::basis::BasisSignature;
+use crate::ast2::{RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::traits::TraitKey;
 
@@ -14,42 +15,65 @@ enum ClassGroup {
 }
 
 pub trait TraitResultType: Debug + Sized {
-    type ExprType;
+    type Expr: Expression<Self>;
     #[allow(unused)]
-    fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
-        panic!("into_expr_0 is needed (but not supported) for {trait_name:?}")
+    fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {
+        panic!("expr_10 is needed (but not supported) for {trait_name:?}")
+    }
+    fn inlined_expr_10(var: Variable<Self>) -> Self::Expr {
+        panic!("inlined_expr_10 is needed (but not supported)")
     }
     #[allow(unused)]
-    fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
-        panic!("into_expr_11 is needed (but not supported) for {trait_name:?}")
+    fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::Expr {
+        panic!("expr_11 is needed (but not supported) for {trait_name:?}")
+    }
+    fn inlined_expr_11(var: Variable<Self>) -> Self::Expr {
+        panic!("inlined_expr_11 is needed (but not supported)")
     }
     #[allow(unused)]
-    fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::ExprType {
-        panic!("into_expr_21 is needed (but not supported) for {trait_name:?}")
+    fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {
+        panic!("expr_21 is needed (but not supported) for {trait_name:?}")
+    }
+    fn inlined_expr_21(var: Variable<Self>) -> Self::Expr {
+        panic!("inlined_expr_21 is needed (but not supported)")
     }
     #[allow(unused)]
-    fn expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::ExprType {
-        panic!("into_expr_22 is needed (but not supported) for {trait_name:?}")
+    fn expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> Self::Expr {
+        panic!("expr_22 is needed (but not supported) for {trait_name:?}")
     }
-
+    fn inlined_expr_22(var: Variable<Self>) -> Self::Expr {
+        panic!("inlined_expr_22 is needed (but not supported)")
+    }
 }
 impl TraitResultType for Integer {
-    type ExprType = IntExpr;
+    type Expr = IntExpr;
     fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> IntExpr {
         assert!(mv_out.is_none(), "Confused Trait output: Expected Integer, found MultiVector");
         IntExpr::TraitInvoke10ToInt(trait_name, owner)
     }
+
+    fn inlined_expr_10(var: Variable<Self>) -> Self::Expr {
+        IntExpr::Variable(RawVariableInvocation {
+            decl: var.decl,
+        })
+    }
 }
 impl TraitResultType for Float {
-    type ExprType = FloatExpr;
+    type Expr = FloatExpr;
 
     fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> FloatExpr {
         assert!(mv_out.is_none(), "Confused Trait output: Expected Float, found MultiVector");
         FloatExpr::TraitInvoke11ToFloat(trait_name, owner)
     }
+
+    fn inlined_expr_11(var: Variable<Self>) -> Self::Expr {
+        FloatExpr::Variable(RawVariableInvocation {
+            decl: var.decl,
+        })
+    }
 }
 impl TraitResultType for MultiVector {
-    type ExprType = MultiVectorExpr;
+    type Expr = MultiVectorExpr;
 
     fn expr_11(trait_name: TraitKey, owner: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect(
@@ -58,6 +82,14 @@ impl TraitResultType for MultiVector {
         MultiVectorExpr {
             mv_class,
             expr: Box::new(MultiVectorVia::TraitInvoke11ToClass(trait_name, owner)),
+        }
+    }
+    fn inlined_expr_11(var: Variable<Self>) -> Self::Expr {
+        MultiVectorExpr {
+            mv_class: var.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
+                decl: var.decl,
+            })),
         }
     }
     fn expr_21(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVector, mv_out: Option<MultiVector>) -> MultiVectorExpr {
@@ -69,6 +101,14 @@ impl TraitResultType for MultiVector {
             expr: Box::new(MultiVectorVia::TraitInvoke21ToClass(trait_name, owner, other)),
         }
     }
+    fn inlined_expr_21(var: Variable<Self>) -> Self::Expr {
+        MultiVectorExpr {
+            mv_class: var.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
+                decl: var.decl,
+            })),
+        }
+    }
     fn expr_22(trait_name: TraitKey, owner: MultiVectorExpr, other: MultiVectorExpr, mv_out: Option<MultiVector>) -> MultiVectorExpr {
         let mv_class = mv_out.expect(
             "Confused Trait output: Expected MultiVector, but None provided."
@@ -76,6 +116,14 @@ impl TraitResultType for MultiVector {
         MultiVectorExpr {
             mv_class,
             expr: Box::new(MultiVectorVia::TraitInvoke22ToClass(trait_name, owner, other)),
+        }
+    }
+    fn inlined_expr_22(var: Variable<Self>) -> Self::Expr {
+        MultiVectorExpr {
+            mv_class: var.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
+                decl: var.decl,
+            })),
         }
     }
 }
@@ -169,9 +217,15 @@ impl AnyExpression {
 
 
 
-pub trait Expression<ExprType>: Send {
+pub trait Expression<ExprType>: Send + Sized {
     fn into_any_expression(self) -> AnyExpression;
+
+    fn from_any_expression(any: AnyExpression) -> Option<Self>;
     fn strong_expression_type(&self) -> ExprType;
+    fn type_from_any(any: &AnyExpression) -> Option<ExprType>;
+    fn try_into_variable(self) -> Either<Self, Variable<ExprType>>;
+
+    // TODO it seems this method is not used
     fn soft_expression_type(&self) -> ExpressionType;
 }
 
@@ -190,8 +244,34 @@ impl Expression<Integer> for IntExpr {
         AnyExpression::Int(self)
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Int(i) => Some(i),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Integer {
         Integer
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Integer> {
+        match any {
+            AnyExpression::Int(_) => Some(Integer),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Integer>> {
+        match self {
+            IntExpr::Variable(v) => {
+                Either::Right(Variable {
+                    expr_type: Integer,
+                    decl: v.decl,
+                })
+            }
+            _ => Either::Left(self)
+        }
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -204,8 +284,34 @@ impl Expression<Float> for FloatExpr {
         AnyExpression::Float(self)
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Float(f) => Some(f),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Float {
         Float
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Float> {
+        match any {
+            AnyExpression::Float(_) => Some(Float),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Float>> {
+        match self {
+            FloatExpr::Variable(v) => {
+                Either::Right(Variable {
+                    expr_type: Float,
+                    decl: v.decl,
+                })
+            }
+            _ => Either::Left(self)
+        }
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -218,8 +324,34 @@ impl Expression<Vec2> for Vec2Expr {
         AnyExpression::Vec2(self)
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Vec2(f) => Some(f),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Vec2 {
         Vec2
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Vec2> {
+        match any {
+            AnyExpression::Vec2(_) => Some(Vec2),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Vec2>> {
+        match self {
+            Vec2Expr::Variable(v) => {
+                Either::Right(Variable {
+                    expr_type: Vec2,
+                    decl: v.decl,
+                })
+            }
+            _ => Either::Left(self)
+        }
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -232,8 +364,34 @@ impl Expression<Vec3> for Vec3Expr {
         AnyExpression::Vec3(self)
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Vec3(f) => Some(f),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Vec3 {
         Vec3
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Vec3> {
+        match any {
+            AnyExpression::Vec3(_) => Some(Vec3),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Vec3>> {
+        match self {
+            Vec3Expr::Variable(v) => {
+                Either::Right(Variable {
+                    expr_type: Vec3,
+                    decl: v.decl,
+                })
+            }
+            _ => Either::Left(self)
+        }
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -246,8 +404,34 @@ impl Expression<Vec4> for Vec4Expr {
         AnyExpression::Vec4(self)
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Vec4(f) => Some(f),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Vec4 {
         Vec4
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Vec4> {
+        match any {
+            AnyExpression::Vec4(_) => Some(Vec4),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Vec4>> {
+        match self {
+            Vec4Expr::Variable(v) => {
+                Either::Right(Variable {
+                    expr_type: Vec4,
+                    decl: v.decl,
+                })
+            }
+            _ => Either::Left(self)
+        }
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -260,8 +444,34 @@ impl Expression<MultiVector> for MultiVectorExpr {
         AnyExpression::Class(self)
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Class(mv) => Some(mv),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> MultiVector {
         self.mv_class.clone()
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<MultiVector> {
+        match any {
+            AnyExpression::Class(mve) => Some(mve.mv_class.clone()),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<MultiVector>> {
+        match *self.expr {
+            MultiVectorVia::Variable(v) => {
+                Either::Right(Variable {
+                    expr_type: self.mv_class,
+                    decl: v.decl,
+                })
+            }
+            _ => Either::Left(self)
+        }
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -276,8 +486,29 @@ impl Expression<Integer> for Variable<Integer> {
         AnyExpression::Int(IntExpr::Variable(RawVariableInvocation { decl }))
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Int(IntExpr::Variable(v)) => Some(Variable {
+                expr_type: Integer,
+                decl: v.decl.clone(),
+            }),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Integer {
         Integer
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Integer> {
+        match any {
+            AnyExpression::Int(IntExpr::Variable(_)) => Some(Integer),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Integer>> {
+        Either::Right(self)
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -291,8 +522,29 @@ impl Expression<Float> for Variable<Float> {
         AnyExpression::Float(FloatExpr::Variable(RawVariableInvocation { decl }))
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Float(FloatExpr::Variable(v)) => Some(Variable {
+                expr_type: Float,
+                decl: v.decl.clone(),
+            }),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Float {
         Float
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Float> {
+        match any {
+            AnyExpression::Float(FloatExpr::Variable(_)) => Some(Float),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Float>> {
+        Either::Right(self)
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -306,8 +558,29 @@ impl Expression<Vec2> for Variable<Vec2> {
         AnyExpression::Vec2(Vec2Expr::Variable(RawVariableInvocation { decl }))
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(Variable {
+                expr_type: Vec2,
+                decl: v.decl.clone(),
+            }),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Vec2 {
         Vec2
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Vec2> {
+        match any {
+            AnyExpression::Vec2(Vec2Expr::Variable(_)) => Some(Vec2),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Vec2>> {
+        Either::Right(self)
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -321,8 +594,29 @@ impl Expression<Vec3> for Variable<Vec3> {
         AnyExpression::Vec3(Vec3Expr::Variable(RawVariableInvocation { decl }))
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(Variable {
+                expr_type: Vec3,
+                decl: v.decl.clone(),
+            }),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Vec3 {
         Vec3
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Vec3> {
+        match any {
+            AnyExpression::Vec3(Vec3Expr::Variable(_)) => Some(Vec3),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Vec3>> {
+        Either::Right(self)
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -336,8 +630,29 @@ impl Expression<Vec4> for Variable<Vec4> {
         AnyExpression::Vec4(Vec4Expr::Variable(RawVariableInvocation { decl }))
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(Variable {
+                expr_type: Vec4,
+                decl: v.decl.clone(),
+            }),
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> Vec4 {
         Vec4
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<Vec4> {
+        match any {
+            AnyExpression::Vec4(Vec4Expr::Variable(_)) => Some(Vec4),
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<Vec4>> {
+        Either::Right(self)
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
@@ -354,8 +669,41 @@ impl Expression<MultiVector> for Variable<MultiVector> {
         })
     }
 
+    fn from_any_expression(any: AnyExpression) -> Option<Self> {
+        match any {
+            AnyExpression::Class(MultiVectorExpr { mv_class, expr, }) => {
+                if let MultiVectorVia::Variable(var) = *expr {
+                    Some(Variable {
+                        expr_type: mv_class,
+                        decl: var.decl.clone(),
+                    })
+                } else {
+                    None
+                }
+            },
+            _ => None,
+        }
+    }
+
     fn strong_expression_type(&self) -> MultiVector {
         self.expr_type.clone()
+    }
+
+    fn type_from_any(any: &AnyExpression) -> Option<MultiVector> {
+        match any {
+            AnyExpression::Class(MultiVectorExpr { mv_class, expr, }) => {
+                if let MultiVectorVia::Variable(_) = **expr {
+                    Some(mv_class.clone())
+                } else {
+                    None
+                }
+            },
+            _ => None,
+        }
+    }
+
+    fn try_into_variable(self) -> Either<Self, Variable<MultiVector>> {
+        Either::Right(self)
     }
 
     fn soft_expression_type(&self) -> ExpressionType {

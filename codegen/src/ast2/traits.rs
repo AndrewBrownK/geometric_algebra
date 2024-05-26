@@ -4,11 +4,12 @@ use std::ops::Deref;
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use either::Either;
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
 use regex::Regex;
 
-use crate::ast2::{RawVariableDeclaration, Variable};
+use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, TraitResultType};
 use crate::utility::AsyncMap;
@@ -82,11 +83,11 @@ pub trait TraitDef_1Class_0Param {
         })
     }
 
-    async fn invoke(
+    async fn invoke<'impl_ctx>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, HasNotReturned>,
         owner: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let cycle_detector_key = (trait_key.clone(), owner.clone(), None);
         if b.cycle_detector.contains(&cycle_detector_key) {
@@ -96,7 +97,8 @@ pub trait TraitDef_1Class_0Param {
             b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
-            return self.inline(b, owner).await;
+            let return_as_var = self.inline(b, owner).await?;
+            return Some(<Self::Output as TraitResultType>::inlined_expr_10(return_as_var));
         }
 
         let trait_names = self.trait_names();
@@ -112,7 +114,7 @@ pub trait TraitDef_1Class_0Param {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let builder = TraitImplBuilder::new(
-                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let trait_impl = Self::general_implementation(builder, owner_clone.clone()).await?;
             Some(trait_impl.into_trait10(trait_key_clone, owner_clone))
@@ -137,12 +139,21 @@ pub trait TraitDef_1Class_0Param {
         Some(invocation_expression)
     }
 
-    async fn inline(
+    async fn inline<'impl_ctx>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, HasNotReturned>,
         owner: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
+    ) -> Option<Variable<Self::Output>> {
+        let trait_key = self.trait_names().trait_key;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let builder = TraitImplBuilder::new(
+            the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+        );
+        // TODO manual overrides/specialization looks like it will be tricky.
+        let trait_impl = Self::general_implementation(builder, owner).await?;
+        let var_name = trait_key.as_lower_snake();
+        trait_impl.into_append().append_to(b, var_name)
     }
 }
 
@@ -171,7 +182,7 @@ pub trait TraitDef_1Class_1Param {
     async fn invoke<Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.strong_expression_type();
         let owner_param = owner;
@@ -183,7 +194,8 @@ pub trait TraitDef_1Class_1Param {
             b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
-            return self.inline(b, owner_param).await;
+            let return_as_var = self.inline(b, owner_param).await?;
+            return Some(<Self::Output as TraitResultType>::inlined_expr_11(return_as_var));
         }
 
         let trait_names = self.trait_names();
@@ -205,7 +217,7 @@ pub trait TraitDef_1Class_1Param {
             });
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -237,8 +249,18 @@ pub trait TraitDef_1Class_1Param {
     async fn inline<Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
+    ) -> Option<Variable<Self::Output>> {
+        let trait_key = self.trait_names().trait_key;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let mut builder = TraitImplBuilder::new(
+            the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+        );
+        // TODO manual overrides/specialization looks like it will be tricky.
+        let owner = builder.coerce_variable("self", owner);
+        let trait_impl = Self::general_implementation(builder, owner).await?;
+        let var_name = trait_key.as_lower_snake();
+        trait_impl.into_append().append_to(b, var_name)
     }
 }
 
@@ -271,7 +293,7 @@ pub trait TraitDef_2Class_1Param {
         b: &mut TraitImplBuilder<HasNotReturned>,
         owner: Expr,
         other: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.strong_expression_type();
         let owner_param = owner;
@@ -284,7 +306,8 @@ pub trait TraitDef_2Class_1Param {
             b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
-            return self.inline(b, owner_param, other_class.clone()).await;
+            let return_as_var = self.inline(b, owner_param, other_class.clone()).await?;
+            return Some(<Self::Output as TraitResultType>::inlined_expr_21(return_as_var));
         }
 
         let trait_names = self.trait_names();
@@ -307,7 +330,7 @@ pub trait TraitDef_2Class_1Param {
             });
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -340,8 +363,18 @@ pub trait TraitDef_2Class_1Param {
     async fn inline<Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr, other: MultiVector
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
+    ) -> Option<Variable<Self::Output>> {
+        let trait_key = self.trait_names().trait_key;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let mut builder = TraitImplBuilder::new(
+            the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+        );
+        // TODO manual overrides/specialization looks like it will be tricky.
+        let owner = builder.coerce_variable("self", owner);
+        let trait_impl = Self::general_implementation(builder, owner, other).await?;
+        let var_name = trait_key.as_lower_snake();
+        trait_impl.into_append().append_to(b, var_name)
     }
 }
 
@@ -374,7 +407,7 @@ pub trait TraitDef_2Class_2Param {
         b: &mut TraitImplBuilder<HasNotReturned>,
         owner: Expr1,
         other: Expr2
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.strong_expression_type();
         let owner_param = owner;
@@ -388,7 +421,8 @@ pub trait TraitDef_2Class_2Param {
             b.cycle_detector.insert(cycle_detector_key);
         }
         if b.inline_dependencies {
-            return self.inline(b, owner_param, other_param).await;
+            let return_as_var = self.inline(b, owner_param, other_param).await?;
+            return Some(<Self::Output as TraitResultType>::inlined_expr_22(return_as_var));
         }
 
         let trait_names = self.trait_names();
@@ -417,7 +451,7 @@ pub trait TraitDef_2Class_2Param {
             fresh_variable_scope.insert("self".to_string(), declare_self.clone());
             fresh_variable_scope.insert("other".to_string(), declare_other.clone());
             let builder = TraitImplBuilder::new(
-                the_def_clone, &registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -457,8 +491,19 @@ pub trait TraitDef_2Class_2Param {
         b: &mut TraitImplBuilder<HasNotReturned>,
         owner: Expr1,
         other: Expr2
-    ) -> Option<<Self::Output as TraitResultType>::ExprType> {
-        todo!()
+    ) -> Option<Variable<Self::Output>> {
+        let trait_key = self.trait_names().trait_key;
+        let trait_names = self.trait_names();
+        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let mut builder = TraitImplBuilder::new(
+            the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+        );
+        // TODO manual overrides/specialization looks like it will be tricky.
+        let owner = builder.coerce_variable("self", owner);
+        let other = builder.coerce_variable("other", other);
+        let trait_impl = Self::general_implementation(builder, owner, other).await?;
+        let var_name = trait_key.as_lower_snake();
+        trait_impl.into_append().append_to(b, var_name)
     }
 }
 
@@ -504,6 +549,41 @@ impl TraitKey {
         Self {
             final_name: name,
         }
+    }
+
+    pub fn as_upper_camel(&self) -> String {
+        self.final_name.to_string()
+    }
+
+    pub fn as_lower_camel(&self) -> String {
+        let n = self.final_name;
+        let f = n[0..1].to_lowercase();
+        let inal_name = n[1..n.len()].to_string();
+        format!("{f}{inal_name}")
+    }
+
+    pub fn as_lower_snake(&self) -> String {
+        let mut snake = String::new();
+        let mut chars = self.final_name.chars().peekable();
+
+        while let Some(c) = chars.next() {
+            if c.is_uppercase() {
+                // If not the first character and the next character is not uppercase,
+                // or the previous character is not uppercase, add an underscore.
+                if !snake.is_empty() &&
+                    (chars.peek().map_or(false, |next| !next.is_uppercase()) ||
+                        snake.chars().last().map_or(false, |prev| !prev.is_uppercase())) {
+                    snake.push('_');
+                }
+                for lowercase in c.to_lowercase() {
+                    snake.push(lowercase);
+                }
+            } else {
+                snake.push(c);
+            }
+        }
+
+        snake
     }
 }
 
@@ -586,8 +666,8 @@ pub enum CommentOrVariableDeclaration {
     VarDec(Arc<RawVariableDeclaration>)
 }
 
-pub struct TraitImplBuilder<'build_ctx, ReturnStatus> {
-    registry: &'build_ctx TraitImplRegistry,
+pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
+    registry: TraitImplRegistry,
     trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
 
@@ -597,19 +677,19 @@ pub struct TraitImplBuilder<'build_ctx, ReturnStatus> {
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
-    variables: &'build_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
+    variables: &'impl_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
     return_expr: Option<AnyExpression>,
-    return_status: PhantomData<ReturnStatus>,
+    return_type: ReturnType,
 }
 
-impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
+impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     fn new(
         trait_def: Arc<RawTraitDefinition>,
-        registry: &'build_ctx TraitImplRegistry,
+        registry: TraitImplRegistry,
         inline_dependencies: bool,
-        variables: &'build_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
+        variables: &'impl_ctx mut HashMap<String, Arc<RawVariableDeclaration>>,
         cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     ) -> Self {
         TraitImplBuilder {
@@ -625,7 +705,7 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
             lines: vec![],
             return_comment: None,
             return_expr: None,
-            return_status: PhantomData,
+            return_type: HasNotReturned,
         }
     }
 
@@ -652,7 +732,7 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
         var_name: V,
         expr: Expr
     ) -> Variable<ExprType> {
-        self.comment_variable_impl(None::<String>, var_name, expr)
+        self.comment_variable_impl(None::<String>, var_name, expr.strong_expression_type(), expr.into_any_expression())
     }
 
     pub fn comment_variable<
@@ -666,27 +746,26 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
         var_name: V,
         expr: Expr
     ) -> Variable<ExprType> {
-        self.comment_variable_impl(Some(comment), var_name, expr)
+        self.comment_variable_impl(Some(comment), var_name, expr.strong_expression_type(), expr.into_any_expression())
     }
 
     fn comment_variable_impl<
         C: Into<String>,
         V: Into<String>,
         ExprType,
-        Expr: Expression<ExprType>
     >(
         &mut self,
         comment: Option<C>,
         var_name: V,
-        expr: Expr
+        expr_type: ExprType,
+        expr: AnyExpression
     ) -> Variable<ExprType> {
         let var_name = var_name.into();
         let unique_name = self.make_var_name_unique(var_name);
-        let expr_type = expr.strong_expression_type();
         let decl = Arc::new(RawVariableDeclaration {
             comment: comment.map(|it| it.into()),
             name: unique_name.clone(),
-            expr: Some(expr.into_any_expression()),
+            expr: Some(expr),
         });
         let existing = self.variables.insert(unique_name.clone(), decl.clone());
         assert!(existing.is_none(), "Variable {unique_name} is already taken");
@@ -694,21 +773,29 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
         Variable { expr_type, decl, }
     }
 
+    fn coerce_variable<V: Into<String>, ExprType, Expr: Expression<ExprType>>(&mut self, name_if_new_var: V, expr: Expr) -> Variable<ExprType> {
+        return match expr.try_into_variable() {
+            Either::Right(already_done) => already_done,
+            Either::Left(not_yet) => self.variable(name_if_new_var, not_yet),
+        }
+    }
+
     pub fn return_expr<ExprType, Expr: Expression<ExprType>>(
         self, expr: Expr
-    ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {
+    ) -> Option<TraitImplBuilder<'impl_ctx, ExprType>> {
         self.comment_return_impl(None::<String>, expr)
     }
 
     pub fn comment_return<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: C, expr: Expr
-    ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {
+    ) -> Option<TraitImplBuilder<'impl_ctx, ExprType>> {
         self.comment_return_impl(Some(comment), expr)
     }
 
     fn comment_return_impl<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: Option<C>, expr: Expr
-    ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {
+    ) -> Option<TraitImplBuilder<'impl_ctx, ExprType>> {
+        let return_type = expr.strong_expression_type();
         return Some(TraitImplBuilder {
             registry: self.registry,
             // trait_def: self.trait_def,
@@ -723,13 +810,13 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
             lines: self.lines,
             return_comment: comment.map(|it| it.into()),
             return_expr: Some(expr.into_any_expression()),
-            return_status: PhantomData,
+            return_type,
         })
     }
 }
 
 
-impl<'impls, T> TraitImplBuilder<'impls, T> {
+impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     fn into_trait10(
         self, tk: TraitKey, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
@@ -811,7 +898,33 @@ impl<'impls, T> TraitImplBuilder<'impls, T> {
     }
 }
 
+pub struct BuilderAppend<ReturnType> {
+    lines: Vec<CommentOrVariableDeclaration>,
+    return_comment: Option<String>,
+    return_expr: Option<AnyExpression>,
+    return_type: ReturnType,
+}
 
+impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
+    fn into_append(self) -> BuilderAppend<ExprType> {
+        BuilderAppend {
+            lines: self.lines,
+            return_comment: self.return_comment,
+            return_expr: self.return_expr,
+            return_type: self.return_type,
+        }
+    }
+}
 
+impl<ExprType> BuilderAppend<ExprType> {
+    fn append_to<V: Into<String>>(self, b: &mut TraitImplBuilder<HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+        for line in self.lines {
+            b.lines.push(line);
+        }
 
-
+        // If there was no return expression provided, assume the implementation "failed"
+        // under normal circumstances like some combination of classes that doesn't produce a result
+        let var = b.comment_variable_impl(self.return_comment, var_name, self.return_type, self.return_expr?);
+        Some(var)
+    }
+}

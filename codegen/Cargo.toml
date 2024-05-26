@@ -19,10 +19,10 @@ naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }
 anyhow = "1.0.81"
 parking_lot = "0.12.2"
 bitflags = "2.5.0"
-#frunk = "0.4.2"
 async-trait = "0.1.80"
 rand = "0.9.0-alpha.1"
 regex = "1.10.4"
 lazy_static = "1.4.0"
 tokio = { version = "1.37.0", features = ["rt", "rt-multi-thread", "io-std", "io-util", "sync", "signal", "fs", "parking_lot"] }
 im = "15.1.0"
+either = "1.12.0"
