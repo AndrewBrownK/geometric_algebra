@@ -94,34 +94,3 @@ fn thingy() {
     // }
 }
 
-
-fn get_class_registry() -> MultiVectorClassRegistry {
-    todo!()
-}
-fn get_impl_registry() -> TraitImplRegistry {
-    todo!()
-}
-
-async fn pretend() {
-    let mut class_registry = get_class_registry();
-    let mut impl_registry = get_impl_registry();
-
-    // let expansion = TraitDefinition {
-    //     name: "Expansion".to_string(),
-    //     aliases: vec![],
-    //     documentation: "Blah blah blah".to_string(),
-    //     inherits: (Wedge, AntiDual),
-    //     owner: AnyClasses,
-    //     inputs: AnyClasses,
-    //     // outputs: (),
-    // };
-
-
-    // let mut builder = general_trait_impl(
-    //     &class_registry,
-    //     expansion.clone(),
-    //     expansion.into(),
-    // ).await;
-    // let (param_self, builder) = builder.take_param();
-
-}

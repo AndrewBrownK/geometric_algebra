@@ -630,8 +630,13 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
     }
 
     fn make_var_name_unique(&mut self, var_name: String) -> String {
-        // TODO
-        var_name
+        let mut unique_name = var_name.to_string();
+        let mut counter = 1;
+        while self.variables.contains_key(&unique_name) {
+            unique_name = format!("{}_{}", var_name, format!("{:02}", counter));
+            counter += 1;
+        }
+        unique_name
     }
 
     pub fn comment<C: Into<String>>(&mut self, comment: C) {
@@ -689,8 +694,6 @@ impl<'build_ctx> TraitImplBuilder<'build_ctx, HasNotReturned> {
         Variable { expr_type, decl, }
     }
 
-
-    // TODO return type should really match the trait definition, it can't just be any type.
     pub fn return_expr<ExprType, Expr: Expression<ExprType>>(
         self, expr: Expr
     ) -> Option<TraitImplBuilder<'build_ctx, ExprType>> {

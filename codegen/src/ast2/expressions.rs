@@ -97,28 +97,28 @@ pub enum FloatExpr {
     AccessVec4(Box<Vec4Expr>, u8),
     // e.g. UnitizedNorm
     TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
-    // TODO sum of o products
+    // TODO sum of products
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather2(FloatExpr, FloatExpr),
-    // TODO sum of o products
+    // TODO sum of products
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum Vec3Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather3(FloatExpr, FloatExpr, FloatExpr),
-    // TODO sum of o products
+    // TODO sum of products
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum Vec4Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather4(FloatExpr, FloatExpr, FloatExpr, FloatExpr),
-    // TODO sum of o products
+    // TODO sum of products
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum MultiVectorGroupExpr {
