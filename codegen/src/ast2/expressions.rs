@@ -239,7 +239,14 @@ impl AnyExpression {
     }
 
     pub fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self {
+            AnyExpression::Int(i) => i.substitute_variable(old, new),
+            AnyExpression::Float(f) => f.substitute_variable(old, new),
+            AnyExpression::Vec2(v2) => v2.substitute_variable(old, new),
+            AnyExpression::Vec3(v3) => v3.substitute_variable(old, new),
+            AnyExpression::Vec4(v4) => v4.substitute_variable(old, new),
+            AnyExpression::Class(c) => c.substitute_variable(old, new),
+        }
     }
 }
 
@@ -310,7 +317,15 @@ impl Expression<Integer> for IntExpr {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self {
+            IntExpr::Variable(var) => {
+                if var.decl == old {
+                    var.decl = new;
+                }
+            }
+            IntExpr::Literal(_) => {}
+            IntExpr::TraitInvoke10ToInt(_, _) => {}
+        }
     }
 }
 impl Expression<Float> for FloatExpr {
@@ -354,7 +369,22 @@ impl Expression<Float> for FloatExpr {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self {
+            FloatExpr::Variable(var) => {
+                if var.decl == old {
+                    var.decl = new;
+                }
+            }
+            FloatExpr::Zero => {}
+            FloatExpr::One => {}
+            FloatExpr::NegOne => {}
+            FloatExpr::Two => {}
+            FloatExpr::Half => {}
+            FloatExpr::AccessVec2(v, _) => v.substitute_variable(old, new),
+            FloatExpr::AccessVec3(v, _) => v.substitute_variable(old, new),
+            FloatExpr::AccessVec4(v, _) => v.substitute_variable(old, new),
+            FloatExpr::TraitInvoke11ToFloat(_, mvc) => mvc.substitute_variable(old, new),
+        }
     }
 }
 impl Expression<Vec2> for Vec2Expr {
@@ -398,7 +428,18 @@ impl Expression<Vec2> for Vec2Expr {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self {
+            Vec2Expr::Variable(var) => {
+                if var.decl == old {
+                    var.decl = new;
+                }
+            }
+            Vec2Expr::Gather1(f) => f.substitute_variable(old, new),
+            Vec2Expr::Gather2(f1, f2) => {
+                f1.substitute_variable(old.clone(), new.clone());
+                f2.substitute_variable(old, new);
+            }
+        }
     }
 }
 impl Expression<Vec3> for Vec3Expr {
@@ -442,7 +483,19 @@ impl Expression<Vec3> for Vec3Expr {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self {
+            Vec3Expr::Variable(var) => {
+                if var.decl == old {
+                    var.decl = new;
+                }
+            }
+            Vec3Expr::Gather1(f) => f.substitute_variable(old, new),
+            Vec3Expr::Gather3(f1, f2, f3) => {
+                f1.substitute_variable(old.clone(), new.clone());
+                f2.substitute_variable(old.clone(), new.clone());
+                f3.substitute_variable(old, new);
+            }
+        }
     }
 }
 impl Expression<Vec4> for Vec4Expr {
@@ -486,7 +539,20 @@ impl Expression<Vec4> for Vec4Expr {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self {
+            Vec4Expr::Variable(var) => {
+                if var.decl == old {
+                    var.decl = new;
+                }
+            }
+            Vec4Expr::Gather1(f) => f.substitute_variable(old, new),
+            Vec4Expr::Gather4(f1, f2, f3, f4) => {
+                f1.substitute_variable(old.clone(), new.clone());
+                f2.substitute_variable(old.clone(), new.clone());
+                f3.substitute_variable(old.clone(), new.clone());
+                f4.substitute_variable(old, new);
+            }
+        }
     }
 }
 impl Expression<MultiVector> for MultiVectorExpr {
@@ -530,7 +596,29 @@ impl Expression<MultiVector> for MultiVectorExpr {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        match self.expr.as_mut() {
+            MultiVectorVia::Variable(var) => {
+                if var.decl == old {
+                    var.decl = new;
+                }
+            }
+            MultiVectorVia::Construct(stuff) => {
+                for stuff in stuff {
+                    match stuff {
+                        MultiVectorGroupExpr::JustFloat(f) => f.substitute_variable(old.clone(), new.clone()),
+                        MultiVectorGroupExpr::Vec2(v) => v.substitute_variable(old.clone(), new.clone()),
+                        MultiVectorGroupExpr::Vec3(v) => v.substitute_variable(old.clone(), new.clone()),
+                        MultiVectorGroupExpr::Vec4(v) => v.substitute_variable(old.clone(), new.clone()),
+                    }
+                }
+            }
+            MultiVectorVia::TraitInvoke11ToClass(_, a) => a.substitute_variable(old, new),
+            MultiVectorVia::TraitInvoke21ToClass(_, a, _) => a.substitute_variable(old, new),
+            MultiVectorVia::TraitInvoke22ToClass(_, a, b) => {
+                a.substitute_variable(old.clone(), new.clone());
+                b.substitute_variable(old, new);
+            }
+        }
     }
 }
 
@@ -571,7 +659,9 @@ impl Expression<Integer> for Variable<Integer> {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        if self.decl == old {
+            self.decl = new;
+        }
     }
 }
 impl Expression<Float> for Variable<Float> {
@@ -611,7 +701,9 @@ impl Expression<Float> for Variable<Float> {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        if self.decl == old {
+            self.decl = new;
+        }
     }
 }
 impl Expression<Vec2> for Variable<Vec2> {
@@ -651,7 +743,9 @@ impl Expression<Vec2> for Variable<Vec2> {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        if self.decl == old {
+            self.decl = new;
+        }
     }
 }
 impl Expression<Vec3> for Variable<Vec3> {
@@ -691,7 +785,9 @@ impl Expression<Vec3> for Variable<Vec3> {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        if self.decl == old {
+            self.decl = new;
+        }
     }
 }
 impl Expression<Vec4> for Variable<Vec4> {
@@ -731,7 +827,9 @@ impl Expression<Vec4> for Variable<Vec4> {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        if self.decl == old {
+            self.decl = new;
+        }
     }
 }
 impl Expression<MultiVector> for Variable<MultiVector> {
@@ -786,7 +884,9 @@ impl Expression<MultiVector> for Variable<MultiVector> {
     }
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        todo!()
+        if self.decl == old {
+            self.decl = new;
+        }
     }
 }
 

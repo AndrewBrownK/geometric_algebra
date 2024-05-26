@@ -13,7 +13,7 @@ mod expressions;
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct Variable<ExprType> {
     pub expr_type: ExprType,
-    pub decl: Arc<RawVariableDeclaration>,
+    decl: Arc<RawVariableDeclaration>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq,)]

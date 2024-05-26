@@ -222,12 +222,8 @@ pub trait TraitDef_1Class_1Param {
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
-            let declare_self = Arc::new(RawVariableDeclaration {
-                comment: None,
-                name: "self".to_string(),
-                expr: None,
-            });
-            fresh_variable_scope.insert("self".to_string(), declare_self.clone());
+            let declare_self = param_self();
+            fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
             let builder = TraitImplBuilder::new(
                 the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
@@ -347,12 +343,8 @@ pub trait TraitDef_2Class_1Param {
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
-            let declare_self = Arc::new(RawVariableDeclaration {
-                comment: None,
-                name: "self".to_string(),
-                expr: None,
-            });
-            fresh_variable_scope.insert("self".to_string(), declare_self.clone());
+            let declare_self = param_self();
+            fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
             let builder = TraitImplBuilder::new(
                 the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
@@ -475,18 +467,10 @@ pub trait TraitDef_2Class_2Param {
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
-            let declare_self = Arc::new(RawVariableDeclaration {
-                comment: None,
-                name: "self".to_string(),
-                expr: None,
-            });
-            let declare_other = Arc::new(RawVariableDeclaration {
-                comment: None,
-                name: "other".to_string(),
-                expr: None,
-            });
-            fresh_variable_scope.insert("self".to_string(), declare_self.clone());
-            fresh_variable_scope.insert("other".to_string(), declare_other.clone());
+            let declare_self = param_self();
+            let declare_other = param_other();
+            fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
+            fresh_variable_scope.insert(declare_other.name.clone(), declare_other.clone());
             let builder = TraitImplBuilder::new(
                 the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
@@ -708,6 +692,21 @@ pub struct TraitDefRegistry {
 
 pub struct HasNotReturned;
 
+fn param_self() -> Arc<RawVariableDeclaration> {
+    Arc::new(RawVariableDeclaration {
+        comment: None,
+        name: ("self".to_string(), 0),
+        expr: None,
+    })
+}
+fn param_other() -> Arc<RawVariableDeclaration> {
+    Arc::new(RawVariableDeclaration {
+        comment: None,
+        name: ("other".to_string(), 0),
+        expr: None,
+    })
+}
+
 #[derive(Clone)]
 pub enum CommentOrVariableDeclaration {
     Comment(Cow<'static, String>),
@@ -821,7 +820,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
             expr: Some(expr),
         });
         let existing = self.variables.insert(unique_name.clone(), decl.clone());
-        assert!(existing.is_none(), "Variable {unique_name} is already taken");
+        assert!(existing.is_none(), "Variable {unique_name:?} is already taken");
         self.lines.push(CommentOrVariableDeclaration::VarDec(decl.clone()));
         Variable { expr_type, decl, }
     }
@@ -902,11 +901,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         owner: Expr,
     ) -> Option<Variable<T::Output>> {
         let new_self = self.coerce_variable("self", owner).decl;
-        let old_self =  Arc::new(RawVariableDeclaration {
-            comment: None,
-            name: "self".to_string(),
-            expr: None,
-        });
+        let old_self =  param_self();
         let mut var_replacements = vec![(old_self, new_self)];
         self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
         let mut return_expr = raw_impl.return_expr.clone();
@@ -934,11 +929,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         owner: Expr,
     ) -> Option<Variable<T::Output>> {
         let new_self = self.coerce_variable("self", owner).decl;
-        let old_self =  Arc::new(RawVariableDeclaration {
-            comment: None,
-            name: "self".to_string(),
-            expr: None,
-        });
+        let old_self =  param_self();
         let mut var_replacements = vec![(old_self, new_self)];
         self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
         let mut return_expr = raw_impl.return_expr.clone();
@@ -969,16 +960,8 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     ) -> Option<Variable<T::Output>> {
         let new_self = self.coerce_variable("self", owner).decl;
         let new_other = self.coerce_variable("other", other).decl;
-        let old_self =  Arc::new(RawVariableDeclaration {
-            comment: None,
-            name: "self".to_string(),
-            expr: None,
-        });
-        let old_other =  Arc::new(RawVariableDeclaration {
-            comment: None,
-            name: "other".to_string(),
-            expr: None,
-        });
+        let old_self =  param_self();
+        let old_other =  param_other();
         let mut var_replacements = vec![(old_self, new_self), (old_other, new_other)];
         self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
         let mut return_expr = raw_impl.return_expr.clone();
