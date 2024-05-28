@@ -42,6 +42,7 @@ const fn mono_grade_groups(d: u8) -> usize {
 pub struct MultiVectorSignature<const D: u8>(ArrayVec<[BasisSignature; num_elements(D)]>)
     where [(); num_elements(D)]: Sized;
 
+// TODO there could be an argument for using an enum instead, which is integrating the AST
 pub type BasisElementGroup = ArrayVec<[BasisElement; 4]>;
 
 
@@ -52,6 +53,7 @@ pub struct MultiVec<const D: u8> where
     [(); num_elements(D)]: Sized
 {
     name: &'static str,
+    uniform_grade: Some(u8),
     element_groups: TinyVec<[BasisElementGroup; mono_grade_groups(D)]>,
     // It is important to keep the vec in the signature sorted, so it can serve its purpose.
     // So we should keep very strict control over construction and mutation of MultiVec,
@@ -162,26 +164,47 @@ impl<const D: u8> MultiVec<D> where
     }
 
     pub fn new_by_groups<G: IntoIterator<Item=BasisElementGroup>>(name: &'static str, element_groups: G) -> Self {
-        assert!(
-            MULTIVECTOR_NAME_REGEX.is_match(name),
-            "MultiVector names must be UpperCamelCase without any funny business or special characters, but this is violated by \"{name}\"."
-        );
+        if !MULTIVECTOR_NAME_REGEX.is_match(name) {
+            panic!("MultiVector names must be UpperCamelCase without any funny business or \
+                special characters, but this is violated by \"{name}\".")
+        }
+        let mut used_dimensions = BasisSignature::empty();
         let arg = element_groups;
         let mut element_groups = TinyVec::new();
         let mut signature = MultiVectorSignature(ArrayVec::new());
+        let mut grade_vote_began = true;
+        let mut uniform_grade = None;
         for group in arg {
             for el in group {
-                if signature.0.contains(&el.signature()) {
+                let el_sig = el.signature();
+                if signature.0.contains(&el_sig) {
                     panic!("{name} already has {el}. Do not define MultiVectors using redundant or \
-                    duplicate BasisSignatures. Don't forget that reordered or sign flipped \
-                    BasisElements can share the same BasisSignature")
+                        duplicate BasisSignatures. Don't forget that reordered or sign flipped \
+                        BasisElements can share the same BasisSignature")
                 }
-                signature.0.push(el.signature())
+                signature.0.push(el_sig);
+                used_dimensions = used_dimensions.union(el_sig);
+                let i = used_dimensions.bits().count_ones();
+                if i > D as u32 {
+                    panic!("MultiVector embedded in {D} dimensions is defined with {i} or \
+                        more primary basis vectors. Already reserved: {used_dimensions} Latest \
+                        addition: {el_sig}")
+                }
+
+                if let Some(ug) = uniform_grade {
+                    if ug != el_sig.bits() as u8 {
+                        uniform_grade = None;
+                    }
+                }
+                if !grade_vote_began {
+                    uniform_grade = Some(el_sig.bits() as u8);
+                    grade_vote_began = true;
+                }
             }
             element_groups.push(group);
         }
         signature.0.sort();
-        MultiVec { name, element_groups, signature, }
+        MultiVec { name, uniform_grade, element_groups, signature, }
     }
 }
 

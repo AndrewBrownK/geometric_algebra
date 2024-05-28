@@ -1,2 +1,4 @@
 pub mod basis;
-mod multivector;
+pub mod multivector;
+mod algebra;
+mod metric;

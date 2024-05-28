@@ -2,6 +2,8 @@ use std::sync::Arc;
 
 use crate::algebra::MultiVectorClass;
 
+// TODO move these items to better locations
+
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Integer;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
