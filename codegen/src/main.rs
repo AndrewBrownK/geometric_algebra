@@ -3,6 +3,7 @@
 #![feature(exit_status_error)]
 #![feature(associated_type_defaults)]
 #![feature(generic_const_exprs)]
+#![feature(const_option)]
 
 mod algebra;
 mod ast;

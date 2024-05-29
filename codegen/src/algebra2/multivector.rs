@@ -53,7 +53,7 @@ pub struct MultiVec<const D: u8> where
     [(); num_elements(D)]: Sized
 {
     name: &'static str,
-    uniform_grade: Some(u8),
+    uniform_grade: Option<u8>,
     element_groups: TinyVec<[BasisElementGroup; mono_grade_groups(D)]>,
     // It is important to keep the vec in the signature sorted, so it can serve its purpose.
     // So we should keep very strict control over construction and mutation of MultiVec,

@@ -1,4 +1,5 @@
 use std::cmp::Ordering;
+use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 
 use rand::Rng;
@@ -82,7 +83,7 @@ impl BasisSignature {
     fn to_primary_bases(&self) -> Vec<PrimaryBasis> {
         let mut result = vec![];
         for basis in PrimaryBasis::array() {
-            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            let sig = basis.signature();
             if self.contains(sig) {
                 result.push(basis);
             }
@@ -95,9 +96,29 @@ impl BasisSignature {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct BasisElement {
+    // BasisElements will mathematically operate
+    // under the assumption that the primary bases
+    // are ordered normally, like e123456 etc
     coefficient: i8,
     signature: BasisSignature,
+
+    // However you can also override the name of a
+    // basis element (like "e3215" or "e_plus" or "e_minus"
+    // or "anti_scalar" or "pseudo_scalar" or "pss" or "i")
+    // As long as you also record the sign with
+    // respect to the normally ordered element.
+    // This way we can tell what to do with all of
+    // (for example) +e412, -e412, +e124, and -e124
+    display_name: Option<BasisElementDisplayName>,
 }
+
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct BasisElementDisplayName {
+    display_name: &'static str,
+    negate_display: bool,
+}
+
 impl PartialOrd for BasisElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.signature.cmp(&other.signature).then_with(|| {
@@ -114,7 +135,19 @@ impl Ord for BasisElement {
 }
 impl Display for BasisElement {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self.coefficient {
+        let mut sign = self.coefficient;
+        if let Some(dn) = self.display_name {
+            if dn.negate_display {
+                sign = sign * -1;
+            }
+            return match sign {
+                0 => write!(f, "0"),
+                1 => write!(f, "{}", dn.display_name),
+                -1 => write!(f, "-{}", dn.display_name),
+                c => write!(f, "{}*{}", c, dn.display_name),
+            };
+        }
+        match sign {
             0 => write!(f, "0"),
             1 => write!(f, "{}", self.signature),
             -1 => write!(f, "-{}", self.signature),
@@ -127,6 +160,7 @@ impl Default for BasisElement {
         Self {
             coefficient: 0,
             signature: BasisSignature::scalar,
+            display_name: None,
         }
     }
 }
@@ -135,7 +169,8 @@ impl From<BasisSignature> for BasisElement {
     fn from(signature: BasisSignature) -> Self {
         Self {
             coefficient: 1,
-            signature
+            signature,
+            display_name: None,
         }
     }
 }
@@ -152,7 +187,16 @@ impl BasisElement {
     pub const fn zero() -> Self {
         Self {
             coefficient: 0,
-            signature: BasisSignature::scalar
+            signature: BasisSignature::scalar,
+            display_name: None,
+        }
+    }
+
+    pub const fn scalar() -> Self {
+        Self {
+            coefficient: 1,
+            signature: BasisSignature::scalar,
+            display_name: None,
         }
     }
 
@@ -165,6 +209,180 @@ impl BasisElement {
         self.signature.bits().count_ones() as u8
     }
 
+    pub const fn parsed_display_name(s: &'static str) -> Option<Self> {
+        let mut result = BasisElement::zero();
+        result.coefficient = 1;
+        let mut display_name = BasisElementDisplayName {
+            display_name: s,
+            negate_display: false,
+        };
+
+        // This might not look very idiomatic at first glance,
+        // but keep in mind we are operating in a const fn.
+
+        let s = s.as_bytes();
+        // if s == b"zero" {
+        //     display_name.display_name = "zero";
+        //     result.display_name = Some(display_name);
+        //     result.coefficient = 0;
+        //     return Some(result)
+        // }
+        // if s == b"scalar" {
+        //     display_name.display_name = "scalar";
+        //     result.display_name = Some(display_name);
+        //     result.coefficient = 1;
+        //     return Some(result)
+        // }
+        let mut i = 0;
+        let mut reached_elements = false;
+        while i < s.len() {
+            let c = s[i];
+            i += 1;
+            let next_basis = match (reached_elements, c) {
+                // (false, b'-') => {
+                //     display_name.negate_display = !display_name.negate_display;
+                //     continue
+                // }
+                (false, b'0') => {
+                    result.coefficient = 0;
+                    result.signature = BasisSignature::empty();
+                    // For parsing here, it would be weird for someone to specify stuff
+                    // after a 0, like "0e123". So if you want to be weird, do that
+                    // with a manually set display_name instead of me figure out
+                    // strange cases in const evaluation.
+                    return if i == s.len() {
+                        result.display_name = Some(display_name);
+                        Some(result)
+                    } else {
+                        None
+                    }
+                }
+                (false, b'1') => {
+                    result.coefficient = 1;
+                    result.signature = BasisSignature::empty();
+                    return if i == s.len() {
+                        result.display_name = Some(display_name);
+                        Some(result)
+                    } else {
+                        None
+                    }
+                }
+                (false, b'e') => {
+                    reached_elements = true;
+                    continue
+                }
+                (true, b'0') => PrimaryBasis::e0,
+                (true, b'1') => PrimaryBasis::e1,
+                (true, b'2') => PrimaryBasis::e2,
+                (true, b'3') => PrimaryBasis::e3,
+                (true, b'4') => PrimaryBasis::e4,
+                (true, b'5') => PrimaryBasis::e5,
+                (true, b'6') => PrimaryBasis::e6,
+                (true, b'7') => PrimaryBasis::e7,
+                (true, b'8') => PrimaryBasis::e8,
+                (true, b'9') => PrimaryBasis::e9,
+                (true, b'A') => PrimaryBasis::eA,
+                (true, b'B') => PrimaryBasis::eB,
+                (true, b'C') => PrimaryBasis::eC,
+                (true, b'D') => PrimaryBasis::eD,
+                (true, b'E') => PrimaryBasis::eE,
+                (true, b'F') => PrimaryBasis::eF,
+                _ => return None
+            };
+            let sig_addition = next_basis.signature();
+            let sig_existing = result.signature;
+
+            // Reject double bases.
+            if sig_existing.contains(sig_addition) {
+                return None;
+            }
+            // Alright so the slot is open for this primary element.
+            // Now the only question is how many primary elements we have to swap to be in order.
+            let sig_behind_this_basis = BasisSignature::from_bits_retain(u16::MAX - (sig_addition.bits() - 1));
+            let yes_swap = sig_existing.intersection(sig_behind_this_basis);
+            let exp = yes_swap.bits().count_ones();
+            let negate = -1 == i8::pow(-1, exp);
+            if negate {
+                result.coefficient = result.coefficient * -1;
+                display_name.negate_display = !display_name.negate_display;
+            }
+            // Alright and finally actually update the signature
+            result.signature = sig_existing.union(sig_addition);
+        }
+        result.display_name = Some(display_name);
+        Some(result)
+    }
+
+    pub const fn with_name(mut self, display_name: &'static str, odd_permutation: bool) -> Self {
+        let dn = BasisElementDisplayName {
+            display_name,
+            negate_display: odd_permutation,
+        };
+        self.display_name = Some(dn);
+        self
+    }
+
+    pub fn reverse(&self) -> Self {
+        let gr = self.grade() as u32;
+        let exp = gr * (gr - 1) / 2;
+        let mut copy = self.clone();
+        copy.coefficient = i8::pow(-1i8, exp) * copy.coefficient;
+        copy
+    }
+
+    // TODO have multiple different feelings on this...
+    //  - Could we use a const generic parameter to make "right_complement + left_complement"
+    //    vs only "complement" available depending on dimensionality? Would require adding the
+    //    const generic to either GeneratorSquares, or a new AntiScalar(BasisElement) newtype,
+    //    or BasisElements themselves. Seems to cumbersome for BasisElements in general. But
+    //    maybe would fit best on an AntiScalar newtype.
+    //  - without having to return a Result, and also without ignoring the case entirely,
+    //    is it possible to get rid of the panic branch? In other words, somewhat similar to the
+    //    above, can we make this only callable for valid/applicable AntiScalars? I'm not sure yet.
+    //    But if it's possible, it probably starts with making AntiScalar const and (again,
+    //    if possible, idk) using const generic constrained to AntiScalar. Even if you can get
+    //    that far though, how can you know the mundane element you are trying to complement
+    //    will match or not? at the end of the day, compile time is compile time and runtime
+    //    is runtime. So I do have all those constants out there, and maybe we can have const
+    //    constraints on expressions of those hard constants, but it seems much less likely I
+    //    can use such techniques on a non-const BasisElement.
+    pub fn right_complement(&self, anti_scalar: BasisElement) -> BasisElement {
+        if !anti_scalar.signature.contains(self.signature()) {
+            panic!("Cannot take the right complement of a BasisElement with respect to an \
+                AntiScalar that does not contain it.")
+        }
+        let new_sig = anti_scalar.signature() - self.signature();
+
+        // Start with the anti_scalar, in case they use a negative coefficient
+        // anti_scalar for some silly reason. We'll support it.
+        let mut answer = BasisElement::zero();
+        answer.coefficient = self.coefficient * anti_scalar.coefficient;
+        answer.signature = new_sig;
+
+        // Now we can test if we have to actually worry about the sign.
+        let d = anti_scalar.grade();
+        let gr = self.grade();
+        let ag = d - gr;
+
+        // Hmmm it is so inconvenient to define these,
+        // maybe I should get them as a dependency instead
+        fn is_even(num: u8) -> bool { num % 2 == 0 }
+        fn is_odd(num: u8) -> bool { num % 2 != 0 }
+
+        if is_odd(d) || is_even(gr) || is_even(ag) {
+            return answer;
+        }
+
+        // Okay we should double-check the sign.
+
+
+
+        // let test = self.primitive_wedge(answer)
+        todo!()
+    }
+
+    // TODO based on page 114 I'm starting to wonder if we don't need Generator Squares at all
+    //  Or is it rather, the wedge is the same regardless of metric
     /// Wedge product, but "primitive" in the sense that all BasisElements
     /// are assumed to be entirely independent, and there's nothing fancy
     /// like merged e+ and e- into e4 and e5 going on.
@@ -221,13 +439,14 @@ impl BasisElement {
         }
         let mut result_sig = 0u16;
         for primary_basis in result_elements {
-            let additional_sig = 1u16 << (primary_basis as u8);
+            let additional_sig = primary_basis.bits();
             result_sig = result_sig | additional_sig;
         }
         let signature = BasisSignature::from_bits_retain(result_sig);
         BasisElement {
             coefficient: sign,
             signature,
+            display_name: None,
         }
     }
 
@@ -249,6 +468,56 @@ impl BasisElement {
         return result;
     }
 }
+
+
+#[derive(Clone, Debug)]
+pub struct BasisElementNames {
+    zero: Option<BasisElementDisplayName>,
+    elements: HashMap<BasisSignature, BasisElementDisplayName>
+}
+impl BasisElementNames {
+    pub fn new() -> Self {
+        BasisElementNames {
+            zero: None,
+            elements: HashMap::new(),
+        }
+    }
+
+    /// Give a name to a BasisElement, if one exists.
+    pub fn provide_name(&self, mut el: BasisElement) -> BasisElement {
+        let existing = if el.coefficient == 0 {
+            self.zero
+        } else {
+            self.elements.get(&el.signature).cloned()
+        };
+        if let Some(dn) = existing {
+            el.display_name = Some(dn);
+        }
+        return el
+    }
+
+    /// Add a name on a BasisElement (if it exists) to the BasisElementNames.
+    pub fn accept_name(&mut self, el: BasisElement) -> anyhow::Result<()> {
+        let Some(el_dn) = el.display_name else { return Ok(()) };
+        let sig = el.signature;
+        let existing = if el.coefficient == 0 {
+            self.zero
+        } else {
+            self.elements.get(&sig).cloned()
+        };
+        if let Some(dn) = existing {
+            if el_dn != dn {
+                anyhow::bail!("BasisElementNames cannot accept name {el_dn:?} because it already has {dn:?} for the same signature {sig:?}")
+            }
+        } else {
+            self.elements.insert(sig, el_dn);
+        }
+        Ok(())
+    }
+}
+
+
+
 
 #[test]
 fn new_basis_elements_wedge() {
@@ -327,7 +596,7 @@ pub enum PrimaryBasis {
     eF = 15,
 }
 impl PrimaryBasis {
-    fn array() -> [Self; 16] {
+    pub const fn array() -> [Self; 16] {
         [
             PrimaryBasis::e0, PrimaryBasis::e1, PrimaryBasis::e2, PrimaryBasis::e3,
             PrimaryBasis::e4, PrimaryBasis::e5, PrimaryBasis::e6, PrimaryBasis::e7,
@@ -336,6 +605,21 @@ impl PrimaryBasis {
         ]
     }
 
+    const fn bits(self) -> u16 {
+        1u16 << self as u8
+    }
+
+    pub const fn signature(self) -> BasisSignature {
+        BasisSignature::from_bits_retain(self.bits())
+    }
+
+    pub const fn element(self) -> BasisElement {
+        BasisElement {
+            coefficient: 1,
+            signature: self.signature(),
+            display_name: None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -349,6 +633,7 @@ impl GeneratorSquares {
         BasisElement {
             coefficient: 1,
             signature,
+            display_name: None,
         }
     }
 
@@ -362,8 +647,7 @@ impl GeneratorSquares {
             if emptying_signature.is_empty() {
                 return Ok(basis)
             }
-            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
-            emptying_signature.remove(sig);
+            emptying_signature.remove(basis.signature());
         }
         Err(anyhow::format_err!("There are no more available PrimaryBasis for {self:?}."))
     }
@@ -379,8 +663,7 @@ impl GeneratorSquares {
         let mut active_bases = BasisSignature::empty();
         let mut raw_squares = [0i8; 16];
         for (basis, square) in generator_squares {
-            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
-            active_bases = active_bases.union(sig);
+            active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
         Self { active_bases, raw_squares }
@@ -390,7 +673,7 @@ impl GeneratorSquares {
         let mut active_bases = self.active_bases;
         let mut raw_squares = self.raw_squares;
         for (basis, square) in generator_squares {
-            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
+            let sig = basis.signature();
             if active_bases.contains(sig) {
                 return Err(anyhow::format_err!("The PrimaryBasis {basis:?} is already taken on {self:?}"))
             }
@@ -404,8 +687,7 @@ impl GeneratorSquares {
         let mut active_bases = self.active_bases;
         let mut raw_squares = self.raw_squares;
         for (basis, square) in generator_squares {
-            let sig = BasisSignature::from_bits_retain(1u16 << (basis as u8));
-            active_bases = active_bases.union(sig);
+            active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
         Self { active_bases, raw_squares }
@@ -428,34 +710,86 @@ impl GeneratorSquares {
 pub mod elements {
     use crate::algebra2::basis::*;
 
-    const fn element(signature: BasisSignature) -> BasisElement {
-        BasisElement {
-            coefficient: 1,
-            signature,
-        }
-    }
-
     include!(concat!(env!("OUT_DIR"), "/generated_elements.rs"));
 
     // And we'll add some custom bases as seen in the wild.
     // (But let's not go overboard by using code generation on this part...
     //  The number of permutations is the factorial of the number of dimensions.)
 
+    const fn const_parse(s: &'static str) -> BasisElement {
+        BasisElement::parsed_display_name(s).expect("Failed to parse const BasisElement")
+    }
+
     // Eric Lengyel's bases:
-    pub const e41: BasisElement = e14.negate();
-    pub const e42: BasisElement = e24.negate();
-    pub const e43: BasisElement = e34.negate();
-    pub const e31: BasisElement = e13.negate();
-    pub const e423: BasisElement = e234;
-    pub const e431: BasisElement = e134.negate();
-    pub const e412: BasisElement = e124;
-    pub const e321: BasisElement = e123;
-    pub const e415: BasisElement = e145.negate();
-    pub const e425: BasisElement = e245.negate();
-    pub const e435: BasisElement = e345.negate();
-    pub const e315: BasisElement = e135.negate();
-    pub const e4235: BasisElement = e2345;
-    pub const e4315: BasisElement = e1345.negate();
-    pub const e4125: BasisElement = e1245;
-    pub const e3215: BasisElement = e1235.negate();
+    pub const e41: BasisElement = const_parse("e41");
+    pub const e42: BasisElement = const_parse("e42");
+    pub const e43: BasisElement = const_parse("e43");
+    pub const e31: BasisElement = const_parse("e31");
+    pub const e423: BasisElement = const_parse("e423");
+    pub const e431: BasisElement = const_parse("e431");
+    pub const e412: BasisElement = const_parse("e412");
+    pub const e321: BasisElement = const_parse("e321");
+    pub const e415: BasisElement = const_parse("e415");
+    pub const e425: BasisElement = const_parse("e425");
+    pub const e435: BasisElement = const_parse("e435");
+    pub const e315: BasisElement = const_parse("e315");
+    pub const e4235: BasisElement = const_parse("e4235");
+    pub const e4315: BasisElement = const_parse("e4315");
+    pub const e4125: BasisElement = const_parse("e4125");
+    pub const e3215: BasisElement = const_parse("e3215");
+
+    #[test]
+    fn test_parse_custom_bases() {
+        use std::fmt::Write;
+        let cases = [
+            (e41, "e41", true, e14.negate()),
+            (e42, "e42", true, e24.negate()),
+            (e43, "e43", true, e34.negate()),
+            (e31, "e31", true, e13.negate()),
+            (e423, "e423", false, e234),
+            (e431, "e431", true, e134.negate()),
+            (e412, "e412", false, e124),
+            (e321, "e321", true, e123.negate()),
+            (e415, "e415", true, e145.negate()),
+            (e425, "e425", true, e245.negate()),
+            (e435, "e435", true, e345.negate()),
+            (e315, "e315", true, e135.negate()),
+            (e4235, "e4235", false, e2345),
+            (e4315, "e4315", true, e1345.negate()),
+            (e4125, "e4125", false, e1245),
+            (e3215, "e3215", true, e1235.negate()),
+        ];
+        for (custom_element, correct_name, display_is_negated, ordered_element) in cases {
+            assert_eq!(
+                custom_element.signature(), ordered_element.signature(),
+                "Custom BasisElement {custom_element:?} does not match signature of {ordered_element:?}"
+            );
+            assert_eq!(
+                custom_element.coefficient(), ordered_element.coefficient(),
+                "Custom BasisElement {custom_element:?} does not match coefficient of {ordered_element:?}"
+            );
+            let dn = custom_element.display_name.expect("Parsed BasisElements should have custom names");
+            assert_eq!(
+                dn.negate_display, display_is_negated,
+                "Custom BasisElement {custom_element:?} has incorrect display negation"
+            );
+            let mut n = String::new();
+            write!(n, "{custom_element}").expect("BasisElements must implement Display without fail");
+            assert_eq!(
+                n.as_str(), correct_name,
+                "Custom BasisElement {custom_element:?} does not display to \"{correct_name}\""
+            );
+
+            // Negated display
+            let mut custom_element = custom_element;
+            custom_element.coefficient = -1 * custom_element.coefficient;
+            let correct_name = format!("-{correct_name}");
+            let mut n = String::new();
+            write!(n, "{custom_element}").expect("BasisElements must implement Display without fail");
+            assert_eq!(
+                n, correct_name,
+                "Custom BasisElement {custom_element:?} does not display to \"{correct_name}\""
+            );
+        }
+    }
 }

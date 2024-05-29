@@ -36,6 +36,16 @@ fn generate_multi_bases() {
             b.reverse_bits().cmp(&a.reverse_bits())
         })
     });
+
+    write!(f, "const fn element(signature: BasisSignature) -> BasisElement {{
+    BasisElement {{
+        coefficient: 1,
+        signature,
+        display_name: None,
+    }}
+}}
+").unwrap();
+
     for num in numbers {
         let mut combined_basis = if num == 0 { "scalar".to_string() } else { "e".to_string() };
         for i in 0..16 {
@@ -44,7 +54,8 @@ fn generate_multi_bases() {
             }
         }
 
-        let line = format!("    pub const {combined_basis}: BasisElement = element(BasisSignature::from_bits_retain(0b{num:016b}));\n");
+
+        let line = format!("pub const {combined_basis}: BasisElement = element(BasisSignature::from_bits_retain(0b{num:016b}));\n");
         f.write(line.as_bytes()).unwrap();
     }
 }
