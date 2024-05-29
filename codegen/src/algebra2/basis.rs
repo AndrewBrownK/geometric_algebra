@@ -176,11 +176,11 @@ impl From<BasisSignature> for BasisElement {
 }
 
 impl BasisElement {
-    pub fn coefficient(&self) -> i8 {
+    pub const fn coefficient(&self) -> i8 {
         self.coefficient
     }
 
-    pub fn signature(&self) -> BasisSignature {
+    pub const fn signature(&self) -> BasisSignature {
         self.signature
     }
 
@@ -205,7 +205,7 @@ impl BasisElement {
         self
     }
 
-    pub fn grade(&self) -> u8 {
+    pub const fn grade(&self) -> u8 {
         self.signature.bits().count_ones() as u8
     }
 
@@ -322,40 +322,35 @@ impl BasisElement {
         self
     }
 
-    pub fn reverse(&self) -> Self {
+    pub const fn reverse(&self) -> Self {
         let gr = self.grade() as u32;
         let exp = gr * (gr - 1) / 2;
-        let mut copy = self.clone();
+        let mut copy = *self;
         copy.coefficient = i8::pow(-1i8, exp) * copy.coefficient;
         copy
     }
 
-    // TODO have multiple different feelings on this...
-    //  - Could we use a const generic parameter to make "right_complement + left_complement"
-    //    vs only "complement" available depending on dimensionality? Would require adding the
-    //    const generic to either GeneratorSquares, or a new AntiScalar(BasisElement) newtype,
-    //    or BasisElements themselves. Seems to cumbersome for BasisElements in general. But
-    //    maybe would fit best on an AntiScalar newtype.
-    //  - without having to return a Result, and also without ignoring the case entirely,
-    //    is it possible to get rid of the panic branch? In other words, somewhat similar to the
-    //    above, can we make this only callable for valid/applicable AntiScalars? I'm not sure yet.
-    //    But if it's possible, it probably starts with making AntiScalar const and (again,
-    //    if possible, idk) using const generic constrained to AntiScalar. Even if you can get
-    //    that far though, how can you know the mundane element you are trying to complement
-    //    will match or not? at the end of the day, compile time is compile time and runtime
-    //    is runtime. So I do have all those constants out there, and maybe we can have const
-    //    constraints on expressions of those hard constants, but it seems much less likely I
-    //    can use such techniques on a non-const BasisElement.
+    // TODO see if the remaining methods can also be const
+
+    pub fn anti_reverse(&self, anti_scalar: BasisElement) -> Self {
+        let r = self.right_complement(anti_scalar);
+        let r = r.reverse();
+        r.left_complement(anti_scalar)
+    }
+
     pub fn right_complement(&self, anti_scalar: BasisElement) -> BasisElement {
-        if !anti_scalar.signature.contains(self.signature()) {
+        if !anti_scalar.signature.contains(self.signature) {
             panic!("Cannot take the right complement of a BasisElement with respect to an \
                 AntiScalar that does not contain it.")
         }
-        let new_sig = anti_scalar.signature() - self.signature();
+        if self.coefficient == 0 {
+            return BasisElement::zero();
+        }
 
-        // Start with the anti_scalar, in case they use a negative coefficient
-        // anti_scalar for some silly reason. We'll support it.
-        let mut answer = BasisElement::zero();
+        let new_sig = anti_scalar.signature - self.signature;
+
+        // Negative coefficient anti_scalar is allowed
+        let mut answer = BasisElement::scalar();
         answer.coefficient = self.coefficient * anti_scalar.coefficient;
         answer.signature = new_sig;
 
@@ -374,22 +369,33 @@ impl BasisElement {
         }
 
         // Okay we should double-check the sign.
+        let test = self.wedge(answer);
+        if test.coefficient == anti_scalar.coefficient {
+            return answer
+        }
+        if test.coefficient == -anti_scalar.coefficient {
+            answer.coefficient = -1 * answer.coefficient;
+            return answer
+        }
 
-
-
-        // let test = self.primitive_wedge(answer)
-        todo!()
+        // This basically shouldn't happen unless the i8 coefficient somehow gets corrupted
+        panic!("Cannot figure out right_complement for strange element: {self:?} anti_scalar: {anti_scalar:?}")
     }
 
-    // TODO based on page 114 I'm starting to wonder if we don't need Generator Squares at all
-    //  Or is it rather, the wedge is the same regardless of metric
-    /// Wedge product, but "primitive" in the sense that all BasisElements
-    /// are assumed to be entirely independent, and there's nothing fancy
-    /// like merged e+ and e- into e4 and e5 going on.
-    pub fn primitive_wedge(
+    pub fn left_complement(&self, anti_scalar: BasisElement) -> BasisElement {
+        let mut rc = self.right_complement(anti_scalar);
+        let d = anti_scalar.grade();
+        let gr = self.grade();
+        let ag = d - gr;
+        let exp = gr * ag;
+        rc.coefficient = rc.coefficient * i8::pow(-1, exp as u32);
+        rc
+    }
+
+    /// Wedge product
+    pub fn wedge(
         &self,
-        other: &BasisElement,
-        generator_squares: &GeneratorSquares,
+        other: BasisElement,
     ) -> BasisElement {
         let a = self.signature.to_primary_bases();
         let b = other.signature.to_primary_bases();
@@ -415,18 +421,7 @@ impl BasisElement {
                     result_elements.push(a_);
                     a_idx += 1;
                 }
-                Ordering::Equal => {
-                    sign *= generator_squares.square(a_);
-                    if sign == 0 {
-                        return BasisElement::zero()
-                    }
-                    // Must move b_ at least to the right of a_.
-                    // Which negates the sign each step.
-                    let swaps = ((a.len() - a_idx) - 1) as u32;
-                    sign *= i8::pow(-1, swaps % 2);
-                    a_idx += 1;
-                    b_idx += 1;
-                }
+                Ordering::Equal => return BasisElement::zero(),
                 Ordering::Greater => {
                     // Must move b_ all the way to left of a_.
                     // Which negates the sign each step.
@@ -442,6 +437,9 @@ impl BasisElement {
             let additional_sig = primary_basis.bits();
             result_sig = result_sig | additional_sig;
         }
+        if sign == 0 {
+            result_sig = 0u16;
+        }
         let signature = BasisSignature::from_bits_retain(result_sig);
         BasisElement {
             coefficient: sign,
@@ -450,22 +448,16 @@ impl BasisElement {
         }
     }
 
-    /// AntiWedge product, but "primitive" in the sense that all BasisElements
-    /// are assumed to be entirely independent, and there's nothing fancy
-    /// like merged e+ and e- into e4 and e5 going on.
-    pub fn primitive_anti_wedge(
+    /// AntiWedge product
+    pub fn anti_wedge(
         &self,
-        other: &BasisElement,
-        generator_squares: &GeneratorSquares,
+        other: BasisElement,
+        anti_scalar: BasisElement,
     ) -> BasisElement {
-        let mut a = self.clone();
-        let mut b = other.clone();
-        let anti_scalar_signature = generator_squares.anti_scalar().signature;
-        a.signature = anti_scalar_signature - a.signature;
-        b.signature = anti_scalar_signature - b.signature;
-        let mut result = a.primitive_wedge(&b, generator_squares);
-        result.signature = anti_scalar_signature - result.signature;
-        return result;
+        let s = self.right_complement(anti_scalar);
+        let o = other.right_complement(anti_scalar);
+        let w = s.wedge(o);
+        w.left_complement(anti_scalar)
     }
 }
 
@@ -522,7 +514,8 @@ impl BasisElementNames {
 #[test]
 fn new_basis_elements_wedge() {
     let mut rng = rand::thread_rng();
-    for _ in 0..100 {
+    let mut i = 0;
+    while i < 100 {
         let mut a: u16 = rng.gen();
         let mut b: u16 = rng.gen();
         let a_s: i8 = rng.gen::<i8>().signum();
@@ -536,12 +529,9 @@ fn new_basis_elements_wedge() {
         let mut squares = GeneratorSquares::empty();
         for _ in 0..d {
             let basis = squares.next_available_basis().unwrap();
-            let sq: i8 = ((rng.gen::<i8>().max(i8::MIN + 1).abs() % 5) - 2).signum();
+            let sq: i8 = ((rng.gen::<i8>().max(i8::MIN + 1).abs() % 11) - 5).signum();
             squares = squares.append([(basis, sq)]).unwrap();
         }
-        println!("Squares: {squares:?}");
-        println!("a: {a_s} {a:016b}");
-        println!("b: {b_s} {b:016b}");
 
         let old_a = basis_element::BasisElement {
             coefficient: a_s as isize,
@@ -558,8 +548,19 @@ fn new_basis_elements_wedge() {
         new_b.coefficient = b_s;
 
         let sq: Vec<_> = squares.raw_squares[0..d].iter().map(|it| it.clone() as isize).collect();
-        let old_product = old_a.primitive_anti_product(&old_b, sq.as_slice());
-        let new_product = new_a.primitive_anti_wedge(&new_b, &squares);
+        // The old BasisElement product is a geometric product, not a wedge product
+        let old_product = old_a.primitive_product(&old_b, sq.as_slice());
+        let new_product = new_a.wedge(new_b);
+
+        // So we do this check to make sure we are comparing apples to apples
+        if old_product.coefficient != 0 && old_product.index.count_ones() != (a.count_ones() + b.count_ones()) {
+            continue
+        }
+        i += 1;
+
+        println!("Squares: {squares:?}");
+        println!("a: {a_s} {a:016b}");
+        println!("b: {b_s} {b:016b}");
 
         let old_coefficient = old_product.coefficient;
         let old_sig = old_product.index;
@@ -695,14 +696,6 @@ impl GeneratorSquares {
 
     pub fn square(&self, basis: PrimaryBasis) -> i8 {
         self.raw_squares[(basis as u8) as usize]
-    }
-
-    pub fn wedge(&self, a: BasisElement, b: BasisElement) -> BasisElement {
-        a.primitive_wedge(&b, &self)
-    }
-
-    pub fn anti_wedge(&self, a: BasisElement, b: BasisElement) -> BasisElement {
-        a.primitive_anti_wedge(&b, &self)
     }
 }
 

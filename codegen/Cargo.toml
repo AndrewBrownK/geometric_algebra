@@ -12,7 +12,8 @@ wedge-is-join = []
 wedge-is-meet = []
 prefer-blanket-impls = []
 specialize-on-blankets = ["prefer-blanket-impls"]
-very-large-bases = []
+large-basis-elements = []
+very-large-basis-elements = ["large-basis-elements"]
 
 [dependencies]
 naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }

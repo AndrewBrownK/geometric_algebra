@@ -60,6 +60,8 @@ pub struct RawTraitDefinition {
 }
 
 
+// TODO infix operators
+
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_1Class_0Param {

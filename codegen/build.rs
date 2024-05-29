@@ -26,8 +26,15 @@ fn generate_multi_bases() {
     let dest_path = Path::new(out_dir).join("generated_elements.rs");
     let mut f = File::create(dest_path).unwrap();
 
+    // 8 dimensions -> 255 elements
     let mut max = u8::MAX as u16;
-    if cfg!(feature = "very-large-bases") {
+    //TODO not seeing the results of this flag yet.
+    if cfg!(feature = "large-basis-elements") {
+        // 12 dimensions -> 4095 elements
+        max = (1u16 << 12) - 1;
+    }
+    if cfg!(feature = "very-large-basis-elements") {
+        // 16 dimensions -> 65k elements
         max = u16::MAX;
     }
     let mut numbers: Vec<u16> = (0..=max).collect();
