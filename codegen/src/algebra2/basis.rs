@@ -38,20 +38,12 @@ impl Default for BasisSignature {
 
 impl PartialOrd for BasisSignature {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let a = self.bits();
-        let b = other.bits();
-        Some(a.count_ones().cmp(&b.count_ones()).then_with(|| {
-            b.reverse_bits().cmp(&a.reverse_bits())
-        }))
+        Some(BasisSignature::const_cmp(self, other))
     }
 }
 impl Ord for BasisSignature {
     fn cmp(&self, other: &Self) -> Ordering {
-        let a = self.bits();
-        let b = other.bits();
-        a.count_ones().cmp(&b.count_ones()).then_with(|| {
-            b.reverse_bits().cmp(&a.reverse_bits())
-        })
+        BasisSignature::const_cmp(self, other)
     }
 }
 
@@ -80,15 +72,45 @@ impl Display for BasisSignature {
 }
 
 impl BasisSignature {
-    fn to_primary_bases(&self) -> Vec<PrimaryBasis> {
-        let mut result = vec![];
-        for basis in PrimaryBasis::array() {
+    const fn into_primary_bases(self) -> (usize, [Option<PrimaryBasis>; 16]) {
+        let mut result = [None; 16];
+        let mut i = 0;
+        let mut j = 0;
+        let mut len = 0;
+        let arr = PrimaryBasis::array();
+        while i < arr.len() {
+            let basis = arr[i];
+            i += 1;
             let sig = basis.signature();
             if self.contains(sig) {
-                result.push(basis);
+                result[j] = Some(basis);
+                j += 1;
+                len += 1;
             }
         }
-        result
+        (len, result)
+    }
+
+    const fn const_cmp(&self, other: &BasisSignature) -> Ordering {let a = self.bits();
+        let a = self.bits();
+        let b = other.bits();
+        let aco = a.count_ones();
+        let bco = b.count_ones();
+        if aco < bco {
+            return Ordering::Less
+        }
+        if aco > bco {
+            return Ordering::Greater
+        }
+        let ra = a.reverse_bits();
+        let rb = b.reverse_bits();
+        if rb < ra {
+            return Ordering::Less
+        }
+        if rb > ra {
+            return Ordering::Greater
+        }
+        return Ordering::Equal
     }
 }
 
@@ -121,16 +143,12 @@ pub struct BasisElementDisplayName {
 
 impl PartialOrd for BasisElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.signature.cmp(&other.signature).then_with(|| {
-            self.coefficient.cmp(&other.coefficient)
-        }))
+        Some(BasisElement::const_cmp(self, other))
     }
 }
 impl Ord for BasisElement {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.signature.cmp(&other.signature).then_with(|| {
-            self.coefficient.cmp(&other.coefficient)
-        })
+        BasisElement::const_cmp(self, other)
     }
 }
 impl Display for BasisElement {
@@ -176,6 +194,23 @@ impl From<BasisSignature> for BasisElement {
 }
 
 impl BasisElement {
+    const fn const_cmp(&self, other: &Self) -> Ordering {
+        match BasisSignature::const_cmp(&self.signature, &other.signature) {
+            Ordering::Less => return Ordering::Less,
+            Ordering::Greater => return Ordering::Greater,
+            _ => {}
+        }
+        let ac = self.coefficient;
+        let bc = other.coefficient;
+        if ac < bc {
+            return Ordering::Less
+        }
+        if ac > bc {
+            return Ordering::Greater
+        }
+        Ordering::Equal
+    }
+
     pub const fn coefficient(&self) -> i8 {
         self.coefficient
     }
@@ -330,15 +365,13 @@ impl BasisElement {
         copy
     }
 
-    // TODO see if the remaining methods can also be const
-
-    pub fn anti_reverse(&self, anti_scalar: BasisElement) -> Self {
+    pub const fn anti_reverse(&self, anti_scalar: BasisElement) -> Self {
         let r = self.right_complement(anti_scalar);
         let r = r.reverse();
         r.left_complement(anti_scalar)
     }
 
-    pub fn right_complement(&self, anti_scalar: BasisElement) -> BasisElement {
+    pub const fn right_complement(&self, anti_scalar: BasisElement) -> BasisElement {
         if !anti_scalar.signature.contains(self.signature) {
             panic!("Cannot take the right complement of a BasisElement with respect to an \
                 AntiScalar that does not contain it.")
@@ -347,12 +380,12 @@ impl BasisElement {
             return BasisElement::zero();
         }
 
-        let new_sig = anti_scalar.signature - self.signature;
+        let new_sig = anti_scalar.signature.bits() - self.signature.bits();
 
         // Negative coefficient anti_scalar is allowed
         let mut answer = BasisElement::scalar();
         answer.coefficient = self.coefficient * anti_scalar.coefficient;
-        answer.signature = new_sig;
+        answer.signature = BasisSignature::from_bits_retain(new_sig);
 
         // Now we can test if we have to actually worry about the sign.
         let d = anti_scalar.grade();
@@ -361,8 +394,8 @@ impl BasisElement {
 
         // Hmmm it is so inconvenient to define these,
         // maybe I should get them as a dependency instead
-        fn is_even(num: u8) -> bool { num % 2 == 0 }
-        fn is_odd(num: u8) -> bool { num % 2 != 0 }
+        const fn is_even(num: u8) -> bool { num % 2 == 0 }
+        const fn is_odd(num: u8) -> bool { num % 2 != 0 }
 
         if is_odd(d) || is_even(gr) || is_even(ag) {
             return answer;
@@ -379,10 +412,13 @@ impl BasisElement {
         }
 
         // This basically shouldn't happen unless the i8 coefficient somehow gets corrupted
-        panic!("Cannot figure out right_complement for strange element: {self:?} anti_scalar: {anti_scalar:?}")
+        // panic!("Cannot figure out right_complement for strange element: {self:?} anti_scalar: {anti_scalar:?}")
+
+        // Limited/no formatting options in const eval
+        panic!("Cannot figure out right_complement for strange element")
     }
 
-    pub fn left_complement(&self, anti_scalar: BasisElement) -> BasisElement {
+    pub const fn left_complement(&self, anti_scalar: BasisElement) -> BasisElement {
         let mut rc = self.right_complement(anti_scalar);
         let d = anti_scalar.grade();
         let gr = self.grade();
@@ -393,47 +429,58 @@ impl BasisElement {
     }
 
     /// Wedge product
-    pub fn wedge(
+    pub const fn wedge(
         &self,
         other: BasisElement,
     ) -> BasisElement {
-        let a = self.signature.to_primary_bases();
-        let b = other.signature.to_primary_bases();
+        // Implementation may look a bit strange because it is const compatible
+
+        let (a_len, a) = self.signature.into_primary_bases();
+        let (b_len, b) = other.signature.into_primary_bases();
         let mut sign = self.coefficient * other.coefficient;
-        let mut result_elements = vec![];
+
+        let mut result_elements: [Option<PrimaryBasis>; 16] = [None; 16];
         let mut a_idx = 0;
         let mut b_idx = 0;
-        while a_idx < a.len() || b_idx < b.len() {
-            if a_idx >= a.len() {
-                result_elements.push(b[b_idx]);
+        let mut r_idx = 0;
+        while a_idx < a_len || b_idx < b_len {
+            if a_idx >= a_len {
+                result_elements[r_idx] = b[b_idx];
+                r_idx += 1;
                 b_idx += 1;
                 continue
             }
-            if b_idx >= b.len() {
-                result_elements.push(a[a_idx]);
+            if b_idx >= b_len {
+                result_elements[r_idx] = a[a_idx];
+                r_idx += 1;
                 a_idx += 1;
                 continue
             }
-            let a_ = a[a_idx];
-            let b_ = b[b_idx];
-            match a_.cmp(&b_) {
+            let a_ = a[a_idx].unwrap();
+            let b_ = b[b_idx].unwrap();
+            match PrimaryBasis::const_cmp(&a_, &b_) {
                 Ordering::Less => {
-                    result_elements.push(a_);
+                    result_elements[r_idx] = Some(a_);
+                    r_idx += 1;
                     a_idx += 1;
                 }
                 Ordering::Equal => return BasisElement::zero(),
                 Ordering::Greater => {
                     // Must move b_ all the way to left of a_.
                     // Which negates the sign each step.
-                    result_elements.push(b_);
-                    let swaps = (a.len() - a_idx) as u32;
+                    result_elements[r_idx] = Some(b_);
+                    r_idx += 1;
+                    let swaps = (a_len - a_idx) as u32;
                     sign *= i8::pow(-1, swaps % 2);
                     b_idx += 1;
                 }
             }
         }
         let mut result_sig = 0u16;
-        for primary_basis in result_elements {
+        let mut i = 0;
+        while i < r_idx {
+            let primary_basis = result_elements[i].unwrap();
+            i += 1;
             let additional_sig = primary_basis.bits();
             result_sig = result_sig | additional_sig;
         }
@@ -449,7 +496,7 @@ impl BasisElement {
     }
 
     /// AntiWedge product
-    pub fn anti_wedge(
+    pub const fn anti_wedge(
         &self,
         other: BasisElement,
         anti_scalar: BasisElement,
@@ -620,6 +667,18 @@ impl PrimaryBasis {
             signature: self.signature(),
             display_name: None,
         }
+    }
+
+    const fn const_cmp(&self, other: &PrimaryBasis) -> Ordering {
+        let a = *self as u8;
+        let b = *other as u8;
+        if a < b {
+            return Ordering::Less
+        }
+        if a > b {
+            return Ordering::Greater
+        }
+        Ordering::Equal
     }
 }
 
