@@ -3,18 +3,50 @@ use crate::algebra2::basis::{BasisElement, GeneratorSquares, PrimaryBasis};
 use crate::algebra2::metric::{ExoMetric, Metric};
 
 pub trait GeoAlg {
-    fn true_generator_squares(&self) -> GeneratorSquares;
-
-    // But what about????
-    // - anti_scalar: not needed because it's in true_generator_squares
-    // - wedge_product: not needed because BasisElement primitive wedge is just it
-    // - metric/exo_metric: the whole point of this foundation layer trait is to not have a metric yet.
-}
-pub trait GeoAlgWithMetric {
+    fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> i8;
     fn anti_scalar(&self) -> BasisElement;
-    fn metric(&self) -> Metric;
-    fn exo_metric(&self) -> ExoMetric;
 }
+
+pub trait DiagonalGeoAlg {
+    fn generator_squares(&self) -> GeneratorSquares;
+    fn anti_scalar(&self) -> BasisElement;
+}
+
+
+
+
+pub struct DiagonalSquares<GA: DiagonalGeoAlg>(GA);
+impl<GA: DiagonalGeoAlg> GeoAlg for DiagonalSquares<GA> {
+    fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> i8 {
+        if a.grade() != b.grade() {
+            return 0;
+        }
+        if a.signature() != b.signature() {
+            return 0;
+        }
+        let gs = self.0.generator_squares();
+        a.coefficient() * b.coefficient() * gs.square_element(a)
+    }
+    fn anti_scalar(&self) -> BasisElement {
+        self.0.anti_scalar()
+    }
+}
+
+
+pub struct GA_<GA: GeoAlg>(GA);
+impl<GA: GeoAlg> GA_<GA> {
+    // TODO tests
+    pub fn geometric_product(&self, a: BasisElement, b: BasisElement) -> Vec<BasisElement> {
+        // TODO implementation
+        let w = a.wedge(b);
+        let d = self.0.exomorphism_metric(a, b);
+        vec![]
+    }
+}
+
+
+
+
 
 
 
@@ -40,8 +72,8 @@ impl VanillaArrows {
         VanillaArrows { squares, dimensions }
     }
 }
-impl GeoAlg for VanillaArrows {
-    fn true_generator_squares(&self) -> GeneratorSquares {
-        self.squares
-    }
-}
+// impl GeoAlg for VanillaArrows {
+//     fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+//         todo!()
+//     }
+// }

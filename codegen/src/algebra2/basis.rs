@@ -72,6 +72,11 @@ impl Display for BasisSignature {
 }
 
 impl BasisSignature {
+
+    // TODO seek uses of this, how do you use PrimaryBasis?
+    //  How would it be affected by a refactor renaming PrimaryBasis to GeneratorElement?
+    //  Would I rather return 1-bit BasisSignatures here instead?
+    // Strange return type is because of const evaluation compatibility
     const fn into_primary_bases(self) -> (usize, [Option<PrimaryBasis>; 16]) {
         let mut result = [None; 16];
         let mut i = 0;
@@ -91,7 +96,7 @@ impl BasisSignature {
         (len, result)
     }
 
-    const fn const_cmp(&self, other: &BasisSignature) -> Ordering {let a = self.bits();
+    const fn const_cmp(&self, other: &BasisSignature) -> Ordering {
         let a = self.bits();
         let b = other.bits();
         let aco = a.count_ones();
@@ -306,6 +311,7 @@ impl BasisElement {
                     reached_elements = true;
                     continue
                 }
+                // TODO yeah I don't need to use PrimaryBasis here, I can just use the BasisSignatures
                 (true, b'0') => PrimaryBasis::e0,
                 (true, b'1') => PrimaryBasis::e1,
                 (true, b'2') => PrimaryBasis::e2,
@@ -439,6 +445,8 @@ impl BasisElement {
         let (b_len, b) = other.signature.into_primary_bases();
         let mut sign = self.coefficient * other.coefficient;
 
+        // TODO yeah once into_primary_bases is refactored to return BasisSignature instead, I don't think
+        //  I'll need PrimaryBasis here either
         let mut result_elements: [Option<PrimaryBasis>; 16] = [None; 16];
         let mut a_idx = 0;
         let mut b_idx = 0;
@@ -622,6 +630,13 @@ fn new_basis_elements_wedge() {
 }
 
 
+// TODO when it comes to considering a rename for this enum,
+//  one good candidate might be "Generator" to avoid the highly
+//  overloaded term "vector" and it's real application is
+//  mostly GeneratorSquares (right? double check). So maybe
+//  "GeneratorElement".
+//  Okay initial inspection looks good. I'll do it after a
+//  commit for a clean slate.
 #[repr(u8)]
 #[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
@@ -687,6 +702,7 @@ pub struct GeneratorSquares {
     active_bases: BasisSignature,
     raw_squares: [i8; 16],
 }
+// TODO any chance of some of these being const fn?
 impl GeneratorSquares {
     pub fn anti_scalar(&self) -> BasisElement {
         let signature = self.active_bases.clone();
@@ -753,14 +769,134 @@ impl GeneratorSquares {
         Self { active_bases, raw_squares }
     }
 
-    pub fn square(&self, basis: PrimaryBasis) -> i8 {
+    pub fn square_basis(&self, basis: PrimaryBasis) -> i8 {
         self.raw_squares[(basis as u8) as usize]
     }
+
+    pub fn square_element(&self, a: BasisElement) -> i8 {
+        if a.coefficient == 0 {
+            return 0
+        }
+        // (-1)^2 == 1^2 == 1
+        let mut sign = 1i8;
+
+        let mut sig = a.signature;
+        sig = self.anti_scalar().signature.intersection(sig);
+        let (a_len, a) = sig.into_primary_bases();
+        let mut a_idx = 0;
+        while a_idx < a_len {
+            let a_ = a[a_idx].unwrap();
+            // TODO remove this commented bit if indeed we don't need it
+            // Must move b_ at least to the right of a_.
+            // Which negates the sign each step.
+            // let swaps = ((a_len - 1) - a_idx) as u32;
+            // sign *= i8::pow(-1, swaps % 2);
+            sign = sign * match self.square_basis(a_) {
+                0 => return 0i8,
+                sq => sq
+            };
+            a_idx += 1;
+        }
+        sign
+    }
 }
+
+#[test]
+fn test_generator_squares() {
+    use elements::*;
+    let rga = GeneratorSquares::new([(E1, 1), (E2, 1), (E3, 1), (E4, 0)]);
+    let cga = GeneratorSquares::new([(E1, 1), (E2, 1), (E3, 1), (E4, 1), (E5, -1)]);
+
+    //
+
+    assert_eq!(1, rga.square_element(scalar));
+
+    assert_eq!(1, rga.square_element(e1));
+    assert_eq!(1, rga.square_element(e2));
+    assert_eq!(1, rga.square_element(e3));
+    assert_eq!(0, rga.square_element(e4));
+
+    assert_eq!(1, rga.square_element(e12));
+    assert_eq!(1, rga.square_element(e23));
+    assert_eq!(1, rga.square_element(e31));
+    assert_eq!(0, rga.square_element(e41));
+    assert_eq!(0, rga.square_element(e42));
+    assert_eq!(0, rga.square_element(e43));
+
+    assert_eq!(1, rga.square_element(e123));
+    assert_eq!(0, rga.square_element(e412));
+    assert_eq!(0, rga.square_element(e423));
+    assert_eq!(0, rga.square_element(e431));
+
+    assert_eq!(0, rga.square_element(e1234));
+
+    //
+
+    assert_eq!(1, cga.square_element(scalar));
+
+    assert_eq!(1, cga.square_element(e1));
+    assert_eq!(1, cga.square_element(e2));
+    assert_eq!(1, cga.square_element(e3));
+    assert_eq!(1, cga.square_element(e4));
+    assert_eq!(-1, cga.square_element(e5));
+
+    assert_eq!(1, cga.square_element(e12));
+    assert_eq!(1, cga.square_element(e23));
+    assert_eq!(1, cga.square_element(e31));
+    assert_eq!(1, cga.square_element(e41));
+    assert_eq!(1, cga.square_element(e42));
+    assert_eq!(1, cga.square_element(e43));
+    assert_eq!(-1, cga.square_element(e15));
+    assert_eq!(-1, cga.square_element(e25));
+    assert_eq!(-1, cga.square_element(e35));
+    assert_eq!(-1, cga.square_element(e45));
+
+    assert_eq!(1, cga.square_element(e123));
+    assert_eq!(1, cga.square_element(e412));
+    assert_eq!(1, cga.square_element(e423));
+    assert_eq!(1, cga.square_element(e431));
+    assert_eq!(-1, cga.square_element(e125));
+    assert_eq!(-1, cga.square_element(e235));
+    assert_eq!(-1, cga.square_element(e315));
+    assert_eq!(-1, cga.square_element(e415));
+    assert_eq!(-1, cga.square_element(e425));
+    assert_eq!(-1, cga.square_element(e435));
+
+    assert_eq!(1, cga.square_element(e1234));
+    assert_eq!(-1, cga.square_element(e1235));
+    assert_eq!(-1, cga.square_element(e1245));
+    assert_eq!(-1, cga.square_element(e1345));
+    assert_eq!(-1, cga.square_element(e2345));
+
+    assert_eq!(-1, cga.square_element(e12345));
+}
+
 
 #[allow(non_upper_case_globals, dead_code)]
 pub mod elements {
     use crate::algebra2::basis::*;
+
+    // List some primary basis elements
+
+    pub const E0: PrimaryBasis = PrimaryBasis::e0;
+    pub const E1: PrimaryBasis = PrimaryBasis::e1;
+    pub const E2: PrimaryBasis = PrimaryBasis::e2;
+    pub const E3: PrimaryBasis = PrimaryBasis::e3;
+    pub const E4: PrimaryBasis = PrimaryBasis::e4;
+    pub const E5: PrimaryBasis = PrimaryBasis::e5;
+    pub const E6: PrimaryBasis = PrimaryBasis::e6;
+    pub const E7: PrimaryBasis = PrimaryBasis::e7;
+    pub const E8: PrimaryBasis = PrimaryBasis::e8;
+    pub const E9: PrimaryBasis = PrimaryBasis::e9;
+    pub const EA: PrimaryBasis = PrimaryBasis::eA;
+    pub const EB: PrimaryBasis = PrimaryBasis::eB;
+    pub const EC: PrimaryBasis = PrimaryBasis::eC;
+    pub const ED: PrimaryBasis = PrimaryBasis::eD;
+    pub const EE: PrimaryBasis = PrimaryBasis::eE;
+    pub const EF: PrimaryBasis = PrimaryBasis::eF;
+
+
+    // List a bunch of generated elements
 
     include!(concat!(env!("OUT_DIR"), "/generated_elements.rs"));
 
