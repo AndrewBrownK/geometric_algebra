@@ -1,6 +1,6 @@
 use std::num::NonZeroU8;
-use crate::algebra2::basis::{BasisElement, GeneratorSquares, PrimaryBasis};
-use crate::algebra2::metric::{ExoMetric, Metric};
+use crate::algebra2::basis::{BasisElement, PrimaryBasis};
+use crate::algebra2::basis::generators::GeneratorSquares;
 
 pub trait GeoAlg {
     fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> i8;
