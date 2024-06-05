@@ -1,6 +1,6 @@
 use std::num::NonZeroU8;
-use crate::algebra2::basis::{BasisElement, PrimaryBasis};
-use crate::algebra2::basis::generators::GeneratorSquares;
+use crate::algebra2::basis::BasisElement;
+use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
 
 pub trait GeoAlg {
     fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> i8;
@@ -56,7 +56,7 @@ pub struct VanillaArrows {
     squares: GeneratorSquares
 }
 impl VanillaArrows {
-    pub fn new(first_basis: PrimaryBasis, dimensions: NonZeroU8) -> Self {
+    pub fn new(first_basis: GeneratorElement, dimensions: NonZeroU8) -> Self {
         let dimensions = dimensions.get();
         let mut d_remaining = dimensions;
         let mut squares = GeneratorSquares::new([(first_basis, 1i8)]);

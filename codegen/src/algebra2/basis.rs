@@ -76,22 +76,17 @@ impl Display for BasisSignature {
 
 impl BasisSignature {
 
-    // TODO seek uses of this, how do you use PrimaryBasis?
-    //  How would it be affected by a refactor renaming PrimaryBasis to GeneratorElement?
-    //  Would I rather return 1-bit BasisSignatures here instead?
     // Strange return type is because of const evaluation compatibility
-    const fn into_primary_bases(self) -> (usize, [Option<PrimaryBasis>; 16]) {
+    const fn into_primary_bases(self) -> (usize, [Option<BasisSignature>; 16]) {
         let mut result = [None; 16];
         let mut i = 0;
         let mut j = 0;
         let mut len = 0;
-        let arr = PrimaryBasis::array();
-        while i < arr.len() {
-            let basis = arr[i];
+        while i < 16 {
+            let sig = BasisSignature::from_bits_retain(u16::pow(2, i as u32));
             i += 1;
-            let sig = basis.signature();
             if self.contains(sig) {
-                result[j] = Some(basis);
+                result[j] = Some(sig);
                 j += 1;
                 len += 1;
             }
@@ -281,7 +276,7 @@ impl BasisElement {
         while i < s.len() {
             let c = s[i];
             i += 1;
-            let next_basis = match (reached_elements, c) {
+            let next_basis: u16 = match (reached_elements, c) {
                 // (false, b'-') => {
                 //     display_name.negate_display = !display_name.negate_display;
                 //     continue
@@ -314,26 +309,25 @@ impl BasisElement {
                     reached_elements = true;
                     continue
                 }
-                // TODO yeah I don't need to use PrimaryBasis here, I can just use the BasisSignatures
-                (true, b'0') => PrimaryBasis::e0,
-                (true, b'1') => PrimaryBasis::e1,
-                (true, b'2') => PrimaryBasis::e2,
-                (true, b'3') => PrimaryBasis::e3,
-                (true, b'4') => PrimaryBasis::e4,
-                (true, b'5') => PrimaryBasis::e5,
-                (true, b'6') => PrimaryBasis::e6,
-                (true, b'7') => PrimaryBasis::e7,
-                (true, b'8') => PrimaryBasis::e8,
-                (true, b'9') => PrimaryBasis::e9,
-                (true, b'A') => PrimaryBasis::eA,
-                (true, b'B') => PrimaryBasis::eB,
-                (true, b'C') => PrimaryBasis::eC,
-                (true, b'D') => PrimaryBasis::eD,
-                (true, b'E') => PrimaryBasis::eE,
-                (true, b'F') => PrimaryBasis::eF,
+                (true, b'0') => 0x0,
+                (true, b'1') => 0x1,
+                (true, b'2') => 0x2,
+                (true, b'3') => 0x3,
+                (true, b'4') => 0x4,
+                (true, b'5') => 0x5,
+                (true, b'6') => 0x6,
+                (true, b'7') => 0x7,
+                (true, b'8') => 0x8,
+                (true, b'9') => 0x9,
+                (true, b'A') => 0xA,
+                (true, b'B') => 0xB,
+                (true, b'C') => 0xC,
+                (true, b'D') => 0xD,
+                (true, b'E') => 0xE,
+                (true, b'F') => 0xF,
                 _ => return None
             };
-            let sig_addition = next_basis.signature();
+            let sig_addition = BasisSignature::from_bits_retain(next_basis);
             let sig_existing = result.signature;
 
             // Reject double bases.
@@ -448,9 +442,7 @@ impl BasisElement {
         let (b_len, b) = other.signature.into_primary_bases();
         let mut sign = self.coefficient * other.coefficient;
 
-        // TODO yeah once into_primary_bases is refactored to return BasisSignature instead, I don't think
-        //  I'll need PrimaryBasis here either
-        let mut result_elements: [Option<PrimaryBasis>; 16] = [None; 16];
+        let mut result_elements: [Option<BasisSignature>; 16] = [None; 16];
         let mut a_idx = 0;
         let mut b_idx = 0;
         let mut r_idx = 0;
@@ -469,7 +461,7 @@ impl BasisElement {
             }
             let a_ = a[a_idx].unwrap();
             let b_ = b[b_idx].unwrap();
-            match PrimaryBasis::const_cmp(&a_, &b_) {
+            match BasisSignature::const_cmp(&a_, &b_) {
                 Ordering::Less => {
                     result_elements[r_idx] = Some(a_);
                     r_idx += 1;
@@ -632,74 +624,6 @@ fn new_basis_elements_wedge() {
     }
 }
 
-
-// TODO when it comes to considering a rename for this enum,
-//  one good candidate might be "Generator" to avoid the highly
-//  overloaded term "vector" and it's real application is
-//  mostly GeneratorSquares (right? double check). So maybe
-//  "GeneratorElement".
-//  Okay initial inspection looks good. I'll do it after a
-//  commit for a clean slate.
-#[repr(u8)]
-#[allow(non_camel_case_types)]
-#[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
-pub enum PrimaryBasis {
-    e0 = 0,
-    e1 = 1,
-    e2 = 2,
-    e3 = 3,
-    e4 = 4,
-    e5 = 5,
-    e6 = 6,
-    e7 = 7,
-    e8 = 8,
-    e9 = 9,
-    eA = 10,
-    eB = 11,
-    eC = 12,
-    eD = 13,
-    eE = 14,
-    eF = 15,
-}
-impl PrimaryBasis {
-    pub const fn array() -> [Self; 16] {
-        [
-            PrimaryBasis::e0, PrimaryBasis::e1, PrimaryBasis::e2, PrimaryBasis::e3,
-            PrimaryBasis::e4, PrimaryBasis::e5, PrimaryBasis::e6, PrimaryBasis::e7,
-            PrimaryBasis::e8, PrimaryBasis::e9, PrimaryBasis::eA, PrimaryBasis::eB,
-            PrimaryBasis::eC, PrimaryBasis::eD, PrimaryBasis::eE, PrimaryBasis::eF,
-        ]
-    }
-
-    const fn bits(self) -> u16 {
-        1u16 << self as u8
-    }
-
-    pub const fn signature(self) -> BasisSignature {
-        BasisSignature::from_bits_retain(self.bits())
-    }
-
-    pub const fn element(self) -> BasisElement {
-        BasisElement {
-            coefficient: 1,
-            signature: self.signature(),
-            display_name: None,
-        }
-    }
-
-    const fn const_cmp(&self, other: &PrimaryBasis) -> Ordering {
-        let a = *self as u8;
-        let b = *other as u8;
-        if a < b {
-            return Ordering::Less
-        }
-        if a > b {
-            return Ordering::Greater
-        }
-        Ordering::Equal
-    }
-}
-
 #[test]
 fn test_generator_squares() {
     use elements::*;
@@ -774,25 +698,26 @@ fn test_generator_squares() {
 #[allow(non_upper_case_globals, dead_code)]
 pub mod elements {
     use crate::algebra2::basis::*;
+    use crate::algebra2::basis::generators::GeneratorElement;
 
     // List some primary basis elements
 
-    pub const E0: PrimaryBasis = PrimaryBasis::e0;
-    pub const E1: PrimaryBasis = PrimaryBasis::e1;
-    pub const E2: PrimaryBasis = PrimaryBasis::e2;
-    pub const E3: PrimaryBasis = PrimaryBasis::e3;
-    pub const E4: PrimaryBasis = PrimaryBasis::e4;
-    pub const E5: PrimaryBasis = PrimaryBasis::e5;
-    pub const E6: PrimaryBasis = PrimaryBasis::e6;
-    pub const E7: PrimaryBasis = PrimaryBasis::e7;
-    pub const E8: PrimaryBasis = PrimaryBasis::e8;
-    pub const E9: PrimaryBasis = PrimaryBasis::e9;
-    pub const EA: PrimaryBasis = PrimaryBasis::eA;
-    pub const EB: PrimaryBasis = PrimaryBasis::eB;
-    pub const EC: PrimaryBasis = PrimaryBasis::eC;
-    pub const ED: PrimaryBasis = PrimaryBasis::eD;
-    pub const EE: PrimaryBasis = PrimaryBasis::eE;
-    pub const EF: PrimaryBasis = PrimaryBasis::eF;
+    pub const E0: GeneratorElement = GeneratorElement::e0;
+    pub const E1: GeneratorElement = GeneratorElement::e1;
+    pub const E2: GeneratorElement = GeneratorElement::e2;
+    pub const E3: GeneratorElement = GeneratorElement::e3;
+    pub const E4: GeneratorElement = GeneratorElement::e4;
+    pub const E5: GeneratorElement = GeneratorElement::e5;
+    pub const E6: GeneratorElement = GeneratorElement::e6;
+    pub const E7: GeneratorElement = GeneratorElement::e7;
+    pub const E8: GeneratorElement = GeneratorElement::e8;
+    pub const E9: GeneratorElement = GeneratorElement::e9;
+    pub const EA: GeneratorElement = GeneratorElement::eA;
+    pub const EB: GeneratorElement = GeneratorElement::eB;
+    pub const EC: GeneratorElement = GeneratorElement::eC;
+    pub const ED: GeneratorElement = GeneratorElement::eD;
+    pub const EE: GeneratorElement = GeneratorElement::eE;
+    pub const EF: GeneratorElement = GeneratorElement::eF;
 
 
     // List a bunch of generated elements
