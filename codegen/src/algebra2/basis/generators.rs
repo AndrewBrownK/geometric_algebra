@@ -88,7 +88,7 @@ impl GeneratorSquares {
 
         let mut sig = a.signature;
         sig = self.anti_scalar().signature.intersection(sig);
-        let (a_len, a) = sig.into_primary_bases();
+        let (a_len, a) = sig.into_generator_elements();
         let mut a_idx = 0;
         while a_idx < a_len {
             let a_ = a[a_idx].unwrap();

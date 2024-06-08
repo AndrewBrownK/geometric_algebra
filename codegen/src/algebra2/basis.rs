@@ -4,10 +4,12 @@ use std::fmt::{Debug, Display, Formatter};
 
 use rand::Rng;
 use generators::GeneratorSquares;
+use crate::algebra2::basis::generators::GeneratorElement;
 
 use crate::algebra::basis_element;
 
 pub mod generators;
+pub mod substitute;
 
 bitflags::bitflags! {
     #[derive(Clone, Copy, PartialEq, Eq, Hash)]
@@ -77,7 +79,7 @@ impl Display for BasisSignature {
 impl BasisSignature {
 
     // Strange return type is because of const evaluation compatibility
-    const fn into_primary_bases(self) -> (usize, [Option<BasisSignature>; 16]) {
+    const fn into_grade_1_signatures(self) -> (usize, [Option<BasisSignature>; 16]) {
         let mut result = [None; 16];
         let mut i = 0;
         let mut j = 0;
@@ -87,6 +89,27 @@ impl BasisSignature {
             i += 1;
             if self.contains(sig) {
                 result[j] = Some(sig);
+                j += 1;
+                len += 1;
+            }
+        }
+        (len, result)
+    }
+
+    // TODO see if I really need this
+    // Strange return type is because of const evaluation compatibility
+    const fn into_generator_elements(self) -> (usize, [Option<GeneratorElement>; 16]) {
+        let mut result = [None; 16];
+        let mut i = 0;
+        let mut j = 0;
+        let mut len = 0;
+        let ge = GeneratorElement::array();
+        while i < 16 {
+            let sig = BasisSignature::from_bits_retain(u16::pow(2, i as u32));
+            let ge = ge[i];
+            i += 1;
+            if self.contains(sig) {
+                result[j] = Some(ge);
                 j += 1;
                 len += 1;
             }
@@ -327,7 +350,7 @@ impl BasisElement {
                 (true, b'F') => 0xF,
                 _ => return None
             };
-            let sig_addition = BasisSignature::from_bits_retain(next_basis);
+            let sig_addition = BasisSignature::from_bits_retain(1u16 << next_basis);
             let sig_existing = result.signature;
 
             // Reject double bases.
@@ -438,8 +461,8 @@ impl BasisElement {
     ) -> BasisElement {
         // Implementation may look a bit strange because it is const compatible
 
-        let (a_len, a) = self.signature.into_primary_bases();
-        let (b_len, b) = other.signature.into_primary_bases();
+        let (a_len, a) = self.signature.into_grade_1_signatures();
+        let (b_len, b) = other.signature.into_grade_1_signatures();
         let mut sign = self.coefficient * other.coefficient;
 
         let mut result_elements: [Option<BasisSignature>; 16] = [None; 16];
