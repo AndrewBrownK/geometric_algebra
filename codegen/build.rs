@@ -38,6 +38,18 @@ fn generate_multi_bases() {
         max = u16::MAX;
     }
     let mut numbers: Vec<u16> = (0..=max).collect();
+    if !cfg!(feature = "large-basis-elements") {
+        numbers.push(1u16 << 8);
+        numbers.push(1u16 << 9);
+        numbers.push(1u16 << 10);
+        numbers.push(1u16 << 11);
+    }
+    if !cfg!(feature = "very-large-basis-elements") {
+        numbers.push(1u16 << 12);
+        numbers.push(1u16 << 13);
+        numbers.push(1u16 << 14);
+        numbers.push(1u16 << 15);
+    }
     numbers.sort_by(|a, b| {
         a.count_ones().cmp(&b.count_ones()).then_with(|| {
             b.reverse_bits().cmp(&a.reverse_bits())
@@ -57,7 +69,7 @@ fn generate_multi_bases() {
         let mut combined_basis = if num == 0 { "scalar".to_string() } else { "e".to_string() };
         for i in 0..16 {
             if num & (1 << i) != 0 {
-                combined_basis.push(char::from_digit(i, 16).unwrap());
+                combined_basis.push(char::from_digit(i, 16).unwrap().to_ascii_uppercase());
             }
         }
 

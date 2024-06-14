@@ -10,8 +10,8 @@ pub struct GeneratorSquares {
 
 // TODO any chance of some of these being const fn?
 impl GeneratorSquares {
-    pub fn anti_scalar(&self) -> BasisElement {
-        let signature = self.active_bases.clone();
+    pub const fn anti_scalar(&self) -> BasisElement {
+        let signature = self.active_bases;
         BasisElement {
             coefficient: 1,
             signature,
@@ -75,11 +75,11 @@ impl GeneratorSquares {
         Self { active_bases, raw_squares }
     }
 
-    pub fn square_basis(&self, basis: GeneratorElement) -> i8 {
+    pub const fn square_generator(&self, basis: GeneratorElement) -> i8 {
         self.raw_squares[(basis as u8) as usize]
     }
 
-    pub fn square_element(&self, a: BasisElement) -> i8 {
+    pub const fn square_element(&self, a: BasisElement) -> i8 {
         if a.coefficient == 0 {
             return 0
         }
@@ -97,13 +97,113 @@ impl GeneratorSquares {
             // Which negates the sign each step.
             // let swaps = ((a_len - 1) - a_idx) as u32;
             // sign *= i8::pow(-1, swaps % 2);
-            sign = sign * match self.square_basis(a_) {
+            sign = sign * match self.square_generator(a_) {
                 0 => return 0i8,
                 sq => sq
             };
             a_idx += 1;
         }
         sign
+    }
+
+    // TODO test
+    /// True Geometric Product, in other words without using substituted bases.
+    /// If your BasisElements are substituting bases, you'll need to convert to
+    /// the underlying bases before you can properly use this function.
+    pub const fn true_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+
+        // TODO determine if actually const compatible
+        // Implementation may look a bit strange because it is const compatible
+        let s = a;
+        let o = b;
+
+        let (a_len, a) = s.signature.into_grade_1_signatures();
+        let (b_len, b) = o.signature.into_grade_1_signatures();
+        let mut sign = s.coefficient * o.coefficient;
+
+        let mut result_elements: [Option<BasisSignature>; 16] = [None; 16];
+        let mut a_idx = 0;
+        let mut b_idx = 0;
+        let mut r_idx = 0;
+        while a_idx < a_len || b_idx < b_len {
+            if a_idx >= a_len {
+                result_elements[r_idx] = b[b_idx];
+                r_idx += 1;
+                b_idx += 1;
+                continue
+            }
+            if b_idx >= b_len {
+                result_elements[r_idx] = a[a_idx];
+                r_idx += 1;
+                a_idx += 1;
+                continue
+            }
+            let a_ = a[a_idx].unwrap();
+            let b_ = b[b_idx].unwrap();
+            match BasisSignature::const_cmp(&a_, &b_) {
+                Ordering::Less => {
+                    result_elements[r_idx] = Some(a_);
+                    r_idx += 1;
+                    a_idx += 1;
+                }
+                Ordering::Equal => {
+                    // TODO if this would be better using square_generator, maybe
+                    //  I need to do a refactor and BasisSignature::into_generator_elements
+                    //  is nice after all
+                    sign *= self.square_element(BasisElement {
+                        coefficient: 1,
+                        signature: a_,
+                        display_name: None,
+                    });
+                    if sign == 0 {
+                        return BasisElement::zero()
+                    }
+                    // Must move b_ at least to the right of a_.
+                    // Which negates the sign each step.
+                    let swaps = ((a_len - a_idx) - 1) as u32;
+                    sign *= i8::pow(-1, swaps % 2);
+                    a_idx += 1;
+                    b_idx += 1;
+                },
+                Ordering::Greater => {
+                    // Must move b_ all the way to left of a_.
+                    // Which negates the sign each step.
+                    result_elements[r_idx] = Some(b_);
+                    r_idx += 1;
+                    let swaps = (a_len - a_idx) as u32;
+                    sign *= i8::pow(-1, swaps % 2);
+                    b_idx += 1;
+                }
+            }
+        }
+        let mut result_sig = 0u16;
+        let mut i = 0;
+        while i < r_idx {
+            let primary_basis = result_elements[i].unwrap();
+            i += 1;
+            let additional_sig = primary_basis.bits();
+            result_sig = result_sig | additional_sig;
+        }
+        if sign == 0 {
+            result_sig = 0u16;
+        }
+        let signature = BasisSignature::from_bits_retain(result_sig);
+        BasisElement {
+            coefficient: sign,
+            signature,
+            display_name: None,
+        }
+    }
+
+    /// True Geometric AntiProduct, in other words without using substituted bases.
+    /// If your BasisElements are substituting bases, you'll need to convert to
+    /// the underlying bases before you can properly use this function.
+    pub fn true_anti_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        let a = a.right_complement(anti_scalar);
+        let b = b.right_complement(anti_scalar);
+        let c = self.true_product(a, b);
+        c.left_complement(anti_scalar)
     }
 }
 
