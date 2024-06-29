@@ -64,7 +64,7 @@ pub struct RawTraitDefinition {
 // TODO infix operators
 
 
-// TODO the "Copy" ancestor for TraitImpls is experimental.
+// The "Copy" ancestor for TraitImpls is experimental.
 //  It might seem absurd and far too constraining at first, but actually it might be pretty
 //  viable. Even when the implementing type isn't trivial, the ability to define static values
 //  combined with the ability to impl traits for &'static Item makes this actually start
@@ -584,11 +584,11 @@ impl<I> CanNameTrait for I where I: TraitImpl_22 {}
 
 #[const_trait]
 pub trait NameTrait: Sized + Copy {
-    fn named(self, name: &'static str) -> Elaborated<Self>;
+    fn name(self, name: &'static str) -> Elaborated<Self>;
 }
 impl<I> const NameTrait for I where I: CanNameTrait + Copy {
-    fn named(self, name: &'static str) -> Elaborated<Self> {
-        Elaborated::name(self, name)
+    fn name(self, name: &'static str) -> Elaborated<Self> {
+        Elaborated::new_name(self, name)
     }
 }
 
@@ -719,58 +719,24 @@ pub enum TraitSharing {
 }
 
 impl TraitAlias {
-    pub const fn usual(alias_key: TraitKey) -> Self {
-        Self::new(alias_key, true, TraitSharing::Consolidate, true)
+    pub const fn usual(alias: &'static str) -> Self {
+        Self::new(alias, true, TraitSharing::Consolidate, true)
     }
-    pub const fn usual_except_shaders(alias_key: TraitKey) -> Self {
-        Self::new(alias_key, true, TraitSharing::Consolidate, false)
+    pub const fn usual_except_shaders(alias: &'static str) -> Self {
+        Self::new(alias, true, TraitSharing::Consolidate, false)
     }
-    pub const fn docs_only(alias_key: TraitKey) -> Self {
-        Self::new(alias_key, true, TraitSharing::DontOutput, false)
+    pub const fn docs_only(alias: &'static str) -> Self {
+        Self::new(alias, true, TraitSharing::DontOutput, false)
     }
-    pub const fn new(alias_key: TraitKey, docs: bool, share: TraitSharing, shaders: bool) -> Self {
+    pub const fn new(alias: &'static str, docs: bool, share: TraitSharing, shaders: bool) -> Self {
         TraitAlias {
-            alias_key,
+            alias_key: TraitKey::new(alias),
             mention_in_documentation: docs,
             rust_trait_sharing: share,
             output_in_shaders: shaders
         }
     }
-
-    // This is only for use as a const Default
-    // const fn empty() -> Self {
-    //     Self {
-    //         alias_key: TraitKey { final_name: "" },
-    //         mention_in_documentation: false,
-    //         rust_trait_sharing: TraitSharing::DontOutput,
-    //         output_in_shaders: false,
-    //     }
-    // }
-    // pub(crate) const fn empty_array() -> ArrayVec<[Self; 16]> {
-    //     ArrayVec::from_array_empty([Self::empty(); 16])
-    // }
-    // pub(crate) const fn push_array(arr: &mut ArrayVec<[Self; 16]>, alias: TraitAlias) {
-    //     let mut a = arr.clone().into_inner();
-    //     let empty = TraitAlias::empty();
-    //     let mut idx = 0;
-    //     while idx < a.len() {
-    //         if a[idx] == empty {
-    //             a[idx] = alias;
-    //             break;
-    //         }
-    //         idx += 1;
-    //     }
-    //     *arr = a.into();
-    //     arr.truncate(idx + 1)
-    // }
 }
-
-// We're only implementing Default to use inside ArrayVec
-// impl Default for TraitAlias {
-//     fn default() -> Self {
-//         Self::empty()
-//     }
-// }
 
 
 #[derive(Clone)]

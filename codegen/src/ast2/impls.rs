@@ -58,7 +58,7 @@ impl<Impl: Copy> Elaborated<Impl> {
         }
     }
 
-    pub const fn name(i: Impl, n: &'static str) -> Self {
+    pub const fn new_name(i: Impl, n: &'static str) -> Self {
         Self::new(i, n, "", [])
     }
 
@@ -67,37 +67,27 @@ impl<Impl: Copy> Elaborated<Impl> {
         *self
     }
 
-    // destructor of `CustomizedTraitDef<Impl>` cannot be evaluated at compile-time
-
-    // pub const fn with_blurb(self, explanation: &'static str) -> Self {
-    //     Self {
-    //         trait_names: self.trait_names,
-    //         blurb: explanation,
-    //         the_impl: self.the_impl,
-    //     }
-    // }
-    //
-    // pub const fn with_alias(self, alias: TraitAlias) -> Self {
-    //     let mut tn = self.trait_names;
-    //     tn.aliases.push(alias);
-    //     Self {
-    //         trait_names: tn,
-    //         blurb: self.blurb,
-    //         the_impl: self.the_impl,
-    //     }
-    // }
-
-    pub const fn with_blurb(&mut self, explanation: &'static str) -> Self {
+    pub const fn blurb(&mut self, explanation: &'static str) -> Self {
         self.blurb = explanation;
         *self
     }
 
-    pub const fn with_alias(&mut self, alias: &'static str) -> Self {
-        let alias = TraitAlias::usual(TraitKey::new(alias));
-        self.with_precise_alias(alias)
+    pub const fn alias(&mut self, alias: &'static str) -> Self {
+        let alias = TraitAlias::usual(alias);
+        self.alias_custom(alias)
     }
 
-    pub const fn with_precise_alias(&mut self, alias: TraitAlias) -> Self {
+    pub const fn alias_docs_only(&mut self, alias: &'static str) -> Self {
+        let alias = TraitAlias::docs_only(alias);
+        self.alias_custom(alias)
+    }
+
+    pub const fn alias_except_shaders(&mut self, alias: &'static str) -> Self {
+        let alias = TraitAlias::usual_except_shaders(alias);
+        self.alias_custom(alias)
+    }
+
+    pub const fn alias_custom(&mut self, alias: TraitAlias) -> Self {
         let mut arr = &mut self.trait_names.aliases;
         let mut idx = 0;
         while idx < arr.len() {
