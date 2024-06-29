@@ -311,6 +311,12 @@ impl SubstitutionRepository {
     }
 }
 
+impl From<GeneratorSquares> for SubstitutionRepository {
+    fn from(value: GeneratorSquares) -> Self {
+        SubstitutionRepository::new(value, vec![])
+    }
+}
+
 #[test]
 fn sum_simplifications() {
     use crate::algebra2::basis::elements::*;
@@ -1395,10 +1401,9 @@ fn conformal_3d_geometric_products() {
         ("e12345", "e12345", vec!["-1"]),
     ]};
 
-    let mut substituted_cga = SubstitutionRepository::new(
-        generator_squares!(1 => e1, e2, e3, eA; -1 => eB),
-        substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA)
-    );
+    let mut cga3d
+        = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
+        + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
 
     let mut failures = 0;
     let mut correct_products = BTreeMap::new();
@@ -1442,7 +1447,7 @@ fn conformal_3d_geometric_products() {
             a.coefficient = a_sign;
             b.coefficient = b_sign;
 
-            let calculated_product = substituted_cga.product(&a, &b);
+            let calculated_product = cga3d.product(&a, &b);
             if calculated_product != correct_product {
                 eprintln!("{a} * {b} was calculated as {calculated_product}, but we expected {correct_product}");
                 failures = failures + 1;
@@ -2483,10 +2488,9 @@ fn conformal_3d_geometric_anti_products() {
         ("e12345", "e12345", vec!["e12345"]),
     ]};
 
-    let mut substituted_cga = SubstitutionRepository::new(
-        generator_squares!(1 => e1, e2, e3, eA; -1 => eB),
-        substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA)
-    );
+    let mut cga3d
+        = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
+        + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
 
     let mut failures = 0;
     let mut correct_anti_products = BTreeMap::new();
@@ -2530,7 +2534,7 @@ fn conformal_3d_geometric_anti_products() {
             a.coefficient = a_sign;
             b.coefficient = b_sign;
 
-            let calculated_anti_product = substituted_cga.anti_product(&a, &b);
+            let calculated_anti_product = cga3d.anti_product(&a, &b);
             if calculated_anti_product != correct_anti_product {
                 eprintln!("{a} * {b} was calculated as {calculated_anti_product}, but we expected {correct_anti_product}");
                 failures = failures + 1;

@@ -5,6 +5,7 @@ use std::ops::{Add, Mul, Sub};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum};
 use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::substitute::SubstitutionRepository;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GeneratorSquares {
@@ -356,4 +357,21 @@ impl Sub<GradedProduct<{Grades::g1}>> for GeneratorElement {
     }
 }
 
+
+
+impl Add<Vec<(GeneratorElement, GradedSum<{Grades::g1}>)>> for GeneratorSquares {
+    type Output = SubstitutionRepository;
+
+    fn add(self, rhs: Vec<(GeneratorElement, GradedSum<{ Grades::g1 }>)>) -> Self::Output {
+        SubstitutionRepository::new(self, rhs)
+    }
+}
+
+impl Add<GeneratorSquares> for Vec<(GeneratorElement, GradedSum<{Grades::g1}>)> {
+    type Output = SubstitutionRepository;
+
+    fn add(self, rhs: GeneratorSquares) -> Self::Output {
+        SubstitutionRepository::new(rhs, self)
+    }
+}
 

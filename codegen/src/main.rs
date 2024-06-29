@@ -20,7 +20,6 @@ mod algebra2 {
     pub mod basis;
     pub mod multivector;
     pub mod algebra;
-    pub mod metric;
 }
 mod utility;
 
