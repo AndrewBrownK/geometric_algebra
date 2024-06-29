@@ -4,7 +4,7 @@ use std::cmp::Ordering;
 use std::ops::{Add, Mul, Sub};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum};
-use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::algebra2::basis::substitute::SubstitutionRepository;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -310,7 +310,7 @@ impl GeneratorElement {
 
 
 impl Mul<f32> for GeneratorElement {
-    type Output = GradedProduct<{Grades::g1}>;
+    type Output = GradedProduct<{grade1}>;
 
     fn mul(self, rhs: f32) -> Self::Output {
         let mut gp = self.into();
@@ -319,55 +319,55 @@ impl Mul<f32> for GeneratorElement {
     }
 }
 impl Add<GeneratorElement> for GeneratorElement {
-    type Output = GradedSum<{Grades::g1}>;
+    type Output = GradedSum<{grade1}>;
 
     fn add(self, rhs: GeneratorElement) -> Self::Output {
-        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
-        let b: GradedProduct<{Grades::g1}> = rhs * 1.0f32;
-        let c: GradedSum<{Grades::g1}> = a + b;
+        let a: GradedProduct<{grade1}> = self * 1.0f32;
+        let b: GradedProduct<{grade1}> = rhs * 1.0f32;
+        let c: GradedSum<{grade1}> = a + b;
         c
     }
 }
-impl Add<GradedProduct<{Grades::g1}>> for GeneratorElement {
-    type Output = GradedSum<{Grades::g1}>;
+impl Add<GradedProduct<{grade1}>> for GeneratorElement {
+    type Output = GradedSum<{grade1}>;
 
-    fn add(self, rhs: GradedProduct<{Grades::g1}>) -> Self::Output {
-        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
-        let c: GradedSum<{Grades::g1}> = a + rhs;
+    fn add(self, rhs: GradedProduct<{grade1}>) -> Self::Output {
+        let a: GradedProduct<{grade1}> = self * 1.0f32;
+        let c: GradedSum<{grade1}> = a + rhs;
         c
     }
 }
 impl Sub<GeneratorElement> for GeneratorElement {
-    type Output = GradedSum<{Grades::g1}>;
+    type Output = GradedSum<{grade1}>;
 
     fn sub(self, rhs: GeneratorElement) -> Self::Output {
-        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
-        let b: GradedProduct<{Grades::g1}> = rhs * -1.0f32;
-        let c: GradedSum<{Grades::g1}> = a + b;
+        let a: GradedProduct<{grade1}> = self * 1.0f32;
+        let b: GradedProduct<{grade1}> = rhs * -1.0f32;
+        let c: GradedSum<{grade1}> = a + b;
         c
     }
 }
-impl Sub<GradedProduct<{Grades::g1}>> for GeneratorElement {
-    type Output = GradedSum<{Grades::g1}>;
+impl Sub<GradedProduct<{grade1}>> for GeneratorElement {
+    type Output = GradedSum<{grade1}>;
 
-    fn sub(self, rhs: GradedProduct<{Grades::g1}>) -> Self::Output {
-        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
-        let c: GradedSum<{Grades::g1}> = a - rhs;
+    fn sub(self, rhs: GradedProduct<{grade1}>) -> Self::Output {
+        let a: GradedProduct<{grade1}> = self * 1.0f32;
+        let c: GradedSum<{grade1}> = a - rhs;
         c
     }
 }
 
 
 
-impl Add<Vec<(GeneratorElement, GradedSum<{Grades::g1}>)>> for GeneratorSquares {
+impl Add<Vec<(GeneratorElement, GradedSum<{grade1}>)>> for GeneratorSquares {
     type Output = SubstitutionRepository;
 
-    fn add(self, rhs: Vec<(GeneratorElement, GradedSum<{ Grades::g1 }>)>) -> Self::Output {
+    fn add(self, rhs: Vec<(GeneratorElement, GradedSum<{ grade1 }>)>) -> Self::Output {
         SubstitutionRepository::new(self, rhs)
     }
 }
 
-impl Add<GeneratorSquares> for Vec<(GeneratorElement, GradedSum<{Grades::g1}>)> {
+impl Add<GeneratorSquares> for Vec<(GeneratorElement, GradedSum<{grade1}>)> {
     type Output = SubstitutionRepository;
 
     fn add(self, rhs: GeneratorSquares) -> Self::Output {

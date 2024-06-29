@@ -7,7 +7,7 @@ use im::HashMap;
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedSum, Product, Sum};
 use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::generator_squares;
 
 #[derive(Debug)]
@@ -33,7 +33,7 @@ macro_rules! substitutions {
 impl SubstitutionRepository {
     pub fn new(
         mut underlying_squares: GeneratorSquares,
-        substituted_elements: Vec<(GeneratorElement, GradedSum<{Grades::g1}>)>
+        substituted_elements: Vec<(GeneratorElement, GradedSum<{grade1}>)>
     ) -> Self {
 
         let mut substitutions_to_underlying = HashMap::new();
@@ -190,7 +190,7 @@ impl SubstitutionRepository {
 
                         // Assume the substitution anti_scalar should be positive,
                         // and set underlying anti_scalar direction accordingly
-                        if substitution_wedge.grade() == substitute_grade_1_elements.len() as u8
+                        if substitution_wedge.grade() == substitute_grade_1_elements.len() as u32
                             && substitution_wedge.coefficient == 1
                             && underlying_wedge[0].coefficient == -1.0 {
                             underlying_squares.negative_anti_scalar = true;
@@ -203,7 +203,7 @@ impl SubstitutionRepository {
             }
 
             for (under, orig_substitutions) in underlying_to_substitutions.iter_mut() {
-                if under.grade() != (n + 1) as u8 {
+                if under.grade() != (n + 1) as u32 {
                     continue
                 }
                 // Since the accumulated components of each sum is acquired now, fix the scale

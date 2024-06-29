@@ -18,13 +18,17 @@ mod emit;
 mod impls;
 mod validate;
 mod shader_support;
-mod ast2;
+pub mod ast2;
 mod algebra2 {
     pub mod basis;
     pub mod multivector;
     pub mod algebra;
 }
 mod utility;
+
+mod build_scripts2 {
+    pub mod common_traits;
+}
 
 mod build_scripts {
     pub mod cga;

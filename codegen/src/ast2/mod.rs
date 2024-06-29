@@ -3,9 +3,9 @@ use std::sync::Arc;
 
 use crate::ast2::expressions::AnyExpression;
 
-mod datatype;
+pub mod datatype;
 mod playground;
-mod traits;
+pub mod traits;
 mod expressions;
 mod impls;
 // TODO Hamish recommends terms "intrinsic" and "extrinsic" instead of "Space" and "antispace"

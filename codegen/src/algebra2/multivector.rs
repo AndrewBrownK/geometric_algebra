@@ -4,6 +4,7 @@ use regex::Regex;
 use tinyvec::{array_vec, ArrayVec, TinyVec};
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra2::basis::grades::Grades;
 
 const fn num_elements(d: u8) -> usize {
     let d = d as u32;
@@ -53,7 +54,7 @@ pub struct MultiVec<const D: u8> where
     [(); num_elements(D)]: Sized
 {
     name: &'static str,
-    uniform_grade: Option<u8>,
+    grades: Grades,
     element_groups: TinyVec<[BasisElementGroup; mono_grade_groups(D)]>,
     // It is important to keep the vec in the signature sorted, so it can serve its purpose.
     // So we should keep very strict control over construction and mutation of MultiVec,
@@ -172,8 +173,7 @@ impl<const D: u8> MultiVec<D> where
         let arg = element_groups;
         let mut element_groups = TinyVec::new();
         let mut signature = MultiVectorSignature(ArrayVec::new());
-        let mut grade_vote_began = true;
-        let mut uniform_grade = None;
+        let mut grades = Grades::none;
         for group in arg {
             for el in group {
                 let el_sig = el.signature();
@@ -190,21 +190,12 @@ impl<const D: u8> MultiVec<D> where
                         more primary basis vectors. Already reserved: {used_dimensions} Latest \
                         addition: {el_sig}")
                 }
-
-                if let Some(ug) = uniform_grade {
-                    if ug != el_sig.bits() as u8 {
-                        uniform_grade = None;
-                    }
-                }
-                if !grade_vote_began {
-                    uniform_grade = Some(el_sig.bits() as u8);
-                    grade_vote_began = true;
-                }
+                grades |= Grades::from_sig(el_sig);
             }
             element_groups.push(group);
         }
         signature.0.sort();
-        MultiVec { name, uniform_grade, element_groups, signature, }
+        MultiVec { name, grades, element_groups, signature, }
     }
 }
 

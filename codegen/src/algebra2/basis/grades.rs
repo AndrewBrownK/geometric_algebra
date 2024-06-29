@@ -1,59 +1,34 @@
-
+#![allow(non_upper_case_globals)]
 
 use std::marker::{ConstParamTy};
 
-// Cannot use macro because that makes it incompatible with ConstParamTy
-// bitflags::bitflags! {
-//     #[derive(Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
-//     pub struct Grades: u16 {
-//         const g0 = 0x1;
-//         const g1 = 0x2;
-//         const g2 = 0x4;
-//         const g3 = 0x8;
-//         const g4 = 0x10;
-//         const g5 = 0x20;
-//         const g6 = 0x40;
-//         const g7 = 0x80;
-//         const g8 = 0x100;
-//         const g9 = 0x200;
-//         const g10 = 0x400;
-//         const g11 = 0x800;
-//         const g12 = 0x1000;
-//         const g13 = 0x2000;
-//         const g14 = 0x4000;
-//         const g15 = 0x8000;
-//     }
-// }
-
-
 use std::cmp::{PartialEq};
 use std::hash::{Hash};
-use std::ops::{BitOr, BitAnd, Not};
+use std::ops::{BitOr, BitAnd, Not, BitOrAssign};
+use crate::algebra2::basis::BasisSignature;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Grades(u16);
+pub struct Grades(u32);
 
 #[allow(non_upper_case_globals)]
 impl Grades {
-    pub const g0: Self = Grades(0x1);
-    pub const g1: Self = Grades(0x2);
-    pub const g2: Self = Grades(0x4);
-    pub const g3: Self = Grades(0x8);
-    pub const g4: Self = Grades(0x10);
-    pub const g5: Self = Grades(0x20);
-    pub const g6: Self = Grades(0x40);
-    pub const g7: Self = Grades(0x80);
-    pub const g8: Self = Grades(0x100);
-    pub const g9: Self = Grades(0x200);
-    pub const g10: Self = Grades(0x400);
-    pub const g11: Self = Grades(0x800);
-    pub const g12: Self = Grades(0x1000);
-    pub const g13: Self = Grades(0x2000);
-    pub const g14: Self = Grades(0x4000);
-    pub const g15: Self = Grades(0x8000);
+    pub const none: Grades = Grades(0x0);
 
-    pub const fn into_bits(self) -> u16 {
+    pub const fn into_bits(self) -> u32 {
         self.0
+    }
+
+    const fn from_bits(mut b: u32) -> Self {
+        // Up to 16 dimensions (see BasisSignature) gives us 1 << 15
+        // Plus the bit representing grade0 gives us 1 << 16
+        // Then to enable all valid bits we go to 1 << 17 and then subtract 1
+        b &= (0x1 << (16 + 1)) - 1;
+        Grades(b)
+    }
+
+    pub const fn from_sig(sig: BasisSignature) -> Self {
+        let ones = sig.bits().count_ones();
+        Grades::from_bits(1u32 << ones)
     }
 
     pub const fn const_bitor(self, rhs: Self) -> Self {
@@ -67,11 +42,36 @@ impl Grades {
         Grades(!self.0)
     }
 }
+
+pub const grade0: Grades = Grades(0x1);
+pub const grade1: Grades = Grades(0x2);
+pub const grade2: Grades = Grades(0x4);
+pub const grade3: Grades = Grades(0x8);
+pub const grade4: Grades = Grades(0x10);
+pub const grade5: Grades = Grades(0x20);
+pub const grade6: Grades = Grades(0x40);
+pub const grade7: Grades = Grades(0x80);
+pub const grade8: Grades = Grades(0x100);
+pub const grade9: Grades = Grades(0x200);
+pub const grade10: Grades = Grades(0x400);
+pub const grade11: Grades = Grades(0x800);
+pub const grade12: Grades = Grades(0x1000);
+pub const grade13: Grades = Grades(0x2000);
+pub const grade14: Grades = Grades(0x4000);
+pub const grade15: Grades = Grades(0x8000);
+pub const grade16: Grades = Grades(0x10000);
+
+
 impl BitOr for Grades {
     type Output = Self;
 
     fn bitor(self, rhs: Self) -> Self::Output {
         Grades(self.0 | rhs.0)
+    }
+}
+impl BitOrAssign for Grades {
+    fn bitor_assign(&mut self, rhs: Self) {
+        *self = self.bitor(rhs);
     }
 }
 impl BitAnd for Grades {

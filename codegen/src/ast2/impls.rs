@@ -58,7 +58,7 @@ impl<Impl: Copy> Elaborated<Impl> {
         }
     }
 
-    pub const fn new_name(i: Impl, n: &'static str) -> Self {
+    pub const fn new_with_name(i: Impl, n: &'static str) -> Self {
         Self::new(i, n, "", [])
     }
 

@@ -5,7 +5,7 @@ use std::fmt::{Debug, Display, Formatter};
 use rand::Rng;
 use generators::GeneratorSquares;
 use crate::algebra2::basis::generators::GeneratorElement;
-
+use crate::algebra2::basis::grades::Grades;
 use crate::algebra::basis_element;
 use crate::generator_squares;
 
@@ -170,20 +170,6 @@ pub struct BasisElementDisplayName {
     negate_display: bool,
 }
 
-// impl PartialEq for BasisElement {
-//     fn eq(&self, other: &Self) -> bool {
-//         if self.signature != other.signature {
-//             return false;
-//         }
-//         let (a, b) = match (&self.display_name, &other.display_name) {
-//             (Some(BasisElementDisplayName { negate_display: true, .. }), None) => (-1 * self.coefficient, other.coefficient),
-//             (None, Some(BasisElementDisplayName { negate_display: true, .. })) => (self.coefficient, -1 * other.coefficient),
-//             (_, _) => (self.coefficient, other.coefficient),
-//         };
-//         return a == b;
-//     }
-// }
-// impl Eq for BasisElement {}
 
 impl PartialOrd for BasisElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -298,8 +284,11 @@ impl BasisElement {
         self
     }
 
-    pub const fn grade(&self) -> u8 {
-        self.signature.bits().count_ones() as u8
+    pub const fn grade(&self) -> u32 {
+        self.signature.bits().count_ones()
+    }
+    pub const fn grades(&self) -> Grades {
+        Grades::from_sig(self.signature)
     }
 
     pub const fn parsed_display_name(s: &'static str) -> Option<Self> {
@@ -425,7 +414,7 @@ impl BasisElement {
     }
 
     pub const fn reverse(&self) -> Self {
-        let gr = self.grade() as u32;
+        let gr = self.grade();
         let exp = gr * (gr - 1) / 2;
         let mut copy = *self;
         copy.coefficient = i8::pow(-1i8, exp) * copy.coefficient;

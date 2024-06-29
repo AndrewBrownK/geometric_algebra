@@ -4,7 +4,7 @@ use std::fmt::{Debug, Display, Formatter};
 use std::marker::PhantomData;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-use crate::algebra2::basis::grades::{Grades};
+use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::grade_constraint;
 
 #[derive(Clone, Copy, PartialEq)]
@@ -34,7 +34,7 @@ macro_rules! graded_sum {
 }
 
 
-impl From<GeneratorElement> for GradedProduct<{Grades::g1}> {
+impl From<GeneratorElement> for GradedProduct<{grade1}> {
     fn from(value: GeneratorElement) -> Self {
         GradedProduct(
             PhantomData,

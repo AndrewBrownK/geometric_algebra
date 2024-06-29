@@ -12,7 +12,7 @@ struct AntiDual;
 #[derive(Clone, Copy)]
 struct Expansion;
 
-static WEDGE: Elaborated<Wedge> = Wedge
+pub static WEDGE: Elaborated<Wedge> = Wedge
     .name("Wedge")
     .alias("Join")
     .alias_docs_only("ExteriorProduct")

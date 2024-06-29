@@ -588,7 +588,7 @@ pub trait NameTrait: Sized + Copy {
 }
 impl<I> const NameTrait for I where I: CanNameTrait + Copy {
     fn name(self, name: &'static str) -> Elaborated<Self> {
-        Elaborated::new_name(self, name)
+        Elaborated::new_with_name(self, name)
     }
 }
 
