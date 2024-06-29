@@ -68,7 +68,7 @@ impl Display for BasisSignature {
             write!(f, "e")?;
             for i in 0..16 {
                 if num & (1 << i) != 0 {
-                    write!(f, "{}", char::from_digit(i, 16).unwrap())?;
+                    write!(f, "{}", char::from_digit(i, 16).unwrap().to_ascii_uppercase())?;
                 }
             }
             Ok(())
@@ -142,7 +142,7 @@ impl BasisSignature {
 
 
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct BasisElement {
     // BasisElements will mathematically operate
     // under the assumption that the primary bases
@@ -167,6 +167,21 @@ pub struct BasisElementDisplayName {
     negate_display: bool,
 }
 
+// impl PartialEq for BasisElement {
+//     fn eq(&self, other: &Self) -> bool {
+//         if self.signature != other.signature {
+//             return false;
+//         }
+//         let (a, b) = match (&self.display_name, &other.display_name) {
+//             (Some(BasisElementDisplayName { negate_display: true, .. }), None) => (-1 * self.coefficient, other.coefficient),
+//             (None, Some(BasisElementDisplayName { negate_display: true, .. })) => (self.coefficient, -1 * other.coefficient),
+//             (_, _) => (self.coefficient, other.coefficient),
+//         };
+//         return a == b;
+//     }
+// }
+// impl Eq for BasisElement {}
+
 impl PartialOrd for BasisElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(BasisElement::const_cmp(self, other))
@@ -175,6 +190,22 @@ impl PartialOrd for BasisElement {
 impl Ord for BasisElement {
     fn cmp(&self, other: &Self) -> Ordering {
         BasisElement::const_cmp(self, other)
+    }
+}
+impl Debug for BasisElement {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        // BasisElement { coefficient: -1, signature: BasisSignature(0b0000000000011000), display_name: None }
+
+        write!(f, "BasisElement(")?;
+        let mut sign = self.coefficient;
+        match sign {
+            0 => write!(f, "0"),
+            1 => write!(f, "{}", self.signature),
+            -1 => write!(f, "-{}", self.signature),
+            c => write!(f, "{}*{}", c, self.signature),
+        }?;
+        let n = &self.display_name;
+        write!(f, ", {n:?})")
     }
 }
 impl Display for BasisElement {
@@ -300,10 +331,20 @@ impl BasisElement {
             let c = s[i];
             i += 1;
             let next_basis: u16 = match (reached_elements, c) {
-                // (false, b'-') => {
-                //     display_name.negate_display = !display_name.negate_display;
-                //     continue
-                // }
+                (false, b'-') => {
+                    // It might seem difficult or confusing to arbitrate if this
+                    // negative sign should negate the representation or the display name,
+                    // but at the time of writing (getting CGA geometric product tests to run)
+                    // it is convenient to parse product results like -e31 or whatever,
+                    // and in that case we need the leading negative sign to negate the
+                    // representation and not the display, as shown below. If we ever get a
+                    // compelling case/motivation to interpret it another way, then be sure
+                    // to run and resolve tests in order to complete an accurate refactor.
+
+                    // display_name.negate_display = !display_name.negate_display;
+                    result.coefficient *= -1;
+                    continue
+                }
                 (false, b'0') => {
                     result.coefficient = 0;
                     result.signature = BasisSignature::empty();
@@ -319,7 +360,6 @@ impl BasisElement {
                     }
                 }
                 (false, b'1') => {
-                    result.coefficient = 1;
                     result.signature = BasisSignature::empty();
                     return if i == s.len() {
                         result.display_name = Some(display_name);
@@ -413,19 +453,22 @@ impl BasisElement {
         answer.coefficient = self.coefficient * anti_scalar.coefficient;
         answer.signature = BasisSignature::from_bits_retain(new_sig);
 
-        // Now we can test if we have to actually worry about the sign.
-        let d = anti_scalar.grade();
-        let gr = self.grade();
-        let ag = d - gr;
+        // The following gr and ag calculation for sign doesn't work for negative anti_scalars
+        // So let's just do the tested approach
 
-        // Hmmm it is so inconvenient to define these,
-        // maybe I should get them as a dependency instead
-        const fn is_even(num: u8) -> bool { num % 2 == 0 }
-        const fn is_odd(num: u8) -> bool { num % 2 != 0 }
-
-        if is_odd(d) || is_even(gr) || is_even(ag) {
-            return answer;
-        }
+        // // Now we can test if we have to actually worry about the sign.
+        // let d = anti_scalar.grade();
+        // let gr = self.grade();
+        // let ag = d - gr;
+        //
+        // // Hmmm it is so inconvenient to define these,
+        // // maybe I should get them as a dependency instead
+        // const fn is_even(num: u8) -> bool { num % 2 == 0 }
+        // const fn is_odd(num: u8) -> bool { num % 2 != 0 }
+        //
+        // if is_odd(d) || is_even(gr) || is_even(ag) {
+        //     return answer;
+        // }
 
         // Okay we should double-check the sign.
         let test = self.wedge(answer);
@@ -446,12 +489,28 @@ impl BasisElement {
 
     pub const fn left_complement(&self, anti_scalar: BasisElement) -> BasisElement {
         let mut rc = self.right_complement(anti_scalar);
-        let d = anti_scalar.grade();
-        let gr = self.grade();
-        let ag = d - gr;
-        let exp = gr * ag;
-        rc.coefficient = rc.coefficient * i8::pow(-1, exp as u32);
-        rc
+
+        // let d = anti_scalar.grade();
+        // let gr = self.grade();
+        // let ag = d - gr;
+        // let exp = gr * ag;
+        // rc.coefficient = rc.coefficient * i8::pow(-1, exp as u32);
+
+        // Okay we should double-check the sign.
+        let test = rc.wedge(*self);
+        if test.coefficient == anti_scalar.coefficient {
+            return rc
+        }
+        if test.coefficient == -anti_scalar.coefficient {
+            rc.coefficient = -1 * rc.coefficient;
+            return rc
+        }
+
+        // This basically shouldn't happen unless the i8 coefficient somehow gets corrupted
+        // panic!("Cannot figure out right_complement for strange element: {self:?} anti_scalar: {anti_scalar:?}")
+
+        // Limited/no formatting options in const eval
+        panic!("Cannot figure out left_complement for strange element")
     }
 
     /// Wedge product

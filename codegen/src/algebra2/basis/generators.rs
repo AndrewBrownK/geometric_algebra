@@ -3,6 +3,7 @@ use crate::algebra2::basis::{BasisElement, BasisSignature};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GeneratorSquares {
+    pub negative_anti_scalar: bool,
     active_bases: BasisSignature,
     // TODO un-pub
     pub raw_squares: [i8; 16],
@@ -13,7 +14,7 @@ impl GeneratorSquares {
     pub const fn anti_scalar(&self) -> BasisElement {
         let signature = self.active_bases;
         BasisElement {
-            coefficient: 1,
+            coefficient: if self.negative_anti_scalar { -1 } else { 1 },
             signature,
             display_name: None,
         }
@@ -36,6 +37,7 @@ impl GeneratorSquares {
 
     pub fn empty() -> Self {
         Self {
+            negative_anti_scalar: false,
             active_bases: BasisSignature::empty(),
             raw_squares: [0i8; 16]
         }
@@ -48,7 +50,7 @@ impl GeneratorSquares {
             active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
-        Self { active_bases, raw_squares }
+        Self { negative_anti_scalar: false, active_bases, raw_squares }
     }
 
     pub fn append<const N: usize>(self, generator_squares: [(GeneratorElement, i8); N]) -> anyhow::Result<Self> {
@@ -62,7 +64,7 @@ impl GeneratorSquares {
             active_bases = active_bases.union(sig);
             raw_squares[(basis as u8) as usize] = square;
         }
-        Ok(Self { active_bases, raw_squares })
+        Ok(Self { negative_anti_scalar: false, active_bases, raw_squares })
     }
 
     pub fn overwrite<const N: usize>(self, generator_squares: [(GeneratorElement, i8); N]) -> Self {
@@ -72,7 +74,7 @@ impl GeneratorSquares {
             active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
-        Self { active_bases, raw_squares }
+        Self { negative_anti_scalar: false, active_bases, raw_squares }
     }
 
     pub const fn square_generator(&self, basis: GeneratorElement) -> i8 {
