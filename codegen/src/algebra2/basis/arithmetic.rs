@@ -69,6 +69,13 @@ impl Mul<f32> for Product {
         }
     }
 }
+impl Mul<Product> for f32 {
+    type Output = Product;
+
+    fn mul(self, rhs: Product) -> Self::Output {
+        rhs * self
+    }
+}
 impl MulAssign<f32> for Product {
     fn mul_assign(&mut self, rhs: f32) {
         self.coefficient *= rhs;
@@ -118,6 +125,13 @@ impl<const G: Grades> Mul<f32> for GradedProduct<G> {
     fn mul(mut self, rhs: f32) -> Self::Output {
         self.1.coefficient *= rhs;
         self
+    }
+}
+impl<const G: Grades> Mul<GradedProduct<G>> for f32 {
+    type Output = GradedProduct<G>;
+
+    fn mul(self, rhs: GradedProduct<G>) -> Self::Output {
+        rhs * self
     }
 }
 impl<const G: Grades> MulAssign<f32> for GradedProduct<G> {
@@ -175,6 +189,13 @@ impl Mul<f32> for &Sum {
         result
     }
 }
+impl Mul<&Sum> for f32 {
+    type Output = Sum;
+
+    fn mul(self, rhs: &Sum) -> Self::Output {
+        rhs * self
+    }
+}
 impl MulAssign<f32> for Sum {
     fn mul_assign(&mut self, rhs: f32) {
         for term in self.sum.iter_mut() {
@@ -210,6 +231,13 @@ impl Add<Product> for &Sum {
         s
     }
 }
+impl Add<Sum> for &Product {
+    type Output = Sum;
+
+    fn add(self, rhs: Sum) -> Self::Output {
+        &rhs + *self
+    }
+}
 impl AddAssign<Product> for Sum {
     fn add_assign(&mut self, rhs: Product) {
         self.sum.push(rhs);
@@ -225,6 +253,14 @@ impl Sub<Product> for &Sum {
         s.sum.push(rhs);
         s.sort_and_simplify();
         s
+    }
+}
+impl Sub<Sum> for &Product {
+    type Output = Sum;
+
+    fn sub(self, mut rhs: Sum) -> Self::Output {
+        rhs *= -1.0;
+        &rhs + *self
     }
 }
 impl SubAssign<Product> for Sum {
@@ -282,6 +318,13 @@ impl<const G: Grades> Mul<f32> for GradedSum<G> {
         )
     }
 }
+impl<const G: Grades> Mul<GradedSum<G>> for f32 {
+    type Output = GradedSum<G>;
+
+    fn mul(self, rhs: GradedSum<G>) -> Self::Output {
+        rhs * self
+    }
+}
 impl<const G: Grades> MulAssign<f32> for GradedSum<G> {
     fn mul_assign(&mut self, rhs: f32) {
         self.1 *= rhs;
@@ -319,6 +362,27 @@ impl<const G: Grades, const H: Grades> Sub<GradedProduct<H>> for GradedSum<G> wh
         GradedSum(
             PhantomData,
             &self.1 - rhs.1
+        )
+    }
+}
+impl<const G: Grades, const H: Grades> Add<GradedSum<H>> for GradedProduct<G> where grade_constraint!(G, H): Sized {
+    type Output = graded_sum!(G, H);
+
+    fn add(self, rhs: GradedSum<H>) -> Self::Output {
+        GradedSum(
+            PhantomData,
+            &rhs.1 + self.1
+        )
+    }
+}
+impl<const G: Grades, const H: Grades> Sub<GradedSum<H>> for GradedProduct<G> where grade_constraint!(G, H): Sized {
+    type Output = graded_sum!(G, H);
+
+    fn sub(self, rhs: GradedSum<H>) -> Self::Output {
+        let s = Sum { sum: vec![self.1] };
+        GradedSum(
+            PhantomData,
+            &s - &rhs.1
         )
     }
 }

@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use std::fmt::{Debug};
+use std::fmt::Debug;
 use std::ops::{Add, Mul, MulAssign};
 
 use im::HashMap;
@@ -17,6 +17,17 @@ pub struct SubstitutionRepository {
     underlying_to_substitutions: HashMap<BasisElement, Sum>,
     substitution_products: HashMap<(BasisElement, BasisElement), Sum>,
     substitution_anti_products: HashMap<(BasisElement, BasisElement), Sum>,
+}
+
+
+#[macro_export]
+macro_rules! substitutions {
+    ($( $generator_element:expr => $sum:expr );+ $(;)? ) => {
+        {
+            use crate::algebra2::basis::generators::*;
+            vec![$(($generator_element, $sum)),+]
+        }
+    };
 }
 
 impl SubstitutionRepository {
@@ -1384,14 +1395,10 @@ fn conformal_3d_geometric_products() {
         ("e12345", "e12345", vec!["-1"]),
     ]};
 
-    // let underlying_cga = GeneratorSquares::new([(e1, 1), (e2, 1), (e3, 1), (eA, 1), (eB, -1)]);
-    let underlying_cga = generator_squares!(1 => e1, e2, e3, eA; -1 => eB);
-    use crate::algebra2::basis::generators::*;
-    let mut substituted_cga = SubstitutionRepository::new(underlying_cga, vec![
-        // TODO associativity, general floats (no "f32" specifier)
-        (e4, (eB - eA) * 0.5f32),
-        (e5, eB + eA),
-    ]);
+    let mut substituted_cga = SubstitutionRepository::new(
+        generator_squares!(1 => e1, e2, e3, eA; -1 => eB),
+        substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA)
+    );
 
     let mut failures = 0;
     let mut correct_products = BTreeMap::new();
@@ -1435,7 +1442,7 @@ fn conformal_3d_geometric_products() {
             a.coefficient = a_sign;
             b.coefficient = b_sign;
 
-            let mut calculated_product = substituted_cga.product(&a, &b);
+            let calculated_product = substituted_cga.product(&a, &b);
             if calculated_product != correct_product {
                 eprintln!("{a} * {b} was calculated as {calculated_product}, but we expected {correct_product}");
                 failures = failures + 1;
@@ -2476,14 +2483,10 @@ fn conformal_3d_geometric_anti_products() {
         ("e12345", "e12345", vec!["e12345"]),
     ]};
 
-    // let underlying_cga = GeneratorSquares::new([(e1, 1), (e2, 1), (e3, 1), (eA, 1), (eB, -1)]);
-    let underlying_cga = generator_squares!(1 => e1, e2, e3, eA; -1 => eB);
-    use crate::algebra2::basis::generators::*;
-    let mut substituted_cga = SubstitutionRepository::new(underlying_cga, vec![
-        // TODO need associativity for this * 0.5 part, support general floats (no "f32" specifier)
-        (e4, (eB - eA) * 0.5f32),
-        (e5, eB + eA),
-    ]);
+    let mut substituted_cga = SubstitutionRepository::new(
+        generator_squares!(1 => e1, e2, e3, eA; -1 => eB),
+        substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA)
+    );
 
     let mut failures = 0;
     let mut correct_anti_products = BTreeMap::new();
@@ -2527,7 +2530,7 @@ fn conformal_3d_geometric_anti_products() {
             a.coefficient = a_sign;
             b.coefficient = b_sign;
 
-            let mut calculated_anti_product = substituted_cga.anti_product(&a, &b);
+            let calculated_anti_product = substituted_cga.anti_product(&a, &b);
             if calculated_anti_product != correct_anti_product {
                 eprintln!("{a} * {b} was calculated as {calculated_anti_product}, but we expected {correct_anti_product}");
                 failures = failures + 1;
