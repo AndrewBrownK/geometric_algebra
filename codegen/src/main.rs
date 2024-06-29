@@ -16,7 +16,12 @@ mod impls;
 mod validate;
 mod shader_support;
 mod ast2;
-mod algebra2;
+mod algebra2 {
+    pub mod basis;
+    pub mod multivector;
+    pub mod algebra;
+    pub mod metric;
+}
 mod utility;
 
 mod build_scripts {
