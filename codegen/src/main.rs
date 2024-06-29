@@ -2,8 +2,11 @@
 #![feature(iter_intersperse)]
 #![feature(exit_status_error)]
 #![feature(associated_type_defaults)]
-#![feature(generic_const_exprs)]
 #![feature(const_option)]
+
+// TODO evaluate if I actually need/use these
+#![feature(generic_const_exprs)]
+#![feature(adt_const_params)]
 
 mod algebra;
 mod ast;

@@ -7,9 +7,12 @@ use generators::GeneratorSquares;
 use crate::algebra2::basis::generators::GeneratorElement;
 
 use crate::algebra::basis_element;
+use crate::generator_squares;
 
 pub mod generators;
 pub mod substitute;
+pub mod arithmetic;
+pub mod grades;
 
 bitflags::bitflags! {
     #[derive(Clone, Copy, PartialEq, Eq, Hash)]
@@ -194,10 +197,8 @@ impl Ord for BasisElement {
 }
 impl Debug for BasisElement {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        // BasisElement { coefficient: -1, signature: BasisSignature(0b0000000000011000), display_name: None }
-
         write!(f, "BasisElement(")?;
-        let mut sign = self.coefficient;
+        let sign = self.coefficient;
         match sign {
             0 => write!(f, "0"),
             1 => write!(f, "{}", self.signature),
@@ -709,8 +710,8 @@ fn new_basis_elements_wedge() {
 #[test]
 fn test_generator_squares() {
     use elements::*;
-    let rga = GeneratorSquares::new([(E1, 1), (E2, 1), (E3, 1), (E4, 0)]);
-    let cga = GeneratorSquares::new([(E1, 1), (E2, 1), (E3, 1), (E4, 1), (E5, -1)]);
+    let rga = generator_squares!(1 => e1, e2, e3; 0 => e4);
+    let cga = generator_squares!(1 => e1, e2, e3, e4; -1 => e5);
 
     //
 
@@ -780,27 +781,6 @@ fn test_generator_squares() {
 #[allow(non_upper_case_globals, dead_code)]
 pub mod elements {
     use crate::algebra2::basis::*;
-    use crate::algebra2::basis::generators::GeneratorElement;
-
-    // List some primary basis elements
-
-    pub const E0: GeneratorElement = GeneratorElement::e0;
-    pub const E1: GeneratorElement = GeneratorElement::e1;
-    pub const E2: GeneratorElement = GeneratorElement::e2;
-    pub const E3: GeneratorElement = GeneratorElement::e3;
-    pub const E4: GeneratorElement = GeneratorElement::e4;
-    pub const E5: GeneratorElement = GeneratorElement::e5;
-    pub const E6: GeneratorElement = GeneratorElement::e6;
-    pub const E7: GeneratorElement = GeneratorElement::e7;
-    pub const E8: GeneratorElement = GeneratorElement::e8;
-    pub const E9: GeneratorElement = GeneratorElement::e9;
-    pub const EA: GeneratorElement = GeneratorElement::eA;
-    pub const EB: GeneratorElement = GeneratorElement::eB;
-    pub const EC: GeneratorElement = GeneratorElement::eC;
-    pub const ED: GeneratorElement = GeneratorElement::eD;
-    pub const EE: GeneratorElement = GeneratorElement::eE;
-    pub const EF: GeneratorElement = GeneratorElement::eF;
-
 
     // List a bunch of generated elements
 

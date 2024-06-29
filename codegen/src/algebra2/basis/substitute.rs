@@ -1,271 +1,14 @@
 use std::collections::BTreeMap;
-use std::fmt::{Debug, Display, Formatter};
-use std::ops::{Mul, MulAssign};
+use std::fmt::{Debug};
+use std::ops::{Add, Mul, MulAssign};
 
 use im::HashMap;
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra2::basis::arithmetic::{GradedSum, Product, Sum};
 use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-
-#[derive(Clone, PartialEq)]
-struct Sum {
-    sum: Vec<Product>
-}
-
-#[derive(Clone, PartialEq)]
-struct Product {
-    coefficient: f32,
-    element: BasisElement
-}
-
-impl Mul<f32> for &Product {
-    type Output = Product;
-
-    fn mul(self, rhs: f32) -> Self::Output {
-        Product {
-            coefficient: self.coefficient * rhs,
-            element: self.element,
-        }
-    }
-}
-
-impl MulAssign<f32> for Product {
-    fn mul_assign(&mut self, rhs: f32) {
-        self.coefficient *= rhs;
-    }
-}
-
-impl Mul<f32> for &Sum {
-    type Output = Sum;
-
-    fn mul(self, rhs: f32) -> Self::Output {
-        let mut result = self.clone();
-        for term in result.sum.iter_mut() {
-            *term = term.mul(rhs);
-        }
-        result
-    }
-}
-
-impl MulAssign<f32> for Sum {
-    fn mul_assign(&mut self, rhs: f32) {
-        for term in self.sum.iter_mut() {
-            term.mul_assign(rhs);
-        }
-    }
-}
-
-impl Debug for Product {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        if self.coefficient == 1.0 {
-            return Display::fmt(&self.element, f);
-        }
-        if self.coefficient == -1.0 {
-            write!(f, "-")?;
-            return Display::fmt(&self.element, f);
-        }
-        if self.coefficient == 0.0 {
-            write!(f, "0*")?;
-            return Display::fmt(&self.element, f);
-        }
-        write!(f, "{}*{}", self.coefficient, self.element)
-    }
-}
-
-impl Debug for Sum {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        if self.sum.is_empty() {
-            return write!(f, "0");
-        }
-        for (i, p) in self.sum.iter().enumerate() {
-            if i > 0 {
-                write!(f, " + ")?;
-            }
-            Debug::fmt(p, f)?;
-        }
-        Ok(())
-    }
-}
-
-
-#[derive(Debug, Clone)]
-struct SubstituteElement {
-    new_element: BasisElement,
-    depends_on_underlying: Vec<BasisElement>,
-    expr: Sum,
-}
-
-impl SubstituteElement {
-    pub fn new() -> Self {
-        todo!()
-    }
-}
-
-
-impl Product {
-    fn multiply(&self, other: &Product, underlying: &GeneratorSquares) -> Option<Product> {
-        let mut element = underlying.true_product(self.element, other.element);
-        if element.coefficient == 0 {
-            return None;
-        }
-        let coefficient = self.coefficient * other.coefficient * element.coefficient as f32;
-        element.coefficient = 1;
-        Some(Product { coefficient, element })
-    }
-
-    fn anti_multiply(&self, other: &Product, underlying: &GeneratorSquares) -> Option<Product> {
-        // use crate::algebra2::basis::elements::*;
-        // let e123AB = e123.wedge(eA).wedge(eB);
-        // if self.element == e123AB && other.element == e123AB {
-        //     eprintln!("Attempting anti-product identity");
-        // }
-
-        let mut element = underlying.true_anti_product(self.element, other.element);
-        if element.coefficient == 0 {
-            return None;
-        }
-        let coefficient = self.coefficient * other.coefficient * element.coefficient as f32;
-        element.coefficient = 1;
-        Some(Product { coefficient, element })
-    }
-
-    fn add(&self, other: &Product) -> Sum {
-        let mut s = Sum { sum: vec![self.clone(), other.clone()] };
-        s.sort_and_simplify();
-        s
-    }
-}
-
-impl Sum {
-
-    fn sort_and_simplify(&mut self) {
-        // println!("Sum::sort_and_simplify {self:?}");
-        self.sum.sort_by(|a, b| {
-            a.element.cmp(&b.element)
-        });
-        // println!("Sum::sort_and_simplify -> {self:?}");
-        for p in self.sum.iter_mut() {
-            if p.element.coefficient != 1 {
-                p.coefficient *= p.element.coefficient as f32;
-                p.element.coefficient = 1;
-            }
-        }
-        let mut i = 0;
-        while !self.sum.is_empty() && i < self.sum.len() - 1 {
-            let (a, b) = self.sum.split_at_mut(i + 1);
-            let b_len = b.len();
-            let a = &mut a[i];
-            let mut total = a.coefficient;
-            let mut j = 0;
-            while j < b_len {
-                let b = &mut b[j];
-                if b.element != a.element {
-                    break;
-                }
-                total += b.coefficient;
-                j += 1;
-            }
-            if total == 0.0 {
-                self.sum.drain(i..(i+j+1));
-            } else {
-                a.coefficient = total;
-                self.sum.drain(i + 1..(i+j+1));
-                i += 1;
-            }
-        }
-        // println!("Sum::sort_and_simplify -> {self:?}");
-    }
-
-    fn multiply(&self, other: &Sum, underlying: &GeneratorSquares) -> Sum {
-        // println!("Sum::multiply {self:?} and {other:?}");
-        let mut sum = vec![];
-        for a in self.sum.iter() {
-            for b in other.sum.iter() {
-                if let Some(product) = a.multiply(b, underlying) {
-                    sum.push(product);
-                }
-            }
-        }
-        let mut s = Sum { sum };
-        // println!("Sum::multiply -> {s:?}");
-        s.sort_and_simplify();
-        // println!("Sum::multiply -> {s:?}");
-        s
-    }
-
-    fn anti_multiply(&self, other: &Sum, underlying: &GeneratorSquares) -> Sum {
-        // println!("Sum::multiply {self:?} and {other:?}");
-        let mut sum = vec![];
-        for a in self.sum.iter() {
-            for b in other.sum.iter() {
-                if let Some(product) = a.anti_multiply(b, underlying) {
-                    sum.push(product);
-                }
-            }
-        }
-        let mut s = Sum { sum };
-        // println!("Sum::multiply -> {s:?}");
-        s.sort_and_simplify();
-        // println!("Sum::multiply -> {s:?}");
-        s
-    }
-
-
-    fn wedge(&self, other: &Sum) -> Sum {
-        let a = self;
-        let b = other;
-        let mut sum = vec![];
-        for a in &a.sum {
-            for b in &b.sum {
-                let mut c = a.element.wedge(b.element);
-                if c.coefficient != 0 {
-                    let coefficient = (c.coefficient() as f32) * a.coefficient * b.coefficient;
-                    c.coefficient = 1;
-                    sum.push(Product { coefficient, element: c, });
-                }
-            }
-        }
-        let mut s = Sum { sum };
-        s.sort_and_simplify();
-        s
-    }
-
-    /// Dot product of superficial basis as vectors on the underlying basis.
-    /// If that makes sense...
-    /// In other words... Suppose e4 = 0.5*e- - 0.5*e+ and e5 = e+ + e-
-    /// So we have two ways we can try to dot product that.
-    /// We can do dot(e4, e5) = 0.5 * 1 + -0.5*1 = 0
-    /// Or we can (per page 119) take dot(e4, e5) = 0.5(a⟑b + b⟑a) = -1
-    /// I'm not entirely comfortable with the fact each of those gives us a different result.
-    /// But in any case, it is the former that we implement here, and that can be used
-    /// as an orthogonality test. I'm pretty sure the latter cannot be used as an orthogonality
-    /// test.
-    fn superficial_dot_product(self, other: Sum) -> f32 {
-        let mut a = self;
-        let mut b = other;
-        a.sort_and_simplify();
-        b.sort_and_simplify();
-        let a: HashMap<_, _> = a.sum.into_iter().map(|it| {
-            (it.element.signature, it.coefficient * it.element.coefficient() as f32)
-        }).collect();
-        let b: HashMap<_, _> = b.sum.into_iter().map(|it| {
-            (it.element.signature, it.coefficient * it.element.coefficient() as f32)
-        }).collect();
-        let c = a.intersection_with(b, |a, b| {
-            a * b
-        });
-        c.iter().map(|it| it.1).sum()
-    }
-
-    fn add(&self, other: &Sum) -> Sum {
-        let mut sum = self.sum.clone();
-        sum.append(&mut other.sum.clone());
-        let mut s = Sum { sum };
-        s.sort_and_simplify();
-        s
-    }
-}
-
+use crate::algebra2::basis::grades::Grades;
+use crate::generator_squares;
 
 #[derive(Debug)]
 pub struct SubstitutionRepository {
@@ -278,15 +21,16 @@ pub struct SubstitutionRepository {
 
 impl SubstitutionRepository {
     pub fn new(
-        underlying_squares: GeneratorSquares,
-        substituted_elements: Vec<(GeneratorElement, Vec<(f32, GeneratorElement)>)>
+        mut underlying_squares: GeneratorSquares,
+        substituted_elements: Vec<(GeneratorElement, GradedSum<{Grades::g1}>)>
     ) -> Self {
+
         let mut substitutions_to_underlying = HashMap::new();
         let mut underlying_to_substitutions = HashMap::new();
 
 
         // Get grade 1 elements for underlying basis
-        let mut underlying_grade_1_elements: Vec<_> = underlying_squares
+        let underlying_grade_1_elements: Vec<_> = underlying_squares
             .anti_scalar().signature()
             .into_generator_elements().1.into_iter()
             .filter_map(|it| it)
@@ -296,8 +40,9 @@ impl SubstitutionRepository {
         // Get grade 1 elements for substitute basis
         let mut substitute_grade_1_elements = underlying_grade_1_elements.clone();
         for (_, sum) in substituted_elements.iter() {
-            for (_, und_el) in sum {
-                let und_el = und_el.element();
+            let sum: Sum = sum.clone().into();
+            for p in sum.sum {
+                let und_el = p.element;
                 substitute_grade_1_elements.retain(|it| it != &und_el)
             }
         }
@@ -316,9 +61,12 @@ impl SubstitutionRepository {
         // Translate solutions for substitute basis into solutions for underlying basis
         // This allows us to go back and forth instead of only one way
         for (sub, under) in substituted_elements {
+            let under: Sum = under.into();
             let sub = sub.element();
-            for (c, u) in under.iter() {
-                // eprintln!("sub: {sub}   c: {c}   u: {u:?}");
+            for p in under.sum.iter() {
+                let c = p.coefficient;
+                let u = p.element;
+                // eprintln!("sub: {sub}   c: {c}   u: {u}");
 
                 // So with Lengyel CGA we will pass through this block 4 times
                 // sub: E4   c:  0.5   u: EB
@@ -326,18 +74,17 @@ impl SubstitutionRepository {
                 // sub: E5   c:  1.0   u: EB
                 // sub: E5   c:  1.0   u: EA
 
-                if *c == 0.0 {
-                    panic!("Don't define substitution elements on underlying elements using a coefficient of zero: {sub:?}")
+                if c == 0.0 {
+                    panic!("Don't define substitution elements on underlying elements using a coefficient of zero: {sub}")
                 }
-                let u = u.element();
                 let s = underlying_to_substitutions.entry(u)
                     .and_modify(|sum: &mut Sum| {
                         sum.sum.push(Product { coefficient: 1.0 / c, element: sub });
                         sum.sort_and_simplify();
                     })
-                    .or_insert(Sum { sum: vec![Product { coefficient: 1.0 / *c, element: sub }] });
+                    .or_insert(Sum { sum: vec![Product { coefficient: 1.0 / c, element: sub }] });
 
-                // eprintln!("WIP Sum: {u} := {s:?}");
+                // eprintln!("WIP Sum: {u} := {s}");
 
                 // And then after the above modifications/insertions, we get something like...
                 // EB :=  2.0*E4 + 1.0*E5
@@ -345,8 +92,7 @@ impl SubstitutionRepository {
 
                 assert!(!s.sum.is_empty(), "problem deriving underlying_to_substitutions")
             }
-            let sum = under.into_iter().map(|(c, it)| Product { coefficient: c, element: it.element()}).collect();
-            let mut sum = Sum { sum };
+            let mut sum = under;
             sum.sort_and_simplify();
 
             let existing = substitutions_to_underlying.insert(sub, sum.clone());
@@ -374,7 +120,7 @@ impl SubstitutionRepository {
                 .collect();
             let mut back_to_underlying = Sum { sum: subs_back_to_underlying };
             back_to_underlying.sort_and_simplify();
-            assert_eq!(back_to_underlying.sum.len(), 1, "Substitution elements ({under} := {orig_substitutions:?}) do not resolve into an independent underlying {under}.");
+            assert_eq!(back_to_underlying.sum.len(), 1, "Substitution elements ({under} := {orig_substitutions}) do not resolve into an independent underlying {under}.");
 
             // This is a good place to fix proportionality since we haven't done that yet
             let c = back_to_underlying.sum[0].coefficient;
@@ -386,7 +132,7 @@ impl SubstitutionRepository {
 
 
         // Verify that substitution elements are orthogonal
-        let mut substitutions_to_underlying_vec: Vec<_> = substitutions_to_underlying.clone().into_iter().collect();
+        let substitutions_to_underlying_vec: Vec<_> = substitutions_to_underlying.clone().into_iter().collect();
         for i in 0..(substitutions_to_underlying.len() - 1) {
             for j in (i + 1)..substitutions_to_underlying_vec.len() {
                 let (a, a_underlying) = &substitutions_to_underlying_vec[i];
@@ -398,7 +144,6 @@ impl SubstitutionRepository {
                 assert_eq!(dot, 0.0, "Basis substitutions must be orthogonal, violated by {a} and {b}")
             }
         }
-
 
         // Start constructing higher grade elements
         let mut substitution_grade_n_elements = substitute_grade_1_elements.clone();
@@ -425,13 +170,22 @@ impl SubstitutionRepository {
                         for term in underlying_wedge.iter() {
                             let thing = Sum { sum: vec![Product { coefficient: 1.0 / term.coefficient, element: substitution_wedge }]};
                             let el = term.element;
-                            // eprintln!("Adding {thing:?} to {el}");
-                            let s = underlying_to_substitutions.entry(el)
+                            // eprintln!("Adding {thing} to {el}");
+                            let _s = underlying_to_substitutions.entry(el)
                                 .and_modify(|it| { *it = it.add(&thing); })
                                 .or_insert(thing);
-                            // eprintln!("{el} is now looking like: {s:?}");
+                            // eprintln!("{el} is now looking like: {s}");
                         }
-                        substitutions_to_underlying.insert(substitution_wedge, Sum { sum: underlying_wedge });
+
+                        // Assume the substitution anti_scalar should be positive,
+                        // and set underlying anti_scalar direction accordingly
+                        if substitution_wedge.grade() == substitute_grade_1_elements.len() as u8
+                            && substitution_wedge.coefficient == 1
+                            && underlying_wedge[0].coefficient == -1.0 {
+                            underlying_squares.negative_anti_scalar = true;
+                        }
+                        let s = Sum { sum: underlying_wedge };
+                        substitutions_to_underlying.insert(substitution_wedge, s);
                         grade_n_plus_1_elements.push(substitution_wedge);
                     }
                 }
@@ -455,7 +209,7 @@ impl SubstitutionRepository {
                     .collect();
                 let mut back_to_underlying = Sum { sum: subs_back_to_underlying };
                 back_to_underlying.sort_and_simplify();
-                assert_eq!(back_to_underlying.sum.len(), 1, "Substitution elements ({under} := {orig_substitutions:?}) do not resolve into an independent underlying {under}.");
+                assert_eq!(back_to_underlying.sum.len(), 1, "Substitution elements ({under} := {orig_substitutions}) do not resolve into an independent underlying {under}.");
 
                 let c = back_to_underlying.sum[0].coefficient;
                 back_to_underlying.sum[0].mul_assign(1.0 / c);
@@ -483,9 +237,8 @@ impl SubstitutionRepository {
             underlying_to_substitutions.insert(under.negate(), orig_substitutions.mul(-1.0));
         }
 
-
-        let mut substitution_products = HashMap::new();
-        let mut substitution_anti_products = HashMap::new();
+        let substitution_products = HashMap::new();
+        let substitution_anti_products = HashMap::new();
         let s = Self {
             underlying_squares,
             substitutions_to_underlying,
@@ -493,7 +246,7 @@ impl SubstitutionRepository {
             substitution_products,
             substitution_anti_products,
         };
-        // eprintln!("SubstitutionRepository: {s:?}");
+        // eprintln!("SubstitutionRepository: {s}");
         s
     }
 
@@ -501,16 +254,14 @@ impl SubstitutionRepository {
         // eprintln!("Attempting {a} * {b}");
         self.substitution_products.entry((*a, *b))
             .or_insert_with(|| {
-                // TODO should I really be using any unwrap_or here? or should I fill out
-                //  substitutions_to_underlying and underlying_to_substitutions all the way?
                 let a_ = self.substitutions_to_underlying.get(&a).cloned()
                     .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: *a }] });
                 let b_ = self.substitutions_to_underlying.get(&b).cloned()
                     .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: *b }] });
-                // eprintln!("    Underlying factors: {a_:?}, {b_:?}");
+                // eprintln!("    Underlying factors: {a_}, {b_}");
                 let mut result = Sum { sum: vec![] };
                 let underlying_product = a_.multiply(&b_, &self.underlying_squares);
-                // eprintln!("    Underlying product: {underlying_product:?}");
+                // eprintln!("    Underlying product: {underlying_product}");
                 for underlying_term in underlying_product.sum.into_iter() {
                     let substitution_terms = self.underlying_to_substitutions.get(&underlying_term.element).cloned()
                         .map(| mut it| {
@@ -518,10 +269,10 @@ impl SubstitutionRepository {
                             it
                         })
                         .unwrap_or(Sum { sum: vec![underlying_term] });
-                    // eprintln!("    Intermediate sum: {substitution_terms:?}");
+                    // eprintln!("    Intermediate sum: {substitution_terms}");
                     result = result.add(&substitution_terms);
                 }
-                // eprintln!("    Substitution product: {result:?}");
+                // eprintln!("    Substitution product: {result}");
                 result
             }).clone()
     }
@@ -1633,18 +1384,14 @@ fn conformal_3d_geometric_products() {
         ("e12345", "e12345", vec!["-1"]),
     ]};
 
-
-
-    use crate::algebra2::basis::elements::*;
-    let mut underlying_cga = GeneratorSquares::new([(E1, 1), (E2, 1), (E3, 1), (EA, 1), (EB, -1)]);
-    underlying_cga.negative_anti_scalar = true;
+    // let underlying_cga = GeneratorSquares::new([(e1, 1), (e2, 1), (e3, 1), (eA, 1), (eB, -1)]);
+    let underlying_cga = generator_squares!(1 => e1, e2, e3, eA; -1 => eB);
+    use crate::algebra2::basis::generators::*;
     let mut substituted_cga = SubstitutionRepository::new(underlying_cga, vec![
-        // TODO i bet I can make this use operators which would actually be very nice and appropriate
-        (E4, vec![(0.5, EB), (-0.5, EA)]),
-        (E5, vec![(1.0, EB), (1.0, EA)]),
+        // TODO associativity, general floats (no "f32" specifier)
+        (e4, (eB - eA) * 0.5f32),
+        (e5, eB + eA),
     ]);
-
-
 
     let mut failures = 0;
     let mut correct_products = BTreeMap::new();
@@ -1655,8 +1402,7 @@ fn conformal_3d_geometric_products() {
         b.display_name = None;
         let mut sum = vec![];
         for product in products {
-            // TODO go through the entire file and fix non-idiomatic expect(format!().as_str())
-            let mut element = BasisElement::parsed_display_name(product).expect(format!("{product} must parse").as_str());
+            let mut element = BasisElement::parsed_display_name(product).expect("product must parse");
             element.display_name = None;
             sum.push(Product { coefficient: 1.0, element });
         }
@@ -1691,7 +1437,7 @@ fn conformal_3d_geometric_products() {
 
             let mut calculated_product = substituted_cga.product(&a, &b);
             if calculated_product != correct_product {
-                eprintln!("{a} * {b} was calculated as {calculated_product:?}, but we expected {correct_product:?}");
+                eprintln!("{a} * {b} was calculated as {calculated_product}, but we expected {correct_product}");
                 failures = failures + 1;
             }
         }
@@ -2730,18 +2476,14 @@ fn conformal_3d_geometric_anti_products() {
         ("e12345", "e12345", vec!["e12345"]),
     ]};
 
-
-
-    use crate::algebra2::basis::elements::*;
-    let mut underlying_cga = GeneratorSquares::new([(E1, 1), (E2, 1), (E3, 1), (EA, 1), (EB, -1)]);
-    underlying_cga.negative_anti_scalar = true;
+    // let underlying_cga = GeneratorSquares::new([(e1, 1), (e2, 1), (e3, 1), (eA, 1), (eB, -1)]);
+    let underlying_cga = generator_squares!(1 => e1, e2, e3, eA; -1 => eB);
+    use crate::algebra2::basis::generators::*;
     let mut substituted_cga = SubstitutionRepository::new(underlying_cga, vec![
-        // TODO i bet I can make this use operators which would actually be very nice and appropriate
-        (E4, vec![(0.5, EB), (-0.5, EA)]),
-        (E5, vec![(1.0, EB), (1.0, EA)]),
+        // TODO need associativity for this * 0.5 part, support general floats (no "f32" specifier)
+        (e4, (eB - eA) * 0.5f32),
+        (e5, eB + eA),
     ]);
-
-
 
     let mut failures = 0;
     let mut correct_anti_products = BTreeMap::new();
@@ -2752,7 +2494,7 @@ fn conformal_3d_geometric_anti_products() {
         b.display_name = None;
         let mut sum = vec![];
         for anti_product in anti_products {
-            let mut element = BasisElement::parsed_display_name(anti_product).expect(format!("{anti_product} must parse").as_str());
+            let mut element = BasisElement::parsed_display_name(anti_product).expect("anti-product must parse");
             element.display_name = None;
             sum.push(Product { coefficient: 1.0, element });
         }
@@ -2787,7 +2529,7 @@ fn conformal_3d_geometric_anti_products() {
 
             let mut calculated_anti_product = substituted_cga.anti_product(&a, &b);
             if calculated_anti_product != correct_anti_product {
-                eprintln!("{a} * {b} was calculated as {calculated_anti_product:?}, but we expected {correct_anti_product:?}");
+                eprintln!("{a} * {b} was calculated as {calculated_anti_product}, but we expected {correct_anti_product}");
                 failures = failures + 1;
             }
         }

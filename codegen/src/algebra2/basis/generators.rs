@@ -1,13 +1,32 @@
+#![allow(non_upper_case_globals)]
+
 use std::cmp::Ordering;
+use std::ops::{Add, Mul, Sub};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum};
+use crate::algebra2::basis::grades::Grades;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GeneratorSquares {
+    // TODO un-pub
     pub negative_anti_scalar: bool,
     active_bases: BasisSignature,
     // TODO un-pub
     pub raw_squares: [i8; 16],
 }
+
+#[macro_export]
+macro_rules! generator_squares {
+    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
+        {
+            use crate::algebra2::basis::generators::*;
+            let mut gs = GeneratorSquares::empty();
+            $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
+            gs
+        }
+    };
+}
+
 
 // TODO any chance of some of these being const fn?
 impl GeneratorSquares {
@@ -108,7 +127,6 @@ impl GeneratorSquares {
         sign
     }
 
-    // TODO test
     /// True Geometric Product, in other words without using substituted bases.
     /// If your BasisElements are substituting bases, you'll need to convert to
     /// the underlying bases before you can properly use this function.
@@ -232,6 +250,24 @@ pub enum GeneratorElement {
     eF = 15,
 }
 
+// List some primary basis elements
+pub const e0: GeneratorElement = GeneratorElement::e0;
+pub const e1: GeneratorElement = GeneratorElement::e1;
+pub const e2: GeneratorElement = GeneratorElement::e2;
+pub const e3: GeneratorElement = GeneratorElement::e3;
+pub const e4: GeneratorElement = GeneratorElement::e4;
+pub const e5: GeneratorElement = GeneratorElement::e5;
+pub const e6: GeneratorElement = GeneratorElement::e6;
+pub const e7: GeneratorElement = GeneratorElement::e7;
+pub const e8: GeneratorElement = GeneratorElement::e8;
+pub const e9: GeneratorElement = GeneratorElement::e9;
+pub const eA: GeneratorElement = GeneratorElement::eA;
+pub const eB: GeneratorElement = GeneratorElement::eB;
+pub const eC: GeneratorElement = GeneratorElement::eC;
+pub const eD: GeneratorElement = GeneratorElement::eD;
+pub const eE: GeneratorElement = GeneratorElement::eE;
+pub const eF: GeneratorElement = GeneratorElement::eF;
+
 impl GeneratorElement {
     pub const fn array() -> [Self; 16] {
         [
@@ -270,3 +306,54 @@ impl GeneratorElement {
         Ordering::Equal
     }
 }
+
+
+impl Mul<f32> for GeneratorElement {
+    type Output = GradedProduct<{Grades::g1}>;
+
+    fn mul(self, rhs: f32) -> Self::Output {
+        let mut gp = self.into();
+        gp *= rhs;
+        gp
+    }
+}
+impl Add<GeneratorElement> for GeneratorElement {
+    type Output = GradedSum<{Grades::g1}>;
+
+    fn add(self, rhs: GeneratorElement) -> Self::Output {
+        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
+        let b: GradedProduct<{Grades::g1}> = rhs * 1.0f32;
+        let c: GradedSum<{Grades::g1}> = a + b;
+        c
+    }
+}
+impl Add<GradedProduct<{Grades::g1}>> for GeneratorElement {
+    type Output = GradedSum<{Grades::g1}>;
+
+    fn add(self, rhs: GradedProduct<{Grades::g1}>) -> Self::Output {
+        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
+        let c: GradedSum<{Grades::g1}> = a + rhs;
+        c
+    }
+}
+impl Sub<GeneratorElement> for GeneratorElement {
+    type Output = GradedSum<{Grades::g1}>;
+
+    fn sub(self, rhs: GeneratorElement) -> Self::Output {
+        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
+        let b: GradedProduct<{Grades::g1}> = rhs * -1.0f32;
+        let c: GradedSum<{Grades::g1}> = a + b;
+        c
+    }
+}
+impl Sub<GradedProduct<{Grades::g1}>> for GeneratorElement {
+    type Output = GradedSum<{Grades::g1}>;
+
+    fn sub(self, rhs: GradedProduct<{Grades::g1}>) -> Self::Output {
+        let a: GradedProduct<{Grades::g1}> = self * 1.0f32;
+        let c: GradedSum<{Grades::g1}> = a - rhs;
+        c
+    }
+}
+
+
