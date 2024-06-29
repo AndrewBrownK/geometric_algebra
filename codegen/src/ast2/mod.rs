@@ -7,7 +7,7 @@ mod datatype;
 mod playground;
 mod traits;
 mod expressions;
-
+mod impls;
 // TODO Hamish recommends terms "intrinsic" and "extrinsic" instead of "Space" and "antispace"
 
 #[derive(PartialEq, Eq, Clone, Debug)]

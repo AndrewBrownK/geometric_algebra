@@ -12,6 +12,7 @@ use regex::Regex;
 use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, TraitResultType};
+use crate::ast2::impls::Elaborated;
 use crate::utility::AsyncMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -62,23 +63,40 @@ pub struct RawTraitDefinition {
 
 // TODO infix operators
 
+
+// TODO the "Copy" ancestor for TraitImpls is experimental.
+//  It might seem absurd and far too constraining at first, but actually it might be pretty
+//  viable. Even when the implementing type isn't trivial, the ability to define static values
+//  combined with the ability to impl traits for &'static Item makes this actually start
+//  to look quite viable. I mean, scoped references are all we need for Copy, but the reason
+//  we might want to use references to static items is so we can reference them inside
+//  general_implementation without access to an enclosing scope (aside from static values).
+//  In this way it is almost like the entire rs file becomes a script, defining variables
+//  as statics and interdependent script snippets as trait implementations.
+
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_0Param {
-    type Owner: ClassesFromRegistry = AnyClasses;
+pub trait TraitImpl_10: Copy + Send + 'static {
     type Output: TraitResultType;
-    fn trait_names(&self) -> TraitNames;
-    fn general_documentation() -> String { String::new() }
 
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         owner: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+}
 
-    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
+
+#[async_trait]
+#[allow(non_camel_case_types)]
+pub trait TraitDef_1Class_0Param: TraitImpl_10 {
+    type Owner: ClassesFromRegistry = AnyClasses;
+    fn trait_names(&self) -> TraitNames;
+    fn general_documentation(&self) -> String { String::new() }
+
+    fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
-            documentation: Self::general_documentation(),
-            names: trait_names,
+            documentation: self.general_documentation(),
+            names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: false,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -103,8 +121,8 @@ pub trait TraitDef_1Class_0Param {
             return Some(<Self::Output as TraitResultType>::inlined_expr_10(return_as_var));
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner.clone());
@@ -159,8 +177,8 @@ pub trait TraitDef_1Class_0Param {
             }
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
@@ -172,20 +190,25 @@ pub trait TraitDef_1Class_0Param {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_1Param {
-    type Owner: ClassesFromRegistry = AnyClasses;
+pub trait TraitImpl_11: Copy + Send + 'static {
     type Output: TraitResultType;
-    fn trait_names(&self) -> TraitNames;
-    fn general_documentation() -> String { String::new() }
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+}
 
-    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
+#[async_trait]
+#[allow(non_camel_case_types)]
+pub trait TraitDef_1Class_1Param: TraitImpl_11 {
+    type Owner: ClassesFromRegistry = AnyClasses;
+    fn trait_names(&self) -> TraitNames;
+    fn general_documentation(&self) -> String { String::new() }
+
+    fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
-            documentation: Self::general_documentation(),
-            names: trait_names,
+            documentation: self.general_documentation(),
+            names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -211,8 +234,8 @@ pub trait TraitDef_1Class_1Param {
             return Some(<Self::Output as TraitResultType>::inlined_expr_11(return_as_var));
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone());
@@ -273,8 +296,8 @@ pub trait TraitDef_1Class_1Param {
             }
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let mut builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
@@ -287,22 +310,27 @@ pub trait TraitDef_1Class_1Param {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_1Param {
-    type Owner: ClassesFromRegistry = AnyClasses;
-    type Other: ClassesFromRegistry = AnyClasses;
+pub trait TraitImpl_21: Copy + Send + 'static {
     type Output: TraitResultType;
-    fn trait_names(&self) -> TraitNames;
-    fn general_documentation() -> String { String::new() }
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+}
 
-    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
+#[async_trait]
+#[allow(non_camel_case_types)]
+pub trait TraitDef_2Class_1Param: TraitImpl_21 {
+    type Owner: ClassesFromRegistry = AnyClasses;
+    type Other: ClassesFromRegistry = AnyClasses;
+    fn trait_names(&self) -> TraitNames;
+    fn general_documentation(&self) -> String { String::new() }
+
+    fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
-            documentation: Self::general_documentation(),
-            names: trait_names,
+            documentation: self.general_documentation(),
+            names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -331,8 +359,8 @@ pub trait TraitDef_2Class_1Param {
             return Some(<Self::Output as TraitResultType>::inlined_expr_21(return_as_var));
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
@@ -396,8 +424,8 @@ pub trait TraitDef_2Class_1Param {
             }
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let mut builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
@@ -410,22 +438,27 @@ pub trait TraitDef_2Class_1Param {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_2Param {
-    type Owner: ClassesFromRegistry = AnyClasses;
-    type Other: ClassesFromRegistry = AnyClasses;
+pub trait TraitImpl_22: Copy + Send + 'static {
     type Output: TraitResultType;
-    fn trait_names(&self) -> TraitNames;
-    fn general_documentation() -> String { String::new() }
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+}
 
-    fn def(trait_names: TraitNames) -> Arc<RawTraitDefinition> {
+#[async_trait]
+#[allow(non_camel_case_types)]
+pub trait TraitDef_2Class_2Param: TraitImpl_22 {
+    type Owner: ClassesFromRegistry = AnyClasses;
+    type Other: ClassesFromRegistry = AnyClasses;
+    fn trait_names(&self) -> TraitNames;
+    fn general_documentation(&self) -> String { String::new() }
+
+    fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
-            documentation: Self::general_documentation(),
-            names: trait_names,
+            documentation: self.general_documentation(),
+            names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
@@ -455,8 +488,8 @@ pub trait TraitDef_2Class_2Param {
             return Some(<Self::Output as TraitResultType>::inlined_expr_22(return_as_var));
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let the_def_clone = the_def.clone();
 
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
@@ -527,8 +560,8 @@ pub trait TraitDef_2Class_2Param {
             }
         }
 
-        let trait_names = self.trait_names();
-        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { Self::def(trait_names) }).await;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let mut builder = TraitImplBuilder::new(
             the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
@@ -537,6 +570,25 @@ pub trait TraitDef_2Class_2Param {
         let trait_impl = Self::general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.release_context().finish_inline(b, var_name)
+    }
+}
+
+
+#[marker]
+pub trait CanNameTrait {}
+impl<I> CanNameTrait for I where I: TraitImpl_10 {}
+impl<I> CanNameTrait for I where I: TraitImpl_11 {}
+impl<I> CanNameTrait for I where I: TraitImpl_21 {}
+impl<I> CanNameTrait for I where I: TraitImpl_22 {}
+
+
+#[const_trait]
+pub trait NameTrait: Sized + Copy {
+    fn named(self, name: &'static str) -> Elaborated<Self>;
+}
+impl<I> const NameTrait for I where I: CanNameTrait + Copy {
+    fn named(self, name: &'static str) -> Elaborated<Self> {
+        Elaborated::name(self, name)
     }
 }
 
@@ -564,7 +616,7 @@ pub struct RawTraitImplementation {
 /// with no funny business or special characters. It will be converted
 /// to lowerCamelCase for output in shaders and lower_snake_case for
 /// function names inside the trait item.
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord, Hash)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub struct TraitKey {
     final_name: &'static str,
 }
@@ -573,21 +625,32 @@ lazy_static! {
     static ref TRAIT_KEY_REGEX: Regex = Regex::new("^[A-Z][a-zA-Z0-9]+$").expect("TraitKey regex is valid");
 }
 impl TraitKey {
-    pub fn new(name: &'static str) -> Self {
-        assert!(
-            TRAIT_KEY_REGEX.is_match(name),
-            "TraitKeys must be UpperCamelCase without any funny business or special characters."
-        );
+    pub const fn new(name: &'static str) -> Self {
+        // Cannot validate with regex in const eval.
+        // So we'll do validation at use sites instead.
+
+        // assert!(
+        //     TRAIT_KEY_REGEX.is_match(name),
+        //     "TraitKeys must be UpperCamelCase without any funny business or special characters."
+        // );
         Self {
             final_name: name,
         }
     }
 
     pub fn as_upper_camel(&self) -> String {
+        assert!(
+            TRAIT_KEY_REGEX.is_match(self.final_name),
+            "TraitKeys must be UpperCamelCase without any funny business or special characters."
+        );
         self.final_name.to_string()
     }
 
     pub fn as_lower_camel(&self) -> String {
+        assert!(
+            TRAIT_KEY_REGEX.is_match(self.final_name),
+            "TraitKeys must be UpperCamelCase without any funny business or special characters."
+        );
         let n = self.final_name;
         let f = n[0..1].to_lowercase();
         let inal_name = n[1..n.len()].to_string();
@@ -595,6 +658,10 @@ impl TraitKey {
     }
 
     pub fn as_lower_snake(&self) -> String {
+        assert!(
+            TRAIT_KEY_REGEX.is_match(self.final_name),
+            "TraitKeys must be UpperCamelCase without any funny business or special characters."
+        );
         let mut snake = String::new();
         let mut chars = self.final_name.chars().peekable();
 
@@ -619,22 +686,24 @@ impl TraitKey {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord, Hash)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub struct TraitNames {
     pub trait_key: TraitKey,
-    pub aliases: Vec<TraitAlias>,
+    // ArrayVec does not allow quite enough const operations
+    // pub aliases: ArrayVec<[TraitAlias; 16]>,
+    pub aliases: [Option<TraitAlias>; 16],
 }
 impl TraitNames {
-    pub fn just(name: &'static str) -> Self {
+    pub const fn just(name: &'static str) -> Self {
         TraitNames {
             trait_key: TraitKey::new(name),
-            aliases: vec![],
+            aliases: [None; 16],
         }
     }
 }
 
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord, Hash)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub struct TraitAlias {
     pub alias_key: TraitKey,
     pub mention_in_documentation: bool,
@@ -642,7 +711,7 @@ pub struct TraitAlias {
     pub output_in_shaders: bool
 }
 
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd, Ord, Hash)]
+#[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum TraitSharing {
     DontOutput,
     Consolidate,
@@ -650,16 +719,16 @@ pub enum TraitSharing {
 }
 
 impl TraitAlias {
-    fn usual(alias_key: TraitKey) -> Self {
+    pub const fn usual(alias_key: TraitKey) -> Self {
         Self::new(alias_key, true, TraitSharing::Consolidate, true)
     }
-    fn usual_except_shaders(alias_key: TraitKey) -> Self {
+    pub const fn usual_except_shaders(alias_key: TraitKey) -> Self {
         Self::new(alias_key, true, TraitSharing::Consolidate, false)
     }
-    fn docs_only(alias_key: TraitKey) -> Self {
+    pub const fn docs_only(alias_key: TraitKey) -> Self {
         Self::new(alias_key, true, TraitSharing::DontOutput, false)
     }
-    fn new(alias_key: TraitKey, docs: bool, share: TraitSharing, shaders: bool) -> Self {
+    pub const fn new(alias_key: TraitKey, docs: bool, share: TraitSharing, shaders: bool) -> Self {
         TraitAlias {
             alias_key,
             mention_in_documentation: docs,
@@ -667,7 +736,41 @@ impl TraitAlias {
             output_in_shaders: shaders
         }
     }
+
+    // This is only for use as a const Default
+    // const fn empty() -> Self {
+    //     Self {
+    //         alias_key: TraitKey { final_name: "" },
+    //         mention_in_documentation: false,
+    //         rust_trait_sharing: TraitSharing::DontOutput,
+    //         output_in_shaders: false,
+    //     }
+    // }
+    // pub(crate) const fn empty_array() -> ArrayVec<[Self; 16]> {
+    //     ArrayVec::from_array_empty([Self::empty(); 16])
+    // }
+    // pub(crate) const fn push_array(arr: &mut ArrayVec<[Self; 16]>, alias: TraitAlias) {
+    //     let mut a = arr.clone().into_inner();
+    //     let empty = TraitAlias::empty();
+    //     let mut idx = 0;
+    //     while idx < a.len() {
+    //         if a[idx] == empty {
+    //             a[idx] = alias;
+    //             break;
+    //         }
+    //         idx += 1;
+    //     }
+    //     *arr = a.into();
+    //     arr.truncate(idx + 1)
+    // }
 }
+
+// We're only implementing Default to use inside ArrayVec
+// impl Default for TraitAlias {
+//     fn default() -> Self {
+//         Self::empty()
+//     }
+// }
 
 
 #[derive(Clone)]

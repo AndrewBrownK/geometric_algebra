@@ -310,9 +310,9 @@ fn test_construction() {
     println!("{circle}");
 
     // Note this one will print with a different order than displayed because it will sort
-    // the BasisElements first. If you want a fixed order, everything gets grouped in the end
-    // anyway, just specify your grouping manually. If you'd rather have it sorted without fretting
-    // about sorting it yourself, then use it like this with ungrouped input.
+    // the BasisElements first. If you want a fixed order, then specify the grouping
+    // manually (since everything will end up in groups anyway). If you'd rather have it sorted
+    // without fretting about sorting it yourself, then use it like this with ungrouped input.
     let dipole = multi_vec!("Dipole", 5, e41, e42, e43, e23, e31, e12, e15, e25, e35, e45);
     println!("{dipole}");
 

@@ -198,6 +198,7 @@ pub struct MultiVectorExpr {
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum MultiVectorVia {
     Variable(RawVariableInvocation),
+    // TODO shall I replace this with MultiVec? or not replace, but integrate?
     Construct(Vec<MultiVectorGroupExpr>),
     // e.g. Involutions
     TraitInvoke11ToClass(TraitKey, MultiVectorExpr),

@@ -1,30 +1,39 @@
 use async_trait::async_trait;
 
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder, TraitNames};
+use crate::ast2::impls::Elaborated;
+use crate::ast2::traits::{HasNotReturned, NameTrait, TraitAlias, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
 use crate::ast2::Variable;
 
-struct Wedge {
-    names: TraitNames
-}
-impl Default for Wedge {
-    fn default() -> Self {
-        Wedge {
-            names: TraitNames::just("Wedge")
-        }
-    }
-}
+#[derive(Clone, Copy)]
+struct Wedge;
+#[derive(Clone, Copy)]
 struct AntiDual;
+#[derive(Clone, Copy)]
 struct Expansion;
+
+// static WEDGE: CustomizedTraitDef<Wedge> = CustomizedTraitDef::new(Wedge, "Wedge");
+// static ANTI_DUAL: CustomizedTraitDef<AntiDual> = CustomizedTraitDef::new(AntiDual, "AntiDual");
+// static EXPANSION: CustomizedTraitDef<Expansion> = CustomizedTraitDef::new(Expansion, "Expansion");
+static WEDGE: Elaborated<Wedge> = Wedge
+    .named("Wedge")
+    .with_alias("Join")
+    .with_alias("ExteriorProduct")
+    .with_blurb("The famous Wedge product, also known as ExteriorProduct. \
+    When a Wedge product exists between two multivectors, the result has a grade that is the \
+    sum of the two factors' grades. In point-based interpretations, the Wedge is a Join \
+    because increasing grade corresponds to increasing the dimensionality of objects. In \
+    hyperplane-based interpretations, the Wedge is a Meet because increasing grade corresponds \
+    to the intersection of objects.");
+
+static ANTI_DUAL: Elaborated<AntiDual> = AntiDual.named("AntiDual");
+static EXPANSION: Elaborated<Expansion> = Expansion.named("Expansion");
+
 
 
 #[async_trait]
-impl TraitDef_2Class_2Param for Wedge {
+impl TraitImpl_22 for Wedge {
     type Output = MultiVector;
-
-    fn trait_names(&self) -> TraitNames {
-        self.names.clone()
-    }
 
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
@@ -36,12 +45,8 @@ impl TraitDef_2Class_2Param for Wedge {
 }
 
 #[async_trait]
-impl TraitDef_1Class_1Param for AntiDual {
+impl TraitImpl_11 for AntiDual {
     type Output = MultiVector;
-
-    fn trait_names(&self) -> TraitNames {
-        TraitNames::just("AntiDual")
-    }
 
     async fn general_implementation<'impls>(
         b: TraitImplBuilder<'impls, HasNotReturned>,
@@ -54,21 +59,17 @@ impl TraitDef_1Class_1Param for AntiDual {
 
 
 #[async_trait]
-impl TraitDef_2Class_2Param for Expansion {
+impl TraitImpl_22 for Expansion {
     type Output = MultiVector;
-
-    fn trait_names(&self) -> TraitNames {
-        TraitNames::just("Expansion")
-    }
 
     async fn general_implementation<'impls>(
         mut b: TraitImplBuilder<'impls, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
     ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
-        let anti_dual = AntiDual.invoke(&mut b, other).await?;
+        let anti_dual = ANTI_DUAL.invoke(&mut b, other).await?;
         let anti_dual = b.variable("anti_dual", anti_dual);
-        let wedge = Wedge::default().inline(&mut b, slf, anti_dual).await?;
+        let wedge = WEDGE.inline(&mut b, slf, anti_dual).await?;
         b.comment_return("Hello comment", wedge)
     }
 }

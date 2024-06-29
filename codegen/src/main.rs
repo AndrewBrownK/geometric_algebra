@@ -7,6 +7,9 @@
 // TODO evaluate if I actually need/use these
 #![feature(generic_const_exprs)]
 #![feature(adt_const_params)]
+#![feature(const_trait_impl, effects)]
+#![feature(marker_trait_attr)]
+#![feature(const_mut_refs)]
 
 mod algebra;
 mod ast;
