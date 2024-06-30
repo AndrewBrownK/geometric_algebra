@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::algebra::MultiVectorClass;
+use crate::algebra2::multivector::{BoxedMultiVec, BoxIt, mono_grade_groups, MultiVec, num_elements};
 
 // TODO move these items to better locations
 
@@ -15,7 +15,7 @@ pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Vec4;
 #[derive(PartialEq, Eq, Clone, Debug, Hash)]
-pub struct MultiVector(Arc<MultiVectorClass>);
+pub struct MultiVector(Arc<BoxedMultiVec>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionType {
@@ -30,17 +30,17 @@ pub enum ExpressionType {
 
 
 pub trait ClassesFromRegistry {
-    fn include_class(&self, mvc: &MultiVectorClass) -> bool;
+    fn include_class(&self, mvc: &BoxedMultiVec) -> bool;
 }
 pub struct NoParam;
 impl ClassesFromRegistry for NoParam {
-    fn include_class(&self, _: &MultiVectorClass) -> bool {
+    fn include_class(&self, _: &BoxedMultiVec) -> bool {
         false
     }
 }
 pub struct AnyClasses;
 impl ClassesFromRegistry for AnyClasses {
-    fn include_class(&self, _: &MultiVectorClass) -> bool {
+    fn include_class(&self, _: &BoxedMultiVec) -> bool {
         true
     }
 }
@@ -48,9 +48,15 @@ impl ClassesFromRegistry for AnyClasses {
 
 
 /// Good for manual implementations
-pub struct Specifically(MultiVector);
-impl ClassesFromRegistry for Specifically {
-    fn include_class(&self, mvc: &MultiVectorClass) -> bool {
-        mvc == self.0.0.as_ref()
+pub struct Specifically<const D: u8>(MultiVec<D>) where
+    MultiVec<D>: BoxIt,
+    [(); mono_grade_groups(D)]: Sized,
+    [(); num_elements(D)]: Sized;
+impl<const D: u8> ClassesFromRegistry for Specifically<D> where
+    MultiVec<D>: BoxIt,
+    [(); mono_grade_groups(D)]: Sized,
+    [(); num_elements(D)]: Sized {
+    fn include_class(&self, mvc: &BoxedMultiVec) -> bool {
+        mvc.adapt_eq(&self.0)
     }
 }

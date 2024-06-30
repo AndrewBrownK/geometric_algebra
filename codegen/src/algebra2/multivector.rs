@@ -2,17 +2,21 @@ use std::fmt::{Debug, Display, Formatter};
 use lazy_static::lazy_static;
 use regex::Regex;
 use tinyvec::{array_vec, ArrayVec, TinyVec};
-
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::grades::Grades;
 
-const fn num_elements(d: u8) -> usize {
+pub(crate) const fn num_elements(d: u8) -> usize {
     let d = d as u32;
-    let n = usize::pow(2, d) - 1;
+
+    // Scalar counts as an element
+    // let n = usize::pow(2, d) - 1;
+    let n = usize::pow(2, d);
+
     n
 }
 
-const fn mono_grade_elements(d: u8) -> usize {
+// TODO Is there anything I can do to un-pub this, or make the constraints outside this module more simple?
+pub const fn mono_grade_elements(d: u8) -> usize {
     const fn factorial(mut n: usize) -> usize {
         let mut result = 1;
         while n > 1 {
@@ -27,7 +31,7 @@ const fn mono_grade_elements(d: u8) -> usize {
     let n_k = n-k;
     factorial(n) / (factorial(k) * factorial(n_k))
 }
-const fn mono_grade_groups(d: u8) -> usize {
+pub const fn mono_grade_groups(d: u8) -> usize {
     let elements = mono_grade_elements(d);
     // In the end every group is 4 floats wide, regardless.
     // This helps keep things simple when passing data back and forth from GPU.
@@ -47,12 +51,20 @@ pub struct MultiVectorSignature<const D: u8>(ArrayVec<[BasisSignature; num_eleme
 pub type BasisElementGroup = ArrayVec<[BasisElement; 4]>;
 
 
+
+
+// pub struct MultiVecConstraint<const D: u8>([(); mono_grade_groups(D)], [(); num_elements(D)]) where
+//     [(); mono_grade_groups(D)]: Sized,
+//     [(); num_elements(D)]: Sized;
+
+
+
+
 // Cannot be Copy because TinyVec is never Copy
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct MultiVec<const D: u8> where
     [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized
-{
+    [(); num_elements(D)]: Sized {
     name: &'static str,
     grades: Grades,
     element_groups: TinyVec<[BasisElementGroup; mono_grade_groups(D)]>,
@@ -183,7 +195,7 @@ impl<const D: u8> MultiVec<D> where
                         BasisElements can share the same BasisSignature")
                 }
                 signature.0.push(el_sig);
-                used_dimensions = used_dimensions.union(el_sig);
+                used_dimensions |= el_sig;
                 let i = used_dimensions.bits().count_ones();
                 if i > D as u32 {
                     panic!("MultiVector embedded in {D} dimensions is defined with {i} or \
@@ -289,6 +301,120 @@ impl<T: Default> TupleToGroup<T> for [T; 1] {
     }
 }
 
+pub trait BoxIt {
+    fn box_it(self) -> BoxedMultiVec;
+}
+impl BoxIt for MultiVec<1> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D1(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<2> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D2(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<3> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D3(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<4> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D4(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<5> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D5(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<6> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D6(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<7> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D7(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<8> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D8(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<9> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D9(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<10> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D10(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<11> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D11(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<12> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D12(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<13> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D13(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<14> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D14(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<15> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D15(Box::new(self))
+    }
+}
+impl BoxIt for MultiVec<16> {
+    fn box_it(self) -> BoxedMultiVec {
+        BoxedMultiVec::D16(Box::new(self))
+    }
+}
+
+
+
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
+pub enum BoxedMultiVec {
+    D1(Box<MultiVec<1>>),
+    D2(Box<MultiVec<2>>),
+    D3(Box<MultiVec<3>>),
+    D4(Box<MultiVec<4>>),
+    D5(Box<MultiVec<5>>),
+    D6(Box<MultiVec<6>>),
+    D7(Box<MultiVec<7>>),
+    D8(Box<MultiVec<8>>),
+    D9(Box<MultiVec<9>>),
+    D10(Box<MultiVec<10>>),
+    D11(Box<MultiVec<11>>),
+    D12(Box<MultiVec<12>>),
+    D13(Box<MultiVec<13>>),
+    D14(Box<MultiVec<14>>),
+    D15(Box<MultiVec<15>>),
+    D16(Box<MultiVec<16>>),
+}
+impl BoxedMultiVec {
+    pub fn adapt_eq<const D: u8>(&self, other: &MultiVec<D>) -> bool where
+        MultiVec<D>: BoxIt,
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized {
+
+        self == &other.clone().box_it()
+    }
+}
 
 
 #[test]
@@ -312,4 +438,8 @@ fn test_construction() {
 
     let dipole_again = multi_vec!("Dipole", 5, [e41, e42, e43], [e23, e31, e12], [e15, e25, e35, e45]);
     println!("{dipole_again}");
+
+    if dipole == dipole_again {
+        //
+    }
 }
