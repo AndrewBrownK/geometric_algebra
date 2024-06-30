@@ -414,6 +414,35 @@ impl BoxedMultiVec {
 
         self == &other.clone().box_it()
     }
+
+    pub fn element_groups(&self) -> impl Iterator<Item=&BasisElementGroup> {
+        match &self {
+            BoxedMultiVec::D1(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D2(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D3(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D4(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D5(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D6(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D7(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D8(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D9(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D10(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D11(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D12(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D13(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D14(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D15(mv) => mv.element_groups.iter(),
+            BoxedMultiVec::D16(mv) => mv.element_groups.iter(),
+        }
+    }
+
+    pub fn elements(&self) -> impl Iterator<Item=BasisElement> {
+        let mut v = vec![];
+        for el in self.element_groups().flat_map(|it| it.iter()) {
+            v.push(*el);
+        }
+        v.into_iter()
+    }
 }
 
 

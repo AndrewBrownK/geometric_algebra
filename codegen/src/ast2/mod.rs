@@ -6,8 +6,8 @@ use crate::ast2::expressions::AnyExpression;
 pub mod datatype;
 mod playground;
 pub mod traits;
-mod expressions;
-mod impls;
+pub mod expressions;
+pub mod impls;
 // TODO Hamish recommends terms "intrinsic" and "extrinsic" instead of "Space" and "antispace"
 
 #[derive(PartialEq, Eq, Clone, Debug)]

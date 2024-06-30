@@ -3,20 +3,21 @@ use std::fmt::Debug;
 use std::ops::{Add, Mul, MulAssign};
 
 use im::HashMap;
-
+use parking_lot::RwLock;
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedSum, Product, Sum};
 use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-use crate::algebra2::basis::grades::{grade1, Grades};
+use crate::algebra2::basis::grades::{grade1};
 use crate::generator_squares;
 
 #[derive(Debug)]
 pub struct SubstitutionRepository {
     underlying_squares: GeneratorSquares,
+    substitution_anti_scalar: BasisElement,
     substitutions_to_underlying: HashMap<BasisElement, Sum>,
     underlying_to_substitutions: HashMap<BasisElement, Sum>,
-    substitution_products: HashMap<(BasisElement, BasisElement), Sum>,
-    substitution_anti_products: HashMap<(BasisElement, BasisElement), Sum>,
+    substitution_products: RwLock<HashMap<(BasisElement, BasisElement), Sum>>,
+    substitution_anti_products: RwLock<HashMap<(BasisElement, BasisElement), Sum>>,
 }
 
 
@@ -156,6 +157,9 @@ impl SubstitutionRepository {
             }
         }
 
+        // Prepare to acquire anti_scalar
+        let mut substitution_anti_scalar = None;
+
         // Start constructing higher grade elements
         let mut substitution_grade_n_elements = substitute_grade_1_elements.clone();
         for n in 1..substitute_grade_1_elements.len() {
@@ -191,9 +195,11 @@ impl SubstitutionRepository {
                         // Assume the substitution anti_scalar should be positive,
                         // and set underlying anti_scalar direction accordingly
                         if substitution_wedge.grade() == substitute_grade_1_elements.len() as u32
-                            && substitution_wedge.coefficient == 1
-                            && underlying_wedge[0].coefficient == -1.0 {
-                            underlying_squares.negative_anti_scalar = true;
+                            && substitution_wedge.coefficient == 1{
+                            substitution_anti_scalar = Some(substitution_wedge);
+                            if underlying_wedge[0].coefficient == -1.0 {
+                                underlying_squares.negative_anti_scalar = true;
+                            }
                         }
                         let s = Sum { sum: underlying_wedge };
                         substitutions_to_underlying.insert(substitution_wedge, s);
@@ -248,27 +254,34 @@ impl SubstitutionRepository {
             underlying_to_substitutions.insert(under.negate(), orig_substitutions.mul(-1.0));
         }
 
-        let substitution_products = HashMap::new();
-        let substitution_anti_products = HashMap::new();
+        let substitution_anti_scalar = substitution_anti_scalar
+            .expect("Must have found the substitution_anti_scalar");
+
+        let substitution_products = RwLock::new(HashMap::new());
+        let substitution_anti_products = RwLock::new(HashMap::new());
         let s = Self {
             underlying_squares,
+            substitution_anti_scalar,
             substitutions_to_underlying,
             underlying_to_substitutions,
             substitution_products,
             substitution_anti_products,
         };
-        // eprintln!("SubstitutionRepository: {s}");
+        // eprintln!("SubstitutionRepository: {s:?}");
         s
     }
 
-    pub fn product(&mut self, a: &BasisElement, b: &BasisElement) -> Sum {
+    pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
         // eprintln!("Attempting {a} * {b}");
-        self.substitution_products.entry((*a, *b))
+        if let Some(p) = self.substitution_products.read().get(&(a, b)) {
+            return p.clone();
+        }
+        self.substitution_products.write().entry((a, b))
             .or_insert_with(|| {
                 let a_ = self.substitutions_to_underlying.get(&a).cloned()
-                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: *a }] });
+                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] });
                 let b_ = self.substitutions_to_underlying.get(&b).cloned()
-                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: *b }] });
+                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: b }] });
                 // eprintln!("    Underlying factors: {a_}, {b_}");
                 let mut result = Sum { sum: vec![] };
                 let underlying_product = a_.multiply(&b_, &self.underlying_squares);
@@ -288,13 +301,16 @@ impl SubstitutionRepository {
             }).clone()
     }
 
-    pub fn anti_product(&mut self, a: &BasisElement, b: &BasisElement) -> Sum {
-        self.substitution_anti_products.entry((*a, *b))
+    pub fn anti_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        if let Some(p) = self.substitution_anti_products.read().get(&(a, b)) {
+            return p.clone();
+        }
+        self.substitution_anti_products.write().entry((a, b))
             .or_insert_with(|| {
                 let a_ = self.substitutions_to_underlying.get(&a).cloned()
-                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: *a }] });
+                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] });
                 let b_ = self.substitutions_to_underlying.get(&b).cloned()
-                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: *b }] });
+                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: b }] });
                 let mut result = Sum { sum: vec![] };
                 let underlying_product = a_.anti_multiply(&b_, &self.underlying_squares);
                 for underlying_term in underlying_product.sum.into_iter() {
@@ -308,6 +324,10 @@ impl SubstitutionRepository {
                 }
                 result
             }).clone()
+    }
+
+    pub fn anti_scalar(&self) -> BasisElement {
+        self.substitution_anti_scalar
     }
 }
 
@@ -1401,9 +1421,15 @@ fn conformal_3d_geometric_products() {
         ("e12345", "e12345", vec!["-1"]),
     ]};
 
+    // Forward or Backward underlying anti-scalar, it must fulfill the
+    // same results at the substitution level either way.
+
     let mut cga3d
         = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
         + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
+    // let mut cga3d
+    //     = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
+    //     + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
 
     let mut failures = 0;
     let mut correct_products = BTreeMap::new();
@@ -1447,7 +1473,7 @@ fn conformal_3d_geometric_products() {
             a.coefficient = a_sign;
             b.coefficient = b_sign;
 
-            let calculated_product = cga3d.product(&a, &b);
+            let calculated_product = cga3d.product(a, b);
             if calculated_product != correct_product {
                 eprintln!("{a} * {b} was calculated as {calculated_product}, but we expected {correct_product}");
                 failures = failures + 1;
@@ -1456,7 +1482,6 @@ fn conformal_3d_geometric_products() {
     }
     assert_eq!(failures, 0, "Conformal Geometric Product has {failures} errors.")
 }
-
 
 #[test]
 fn conformal_3d_geometric_anti_products() {
@@ -2488,9 +2513,15 @@ fn conformal_3d_geometric_anti_products() {
         ("e12345", "e12345", vec!["e12345"]),
     ]};
 
+    // Forward or Backward underlying anti-scalar, it must fulfill the
+    // same results at the substitution level either way.
+
     let mut cga3d
         = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
         + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
+    // let mut cga3d
+    //     = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
+    //     + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
 
     let mut failures = 0;
     let mut correct_anti_products = BTreeMap::new();
@@ -2534,7 +2565,7 @@ fn conformal_3d_geometric_anti_products() {
             a.coefficient = a_sign;
             b.coefficient = b_sign;
 
-            let calculated_anti_product = cga3d.anti_product(&a, &b);
+            let calculated_anti_product = cga3d.anti_product(a, b);
             if calculated_anti_product != correct_anti_product {
                 eprintln!("{a} * {b} was calculated as {calculated_anti_product}, but we expected {correct_anti_product}");
                 failures = failures + 1;
@@ -2542,4 +2573,29 @@ fn conformal_3d_geometric_anti_products() {
         }
     }
     assert_eq!(failures, 0, "Conformal Geometric AntiProduct has {failures} errors.")
+}
+
+#[test]
+fn support_both_underlying_anti_scalar_directions() {
+
+    let cga3d_same_anti_scalars
+        = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
+        + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
+    let cga3d_opposite_anti_scalars
+        = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
+        + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
+
+    use crate::algebra2::basis::elements::*;
+
+    let a = &cga3d_same_anti_scalars.substitutions_to_underlying[&e12345];
+    assert_eq!(a.sum.len(), 1);
+    let a = a.sum[0];
+    let b = Product { coefficient: 1.0, element: e123.wedge(eA).wedge(eB) };
+    assert_eq!(a, b, "Same direction anti-scalars failed");
+
+    let a = &cga3d_opposite_anti_scalars.substitutions_to_underlying[&e12345];
+    assert_eq!(a.sum.len(), 1);
+    let a = a.sum[0];
+    let b = -1.0 * b;
+    assert_eq!(a, b, "Opposite direction anti-scalars failed");
 }

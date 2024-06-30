@@ -1,79 +1,93 @@
-use std::num::NonZeroU8;
-use crate::algebra2::basis::BasisElement;
-use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
+use crate::algebra2::basis::arithmetic::{GradedProduct, Product, Sum};
+use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra2::basis::generators::GeneratorSquares;
+use crate::algebra2::basis::grades::grade0;
+use crate::algebra2::basis::substitute::SubstitutionRepository;
 
-pub trait GeoAlg {
-    fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> i8;
-    fn anti_scalar(&self) -> BasisElement;
-}
+pub struct GeometricAlgebra(
+    SubstitutionRepository
+);
 
-pub trait DiagonalGeoAlg {
-    fn generator_squares(&self) -> GeneratorSquares;
-    fn anti_scalar(&self) -> BasisElement;
-}
-
-
-
-
-pub struct DiagonalSquares<GA: DiagonalGeoAlg>(GA);
-impl<GA: DiagonalGeoAlg> GeoAlg for DiagonalSquares<GA> {
-    fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> i8 {
-        if a.grade() != b.grade() {
-            return 0;
-        }
-        if a.signature() != b.signature() {
-            return 0;
-        }
-        let gs = self.0.generator_squares();
-        a.coefficient() * b.coefficient() * gs.square_element(a)
+impl GeometricAlgebra {
+    pub fn from_squares(generator_squares: GeneratorSquares) -> Self {
+        Self::from_substitutions(SubstitutionRepository::new(generator_squares, vec![]))
     }
-    fn anti_scalar(&self) -> BasisElement {
+
+    pub fn from_substitutions(substitution_repository: SubstitutionRepository) -> Self {
+        Self(substitution_repository)
+    }
+
+    pub fn anti_scalar(&self) -> BasisElement {
         self.0.anti_scalar()
     }
-}
 
-
-pub struct GA_<GA: GeoAlg>(GA);
-impl<GA: GeoAlg> GA_<GA> {
-    // TODO tests
-    pub fn geometric_product(&self, a: BasisElement, b: BasisElement) -> Vec<BasisElement> {
-        // TODO implementation
-        let w = a.wedge(b);
-        let d = self.0.exomorphism_metric(a, b);
-        vec![]
+    pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        self.0.product(a, b)
     }
-}
 
-
-
-
-
-
-
-
-pub struct VanillaArrows {
-    dimensions: u8,
-    squares: GeneratorSquares
-}
-impl VanillaArrows {
-    pub fn new(first_basis: GeneratorElement, dimensions: NonZeroU8) -> Self {
-        let dimensions = dimensions.get();
-        let mut d_remaining = dimensions;
-        let mut squares = GeneratorSquares::new([(first_basis, 1i8)]);
-        d_remaining -= 1;
-        while d_remaining > 0 {
-            d_remaining -= 1;
-            let _: anyhow::Result<()> = try {
-                let next_basis = squares.next_available_basis()?;
-                squares = squares.append([(next_basis, 1i8)])?;
-                ()
-            };
-        }
-        VanillaArrows { squares, dimensions }
+    pub fn anti_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        self.0.anti_product(a, b)
     }
+
+    // // TODO you might want to check out page 134 before you settle into this.
+    // //  Additionally, different factions can't even agree on what the dot product is
+    // //  I'm probably better off deriving an exomorphism metric instead of grade selecting the product.
+    // pub fn dot(&self, a: BasisElement, b: BasisElement) -> Product {
+    //     // Feels a bit dirty and expensive to implement dot product this way.
+    //     // But since this is code generation and not actual number crunching,
+    //     // it should be fine... Not that I wouldn't happily accept something
+    //     // better.
+    //     let mut s = self.product(a, b);
+    //     s.sum.retain(|p| p.element.grade() == 0);
+    //     s.sort_and_simplify();
+    //     if s.sum.is_empty() {
+    //         return Product {
+    //             coefficient: 0.0,
+    //             element: BasisElement::scalar(),
+    //         };
+    //     }
+    //     assert_eq!(s.sum.len(), 1);
+    //     let p = s.sum[0];
+    //     assert_eq!(p.element.signature(), BasisSignature::scalar);
+    //     p
+    // }
+    //
+    // pub fn anti_dot(&self, a: BasisElement, b: BasisElement) -> Product {
+    //     // Feels a bit dirty and expensive to implement dot product this way.
+    //     // But since this is code generation and not actual number crunching,
+    //     // it should be fine... Not that I wouldn't happily accept something
+    //     // better.
+    //     let anti_scalar = self.anti_scalar();
+    //     let anti_scalar_grade = anti_scalar.grade();
+    //     let mut s = self.anti_product(a, b);
+    //     s.sum.retain(|p| p.element.grade() == anti_scalar_grade);
+    //     s.sort_and_simplify();
+    //     if s.sum.is_empty() {
+    //         return Product {
+    //             coefficient: 0.0,
+    //             element: anti_scalar,
+    //         };
+    //     }
+    //     assert_eq!(s.sum.len(), 1);
+    //     let p = s.sum[0];
+    //     assert_eq!(p.element.signature(), anti_scalar.signature());
+    //     p
+    // }
+
+    // pub fn right_complement(&self, a: BasisElement) -> BasisElement {
+    //     self.
+    // }
+
+    // pub fn wedge(&self, a: BasisElement, b: BasisElement) -> Option<BasisElement> {
+    //     let c = a.wedge(b);
+    //     if c.coefficient() == 0 {
+    //         return None;
+    //     }
+    //     Some(c)
+    // }
+    //
+    // pub fn anti_wedge(&self, a: BasisElement, b: BasisElement) -> Option<BasisElement> {
+    //
+    // }
 }
-// impl GeoAlg for VanillaArrows {
-//     fn exomorphism_metric(&self, a: BasisElement, b: BasisElement) -> BasisElement {
-//         todo!()
-//     }
-// }
+
