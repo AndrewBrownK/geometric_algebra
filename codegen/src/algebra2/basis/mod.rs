@@ -677,22 +677,20 @@ impl BasisElementNames {
         return el
     }
 
-    /// Give a name and sign to a BasisElement, if the direction
-    /// of your BasisElement is not critical yet. In other words,
-    /// this will give the positive direction of any BasisElement,
-    /// whether it is an odd permutation or even permutation.
+    /// Give a name and sign to a BasisElement, if the direction of your BasisElement is not of
+    /// critical relied upon yet. In other words, this will give the positive direction of any
+    /// BasisElement, according to the name's preference as an odd or even permutation.
     pub fn provide_name_and_sign(&self, mut el: BasisElement) -> BasisElement {
         let existing = if el.coefficient == 0 {
             self.zero
         } else {
             self.elements.get(&el.signature).cloned()
         };
+        el.coefficient = 1;
         if let Some(dn) = existing {
             el.display_name = Some(dn);
             if dn.negate_display {
                 el.coefficient = -1;
-            } else {
-                el.coefficient = 1;
             }
         }
         return el

@@ -216,6 +216,7 @@ macro_rules! multi_vec {
     // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as tuples)
     (D=$u8_lit:expr; $mv_name:ident => $( ($($basis_element:expr),+ $(,)?)),+ $(,)?) => {
         {
+            use $crate::algebra2::basis::elements::*;
             use $crate::algebra2::multivector::TupleToGroup;
             let name: &'static str = stringify!($mv_name);
             let groups: std::vec::Vec<$crate::algebra2::multivector::BasisElementGroup> = vec![
@@ -227,20 +228,22 @@ macro_rules! multi_vec {
     // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as arrays)
     (D=$u8_lit:expr; $mv_name:ident => $( [$($basis_element:expr),+ $(,)?]),+ $(,)?) => {
         {
-            use crate::algebra2::multivector::TupleToGroup;
+            use $crate::algebra2::basis::elements::*;
+            use $crate::algebra2::multivector::TupleToGroup;
             let name: &'static str = stringify!($mv_name);
-            let groups: std::vec::Vec<crate::algebra2::multivector::BasisElementGroup> = vec![
+            let groups: std::vec::Vec<$crate::algebra2::multivector::BasisElementGroup> = vec![
                 $( ($($basis_element),+,).tuple_to_group() ),+
             ];
-            crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
+            $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
         }
     };
     // Accepts a string literal, a u8 literal, and a list of BasisElement
     (D=$u8_lit:expr; $mv_name:ident => $( $basis_element:expr ),+ $(,)?) => {
         {
+            use $crate::algebra2::basis::elements::*;
             let name: &'static str = stringify!($mv_name);
-            let elements: std::vec::Vec<crate::algebra2::multivector::BasisElement> = vec![$($basis_element),+,];
-            crate::algebra2::multivector::MultiVec::<$u8_lit>::new(name, elements)
+            let elements: std::vec::Vec<$crate::algebra2::multivector::BasisElement> = vec![$($basis_element),+,];
+            $crate::algebra2::multivector::MultiVec::<$u8_lit>::new(name, elements)
         }
     };
 }

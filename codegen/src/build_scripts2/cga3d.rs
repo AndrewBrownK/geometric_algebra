@@ -16,9 +16,6 @@ pub fn cga3d_script() {
     // TODO get TraitImplRegistry, TraitDefRegistry
     // TODO MultiVectorRegistry?
 
-
-    use crate::algebra2::basis::elements::*;
-
     let flat_point = multi_vec!(D=5; FlatPoint => [e15, e25, e35, e45]);
     let line = multi_vec!(D=5; Line => [e415, e425, e435], [e235, e315, e125]);
     let plane = multi_vec!(D=5; Plane => [e4235, e4315, e4125, e3215]);
