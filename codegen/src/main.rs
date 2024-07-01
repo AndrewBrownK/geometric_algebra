@@ -10,6 +10,7 @@
 #![feature(const_trait_impl, effects)]
 #![feature(marker_trait_attr)]
 #![feature(const_mut_refs)]
+#![feature(concat_idents)]
 
 mod algebra;
 mod ast;
@@ -19,17 +20,14 @@ mod impls;
 mod validate;
 mod shader_support;
 pub mod ast2;
-pub mod algebra2 {
-    pub mod basis;
-    pub mod multivector;
-    pub mod algebra;
-}
+pub mod algebra2;
 mod utility;
 
 mod build_scripts2 {
     pub mod common_traits;
     pub mod cga3d;
     pub mod rga3d;
+    pub mod uwu;
 }
 
 mod build_scripts {

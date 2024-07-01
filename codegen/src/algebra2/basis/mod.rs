@@ -617,6 +617,10 @@ impl BasisElement {
         let w = s.wedge(o);
         w.left_complement(anti_scalar)
     }
+
+    pub const fn is_wedge_on(&self, other: BasisElement) -> bool {
+        self.signature.contains(other.signature)
+    }
 }
 
 
@@ -901,6 +905,9 @@ pub mod elements {
     pub const e_inf: BasisElement = eD.with_name("e_inf", false);
     pub const e_plus: BasisElement = eE.with_name("e_plus", false);
     pub const e_minus: BasisElement = eF.with_name("e_minus", false);
+    pub const eI: BasisElement = eD.with_name("eI", false);
+    pub const eP: BasisElement = eE.with_name("eP", false);
+    pub const eM: BasisElement = eF.with_name("eM", false);
 
 
     // And so for that matter... Let's provide some wedges for the common dimensions.

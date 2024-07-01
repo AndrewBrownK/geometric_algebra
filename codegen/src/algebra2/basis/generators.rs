@@ -394,6 +394,9 @@ pub const eF: GeneratorElement = GeneratorElement::eF;
 pub const e_inf: GeneratorElement = GeneratorElement::eD;
 pub const e_plus: GeneratorElement = GeneratorElement::eE;
 pub const e_minus: GeneratorElement = GeneratorElement::eF;
+pub const eI: GeneratorElement = GeneratorElement::eD;
+pub const eP: GeneratorElement = GeneratorElement::eE;
+pub const eM: GeneratorElement = GeneratorElement::eF;
 
 
 impl GeneratorElement {

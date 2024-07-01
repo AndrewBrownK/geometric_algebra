@@ -27,7 +27,8 @@ mod impls {
     use crate::algebra2::basis::BasisSignature;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitImpl_10, TraitImpl_11, TraitImplBuilder};
+    use crate::ast2::traits::{HasNotReturned, TraitImpl_10, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
+    use crate::ast2::Variable;
 
     #[derive(Clone, Copy)]
     pub struct ZeroImpl;
@@ -111,5 +112,18 @@ mod impls {
         }
     }
 
+    #[derive(Clone, Copy)]
+    pub struct WedgeImpl;
+    #[async_trait]
+    impl TraitImpl_22 for WedgeImpl {
+        type Output = MultiVector;
+        async fn general_implementation<'impls>(
+            b: TraitImplBuilder<'impls, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+            todo!()
+        }
+    }
 
 }

@@ -8,7 +8,8 @@ use either::Either;
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
 use regex::Regex;
-use crate::algebra2::algebra::GeometricAlgebra;
+use crate::algebra2::GeometricAlgebra;
+use crate::algebra2::multivector::MultiVecRepository;
 use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, TraitResultType};
@@ -131,11 +132,12 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
+        let mvs = b.mvs.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let builder = TraitImplBuilder::new(
-                ga, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let trait_impl = Self::general_implementation(builder, owner_clone.clone()).await?;
             Some(trait_impl.into_trait10(owner_clone))
@@ -181,7 +183,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
         let slf = self.clone();
         let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let builder = TraitImplBuilder::new(
-            b.ga.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
         let trait_impl = Self::general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
@@ -245,13 +247,14 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
+        let mvs = b.mvs.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = param_self();
             fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                ga, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -301,7 +304,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
         let slf = self.clone();
         let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let mut builder = TraitImplBuilder::new(
-            b.ga.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = Self::general_implementation(builder, owner).await?;
@@ -372,13 +375,14 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
+        let mvs = b.mvs.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = param_self();
             fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
             let builder = TraitImplBuilder::new(
-                ga, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -430,7 +434,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
         let slf = self.clone();
         let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let mut builder = TraitImplBuilder::new(
-            b.ga.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = Self::general_implementation(builder, owner, other).await?;
@@ -502,6 +506,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
+        let mvs = b.mvs.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -510,7 +515,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
             fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
             fresh_variable_scope.insert(declare_other.name.clone(), declare_other.clone());
             let builder = TraitImplBuilder::new(
-                ga, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
+                ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
             let var_self: Variable<MultiVector> = Variable {
                 expr_type: owner_class_clone.clone(),
@@ -567,7 +572,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
         let slf = self.clone();
         let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
         let mut builder = TraitImplBuilder::new(
-            b.ga.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
         let owner = builder.coerce_variable("self", owner);
         let other = builder.coerce_variable("other", other);
@@ -789,6 +794,7 @@ pub enum CommentOrVariableDeclaration {
 
 pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
     pub ga: Arc<GeometricAlgebra>,
+    pub mvs: Arc<MultiVecRepository>,
     // TODO statistics tracker for fun
     registry: TraitImplRegistry,
     trait_def: Arc<RawTraitDefinition>,
@@ -811,6 +817,7 @@ pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
 impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     fn new(
         ga: Arc<GeometricAlgebra>,
+        mvs: Arc<MultiVecRepository>,
         trait_def: Arc<RawTraitDefinition>,
         registry: TraitImplRegistry,
         inline_dependencies: bool,
@@ -819,6 +826,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     ) -> Self {
         TraitImplBuilder {
             ga,
+            mvs,
             registry,
             trait_def,
             inline_dependencies,
@@ -927,6 +935,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
         let return_type = expr.strong_expression_type();
         return Some(TraitImplBuilder {
             ga: self.ga.clone(),
+            mvs: self.mvs.clone(),
             registry: self.registry,
             // trait_def: self.trait_def,
             trait_def: self.trait_def,
@@ -1160,7 +1169,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
     fn into_trait22(
         self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        return Arc::new(RawTraitImplementation {
+        let the_impl = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -1176,6 +1185,9 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
             specialized: self.specialized,
         });
+        // TODO record wanted MultiVecs
+        // self.
+        return the_impl;
     }
 }
 

@@ -1,9 +1,21 @@
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::{Debug, Display, Formatter};
+use std::sync::Arc;
+use std::sync::atomic::Ordering;
+
+use atom::AtomSetOnce;
 use lazy_static::lazy_static;
+use parking_lot::Mutex;
+use paste::paste;
 use regex::Regex;
 use tinyvec::{array_vec, ArrayVec, TinyVec};
+
+use MultiVecRepository::D1;
+
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::GeometricAlgebra;
+use crate::ast2::traits::RawTraitImplementation;
 
 pub(crate) const fn num_elements(d: u8) -> usize {
     let d = d as u32;
@@ -43,7 +55,7 @@ pub const fn mono_grade_groups(d: u8) -> usize {
 
 
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct MultiVectorSignature<const D: u8>(ArrayVec<[BasisSignature; num_elements(D)]>)
     where [(); num_elements(D)]: Sized;
 
@@ -359,138 +371,74 @@ impl<T: Default> TupleToGroup<T> for [T; 1] {
     }
 }
 
-pub trait BoxIt {
-    fn box_it(self) -> BoxedMultiVec;
+pub trait ConsolidateEnum {
+    type Output;
+    fn consolidate_enum(self) -> Self::Output;
 }
-impl BoxIt for MultiVec<1> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D1(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<2> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D2(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<3> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D3(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<4> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D4(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<5> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D5(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<6> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D6(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<7> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D7(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<8> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D8(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<9> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D9(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<10> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D10(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<11> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D11(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<12> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D12(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<13> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D13(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<14> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D14(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<15> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D15(Box::new(self))
-    }
-}
-impl BoxIt for MultiVec<16> {
-    fn box_it(self) -> BoxedMultiVec {
-        BoxedMultiVec::D16(Box::new(self))
-    }
+macro_rules! consolidate_enum {
+    // literal based, with boxing
+    (box $impl_type:ident $variant_prefix:ident => $( $variants:literal ),+ $(,)?) => {
+        paste! {
+            #[derive(Clone, PartialEq, Eq, Hash, Debug)]
+            pub enum [<$impl_type Enum>] {
+                $([<$variant_prefix $variants>](Box<$impl_type<$variants>>)),+
+            }
+
+            $(impl ConsolidateEnum for $impl_type<$variants> {
+                type Output = [<$impl_type Enum>];
+                fn consolidate_enum(self) -> Self::Output {
+                    [<$impl_type Enum>]::[<$variant_prefix $variants>](Box::new(self))
+                }
+            })+
+        }
+    };
+    // literal based, no boxing
+    ($impl_type:ident $variant_prefix:ident => $( $variants:literal ),+ $(,)?) => {
+        paste! {
+            #[derive(Clone, PartialEq, Eq, Hash, Debug)]
+            pub enum [<$impl_type Enum>] {
+                $([<$variant_prefix $variants>]($impl_type<$variants>)),+
+            }
+
+            $(impl ConsolidateEnum for $impl_type<$variants> {
+                type Output = [<$impl_type Enum>];
+                fn consolidate_enum(self) -> Self::Output {
+                    [<$impl_type Enum>]::[<$variant_prefix $variants>](self)
+                }
+            })+
+        }
+    };
 }
 
+consolidate_enum!(box MultiVec D => 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
 
-
-#[derive(Clone, PartialEq, Eq, Hash, Debug)]
-pub enum BoxedMultiVec {
-    D1(Box<MultiVec<1>>),
-    D2(Box<MultiVec<2>>),
-    D3(Box<MultiVec<3>>),
-    D4(Box<MultiVec<4>>),
-    D5(Box<MultiVec<5>>),
-    D6(Box<MultiVec<6>>),
-    D7(Box<MultiVec<7>>),
-    D8(Box<MultiVec<8>>),
-    D9(Box<MultiVec<9>>),
-    D10(Box<MultiVec<10>>),
-    D11(Box<MultiVec<11>>),
-    D12(Box<MultiVec<12>>),
-    D13(Box<MultiVec<13>>),
-    D14(Box<MultiVec<14>>),
-    D15(Box<MultiVec<15>>),
-    D16(Box<MultiVec<16>>),
-}
-impl BoxedMultiVec {
+impl MultiVecEnum {
     pub fn adapt_eq<const D: u8>(&self, other: &MultiVec<D>) -> bool where
-        MultiVec<D>: BoxIt,
+        MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
         [(); mono_grade_groups(D)]: Sized,
         [(); num_elements(D)]: Sized {
 
-        self == &other.clone().box_it()
+        self == &other.clone().consolidate_enum()
     }
 
     pub fn element_groups(&self) -> impl Iterator<Item=&BasisElementGroup> {
         match &self {
-            BoxedMultiVec::D1(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D2(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D3(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D4(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D5(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D6(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D7(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D8(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D9(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D10(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D11(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D12(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D13(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D14(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D15(mv) => mv.element_groups.iter(),
-            BoxedMultiVec::D16(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D1(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D2(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D3(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D4(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D5(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D6(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D7(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D8(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D9(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D10(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D11(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D12(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D13(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D14(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D15(mv) => mv.element_groups.iter(),
+            MultiVecEnum::D16(mv) => mv.element_groups.iter(),
         }
     }
 
@@ -555,3 +503,216 @@ fn test_construction() {
     );
     println!("{mvs:?}");
 }
+
+
+pub struct FallbackWasUsed(AtomSetOnce<Box<()>>);
+impl FallbackWasUsed {
+    pub fn new() -> Self {
+        FallbackWasUsed(AtomSetOnce::empty())
+    }
+
+    pub fn has_been_used(&self) -> bool {
+        !self.0.is_none(Ordering::AcqRel)
+    }
+
+    pub fn mark_used(&self) {
+        self.0.set_if_none(Box::new(()), Ordering::AcqRel);
+    }
+}
+
+
+pub struct DeclareMultiVecs<const D: u8> where
+    [(); mono_grade_groups(D)]: Sized,
+    [(); num_elements(D)]: Sized {
+
+    ga: Arc<GeometricAlgebra>,
+    anti_scalar_sig: BasisSignature,
+
+    declared: BTreeMap<MultiVectorSignature<D>, MultiVec<D>>,
+    fallback: BTreeMap<MultiVectorSignature<D>, (FallbackWasUsed, MultiVec<D>)>,
+
+    wanted: Mutex<BTreeMap<
+        MultiVectorSignature<D>,
+        Vec<Arc<RawTraitImplementation>>>>,
+    strongly_wanted: Mutex<BTreeMap<
+        MultiVectorSignature<D>,
+        Vec<Arc<RawTraitImplementation>>>>
+}
+
+impl<const D: u8> DeclareMultiVecs<D> where
+    [(); mono_grade_elements(D)]: Sized,
+    [(); mono_grade_groups(D)]: Sized,
+    [(); num_elements(D)]: Sized {
+
+    pub fn get_at_least(self: Arc<Self>, signature: MultiVectorSignature<D>) -> MultiVec<D> {
+        todo!()
+    }
+
+    pub fn get_exact(self: Arc<Self>, signature: MultiVectorSignature<D>) -> Option<MultiVec<D>> {
+        todo!()
+    }
+
+    pub fn declare(&mut self, multi_vec: MultiVec<D>) {
+        self.ga.internalize_element_names(&multi_vec);
+
+        // Is it really okay to mutate our fallbacks like this?
+        // Yes, because right now we have a &mut MultiVecRepositoryD<D>, where you can
+        // only put MultiVecs in, but not pull any out. You can't actually pull out any
+        // MultiVecs out (and thereby create a dependency on the directions of BasisElements in
+        // fallback MultiVecs) until you turn the repository immutable by wrapping it into an
+        // Arc<MultiVecRepositoryD<D>>
+
+        for (_, (_, mv)) in self.fallback.iter_mut() {
+            for group in mv.element_groups.iter_mut() {
+                for el in group.iter_mut() {
+                    *el = self.ga.name_and_sign_out(*el);
+                }
+            }
+        }
+        self.declared.insert(multi_vec.signature, multi_vec);
+    }
+    fn fallback_multi_vec(&mut self, multi_vec: MultiVec<D>) {
+        self.fallback.insert(multi_vec.signature, (FallbackWasUsed::new(), multi_vec));
+    }
+
+    pub fn new(ga: Arc<GeometricAlgebra>) -> Self {
+        let anti_scalar = ga.anti_scalar();
+        let gr = anti_scalar.grade();
+        if D as u32 != gr {
+            panic!("Cannot create a MultiVec of D={D} using GeometricAlgebra of dimension {gr}");
+        }
+        let mut mvr = DeclareMultiVecs {
+            ga: ga.clone(),
+            anti_scalar_sig: anti_scalar.signature(),
+            declared: BTreeMap::new(),
+            fallback: BTreeMap::new(),
+            wanted: Mutex::new(BTreeMap::new()),
+            strongly_wanted: Mutex::new(BTreeMap::new()),
+        };
+
+        // Generate fallback types.
+        use crate::algebra2::basis::elements::*;
+        mvr.fallback_multi_vec(MultiVec::<D>::new("Scalar", [scalar]));
+        mvr.fallback_multi_vec(MultiVec::<D>::new("AntiScalar", [anti_scalar]));
+        mvr.fallback_multi_vec(MultiVec::<D>::new("DualNum", [scalar, anti_scalar]));
+        mvr.fallback_multi_vec(MultiVec::<D>::new("MultiVector", ga.all_elements()));
+        // 1..D skips scalar and anti_scalar
+        for gr in 1..D {
+            let els: Vec<_> = ga.all_elements().filter(|el| el.grade() == gr as u32).collect();
+            if els.is_empty() {
+                panic!("There are no BasisElements of grade {gr} for our GA of D={D}")
+            }
+            let mv = match gr {
+                // 0 is Scalar, defined above
+                1 => MultiVec::<D>::new("Vector", els),
+                2 => MultiVec::<D>::new("BiVector", els),
+                3 => MultiVec::<D>::new("TriVector", els),
+                4 => MultiVec::<D>::new("QuadVector", els),
+                5 => MultiVec::<D>::new("VectorGr5", els),
+                6 => MultiVec::<D>::new("VectorGr6", els),
+                7 => MultiVec::<D>::new("VectorGr7", els),
+                8 => MultiVec::<D>::new("VectorGr8", els),
+                9 => MultiVec::<D>::new("VectorGr9", els),
+                10 => MultiVec::<D>::new("VectorGr10", els),
+                11 => MultiVec::<D>::new("VectorGr11", els),
+                12 => MultiVec::<D>::new("VectorGr12", els),
+                13 => MultiVec::<D>::new("VectorGr13", els),
+                14 => MultiVec::<D>::new("VectorGr14", els),
+                15 => MultiVec::<D>::new("VectorGr15", els),
+                // 16 would be AntiScalar, defined above
+                _ => panic!("MultiVecs of D<0 or D>16 are not supported"),
+            };
+            mvr.fallback_multi_vec(mv);
+        }
+
+        mvr
+    }
+}
+
+pub enum MultiVecRepository {
+    D1(DeclareMultiVecs<1>),
+    D2(DeclareMultiVecs<2>),
+    D3(DeclareMultiVecs<3>),
+    D4(DeclareMultiVecs<4>),
+    D5(DeclareMultiVecs<5>),
+    D6(DeclareMultiVecs<6>),
+    D7(DeclareMultiVecs<7>),
+    D8(DeclareMultiVecs<8>),
+    D9(DeclareMultiVecs<9>),
+    D10(DeclareMultiVecs<10>),
+    D11(DeclareMultiVecs<11>),
+    D12(DeclareMultiVecs<12>),
+    D13(DeclareMultiVecs<13>),
+    D14(DeclareMultiVecs<14>),
+    D15(DeclareMultiVecs<15>),
+    D16(DeclareMultiVecs<16>),
+}
+
+
+// TODO maybe only allow adding declarations to the repo with const generic, and
+//  only allow pulling out MultiVecs from this one without const generic
+impl MultiVecRepository {
+    pub fn declare_multi_vec<const D: u8>(&mut self, multi_vec: MultiVec<D>) where
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized {
+
+        match (D, self) {
+            (1, D1(mvr)) => {
+
+            }
+            (2, D1(mvr)) => {
+
+            }
+            (3, D1(mvr)) => {
+
+            }
+            (4, D1(mvr)) => {
+
+            }
+            (5, D1(mvr)) => {
+
+            }
+            (6, D1(mvr)) => {
+
+            }
+            (7, D1(mvr)) => {
+
+            }
+            (8, D1(mvr)) => {
+
+            }
+            (9, D1(mvr)) => {
+
+            }
+            (10, D1(mvr)) => {
+
+            }
+            (11, D1(mvr)) => {
+
+            }
+            (12, D1(mvr)) => {
+
+            }
+            (13, D1(mvr)) => {
+
+            }
+            (14, D1(mvr)) => {
+
+            }
+            (15, D1(mvr)) => {
+
+            }
+            (16, D1(mvr)) => {
+
+            }
+            (_, _) => panic!("MultiVecs of D<0 or D>16 are not supported"),
+        }
+    }
+}
+
+
+
+
+
+
+//

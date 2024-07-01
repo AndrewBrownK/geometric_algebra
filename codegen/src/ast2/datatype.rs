@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::Grades;
-use crate::algebra2::multivector::{BoxedMultiVec, BoxIt, mono_grade_groups, MultiVec, num_elements};
+use crate::algebra2::multivector::{MultiVecEnum, ConsolidateEnum, mono_grade_groups, MultiVec, num_elements};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 // TODO move these items to better locations
 
@@ -16,7 +16,7 @@ pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Vec4;
 #[derive(PartialEq, Eq, Clone, Debug, Hash)]
-pub struct MultiVector(Arc<BoxedMultiVec>);
+pub struct MultiVector(Arc<MultiVecEnum>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionType {
@@ -79,17 +79,17 @@ impl MultiVector {
 
 
 pub trait ClassesFromRegistry {
-    fn include_class(&self, mvc: &BoxedMultiVec) -> bool;
+    fn include_class(&self, mvc: &MultiVecEnum) -> bool;
 }
 pub struct NoParam;
 impl ClassesFromRegistry for NoParam {
-    fn include_class(&self, _: &BoxedMultiVec) -> bool {
+    fn include_class(&self, _: &MultiVecEnum) -> bool {
         false
     }
 }
 pub struct AnyClasses;
 impl ClassesFromRegistry for AnyClasses {
-    fn include_class(&self, _: &BoxedMultiVec) -> bool {
+    fn include_class(&self, _: &MultiVecEnum) -> bool {
         true
     }
 }
@@ -98,14 +98,14 @@ impl ClassesFromRegistry for AnyClasses {
 
 /// Good for manual implementations
 pub struct Specifically<const D: u8>(MultiVec<D>) where
-    MultiVec<D>: BoxIt,
+    MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
     [(); mono_grade_groups(D)]: Sized,
     [(); num_elements(D)]: Sized;
 impl<const D: u8> ClassesFromRegistry for Specifically<D> where
-    MultiVec<D>: BoxIt,
+    MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
     [(); mono_grade_groups(D)]: Sized,
     [(); num_elements(D)]: Sized {
-    fn include_class(&self, mvc: &BoxedMultiVec) -> bool {
+    fn include_class(&self, mvc: &MultiVecEnum) -> bool {
         mvc.adapt_eq(&self.0)
     }
 }

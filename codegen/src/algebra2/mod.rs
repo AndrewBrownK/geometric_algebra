@@ -1,12 +1,16 @@
-use std::collections::HashMap;
 use std::sync::Arc;
+
 use parking_lot::RwLock;
-use crate::algebra2::basis::arithmetic::{GradedProduct, Product, Sum};
-use crate::algebra2::basis::{BasisElement, BasisElementNames, BasisSignature};
+
+use crate::algebra2::basis::{BasisElement, BasisElementNames};
+use crate::algebra2::basis::arithmetic::Sum;
 use crate::algebra2::basis::generators::GeneratorSquares;
-use crate::algebra2::basis::grades::grade0;
 use crate::algebra2::basis::substitute::SubstitutionRepository;
 use crate::algebra2::multivector::{mono_grade_elements, mono_grade_groups, MultiVec, num_elements};
+
+pub mod basis;
+pub mod multivector;
+
 
 pub struct GeometricAlgebra {
     repo: SubstitutionRepository,
@@ -14,6 +18,8 @@ pub struct GeometricAlgebra {
 }
 
 
+
+// TODO do a DETAILED search through macros for any unqualified types or symbols
 #[macro_export]
 macro_rules! ga {
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
@@ -21,18 +27,18 @@ macro_rules! ga {
             use $crate::algebra2::basis::generators::*;
             let gs = {
                 use $crate::algebra2::basis::generators::*;
-                let mut gs = GeneratorSquares::empty();
+                let mut gs = $crate::algebra2::basis::generators::GeneratorSquares::empty();
                 $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
                 gs
             };
-            $crate::algebra2::algebra::GeometricAlgebra::from_squares(gs)
+            $crate::algebra2::GeometricAlgebra::from_squares(gs)
         }
     };
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; where $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
             use $crate::algebra2::basis::generators::*;
             let gs = {
-                let mut gs = GeneratorSquares::empty();
+                let mut gs = $crate::algebra2::basis::generators::GeneratorSquares::empty();
                 $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
                 gs
             };
@@ -40,7 +46,7 @@ macro_rules! ga {
                 vec![$(($generator_element, $sum)),+]
             };
             let subs = $crate::algebra2::basis::substitute::SubstitutionRepository::new(gs, subs);
-            $crate::algebra2::algebra::GeometricAlgebra::from_substitutions(subs)
+            $crate::algebra2::GeometricAlgebra::from_substitutions(subs)
         }
     };
 }
@@ -66,6 +72,10 @@ impl GeometricAlgebra {
 
     fn name_out(&self, el: BasisElement) -> BasisElement {
         self.named_bases.read().provide_name(el)
+    }
+
+    fn name_and_sign_out(&self, el: BasisElement) -> BasisElement {
+        self.named_bases.read().provide_name_and_sign(el)
     }
 
     fn name_out_sum(&self, mut sum: Sum) -> Sum {
@@ -113,9 +123,7 @@ impl GeometricAlgebra {
         self.name_out(self.repo.apply_anti_metric(a))
     }
 
-
-    // TODO this is a temp method just for testing names on full_multi_vec
-    pub fn internalize_names<const D: u8>(&self, mv: MultiVec<D>)  where
+    fn internalize_element_names<const D: u8>(&self, mv: &MultiVec<D>)  where
         [(); mono_grade_groups(D)]: Sized,
         [(); num_elements(D)]: Sized,
         [(); mono_grade_elements(D)]: Sized {
@@ -142,18 +150,6 @@ impl GeometricAlgebra {
         }
         results.sort();
         results.into_iter()
-    }
-
-    pub fn full_multi_vector<const D: u8>(&self) -> MultiVec<D> where
-        [(); mono_grade_groups(D)]: Sized,
-        [(); num_elements(D)]: Sized  {
-
-        let anti_scalar = self.anti_scalar();
-        let gr = anti_scalar.grade() as u8;
-        if D != gr {
-            panic!("Cannot create a MultiVec of D={D} using GeometricAlgebra of dimension {gr}");
-        }
-        MultiVec::<D>::new("MultiVector", self.all_elements())
     }
 }
 

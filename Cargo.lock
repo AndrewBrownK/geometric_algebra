@@ -142,6 +142,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "atom"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1dcfa7026c8fa43fa767bff0b7cd4d1963cdfd946e0386bee93003e9b2498562"
+
+[[package]]
 name = "atomic-waker"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -340,12 +346,14 @@ version = "0.3.0"
 dependencies = [
  "anyhow",
  "async-trait",
+ "atom",
  "bitflags 2.5.0",
  "either",
  "im",
  "lazy_static",
  "naga",
  "parking_lot",
+ "paste",
  "rand",
  "regex",
  "tinyvec",
@@ -1232,9 +1240,9 @@ dependencies = [
 
 [[package]]
 name = "paste"
-version = "1.0.14"
+version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c"
+checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
 name = "percent-encoding"
