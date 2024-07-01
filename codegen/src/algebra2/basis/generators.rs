@@ -32,6 +32,7 @@ macro_rules! generator_squares {
 
 
 // TODO any chance of some of these being const fn?
+// TODO validate that only 1, 0, and -1 are used.
 impl GeneratorSquares {
     pub const fn anti_scalar(&self) -> BasisElement {
         let signature = self.active_bases;
@@ -385,6 +386,15 @@ pub const eC: GeneratorElement = GeneratorElement::eC;
 pub const eD: GeneratorElement = GeneratorElement::eD;
 pub const eE: GeneratorElement = GeneratorElement::eE;
 pub const eF: GeneratorElement = GeneratorElement::eF;
+
+// There is room for people to be weird and make these
+// generators square to unconventional values, but that
+// risk of breaking semantics is worth providing the
+// convenience of these already being defined.
+pub const e_inf: GeneratorElement = GeneratorElement::eD;
+pub const e_plus: GeneratorElement = GeneratorElement::eE;
+pub const e_minus: GeneratorElement = GeneratorElement::eF;
+
 
 impl GeneratorElement {
     pub const fn array() -> [Self; 16] {

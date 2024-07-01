@@ -826,6 +826,111 @@ pub mod elements {
     pub const e4125: BasisElement = const_parse("e4125");
     pub const e3215: BasisElement = const_parse("e3215");
 
+
+
+
+
+    // There is room for people to be weird and make these
+    // generators square to unconventional values, but that
+    // risk of breaking semantics is worth providing the
+    // convenience of these already being defined.
+    pub const e_inf: BasisElement = eD.with_name("e_inf", false);
+    pub const e_plus: BasisElement = eE.with_name("e_plus", false);
+    pub const e_minus: BasisElement = eF.with_name("e_minus", false);
+
+
+    // And so for that matter... Let's provide some wedges for the common dimensions.
+
+
+    // e_inf wedges
+
+    pub const e0I: BasisElement = const_parse("e0D").with_name("e0I", false);
+    pub const e1I: BasisElement = const_parse("e1D").with_name("e1I", false);
+    pub const e2I: BasisElement = const_parse("e2D").with_name("e2I", false);
+    pub const e3I: BasisElement = const_parse("e3D").with_name("e3I", false);
+
+    pub const e01I: BasisElement = const_parse("e01D").with_name("e01I", false);
+    pub const e02I: BasisElement = const_parse("e02D").with_name("e02I", false);
+    pub const e03I: BasisElement = const_parse("e03D").with_name("e03I", false);
+    pub const e12I: BasisElement = const_parse("e12D").with_name("e12I", false);
+    pub const e13I: BasisElement = const_parse("e13D").with_name("e13I", false);
+    pub const e23I: BasisElement = const_parse("e23D").with_name("e23I", false);
+
+    pub const e123I: BasisElement = const_parse("e123D").with_name("e123I", false);
+    pub const e023I: BasisElement = const_parse("e023D").with_name("e023I", false);
+    pub const e013I: BasisElement = const_parse("e013D").with_name("e013I", false);
+    pub const e012I: BasisElement = const_parse("e012D").with_name("e012I", false);
+
+    pub const e0123I: BasisElement = const_parse("e0123D").with_name("e0123I", false);
+
+
+    // e_plus
+
+    pub const e0P: BasisElement = const_parse("e0E").with_name("e0P", false);
+    pub const e1P: BasisElement = const_parse("e1E").with_name("e1P", false);
+    pub const e2P: BasisElement = const_parse("e2E").with_name("e2P", false);
+    pub const e3P: BasisElement = const_parse("e3E").with_name("e3P", false);
+
+    pub const e01P: BasisElement = const_parse("e01E").with_name("e01P", false);
+    pub const e02P: BasisElement = const_parse("e02E").with_name("e02P", false);
+    pub const e03P: BasisElement = const_parse("e03E").with_name("e03P", false);
+    pub const e12P: BasisElement = const_parse("e12E").with_name("e12P", false);
+    pub const e13P: BasisElement = const_parse("e13E").with_name("e13P", false);
+    pub const e23P: BasisElement = const_parse("e23E").with_name("e23P", false);
+
+    pub const e123P: BasisElement = const_parse("e123E").with_name("e123P", false);
+    pub const e023P: BasisElement = const_parse("e023E").with_name("e023P", false);
+    pub const e013P: BasisElement = const_parse("e013E").with_name("e013P", false);
+    pub const e012P: BasisElement = const_parse("e012E").with_name("e012P", false);
+
+    pub const e0123P: BasisElement = const_parse("e0123E").with_name("e0123P", false);
+
+
+    // e_minus
+
+    pub const e0M: BasisElement = const_parse("e0F").with_name("e0M", false);
+    pub const e1M: BasisElement = const_parse("e1F").with_name("e1M", false);
+    pub const e2M: BasisElement = const_parse("e2F").with_name("e2M", false);
+    pub const e3M: BasisElement = const_parse("e3F").with_name("e3M", false);
+
+    pub const e01M: BasisElement = const_parse("e01F").with_name("e01M", false);
+    pub const e02M: BasisElement = const_parse("e02F").with_name("e02M", false);
+    pub const e03M: BasisElement = const_parse("e03F").with_name("e03M", false);
+    pub const e12M: BasisElement = const_parse("e12F").with_name("e12M", false);
+    pub const e13M: BasisElement = const_parse("e13F").with_name("e13M", false);
+    pub const e23M: BasisElement = const_parse("e23F").with_name("e23M", false);
+
+    pub const e123M: BasisElement = const_parse("e123F").with_name("e123M", false);
+    pub const e023M: BasisElement = const_parse("e023F").with_name("e023M", false);
+    pub const e013M: BasisElement = const_parse("e013F").with_name("e013M", false);
+    pub const e012M: BasisElement = const_parse("e012F").with_name("e012M", false);
+
+    pub const e0123M: BasisElement = const_parse("e0123F").with_name("e0123M", false);
+
+
+    // e_plus and e_minus
+
+    pub const ePM: BasisElement = const_parse("eEF").with_name("ePM", false);
+
+    pub const e0PM: BasisElement = const_parse("e0EF").with_name("e0PM", false);
+    pub const e1PM: BasisElement = const_parse("e1EF").with_name("e1PM", false);
+    pub const e2PM: BasisElement = const_parse("e2EF").with_name("e2PM", false);
+    pub const e3PM: BasisElement = const_parse("e3EF").with_name("e3PM", false);
+
+    pub const e01PM: BasisElement = const_parse("e01EF").with_name("e01PM", false);
+    pub const e02PM: BasisElement = const_parse("e02EF").with_name("e02PM", false);
+    pub const e03PM: BasisElement = const_parse("e03EF").with_name("e03PM", false);
+    pub const e12PM: BasisElement = const_parse("e12EF").with_name("e12PM", false);
+    pub const e13PM: BasisElement = const_parse("e13EF").with_name("e13PM", false);
+    pub const e23PM: BasisElement = const_parse("e23EF").with_name("e23PM", false);
+
+    pub const e123PM: BasisElement = const_parse("e123EF").with_name("e123PM", false);
+    pub const e023PM: BasisElement = const_parse("e023EF").with_name("e023PM", false);
+    pub const e013PM: BasisElement = const_parse("e013EF").with_name("e013PM", false);
+    pub const e012PM: BasisElement = const_parse("e012EF").with_name("e012PM", false);
+
+    pub const e0123PM: BasisElement = const_parse("e0123EF").with_name("e0123PM", false);
+
     #[test]
     fn test_parse_custom_bases() {
         use std::fmt::Write;
