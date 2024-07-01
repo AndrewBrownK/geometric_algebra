@@ -213,7 +213,7 @@ impl<const D: u8> MultiVec<D> where
 
 #[macro_export]
 macro_rules! multi_vec {
-    // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as tuples)
+    // Accepts a u8 literal, an ident, and a list of BasisElementGroups (as tuples)
     (D=$u8_lit:expr; $mv_name:ident => $( ($($basis_element:expr),+ $(,)?)),+ $(,)?) => {
         {
             use $crate::algebra2::basis::elements::*;
@@ -225,7 +225,7 @@ macro_rules! multi_vec {
             $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
         }
     };
-    // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as arrays)
+    // Accepts a u8 literal, an ident, and a list of BasisElementGroups (as arrays)
     (D=$u8_lit:expr; $mv_name:ident => $( [$($basis_element:expr),+ $(,)?]),+ $(,)?) => {
         {
             use $crate::algebra2::basis::elements::*;
@@ -237,13 +237,28 @@ macro_rules! multi_vec {
             $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
         }
     };
-    // Accepts a string literal, a u8 literal, and a list of BasisElement
+    // Accepts a u8 literal, an ident, and a list of BasisElement
     (D=$u8_lit:expr; $mv_name:ident => $( $basis_element:expr ),+ $(,)?) => {
         {
             use $crate::algebra2::basis::elements::*;
             let name: &'static str = stringify!($mv_name);
             let elements: std::vec::Vec<$crate::algebra2::basis::BasisElement> = vec![$($basis_element),+,];
             $crate::algebra2::multivector::MultiVec::<$u8_lit>::new(name, elements)
+        }
+    };
+    // Accepts a u8 literal, an ident, and a list of BasisElementGroups
+    // (non-enclosed, but separated by pipes). This is kind of cheating
+    // because we are using an ident instead of an expr to allow us to chain
+    // with pipes.
+    (D=$u8_lit:expr; $mv_name:ident as $( $($basis_element:ident),+ $(,)?)|+ ) => {
+        {
+            use $crate::algebra2::basis::elements::*;
+            use $crate::algebra2::multivector::TupleToGroup;
+            let name: &'static str = stringify!($mv_name);
+            let groups: std::vec::Vec<$crate::algebra2::multivector::BasisElementGroup> = vec![
+                $( ($($basis_element),+,).tuple_to_group() ),+
+            ];
+            $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
         }
     };
 }
@@ -265,11 +280,23 @@ macro_rules! multi_vecs {
             ]
         }
     };
-    (D=$u8_lit:expr; $( $mv_name:ident => $( $basis_element:expr),+ $(,)? );+ $(;)?) => {
+    (D=$u8_lit:expr; $( $mv_name:ident => $($basis_element:expr),+ $(,)? );+ $(;)?) => {
         {
             use $crate::algebra2::basis::elements::*;
             vec![
                 $( multi_vec!(D=$u8_lit; $mv_name => $( $basis_element ),+) ),+
+            ]
+        }
+    };
+    // Accepts a u8 literal, an ident, and a list of BasisElementGroups
+    // (non-enclosed, but separated by pipes). This is kind of cheating
+    // because we are using an ident instead of an expr to allow us to chain
+    // with pipes.
+    (D=$u8_lit:expr; $( $mv_name:ident as $( $($basis_element:ident),+ $(,)?)|+ );+ $(;)?) => {
+        {
+            use $crate::algebra2::basis::elements::*;
+            vec![
+                $( multi_vec!(D=$u8_lit; $mv_name as $( $( $basis_element ),+ )|+ ) ),+
             ]
         }
     };
@@ -496,10 +523,35 @@ fn test_construction() {
     let circle_again = multi_vec!(D=5; Circle => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
     println!("{circle_again}");
 
-    let dipole_again = multi_vec!(D=5; Dipole => [e41, e42, e43], [e23, e31, e12], [e15, e25, e35, e45]);
+    let circle_again = multi_vec!(D=5; Circle => [e423, e431, e412, e321], [e415, e425, e435], [e235, e315, e125]);
+    println!("{circle_again}");
+
+    let dipole_again = multi_vec!(D=5; Dipole as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45);
     println!("{dipole_again}");
 
-    if dipole == dipole_again {
-        //
-    }
+
+    let mvs = multi_vecs!(D=5;
+        Scalar      => [scalar];
+        AntiScalar  => [e12345];
+        DualNum     => [scalar, e12345];
+    );
+    println!("{mvs:?}");
+    let mvs = multi_vecs!(D=5;
+        FlatPoint   => (e15, e25, e35, e45);
+        Line        => (e415, e425, e435), (e235, e315, e125);
+        Plane       => (e4235, e4315, e4125, e3215);
+    );
+    println!("{mvs:?}");
+    let mvs = multi_vecs!(D=5;
+        RoundPoint  => e1, e2, e3, e4, e5;
+        Dipole      => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45;
+        Circle      => e423, e431, e412, e321, e415, e425, e435, e235, e315, e125;
+        Sphere      => e1234, e4235, e4315, e4125, e3215;
+    );
+    println!("{mvs:?}");
+    let mvs = multi_vecs!(D=5;
+        Motor       as e415, e425, e435, e12345 | e235, e315, e125;
+        Flector     as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
+    );
+    println!("{mvs:?}");
 }
