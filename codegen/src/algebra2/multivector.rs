@@ -242,11 +242,39 @@ macro_rules! multi_vec {
         {
             use $crate::algebra2::basis::elements::*;
             let name: &'static str = stringify!($mv_name);
-            let elements: std::vec::Vec<$crate::algebra2::multivector::BasisElement> = vec![$($basis_element),+,];
+            let elements: std::vec::Vec<$crate::algebra2::basis::BasisElement> = vec![$($basis_element),+,];
             $crate::algebra2::multivector::MultiVec::<$u8_lit>::new(name, elements)
         }
     };
 }
+#[macro_export]
+macro_rules! multi_vecs {
+    (D=$u8_lit:expr; $( $mv_name:ident => $( ($($basis_element:expr),+ $(,)?)),+ $(,)? );+ $(;)?) => {
+        {
+            use $crate::algebra2::basis::elements::*;
+            vec![
+                $( multi_vec!(D=$u8_lit; $mv_name => $( ( $( $basis_element ),+ ) ),+ ) ),+
+            ]
+        }
+    };
+    (D=$u8_lit:expr; $( $mv_name:ident => $( [$($basis_element:expr),+ $(,)?]),+ $(,)? );+ $(;)?) => {
+        {
+            use $crate::algebra2::basis::elements::*;
+            vec![
+                $( multi_vec!(D=$u8_lit; $mv_name => $( [ $( $basis_element ),+ ] ),+ ) ),+
+            ]
+        }
+    };
+    (D=$u8_lit:expr; $( $mv_name:ident => $( $basis_element:expr),+ $(,)? );+ $(;)?) => {
+        {
+            use $crate::algebra2::basis::elements::*;
+            vec![
+                $( multi_vec!(D=$u8_lit; $mv_name => $( $basis_element ),+) ),+
+            ]
+        }
+    };
+}
+
 
 pub trait TupleToGroup<T: Default> {
     fn tuple_to_group(self) -> ArrayVec<[T; 4]>;
