@@ -105,9 +105,9 @@ mod impls {
             b: TraitImplBuilder<'impls, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
-            // TODO I need access to an anti_scalar, therefore I need
-            //  access to a GeometricAlgebra
-            todo!()
+            let anti_scalar = b.ga.anti_scalar();
+            let ag = owner.anti_grade(anti_scalar)?;
+            b.return_expr(IntExpr::Literal(ag))
         }
     }
 

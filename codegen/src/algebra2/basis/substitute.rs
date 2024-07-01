@@ -388,6 +388,10 @@ impl SubstitutionRepository {
         result
     }
 
+    pub fn anti_scalar(&self) -> BasisElement {
+        self.substitution_anti_scalar
+    }
+
     pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
         // eprintln!("Attempting {a} * {b}");
         if let Some(p) = self.substitution_products.read().get(&(a, b)) {
@@ -439,10 +443,6 @@ impl SubstitutionRepository {
                 }
                 result
             }).clone()
-    }
-
-    pub fn anti_scalar(&self) -> BasisElement {
-        self.substitution_anti_scalar
     }
 
     pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
