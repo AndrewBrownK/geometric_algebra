@@ -445,6 +445,15 @@ impl Mul<f32> for GeneratorElement {
         gp
     }
 }
+impl Mul<GeneratorElement> for f32 {
+    type Output = GradedProduct<{grade1}>;
+
+    fn mul(self, rhs: GeneratorElement) -> Self::Output {
+        let mut gp = rhs.into();
+        gp *= self;
+        gp
+    }
+}
 impl Add<GeneratorElement> for GeneratorElement {
     type Output = GradedSum<{grade1}>;
 
@@ -464,6 +473,15 @@ impl Add<GradedProduct<{grade1}>> for GeneratorElement {
         c
     }
 }
+impl Add<GeneratorElement> for GradedProduct<{grade1}> {
+    type Output = GradedSum<{grade1}>;
+
+    fn add(self, rhs: GeneratorElement) -> Self::Output {
+        let a: GradedProduct<{grade1}> = rhs * 1.0f32;
+        let c: GradedSum<{grade1}> = self + a;
+        c
+    }
+}
 impl Sub<GeneratorElement> for GeneratorElement {
     type Output = GradedSum<{grade1}>;
 
@@ -480,6 +498,15 @@ impl Sub<GradedProduct<{grade1}>> for GeneratorElement {
     fn sub(self, rhs: GradedProduct<{grade1}>) -> Self::Output {
         let a: GradedProduct<{grade1}> = self * 1.0f32;
         let c: GradedSum<{grade1}> = a - rhs;
+        c
+    }
+}
+impl Sub<GeneratorElement> for GradedProduct<{grade1}> {
+    type Output = GradedSum<{grade1}>;
+
+    fn sub(self, rhs: GeneratorElement) -> Self::Output {
+        let a: GradedProduct<{grade1}> = 1.0f32 * rhs;
+        let c: GradedSum<{grade1}> = self - a;
         c
     }
 }
