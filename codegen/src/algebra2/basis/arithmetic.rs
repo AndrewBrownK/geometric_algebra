@@ -29,7 +29,7 @@ pub struct GradedSum<const G: Grades>(PhantomData<Grades>, Sum);
 
 macro_rules! graded_sum {
     ($g:ty, $h:ty) => {
-        GradedSum<{<crate::algebra2::basis::grades::AddGradesImpl as crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT}>
+        GradedSum<{<$crate::algebra2::basis::grades::AddGradesImpl as $crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT}>
     };
 }
 

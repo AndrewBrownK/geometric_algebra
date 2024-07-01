@@ -97,7 +97,7 @@ impl ConstParamTy for Grades {}
 #[macro_export]
 macro_rules! grade_constraint {
     ($g:ty, $h:ty) => {
-        [(); <crate::algebra2::basis::grades::AddGradesImpl as crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT.into_bits() as usize]
+        [(); <$crate::algebra2::basis::grades::AddGradesImpl as $crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT.into_bits() as usize]
     };
 }
 

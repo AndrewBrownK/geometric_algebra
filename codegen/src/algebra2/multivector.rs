@@ -216,12 +216,12 @@ macro_rules! multi_vec {
     // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as tuples)
     ($str_lit:expr, $u8_lit:expr, $( ($($basis_element:expr),+ $(,)?)),+ $(,)?) => {
         {
-            use crate::algebra2::multivector::TupleToGroup;
+            use $crate::algebra2::multivector::TupleToGroup;
             let name: &'static str = $str_lit;
-            let groups: std::vec::Vec<crate::algebra2::multivector::BasisElementGroup> = vec![
+            let groups: std::vec::Vec<$crate::algebra2::multivector::BasisElementGroup> = vec![
                 $( ($($basis_element),+).tuple_to_group() ),+
             ];
-            crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups($str_lit, groups)
+            $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups($str_lit, groups)
         }
     };
     // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as arrays)

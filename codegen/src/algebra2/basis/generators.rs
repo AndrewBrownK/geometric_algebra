@@ -22,7 +22,7 @@ pub struct GeneratorSquares {
 macro_rules! generator_squares {
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
-            use crate::algebra2::basis::generators::*;
+            use $crate::algebra2::basis::generators::*;
             let mut gs = GeneratorSquares::empty();
             $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
             gs

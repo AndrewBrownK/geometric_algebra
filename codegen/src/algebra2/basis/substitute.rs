@@ -26,7 +26,7 @@ pub struct SubstitutionRepository {
 macro_rules! substitutions {
     ($( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
-            use crate::algebra2::basis::generators::*;
+            use $crate::algebra2::basis::generators::*;
             vec![$(($generator_element, $sum)),+]
         }
     };
@@ -2803,8 +2803,8 @@ fn support_both_underlying_anti_scalar_directions() {
 #[test]
 fn metric_using_substitutions() {
     let cga
-        = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
-        + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
+        = generator_squares!(1 => e1, e2, e3, e_plus; -1 => e_minus)
+        + substitutions!(e4 => 0.5 * (e_minus - e_plus); e5 => e_plus + e_minus);
 
     use crate::algebra2::basis::elements::*;
 
