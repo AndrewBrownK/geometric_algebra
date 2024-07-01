@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 use im::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 use std::marker::PhantomData;
-use crate::algebra2::basis::BasisElement;
+use crate::algebra2::basis::{BasisElement, BasisElementNames};
 use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
 use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::grade_constraint;
@@ -522,6 +522,7 @@ impl Sum {
             let mut j = 0;
             while j < b_len {
                 let b = &mut b[j];
+                BasisElementNames::contaminate(&mut a.element, &mut b.element);
                 if b.element != a.element {
                     break;
                 }

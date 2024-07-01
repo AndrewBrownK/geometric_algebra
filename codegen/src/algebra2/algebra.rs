@@ -1,57 +1,108 @@
+use std::collections::HashMap;
+use std::sync::Arc;
+use parking_lot::RwLock;
 use crate::algebra2::basis::arithmetic::{GradedProduct, Product, Sum};
-use crate::algebra2::basis::{BasisElement, BasisSignature};
+use crate::algebra2::basis::{BasisElement, BasisElementNames, BasisSignature};
 use crate::algebra2::basis::generators::GeneratorSquares;
 use crate::algebra2::basis::grades::grade0;
 use crate::algebra2::basis::substitute::SubstitutionRepository;
 
 
-// TODO I think I can pick back up in here.
-
-
-
-// TODO maybe you want to give it a name? and some other properties too?
-//  If you can't come up with something, you might want to leave it at SubstitutionRepository
-//  after all. Could also use this location to recover the names of BasisElements that might
-//  have been lost in calculation.
 pub struct GeometricAlgebra {
     repo: SubstitutionRepository,
+    named_bases: RwLock<BasisElementNames>
+}
+
+#[macro_export]
+macro_rules! ga {
+    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
+        {
+            let gs = $crate::algebra2::basis::generators::generator_squares!(
+                $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)?
+            );
+            $crate::algebra2::algebra::GeometricAlgebra::from_squares(gs)
+        }
+    };
+    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; sub $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
+        {
+            let gs = $crate::algebra2::basis::generators::generator_squares!(
+                $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)?
+            );
+            let subs = $crate::algebra2::basis::substitute::substitutions!(
+                $( $generator_element:expr => $sum:expr );+ $(;)?
+            )
+            let subs = $crate::algebra2::basis::substitute::SubstitutionRepository::new(gs, subs);
+            $crate::algebra2::algebra::GeometricAlgebra::from_substitutions(subs)
+        }
+    };
 }
 
 impl GeometricAlgebra {
-    pub fn from_squares(generator_squares: GeneratorSquares) -> Self {
+    pub fn from_squares(generator_squares: GeneratorSquares) -> Arc<Self> {
         Self::from_substitutions(SubstitutionRepository::new(generator_squares, vec![]))
     }
 
-    pub fn from_substitutions(substitution_repository: SubstitutionRepository) -> Self {
-        Self { repo: substitution_repository }
+    pub fn from_substitutions(substitution_repository: SubstitutionRepository) -> Arc<Self> {
+        Arc::new(Self { repo: substitution_repository, named_bases: RwLock::new(BasisElementNames::new()) })
+    }
+
+    fn name_in(&self, el: BasisElement) -> BasisElement {
+        if !self.named_bases.read().may_accept(el) {
+            return el;
+        }
+        match self.named_bases.write().accept_name(el) {
+            Ok(_) => el,
+            Err(err) => panic!("Conflicting element names for {el:?}: {err:?}"),
+        }
+    }
+
+    fn name_out(&self, el: BasisElement) -> BasisElement {
+        self.named_bases.read().provide_name(el)
+    }
+
+    fn name_out_sum(&self, mut sum: Sum) -> Sum {
+        for p in sum.sum.iter_mut() {
+            p.element = self.name_out(p.element);
+        }
+        sum
     }
 
     pub fn anti_scalar(&self) -> BasisElement {
-        self.repo.anti_scalar()
+        self.name_out(self.repo.anti_scalar())
     }
 
     pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
-        self.repo.product(a, b)
+        let a = self.name_in(a);
+        let b =self.name_in(b);
+        self.name_out_sum(self.repo.product(a, b))
     }
 
     pub fn anti_product(&self, a: BasisElement, b: BasisElement) -> Sum {
-        self.repo.anti_product(a, b)
+        let a = self.name_in(a);
+        let b =self.name_in(b);
+        self.name_out_sum(self.repo.anti_product(a, b))
     }
 
     pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
-        self.repo.scalar_product(a, b)
+        let a = self.name_in(a);
+        let b =self.name_in(b);
+        self.name_out_sum(self.repo.scalar_product(a, b))
     }
 
     pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
-        self.repo.anti_scalar_product(a, b)
+        let a = self.name_in(a);
+        let b =self.name_in(b);
+        self.name_out_sum(self.repo.anti_scalar_product(a, b))
     }
 
     pub fn apply_metric(&self, a: BasisElement) -> BasisElement {
-        self.repo.apply_metric(a)
+        let a = self.name_in(a);
+        self.name_out(self.repo.apply_metric(a))
     }
 
-    pub fn apply_anti_metric(&self, b: BasisElement) -> BasisElement {
-        self.repo.apply_anti_metric(b)
+    pub fn apply_anti_metric(&self, a: BasisElement) -> BasisElement {
+        let a = self.name_in(a);
+        self.name_out(self.repo.apply_anti_metric(a))
     }
 }
 

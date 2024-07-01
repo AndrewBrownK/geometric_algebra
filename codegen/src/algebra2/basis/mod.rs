@@ -152,6 +152,10 @@ impl BasisSignature {
 //  too (although so far I think it won't be necessary, I'll need to consider it). And overall
 //  I need to do research on how Rust community/documentation feels about such niche uses
 //  of Eq and if there are any show stopper problems I'm not yet foreseeing.
+
+// TODO actually the best solution might be to litter BasisElementNames::contaminate(&mut a, &mut b)
+//  the statement before any invocation of PartialEq or Eq
+
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct BasisElement {
     // BasisElements will mathematically operate
@@ -434,6 +438,9 @@ impl BasisElement {
         self.display_name = None;
         self
     }
+    pub const fn is_anon(&self) -> bool {
+        self.display_name.is_none()
+    }
 
     pub const fn reverse(&self) -> Self {
         let gr = self.grade();
@@ -618,6 +625,37 @@ impl BasisElementNames {
             elements: HashMap::new(),
         }
     }
+
+    pub fn contaminate(a: &mut BasisElement, b: &mut BasisElement) {
+        if a.signature != b.signature {
+            return
+        }
+        match (a.display_name, b.display_name) {
+            (None, None) => {}
+            (Some(an), None) => { b.display_name = Some(an.clone()) }
+            (None, Some(bn)) => { a.display_name = Some(bn.clone()) }
+            (Some(an), Some(bn)) => if an != bn {
+                panic!("Conflicting display names found for {a:?} and {b:?}")
+            },
+        }
+    }
+
+    /// This check will return true if you should attempt to accept_name ("should" including the
+    /// case of revealing a conflict in a Result::Err). This will return false if there is no reason
+    /// to invoke accept_name (no name on the BasisElement, or it is already the same as what we
+    /// have).
+    pub fn may_accept(&self, el: BasisElement) -> bool {
+        let a = match &el.display_name {
+            None => return false,
+            Some(a) => a,
+        };
+        let Some(b) = self.elements.get(&el.signature) else {
+            return true;
+        };
+        // This case will result in Result::Err, but we want that revealed
+        a != b
+    }
+
 
     /// Give a name to a BasisElement, if one exists.
     pub fn provide_name(&self, mut el: BasisElement) -> BasisElement {

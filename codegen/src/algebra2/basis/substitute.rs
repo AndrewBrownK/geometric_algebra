@@ -330,6 +330,7 @@ impl SubstitutionRepository {
     }
 
     fn substitute_element_to_underlying_sum(&self, a: BasisElement) -> Sum {
+        let a = a.anon();
         self.substitutions_to_underlying.get(&a).cloned()
             .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] })
     }
@@ -393,6 +394,8 @@ impl SubstitutionRepository {
     }
 
     pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        let a = a.anon();
+        let b = b.anon();
         // eprintln!("Attempting {a} * {b}");
         if let Some(p) = self.substitution_products.read().get(&(a, b)) {
             return p.clone();
@@ -421,6 +424,8 @@ impl SubstitutionRepository {
     }
 
     pub fn anti_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        let a = a.anon();
+        let b = b.anon();
         if let Some(p) = self.substitution_anti_products.read().get(&(a, b)) {
             return p.clone();
         }
@@ -446,6 +451,8 @@ impl SubstitutionRepository {
     }
 
     pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        let a = a.anon();
+        let b = b.anon();
         let a = self.substitute_element_to_underlying_sum(a);
         let b = self.substitute_element_to_underlying_sum(b);
         let mut underlying_result = Sum { sum: vec![] };
@@ -460,6 +467,8 @@ impl SubstitutionRepository {
     }
 
     pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        let a = a.anon();
+        let b = b.anon();
         let a = self.substitute_element_to_underlying_sum(a);
         let b = self.substitute_element_to_underlying_sum(b);
         let mut underlying_result = Sum { sum: vec![] };
@@ -523,6 +532,7 @@ impl SubstitutionRepository {
     }
 
     pub fn apply_anti_metric(&self, a: BasisElement) -> BasisElement {
+        let a = a.anon();
         let anti_scalar = self.anti_scalar();
         let a = a.right_complement(anti_scalar);
         let a = self.apply_metric(a);
