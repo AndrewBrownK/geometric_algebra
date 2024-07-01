@@ -82,7 +82,7 @@ impl Display for BasisSignature {
 impl BasisSignature {
 
     // Strange return type is because of const evaluation compatibility
-    const fn into_grade_1_signatures(self) -> (usize, [Option<BasisSignature>; 16]) {
+    const fn into_grade_1_signatures_const(self) -> (usize, [Option<BasisSignature>; 16]) {
         let mut result = [None; 16];
         let mut i = 0;
         let mut j = 0;
@@ -99,9 +99,12 @@ impl BasisSignature {
         (len, result)
     }
 
-    // TODO see if I really need this
+    pub fn into_grade_1_signatures(self) -> Vec<BasisSignature> {
+        self.into_grade_1_signatures_const().1.into_iter().filter_map(|it| it).collect()
+    }
+
     // Strange return type is because of const evaluation compatibility
-    const fn into_generator_elements(self) -> (usize, [Option<GeneratorElement>; 16]) {
+    const fn into_generator_elements_const(self) -> (usize, [Option<GeneratorElement>; 16]) {
         let mut result = [None; 16];
         let mut i = 0;
         let mut j = 0;
@@ -118,6 +121,10 @@ impl BasisSignature {
             }
         }
         (len, result)
+    }
+
+    pub fn into_generator_elements(self) -> Vec<GeneratorElement> {
+        self.into_generator_elements_const().1.into_iter().filter_map(|it| it).collect()
     }
 
     const fn const_cmp(&self, other: &BasisSignature) -> Ordering {
@@ -539,8 +546,8 @@ impl BasisElement {
     ) -> BasisElement {
         // Implementation may look a bit strange because it is const compatible
 
-        let (a_len, a) = self.signature.into_grade_1_signatures();
-        let (b_len, b) = other.signature.into_grade_1_signatures();
+        let (a_len, a) = self.signature.into_grade_1_signatures_const();
+        let (b_len, b) = other.signature.into_grade_1_signatures_const();
         let mut sign = self.coefficient * other.coefficient;
 
         let mut result_elements: [Option<BasisSignature>; 16] = [None; 16];
@@ -666,6 +673,27 @@ impl BasisElementNames {
         };
         if let Some(dn) = existing {
             el.display_name = Some(dn);
+        }
+        return el
+    }
+
+    /// Give a name and sign to a BasisElement, if the direction
+    /// of your BasisElement is not critical yet. In other words,
+    /// this will give the positive direction of any BasisElement,
+    /// whether it is an odd permutation or even permutation.
+    pub fn provide_name_and_sign(&self, mut el: BasisElement) -> BasisElement {
+        let existing = if el.coefficient == 0 {
+            self.zero
+        } else {
+            self.elements.get(&el.signature).cloned()
+        };
+        if let Some(dn) = existing {
+            el.display_name = Some(dn);
+            if dn.negate_display {
+                el.coefficient = -1;
+            } else {
+                el.coefficient = 1;
+            }
         }
         return el
     }

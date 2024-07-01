@@ -158,7 +158,7 @@ impl GeneratorSquares {
         // Take care of the outer sign
         let mut result = a.coefficient * b.coefficient;
         // Then simply square the generators
-        for g in a.signature.into_generator_elements().1.into_iter().filter_map(|it| it) {
+        for g in a.signature.into_generator_elements_const().1.into_iter().filter_map(|it| it) {
             result *= self.square_generator(g);
         }
 
@@ -200,7 +200,7 @@ impl GeneratorSquares {
         if sign == 0 {
             return BasisElement::zero();
         }
-        let (gs_len, gs) = a.signature.into_generator_elements();
+        let (gs_len, gs) = a.signature.into_generator_elements_const();
         let mut g_idx = 0;
         while g_idx < gs_len {
             let Some(g) = gs[g_idx] else {
@@ -254,8 +254,8 @@ impl GeneratorSquares {
         let s = a;
         let o = b;
 
-        let (a_len, a) = s.signature.into_grade_1_signatures();
-        let (b_len, b) = o.signature.into_grade_1_signatures();
+        let (a_len, a) = s.signature.into_grade_1_signatures_const();
+        let (b_len, b) = o.signature.into_grade_1_signatures_const();
         let mut sign = s.coefficient * o.coefficient;
 
         let mut result_elements: [Option<BasisSignature>; 16] = [None; 16];
@@ -285,7 +285,7 @@ impl GeneratorSquares {
                 }
                 Ordering::Equal => {
                     let mut g_idx = 0;
-                    let (gs_len, gs) = a_.into_generator_elements();
+                    let (gs_len, gs) = a_.into_generator_elements_const();
                     while g_idx < gs_len {
                         let Some(g) = gs[g_idx] else {
                             g_idx += 1;

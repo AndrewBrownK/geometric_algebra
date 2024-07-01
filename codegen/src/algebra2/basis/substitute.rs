@@ -45,7 +45,7 @@ impl SubstitutionRepository {
         // Get grade 1 elements for underlying basis
         let underlying_grade_1_elements: Vec<_> = underlying_squares
             .anti_scalar().signature()
-            .into_generator_elements().1.into_iter()
+            .into_generator_elements_const().1.into_iter()
             .filter_map(|it| it)
             .map(|it| it.element()).collect();
 

@@ -214,38 +214,38 @@ impl<const D: u8> MultiVec<D> where
 #[macro_export]
 macro_rules! multi_vec {
     // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as tuples)
-    ($str_lit:expr, $u8_lit:expr, $( ($($basis_element:expr),+ $(,)?)),+ $(,)?) => {
+    (D=$u8_lit:expr; $mv_name:ident => $( ($($basis_element:expr),+ $(,)?)),+ $(,)?) => {
         {
             use $crate::algebra2::multivector::TupleToGroup;
-            let name: &'static str = $str_lit;
+            let name: &'static str = stringify!($mv_name);
             let groups: std::vec::Vec<$crate::algebra2::multivector::BasisElementGroup> = vec![
-                $( ($($basis_element),+).tuple_to_group() ),+
+                $( ($($basis_element),+,).tuple_to_group() ),+
             ];
-            $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups($str_lit, groups)
+            $crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
         }
     };
     // Accepts a string literal, a u8 literal, and a list of BasisElementGroups (as arrays)
-    ($str_lit:expr, $u8_lit:expr, $( [$($basis_element:expr),+ $(,)?]),+ $(,)?) => {
+    (D=$u8_lit:expr; $mv_name:ident => $( [$($basis_element:expr),+ $(,)?]),+ $(,)?) => {
         {
             use crate::algebra2::multivector::TupleToGroup;
-            let name: &'static str = $str_lit;
+            let name: &'static str = stringify!($mv_name);
             let groups: std::vec::Vec<crate::algebra2::multivector::BasisElementGroup> = vec![
-                $( ($($basis_element),+).tuple_to_group() ),+
+                $( ($($basis_element),+,).tuple_to_group() ),+
             ];
-            crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups($str_lit, groups)
+            crate::algebra2::multivector::MultiVec::<$u8_lit>::new_by_groups(name, groups)
         }
     };
     // Accepts a string literal, a u8 literal, and a list of BasisElement
-    ($str_lit:expr, $u8_lit:expr, $( $basis_element:expr ),+ $(,)?) => {
+    (D=$u8_lit:expr; $mv_name:ident => $( $basis_element:expr ),+ $(,)?) => {
         {
-            let name: &'static str = $str_lit;
-            let elements: std::vec::Vec<crate::algebra2::multivector::BasisElement> = vec![$($basis_element),+];
-            crate::algebra2::multivector::MultiVec::<$u8_lit>::new($str_lit, elements)
+            let name: &'static str = stringify!($mv_name);
+            let elements: std::vec::Vec<crate::algebra2::multivector::BasisElement> = vec![$($basis_element),+,];
+            crate::algebra2::multivector::MultiVec::<$u8_lit>::new(name, elements)
         }
     };
 }
 
-trait TupleToGroup<T: Default> {
+pub trait TupleToGroup<T: Default> {
     fn tuple_to_group(self) -> ArrayVec<[T; 4]>;
 }
 impl<T: Default> TupleToGroup<T> for (T,) {
@@ -459,13 +459,13 @@ fn test_construction() {
     // the BasisElements first. If you want a fixed order, then specify the grouping
     // manually (since everything will end up in groups anyway). If you'd rather have it sorted
     // without fretting about sorting it yourself, then use it like this with ungrouped input.
-    let dipole = multi_vec!("Dipole", 5, e41, e42, e43, e23, e31, e12, e15, e25, e35, e45);
+    let dipole = multi_vec!(D=5; Dipole => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45);
     println!("{dipole}");
 
-    let circle_again = multi_vec!("Circle", 5, (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
+    let circle_again = multi_vec!(D=5; Circle => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
     println!("{circle_again}");
 
-    let dipole_again = multi_vec!("Dipole", 5, [e41, e42, e43], [e23, e31, e12], [e15, e25, e35, e45]);
+    let dipole_again = multi_vec!(D=5; Dipole => [e41, e42, e43], [e23, e31, e12], [e15, e25, e35, e45]);
     println!("{dipole_again}");
 
     if dipole == dipole_again {

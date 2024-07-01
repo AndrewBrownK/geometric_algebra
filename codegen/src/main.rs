@@ -19,7 +19,7 @@ mod impls;
 mod validate;
 mod shader_support;
 pub mod ast2;
-mod algebra2 {
+pub mod algebra2 {
     pub mod basis;
     pub mod multivector;
     pub mod algebra;

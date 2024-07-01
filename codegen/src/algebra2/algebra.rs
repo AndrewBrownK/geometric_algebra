@@ -6,35 +6,39 @@ use crate::algebra2::basis::{BasisElement, BasisElementNames, BasisSignature};
 use crate::algebra2::basis::generators::GeneratorSquares;
 use crate::algebra2::basis::grades::grade0;
 use crate::algebra2::basis::substitute::SubstitutionRepository;
-
+use crate::algebra2::multivector::{mono_grade_elements, mono_grade_groups, MultiVec, num_elements};
 
 pub struct GeometricAlgebra {
     repo: SubstitutionRepository,
     named_bases: RwLock<BasisElementNames>
 }
 
-// TODO try out this macro.
 
 #[macro_export]
 macro_rules! ga {
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
             use $crate::algebra2::basis::generators::*;
-            let gs = $crate::algebra2::basis::generators::generator_squares!(
-                $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)?
-            );
+            let gs = {
+                use $crate::algebra2::basis::generators::*;
+                let mut gs = GeneratorSquares::empty();
+                $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
+                gs
+            };
             $crate::algebra2::algebra::GeometricAlgebra::from_squares(gs)
         }
     };
-    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? substituting_with $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
+    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; where $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
             use $crate::algebra2::basis::generators::*;
-            let gs = $crate::algebra2::basis::generators::generator_squares!(
-                $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)?
-            );
-            let subs = $crate::algebra2::basis::substitute::substitutions!(
-                $( $generator_element:expr => $sum:expr );+ $(;)?
-            )
+            let gs = {
+                let mut gs = GeneratorSquares::empty();
+                $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
+                gs
+            };
+            let subs = {
+                vec![$(($generator_element, $sum)),+]
+            };
             let subs = $crate::algebra2::basis::substitute::SubstitutionRepository::new(gs, subs);
             $crate::algebra2::algebra::GeometricAlgebra::from_substitutions(subs)
         }
@@ -107,6 +111,49 @@ impl GeometricAlgebra {
     pub fn apply_anti_metric(&self, a: BasisElement) -> BasisElement {
         let a = self.name_in(a);
         self.name_out(self.repo.apply_anti_metric(a))
+    }
+
+
+    // TODO this is a temp method just for testing names on full_multi_vec
+    pub fn internalize_names<const D: u8>(&self, mv: MultiVec<D>)  where
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized,
+        [(); mono_grade_elements(D)]: Sized {
+
+        for el in MultiVec::<D>::elements(&mv).into_iter() {
+            self.name_in(el);
+        }
+    }
+
+    pub fn all_elements(&self) -> impl Iterator<Item=BasisElement> {
+        let mut results = vec![];
+        let anti_scalar = self.anti_scalar();
+        let independent_signatures = anti_scalar.signature().into_grade_1_signatures();
+        let qty_elements = 1 << independent_signatures.len();
+        let names = self.named_bases.read();
+        for i in 0..qty_elements {
+            let mut element = BasisElement::scalar();
+            for (j, &sig) in independent_signatures.iter().enumerate() {
+                if i & (1 << j) != 0 {
+                    element = element.wedge(BasisElement::from(sig));
+                }
+            }
+            results.push(names.provide_name_and_sign(element));
+        }
+        results.sort();
+        results.into_iter()
+    }
+
+    pub fn full_multi_vector<const D: u8>(&self) -> MultiVec<D> where
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized  {
+
+        let anti_scalar = self.anti_scalar();
+        let gr = anti_scalar.grade() as u8;
+        if D != gr {
+            panic!("Cannot create a MultiVec of D={D} using GeometricAlgebra of dimension {gr}");
+        }
+        MultiVec::<D>::new("MultiVector", self.all_elements())
     }
 }
 
