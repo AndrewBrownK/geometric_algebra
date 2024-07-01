@@ -13,18 +13,22 @@ pub struct GeometricAlgebra {
     named_bases: RwLock<BasisElementNames>
 }
 
+// TODO try out this macro.
+
 #[macro_export]
 macro_rules! ga {
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
+            use $crate::algebra2::basis::generators::*;
             let gs = $crate::algebra2::basis::generators::generator_squares!(
                 $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)?
             );
             $crate::algebra2::algebra::GeometricAlgebra::from_squares(gs)
         }
     };
-    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; sub $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
+    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? substituting_with $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
+            use $crate::algebra2::basis::generators::*;
             let gs = $crate::algebra2::basis::generators::generator_squares!(
                 $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)?
             );

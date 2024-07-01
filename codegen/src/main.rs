@@ -28,6 +28,8 @@ mod utility;
 
 mod build_scripts2 {
     pub mod common_traits;
+    pub mod cga3d;
+    pub mod rga3d;
 }
 
 mod build_scripts {
