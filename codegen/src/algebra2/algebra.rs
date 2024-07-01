@@ -4,6 +4,10 @@ use crate::algebra2::basis::generators::GeneratorSquares;
 use crate::algebra2::basis::grades::grade0;
 use crate::algebra2::basis::substitute::SubstitutionRepository;
 
+// TODO maybe you want to give it a name? and some other properties too?
+//  If you can't come up with something, you might want to leave it at SubstitutionRepository
+//  after all. Could also use this location to recover the names of BasisElements that might
+//  have been lost in calculation.
 pub struct GeometricAlgebra(
     SubstitutionRepository
 );

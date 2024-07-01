@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use std::fmt::Debug;
-use std::ops::{Add, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign};
 
 use im::HashMap;
 use parking_lot::RwLock;
@@ -16,6 +16,7 @@ pub struct SubstitutionRepository {
     substitution_anti_scalar: BasisElement,
     substitutions_to_underlying: HashMap<BasisElement, Sum>,
     underlying_to_substitutions: HashMap<BasisElement, Sum>,
+    transposed_substitutions_to_underlying: HashMap<BasisElement, Sum>,
     substitution_products: RwLock<HashMap<(BasisElement, BasisElement), Sum>>,
     substitution_anti_products: RwLock<HashMap<(BasisElement, BasisElement), Sum>>,
 }
@@ -116,6 +117,9 @@ impl SubstitutionRepository {
             assert!(existing.is_none(), "Basis substitutions must be uniquely defined, but found more than one definition for {sub}");
         }
 
+        // for (u, s) in underlying_to_substitutions.iter() {
+        //     eprintln!("Underlying {u} is initially defined as {s}");
+        // }
 
         // Verify that the solutions for underlying basis work correctly and also have proper scale
         for (under, orig_substitutions) in underlying_to_substitutions.iter_mut() {
@@ -141,6 +145,10 @@ impl SubstitutionRepository {
 
             assert_eq!(back_to_underlying.sum[0], Product { coefficient: 1.0, element: *under }, "Substitution elements do not resolve into underlying {under} properly.");
         }
+
+        // for (u, s) in underlying_to_substitutions.iter() {
+        //     eprintln!("Underlying {u} is now fixed to be {s}");
+        // }
 
 
         // Verify that substitution elements are orthogonal
@@ -257,18 +265,127 @@ impl SubstitutionRepository {
         let substitution_anti_scalar = substitution_anti_scalar
             .expect("Must have found the substitution_anti_scalar");
 
-        let substitution_products = RwLock::new(HashMap::new());
-        let substitution_anti_products = RwLock::new(HashMap::new());
+
+        // Lastly..... transposed mappings.
+        // This is very important in order to properly handle the application of the
+        // metric to substitute bases. In other words, this is the transpose found all throughout
+        // the left half of page 184. If we try to apply the metric to CGA naively (by converting
+        // e4 and e5 into their usual e+ and e- definitions), then the output of the metric will
+        // wrongly convert e4 to -0.5*e5 (when we expect just -e5) and e5 to -2.0*e4 (when we
+        // expect just -e4). The transposed metric might seem very confusing at first. It seems to
+        // imply that e- = 0.5*e4 + e5 and e+ = -0.5*e4 + e5. If one looks at the usual arrangement
+        // for these bases, it seems very wrong. However, if we solve for e4 and e5 using these
+        // abnormal equations, we get e4 = e- - e+, and e5 = 0.5*e- + 0.5*e+. Then what is happening
+        // becomes clear. These are not equations for e4 and e5, but some kind of fancy transposed
+        // e4' and e5'. The e4' is twice as long as e4, and e5' is half as long as e5, and
+        // e- = 0.5*e4' + e5' and e+ = -0.5*e4' + e5' make perfect sense. For our purposes (applying
+        // the metric), we really only need a transposed change of basis to go from substitutions
+        // to underlying (but not underlying to substitutions). And so finally, applying the metric
+        // we get g e4 = -e5 and g e5 = -e4.
+
+
+        // This is what actually use to apply the metric.
+        let mut transposed_substitutions_to_underlying = HashMap::new();
+        // for (und, sub) in underlying_to_substitutions.iter() {
+        //     eprintln!("SHOULD BE CORRECT NON-TRANSPOSED: {und} := {sub}")
+        // }
+        for (und, sub) in underlying_to_substitutions.iter() {
+            if und.coefficient != 1 {
+                // These maps also include negative entries,
+                // but we don't want to get twice our accurate values
+                continue;
+            }
+            for p in sub.sum.iter() {
+                let mut p = p.clone();
+                let sub = p.element;
+                p.element = *und;
+                transposed_substitutions_to_underlying.entry(sub)
+                    .and_modify(|it: &mut Sum| { it.add_assign(p); })
+                    .or_insert(Sum { sum: vec![p] });
+            }
+        }
+        for (sub, und) in transposed_substitutions_to_underlying.iter()
+            .map(|(s, u)| (s.clone(), u.clone()))
+            .collect::<Vec<_>>().into_iter() {
+
+            // TODO it might be nice to make arithmetic on Sum not use a reference after all.
+            //  Consume when allowed, and only clone when the old one needs to be preserved.
+            transposed_substitutions_to_underlying.insert(-sub, -1.0 * &und);
+        }
+        // for (sub, und) in transposed_substitutions_to_underlying.iter() {
+        //     eprintln!("TRANSPOSED: {sub}' := {und}")
+        // }
+
         let s = Self {
             underlying_squares,
             substitution_anti_scalar,
             substitutions_to_underlying,
             underlying_to_substitutions,
-            substitution_products,
-            substitution_anti_products,
+            transposed_substitutions_to_underlying,
+            substitution_products: RwLock::new(HashMap::new()),
+            substitution_anti_products: RwLock::new(HashMap::new()),
         };
         // eprintln!("SubstitutionRepository: {s:?}");
         s
+    }
+
+    fn substitute_element_to_underlying_sum(&self, a: BasisElement) -> Sum {
+        self.substitutions_to_underlying.get(&a).cloned()
+            .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] })
+    }
+
+    fn underlying_element_to_substitute_sum(&self, a: BasisElement) -> Sum {
+        self.underlying_to_substitutions.get(&a).cloned()
+            .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] })
+    }
+
+    fn substitute_product_to_underlying_sum(&self, p: Product) -> Sum {
+        let mut c = p.coefficient;
+        let mut a = p.element;
+        if c == 0.0 || a.coefficient == 0 {
+            return Sum::zero();
+        }
+        if a.coefficient != 1 {
+            c *= a.coefficient as f32;
+            a.coefficient = 1;
+        }
+        let mut s = self.substitute_element_to_underlying_sum(a);
+        s *= c;
+        s
+    }
+
+    fn underlying_product_to_substitute_sum(&self, p: Product) -> Sum {
+        let mut c = p.coefficient;
+        let mut a = p.element;
+        if c == 0.0 || a.coefficient == 0 {
+            return Sum::zero();
+        }
+        if a.coefficient != 1 {
+            c *= a.coefficient as f32;
+            a.coefficient = 1;
+        }
+        let mut s = self.underlying_element_to_substitute_sum(a);
+        s *= c;
+        s
+    }
+
+
+    fn substitute_sum_to_underlying_sum(&self, s: Sum) -> Sum {
+        let mut result = Sum { sum: vec![] };
+        for sub_p in s.sum.iter() {
+            let und_s = self.substitute_product_to_underlying_sum(*sub_p);
+            result += &und_s;
+        }
+        result
+    }
+
+    fn underlying_sum_to_substitute_sum(&self, s: Sum) -> Sum {
+        let mut result = Sum { sum: vec![] };
+        for und_p in s.sum.iter() {
+            let sub_s = self.underlying_product_to_substitute_sum(*und_p);
+            result += &sub_s;
+        }
+        result
     }
 
     pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
@@ -278,10 +395,8 @@ impl SubstitutionRepository {
         }
         self.substitution_products.write().entry((a, b))
             .or_insert_with(|| {
-                let a_ = self.substitutions_to_underlying.get(&a).cloned()
-                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] });
-                let b_ = self.substitutions_to_underlying.get(&b).cloned()
-                    .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: b }] });
+                let a_ = self.substitute_element_to_underlying_sum(a);
+                let b_ = self.substitute_element_to_underlying_sum(b);
                 // eprintln!("    Underlying factors: {a_}, {b_}");
                 let mut result = Sum { sum: vec![] };
                 let underlying_product = a_.multiply(&b_, &self.underlying_squares);
@@ -328,6 +443,90 @@ impl SubstitutionRepository {
 
     pub fn anti_scalar(&self) -> BasisElement {
         self.substitution_anti_scalar
+    }
+
+    pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        let a = self.substitute_element_to_underlying_sum(a);
+        let b = self.substitute_element_to_underlying_sum(b);
+        let mut underlying_result = Sum { sum: vec![] };
+        for a in a.sum.iter() {
+            for b in b.sum.iter() {
+                let mut c = self.underlying_squares.scalar_product(a.element, b.element);
+                c.coefficient *= a.coefficient * b.coefficient;
+                underlying_result += c;
+            }
+        }
+        self.underlying_sum_to_substitute_sum(underlying_result)
+    }
+
+    pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Sum {
+        let a = self.substitute_element_to_underlying_sum(a);
+        let b = self.substitute_element_to_underlying_sum(b);
+        let mut underlying_result = Sum { sum: vec![] };
+        for a in a.sum.iter() {
+            for b in b.sum.iter() {
+                let mut c = self.underlying_squares.anti_scalar_product(a.element, b.element);
+                c.coefficient *= a.coefficient * b.coefficient;
+                underlying_result += c;
+            }
+        }
+        self.underlying_sum_to_substitute_sum(underlying_result)
+    }
+
+    pub fn apply_metric(&self, a: BasisElement) -> BasisElement {
+        let orig = a;
+        let a = a.anon();
+        if a.coefficient == 0 {
+            return BasisElement::zero();
+        }
+
+        // See comment at construction of transposed_substitutions_to_underlying
+        // let mut a = self.substitute_element_to_underlying_sum(a);
+        let mut a = self.transposed_substitutions_to_underlying.get(&a).cloned()
+            .unwrap_or(Sum { sum: vec![Product { coefficient: 1.0, element: a }] });
+
+        // eprintln!("Transposed underlying sum for {orig} is {a}");
+
+        for a in a.sum.iter_mut() {
+            a.element = self.underlying_squares.apply_metric(a.element);
+            if a.element.coefficient != 1 {
+                a.coefficient *= a.element.coefficient as f32;
+                a.element.coefficient = 1;
+            }
+        }
+        a.sort_and_simplify();
+        // eprintln!("Underlying sum after applying metric is {a}");
+        let result = self.underlying_sum_to_substitute_sum(a);
+        // eprintln!("Back to substitute basis: {result}");
+        if result.sum.is_empty() {
+            return BasisElement::zero();
+        }
+        if result.sum.len() > 1 {
+            panic!("The metric should always return one BasisElement per BasisElement");
+        }
+        let result = result.sum[0];
+        let c = result.coefficient;
+        if c == 0.0 {
+            panic!("I feel like this branch shouldn't be reachable. You should investigate if Sums \
+            are really simplifying all the way or not. Or maybe there's something wrong with the \
+            metric calculation.");
+        }
+        if c == 1.0 {
+            return result.element;
+        }
+        if c == -1.0 {
+            return -result.element;
+        }
+        // Since we are returning a BasisElement instead of a Product or Sum, we really
+        // need the coefficient of the BasisElement to be 1, 0, or -1 and nothing else.
+        panic!("metric of {orig} through substitutions could not resolve an valid coefficient: {result}")
+    }
+
+    pub fn apply_anti_metric(&self, a: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        let a = a.right_complement(anti_scalar);
+        let a = self.apply_metric(a);
+        a.left_complement(anti_scalar)
     }
 }
 
@@ -2598,4 +2797,69 @@ fn support_both_underlying_anti_scalar_directions() {
     let a = a.sum[0];
     let b = -1.0 * b;
     assert_eq!(a, b, "Opposite direction anti-scalars failed");
+}
+
+
+#[test]
+fn metric_using_substitutions() {
+    let cga
+        = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
+        + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
+
+    use crate::algebra2::basis::elements::*;
+
+
+    assert_eq!(scalar, cga.apply_metric(scalar));
+
+
+
+    assert_eq!(e1, cga.apply_metric(e1));
+    assert_eq!(e2, cga.apply_metric(e2));
+    assert_eq!(e3, cga.apply_metric(e3));
+    assert_eq!(-e5, cga.apply_metric(e4));
+    assert_eq!(-e4, cga.apply_metric(e5));
+
+
+
+    assert_eq!(e15, cga.apply_metric(e41));
+    assert_eq!(e25, cga.apply_metric(e42));
+    assert_eq!(e35, cga.apply_metric(e43));
+
+    assert_eq!(e23, cga.apply_metric(e23));
+    assert_eq!(e31.anon(), cga.apply_metric(e31));
+    assert_eq!(e12, cga.apply_metric(e12));
+
+    assert_eq!(e41.anon(), cga.apply_metric(e15));
+    assert_eq!(e42.anon(), cga.apply_metric(e25));
+    assert_eq!(e43.anon(), cga.apply_metric(e35));
+
+    assert_eq!(-e45, cga.apply_metric(e45));
+
+
+
+    assert_eq!(-e235, cga.apply_metric(e423));
+    assert_eq!(-e315.anon(), cga.apply_metric(e431));
+    assert_eq!(-e125, cga.apply_metric(e412));
+
+    assert_eq!(e321.anon(), cga.apply_metric(e321));
+
+    assert_eq!(-e415.anon(), cga.apply_metric(e415));
+    assert_eq!(-e425.anon(), cga.apply_metric(e425));
+    assert_eq!(-e435.anon(), cga.apply_metric(e435));
+
+    assert_eq!(-e423.anon(), cga.apply_metric(e235));
+    assert_eq!(-e431.anon(), cga.apply_metric(e315));
+    assert_eq!(-e412.anon(), cga.apply_metric(e125));
+
+
+
+    assert_eq!(e3215.anon(), cga.apply_metric(e1234));
+    assert_eq!(-e4235.anon(), cga.apply_metric(e4235));
+    assert_eq!(-e4315.anon(), cga.apply_metric(e4315));
+    assert_eq!(-e4125.anon(), cga.apply_metric(e4125));
+    assert_eq!(e1234, cga.apply_metric(e3215));
+
+
+
+    assert_eq!(-e12345, cga.apply_metric(e12345));
 }

@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
-
+use std::ops::Neg;
 use rand::Rng;
 use generators::GeneratorSquares;
 use crate::algebra2::basis::generators::GeneratorElement;
@@ -145,6 +145,13 @@ impl BasisSignature {
 
 
 
+// TODO I have concerns about BasisElements with different names but the same signature
+//  and sign not being treated as equal. So I could manually implement PartialEq, Eq, etc
+//  but I have to be careful and also re-implement Hash and check if there are any problems
+//  on PartialOrd or Ord. Then I may or may not want a "strong_eq" method that checks display name
+//  too (although so far I think it won't be necessary, I'll need to consider it). And overall
+//  I need to do research on how Rust community/documentation feels about such niche uses
+//  of Eq and if there are any show stopper problems I'm not yet foreseeing.
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct BasisElement {
     // BasisElements will mathematically operate
@@ -161,6 +168,16 @@ pub struct BasisElement {
     // This way we can tell what to do with all of
     // (for example) +e412, -e412, +e124, and -e124
     display_name: Option<BasisElementDisplayName>,
+}
+
+impl Neg for BasisElement {
+    type Output = BasisElement;
+
+    fn neg(self) -> Self::Output {
+        let mut s = self;
+        s.coefficient *= -1;
+        s
+    }
 }
 
 
@@ -410,6 +427,11 @@ impl BasisElement {
             negate_display: odd_permutation,
         };
         self.display_name = Some(dn);
+        self
+    }
+
+    pub const fn anon(mut self) -> Self {
+        self.display_name = None;
         self
     }
 
@@ -697,73 +719,76 @@ fn new_basis_elements_wedge() {
 }
 
 #[test]
-fn test_generator_squares() {
+fn test_metric() {
     use elements::*;
     let rga = generator_squares!(1 => e1, e2, e3; 0 => e4);
+
+    // NOTE that this is CGA without substitute bases, so it has a diagonal metric
+    // instead of the metric shown on page 185.
     let cga = generator_squares!(1 => e1, e2, e3, e4; -1 => e5);
 
+    let zero = BasisElement::zero().anon();
+
+    assert_eq!(scalar, rga.apply_metric(scalar));
+
+    assert_eq!(e1, rga.apply_metric(e1));
+    assert_eq!(e2, rga.apply_metric(e2));
+    assert_eq!(e3, rga.apply_metric(e3));
+    assert_eq!(zero, rga.apply_metric(e4));
+
+    assert_eq!(e12, rga.apply_metric(e12));
+    assert_eq!(e23, rga.apply_metric(e23));
+    assert_eq!(e31.anon(), rga.apply_metric(e31));
+    assert_eq!(zero, rga.apply_metric(e41));
+    assert_eq!(zero, rga.apply_metric(e42));
+    assert_eq!(zero, rga.apply_metric(e43));
+
+    assert_eq!(e123, rga.apply_metric(e123));
+    assert_eq!(zero, rga.apply_metric(e412));
+    assert_eq!(zero, rga.apply_metric(e423));
+    assert_eq!(zero, rga.apply_metric(e431));
+
+    assert_eq!(zero, rga.apply_metric(e1234));
+
     //
 
-    assert_eq!(1, rga.square_element(scalar));
+    assert_eq!(scalar, cga.apply_metric(scalar));
 
-    assert_eq!(1, rga.square_element(e1));
-    assert_eq!(1, rga.square_element(e2));
-    assert_eq!(1, rga.square_element(e3));
-    assert_eq!(0, rga.square_element(e4));
+    assert_eq!(e1, cga.apply_metric(e1));
+    assert_eq!(e2, cga.apply_metric(e2));
+    assert_eq!(e3, cga.apply_metric(e3));
+    assert_eq!(e4, cga.apply_metric(e4));
+    assert_eq!(-e5, cga.apply_metric(e5));
 
-    assert_eq!(1, rga.square_element(e12));
-    assert_eq!(1, rga.square_element(e23));
-    assert_eq!(1, rga.square_element(e31));
-    assert_eq!(0, rga.square_element(e41));
-    assert_eq!(0, rga.square_element(e42));
-    assert_eq!(0, rga.square_element(e43));
+    assert_eq!(e12, cga.apply_metric(e12));
+    assert_eq!(e23, cga.apply_metric(e23));
+    assert_eq!(e31.anon(), cga.apply_metric(e31));
+    assert_eq!(e41.anon(), cga.apply_metric(e41));
+    assert_eq!(e42.anon(), cga.apply_metric(e42));
+    assert_eq!(e43.anon(), cga.apply_metric(e43));
+    assert_eq!(-e15, cga.apply_metric(e15));
+    assert_eq!(-e25, cga.apply_metric(e25));
+    assert_eq!(-e35, cga.apply_metric(e35));
+    assert_eq!(-e45, cga.apply_metric(e45));
 
-    assert_eq!(1, rga.square_element(e123));
-    assert_eq!(0, rga.square_element(e412));
-    assert_eq!(0, rga.square_element(e423));
-    assert_eq!(0, rga.square_element(e431));
+    assert_eq!(e123, cga.apply_metric(e123));
+    assert_eq!(e412.anon(), cga.apply_metric(e412));
+    assert_eq!(e423.anon(), cga.apply_metric(e423));
+    assert_eq!(e431.anon(), cga.apply_metric(e431));
+    assert_eq!(-e125, cga.apply_metric(e125));
+    assert_eq!(-e235, cga.apply_metric(e235));
+    assert_eq!(-e315.anon(), cga.apply_metric(e315));
+    assert_eq!(-e415.anon(), cga.apply_metric(e415));
+    assert_eq!(-e425.anon(), cga.apply_metric(e425));
+    assert_eq!(-e435.anon(), cga.apply_metric(e435));
 
-    assert_eq!(0, rga.square_element(e1234));
+    assert_eq!(e1234, cga.apply_metric(e1234));
+    assert_eq!(-e1235, cga.apply_metric(e1235));
+    assert_eq!(-e1245, cga.apply_metric(e1245));
+    assert_eq!(-e1345, cga.apply_metric(e1345));
+    assert_eq!(-e2345, cga.apply_metric(e2345));
 
-    //
-
-    assert_eq!(1, cga.square_element(scalar));
-
-    assert_eq!(1, cga.square_element(e1));
-    assert_eq!(1, cga.square_element(e2));
-    assert_eq!(1, cga.square_element(e3));
-    assert_eq!(1, cga.square_element(e4));
-    assert_eq!(-1, cga.square_element(e5));
-
-    assert_eq!(1, cga.square_element(e12));
-    assert_eq!(1, cga.square_element(e23));
-    assert_eq!(1, cga.square_element(e31));
-    assert_eq!(1, cga.square_element(e41));
-    assert_eq!(1, cga.square_element(e42));
-    assert_eq!(1, cga.square_element(e43));
-    assert_eq!(-1, cga.square_element(e15));
-    assert_eq!(-1, cga.square_element(e25));
-    assert_eq!(-1, cga.square_element(e35));
-    assert_eq!(-1, cga.square_element(e45));
-
-    assert_eq!(1, cga.square_element(e123));
-    assert_eq!(1, cga.square_element(e412));
-    assert_eq!(1, cga.square_element(e423));
-    assert_eq!(1, cga.square_element(e431));
-    assert_eq!(-1, cga.square_element(e125));
-    assert_eq!(-1, cga.square_element(e235));
-    assert_eq!(-1, cga.square_element(e315));
-    assert_eq!(-1, cga.square_element(e415));
-    assert_eq!(-1, cga.square_element(e425));
-    assert_eq!(-1, cga.square_element(e435));
-
-    assert_eq!(1, cga.square_element(e1234));
-    assert_eq!(-1, cga.square_element(e1235));
-    assert_eq!(-1, cga.square_element(e1245));
-    assert_eq!(-1, cga.square_element(e1345));
-    assert_eq!(-1, cga.square_element(e2345));
-
-    assert_eq!(-1, cga.square_element(e12345));
+    assert_eq!(-e12345, cga.apply_metric(e12345));
 }
 
 

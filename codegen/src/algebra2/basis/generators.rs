@@ -3,10 +3,12 @@
 use std::cmp::Ordering;
 use std::ops::{Add, Mul, Sub};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
-use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum};
+use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum, Product};
 use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::algebra2::basis::substitute::SubstitutionRepository;
 
+/// The foundational GeneratorSquares assumes a diagonal metric
+/// (with no generator substitutions).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GeneratorSquares {
     // TODO un-pub
@@ -101,37 +103,150 @@ impl GeneratorSquares {
         self.raw_squares[(basis as u8) as usize]
     }
 
-    pub const fn square_element(&self, a: BasisElement) -> i8 {
-        if a.coefficient == 0 {
-            return 0
-        }
-        // (-1)^2 == 1^2 == 1
-        let mut sign = 1i8;
+    // OKAY SO while implementing scalar/dot product I can definitely see where the confusion
+    // arises when different authors argue the dot product should be always grade zero, or always
+    // grade difference.
+    /*
+    So suppose in vanilla GA we have e2 and e123 and we want to rediscover and/or generalize what
+    the dot product could mean between them.
 
-        let mut sig = a.signature;
-        sig = self.anti_scalar().signature.intersection(sig);
-        let (a_len, a) = sig.into_generator_elements();
-        let mut a_idx = 0;
-        while a_idx < a_len {
-            let a_ = a[a_idx].unwrap();
-            // TODO remove this commented bit if indeed we don't need it
-            // Must move b_ at least to the right of a_.
-            // Which negates the sign each step.
-            // let swaps = ((a_len - 1) - a_idx) as u32;
-            // sign *= i8::pow(-1, swaps % 2);
-            sign = sign * match self.square_generator(a_) {
-                0 => return 0i8,
-                sq => sq
-            };
-            a_idx += 1;
+    The "Grade 0 Approach" seems to argue (as far as I can discern/infer) that the generalization
+    should be "In dot products between grade 1 vectors, each basis ONLY pairs up with itself (for
+    a non-zero result), and if you try to dot product  mismatched (orthogonal) basis elements,
+    then the result is zero. Therefore it is reasonable to say that since e2 and e123 are not
+    identical basis elements, their dot product should be zero. Therefore ultimately the dot
+    product is the scalar product."
+
+    The "Grade Difference Approach" seems (as far as I can discern/infer) to attempt the
+    generalization differently. The treatment seems to be:
+    e2 ● e123 = ?
+    e2 ● (e1 ∧ e2 ∧ e3) = ?
+    e2 ● -(e2 ∧ e1 ∧ e3) = ?
+    -(e2 ● (e2 ∧ e1 ∧ e3)) = ?
+    -((e2 ● e2) ∧ e1 ∧ e3) = ?     <- concern #1
+    -(1 ∧ e1 ∧ e3) = ?             <- concern #2
+    -e13 = ?
+    e2 ● e123 = -e13
+
+    And then from there (again, attempting to discover/generalize a dot product from scratch here),
+    it is noticed this result is inside the geometric product, and then the dot product is appointed
+    to be the "grade difference" selection of the geometric product.
+
+    Concern #1: Is the dot product really supposed to be associative with wedge product?
+
+    Concern #2: Why do we allow ourselves to collapse (e2 ● e2) = 1 without first encountering
+    interference with (e2 ● e1) = 0? Since we're trying to build upon/generalize the grade 1 dot
+    product to begin with.
+
+    Maybe the motivation is... "The dot product doesn't mean to only match identical elements,
+    it means to only exclude orthogonal elements"?
+     */
+
+    pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Product {
+        if a.coefficient == 0 || b.coefficient == 0 {
+            return Product::zero()
         }
-        sign
+        if a.signature != b.signature {
+            return Product::zero()
+        }
+
+        // a ⋅ b = ⟨ab̃⟩₀
+        // The reversal is what lets us chew through the dot product one squared generator at a time
+        // e.g.  e123 ⋅ e321
+        let b = b.reverse();
+        // Take care of the outer sign
+        let mut result = a.coefficient * b.coefficient;
+        // Then simply square the generators
+        for g in a.signature.into_generator_elements().1.into_iter().filter_map(|it| it) {
+            result *= self.square_generator(g);
+        }
+
+        // And construct a Product for the result
+        let coefficient = result as f32;
+        use crate::algebra2::basis::elements::*;
+        Product { coefficient, element: scalar }
+    }
+
+    pub fn anti_scalar_product(&self, a: BasisElement, b: BasisElement) -> Product {
+        let anti_scalar = self.anti_scalar();
+        let a = a.left_complement(anti_scalar);
+        let b = b.left_complement(anti_scalar);
+        let mut p = self.scalar_product(a, b);
+        p.element = p.element.right_complement(anti_scalar);
+        p
+    }
+
+    pub fn apply_metric(&self, a: BasisElement) -> BasisElement {
+        let a = a.anon();
+        // There is no need for any kind of elements reversal, or counting of swapped elements here.
+        // The (diagonal) metric is just a function that turns one BasisElement into another,
+        // potentially with a sign change. So for example in Rigid GA you have:
+        // G e12 = e12
+        // G e123 = e123
+        // Even though they are even and odd grades respectively and so would permute differently.
+
+        // Again we EMPHASIZE that GeneratorSquares ASSUMES A DIAGONAL METRIC! Non-diagonal metrics
+        // should use SubstitutionRepository to define substitute elements over an underlying
+        // GeneratorSquares where the underlying metric is diagonal even if the substitute metric
+        // is not.
+
+        // Anyway, all that to say, this implementation here is pretty simple.
+        // Just scan through the generators and accumulate their squares on the result.
+
+        // (We copy `a` to preserve any customized display names)
+        let mut result = a;
+        let mut sign = a.coefficient;
+        if sign == 0 {
+            return BasisElement::zero();
+        }
+        let (gs_len, gs) = a.signature.into_generator_elements();
+        let mut g_idx = 0;
+        while g_idx < gs_len {
+            let Some(g) = gs[g_idx] else {
+                g_idx += 1;
+                continue;
+            };
+            sign *= self.square_generator(g);
+            g_idx += 1;
+        }
+        if sign == 0 {
+            return BasisElement::zero()
+        }
+        result.coefficient = sign;
+        result
+    }
+
+    pub fn apply_anti_metric(&self, a: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        let a = a.right_complement(anti_scalar);
+        let a = self.apply_metric(a);
+        a.left_complement(anti_scalar)
+    }
+
+    pub fn right_dual(&self, a: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        self.apply_metric(a).right_complement(anti_scalar)
+    }
+
+    pub fn left_dual(&self, a: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        self.apply_metric(a).left_complement(anti_scalar)
+    }
+
+    pub fn right_anti_dual(&self, a: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        self.apply_anti_metric(a).right_complement(anti_scalar)
+    }
+
+    pub fn left_anti_dual(&self, a: BasisElement) -> BasisElement {
+        let anti_scalar = self.anti_scalar();
+        self.apply_anti_metric(a).left_complement(anti_scalar)
     }
 
     /// True Geometric Product, in other words without using substituted bases.
     /// If your BasisElements are substituting bases, you'll need to convert to
     /// the underlying bases before you can properly use this function.
-    pub const fn true_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+    pub const fn geometric_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
 
         // TODO determine if actually const compatible
         // Implementation may look a bit strange because it is const compatible
@@ -168,14 +283,16 @@ impl GeneratorSquares {
                     a_idx += 1;
                 }
                 Ordering::Equal => {
-                    // TODO if this would be better using square_generator, maybe
-                    //  I need to do a refactor and BasisSignature::into_generator_elements
-                    //  is nice after all
-                    sign *= self.square_element(BasisElement {
-                        coefficient: 1,
-                        signature: a_,
-                        display_name: None,
-                    });
+                    let mut g_idx = 0;
+                    let (gs_len, gs) = a_.into_generator_elements();
+                    while g_idx < gs_len {
+                        let Some(g) = gs[g_idx] else {
+                            g_idx += 1;
+                            continue;
+                        };
+                        sign *= self.square_generator(g);
+                        g_idx += 1;
+                    }
                     if sign == 0 {
                         return BasisElement::zero()
                     }
@@ -219,11 +336,11 @@ impl GeneratorSquares {
     /// True Geometric AntiProduct, in other words without using substituted bases.
     /// If your BasisElements are substituting bases, you'll need to convert to
     /// the underlying bases before you can properly use this function.
-    pub fn true_anti_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
+    pub fn geometric_anti_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
         let anti_scalar = self.anti_scalar();
         let a = a.right_complement(anti_scalar);
         let b = b.right_complement(anti_scalar);
-        let c = self.true_product(a, b);
+        let c = self.geometric_product(a, b);
         c.left_complement(anti_scalar)
     }
 }

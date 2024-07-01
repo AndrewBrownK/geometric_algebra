@@ -468,7 +468,7 @@ impl Display for Sum {
 
 impl Product {
     pub fn multiply(&self, other: &Product, underlying: &GeneratorSquares) -> Option<Product> {
-        let mut element = underlying.true_product(self.element, other.element);
+        let mut element = underlying.geometric_product(self.element, other.element);
         if element.coefficient == 0 {
             return None;
         }
@@ -484,13 +484,18 @@ impl Product {
         //     eprintln!("Attempting anti-product identity");
         // }
 
-        let mut element = underlying.true_anti_product(self.element, other.element);
+        let mut element = underlying.geometric_anti_product(self.element, other.element);
         if element.coefficient == 0 {
             return None;
         }
         let coefficient = self.coefficient * other.coefficient * element.coefficient as f32;
         element.coefficient = 1;
         Some(Product { coefficient, element })
+    }
+
+    pub fn zero() -> Self {
+        use crate::algebra2::basis::elements::*;
+        Product { coefficient: 0.0, element: scalar }
     }
 }
 
@@ -568,7 +573,6 @@ impl Sum {
         s
     }
 
-
     pub fn wedge(&self, other: &Sum) -> Sum {
         let a = self;
         let b = other;
@@ -613,6 +617,10 @@ impl Sum {
             a * b
         });
         c.iter().map(|it| it.1).sum()
+    }
+
+    pub fn zero() -> Self {
+        Self { sum: vec![] }
     }
 }
 
