@@ -101,11 +101,12 @@ pub struct Specifically<const D: u8>(MultiVec<D>) where
     MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
     [(); mono_grade_groups(D)]: Sized,
     [(); num_elements(D)]: Sized;
+
 impl<const D: u8> ClassesFromRegistry for Specifically<D> where
     MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
     [(); mono_grade_groups(D)]: Sized,
     [(); num_elements(D)]: Sized {
     fn include_class(&self, mvc: &MultiVecEnum) -> bool {
-        mvc.adapt_eq(&self.0)
+        mvc == &self.0.clone().consolidate_enum()
     }
 }

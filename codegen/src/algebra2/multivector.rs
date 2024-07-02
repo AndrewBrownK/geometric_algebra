@@ -56,7 +56,7 @@ pub const fn mono_grade_groups(d: u8) -> usize {
 
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct MultiVectorSignature<const D: u8>(ArrayVec<[BasisSignature; num_elements(D)]>)
+pub struct MultiVecSignature<const D: u8>(ArrayVec<[BasisSignature; num_elements(D)]>)
     where [(); num_elements(D)]: Sized;
 
 // TODO there could be an argument for using an enum instead, which is integrating the AST
@@ -70,7 +70,66 @@ pub type BasisElementGroup = ArrayVec<[BasisElement; 4]>;
 //     [(); num_elements(D)]: Sized;
 
 
-
+// TODO I am so very torn and conflicted with MultiVec. It feels so close but so far from being
+//  const. I keep flip flopping. All this effort to use sized arrays, only to drop the ball like
+//  a coward and depend on the heap anyway. The truly really interesting problem is handling
+//  impl ClassesFromRegistry for Specifically. The concern is less about choosing between
+//  MultiVec<D> and MultiVecEnum. The real concern is, where is it getting this value? Hell..
+//  for any implementation of TraitDef_2Class_2Param... where is it providing a value at all,
+//  instead of just specifying an associated type? Nowhere yet, it seems.... alright alright alright
+//  but let's assume we're going to provide it by value somewhere at some point. We probably don't
+//  want these MultiVec values declared willy nilly in trait implementations, we want them to
+//  be properly handled data through the MultiVecRepository. It might be possible to make something
+//  like Elaborated that can set the Owner and Other associated types. Hell.... maybe Owner and
+//  Other associated types should be trait methods instead of Associated types to begin with?
+//  ClassesFromRegistry is technically not used anywhere right now. I think I'm onto something
+//  there. Anyway..... well... that's another conundrum anyway. Because we're back in the class
+//  implementation again, instead of our script scope with lovely MultiVec declarations.
+//  So yeah, about MultiVec declarations. Could they be static? Would we like that? Well right now
+//  they depend on the heap, so we'd have to use something like lazy_static!, and then they're
+//  less succinct. Additionally I want the ability to dynamically generate additional MultiVecs
+//  based on various conditions and suffixes, like being on the Origin or inside the Horizon.
+//  However a modifiable name more or less means the name needs to be a String, which more or less
+//  means MultiVec won't have a Size, or will depend on heap yet again. So to talk more about
+//  MultiVec on heap, never mind String name, mind it now. If some insane person really goes up to
+//  16 dimensions, then that is 65,535 unique BasisElements, which means a MultiVecSignature that is
+//  131kB long. Then multiply that by 18 for one class per grade plus DualNum and full MultiVector,
+//  then the MultiVecSignatures alone (nevermind BasisElementGroups) is taking 2.4 MB, without
+//  including mixed grade or partial grade classes at all. So? If someone is crazy and they do
+//  that, then what? If we start by saying we don't want that on our stack, and we're going to need
+//  the heap, then the heap is the heap no matter how you slice it, and maybe you want to make them
+//  lazy static so you can get away with only a single copy of each. It might seem absurd or crazy
+//  to make them take up so much space statically in the binary instead of the heap, but at the end
+//  of the day, if someone chooses 16 bases, they are going to spend a lot of memory, and I should
+//  be less concerned about if it is using heap, or implements Copy, and more concerned about only
+//  ensuring it is created once, and every use site borrows it, and it never overflows the stack.
+//  To me that looks like... I want static declarations. AS LONG AS THE FOLLOWING CONDITIONS ARE
+//  SATISFIED:
+//  - I prefer const eval static instead of lazy heap static, as long as the compiler isn't
+//    literally destroyed from chewing such intensive const eval. This allows me to use ArrayVec
+//    instead of TinyVec, and simplify some of the constraints on D.
+//  - Obviously the existing macros are kick-ass and there's no way we can settle for anything
+//    less elegant for those declarations. Can the macros play nice in const eval though?
+//  - I might/should redo MultiVecRepository to just take a bunch of &'static MultiVec and go from
+//    there. The entire app could use these &'static MultiVecs without causing lifetime annoyances.
+//  - Even though I do have intentions to make suffix/variant MultiVecs, it might be better as a
+//    suggestion spat out in the console, and we still require all MultiVecs to be statically
+//    declared (instead of generating new MultiVecs using rules and patterns dynamically).
+//  ..
+//  Here are some other thoughts/concerns...
+//  Maybe MultiVecSignature is not serving its purpose well if it is not a convenient/useful lookup
+//  device. With that in mind, I could scrap it and save some memory. If I need to match signatures,
+//  I may be better off (overall) just scanning through the BasisElements already included in the
+//  MultiVec definition. I know BasisSignature is great and would also make a nice lookup tool,
+//  but the fact that MultiVecSignature could get 131 kB long starts to defeat the purpose.
+//  Next... since everything is getting hidden in a static position behind a static reference anyway,
+//  I could honestly get a little more liberal with the const generics. I could size every
+//  MultiVec according to it's ACTUAL quantity of BasisElements, not the total possible elements
+//  for the dimensionality, then have a separate const generic for the dimensionality, and then
+//  have another type that holds a reference to the &'static MultiVec (not worried about size at
+//  all) and keeping track of the dimensionality only (but not the MultiVec-specific quantity of
+//  BasisElements).
+//  Yeah this seems great. Refactors coming!!
 
 // Cannot be Copy because TinyVec is never Copy
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -83,7 +142,7 @@ pub struct MultiVec<const D: u8> where
     // It is important to keep the vec in the signature sorted, so it can serve its purpose.
     // So we should keep very strict control over construction and mutation of MultiVec,
     // and it's signature.
-    signature: MultiVectorSignature<D>
+    signature: MultiVecSignature<D>
 }
 
 impl<const D: u8> Debug for MultiVec<D> where
@@ -133,7 +192,7 @@ lazy_static! {
 impl<const D: u8> MultiVec<D> where
     [(); mono_grade_groups(D)]: Sized,
     [(); num_elements(D)]: Sized {
-    pub fn signature(&self) -> MultiVectorSignature<D> {
+    pub fn signature(&self) -> MultiVecSignature<D> {
         self.signature
     }
 
@@ -196,7 +255,7 @@ impl<const D: u8> MultiVec<D> where
         let mut used_dimensions = BasisSignature::empty();
         let arg = element_groups;
         let mut element_groups = TinyVec::new();
-        let mut signature = MultiVectorSignature(ArrayVec::new());
+        let mut signature = MultiVecSignature(ArrayVec::new());
         let mut grades = Grades::none;
         for group in arg {
             for el in group {
@@ -377,7 +436,7 @@ pub trait ConsolidateEnum {
 }
 macro_rules! consolidate_enum {
     // literal based, with boxing
-    (box $impl_type:ident $variant_prefix:ident => $( $variants:literal ),+ $(,)?) => {
+    ($(derive($($d:ident),+ $(,)?))? box $impl_type:ident $variant_prefix:ident => $( $variants:literal ),+ $(,)?) => {
         paste! {
             #[derive(Clone, PartialEq, Eq, Hash, Debug)]
             pub enum [<$impl_type Enum>] {
@@ -393,9 +452,9 @@ macro_rules! consolidate_enum {
         }
     };
     // literal based, no boxing
-    ($impl_type:ident $variant_prefix:ident => $( $variants:literal ),+ $(,)?) => {
+    ($(derive($($d:ident),+ $(,)?))? $impl_type:ident $variant_prefix:ident => $( $variants:literal ),+ $(,)?) => {
         paste! {
-            #[derive(Clone, PartialEq, Eq, Hash, Debug)]
+            $(#[derive($($d),+)])?
             pub enum [<$impl_type Enum>] {
                 $([<$variant_prefix $variants>]($impl_type<$variants>)),+
             }
@@ -410,15 +469,36 @@ macro_rules! consolidate_enum {
     };
 }
 
-consolidate_enum!(box MultiVec D => 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+consolidate_enum! {
+    derive(Clone, PartialEq, Eq, Hash, Debug)
+    box MultiVec D => 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+}
+
+consolidate_enum! {
+    derive(Clone, PartialEq, Eq, Hash, Debug, PartialOrd, Ord)
+    box MultiVecSignature D => 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+}
 
 impl MultiVecEnum {
-    pub fn adapt_eq<const D: u8>(&self, other: &MultiVec<D>) -> bool where
-        MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
-        [(); mono_grade_groups(D)]: Sized,
-        [(); num_elements(D)]: Sized {
-
-        self == &other.clone().consolidate_enum()
+    fn signature(&self) -> MultiVecSignatureEnum {
+        match self {
+            MultiVecEnum::D1(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D2(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D3(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D4(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D5(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D6(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D7(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D8(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D9(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D10(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D11(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D12(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D13(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D14(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D15(d) => d.signature.consolidate_enum(),
+            MultiVecEnum::D16(d) => d.signature.consolidate_enum(),
+        }
     }
 
     pub fn element_groups(&self) -> impl Iterator<Item=&BasisElementGroup> {
@@ -521,86 +601,111 @@ impl FallbackWasUsed {
 }
 
 
-pub struct DeclareMultiVecs<const D: u8> where
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
-
+pub struct DeclareMultiVecs {
     ga: Arc<GeometricAlgebra>,
     anti_scalar_sig: BasisSignature,
-
-    declared: BTreeMap<MultiVectorSignature<D>, MultiVec<D>>,
-    fallback: BTreeMap<MultiVectorSignature<D>, (FallbackWasUsed, MultiVec<D>)>,
-
-    wanted: Mutex<BTreeMap<
-        MultiVectorSignature<D>,
-        Vec<Arc<RawTraitImplementation>>>>,
-    strongly_wanted: Mutex<BTreeMap<
-        MultiVectorSignature<D>,
-        Vec<Arc<RawTraitImplementation>>>>
+    declared: BTreeMap<MultiVecSignatureEnum, Arc<MultiVecEnum>>,
 }
 
-impl<const D: u8> DeclareMultiVecs<D> where
-    [(); mono_grade_elements(D)]: Sized,
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
+impl DeclareMultiVecs {
+    pub fn declare<const D: u8>(&mut self, multi_vec: MultiVec<D>) where
+        MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
+        MultiVecSignature<D>: ConsolidateEnum<Output=MultiVecSignatureEnum>,
+        [(); mono_grade_elements(D)]: Sized,
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized {
 
-    pub fn get_at_least(self: Arc<Self>, signature: MultiVectorSignature<D>) -> MultiVec<D> {
-        todo!()
-    }
-
-    pub fn get_exact(self: Arc<Self>, signature: MultiVectorSignature<D>) -> Option<MultiVec<D>> {
-        todo!()
-    }
-
-    pub fn declare(&mut self, multi_vec: MultiVec<D>) {
-        self.ga.internalize_element_names(&multi_vec);
-
-        // Is it really okay to mutate our fallbacks like this?
-        // Yes, because right now we have a &mut MultiVecRepositoryD<D>, where you can
-        // only put MultiVecs in, but not pull any out. You can't actually pull out any
-        // MultiVecs out (and thereby create a dependency on the directions of BasisElements in
-        // fallback MultiVecs) until you turn the repository immutable by wrapping it into an
-        // Arc<MultiVecRepositoryD<D>>
-
-        for (_, (_, mv)) in self.fallback.iter_mut() {
-            for group in mv.element_groups.iter_mut() {
-                for el in group.iter_mut() {
-                    *el = self.ga.name_and_sign_out(*el);
-                }
-            }
-        }
-        self.declared.insert(multi_vec.signature, multi_vec);
-    }
-    fn fallback_multi_vec(&mut self, multi_vec: MultiVec<D>) {
-        self.fallback.insert(multi_vec.signature, (FallbackWasUsed::new(), multi_vec));
-    }
-
-    pub fn new(ga: Arc<GeometricAlgebra>) -> Self {
-        let anti_scalar = ga.anti_scalar();
+        let anti_scalar = self.ga.anti_scalar();
         let gr = anti_scalar.grade();
         if D as u32 != gr {
             panic!("Cannot create a MultiVec of D={D} using GeometricAlgebra of dimension {gr}");
         }
-        let mut mvr = DeclareMultiVecs {
-            ga: ga.clone(),
+
+        for el in multi_vec.elements() {
+            if !self.anti_scalar_sig.contains(el.signature()) {
+                let anti_scalar = self.ga.anti_scalar();
+                panic!("Element does not fit in anti_scalar {anti_scalar}: {el} in {multi_vec}");
+            }
+        }
+
+        self.declared.insert(
+            multi_vec.signature.consolidate_enum(),
+            Arc::new(multi_vec.consolidate_enum())
+        );
+    }
+
+    pub fn new(ga: Arc<GeometricAlgebra>) -> Self {
+        let anti_scalar = ga.anti_scalar();
+        DeclareMultiVecs {
+            ga,
             anti_scalar_sig: anti_scalar.signature(),
             declared: BTreeMap::new(),
+        }
+    }
+}
+
+
+pub struct MultiVecRepository {
+    declarations: BTreeMap<MultiVecSignatureEnum, Arc<MultiVecEnum>>,
+    fallback: BTreeMap<MultiVecSignatureEnum, (FallbackWasUsed, Arc<MultiVecEnum>)>,
+    wanted: Mutex<BTreeMap<
+        MultiVecSignatureEnum,
+        Vec<Arc<RawTraitImplementation>>>>,
+    strongly_wanted: Mutex<BTreeMap<
+        MultiVecSignatureEnum,
+        Vec<Arc<RawTraitImplementation>>>>
+}
+
+
+impl MultiVecRepository {
+
+    pub fn default<const D: u8>(ga: Arc<GeometricAlgebra>) -> Arc<Self> where
+        MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
+        [(); mono_grade_elements(D)]: Sized,
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized {
+        let dec = DeclareMultiVecs::new(ga);
+        Self::new(dec)
+    }
+
+    pub fn new<const D: u8>(declarations: DeclareMultiVecs) -> Arc<Self> where
+        MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
+        [(); mono_grade_elements(D)]: Sized,
+        [(); mono_grade_groups(D)]: Sized,
+        [(); num_elements(D)]: Sized {
+
+        let ga = declarations.ga.clone();
+        let anti_scalar = ga.anti_scalar();
+        let gr = anti_scalar.grade();
+        if D != gr as u8 {
+            panic!("Please create your MultiVectorRepository ({D}) using the same dimensionality \
+            as your GeometricAlgebra ({gr})")
+        }
+
+        let mut mvr = MultiVecRepository {
+            declarations: declarations.declared,
             fallback: BTreeMap::new(),
             wanted: Mutex::new(BTreeMap::new()),
             strongly_wanted: Mutex::new(BTreeMap::new()),
         };
 
         // Generate fallback types.
+        let all_elements: Vec<_> = ga.all_elements().map(|el| ga.name_and_sign_out(el)).collect();
+
         use crate::algebra2::basis::elements::*;
-        mvr.fallback_multi_vec(MultiVec::<D>::new("Scalar", [scalar]));
-        mvr.fallback_multi_vec(MultiVec::<D>::new("AntiScalar", [anti_scalar]));
-        mvr.fallback_multi_vec(MultiVec::<D>::new("DualNum", [scalar, anti_scalar]));
-        mvr.fallback_multi_vec(MultiVec::<D>::new("MultiVector", ga.all_elements()));
+        mvr.fallback_multi_vec(MultiVec::<D>::new("Scalar", [scalar]).consolidate_enum());
+        mvr.fallback_multi_vec(MultiVec::<D>::new("AntiScalar", [anti_scalar]).consolidate_enum());
+        mvr.fallback_multi_vec(MultiVec::<D>::new("DualNum", [scalar, anti_scalar]).consolidate_enum());
+        mvr.fallback_multi_vec(MultiVec::<D>::new("MultiVector", all_elements.clone()).consolidate_enum());
+
         // 1..D skips scalar and anti_scalar
         for gr in 1..D {
-            let els: Vec<_> = ga.all_elements().filter(|el| el.grade() == gr as u32).collect();
+            let els: Vec<_> = all_elements.clone().filter(|el| el.grade() == gr as u32).collect();
             if els.is_empty() {
-                panic!("There are no BasisElements of grade {gr} for our GA of D={D}")
+                // This shouldn't happen because we checked D against anti_scalar.grade() already
+                // (why bother checking at all then? Well let's not go feeding junk data to
+                //  MultiVec::new for fun)
+                unreachable!("There are no BasisElements of grade {gr} for our GA of D={D}")
             }
             let mv = match gr {
                 // 0 is Scalar, defined above
@@ -620,93 +725,29 @@ impl<const D: u8> DeclareMultiVecs<D> where
                 14 => MultiVec::<D>::new("VectorGr14", els),
                 15 => MultiVec::<D>::new("VectorGr15", els),
                 // 16 would be AntiScalar, defined above
-                _ => panic!("MultiVecs of D<0 or D>16 are not supported"),
+
+                // This shouldn't really be possible because of the constraint
+                // MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>
+                _ => unreachable!("MultiVecs of D<0 or D>16 are not supported"),
             };
-            mvr.fallback_multi_vec(mv);
+            mvr.fallback_multi_vec(mv.consolidate_enum());
         }
 
-        mvr
+        Arc::new(mvr)
     }
-}
 
-pub enum MultiVecRepository {
-    D1(DeclareMultiVecs<1>),
-    D2(DeclareMultiVecs<2>),
-    D3(DeclareMultiVecs<3>),
-    D4(DeclareMultiVecs<4>),
-    D5(DeclareMultiVecs<5>),
-    D6(DeclareMultiVecs<6>),
-    D7(DeclareMultiVecs<7>),
-    D8(DeclareMultiVecs<8>),
-    D9(DeclareMultiVecs<9>),
-    D10(DeclareMultiVecs<10>),
-    D11(DeclareMultiVecs<11>),
-    D12(DeclareMultiVecs<12>),
-    D13(DeclareMultiVecs<13>),
-    D14(DeclareMultiVecs<14>),
-    D15(DeclareMultiVecs<15>),
-    D16(DeclareMultiVecs<16>),
-}
+    fn fallback_multi_vec(&mut self, multi_vec: MultiVecEnum) {
+        self.fallback.insert(
+            multi_vec.signature,
+            (FallbackWasUsed::new(), Arc::new(multi_vec)));
+    }
 
+    pub fn get_at_least(self: Arc<Self>, signature: MultiVecSignature<D>) -> MultiVec<D> {
+        todo!()
+    }
 
-// TODO maybe only allow adding declarations to the repo with const generic, and
-//  only allow pulling out MultiVecs from this one without const generic
-impl MultiVecRepository {
-    pub fn declare_multi_vec<const D: u8>(&mut self, multi_vec: MultiVec<D>) where
-        [(); mono_grade_groups(D)]: Sized,
-        [(); num_elements(D)]: Sized {
-
-        match (D, self) {
-            (1, D1(mvr)) => {
-
-            }
-            (2, D1(mvr)) => {
-
-            }
-            (3, D1(mvr)) => {
-
-            }
-            (4, D1(mvr)) => {
-
-            }
-            (5, D1(mvr)) => {
-
-            }
-            (6, D1(mvr)) => {
-
-            }
-            (7, D1(mvr)) => {
-
-            }
-            (8, D1(mvr)) => {
-
-            }
-            (9, D1(mvr)) => {
-
-            }
-            (10, D1(mvr)) => {
-
-            }
-            (11, D1(mvr)) => {
-
-            }
-            (12, D1(mvr)) => {
-
-            }
-            (13, D1(mvr)) => {
-
-            }
-            (14, D1(mvr)) => {
-
-            }
-            (15, D1(mvr)) => {
-
-            }
-            (16, D1(mvr)) => {
-
-            }
-            (_, _) => panic!("MultiVecs of D<0 or D>16 are not supported"),
-        }
+    pub fn get_exact(self: Arc<Self>, signature: MultiVecSignature<D>) -> Option<MultiVec<D>> {
+        todo!()
     }
 }
 
