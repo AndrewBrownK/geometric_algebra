@@ -12,6 +12,14 @@ pub fn cga3d_script() {
         e5 => eP + eM;
     );
 
+    // TODO I can see it already... instead of manually passing in MultiVecs to register
+    //  them, the macro will generate a function that does the registration for you and
+    //  simply provides the free MultiVecRegistry to you for invoking it.
+    //  Hell... I wonder if I can't computer a const generic BasisElement anti_scalar on
+    //  GeometricAlgebra...... it could be useful to specify an anti_scalar on the MultiVec
+    //  generating macro, so it can do compile time validation of the const MultiVec
+    //  declarations, but then it could output a MultiVecRegistry<anti_scalar> as long as you
+    //  provide the generated function a GeometricAlgebra<anti_scalar> that matches.
     let mvs = multi_vecs!(D=5;
         Scalar      as scalar;
         AntiScalar  as e12345;

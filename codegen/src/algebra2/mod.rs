@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use std::sync::Arc;
 
 use parking_lot::RwLock;
@@ -12,7 +13,7 @@ pub mod basis;
 pub mod multivector;
 
 
-pub struct GeometricAlgebra {
+pub struct GeometricAlgebra<const AntiScalar: BasisElement> {
     repo: SubstitutionRepository,
     named_bases: RwLock<BasisElementNames>
 }

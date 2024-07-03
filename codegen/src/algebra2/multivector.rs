@@ -1,9 +1,10 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::{Debug, Display, Formatter};
 use std::sync::Arc;
 use std::sync::atomic::Ordering;
 
 use atom::AtomSetOnce;
+use im::OrdSet;
 use lazy_static::lazy_static;
 use parking_lot::Mutex;
 use paste::paste;
@@ -17,57 +18,8 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::traits::RawTraitImplementation;
 
-pub(crate) const fn num_elements(d: u8) -> usize {
-    let d = d as u32;
-
-    // Scalar counts as an element
-    // let n = usize::pow(2, d) - 1;
-    let n = usize::pow(2, d);
-
-    n
-}
-
-// TODO Is there anything I can do to un-pub this, or make the constraints outside this module more simple?
-pub const fn mono_grade_elements(d: u8) -> usize {
-    const fn factorial(mut n: usize) -> usize {
-        let mut result = 1;
-        while n > 1 {
-            result = result * n;
-            n -= 1;
-        }
-        result
-    }
-
-    let n = d as usize;
-    let k = (d/2) as usize;
-    let n_k = n-k;
-    factorial(n) / (factorial(k) * factorial(n_k))
-}
-pub const fn mono_grade_groups(d: u8) -> usize {
-    let elements = mono_grade_elements(d);
-    // In the end every group is 4 floats wide, regardless.
-    // This helps keep things simple when passing data back and forth from GPU.
-    // However, that does mean we might have up to 3 vacant spaces.
-    // The whole point of mono_grade_elements is to prevent any mono_grade class
-    // from allocating to heap. So we use 3 as our margin of error.
-    (elements + 3) / 4
-}
 
 
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct MultiVecSignature<const D: u8>(ArrayVec<[BasisSignature; num_elements(D)]>)
-    where [(); num_elements(D)]: Sized;
-
-// TODO there could be an argument for using an enum instead, which is integrating the AST
-pub type BasisElementGroup = ArrayVec<[BasisElement; 4]>;
-
-
-
-
-// pub struct MultiVecConstraint<const D: u8>([(); mono_grade_groups(D)], [(); num_elements(D)]) where
-//     [(); mono_grade_groups(D)]: Sized,
-//     [(); num_elements(D)]: Sized;
 
 
 // TODO I am so very torn and conflicted with MultiVec. It feels so close but so far from being
@@ -131,23 +83,42 @@ pub type BasisElementGroup = ArrayVec<[BasisElement; 4]>;
 //  BasisElements).
 //  Yeah this seems great. Refactors coming!!
 
-// Cannot be Copy because TinyVec is never Copy
-#[derive(Clone, PartialEq, Eq, Hash)]
-pub struct MultiVec<const D: u8> where
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
-    name: &'static str,
-    grades: Grades,
-    element_groups: TinyVec<[BasisElementGroup; mono_grade_groups(D)]>,
-    // It is important to keep the vec in the signature sorted, so it can serve its purpose.
-    // So we should keep very strict control over construction and mutation of MultiVec,
-    // and it's signature.
-    signature: MultiVecSignature<D>
+
+
+pub(crate) const fn qty_elements(anti_scalar: BasisElement) -> usize {
+    let d = anti_scalar.signature().bits().count_ones();
+    // Scalar counts as an element
+    // let n = usize::pow(2, d) - 1;
+    let n = usize::pow(2, d);
+    n
+}
+pub(crate) const fn qty_groups(anti_scalar: BasisElement) -> usize {
+    let d = anti_scalar.signature().bits().count_ones();
+    // Scalar counts as an element
+    // let n = usize::pow(2, d) - 1;
+    let n = usize::pow(2, d);
+
+    // Let's assume you average at LEAST 3 elements per group for the biggest MultiVector
+    // and then add 1 as the margin for error.
+    (n / 3) + 1
 }
 
-impl<const D: u8> Debug for MultiVec<D> where
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
+// TODO there could be an argument for using an enum instead, which is integrating the AST
+//  Or the fact (iirc) that you cannot construct filled ArrayVecs in const eval
+pub type BasisElementGroup = ArrayVec<[BasisElement; 4]>;
+type MultiVecConstraint<const AntiScalar: BasisElement> = [(); qty_groups(AntiScalar)];
+
+
+// Cannot be Copy because TinyVec is never Copy
+#[derive(Clone, PartialEq, Eq, Hash)]
+pub struct MultiVec<const AntiScalar: BasisElement> where MultiVecConstraint<AntiScalar>: Sized {
+    name: &'static str,
+    grades: Grades,
+    element_groups: ArrayVec<[BasisElementGroup; qty_groups(AntiScalar)]>,
+}
+
+impl<const AntiScalar: BasisElement> Debug for MultiVec<AntiScalar> where
+    MultiVecConstraint<AntiScalar>: Sized  {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let n = self.name;
         write!(f, "MultiVec {{ name: \"{n}\", element_groups: [")?;
@@ -163,13 +134,11 @@ impl<const D: u8> Debug for MultiVec<D> where
         write!(f, "] }}")
     }
 }
-impl<const D: u8> Display for MultiVec<D> where
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
+impl<const AntiScalar: BasisElement> Display for MultiVec<AntiScalar> where
+    MultiVecConstraint<AntiScalar>: Sized  {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let n = self.name;
         write!(f, "{n}(")?;
-        let mut i = 0;
         for (i, group) in self.element_groups.iter().enumerate() {
             let comma = if i == 0 { "" } else { ", " };
             write!(f, "{comma}(")?;
@@ -182,6 +151,23 @@ impl<const D: u8> Display for MultiVec<D> where
         write!(f, ")")
     }
 }
+impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> where
+    MultiVecConstraint<AntiScalar>: Sized  {
+
+    pub fn fmt_for_macro(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let n = self.name;
+        write!(f, "{n} as ")?;
+        for (i, group) in self.element_groups.iter().enumerate() {
+            let group_separator = if i == 0 { "" } else { " | " };
+            write!(f, "{group_separator}")?;
+            for (j, el) in group.iter().enumerate() {
+                let comma = if j == 0 { "" } else { ", " };
+                write!(f, "{comma}{el}")?;
+            }
+        }
+        write!(f, ";")
+    }
+}
 
 
 
@@ -189,15 +175,13 @@ lazy_static! {
     static ref MULTIVECTOR_NAME_REGEX: Regex = Regex::new("^[A-Z][a-zA-Z0-9]+$").expect("MultiVector name regex is valid");
 }
 
-impl<const D: u8> MultiVec<D> where
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
-    pub fn signature(&self) -> MultiVecSignature<D> {
-        self.signature
-    }
+// TODO ACTUALLY I HAVE TO MAKE ALL THESE METHODS CONST NOW AND THAT COULD BE HARD
+//  but here goes nothing i guess.
+impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> where
+    MultiVecConstraint<AntiScalar>: Sized {
 
-    pub fn elements(&self) -> TinyVec<[BasisElement; mono_grade_elements(D)]> {
-        let mut elements = TinyVec::new();
+    pub fn elements(&self) -> ArrayVec<[BasisElement; qty_elements(AntiScalar)]> {
+        let mut elements = ArrayVec::new();
         for group in self.element_groups.iter() {
             for element in group {
                 elements.push(element.clone());
@@ -206,8 +190,8 @@ impl<const D: u8> MultiVec<D> where
         elements
     }
 
-    pub fn groups(&self) -> TinyVec<[BasisElementGroup; mono_grade_groups(D)]> {
-        let mut groups = TinyVec::new();
+    pub fn groups(&self) -> ArrayVec<[BasisElementGroup; qty_groups(AntiScalar)]> {
+        let mut groups = ArrayVec::new();
         for group in self.element_groups.iter() {
             groups.push(group.clone());
         }
@@ -252,33 +236,28 @@ impl<const D: u8> MultiVec<D> where
             panic!("MultiVector names must be UpperCamelCase without any funny business or \
                 special characters, but this is violated by \"{name}\".")
         }
-        let mut used_dimensions = BasisSignature::empty();
+        let mut used_signatures = BTreeSet::new();
         let arg = element_groups;
-        let mut element_groups = TinyVec::new();
-        let mut signature = MultiVecSignature(ArrayVec::new());
+        let mut element_groups = ArrayVec::new();
         let mut grades = Grades::none;
         for group in arg {
             for el in group {
                 let el_sig = el.signature();
-                if signature.0.contains(&el_sig) {
+                if used_signatures.contains(&el_sig) {
                     panic!("{name} already has {el}. Do not define MultiVectors using redundant or \
                         duplicate BasisSignatures. Don't forget that reordered or sign flipped \
                         BasisElements can share the same BasisSignature")
                 }
-                signature.0.push(el_sig);
-                used_dimensions |= el_sig;
-                let i = used_dimensions.bits().count_ones();
-                if i > D as u32 {
-                    panic!("MultiVector embedded in {D} dimensions is defined with {i} or \
-                        more primary basis vectors. Already reserved: {used_dimensions} Latest \
-                        addition: {el_sig}")
+                used_signatures.insert(el_sig);
+                if !AntiScalar.signature().contains(el_sig) {
+                    panic!("MultiVector belonging to AntiScalar({AntiScalar}) \
+                     is defined using {el} which does not fit.")
                 }
                 grades |= Grades::from_sig(el_sig);
             }
             element_groups.push(group);
         }
-        signature.0.sort();
-        MultiVec { name, grades, element_groups, signature, }
+        MultiVec { name, grades, element_groups, }
     }
 }
 
@@ -535,7 +514,7 @@ impl MultiVecEnum {
 #[test]
 fn test_construction() {
     use crate::algebra2::basis::elements::*;
-    let circle = MultiVec::<5>::new_by_groups("Circle", [
+    let circle = MultiVec::<e12345>::new_by_groups("Circle", [
         array_vec!(e423, e431, e412, e321), array_vec!(e415, e425, e435), array_vec!(e235, e315, e125)
     ]);
     println!("{circle:?}");
