@@ -1,5 +1,10 @@
 use crate::{ga, multi_vec, multi_vecs};
 
+// TODO ray tracing in non-euclidean geometry
+//  https://websim.ai/c/UCoHPM1U5McVpoLNq
+
+
+
 /// Lengyel styled CGA of 5 dimensions representing 3 dimensions
 #[test]
 pub fn cga3d_script() {
@@ -20,7 +25,7 @@ pub fn cga3d_script() {
     //  generating macro, so it can do compile time validation of the const MultiVec
     //  declarations, but then it could output a MultiVecRegistry<anti_scalar> as long as you
     //  provide the generated function a GeometricAlgebra<anti_scalar> that matches.
-    let mvs = multi_vecs!(D=5;
+    let mvs = multi_vecs!(e12345;
         Scalar      as scalar;
         AntiScalar  as e12345;
         DualNum     as scalar, e12345;

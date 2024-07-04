@@ -27,6 +27,31 @@ lazy_static = "1.4.0"
 tokio = { version = "1.37.0", features = ["rt", "rt-multi-thread", "io-std", "io-util", "sync", "signal", "fs", "parking_lot"] }
 im = "15.1.0"
 either = "1.12.0"
-tinyvec = { version = "1.6.0", features = ["alloc", "rustc_1_57"] }
 atom = "0.4.0"
 paste = "1.0.15"
+
+
+# What is our preferred Copy and const imitation Vec?
+
+# tinyvec is nice but doesn't offer enough const evaluation support
+# (can still use it for other situations besides MultiVec BasisElementGroups)
+tinyvec = { version = "1.6.0", features = ["alloc", "rustc_1_57"] }
+
+# construe seems extremely nice, but I think I can know the sizes of my arrays, and I definitely want to read
+# arrays as I'm constructing them so that for example there is not duplicate BasisElements in a MultiVec
+# So even though it seems really cool, it might not be right for my situation
+#construe = "0.0.3"
+
+# const-vec lets you specify the size, which is fine by me, and also allows slice indexing and iteration and stuff.
+# This might be what I'm looking for.
+const-vec = "1.1.1"
+
+# inline-const seems to offer cool stuff, worth checking out, but doesn't seem like the most straightforward
+# solution to my current problem (MultiVecs)
+#inline-const = "0.1.0"
+
+# const-gen is also cool but seems heavily oriented towards build-rs, which is not what I'm aiming for right now
+#const-gen = "1.6.4"
+
+# These strangers seem categorically on-topic, but too sparse on documentation to commit
+#const_std_vec = "0.2.0"
