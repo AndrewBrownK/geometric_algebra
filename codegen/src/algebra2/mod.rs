@@ -52,7 +52,7 @@ macro_rules! ga {
     };
 }
 
-impl GeometricAlgebra {
+impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
     pub fn from_squares(generator_squares: GeneratorSquares) -> Arc<Self> {
         Self::from_substitutions(SubstitutionRepository::new(generator_squares, vec![]))
     }
@@ -124,12 +124,9 @@ impl GeometricAlgebra {
         self.name_out(self.repo.apply_anti_metric(a))
     }
 
-    fn internalize_element_names<const D: u8>(&self, mv: &MultiVec<D>)  where
-        [(); mono_grade_groups(D)]: Sized,
-        [(); num_elements(D)]: Sized,
-        [(); mono_grade_elements(D)]: Sized {
+    fn internalize_element_names(&self, mv: &MultiVec<AntiScalar>) {
 
-        for el in MultiVec::<D>::elements(&mv).into_iter() {
+        for el in MultiVec::<AntiScalar>::elements(&mv).into_iter() {
             self.name_in(el);
         }
     }

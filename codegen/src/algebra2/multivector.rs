@@ -8,7 +8,7 @@ use std::sync::atomic::Ordering;
 use atom::AtomSetOnce;
 use const_vec::ConstVec;
 use parking_lot::Mutex;
-use tinyvec::TinyVec;
+use tinyvec::{array_vec, ArrayVec, tiny_vec, TinyVec};
 use MultiVecRepository::D1;
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
@@ -152,8 +152,38 @@ impl BasisElementGroup {
             _ => panic!("Please check can_push() before using push()")
         }
     }
-}
 
+    pub fn into_vec(self) -> ConstVec<BasisElement> {
+        match self {
+            BasisElementGroup::G1(a) => {
+                let mut v = ConstVec::new(4);
+                v.push(a);
+                v
+            }
+            BasisElementGroup::G2(a, b) =>{
+                let mut v = ConstVec::new(4);
+                v.push(a);
+                v.push(b);
+                v
+            }
+            BasisElementGroup::G3(a, b, c) => {
+                let mut v = ConstVec::new(4);
+                v.push(a);
+                v.push(b);
+                v.push(c);
+                v
+            }
+            BasisElementGroup::G4(a, b, c, d) => {
+                let mut v = ConstVec::new(4);
+                v.push(a);
+                v.push(b);
+                v.push(c);
+                v.push(d);
+                v
+            }
+        }
+    }
+}
 
 #[derive(Clone, PartialEq)]
 pub struct MultiVec<const AntiScalar: BasisElement> {
@@ -228,7 +258,9 @@ impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
         let mut active_grade = elements.get(0).map(|it| it.grade()).unwrap_or(0);
         let mut grouped = vec![];
         let mut maybe_group = None;
-        for element in elements {
+        let mut i = 0;
+        while i < elements.len() {
+            let element = elements[i];
             let mut group = match maybe_group {
                 Some(BasisElementGroup::G4(a, b, c, d)) => {
                     grouped.push(BasisElementGroup::G4(a, b, c, d));
@@ -259,6 +291,7 @@ impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
                 maybe_group = Some(BasisElementGroup::G1(element));
                 active_grade = element_grade;
             }
+            i += 1;
         }
         if let Some(group) = maybe_group {
             grouped.push(group);
@@ -273,8 +306,13 @@ impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     pub const fn new_by_groups(name: &'static str, element_groups: ConstVec<BasisElementGroup>) -> Self {
         let mut used_signatures = ConstVec::new(qty_elements(AntiScalar));
         let mut grades = Grades::none;
-        for group in element_groups.iter() {
-            for el in group {
+        let mut i = 0;
+        while i < element_groups.len() {
+            let group = element_groups[i];
+            let group_vec = group.clone().into_vec();
+            let mut j = 0;
+            while j < group_vec.len() {
+                let el = group_vec[j];
                 let el_sig = el.signature();
                 if !AntiScalar.signature().contains(el_sig) {
                     panic!("MultiVector belonging to AntiScalar({AntiScalar}) \
@@ -290,7 +328,9 @@ impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
                 }
                 used_signatures.push(el);
                 grades |= Grades::from_sig(el_sig);
+                j += 1;
             }
+            i += 1;
         }
         MultiVec { name, grades, element_groups, }
     }
@@ -300,7 +340,7 @@ macro_rules! const_vec {
     ($capacity:expr; $( $element:expr ),+ $(,)?) => {
         {
             let mut cv = const_vec::ConstVec::new($capacity);
-            $(cv.push($element));+
+            $(cv.push($element);)+
             cv
         }
     };
@@ -359,51 +399,54 @@ macro_rules! multi_vec {
         }
     };
 }
+
 #[macro_export]
 macro_rules! multi_vecs {
-    // grouped using tuples
-    ($anti_scalar:ident; $( $mv_name:ident => $( ($($basis_element:expr),+ $(,)?)),+ $(,)? );+ $(;)?) => {
-        {
-            use $crate::algebra2::basis::elements::*;
-            vec![
-                $( multi_vec!($mv_name<$anti_scalar> => $( ( $( $basis_element ),+ ) ),+ ) ),+
-            ]
+    // Grouped using tuples
+    ($anti_scalar:ident; $( $mv_name:ident => $( ($($basis_element:ident),+ $(,)?)),+ $(,)? );+ $(;)?) => {
+        use $crate::algebra2::basis::elements::*;
+        $(
+        pub static $mv_name: std::sync::Arc<MultiVec<{$anti_scalar}>> = std::sync::Arc::new(multi_vec!($mv_name<$anti_scalar> as $( $( $basis_element ),+ )|+ ));
+        )+
+        pub static AllMultiVecs: [std::sync::Arc<MultiVec<{$anti_scalar}>>; _] = [
+            $($mv_name.clone()),+
+        ];
+        pub fn register_multi_vecs(ga: Arc<GeometricAlgebra<{$anti_scalar}>>) -> DeclareMultiVecs<{$anti_scalar}> {
+            DeclareMultiVecs::declare(ga, &AllMultiVecs)
         }
     };
-    // grouped using arrays
-    ($anti_scalar:ident; $( $mv_name:ident => $( [$($basis_element:expr),+ $(,)?]),+ $(,)? );+ $(;)?) => {
-        {
-            use $crate::algebra2::basis::elements::*;
-            vec![
-                $( multi_vec!($mv_name<$anti_scalar> => $( [ $( $basis_element ),+ ] ),+ ) ),+
-            ]
-        }
-    };
-    // ungrouped list of BasisElement
-    ($anti_scalar:ident; $( $mv_name:ident => $($basis_element:expr),+ $(,)? );+ $(;)?) => {
-        {
-            use $crate::algebra2::basis::elements::*;
-            vec![
-                $( multi_vec!($mv_name<$anti_scalar> => $( $basis_element ),+) ),+
-            ]
+    // Grouped using arrays
+    ($anti_scalar:ident; $( $mv_name:ident => $( [$($basis_element:ident),+ $(,)?]),+ $(,)? );+ $(;)?) => {
+        use $crate::algebra2::basis::elements::*;
+        $(
+        pub static $mv_name: std::sync::Arc<MultiVec<{$anti_scalar}>> = std::sync::Arc::new(multi_vec!($mv_name<$anti_scalar> as $( $( $basis_element ),+ )|+ ));
+        )+
+        pub static AllMultiVecs: [std::sync::Arc<MultiVec<{$anti_scalar}>>; _] = [
+            $($mv_name.clone()),+
+        ];
+        pub fn register_multi_vecs(ga: Arc<GeometricAlgebra<{$anti_scalar}>>) -> DeclareMultiVecs<{$anti_scalar}> {
+            DeclareMultiVecs::declare(ga, &AllMultiVecs)
         }
     };
     // Elegant and sparse
     ($anti_scalar:ident; $( $mv_name:ident as $( $($basis_element:ident),+ $(,)?)|+ );+ $(;)?) => {
+        use $crate::algebra2::basis::elements::*;
         $(
-        #![allow(non_upper_case_globals)]
-        pub static $(mv_name): MultiVec<{$anti_scalar}> = Arc::new(multi_vec!($mv_name<$anti_scalar> as $( $( $basis_element ),+ )|+ ))
-        );+
-        // pub static MultiVecs: [MultiVec<{$anti_scalar}>; _] = [
-        //     $($mv_name),+
-        // ];
-        pub fn register_multi_vecs(ga: GeometricAlgebra<{$anti_scalar}>) -> DeclareMultiVecs<{$anti_scalar}> {
-            let mut d = DeclareMultiVecs::new(ga);
-            $(d.declare(&[$($mv_name).clone(),+]);)+
-            d
+        pub static $mv_name: std::sync::Arc<MultiVec<{$anti_scalar}>> = std::sync::Arc::new(multi_vec!($mv_name<$anti_scalar> as $( $( $basis_element ),+ )|+ ));
+        )+
+        pub static AllMultiVecs: [std::sync::Arc<MultiVec<{$anti_scalar}>>; _] = [
+            $($mv_name.clone()),+
+        ];
+        pub fn register_multi_vecs(ga: Arc<GeometricAlgebra<{$anti_scalar}>>) -> DeclareMultiVecs<{$anti_scalar}> {
+            DeclareMultiVecs::declare(ga, &AllMultiVecs)
         }
     };
 }
+
+pub struct Baz;
+pub struct Bar<T>(T);
+pub static FOO: Arc<Bar<Baz>> = Arc::new(Bar(Baz));
+
 
 
 pub trait TupleToGroup {
@@ -467,9 +510,8 @@ static Dipole2: MultiVec<{e12346}> = multi_vec!(Dipole<e12346> as e41, e42, e07 
 #[test]
 fn test_construction() {
     use crate::algebra2::basis::elements::*;
-    let
-    println!("{circle:?}");
-    println!("{circle}");
+    println!("{Circle:?}");
+    println!("{Circle}");
 
     // Note this one will print with a different order than displayed because it will sort
     // the BasisElements first. If you want a fixed order, then specify the grouping
@@ -487,31 +529,32 @@ fn test_construction() {
     let dipole_again = &Dipole2;
     println!("{dipole_again}");
 
+    // multi_vecs! now defines items, and is not an expression or statement.
 
-    let mvs = multi_vecs!(e12345;
-        Scalar      => [scalar];
-        AntiScalar  => [e12345];
-        DualNum     => [scalar, e12345];
-    );
-    println!("{mvs:?}");
-    let mvs = multi_vecs!(e12345;
-        FlatPoint   => (e15, e25, e35, e45);
-        Line        => (e415, e425, e435), (e235, e315, e125);
-        Plane       => (e4235, e4315, e4125, e3215);
-    );
-    println!("{mvs:?}");
-    let mvs = multi_vecs!(e12345;
-        RoundPoint  => e1, e2, e3, e4, e5;
-        Dipole      => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45;
-        Circle      => e423, e431, e412, e321, e415, e425, e435, e235, e315, e125;
-        Sphere      => e1234, e4235, e4315, e4125, e3215;
-    );
-    println!("{mvs:?}");
-    let mvs = multi_vecs!(e12345;
-        Motor       as e415, e425, e435, e12345 | e235, e315, e125;
-        Flector     as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
-    );
-    println!("{mvs:?}");
+    // let mvs = multi_vecs!(e12345;
+    //     Scalar      => [scalar];
+    //     AntiScalar  => [e12345];
+    //     DualNum     => [scalar, e12345];
+    // );
+    // println!("{mvs:?}");
+    // let mvs = multi_vecs!(e12345;
+    //     FlatPoint   => (e15, e25, e35, e45);
+    //     Line        => (e415, e425, e435), (e235, e315, e125);
+    //     Plane       => (e4235, e4315, e4125, e3215);
+    // );
+    // println!("{mvs:?}");
+    // let mvs = multi_vecs!(e12345;
+    //     RoundPoint  => e1, e2, e3, e4, e5;
+    //     Dipole      => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45;
+    //     Circle      => e423, e431, e412, e321, e415, e425, e435, e235, e315, e125;
+    //     Sphere      => e1234, e4235, e4315, e4125, e3215;
+    // );
+    // println!("{mvs:?}");
+    // let mvs = multi_vecs!(e12345;
+    //     Motor       as e415, e425, e435, e12345 | e235, e315, e125;
+    //     Flector     as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
+    // );
+    // println!("{mvs:?}");
 }
 
 

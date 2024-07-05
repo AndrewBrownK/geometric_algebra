@@ -8,6 +8,7 @@ use crate::algebra2::basis::generators::GeneratorElement;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra::basis_element;
 use crate::generator_squares;
+use std::marker::{ConstParamTy};
 
 pub mod generators;
 pub mod substitute;
@@ -15,7 +16,7 @@ pub mod arithmetic;
 pub mod grades;
 
 bitflags::bitflags! {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    #[derive(Clone, Copy, PartialEq, Eq, Hash, ConstParamTy)]
     pub struct BasisSignature: u16 {
         const scalar = 0x0;
         const e0 = 0x1;
@@ -163,7 +164,7 @@ impl BasisSignature {
 // TODO actually the best solution might be to litter BasisElementNames::contaminate(&mut a, &mut b)
 //  the statement before any invocation of PartialEq or Eq
 
-#[derive(Clone, Copy, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq, ConstParamTy)]
 pub struct BasisElement {
     // BasisElements will mathematically operate
     // under the assumption that the primary bases
@@ -192,7 +193,7 @@ impl Neg for BasisElement {
 }
 
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, ConstParamTy)]
 pub struct BasisElementDisplayName {
     display_name: &'static str,
     negate_display: bool,
