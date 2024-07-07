@@ -1633,10 +1633,10 @@ fn conformal_3d_geometric_products() {
     // Forward or Backward underlying anti-scalar, it must fulfill the
     // same results at the substitution level either way.
 
-    let mut cga3d
+    let cga3d
         = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
         + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
-    // let mut cga3d
+    // let cga3d
     //     = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
     //     + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
 
@@ -2725,10 +2725,10 @@ fn conformal_3d_geometric_anti_products() {
     // Forward or Backward underlying anti-scalar, it must fulfill the
     // same results at the substitution level either way.
 
-    let mut cga3d
+    let cga3d
         = generator_squares!(1 => e1, e2, e3, eA; -1 => eB)
         + substitutions!(e4 => 0.5 * (eB - eA); e5 => eB + eA);
-    // let mut cga3d
+    // let cga3d
     //     = generator_squares!(1 => e1, e2, e3, eB; -1 => eA)
     //     + substitutions!(e4 => 0.5 * (eA - eB); e5 => eA + eB);
 

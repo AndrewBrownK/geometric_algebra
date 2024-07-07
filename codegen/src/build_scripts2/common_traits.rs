@@ -24,7 +24,7 @@ pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
 mod impls {
     use async_trait::async_trait;
 
-    use crate::algebra2::basis::BasisSignature;
+    use crate::algebra2::basis::{BasisElement, BasisSignature};
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{FloatExpr, IntExpr};
     use crate::ast2::traits::{HasNotReturned, TraitImpl_10, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
@@ -35,10 +35,10 @@ mod impls {
     #[async_trait]
     impl TraitImpl_10 for ZeroImpl {
         type Output = MultiVector;
-        async fn general_implementation<'impls>(
-            b: TraitImplBuilder<'impls, HasNotReturned>,
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
-        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
             b.return_expr(owner.construct(|_| FloatExpr::Zero))
         }
     }
@@ -50,10 +50,10 @@ mod impls {
     #[async_trait]
     impl TraitImpl_10 for OneImpl {
         type Output = MultiVector;
-        async fn general_implementation<'impls>(
-            b: TraitImplBuilder<'impls, HasNotReturned>,
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
-        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
             b.return_expr(owner.construct(|element| {
                 if element.signature() == BasisSignature::scalar {
                     FloatExpr::One
@@ -71,10 +71,10 @@ mod impls {
     #[async_trait]
     impl TraitImpl_10 for UnitImpl {
         type Output = MultiVector;
-        async fn general_implementation<'impls>(
-            b: TraitImplBuilder<'impls, HasNotReturned>,
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
-        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
             b.return_expr(owner.construct(|_| FloatExpr::One))
         }
     }
@@ -86,10 +86,10 @@ mod impls {
     #[async_trait]
     impl TraitImpl_10 for GradeImpl {
         type Output = Integer;
-        async fn general_implementation<'impls>(
-            b: TraitImplBuilder<'impls, HasNotReturned>,
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
-        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
             let gr = owner.grade()?;
             b.return_expr(IntExpr::Literal(gr))
         }
@@ -102,10 +102,10 @@ mod impls {
     #[async_trait]
     impl TraitImpl_10 for AntiGradeImpl {
         type Output = Integer;
-        async fn general_implementation<'impls>(
-            b: TraitImplBuilder<'impls, HasNotReturned>,
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
-        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
             let anti_scalar = b.ga.anti_scalar();
             let ag = owner.anti_grade(anti_scalar)?;
             b.return_expr(IntExpr::Literal(ag))
@@ -117,11 +117,11 @@ mod impls {
     #[async_trait]
     impl TraitImpl_22 for WedgeImpl {
         type Output = MultiVector;
-        async fn general_implementation<'impls>(
-            b: TraitImplBuilder<'impls, HasNotReturned>,
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
-        ) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
             todo!()
         }
     }

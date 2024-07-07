@@ -348,7 +348,6 @@ dependencies = [
  "async-trait",
  "atom",
  "bitflags 2.5.0",
- "const-vec",
  "either",
  "im",
  "lazy_static",
@@ -435,12 +434,6 @@ checksum = "4ca0197aee26d1ae37445ee532fefce43251d24cc7c166799f4d46817f1d3973"
 dependencies = [
  "crossbeam-utils",
 ]
-
-[[package]]
-name = "const-vec"
-version = "1.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce95928ea3daa45d7b1b5c18f02e285ed3bd80bc54c9b0e62aaff84b4e0523e4"
 
 [[package]]
 name = "core-foundation"

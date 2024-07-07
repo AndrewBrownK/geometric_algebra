@@ -40,11 +40,11 @@ pub fn uwu_script() {
 
     use generators::*;
 
-    let uwu = ga!(
-        girls => sugar, spice, everything_nice, hungry;
-        boys => horny;
-        where
-        lazy => 0.5 * (horny - hungry);
-        desperate => horny + hungry;
-    );
+    // let uwu = ga!(
+    //     girls => sugar, spice, everything_nice, hungry;
+    //     boys => horny;
+    //     where
+    //     lazy => 0.5 * (horny - hungry);
+    //     desperate => horny + hungry;
+    // );
 }

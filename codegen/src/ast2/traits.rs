@@ -8,6 +8,7 @@ use either::Either;
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
 use regex::Regex;
+use crate::algebra2::basis::BasisElement;
 use crate::algebra2::GeometricAlgebra;
 use crate::algebra2::multivector::MultiVecRepository;
 use crate::ast2::{RawVariableDeclaration, Variable};
@@ -80,16 +81,16 @@ pub struct RawTraitDefinition {
 pub trait TraitImpl_10: Copy + Send + 'static {
     type Output: TraitResultType;
 
-    async fn general_implementation<'impls>(
-        b: TraitImplBuilder<'impls, HasNotReturned>,
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         owner: MultiVector,
-    ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
 
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_0Param: TraitImpl_10 {
+pub trait TraitDef_1Class_0Param<const AntiScalar: BasisElement>: TraitImpl_10 {
     type Owner: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
@@ -106,7 +107,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
 
     async fn invoke<'impl_ctx>(
         &self,
-        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, HasNotReturned>,
+        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
@@ -128,7 +129,6 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
 
         let impl_key = (trait_key.clone(), owner.clone());
         let owner_clone = owner.clone();
-        let trait_key_clone = trait_key.clone();
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
@@ -164,7 +164,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
 
     async fn inline<'impl_ctx>(
         &self,
-        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, HasNotReturned>,
+        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
@@ -195,15 +195,15 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
 #[allow(non_camel_case_types)]
 pub trait TraitImpl_11: Copy + Send + 'static {
     type Output: TraitResultType;
-    async fn general_implementation<'impls>(
-        b: TraitImplBuilder<'impls, HasNotReturned>,
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
-    ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_1Param: TraitImpl_11 {
+pub trait TraitDef_1Class_1Param<const AntiScalar: BasisElement>: TraitImpl_11 {
     type Owner: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
@@ -220,7 +220,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
 
     async fn invoke<Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>, owner: Expr
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, owner: Expr
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
         let owner_class = owner.strong_expression_type();
@@ -243,7 +243,6 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
 
         let impl_key = (trait_key.clone(), owner_class.clone());
         let owner_class_clone = owner_class.clone();
-        let trait_key_clone = trait_key.clone();
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
@@ -285,7 +284,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
     }
     async fn inline<Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
@@ -317,16 +316,16 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
 #[allow(non_camel_case_types)]
 pub trait TraitImpl_21: Copy + Send + 'static {
     type Output: TraitResultType;
-    async fn general_implementation<'impls>(
-        b: TraitImplBuilder<'impls, HasNotReturned>,
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector,
-    ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_1Param: TraitImpl_21 {
+pub trait TraitDef_2Class_1Param<const AntiScalar: BasisElement>: TraitImpl_21 {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Other: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
@@ -344,7 +343,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
 
     async fn invoke<Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -371,7 +370,6 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
         let owner_class_clone = owner_class.clone();
         let other_class_clone = other_class.clone();
-        let trait_key_clone = trait_key.clone();
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
@@ -414,7 +412,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
 
     async fn inline<Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector
     ) -> Option<Variable<Self::Output>> {
@@ -447,16 +445,16 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
 #[allow(non_camel_case_types)]
 pub trait TraitImpl_22: Copy + Send + 'static {
     type Output: TraitResultType;
-    async fn general_implementation<'impls>(
-        b: TraitImplBuilder<'impls, HasNotReturned>,
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>,
-    ) -> Option<TraitImplBuilder<'impls, Self::Output>>;
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_2Param: TraitImpl_22 {
+pub trait TraitDef_2Class_2Param<const AntiScalar: BasisElement>: TraitImpl_22 {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Other: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
@@ -474,7 +472,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
 
     async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -502,7 +500,6 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
         let impl_key = (trait_key.clone(), owner_class.clone(), other_class.clone());
         let owner_class_clone = owner_class.clone();
         let other_class_clone = other_class.clone();
-        let trait_key_clone = trait_key.clone();
         let registry = b.registry.clone();
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
@@ -552,7 +549,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
 
     async fn inline<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2
     ) -> Option<Variable<Self::Output>> {
@@ -792,9 +789,9 @@ pub enum CommentOrVariableDeclaration {
     VarDec(Arc<RawVariableDeclaration>)
 }
 
-pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
-    pub ga: Arc<GeometricAlgebra>,
-    pub mvs: Arc<MultiVecRepository>,
+pub struct TraitImplBuilder<'impl_ctx, const AntiScalar: BasisElement, ReturnType> {
+    pub ga: Arc<GeometricAlgebra<AntiScalar>>,
+    pub mvs: Arc<MultiVecRepository<AntiScalar>>,
     // TODO statistics tracker for fun
     registry: TraitImplRegistry,
     trait_def: Arc<RawTraitDefinition>,
@@ -814,10 +811,10 @@ pub struct TraitImplBuilder<'impl_ctx, ReturnType> {
     return_type: ReturnType,
 }
 
-impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
+impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, AntiScalar, HasNotReturned> {
     fn new(
-        ga: Arc<GeometricAlgebra>,
-        mvs: Arc<MultiVecRepository>,
+        ga: Arc<GeometricAlgebra<AntiScalar>>,
+        mvs: Arc<MultiVecRepository<AntiScalar>>,
         trait_def: Arc<RawTraitDefinition>,
         registry: TraitImplRegistry,
         inline_dependencies: bool,
@@ -919,19 +916,19 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
 
     pub fn return_expr<ExprType, Expr: Expression<ExprType>>(
         self, expr: Expr
-    ) -> Option<TraitImplBuilder<'impl_ctx, ExprType>> {
+    ) -> Option<TraitImplBuilder<'impl_ctx, AntiScalar, ExprType>> {
         self.comment_return_impl(None::<String>, expr)
     }
 
     pub fn comment_return<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: C, expr: Expr
-    ) -> Option<TraitImplBuilder<'impl_ctx, ExprType>> {
+    ) -> Option<TraitImplBuilder<'impl_ctx, AntiScalar, ExprType>> {
         self.comment_return_impl(Some(comment), expr)
     }
 
     fn comment_return_impl<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: Option<C>, expr: Expr
-    ) -> Option<TraitImplBuilder<'impl_ctx, ExprType>> {
+    ) -> Option<TraitImplBuilder<'impl_ctx, AntiScalar, ExprType>> {
         let return_type = expr.strong_expression_type();
         return Some(TraitImplBuilder {
             ga: self.ga.clone(),
@@ -955,7 +952,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     }
 
     fn inline_by_copy_existing_10<
-        T: TraitDef_1Class_0Param + ?Sized,
+        T: TraitDef_1Class_0Param<AntiScalar> + ?Sized,
     >(
         &mut self,
         trait_key: &TraitKey,
@@ -979,7 +976,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     }
 
     fn inline_by_copy_existing_11<
-        T: TraitDef_1Class_1Param + ?Sized,
+        T: TraitDef_1Class_1Param<AntiScalar> + ?Sized,
         Expr: Expression<MultiVector>
     >(
         &mut self,
@@ -1007,7 +1004,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     }
 
     fn inline_by_copy_existing_21<
-        T: TraitDef_2Class_1Param + ?Sized,
+        T: TraitDef_2Class_1Param<AntiScalar> + ?Sized,
         Expr: Expression<MultiVector>
     >(
         &mut self,
@@ -1035,7 +1032,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
     }
 
     fn inline_by_copy_existing_22<
-        T: TraitDef_2Class_2Param + ?Sized,
+        T: TraitDef_2Class_2Param<AntiScalar> + ?Sized,
         Expr1: Expression<MultiVector>,
         Expr2: Expression<MultiVector>,
     >(
@@ -1102,7 +1099,7 @@ impl<'impl_ctx> TraitImplBuilder<'impl_ctx, HasNotReturned> {
 }
 
 
-impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
+impl<'impl_ctx, const AntiScalar: BasisElement, ExprType> TraitImplBuilder<'impl_ctx, AntiScalar, ExprType> {
     fn into_trait10(
         self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
@@ -1198,7 +1195,7 @@ pub struct InlineFinisher<ReturnType> {
     return_type: ReturnType,
 }
 
-impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
+impl<'impl_ctx, const AntiScalar: BasisElement, ExprType> TraitImplBuilder<'impl_ctx, AntiScalar, ExprType> {
     fn release_context(self) -> InlineFinisher<ExprType> {
         InlineFinisher {
             lines: self.lines,
@@ -1210,7 +1207,7 @@ impl<'impl_ctx, ExprType> TraitImplBuilder<'impl_ctx, ExprType> {
 }
 
 impl<ExprType> InlineFinisher<ExprType> {
-    fn finish_inline<V: Into<String>>(self, b: &mut TraitImplBuilder<HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+    fn finish_inline<const AntiScalar: BasisElement, V: Into<String>>(self, b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
         for line in self.lines {
             b.lines.push(line);
         }

@@ -128,7 +128,7 @@ impl BasisSignature {
         self.into_generator_elements_const().1.into_iter().filter_map(|it| it).collect()
     }
 
-    const fn const_cmp(&self, other: &BasisSignature) -> Ordering {
+    pub const fn const_cmp(&self, other: &BasisSignature) -> Ordering {
         let a = self.bits();
         let b = other.bits();
         let aco = a.count_ones();

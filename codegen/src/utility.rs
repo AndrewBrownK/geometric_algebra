@@ -1,7 +1,11 @@
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
+use std::fmt::Debug;
 use std::future::Future;
 use std::hash::Hash;
+use std::mem;
+use std::mem::ManuallyDrop;
+use std::ops::{Index, IndexMut};
 use std::sync::Arc;
 
 use tokio::sync::broadcast;
@@ -114,5 +118,84 @@ impl<
                 }
             }
         }
+    }
+}
+
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ConstVec<T, const N: usize>([Option<T>; N]);
+
+impl<T: Copy + Debug, const N: usize> ConstVec<T, N> {
+    pub const fn new() -> Self {
+        ConstVec([None; N])
+    }
+
+    pub const fn len(&self) -> usize {
+        let mut s = 0;
+        let mut i = 0;
+        while i < self.0.len() {
+            if self.0[i].is_some() {
+                s += 1;
+            }
+            i += 1;
+        }
+        s
+    }
+
+    pub const fn push(&mut self, t: T) {
+        let mut i = 0;
+        while i < self.0.len() {
+            let i_mut = &mut self.0[i];
+            match i_mut {
+                None => {
+                    // T: Copy helps convince the compiler we are not running a destructor at
+                    // compile time here
+                    *i_mut = Some(t);
+                    return
+                }
+                Some(_) => {
+                    // Continue to iterate until possibly overflow
+                }
+            }
+            i += 1;
+        }
+        // Cannot format nicer error message in const evaluation
+        panic!("ConstVec overflow")
+    }
+
+    pub const fn get(&self, index: usize) -> &T {
+        match &self.0[index] {
+            None => {
+                // Cannot format nicer error message in const evaluation
+                panic!("ConstVec get() index out of bounds")
+            }
+            Some(stuff) => {
+                return stuff
+            }
+        }
+    }
+
+    pub const fn get_mut(&mut self, index: usize) -> &mut T {
+        match &mut self.0[index] {
+            None => {
+                panic!("ConstVec get_mut() index out of bounds")
+            }
+            Some(stuff) => {
+                return stuff
+            }
+        }
+    }
+}
+
+impl<T: Copy + Debug, const N: usize> Index<usize> for ConstVec<T, N> {
+    type Output = T;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        self.get(index)
+    }
+}
+impl<T: Copy + Debug, const N: usize> IndexMut<usize> for ConstVec<T, N> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        self.get_mut(index)
     }
 }

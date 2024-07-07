@@ -43,8 +43,9 @@ tinyvec = { version = "1.6.0", features = ["alloc", "rustc_1_57"] }
 #construe = "0.0.3"
 
 # const-vec lets you specify the size, which is fine by me, and also allows slice indexing and iteration and stuff.
-# This might be what I'm looking for.
-const-vec = "1.1.1"
+# The problem is that it is the wrong meaning of "const". It is const as in interior mutability, not const
+# as in const evaluation.
+#const-vec = "1.1.1"
 
 # inline-const seems to offer cool stuff, worth checking out, but doesn't seem like the most straightforward
 # solution to my current problem (MultiVecs)
@@ -55,3 +56,5 @@ const-vec = "1.1.1"
 
 # These strangers seem categorically on-topic, but too sparse on documentation to commit
 #const_std_vec = "0.2.0"
+
+# Conclusion..... I have to roll my own

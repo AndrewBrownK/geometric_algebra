@@ -7,7 +7,7 @@ use crate::algebra2::basis::{BasisElement, BasisElementNames};
 use crate::algebra2::basis::arithmetic::Sum;
 use crate::algebra2::basis::generators::GeneratorSquares;
 use crate::algebra2::basis::substitute::SubstitutionRepository;
-use crate::algebra2::multivector::{mono_grade_elements, mono_grade_groups, MultiVec, num_elements};
+use crate::algebra2::multivector::{MultiVec, qty_groups};
 
 pub mod basis;
 pub mod multivector;

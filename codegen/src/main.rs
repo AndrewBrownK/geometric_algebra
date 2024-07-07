@@ -11,6 +11,7 @@
 #![feature(marker_trait_attr)]
 #![feature(const_mut_refs)]
 #![feature(concat_idents)]
+#![feature(const_swap)]
 
 mod algebra;
 mod ast;

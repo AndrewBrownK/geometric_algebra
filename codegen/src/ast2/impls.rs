@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-
+use crate::algebra2::basis::BasisElement;
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::traits::{HasNotReturned, TraitAlias, TraitDef_1Class_0Param, TraitDef_1Class_1Param, TraitDef_2Class_1Param, TraitDef_2Class_2Param, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
 use crate::ast2::Variable;
@@ -88,7 +88,7 @@ impl<Impl: Copy> Elaborated<Impl> {
     }
 
     pub const fn alias_custom(&mut self, alias: TraitAlias) -> Self {
-        let mut arr = &mut self.trait_names.aliases;
+        let arr = &mut self.trait_names.aliases;
         let mut idx = 0;
         while idx < arr.len() {
             if arr[idx].is_none() {
@@ -105,65 +105,77 @@ impl<Impl: Copy> Elaborated<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_10> TraitImpl_10 for Elaborated<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls>(b: TraitImplBuilder<'impls, HasNotReturned>, owner: MultiVector) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, owner: MultiVector) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
         Impl::general_implementation(b, owner).await
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for Elaborated<Impl> {
+impl<const AntiScalar: BasisElement, Impl: TraitImpl_10> TraitDef_1Class_0Param<AntiScalar> for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
-        standard_documentation(self.trait_names(), self.blurb)
+        standard_documentation(
+            <Elaborated<Impl> as TraitDef_1Class_0Param<AntiScalar>>::trait_names(self),
+            self.blurb
+        )
     }
 }
 #[async_trait]
 impl<Impl: TraitImpl_11> TraitImpl_11 for Elaborated<Impl> {
     type Output = Impl::Output;
 
-    async fn general_implementation<'impls>(b: TraitImplBuilder<'impls, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
         Impl::general_implementation(b, slf).await
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for Elaborated<Impl> {
+impl<const AntiScalar: BasisElement, Impl: TraitImpl_11> TraitDef_1Class_1Param<AntiScalar> for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
-        standard_documentation(self.trait_names(), self.blurb)
+        standard_documentation(
+            <Elaborated<Impl> as TraitDef_1Class_1Param<AntiScalar>>::trait_names(self),
+            self.blurb
+        )
     }
 }
 #[async_trait]
 impl<Impl: TraitImpl_21> TraitImpl_21 for Elaborated<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls>(b: TraitImplBuilder<'impls, HasNotReturned>, slf: Variable<MultiVector>, other: MultiVector) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: MultiVector) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
         Impl::general_implementation(b, slf, other).await
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for Elaborated<Impl> {
+impl<const AntiScalar: BasisElement, Impl: TraitImpl_21> TraitDef_2Class_1Param<AntiScalar> for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
-        standard_documentation(self.trait_names(), self.blurb)
+        standard_documentation(
+            <Elaborated<Impl> as TraitDef_2Class_1Param<AntiScalar>>::trait_names(self),
+            self.blurb
+        )
     }
 }
 #[async_trait]
 impl<Impl: TraitImpl_22> TraitImpl_22 for Elaborated<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls>(b: TraitImplBuilder<'impls, HasNotReturned>, slf: Variable<MultiVector>, other: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, Self::Output>> {
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
         Impl::general_implementation(b, slf, other).await
     }
 }
 #[async_trait]
-impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for Elaborated<Impl> {
+impl<const AntiScalar: BasisElement, Impl: TraitImpl_22> TraitDef_2Class_2Param<AntiScalar> for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
-        standard_documentation(self.trait_names(), self.blurb)
+        standard_documentation(
+            <Elaborated<Impl> as TraitDef_2Class_2Param<AntiScalar>>::trait_names(self),
+            self.blurb
+        )
     }
 }

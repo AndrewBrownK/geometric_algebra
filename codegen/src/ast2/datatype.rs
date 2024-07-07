@@ -1,8 +1,11 @@
 use std::sync::Arc;
+
 use crate::algebra2::basis::BasisElement;
+use crate::algebra2::basis::elements::e12345;
 use crate::algebra2::basis::grades::Grades;
-use crate::algebra2::multivector::{MultiVecEnum, ConsolidateEnum, mono_grade_groups, MultiVec, num_elements};
+use crate::algebra2::multivector::{MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+
 // TODO move these items to better locations
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
@@ -16,7 +19,9 @@ pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Vec4;
 #[derive(PartialEq, Eq, Clone, Debug, Hash)]
-pub struct MultiVector(Arc<MultiVecEnum>);
+// TODO infect a generic AntiScalar parameter across the AST, unless the pros and cons of
+//  a non-infectious approach are better
+pub struct MultiVector(Arc<MultiVec<{ e12345 }>>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionType {
@@ -33,7 +38,10 @@ pub enum ExpressionType {
 impl MultiVector {
     pub fn construct<F: Fn(BasisElement) -> FloatExpr>(&self, f: F) -> MultiVectorExpr {
         let mut outer = vec![];
-        for thing in self.0.element_groups() {
+        let groups = self.0.groups();
+        let mut i = 0;
+        while i < groups.len() {
+            let thing = groups.get(i).clone().into_vec();
             outer.push(match thing.len() {
                 1 => MultiVectorGroupExpr::JustFloat(f(thing[0])),
                 2 => MultiVectorGroupExpr::Vec2(Vec2Expr::Gather2(f(thing[0]), f(thing[1]))),
@@ -41,6 +49,7 @@ impl MultiVector {
                 4 => MultiVectorGroupExpr::Vec4(Vec4Expr::Gather4(f(thing[0]), f(thing[1]), f(thing[2]), f(thing[3]))),
                 _ => unreachable!("BasisElementGroup has len 1-4")
             });
+            i += 1;
         }
         MultiVectorExpr {
             mv_class: self.clone(),
@@ -79,17 +88,17 @@ impl MultiVector {
 
 
 pub trait ClassesFromRegistry {
-    fn include_class(&self, mvc: &MultiVecEnum) -> bool;
+    fn include_class(&self, mvc: &MultiVector) -> bool;
 }
 pub struct NoParam;
 impl ClassesFromRegistry for NoParam {
-    fn include_class(&self, _: &MultiVecEnum) -> bool {
+    fn include_class(&self, _: &MultiVector) -> bool {
         false
     }
 }
 pub struct AnyClasses;
 impl ClassesFromRegistry for AnyClasses {
-    fn include_class(&self, _: &MultiVecEnum) -> bool {
+    fn include_class(&self, _: &MultiVector) -> bool {
         true
     }
 }
@@ -97,16 +106,10 @@ impl ClassesFromRegistry for AnyClasses {
 
 
 /// Good for manual implementations
-pub struct Specifically<const D: u8>(MultiVec<D>) where
-    MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized;
+pub struct Specifically(MultiVector);
 
-impl<const D: u8> ClassesFromRegistry for Specifically<D> where
-    MultiVec<D>: ConsolidateEnum<Output=MultiVecEnum>,
-    [(); mono_grade_groups(D)]: Sized,
-    [(); num_elements(D)]: Sized {
-    fn include_class(&self, mvc: &MultiVecEnum) -> bool {
-        mvc == &self.0.clone().consolidate_enum()
+impl ClassesFromRegistry for Specifically {
+    fn include_class(&self, mvc: &MultiVector) -> bool {
+        mvc == &self.0.clone()
     }
 }
