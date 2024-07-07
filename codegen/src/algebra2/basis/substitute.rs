@@ -9,6 +9,7 @@ use crate::algebra2::basis::arithmetic::{GradedSum, Product, Sum};
 use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
 use crate::algebra2::basis::grades::{grade1};
 use crate::generator_squares;
+use crate::utility::ConstOption;
 
 #[derive(Debug)]
 pub struct SubstitutionRepository {
@@ -1644,13 +1645,13 @@ fn conformal_3d_geometric_products() {
     let mut correct_products = BTreeMap::new();
     for (a, b, products) in correct_cayley_table {
         let mut a = BasisElement::parsed_display_name(a).expect("a must parse");
-        a.display_name = None;
+        a.display_name = ConstOption::None;
         let mut b = BasisElement::parsed_display_name(b).expect("b must parse");
-        b.display_name = None;
+        b.display_name = ConstOption::None;
         let mut sum = vec![];
         for product in products {
             let mut element = BasisElement::parsed_display_name(product).expect("product must parse");
-            element.display_name = None;
+            element.display_name = ConstOption::None;
             sum.push(Product { coefficient: 1.0, element });
         }
         let mut sum = Sum { sum };
@@ -2736,13 +2737,13 @@ fn conformal_3d_geometric_anti_products() {
     let mut correct_anti_products = BTreeMap::new();
     for (a, b, anti_products) in correct_cayley_table {
         let mut a = BasisElement::parsed_display_name(a).expect("a must parse");
-        a.display_name = None;
+        a.display_name = ConstOption::None;
         let mut b = BasisElement::parsed_display_name(b).expect("b must parse");
-        b.display_name = None;
+        b.display_name = ConstOption::None;
         let mut sum = vec![];
         for anti_product in anti_products {
             let mut element = BasisElement::parsed_display_name(anti_product).expect("anti-product must parse");
-            element.display_name = None;
+            element.display_name = ConstOption::None;
             sum.push(Product { coefficient: 1.0, element });
         }
         let mut sum = Sum { sum };

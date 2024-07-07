@@ -202,7 +202,7 @@ impl BasisElementGroup {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct MultiVec<const AntiScalar: BasisElement> {
     name: &'static str,
     grades: Grades,
@@ -463,7 +463,7 @@ macro_rules! multi_vecs {
     // Grouped using tuples
     ($anti_scalar:ident; $( $mv_name:ident => $( ($($basis_element:ident),+ $(,)?)),+ $(,)? );+ $(;)?) => {
         $(
-        pub static $mv_name: std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>> = std::sync::Arc::new({
+        pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
             use $crate::algebra2::basis::elements::*;
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
@@ -476,14 +476,14 @@ macro_rules! multi_vecs {
                 cv
             };
             $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
-        });
+        };
         )+
         // pub static AllMultiVecs: [std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>>] = [
         //     $($mv_name.clone()),+
         // ];
         pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
-            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, &[
-                $($mv_name.clone()),+
+            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
+                $(&$mv_name,)+
             ])
         }
     };
@@ -491,7 +491,7 @@ macro_rules! multi_vecs {
     ($anti_scalar:ident; $( $mv_name:ident => $( [$($basis_element:ident),+ $(,)?]),+ $(,)? );+ $(;)?) => {
         use $crate::algebra2::basis::elements::*;
         $(
-        pub static $mv_name: std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>> = std::sync::Arc::new({
+        pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -503,14 +503,14 @@ macro_rules! multi_vecs {
                 cv
             };
             $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
-        });
+        };
         )+
         // pub static AllMultiVecs: [std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>>] = [
         //     $($mv_name.clone()),+
         // ];
         pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
-            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, &[
-                $($mv_name.clone()),+
+            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
+                $(&$mv_name, )+
             ])
         }
     };
@@ -518,7 +518,7 @@ macro_rules! multi_vecs {
     ($anti_scalar:ident; $( $mv_name:ident as $( $($basis_element:ident),+ $(,)?)|+ );+ $(;)?) => {
         use $crate::algebra2::basis::elements::*;
         $(
-        pub static $mv_name: std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>> = std::sync::Arc::new({
+        pub static $mv_name: $crate::algebra2::multivector::MultiVec<{$anti_scalar}> = {
             let name: &'static str = stringify!($mv_name);
             let groups: $crate::utility::ConstVec<
                 $crate::algebra2::multivector::BasisElementGroup,
@@ -530,14 +530,14 @@ macro_rules! multi_vecs {
                 cv
             };
             $crate::algebra2::multivector::MultiVec::<$anti_scalar>::new_by_groups(name, groups)
-        });
+        };
         )+
         // pub static AllMultiVecs: [std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>>] = [
         //     $($mv_name.clone()),+
         // ];
         pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
-            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, &[
-                $($mv_name.clone()),+
+            $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
+                $(&$mv_name, )+
             ])
         }
     };
@@ -680,15 +680,16 @@ impl FallbackWasUsed {
 pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     ga: Arc<GeometricAlgebra<AntiScalar>>,
     anti_scalar_sig: BasisSignature,
-    declared: &'static [Arc<MultiVec<AntiScalar>>],
+    declared: Vec<&'static MultiVec<AntiScalar>>,
 }
 
 impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
-    pub fn declare(
+    pub fn declare<const N: usize>(
         ga: Arc<GeometricAlgebra<AntiScalar>>,
-        multi_vecs: &'static [Arc<MultiVec<AntiScalar>>],
+        multi_vecs: [&'static MultiVec<AntiScalar>; N],
     ) -> Self {
         let mut nb = ga.named_bases.write();
+        let mut declared = vec![];
         for multi_vec in multi_vecs {
             for el in multi_vec.elements() {
                 if !AntiScalar.signature().contains(el.signature()) {
@@ -699,12 +700,13 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                     Err(err) => panic!("Could not accept BasisElement {el}: {err}"),
                 }
             }
+            declared.push(multi_vec);
         }
         drop(nb);
         DeclareMultiVecs {
             ga,
             anti_scalar_sig: AntiScalar.signature(),
-            declared: multi_vecs,
+            declared,
         }
     }
 
@@ -713,7 +715,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         DeclareMultiVecs {
             ga,
             anti_scalar_sig: anti_scalar.signature(),
-            declared: &[],
+            declared: vec![],
         }
     }
 }

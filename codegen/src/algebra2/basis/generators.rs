@@ -6,6 +6,7 @@ use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum, Product};
 use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::algebra2::basis::substitute::SubstitutionRepository;
+use crate::utility::ConstOption;
 
 /// The foundational GeneratorSquares assumes a diagonal metric
 /// (with no generator substitutions).
@@ -39,7 +40,7 @@ impl GeneratorSquares {
         BasisElement {
             coefficient: if self.negative_anti_scalar { -1 } else { 1 },
             signature,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 
@@ -330,7 +331,7 @@ impl GeneratorSquares {
         BasisElement {
             coefficient: sign,
             signature,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 
@@ -421,7 +422,7 @@ impl GeneratorElement {
         BasisElement {
             coefficient: 1,
             signature: self.signature(),
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 

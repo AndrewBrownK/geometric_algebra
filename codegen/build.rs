@@ -60,7 +60,7 @@ fn generate_multi_bases() {
     BasisElement {{
         coefficient: 1,
         signature,
-        display_name: None,
+        display_name: ConstOption::None,
     }}
 }}
 ").unwrap();

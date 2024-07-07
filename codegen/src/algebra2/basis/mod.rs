@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
-use std::ops::Neg;
+use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg};
 use rand::Rng;
 use generators::GeneratorSquares;
 use crate::algebra2::basis::generators::GeneratorElement;
@@ -9,34 +9,42 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra::basis_element;
 use crate::generator_squares;
 use std::marker::{ConstParamTy};
+use crate::utility::ConstOption;
 
 pub mod generators;
 pub mod substitute;
 pub mod arithmetic;
 pub mod grades;
 
-bitflags::bitflags! {
-    #[derive(Clone, Copy, PartialEq, Eq, Hash, ConstParamTy)]
-    pub struct BasisSignature: u16 {
-        const scalar = 0x0;
-        const e0 = 0x1;
-        const e1 = 0x2;
-        const e2 = 0x4;
-        const e3 = 0x8;
-        const e4 = 0x10;
-        const e5 = 0x20;
-        const e6 = 0x40;
-        const e7 = 0x80;
-        const e8 = 0x100;
-        const e9 = 0x200;
-        const eA = 0x400;
-        const eB = 0x800;
-        const eC = 0x1000;
-        const eD = 0x2000;
-        const eE = 0x4000;
-        const eF = 0x8000;
-    }
+// Would love to use bitflags::bitflags!, but cannot because
+// we need to implement ConstParamTy
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub struct BasisSignature(u16);
+
+
+// Implement `ConstParamTy` for `BasisSignature`
+impl ConstParamTy for BasisSignature {}
+#[allow(non_upper_case_globals)]
+impl BasisSignature {
+    pub const scalar: BasisSignature = BasisSignature(0x0);
+    pub const e0: BasisSignature = BasisSignature(0x1);
+    pub const e1: BasisSignature = BasisSignature(0x2);
+    pub const e2: BasisSignature = BasisSignature(0x4);
+    pub const e3: BasisSignature = BasisSignature(0x8);
+    pub const e4: BasisSignature = BasisSignature(0x10);
+    pub const e5: BasisSignature = BasisSignature(0x20);
+    pub const e6: BasisSignature = BasisSignature(0x40);
+    pub const e7: BasisSignature = BasisSignature(0x80);
+    pub const e8: BasisSignature = BasisSignature(0x100);
+    pub const e9: BasisSignature = BasisSignature(0x200);
+    pub const eA: BasisSignature = BasisSignature(0x400);
+    pub const eB: BasisSignature = BasisSignature(0x800);
+    pub const eC: BasisSignature = BasisSignature(0x1000);
+    pub const eD: BasisSignature = BasisSignature(0x2000);
+    pub const eE: BasisSignature = BasisSignature(0x4000);
+    pub const eF: BasisSignature = BasisSignature(0x8000);
 }
+
 
 impl Default for BasisSignature {
     fn default() -> Self {
@@ -149,8 +157,64 @@ impl BasisSignature {
         }
         return Ordering::Equal
     }
+
+    pub const fn contains(&self, other: BasisSignature) -> bool {
+        self.0 == (self.0 | other.0)
+    }
+
+    pub const fn from_bits_retain(bits: u16) -> BasisSignature {
+        BasisSignature(bits)
+    }
+
+    pub const fn bits(&self) -> u16 {
+        self.0
+    }
+
+    pub const fn empty() -> Self {
+        BasisSignature(0)
+    }
+
+    pub const fn union(&self, rhs: BasisSignature) -> Self {
+        BasisSignature(self.0 | rhs.0)
+    }
+
+    pub const fn intersection(&self, rhs: BasisSignature) -> Self {
+        BasisSignature(self.0 & rhs.0)
+    }
+
+    pub const fn is_empty(&self) -> bool {
+        self.0 == 0
+    }
+
+    pub const fn remove(&mut self, rhs: BasisSignature) {
+        self.0 &= !rhs.0
+    }
 }
 
+impl BitOr for BasisSignature {
+    type Output = BasisSignature;
+
+    fn bitor(self, rhs: Self) -> Self::Output {
+        BasisSignature(self.0.bitor(rhs.0))
+    }
+}
+impl BitOrAssign for BasisSignature {
+    fn bitor_assign(&mut self, rhs: Self) {
+        self.0.bitor_assign(rhs.0)
+    }
+}
+impl BitAnd for BasisSignature {
+    type Output = BasisSignature;
+
+    fn bitand(self, rhs: Self) -> Self::Output {
+        BasisSignature(self.0.bitand(rhs.0))
+    }
+}
+impl BitAndAssign for BasisSignature {
+    fn bitand_assign(&mut self, rhs: Self) {
+        self.0.bitand_assign(rhs.0)
+    }
+}
 
 
 // TODO I have concerns about BasisElements with different names but the same signature
@@ -164,7 +228,7 @@ impl BasisSignature {
 // TODO actually the best solution might be to litter BasisElementNames::contaminate(&mut a, &mut b)
 //  the statement before any invocation of PartialEq or Eq
 
-#[derive(Clone, Copy, Hash, PartialEq, Eq, ConstParamTy)]
+#[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct BasisElement {
     // BasisElements will mathematically operate
     // under the assumption that the primary bases
@@ -179,8 +243,9 @@ pub struct BasisElement {
     // respect to the normally ordered element.
     // This way we can tell what to do with all of
     // (for example) +e412, -e412, +e124, and -e124
-    display_name: Option<BasisElementDisplayName>,
+    display_name: ConstOption<BasisElementDisplayName>,
 }
+impl ConstParamTy for BasisElement {}
 
 impl Neg for BasisElement {
     type Output = BasisElement;
@@ -193,11 +258,12 @@ impl Neg for BasisElement {
 }
 
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, ConstParamTy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct BasisElementDisplayName {
     display_name: &'static str,
     negate_display: bool,
 }
+impl ConstParamTy for BasisElementDisplayName {}
 
 
 impl PartialOrd for BasisElement {
@@ -227,7 +293,7 @@ impl Debug for BasisElement {
 impl Display for BasisElement {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let mut sign = self.coefficient;
-        if let Some(dn) = self.display_name {
+        if let ConstOption::Some(dn) = self.display_name {
             if dn.negate_display {
                 sign = sign * -1;
             }
@@ -251,7 +317,7 @@ impl Default for BasisElement {
         Self {
             coefficient: 0,
             signature: BasisSignature::scalar,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 }
@@ -261,7 +327,7 @@ impl From<BasisSignature> for BasisElement {
         Self {
             coefficient: 1,
             signature,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 }
@@ -296,7 +362,7 @@ impl BasisElement {
         Self {
             coefficient: 0,
             signature: BasisSignature::scalar,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 
@@ -304,7 +370,7 @@ impl BasisElement {
         Self {
             coefficient: 1,
             signature: BasisSignature::scalar,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 
@@ -372,7 +438,7 @@ impl BasisElement {
                     // with a manually set display_name instead of me figure out
                     // strange cases in const evaluation.
                     return if i == s.len() {
-                        result.display_name = Some(display_name);
+                        result.display_name = ConstOption::Some(display_name);
                         Some(result)
                     } else {
                         None
@@ -381,7 +447,7 @@ impl BasisElement {
                 (false, b'1') => {
                     result.signature = BasisSignature::empty();
                     return if i == s.len() {
-                        result.display_name = Some(display_name);
+                        result.display_name = ConstOption::Some(display_name);
                         Some(result)
                     } else {
                         None
@@ -429,7 +495,7 @@ impl BasisElement {
             // Alright and finally actually update the signature
             result.signature = sig_existing.union(sig_addition);
         }
-        result.display_name = Some(display_name);
+        result.display_name = ConstOption::Some(display_name);
         Some(result)
     }
 
@@ -438,12 +504,12 @@ impl BasisElement {
             display_name,
             negate_display: odd_permutation,
         };
-        self.display_name = Some(dn);
+        self.display_name = ConstOption::Some(dn);
         self
     }
 
     pub const fn anon(mut self) -> Self {
-        self.display_name = None;
+        self.display_name = ConstOption::None;
         self
     }
     pub const fn is_anon(&self) -> bool {
@@ -603,7 +669,7 @@ impl BasisElement {
         BasisElement {
             coefficient: sign,
             signature,
-            display_name: None,
+            display_name: ConstOption::None,
         }
     }
 
@@ -643,10 +709,10 @@ impl BasisElementNames {
             return
         }
         match (a.display_name, b.display_name) {
-            (None, None) => {}
-            (Some(an), None) => { b.display_name = Some(an.clone()) }
-            (None, Some(bn)) => { a.display_name = Some(bn.clone()) }
-            (Some(an), Some(bn)) => if an != bn {
+            (ConstOption::None, ConstOption::None) => {}
+            (ConstOption::Some(an), ConstOption::None) => { b.display_name = ConstOption::Some(an.clone()) }
+            (ConstOption::None, ConstOption::Some(bn)) => { a.display_name = ConstOption::Some(bn.clone()) }
+            (ConstOption::Some(an), ConstOption::Some(bn)) => if an != bn {
                 panic!("Conflicting display names found for {a:?} and {b:?}")
             },
         }
@@ -658,8 +724,8 @@ impl BasisElementNames {
     /// have).
     pub fn may_accept(&self, el: BasisElement) -> bool {
         let a = match &el.display_name {
-            None => return false,
-            Some(a) => a,
+            ConstOption::None => return false,
+            ConstOption::Some(a) => a,
         };
         let Some(b) = self.elements.get(&el.signature) else {
             return true;
@@ -677,7 +743,7 @@ impl BasisElementNames {
             self.elements.get(&el.signature).cloned()
         };
         if let Some(dn) = existing {
-            el.display_name = Some(dn);
+            el.display_name = ConstOption::Some(dn);
         }
         return el
     }
@@ -693,7 +759,7 @@ impl BasisElementNames {
         };
         el.coefficient = 1;
         if let Some(dn) = existing {
-            el.display_name = Some(dn);
+            el.display_name = ConstOption::Some(dn);
             if dn.negate_display {
                 el.coefficient = -1;
             }
@@ -703,7 +769,7 @@ impl BasisElementNames {
 
     /// Add a name on a BasisElement (if it exists) to the BasisElementNames.
     pub fn accept_name(&mut self, el: BasisElement) -> anyhow::Result<()> {
-        let Some(el_dn) = el.display_name else { return Ok(()) };
+        let ConstOption::Some(el_dn) = el.display_name else { return Ok(()) };
         let sig = el.signature;
         let existing = if el.coefficient == 0 {
             self.zero

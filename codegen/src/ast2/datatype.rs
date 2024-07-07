@@ -21,7 +21,7 @@ pub struct Vec4;
 #[derive(PartialEq, Eq, Clone, Debug, Hash)]
 // TODO infect a generic AntiScalar parameter across the AST, unless the pros and cons of
 //  a non-infectious approach are better
-pub struct MultiVector(Arc<MultiVec<{ e12345 }>>);
+pub struct MultiVector(&'static MultiVec<{ e12345 }>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionType {
