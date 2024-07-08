@@ -98,8 +98,7 @@ mod impls {
             b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
-            let anti_scalar = b.ga.anti_scalar();
-            let ag = owner.anti_grade(anti_scalar)?;
+            let ag = owner.anti_grade(AntiScalar)?;
             b.return_expr(IntExpr::Literal(ag))
         }
     }
@@ -114,6 +113,10 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+
+            // TODO I think I should pick up here
+
+
             todo!()
         }
     }

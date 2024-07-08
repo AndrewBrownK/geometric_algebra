@@ -13,6 +13,7 @@ use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::elements::*;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
+use crate::ast2::datatype::MultiVector;
 use crate::ast2::traits::RawTraitImplementation;
 use crate::utility::ConstVec;
 
@@ -26,7 +27,7 @@ use crate::utility::ConstVec;
 // a size constraint.
 // Assuming in all cases the average elements per group is at least 3 (and for margin error +1).
 // 16 dimensions: 2^16 = 65536 -> (n / 3) + 1 = 21846
-// 12 dimensions: 2^16 = 4096 -> (n / 3) + 1 = 1366
+// 12 dimensions: 2^12 = 4096 -> (n / 3) + 1 = 1366
 //  8 dimensions: 2^8  = 256 -> (n / 3) + 1 = 86
 
 #[cfg(feature = "very-large-basis-elements")]
@@ -199,7 +200,7 @@ impl<const AntiScalar: BasisElement> Display for MultiVec<AntiScalar> {
 
 
 
-impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
+impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
 
     pub fn fmt_for_macro(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let n = self.name;
@@ -278,7 +279,11 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
         }
         Self::new_by_groups(name, grouped)
     }
+}
 
+
+
+impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     pub const fn new_by_groups(name: &'static str, element_groups: ConstVec<BasisElementGroup, QTY_GROUPS>) -> Self {
         if ((AntiScalar.grade() / 3) + 1) as usize > QTY_GROUPS {
             panic!("If you want to create an 9-12 dimensional GA, then enable the \
@@ -324,23 +329,6 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     }
 }
 
-pub trait MultiVecTrait {
-    fn refine<const AntiScalar: BasisElement>(&self) -> Option<&MultiVec<AntiScalar>>;
-}
-impl<const CorrectAntiScalar: BasisElement> MultiVecTrait for MultiVec<CorrectAntiScalar> {
-    fn refine<const AntiScalar: BasisElement>(&self) -> Option<&MultiVec<AntiScalar>> {
-        if AntiScalar == CorrectAntiScalar {
-            // SAFETY:
-            // The above condition is enough to ensure the types are actually equal,
-            // and so this "unsafe" type cast is really just casting a type to itself.
-            let slf = unsafe {
-                &*(self as *const MultiVec<CorrectAntiScalar> as *const MultiVec<AntiScalar>)
-            };
-            return Some(slf);
-        }
-        None
-    }
-}
 
 
 #[macro_export]
@@ -595,6 +583,8 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         ga: Arc<GeometricAlgebra<AntiScalar>>,
         multi_vecs: [&'static MultiVec<AntiScalar>; N],
     ) -> Self {
+        // TODO disallow duplicated multivector names
+
         let mut nb = ga.named_bases.write();
         let mut declared = vec![];
         for multi_vec in multi_vecs {

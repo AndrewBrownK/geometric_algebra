@@ -804,6 +804,14 @@ impl BasisElement {
     pub const fn is_wedge_on(&self, other: BasisElement) -> bool {
         self.signature.contains(other.signature)
     }
+
+    pub const fn const_from(sig: BasisSignature) -> Self {
+        BasisElement {
+            coefficient: 1,
+            signature: sig,
+            display_name: ConstOption::None,
+        }
+    }
 }
 
 
