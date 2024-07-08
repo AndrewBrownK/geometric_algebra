@@ -170,7 +170,16 @@ impl BasisElementGroup {
         }
     }
 
-    pub fn into_vec(self) -> ConstVec<BasisElement, 4> {
+    pub const fn const_clone(&self) -> Self {
+        match self {
+            BasisElementGroup::G1(a) => BasisElementGroup::G1(*a),
+            BasisElementGroup::G2(a, b) => BasisElementGroup::G2(*a, *b),
+            BasisElementGroup::G3(a, b, c) => BasisElementGroup::G3(*a, *b, *c),
+            BasisElementGroup::G4(a, b, c, d) => BasisElementGroup::G4(*a, *b, *c, *d),
+        }
+    }
+
+    pub const fn into_vec(self) -> ConstVec<BasisElement, 4> {
         match self {
             BasisElementGroup::G1(a) => {
                 let mut v = ConstVec::new();
@@ -349,8 +358,8 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
 
     pub const fn new_by_groups(name: &'static str, element_groups: ConstVec<BasisElementGroup, QTY_GROUPS>) -> Self {
         if ((AntiScalar.grade() / 3) + 1) as usize > QTY_GROUPS {
-            panic!("If you want to create an >8 dimensional GA, then enable the \
-            \"large-basis-elements\" feature. If you want to create a >12 dimensional GA, then \
+            panic!("If you want to create an 9-12 dimensional GA, then enable the \
+            \"large-basis-elements\" feature. If you want to create a 13-16 dimensional GA, then \
             enable the \"very-large-basis-elements\" feature.")
         }
 
@@ -359,28 +368,35 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
         let mut i = 0;
         while i < element_groups.len() {
             let group = element_groups.get(i);
-            let group_vec = group.clone().into_vec();
+            let group_vec = group.const_clone().into_vec();
             let mut j = 0;
             while j < group_vec.len() {
                 let el = group_vec.get(j);
                 let el_sig = el.signature();
                 if !AntiScalar.signature().contains(el_sig) {
-                    panic!("MultiVector belonging to AntiScalar({AntiScalar}) \
-                        is defined to include {el} which does not fit.");
+                    panic!("MultiVec is defined with BasisElement that does not fit AntiScalar");
+                    // Cannot format in panic during const evaluation
+                    // panic!("MultiVector belonging to AntiScalar({AntiScalar}) \
+                    //     is defined to include {el} which does not fit.");
                 }
                 let mut k = 0;
                 while k < used_signatures.len() {
                     let u = used_signatures.get(k);
-                    if u.signature().const_cmp(&el_sig) == std::cmp::Ordering::Equal {
-                        panic!("{name} already has {el}, named {u}. Do not define \
-                            MultiVectors using redundant or duplicate BasisSignatures. Don't \
-                            forget that reordered or sign flipped BasisElements can share the \
-                            same BasisSignature")
+                    let u_sig = u.signature();
+                    let u_sig_bits = u_sig.bits();
+                    let el_sig_bits = el_sig.bits();
+                    if u_sig_bits == el_sig_bits {
+                        panic!("MultiVec is defined with redundant BasisElements");
+                        // Cannot format in panic during const evaluation
+                        // panic!("{name} already has {el}, named {u}. Do not define \
+                        //     MultiVectors using redundant or duplicate BasisSignatures. Don't \
+                        //     forget that reordered or sign flipped BasisElements can share the \
+                        //     same BasisSignature")
                     }
                     k += 1;
                 }
                 used_signatures.push(*el);
-                grades |= Grades::from_sig(el_sig);
+                grades = grades.const_bitor(Grades::from_sig(el_sig));
                 j += 1;
             }
             i += 1;
@@ -478,9 +494,6 @@ macro_rules! multi_vecs {
             $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
         };
         )+
-        // pub static AllMultiVecs: [std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>>] = [
-        //     $($mv_name.clone()),+
-        // ];
         pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
             $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
                 $(&$mv_name,)+
@@ -505,9 +518,6 @@ macro_rules! multi_vecs {
             $crate::algebra2::multivector::MultiVec::<{$anti_scalar}>::new_by_groups(name, groups)
         };
         )+
-        // pub static AllMultiVecs: [std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>>] = [
-        //     $($mv_name.clone()),+
-        // ];
         pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
             $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
                 $(&$mv_name, )+
@@ -532,9 +542,6 @@ macro_rules! multi_vecs {
             $crate::algebra2::multivector::MultiVec::<$anti_scalar>::new_by_groups(name, groups)
         };
         )+
-        // pub static AllMultiVecs: [std::sync::Arc<$crate::algebra2::multivector::MultiVec<{$anti_scalar}>>] = [
-        //     $($mv_name.clone()),+
-        // ];
         pub fn register_multi_vecs(ga: std::sync::Arc<$crate::algebra2::GeometricAlgebra<{$anti_scalar}>>) -> $crate::algebra2::multivector::DeclareMultiVecs<{$anti_scalar}> {
             $crate::algebra2::multivector::DeclareMultiVecs::declare(ga, [
                 $(&$mv_name, )+
