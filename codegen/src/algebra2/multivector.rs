@@ -14,86 +14,6 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::traits::RawTraitImplementation;
 use crate::utility::ConstVec;
-// TODO I am so very torn and conflicted with MultiVec. It feels so close but so far from being
-//  const. I keep flip flopping. All this effort to use sized arrays, only to drop the ball like
-//  a coward and depend on the heap anyway. The truly really interesting problem is handling
-//  impl ClassesFromRegistry for Specifically. The concern is less about choosing between
-//  MultiVec<D> and MultiVecEnum. The real concern is, where is it getting this value? Hell..
-//  for any implementation of TraitDef_2Class_2Param... where is it providing a value at all,
-//  instead of just specifying an associated type? Nowhere yet, it seems.... alright alright alright
-//  but let's assume we're going to provide it by value somewhere at some point. We probably don't
-//  want these MultiVec values declared willy nilly in trait implementations, we want them to
-//  be properly handled data through the MultiVecRepository. It might be possible to make something
-//  like Elaborated that can set the Owner and Other associated types. Hell.... maybe Owner and
-//  Other associated types should be trait methods instead of Associated types to begin with?
-//  ClassesFromRegistry is technically not used anywhere right now. I think I'm onto something
-//  there. Anyway..... well... that's another conundrum anyway. Because we're back in the class
-//  implementation again, instead of our script scope with lovely MultiVec declarations.
-//  So yeah, about MultiVec declarations. Could they be static? Would we like that? Well right now
-//  they depend on the heap, so we'd have to use something like lazy_static!, and then they're
-//  less succinct. Additionally I want the ability to dynamically generate additional MultiVecs
-//  based on various conditions and suffixes, like being on the Origin or inside the Horizon.
-//  However a modifiable name more or less means the name needs to be a String, which more or less
-//  means MultiVec won't have a Size, or will depend on heap yet again. So to talk more about
-//  MultiVec on heap, never mind String name, mind it now. If some insane person really goes up to
-//  16 dimensions, then that is 65,535 unique BasisElements, which means a MultiVecSignature that is
-//  131kB long. Then multiply that by 18 for one class per grade plus DualNum and full MultiVector,
-//  then the MultiVecSignatures alone (nevermind BasisElementGroups) is taking 2.4 MB, without
-//  including mixed grade or partial grade classes at all. So? If someone is crazy and they do
-//  that, then what? If we start by saying we don't want that on our stack, and we're going to need
-//  the heap, then the heap is the heap no matter how you slice it, and maybe you want to make them
-//  lazy static so you can get away with only a single copy of each. It might seem absurd or crazy
-//  to make them take up so much space statically in the binary instead of the heap, but at the end
-//  of the day, if someone chooses 16 bases, they are going to spend a lot of memory, and I should
-//  be less concerned about if it is using heap, or implements Copy, and more concerned about only
-//  ensuring it is created once, and every use site borrows it, and it never overflows the stack.
-//  To me that looks like... I want static declarations. AS LONG AS THE FOLLOWING CONDITIONS ARE
-//  SATISFIED:
-//  - I prefer const eval static instead of lazy heap static, as long as the compiler isn't
-//    literally destroyed from chewing such intensive const eval. This allows me to use ArrayVec
-//    instead of TinyVec, and simplify some of the constraints on D.
-//  - Obviously the existing macros are kick-ass and there's no way we can settle for anything
-//    less elegant for those declarations. Can the macros play nice in const eval though?
-//  - I might/should redo MultiVecRepository to just take a bunch of &'static MultiVec and go from
-//    there. The entire app could use these &'static MultiVecs without causing lifetime annoyances.
-//  - Even though I do have intentions to make suffix/variant MultiVecs, it might be better as a
-//    suggestion spat out in the console, and we still require all MultiVecs to be statically
-//    declared (instead of generating new MultiVecs using rules and patterns dynamically).
-//  ..
-//  Here are some other thoughts/concerns...
-//  Maybe MultiVecSignature is not serving its purpose well if it is not a convenient/useful lookup
-//  device. With that in mind, I could scrap it and save some memory. If I need to match signatures,
-//  I may be better off (overall) just scanning through the BasisElements already included in the
-//  MultiVec definition. I know BasisSignature is great and would also make a nice lookup tool,
-//  but the fact that MultiVecSignature could get 131 kB long starts to defeat the purpose.
-//  Next... since everything is getting hidden in a static position behind a static reference anyway,
-//  I could honestly get a little more liberal with the const generics. I could size every
-//  MultiVec according to it's ACTUAL quantity of BasisElements, not the total possible elements
-//  for the dimensionality, then have a separate const generic for the dimensionality, and then
-//  have another type that holds a reference to the &'static MultiVec (not worried about size at
-//  all) and keeping track of the dimensionality only (but not the MultiVec-specific quantity of
-//  BasisElements).
-//  Yeah this seems great. Refactors coming!!
-
-
-
-pub(crate) const fn qty_elements(anti_scalar: BasisElement) -> usize {
-    let d = anti_scalar.signature().bits().count_ones();
-    // Scalar counts as an element
-    // let n = usize::pow(2, d) - 1;
-    let n = usize::pow(2, d);
-    n
-}
-pub(crate) const fn qty_groups(anti_scalar: BasisElement) -> usize {
-    let d = anti_scalar.signature().bits().count_ones();
-    // Scalar counts as an element
-    // let n = usize::pow(2, d) - 1;
-    let n = usize::pow(2, d);
-
-    // Let's assume you average at LEAST 3 elements per group for the biggest MultiVector
-    // and then add 1 as the margin for error.
-    (n / 3) + 1
-}
 
 // We COULD use { qty_groups(AntiScalar) } everywhere to specify the size of
 // ConstVec<BasisElement, N>. And this would make the arrays only as small as necessary. However,
@@ -473,7 +393,6 @@ macro_rules! multi_vec {
     };
 }
 
-// TODO yeah it's official I can't use Arc::new in const evaluation.
 #[macro_export]
 macro_rules! multi_vecs {
     // Grouped using tuples
@@ -612,22 +531,12 @@ static Circle: MultiVec<{e12345}> = MultiVec::<e12345>::new_by_groups("Circle", 
 static Circle2: MultiVec<{e12345}> = multi_vec!(Circle<e12345> => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
 static Circle3: MultiVec<{e12345}> = multi_vec!(Circle<e12345> => [e423, e431, e412, e321], [e415, e425, e435], [e235, e315, e125]);
 
-// TODO I'm expecting/needing there to be a compile time error here at some point,
-//  for mismatched anti scalars
-//  and for a random e47 that doesn't fit
-static Dipole2: MultiVec<{e12346}> = multi_vec!(Dipole<e12346> as e41, e42, e07 | e23, e31, e12 | e15, e25, e35, e45);
+static Dipole2: MultiVec<{e12345}> = multi_vec!(Dipole<e12345> as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45);
 
 #[test]
 fn test_construction() {
     println!("{Circle:?}");
     println!("{Circle}");
-
-    // Note this one will print with a different order than displayed because it will sort
-    // the BasisElements first. If you want a fixed order, then specify the grouping
-    // manually (since everything will end up in groups anyway). If you'd rather have it sorted
-    // without fretting about sorting it yourself, then use it like this with ungrouped input.
-    // let dipole = &Dipole;
-    // println!("{dipole}");
 
     let circle_again = &Circle2;
     println!("{circle_again}");
@@ -637,33 +546,6 @@ fn test_construction() {
 
     let dipole_again = &Dipole2;
     println!("{dipole_again}");
-
-    // multi_vecs! now defines items, and is not an expression or statement.
-
-    // let mvs = multi_vecs!(e12345;
-    //     Scalar      => [scalar];
-    //     AntiScalar  => [e12345];
-    //     DualNum     => [scalar, e12345];
-    // );
-    // println!("{mvs:?}");
-    // let mvs = multi_vecs!(e12345;
-    //     FlatPoint   => (e15, e25, e35, e45);
-    //     Line        => (e415, e425, e435), (e235, e315, e125);
-    //     Plane       => (e4235, e4315, e4125, e3215);
-    // );
-    // println!("{mvs:?}");
-    // let mvs = multi_vecs!(e12345;
-    //     RoundPoint  => e1, e2, e3, e4, e5;
-    //     Dipole      => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45;
-    //     Circle      => e423, e431, e412, e321, e415, e425, e435, e235, e315, e125;
-    //     Sphere      => e1234, e4235, e4315, e4125, e3215;
-    // );
-    // println!("{mvs:?}");
-    // let mvs = multi_vecs!(e12345;
-    //     Motor       as e415, e425, e435, e12345 | e235, e315, e125;
-    //     Flector     as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
-    // );
-    // println!("{mvs:?}");
 }
 
 
@@ -733,10 +615,11 @@ pub struct MultiVecRepository<const AntiScalar: BasisElement> {
     uniform_grade_groups: BTreeMap<BasisSignature, Vec<&'static BasisElementGroup>>,
     mixed_grade_groups: BTreeMap<(BasisSignature, Grades), Vec<&'static BasisElementGroup>>,
 
-    // TODO I should take a look at Box::leak() instead of Arc here
-    fallback: Vec<(FallbackWasUsed, Arc<MultiVec<AntiScalar>>)>,
-    wanted: Mutex<Vec<(Arc<MultiVec<AntiScalar>>, Vec<Arc<RawTraitImplementation>>)>>,
-    strongly_wanted: Mutex<Vec<(Arc<MultiVec<AntiScalar>>, Vec<Arc<RawTraitImplementation>>)>>,
+    fallback: Vec<(FallbackWasUsed, &'static MultiVec<AntiScalar>)>,
+
+    // TODO I might need a MultiVecSignature type thing here instead of named MultiVec
+    wanted: Mutex<Vec<(&'static MultiVec<AntiScalar>, Vec<Arc<RawTraitImplementation>>)>>,
+    strongly_wanted: Mutex<Vec<(&'static MultiVec<AntiScalar>, Vec<Arc<RawTraitImplementation>>)>>,
 }
 
 
@@ -802,7 +685,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
     fn fallback(&mut self, multi_vec: MultiVec<AntiScalar>) {
         self.fallback.push((
             FallbackWasUsed::new(),
-            Arc::new(multi_vec)
+            Box::leak(Box::new(multi_vec))
         ));
     }
 
