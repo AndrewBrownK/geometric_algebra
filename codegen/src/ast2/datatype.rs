@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::elements::e12345;
 use crate::algebra2::basis::grades::Grades;
-use crate::algebra2::multivector::{MultiVec};
+use crate::algebra2::multivector::{MultiVec, MultiVecTrait};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 
 // TODO move these items to better locations
@@ -19,12 +19,35 @@ pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Vec4;
 
-
-// TODO pick up here
-// TODO infect a generic AntiScalar parameter across the AST, unless the pros and cons of
-//  a non-infectious approach are better
+// Should we infect a generic AntiScalar parameter across the AST?
+//
+// So... the way this works is.... we have TraitImpl_10/11/21/22. Right now these accept a
+// generic AntiScalar at the method level, instead of the trait level. The reason that this is
+// nice is that we can find the TraitImpl_10/11/21/22 implementation without having to specify
+// an AntiScalar, thus allowing the compiler to find and use the NameTrait, and declare the
+// static Elaborated<Traits> without depending on an AntiScalar.
+//
+// To be clear, it wouldn't be so bad to move the AntiScalar to the trait-level instead of
+// method-level on TraitImpl_10/11/21/22, but ONLY IF the detection/use of NameTrait weren't
+// impacted, and no AntiScalar had to be specified on the static Elaborated<Traits>.
+//
+// Then again... there's something to be said for the "purity" of a trait definition that works
+// for all possible AntiScalars, instead of allowing you to define it such that it only works
+// with specific AntiScalars. This is especially true since we allow such huge flexibility of
+// AntiScalar specification, it would be stupid for something to work on e1234 but not e0123.
+//
+// So with that in mind, I think the preferred approach (with respect to TraitImpl_10/11/21/22) is
+// to leave the AntiScalar at the method-level and not the trait-level. This brings us to our next
+// problem then. When implementing TraitImpl_10/11/21/22, you specify the associated type "Output".
+// Obviously, "MultiVector" (our struct that we are commenting on right here) is a common output
+// type. And MultiVector holds a reference to a MultiVec, but MultiVecs cannot be specified without
+// and AntiScalar (generic or otherwise). So if we infect MultiVector with an AntiScalar too, then
+// we have no way to specify the associated output type of TraitImpl_10/11/21/22 without also
+// infecting those traits. In other words, we have to erase the AntiScalar right here.
+//
+// Solution: MultiVecTrait
 #[derive(PartialEq, Eq, Clone, Debug, Hash)]
-pub struct MultiVector(&'static MultiVec<{ e12345 }>);
+pub struct MultiVector(&'static dyn MultiVecTrait);
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ExpressionType {

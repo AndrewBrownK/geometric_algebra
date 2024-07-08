@@ -17,8 +17,6 @@ pub mod substitutes;
 pub mod arithmetic;
 pub mod grades;
 
-// TODO consider manually implementing PanicFmt instead of deriving?
-
 // Would love to use bitflags::bitflags!, but cannot because
 // we need to implement ConstParamTy
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]

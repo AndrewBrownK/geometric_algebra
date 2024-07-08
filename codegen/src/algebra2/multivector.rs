@@ -324,6 +324,25 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     }
 }
 
+pub trait MultiVecTrait {
+    fn refine<const AntiScalar: BasisElement>(&self) -> Option<&MultiVec<AntiScalar>>;
+}
+impl<const CorrectAntiScalar: BasisElement> MultiVecTrait for MultiVec<CorrectAntiScalar> {
+    fn refine<const AntiScalar: BasisElement>(&self) -> Option<&MultiVec<AntiScalar>> {
+        if AntiScalar == CorrectAntiScalar {
+            // SAFETY:
+            // The above condition is enough to ensure the types are actually equal,
+            // and so this "unsafe" type cast is really just casting a type to itself.
+            let slf = unsafe {
+                &*(self as *const MultiVec<CorrectAntiScalar> as *const MultiVec<AntiScalar>)
+            };
+            return Some(slf);
+        }
+        None
+    }
+}
+
+
 #[macro_export]
 macro_rules! multi_vec {
     // grouped using tuples
@@ -685,6 +704,18 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             FallbackWasUsed::new(),
             Box::leak(Box::new(multi_vec))
         ));
+    }
+
+    pub fn scalar(&self) -> Arc<MultiVec<AntiScalar>> {
+        todo!()
+    }
+
+    pub fn anti_scalar(&self) -> Arc<MultiVec<AntiScalar>> {
+        todo!()
+    }
+
+    pub fn full_multi_vector(&self) -> Arc<MultiVec<AntiScalar>> {
+        todo!()
     }
 
     pub fn get_at_least(self: Arc<Self>, signature: BTreeSet<BasisSignature>) -> Arc<MultiVec<AntiScalar>> {

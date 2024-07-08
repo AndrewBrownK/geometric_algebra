@@ -43,8 +43,6 @@ mod impls {
         }
     }
 
-
-
     #[derive(Clone, Copy)]
     pub struct OneImpl;
     #[async_trait]
@@ -64,8 +62,6 @@ mod impls {
         }
     }
 
-
-
     #[derive(Clone, Copy)]
     pub struct UnitImpl;
     #[async_trait]
@@ -78,8 +74,6 @@ mod impls {
             b.return_expr(owner.construct(|_| FloatExpr::One))
         }
     }
-
-
 
     #[derive(Clone, Copy)]
     pub struct GradeImpl;
@@ -94,8 +88,6 @@ mod impls {
             b.return_expr(IntExpr::Literal(gr))
         }
     }
-
-
 
     #[derive(Clone, Copy)]
     pub struct AntiGradeImpl;
