@@ -6,6 +6,7 @@ use std::sync::Arc;
 use std::sync::atomic::Ordering;
 
 use atom::AtomSetOnce;
+use const_panic::concat_panic;
 use parking_lot::Mutex;
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
@@ -96,6 +97,17 @@ impl BasisElementGroup {
             BasisElementGroup::G2(a, b) => BasisElementGroup::G2(*a, *b),
             BasisElementGroup::G3(a, b, c) => BasisElementGroup::G3(*a, *b, *c),
             BasisElementGroup::G4(a, b, c, d) => BasisElementGroup::G4(*a, *b, *c, *d),
+        }
+    }
+
+    pub const fn from_vec(v: ConstVec<BasisElement, 4>) -> Self {
+        match v.len() {
+            1 => BasisElementGroup::G1(*v.get(0)),
+            2 => BasisElementGroup::G2(*v.get(0), *v.get(1)),
+            3 => BasisElementGroup::G3(*v.get(0), *v.get(1), *v.get(2)),
+            4 => BasisElementGroup::G4(*v.get(0), *v.get(1), *v.get(2), *v.get(3)),
+            0 => panic!("Cannot create empty BasisElementGroup"),
+            _ => panic!("Unreachable: ConstVec has type level size")
         }
     }
 
@@ -233,46 +245,37 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
         elements.sort();
         let mut active_grade = elements.get(0).map(|it| it.grade()).unwrap_or(0);
         let mut grouped = ConstVec::<BasisElementGroup, QTY_GROUPS>::new();
-        let mut maybe_group = None;
+
+        let mut group_as_vec = ConstVec::<BasisElement, 4>::new();
+
         let mut i = 0;
         while i < elements.len() {
             let element = elements[i];
-            let mut group = match maybe_group {
-                Some(BasisElementGroup::G4(a, b, c, d)) => {
-                    grouped.push(BasisElementGroup::G4(a, b, c, d));
-                    BasisElementGroup::G1(element)
-                }
-                Some(mut g) => {
-                    g.push(element);
-                    g
-                },
-                None => BasisElementGroup::G1(element)
-            };
             let element_grade = element.grade();
             if element_grade == active_grade {
                 // Same grade, same group
-                if group.can_push() {
-                    group.push(element);
-                } else {
-                    grouped.push(group);
-                    group = BasisElementGroup::G1(element);
-                }
-                maybe_group = Some(group);
+                group_as_vec.push(element);
             } else {
                 // New grade, new group.
                 // If you want extra-compact grouping, then use new_by_groups with manually
                 // specified groups instead. Or I guess we could add more heuristics here
                 // at some point, but not feeling rushed for it.
-                grouped.push(group);
-                maybe_group = Some(BasisElementGroup::G1(element));
+                grouped.push(BasisElementGroup::from_vec(group_as_vec));
+                group_as_vec = ConstVec::<BasisElement, 4>::new();
                 active_grade = element_grade;
+
+                group_as_vec.push(element);
+            }
+
+            if group_as_vec.len() >= 4 {
+                grouped.push(BasisElementGroup::from_vec(group_as_vec));
+                group_as_vec = ConstVec::<BasisElement, 4>::new();
             }
             i += 1;
         }
-        if let Some(group) = maybe_group {
-            grouped.push(group);
+        if group_as_vec.len() > 0 {
+            grouped.push(BasisElementGroup::from_vec(group_as_vec));
         }
-
         Self::new_by_groups(name, grouped)
     }
 
@@ -294,10 +297,8 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
                 let el = group_vec.get(j);
                 let el_sig = el.signature();
                 if !AntiScalar.signature().contains(el_sig) {
-                    panic!("MultiVec is defined with BasisElement that does not fit AntiScalar");
-                    // Cannot format in panic during const evaluation
-                    // panic!("MultiVector belonging to AntiScalar({AntiScalar}) \
-                    //     is defined to include {el} which does not fit.");
+                    concat_panic!("MultiVector belonging to AntiScalar(", AntiScalar, ") \
+                        is defined to include ", el, " which does not fit. ");
                 }
                 let mut k = 0;
                 while k < used_signatures.len() {
@@ -306,12 +307,10 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
                     let u_sig_bits = u_sig.bits();
                     let el_sig_bits = el_sig.bits();
                     if u_sig_bits == el_sig_bits {
-                        panic!("MultiVec is defined with redundant BasisElements");
-                        // Cannot format in panic during const evaluation
-                        // panic!("{name} already has {el}, named {u}. Do not define \
-                        //     MultiVectors using redundant or duplicate BasisSignatures. Don't \
-                        //     forget that reordered or sign flipped BasisElements can share the \
-                        //     same BasisSignature")
+                        concat_panic!("MultiVec named ", name, " already has ", el, ". Do not \
+                            define MultiVectors using redundant or duplicate BasisSignatures. \
+                            Don't forget that reordered or sign flipped BasisElements can share \
+                            the same BasisSignature. ")
                     }
                     k += 1;
                 }
@@ -607,6 +606,8 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             declared: vec![],
         }
     }
+
+    // TODO some methods to dynamically generate some MultiVecs e.g. OnOrigin or AtInfinity variants
 }
 
 
@@ -624,15 +625,12 @@ pub struct MultiVecRepository<const AntiScalar: BasisElement> {
 
 
 impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
-
     pub fn default(ga: Arc<GeometricAlgebra<AntiScalar>>) -> Arc<Self> {
         Self::new(DeclareMultiVecs::new(ga))
     }
 
     pub fn new(declarations: DeclareMultiVecs<AntiScalar>) -> Arc<Self> {
-
         let ga = declarations.ga.clone();
-
         let mut mvr = MultiVecRepository {
             declarations,
             uniform_grade_groups: Default::default(),

@@ -5,11 +5,17 @@ use std::ops::{Add, Mul, Sub};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum, Product};
 use crate::algebra2::basis::grades::{grade1, Grades};
-use crate::algebra2::basis::substitute::SubstitutionRepository;
+use crate::algebra2::basis::substitutes::Substitutions;
 use crate::utility::ConstOption;
 
 /// The foundational GeneratorSquares assumes a diagonal metric
 /// (with no generator substitutions).
+// I don't think we want to <const AntiScalar: BasisElement> here.
+// It is fundamentally more annoying to get GeneratorElements to track this type level
+// information. I would need a separate struct for each generator, and then add arithmetic
+// operations for every combination of these generators. I think I'm better off giving
+// GeometricAlgebra a PhantomData and validating the GeneratorSquares and SubstitutionRepository
+// against the AntiScalar at runtime.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GeneratorSquares {
     // TODO un-pub
@@ -518,18 +524,18 @@ impl Sub<GeneratorElement> for GradedProduct<{grade1}> {
 
 
 impl Add<Vec<(GeneratorElement, GradedSum<{grade1}>)>> for GeneratorSquares {
-    type Output = SubstitutionRepository;
+    type Output = Substitutions;
 
     fn add(self, rhs: Vec<(GeneratorElement, GradedSum<{ grade1 }>)>) -> Self::Output {
-        SubstitutionRepository::new(self, rhs)
+        Substitutions::new(self, rhs)
     }
 }
 
 impl Add<GeneratorSquares> for Vec<(GeneratorElement, GradedSum<{grade1}>)> {
-    type Output = SubstitutionRepository;
+    type Output = Substitutions;
 
     fn add(self, rhs: GeneratorSquares) -> Self::Output {
-        SubstitutionRepository::new(rhs, self)
+        Substitutions::new(rhs, self)
     }
 }
 

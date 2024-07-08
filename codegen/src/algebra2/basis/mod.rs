@@ -9,18 +9,20 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra::basis_element;
 use crate::generator_squares;
 use std::marker::{ConstParamTy};
+use const_panic::PanicFmt;
 use crate::utility::ConstOption;
 
 pub mod generators;
-pub mod substitute;
+pub mod substitutes;
 pub mod arithmetic;
 pub mod grades;
+
+// TODO consider manually implementing PanicFmt instead of deriving?
 
 // Would love to use bitflags::bitflags!, but cannot because
 // we need to implement ConstParamTy
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct BasisSignature(u16);
-
 
 // Implement `ConstParamTy` for `BasisSignature`
 impl ConstParamTy for BasisSignature {}
@@ -216,6 +218,53 @@ impl BitAndAssign for BasisSignature {
     }
 }
 
+impl PanicFmt for BasisSignature {
+    type This = Self;
+    type Kind = const_panic::IsCustomType;
+    const PV_COUNT: usize = 17;
+}
+impl BasisSignature {
+    pub const fn to_panicvals(self, _: const_panic::FmtArg) -> [const_panic::PanicVal<'static>; BasisSignature::PV_COUNT] {
+        let mut result = {[
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+        ]};
+        if self.0 == 0 {
+            result[0] = const_panic::PanicVal::write_str("scalar");
+            return result;
+        }
+        result[0] = const_panic::PanicVal::write_str("e");
+
+        let hex_dec = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"];
+        let mut i = 0;
+        let mut j = 1;
+        while j < result.len() {
+            let bit = 1 << i;
+            if self.0 & bit == bit {
+                result[j] = const_panic::PanicVal::write_str(hex_dec[i]);
+            }
+            i += 1;
+            j += 1;
+        }
+        result
+    }
+}
+
 
 // TODO I have concerns about BasisElements with different names but the same signature
 //  and sign not being treated as equal. So I could manually implement PartialEq, Eq, etc
@@ -256,9 +305,78 @@ impl Neg for BasisElement {
         s
     }
 }
+impl PanicFmt for BasisElement {
+    type This = Self;
+    type Kind = const_panic::IsCustomType;
+    const PV_COUNT: usize = 23;
+}
+impl BasisElement {
+    pub const fn to_panicvals(self, fmt: const_panic::FmtArg) -> [const_panic::PanicVal<'static>; BasisElement::PV_COUNT] {
+        let mut result = {[
+            const_panic::PanicVal::write_str("BasisElement("),
+
+            // 1: Sign
+            const_panic::PanicVal::write_str(""),
+
+            // 2-18: BasisSignature
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+
+            // 19-21: display name
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+            const_panic::PanicVal::write_str(""),
+
+            const_panic::PanicVal::write_str(")"),
+        ]};
+        let mut sign = self.coefficient;
+        if sign == 0 {
+            result[1] = const_panic::PanicVal::write_str("0");
+        }
+        if sign == -1 {
+            result[1] = const_panic::PanicVal::write_str("-");
+        }
+        let sig = BasisSignature::to_panicvals(self.signature, fmt);
+        let mut s = 0;
+        while s < sig.len() {
+            result[2 + s] = sig[s];
+            s += 1;
+        }
+        if let ConstOption::Some(dn) = self.display_name {
+            result[19] = const_panic::PanicVal::write_str(" displayed_as ");
+            let mut neg = false;
+            neg |= (sign == -1) && !dn.negate_display;
+            neg |= (sign == 1) && dn.negate_display;
+            if neg {
+                result[20] = const_panic::PanicVal::write_str("-");
+            }
+            if sign == 0 {
+                result[21] = const_panic::PanicVal::write_str("0");
+            } else {
+                result[21] = const_panic::PanicVal::write_str(dn.display_name);
+            }
+        }
+        return result;
+    }
+}
 
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PanicFmt)]
 pub struct BasisElementDisplayName {
     display_name: &'static str,
     negate_display: bool,

@@ -11,8 +11,14 @@ use crate::algebra2::basis::grades::{grade1};
 use crate::generator_squares;
 use crate::utility::ConstOption;
 
+// I don't think we want to <const AntiScalar: BasisElement> here.
+// It is fundamentally more annoying to get GeneratorElements to track this type level
+// information. I would need a separate struct for each generator, and then add arithmetic
+// operations for every combination of these generators. I think I'm better off giving
+// GeometricAlgebra a PhantomData and validating the GeneratorSquares and SubstitutionRepository
+// against the AntiScalar at runtime.
 #[derive(Debug)]
-pub struct SubstitutionRepository {
+pub struct Substitutions {
     underlying_squares: GeneratorSquares,
     substitution_anti_scalar: BasisElement,
     substitutions_to_underlying: HashMap<BasisElement, Sum>,
@@ -33,7 +39,7 @@ macro_rules! substitutions {
     };
 }
 
-impl SubstitutionRepository {
+impl Substitutions {
     pub fn new(
         mut underlying_squares: GeneratorSquares,
         substituted_elements: Vec<(GeneratorElement, GradedSum<{grade1}>)>
@@ -541,9 +547,9 @@ impl SubstitutionRepository {
     }
 }
 
-impl From<GeneratorSquares> for SubstitutionRepository {
+impl From<GeneratorSquares> for Substitutions {
     fn from(value: GeneratorSquares) -> Self {
-        SubstitutionRepository::new(value, vec![])
+        Substitutions::new(value, vec![])
     }
 }
 

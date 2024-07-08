@@ -8,7 +8,7 @@ use std::mem;
 use std::mem::ManuallyDrop;
 use std::ops::{Index, IndexMut};
 use std::sync::Arc;
-
+use const_panic::PanicFmt;
 use tokio::sync::broadcast;
 use tokio::sync::broadcast::error::RecvError;
 
@@ -202,6 +202,7 @@ impl<T: Copy + Debug, const N: usize> IndexMut<usize> for ConstVec<T, N> {
 }
 
 
+
 /// Option does implement StructuralPartialEq, but
 /// Option does not implement ConstParamTy.
 /// So we should probably PR rust to make Option implement ContParamTy, but
@@ -245,3 +246,14 @@ impl<T: Copy> ConstOption<T> {
         self.into_option().expect(err)
     }
 }
+
+
+
+//
+// macro_rules! array {
+//     ($($item:expr),* $(,)?) => {
+//         [
+//             $($item,)
+//         ]
+//     };
+// }

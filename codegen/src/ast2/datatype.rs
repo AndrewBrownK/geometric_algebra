@@ -18,9 +18,12 @@ pub struct Vec2;
 pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Vec4;
-#[derive(PartialEq, Eq, Clone, Debug, Hash)]
+
+
+// TODO pick up here
 // TODO infect a generic AntiScalar parameter across the AST, unless the pros and cons of
 //  a non-infectious approach are better
+#[derive(PartialEq, Eq, Clone, Debug, Hash)]
 pub struct MultiVector(&'static MultiVec<{ e12345 }>);
 
 #[derive(Clone, Debug, PartialEq, Eq)]

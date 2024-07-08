@@ -6,7 +6,7 @@ use parking_lot::RwLock;
 use crate::algebra2::basis::{BasisElement, BasisElementNames};
 use crate::algebra2::basis::arithmetic::Sum;
 use crate::algebra2::basis::generators::GeneratorSquares;
-use crate::algebra2::basis::substitute::SubstitutionRepository;
+use crate::algebra2::basis::substitutes::Substitutions;
 use crate::algebra2::multivector::{MultiVec};
 
 pub mod basis;
@@ -14,8 +14,8 @@ pub mod multivector;
 
 
 pub struct GeometricAlgebra<const AntiScalar: BasisElement> {
-    repo: SubstitutionRepository,
-    named_bases: RwLock<BasisElementNames>
+    repo: Substitutions,
+    named_bases: RwLock<BasisElementNames>,
 }
 
 
@@ -46,7 +46,7 @@ macro_rules! ga {
             let subs = {
                 vec![$(($generator_element, $sum)),+]
             };
-            let subs = $crate::algebra2::basis::substitute::SubstitutionRepository::new(gs, subs);
+            let subs = $crate::algebra2::basis::substitutes::Substitutions::new(gs, subs);
             $crate::algebra2::GeometricAlgebra::from_substitutions(subs)
         }
     };
@@ -54,11 +54,16 @@ macro_rules! ga {
 
 impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
     pub fn from_squares(generator_squares: GeneratorSquares) -> Arc<Self> {
-        Self::from_substitutions(SubstitutionRepository::new(generator_squares, vec![]))
+        Self::from_substitutions(Substitutions::new(generator_squares, vec![]))
     }
 
-    pub fn from_substitutions(substitution_repository: SubstitutionRepository) -> Arc<Self> {
-        Arc::new(Self { repo: substitution_repository, named_bases: RwLock::new(BasisElementNames::new()) })
+    pub fn from_substitutions(substitutions: Substitutions) -> Arc<Self> {
+        let ty_anti_scalar = AntiScalar;
+        let rt_anti_scalar = substitutions.anti_scalar();
+        if ty_anti_scalar.signature() != rt_anti_scalar.signature() {
+            panic!("Substitutions AntiScalar({rt_anti_scalar}) does not match GeometricAlgebra AntiScalar({ty_anti_scalar})");
+        }
+        Arc::new(Self { repo: substitutions, named_bases: RwLock::new(BasisElementNames::new()) })
     }
 
     fn name_in(&self, el: BasisElement) -> BasisElement {
