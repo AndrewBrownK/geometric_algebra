@@ -1,11 +1,7 @@
 #![allow(non_upper_case_globals)]
-
-use std::sync::Arc;
-
 use crate::{ga, multi_vecs};
-use crate::algebra2::basis::elements::*;
-use crate::algebra2::GeometricAlgebra;
-use crate::algebra2::multivector::MultiVecRepository;
+
+
 multi_vecs!(e12345;
     FlatPoint   as e15, e25, e35, e45;
     Line        as e415, e425, e435 | e235, e315, e125;
@@ -24,15 +20,15 @@ multi_vecs!(e12345;
 /// Lengyel styled CGA of 5 dimensions representing 3 dimensions
 #[test]
 pub fn cga3d_script() {
-    let cga3d: Arc<GeometricAlgebra<e12345>> = ga!(
+    let cga3d = ga!(e12345;
         1 => e1, e2, e3, eP;
         -1 => eM;
         where
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
     );
-    let mut declarations = register_multi_vecs(cga3d.clone());
-    let repo = MultiVecRepository::new(declarations);
+    let mut declarations = register_multi_vecs(cga3d);
+    let repo = declarations.finished();
 
 
     // TODO get TraitImplRegistry, TraitDefRegistry

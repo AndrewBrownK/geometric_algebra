@@ -626,6 +626,10 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         }
     }
 
+    pub fn finished(self) -> Arc<MultiVecRepository<AntiScalar>> {
+        MultiVecRepository::new(self)
+    }
+
     // TODO some methods to dynamically generate some MultiVecs e.g. OnOrigin or AtInfinity variants
 }
 

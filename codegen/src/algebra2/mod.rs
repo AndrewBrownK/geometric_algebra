@@ -23,7 +23,7 @@ pub struct GeometricAlgebra<const AntiScalar: BasisElement> {
 // TODO do a DETAILED search through macros for any unqualified types or symbols
 #[macro_export]
 macro_rules! ga {
-    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
+    ($anti_scalar:ident; $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
             use $crate::algebra2::basis::generators::*;
             let gs = {
@@ -32,10 +32,10 @@ macro_rules! ga {
                 $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
                 gs
             };
-            $crate::algebra2::GeometricAlgebra::from_squares(gs)
+            $crate::algebra2::GeometricAlgebra::<$anti_scalar>::from_squares(gs)
         }
     };
-    ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; where $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
+    ($anti_scalar:ident; $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ ; where $( $generator_element:expr => $sum:expr );+ $(;)? ) => {
         {
             use $crate::algebra2::basis::generators::*;
             let gs = {
@@ -47,7 +47,7 @@ macro_rules! ga {
                 vec![$(($generator_element, $sum)),+]
             };
             let subs = $crate::algebra2::basis::substitutes::Substitutions::new(gs, subs);
-            $crate::algebra2::GeometricAlgebra::from_substitutions(subs)
+            $crate::algebra2::GeometricAlgebra::<$anti_scalar>::from_substitutions(subs)
         }
     };
 }
