@@ -41,17 +41,22 @@ pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = Geometri
     .new_trait_named("GeometricAntiProduct")
     .blurb("TODO");
 
+// NOTE: If you find yourself wanting to generate grade selection traits, you are
+// probably generating extremely wasteful implementations that perform a lot more
+// floating point calculations than necessary. That is why these trait definitions
+// are InlineOnly. They will not generate trait definitions, but you can still invoke
+// them as if they were traits, and they will always be inlined instead. (With inlining,
+// terms that are unused by the final result of each function will be cut out of the AST
+// automatically. With grade selection declarations (not inlining strictly always), then
+// you'd have the chance to use grade selection in application code which is very undesirable.)
+
 macro_rules! select_grades {
     ($($gr:literal),+ $(,)?) => {
-        pub static SelectGrade: [Elaborated<SelectGradesImpl>; 17] = [$(
-            SelectGradesImpl(Grades::new($gr))
-                .new_trait_named(concat!("SelectGrade", $gr))
-                .blurb(concat!("Select only the portion of a multivector with grade ", $gr, ".")),
+        pub static SelectGrade: [InlineOnly<SelectGradesImpl>; 17] = [$(
+            InlineOnly::new(concat!("SelectGrade", $gr), SelectGradesImpl(Grades::new($gr))),
         )+];
-        pub static SelectAntiGrade: [Elaborated<SelectAntiGradesImpl>; 17] = [$(
-            SelectAntiGradesImpl(AntiGrades::new($gr))
-                .new_trait_named(concat!("SelectAntiGrade", $gr))
-                .blurb(concat!("Select only the portion of a multivector with anti_grade ", $gr, ".")),
+        pub static SelectAntiGrade: [InlineOnly<SelectAntiGradesImpl>; 17] = [$(
+            InlineOnly::new(concat!("SelectAntiGrade", $gr), SelectAntiGradesImpl(AntiGrades::new($gr))),
         )+];
     };
 }

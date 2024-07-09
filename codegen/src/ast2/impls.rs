@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use crate::algebra2::basis::BasisElement;
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::expressions::TraitResultType;
+use crate::ast2::expressions::{Expression, TraitResultType};
 use crate::ast2::traits::{HasNotReturned, TraitAlias, TraitDef_1Class_0Param, TraitDef_1Class_1Param, TraitDef_2Class_1Param, TraitDef_2Class_2Param, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
 use crate::ast2::Variable;
 
@@ -240,6 +240,14 @@ impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for InlineOnly<Impl> {
     fn general_documentation(&self) -> String {
         String::new()
     }
+
+    async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
+        &self,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: Expr
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        self.inline(b, owner).await
+    }
 }
 #[async_trait]
 impl<Impl: TraitImpl_21> TraitImpl_21 for InlineOnly<Impl> {
@@ -256,6 +264,15 @@ impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for InlineOnly<Impl> {
     fn general_documentation(&self) -> String {
         String::new()
     }
+
+    async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
+        &self,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: Expr,
+        other: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        self.inline(b, owner, other).await
+    }
 }
 #[async_trait]
 impl<Impl: TraitImpl_22> TraitImpl_22 for InlineOnly<Impl> {
@@ -271,5 +288,14 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
     }
     fn general_documentation(&self) -> String {
         String::new()
+    }
+
+    async fn invoke<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+        &self,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: Expr1,
+        other: Expr2
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        self.inline(b, owner, other).await
     }
 }
