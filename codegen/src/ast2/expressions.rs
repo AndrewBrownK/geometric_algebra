@@ -146,17 +146,18 @@ impl TraitResultType for MultiVector {
 }
 
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum IntExpr {
     Variable(RawVariableInvocation),
     Literal(u32),
     // e.g. Grade
     TraitInvoke10ToInt(TraitKey, MultiVector),
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum FloatExpr {
     Variable(RawVariableInvocation),
-    Zero, One, NegOne, Two, Half,
+    // TODO only keep lit and get rid of the others
+    Zero, One, NegOne, Two, Half, Lit(f32),
     AccessVec2(Box<Vec2Expr>, u8),
     AccessVec3(Box<Vec3Expr>, u8),
     AccessVec4(Box<Vec4Expr>, u8),
@@ -168,7 +169,7 @@ pub enum FloatExpr {
     Sum(Vec<FloatExpr>)
     // TODO sqrt etc
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
@@ -177,7 +178,7 @@ pub enum Vec2Expr {
     Product(Vec<Vec2Expr>),
     Sum(Vec<Vec2Expr>),
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum Vec3Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
@@ -186,7 +187,7 @@ pub enum Vec3Expr {
     Product(Vec<Vec3Expr>),
     Sum(Vec<Vec3Expr>),
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum Vec4Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
@@ -195,19 +196,19 @@ pub enum Vec4Expr {
     Product(Vec<Vec4Expr>),
     Sum(Vec<Vec4Expr>),
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum MultiVectorGroupExpr {
     JustFloat(FloatExpr),
     Vec2(Vec2Expr),
     Vec3(Vec3Expr),
     Vec4(Vec4Expr)
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct MultiVectorExpr {
     pub mv_class: MultiVector,
     pub expr: Box<MultiVectorVia>
 }
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum MultiVectorVia {
     Variable(RawVariableInvocation),
     // TODO shall I replace this with MultiVec? or not replace, but integrate?
@@ -221,7 +222,7 @@ pub enum MultiVectorVia {
 }
 
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum AnyExpression {
     Int(IntExpr),
     Float(FloatExpr),
@@ -384,6 +385,7 @@ impl Expression<Float> for FloatExpr {
             FloatExpr::NegOne => {}
             FloatExpr::Two => {}
             FloatExpr::Half => {}
+            FloatExpr::Lit(_) => {}
             FloatExpr::AccessVec2(v, _) => v.substitute_variable(old, new),
             FloatExpr::AccessVec3(v, _) => v.substitute_variable(old, new),
             FloatExpr::AccessVec4(v, _) => v.substitute_variable(old, new),

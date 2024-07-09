@@ -21,6 +21,22 @@ pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
     .name("AntiGrade")
     .blurb("The AntiGrade can be described as the missing Grade with respect to an AntiScalar.");
 
+pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
+    .name("Wedge")
+    .blurb("TODO");
+pub static AntiWedge: Elaborated<AntiWedgeImpl> = AntiWedgeImpl
+    .name("AntiWedge")
+    .blurb("TODO");
+
+pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProductImpl
+    .name("GeometricProduct")
+    .blurb("TODO");
+
+pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
+    .name("GeometricAntiProduct")
+    .blurb("TODO");
+
+
 mod impls {
     use async_trait::async_trait;
 
@@ -126,4 +142,84 @@ mod impls {
         }
     }
 
+    #[derive(Clone, Copy)]
+    pub struct AntiWedgeImpl;
+    #[async_trait]
+    impl TraitImpl_22 for AntiWedgeImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements() {
+                for (b, b_el) in other.elements() {
+                    let a = a.clone();
+                    dyn_mv += (a * b, a_el.anti_wedge(b_el, AntiScalar));
+                }
+            }
+            let mv = dyn_mv.construct(&b.mvs)?;
+            b.return_expr(mv)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct GeometricProductImpl;
+    #[async_trait]
+    impl TraitImpl_22 for GeometricProductImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            let ga = &b.ga;
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements() {
+                for (b, b_el) in other.elements() {
+                    let sop = ga.product(a_el, b_el);
+                    for p in sop.sum {
+                        let a = a.clone();
+                        let b = b.clone();
+                        let c = FloatExpr::Lit(p.coefficient);
+                        dyn_mv += (a * b * c, p.element);
+                    }
+                }
+            }
+            let mv = dyn_mv.construct(&b.mvs)?;
+            b.return_expr(mv)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct GeometricAntiProductImpl;
+    #[async_trait]
+    impl TraitImpl_22 for GeometricAntiProductImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            let ga = &b.ga;
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements() {
+                for (b, b_el) in other.elements() {
+                    let sop = ga.anti_product(a_el, b_el);
+                    for p in sop.sum {
+                        let a = a.clone();
+                        let b = b.clone();
+                        let c = FloatExpr::Lit(p.coefficient);
+                        dyn_mv += (a * b * c, p.element);
+                    }
+                }
+            }
+            let mv = dyn_mv.construct(&b.mvs)?;
+            b.return_expr(mv)
+        }
+    }
 }

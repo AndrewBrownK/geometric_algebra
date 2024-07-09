@@ -10,19 +10,19 @@ pub mod expressions;
 pub mod impls;
 // TODO Hamish recommends terms "intrinsic" and "extrinsic" instead of "Space" and "antispace"
 
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Variable<ExprType> {
     pub expr_type: ExprType,
     decl: Arc<RawVariableDeclaration>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq,)]
+#[derive(Clone, Debug, PartialEq)]
 struct RawVariableDeclaration {
     comment: Option<Cow<'static, String>>,
     name: (String, usize),
     expr: Option<AnyExpression>
 }
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 struct RawVariableInvocation {
     decl: Arc<RawVariableDeclaration>,
 }

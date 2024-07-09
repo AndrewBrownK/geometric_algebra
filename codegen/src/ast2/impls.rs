@@ -62,32 +62,35 @@ impl<Impl: Copy> Elaborated<Impl> {
         Self::new(i, n, "", [])
     }
 
-    pub const fn rename(&mut self, n: &'static str) -> Self {
+    pub const fn rename(mut self, n: &'static str) -> Self {
         self.trait_names.trait_key = TraitKey::new(n);
-        *self
+        self
     }
 
-    pub const fn blurb(&mut self, explanation: &'static str) -> Self {
+    pub const fn blurb(mut self, explanation: &'static str) -> Self {
         self.blurb = explanation;
-        *self
+        self
     }
 
-    pub const fn alias(&mut self, alias: &'static str) -> Self {
+    pub const fn alias(mut self, alias: &'static str) -> Self {
         let alias = TraitAlias::usual(alias);
-        self.alias_custom(alias)
+        self.alias_custom(alias);
+        self
     }
 
-    pub const fn alias_docs_only(&mut self, alias: &'static str) -> Self {
+    pub const fn alias_docs_only(mut self, alias: &'static str) -> Self {
         let alias = TraitAlias::docs_only(alias);
-        self.alias_custom(alias)
+        self.alias_custom(alias);
+        self
     }
 
-    pub const fn alias_except_shaders(&mut self, alias: &'static str) -> Self {
+    pub const fn alias_except_shaders(mut self, alias: &'static str) -> Self {
         let alias = TraitAlias::usual_except_shaders(alias);
-        self.alias_custom(alias)
+        self.alias_custom(alias);
+        self
     }
 
-    pub const fn alias_custom(&mut self, alias: TraitAlias) -> Self {
+    pub const fn alias_custom(mut self, alias: TraitAlias) -> Self {
         let arr = &mut self.trait_names.aliases;
         let mut idx = 0;
         while idx < arr.len() {
@@ -97,7 +100,7 @@ impl<Impl: Copy> Elaborated<Impl> {
             }
             idx += 1;
         }
-        *self
+        self
     }
 }
 
