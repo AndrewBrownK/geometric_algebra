@@ -1,5 +1,5 @@
 use crate::algebra2::basis::{BasisElement, BasisSignature};
-use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 
@@ -121,6 +121,13 @@ impl MultiVector {
             grades |= el.grades();
         }
         grades
+    }
+    pub fn anti_grades(&self) -> AntiGrades {
+        let mut anti_grades = AntiGrades::none;
+        for el in self.multi_vec.elements() {
+            anti_grades |= el.anti_grades(self.anti_scalar);
+        }
+        anti_grades
     }
 
     pub fn elements(&self) -> Vec<BasisElement> {

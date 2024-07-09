@@ -82,6 +82,7 @@ pub trait TraitImpl_10: Copy + Send + 'static {
     type Output: TraitResultType;
 
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         owner: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
@@ -133,13 +134,14 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
         let mvs = b.mvs.clone();
+        let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let builder = TraitImplBuilder::new(
                 ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
-            let trait_impl = Self::general_implementation(builder, owner_clone.clone()).await?;
+            let trait_impl = t_self.general_implementation(builder, owner_clone.clone()).await?;
             Some(trait_impl.into_trait10(owner_clone))
         };
         let the_impl = b.registry.traits10.get_or_create_or_panic(impl_key.clone(), f).await?;
@@ -185,7 +187,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
         let builder = TraitImplBuilder::new(
             b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
-        let trait_impl = Self::general_implementation(builder, owner).await?;
+        let trait_impl = self.general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.release_context().finish_inline(b, var_name)
     }
@@ -196,6 +198,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
 pub trait TraitImpl_11: Copy + Send + 'static {
     type Output: TraitResultType;
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
@@ -247,6 +250,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
         let mvs = b.mvs.clone();
+        let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -259,7 +263,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
                 expr_type: owner_class_clone.clone(),
                 decl: declare_self,
             };
-            let trait_impl = Self::general_implementation(builder, var_self).await?;
+            let trait_impl = t_self.general_implementation(builder, var_self).await?;
             Some(trait_impl.into_trait11(owner_class_clone))
         };
         let the_impl = b.registry.traits11.get_or_create_or_panic(impl_key.clone(), f).await?;
@@ -306,7 +310,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
             b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
         let owner = builder.coerce_variable("self", owner);
-        let trait_impl = Self::general_implementation(builder, owner).await?;
+        let trait_impl = self.general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.release_context().finish_inline(b, var_name)
     }
@@ -317,6 +321,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
 pub trait TraitImpl_21: Copy + Send + 'static {
     type Output: TraitResultType;
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector,
@@ -374,6 +379,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
         let mvs = b.mvs.clone();
+        let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -386,7 +392,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
                 expr_type: owner_class_clone.clone(),
                 decl: declare_self,
             };
-            let trait_impl = Self::general_implementation(builder, var_self, other_class_clone.clone()).await?;
+            let trait_impl = t_self.general_implementation(builder, var_self, other_class_clone.clone()).await?;
             Some(trait_impl.into_trait21(owner_class_clone, other_class_clone.clone()))
         };
         let the_impl = b.registry.traits21.get_or_create_or_panic(impl_key.clone(), f).await?;
@@ -435,7 +441,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
             b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), b.inline_dependencies, &mut b.variables, b.cycle_detector.clone()
         );
         let owner = builder.coerce_variable("self", owner);
-        let trait_impl = Self::general_implementation(builder, owner, other).await?;
+        let trait_impl = self.general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.release_context().finish_inline(b, var_name)
     }
@@ -446,6 +452,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
 pub trait TraitImpl_22: Copy + Send + 'static {
     type Output: TraitResultType;
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>,
@@ -506,6 +513,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
         let cycle_detector_clone = b.cycle_detector.clone();
         let ga = b.ga.clone();
         let mvs = b.mvs.clone();
+        let t_self = self.clone();
         let f = async move {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
@@ -524,7 +532,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
                 expr_type: other_class.clone(),
                 decl: declare_other,
             };
-            let trait_impl = Self::general_implementation(builder, var_self, var_other).await?;
+            let trait_impl = t_self.general_implementation(builder, var_self, var_other).await?;
             Some(trait_impl.into_trait22(owner_class_clone.clone(), other_class_clone.clone()))
         };
         let the_impl = b.registry.traits22.get_or_create_or_panic(impl_key.clone(), f).await?;
@@ -575,7 +583,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 {
         );
         let owner = builder.coerce_variable("self", owner);
         let other = builder.coerce_variable("other", other);
-        let trait_impl = Self::general_implementation(builder, owner, other).await?;
+        let trait_impl = self.general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.release_context().finish_inline(b, var_name)
     }

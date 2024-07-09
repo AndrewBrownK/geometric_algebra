@@ -1,11 +1,11 @@
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
-use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg};
+use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg, Sub};
 use rand::Rng;
 use generators::GeneratorSquares;
 use crate::algebra2::basis::generators::GeneratorElement;
-use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::algebra::basis_element;
 use crate::generator_squares;
 use std::marker::{ConstParamTy};
@@ -213,6 +213,13 @@ impl BitAnd for BasisSignature {
 impl BitAndAssign for BasisSignature {
     fn bitand_assign(&mut self, rhs: Self) {
         self.0.bitand_assign(rhs.0)
+    }
+}
+impl Sub<BasisSignature> for BasisSignature {
+    type Output = BasisSignature;
+
+    fn sub(self, rhs: BasisSignature) -> Self::Output {
+        BasisSignature(self.0 - rhs.0)
     }
 }
 
@@ -504,6 +511,9 @@ impl BasisElement {
     }
     pub const fn grades(&self) -> Grades {
         Grades::from_sig(self.signature)
+    }
+    pub const fn anti_grades(&self, anti_scalar: BasisElement) -> AntiGrades {
+        AntiGrades::from_sig(anti_scalar.signature - self.signature)
     }
 
     pub const fn parsed_display_name(s: &'static str) -> Option<Self> {

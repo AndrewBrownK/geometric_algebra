@@ -9,6 +9,7 @@ use crate::algebra2::basis::BasisSignature;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Grades(u32);
+pub type AntiGrades = Grades;
 
 #[allow(non_upper_case_globals)]
 impl Grades {
@@ -26,6 +27,14 @@ impl Grades {
         Grades(b)
     }
 
+    pub const fn new(gr: u32) -> Self {
+        // Grade 0 takes 1 bit of grades
+        // So grade 0 = 0x1
+        // Grade 1 = 0x2
+        // and NO GRADES that is to say NOT EVEN GRADE 0 is represented as 0x0
+        Grades::from_bits(1u32 << gr)
+    }
+
     pub const fn from_sig(sig: BasisSignature) -> Self {
         let ones = sig.bits().count_ones();
         Grades::from_bits(1u32 << ones)
@@ -40,6 +49,10 @@ impl Grades {
     }
     pub const fn const_not(self) -> Self {
         Grades(!self.0)
+    }
+
+    pub const fn contains(&self, other: Grades) -> bool {
+        self.0 == self.0 | other.0
     }
 }
 
