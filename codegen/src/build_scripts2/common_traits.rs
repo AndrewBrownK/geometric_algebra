@@ -25,6 +25,7 @@ mod impls {
     use async_trait::async_trait;
 
     use crate::algebra2::basis::{BasisElement, BasisSignature};
+    use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{FloatExpr, IntExpr};
     use crate::ast2::traits::{HasNotReturned, TraitImpl_10, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
@@ -113,11 +114,15 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
-
-            // TODO I think I should pick up here
-
-
-            todo!()
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements() {
+                for (b, b_el) in other.elements() {
+                    let a = a.clone();
+                    dyn_mv += (a * b, a_el.wedge(b_el));
+                }
+            }
+            let mv = dyn_mv.construct(&b.mvs)?;
+            b.return_expr(mv)
         }
     }
 

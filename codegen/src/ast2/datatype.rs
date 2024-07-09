@@ -1,6 +1,6 @@
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::grades::Grades;
-use crate::algebra2::multivector::{MultiVec};
+use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 
 // TODO move these items to better locations
@@ -74,8 +74,10 @@ pub enum ExpressionType {
 // inspection and diligence. If you want a method that changes behavior depending
 // on an accurate AntiScalar, then accept an AntiScalar as a type parameter of the method,
 // and use the implementation of From or Into to convert multi_vec to the correct type first.
+// If rust had dependent types, then we could trivially do this using the anti_scalar field.
+// But if rust had dependent types, we probably wouldn't be using DUMMY_ANTI_SCALAR to begin with.
 impl MultiVector {
-    pub fn construct<F: Fn(BasisElement) -> FloatExpr>(&self, f: F) -> MultiVectorExpr {
+    pub fn construct<F: FnMut(BasisElement) -> FloatExpr>(&self, mut f: F) -> MultiVectorExpr {
         let mut outer = vec![];
         let groups = self.multi_vec.groups();
         let mut i = 0;
@@ -119,6 +121,22 @@ impl MultiVector {
             grades |= el.grades();
         }
         grades
+    }
+
+    pub fn elements(&self) -> Vec<BasisElement> {
+        self.multi_vec.elements()
+    }
+
+    pub fn groups(&self) -> Vec<BasisElementGroup> {
+        let mut v = vec![];
+        let groups = self.multi_vec.groups();
+        let mut i = 0;
+        while i < groups.len() {
+            let g = groups[i];
+            v.push(g);
+            i += 1;
+        }
+        v
     }
 }
 

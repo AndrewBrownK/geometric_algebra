@@ -2,6 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::{Debug, Display, Formatter};
+use std::ops::AddAssign;
 use std::sync::Arc;
 use std::sync::atomic::Ordering;
 
@@ -14,6 +15,7 @@ use crate::algebra2::basis::elements::*;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::datatype::MultiVector;
+use crate::ast2::expressions::{FloatExpr, MultiVectorExpr};
 use crate::ast2::traits::RawTraitImplementation;
 use crate::utility::ConstVec;
 
@@ -700,28 +702,77 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         ));
     }
 
-    pub fn scalar(&self) -> Arc<MultiVec<AntiScalar>> {
+    pub fn scalar(&self) -> &'static MultiVec<AntiScalar> {
         todo!()
     }
 
-    pub fn anti_scalar(&self) -> Arc<MultiVec<AntiScalar>> {
+    pub fn anti_scalar(&self) -> &'static MultiVec<AntiScalar> {
         todo!()
     }
 
-    pub fn full_multi_vector(&self) -> Arc<MultiVec<AntiScalar>> {
+    pub fn full_multi_vector(&self) -> &'static MultiVec<AntiScalar> {
         todo!()
     }
 
-    pub fn get_at_least(self: Arc<Self>, signature: BTreeSet<BasisSignature>) -> Arc<MultiVec<AntiScalar>> {
+    pub fn get_at_least(self: &Self, signature: BTreeSet<BasisSignature>) -> &'static MultiVec<AntiScalar> {
         todo!()
     }
 
-    pub fn get_exact(self: Arc<Self>, signature: BTreeSet<BasisSignature>) -> Option<Arc<MultiVec<AntiScalar>>> {
+    pub fn get_exact(self: &Self, signature: BTreeSet<BasisSignature>) -> Option<&'static MultiVec<AntiScalar>> {
         todo!()
     }
 }
 
 
+
+pub struct DynamicMultiVector {
+    vals: BTreeMap<BasisElement, FloatExpr>,
+}
+impl DynamicMultiVector {
+    pub fn zero() -> Self {
+        DynamicMultiVector { vals: BTreeMap::new() }
+    }
+
+    pub fn grades(&self) -> Grades {
+        let mut g = Grades::none;
+        for el in self.vals.keys() {
+            g |= el.grades();
+        }
+        g
+    }
+
+    pub fn construct<const AntiScalar: BasisElement>(mut self, repo: &MultiVecRepository<AntiScalar>) -> Option<MultiVectorExpr> {
+        if self.vals.is_empty() {
+            return None;
+        }
+        let keys = self.vals.keys().map(|el| el.signature()).collect();
+        let mv = repo.get_at_least(keys);
+        let mv = MultiVector::from(mv);
+        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Zero)))
+    }
+
+    pub fn construct_exact<const AntiScalar: BasisElement>(mut self, repo: &MultiVecRepository<AntiScalar>) -> Option<MultiVectorExpr> {
+        if self.vals.is_empty() {
+            return None;
+        }
+        let keys = self.vals.keys().map(|el| el.signature()).collect();
+        let mv = repo.get_exact(keys)?;
+        let mv = MultiVector::from(mv);
+        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Zero)))
+    }
+}
+impl AddAssign<(FloatExpr, BasisElement)> for DynamicMultiVector {
+    fn add_assign(&mut self, rhs: (FloatExpr, BasisElement)) {
+        if rhs.1.coefficient() == 0 {
+            return
+        }
+        let mut thing = self.vals.entry(rhs.1).or_insert(FloatExpr::Zero);
+        thing.add_assign(rhs.0);
+        if let FloatExpr::Zero = thing {
+            self.vals.remove(&rhs.1);
+        }
+    }
+}
 
 
 

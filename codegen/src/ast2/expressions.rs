@@ -1,7 +1,9 @@
 use std::fmt::Debug;
+use std::ops::{Add, AddAssign, Mul, MulAssign};
 use std::sync::Arc;
 use either::Either;
-
+use crate::algebra2::basis::BasisElement;
+use crate::algebra2::multivector::BasisElementGroup;
 use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::traits::TraitKey;
@@ -158,30 +160,40 @@ pub enum FloatExpr {
     AccessVec2(Box<Vec2Expr>, u8),
     AccessVec3(Box<Vec3Expr>, u8),
     AccessVec4(Box<Vec4Expr>, u8),
+    AccessMultiVecGroup(MultiVectorExpr, u16),
+    AccessMultiVecFlat(MultiVectorExpr, u16),
     // e.g. UnitizedNorm
     TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
-    // TODO sum of products
+    Product(Vec<FloatExpr>),
+    Sum(Vec<FloatExpr>)
+    // TODO sqrt etc
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather2(FloatExpr, FloatExpr),
-    // TODO sum of products
+    AccessMultiVecGroup(MultiVectorExpr, u16),
+    Product(Vec<Vec2Expr>),
+    Sum(Vec<Vec2Expr>),
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum Vec3Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather3(FloatExpr, FloatExpr, FloatExpr),
-    // TODO sum of products
+    AccessMultiVecGroup(MultiVectorExpr, u16),
+    Product(Vec<Vec3Expr>),
+    Sum(Vec<Vec3Expr>),
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum Vec4Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather4(FloatExpr, FloatExpr, FloatExpr, FloatExpr),
-    // TODO sum of products
+    AccessMultiVecGroup(MultiVectorExpr, u16),
+    Product(Vec<Vec4Expr>),
+    Sum(Vec<Vec4Expr>),
 }
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub enum MultiVectorGroupExpr {
@@ -376,6 +388,18 @@ impl Expression<Float> for FloatExpr {
             FloatExpr::AccessVec3(v, _) => v.substitute_variable(old, new),
             FloatExpr::AccessVec4(v, _) => v.substitute_variable(old, new),
             FloatExpr::TraitInvoke11ToFloat(_, mvc) => mvc.substitute_variable(old, new),
+            FloatExpr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
+            FloatExpr::AccessMultiVecFlat(mve, _) => mve.substitute_variable(old, new),
+            FloatExpr::Product(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
+            }
+            FloatExpr::Sum(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
+            }
         }
     }
 }
@@ -430,6 +454,17 @@ impl Expression<Vec2> for Vec2Expr {
             Vec2Expr::Gather2(f1, f2) => {
                 f1.substitute_variable(old.clone(), new.clone());
                 f2.substitute_variable(old, new);
+            }
+            Vec2Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
+            Vec2Expr::Product(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
+            }
+            Vec2Expr::Sum(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
             }
         }
     }
@@ -487,6 +522,17 @@ impl Expression<Vec3> for Vec3Expr {
                 f2.substitute_variable(old.clone(), new.clone());
                 f3.substitute_variable(old, new);
             }
+            Vec3Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
+            Vec3Expr::Product(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
+            }
+            Vec3Expr::Sum(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
+            }
         }
     }
 }
@@ -543,6 +589,17 @@ impl Expression<Vec4> for Vec4Expr {
                 f2.substitute_variable(old.clone(), new.clone());
                 f3.substitute_variable(old.clone(), new.clone());
                 f4.substitute_variable(old, new);
+            }
+            Vec4Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
+            Vec4Expr::Product(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
+            }
+            Vec4Expr::Sum(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }
             }
         }
     }
@@ -882,9 +939,182 @@ impl Expression<MultiVector> for Variable<MultiVector> {
     }
 }
 
+// TODO this but for other variable types
+impl Variable<MultiVector> {
+    pub fn expr(self) -> MultiVectorExpr {
+        MultiVectorExpr {
+            mv_class: self.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
+                decl: self.decl.clone(),
+            })),
+        }
+    }
+}
+
+impl Variable<MultiVector> {
+    pub fn elements(&self) -> impl Iterator<Item=(FloatExpr, BasisElement)> + '_ {
+        let mv_expr = self.clone().expr();
+        self.expr_type.elements().into_iter().enumerate().map(move |(i, el)| {
+            (FloatExpr::AccessMultiVecFlat(mv_expr.clone(), i as u16), el)
+        })
+    }
+
+    // TODO still not exactly sure how I feel about this, but we'll see.
+    pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
+        let mv_expr = self.clone().expr();
+        self.expr_type.groups().into_iter().enumerate().map(move |(g, group)| {
+            let g = g as u16;
+            match group {
+                BasisElementGroup::G1(a) => (
+                    MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G1(a),
+                ),
+                BasisElementGroup::G2(a, b) => (
+                    MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G2(a, b),
+                ),
+                BasisElementGroup::G3(a, b, c) => (
+                    MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G3(a, b, c),
+                ),
+                BasisElementGroup::G4(a, b, c, d) => (
+                    MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G4(a, b, c, d),
+                ),
+            }
+        })
+    }
+}
+
+impl MultiVectorExpr {
+    pub fn elements(&self) -> impl Iterator<Item=(FloatExpr, BasisElement)> + '_ {
+        self.mv_class.elements().into_iter().enumerate().map(|(i, el)| {
+            (FloatExpr::AccessMultiVecFlat(self.clone(), i as u16), el)
+        })
+    }
+
+    // TODO still not exactly sure how I feel about this, but we'll see.
+    pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
+        let mv_expr = self.clone();
+        self.mv_class.groups().into_iter().enumerate().map(move |(g, group)| {
+            let g = g as u16;
+            match group {
+                BasisElementGroup::G1(a) => (
+                    MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G1(a),
+                ),
+                BasisElementGroup::G2(a, b) => (
+                    MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G2(a, b),
+                ),
+                BasisElementGroup::G3(a, b, c) => (
+                    MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G3(a, b, c),
+                ),
+                BasisElementGroup::G4(a, b, c, d) => (
+                    MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+                    BasisElementGroup::G4(a, b, c, d),
+                ),
+            }
+        })
+    }
+}
 
 
 
+impl Add<FloatExpr> for FloatExpr {
+    type Output = FloatExpr;
 
+    fn add(self, rhs: FloatExpr) -> Self::Output {
+        todo!()
+    }
+}
+impl AddAssign<FloatExpr> for FloatExpr {
+    fn add_assign(&mut self, rhs: FloatExpr) {
+        todo!()
+    }
+}
+impl Mul<FloatExpr> for FloatExpr {
+    type Output = FloatExpr;
 
+    fn mul(self, rhs: FloatExpr) -> Self::Output {
+        todo!()
+    }
+}
+impl MulAssign<FloatExpr> for FloatExpr {
+    fn mul_assign(&mut self, rhs: FloatExpr) {
+        todo!()
+    }
+}
+impl Add<Vec2Expr> for Vec2Expr {
+    type Output = Vec2Expr;
 
+    fn add(self, rhs: Vec2Expr) -> Self::Output {
+        todo!()
+    }
+}
+impl AddAssign<Vec2Expr> for Vec2Expr {
+    fn add_assign(&mut self, rhs: Vec2Expr) {
+        todo!()
+    }
+}
+impl Mul<Vec2Expr> for Vec2Expr {
+    type Output = Vec2Expr;
+
+    fn mul(self, rhs: Vec2Expr) -> Self::Output {
+        todo!()
+    }
+}
+impl MulAssign<Vec2Expr> for Vec2Expr {
+    fn mul_assign(&mut self, rhs: Vec2Expr) {
+        todo!()
+    }
+}
+impl Add<Vec3Expr> for Vec3Expr {
+    type Output = Vec3Expr;
+
+    fn add(self, rhs: Vec3Expr) -> Self::Output {
+        todo!()
+    }
+}
+impl AddAssign<Vec3Expr> for Vec3Expr {
+    fn add_assign(&mut self, rhs: Vec3Expr) {
+        todo!()
+    }
+}
+impl Mul<Vec3Expr> for Vec3Expr {
+    type Output = Vec3Expr;
+
+    fn mul(self, rhs: Vec3Expr) -> Self::Output {
+        todo!()
+    }
+}
+impl MulAssign<Vec3Expr> for Vec3Expr {
+    fn mul_assign(&mut self, rhs: Vec3Expr) {
+        todo!()
+    }
+}
+impl Add<Vec4Expr> for Vec4Expr {
+    type Output = Vec4Expr;
+
+    fn add(self, rhs: Vec4Expr) -> Self::Output {
+        todo!()
+    }
+}
+impl AddAssign<Vec4Expr> for Vec4Expr {
+    fn add_assign(&mut self, rhs: Vec4Expr) {
+        todo!()
+    }
+}
+impl Mul<Vec4Expr> for Vec4Expr {
+    type Output = Vec4Expr;
+
+    fn mul(self, rhs: Vec4Expr) -> Self::Output {
+        todo!()
+    }
+}
+impl MulAssign<Vec4Expr> for Vec4Expr {
+    fn mul_assign(&mut self, rhs: Vec4Expr) {
+        todo!()
+    }
+}
