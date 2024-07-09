@@ -113,13 +113,13 @@ impl<Impl: TraitImpl_10> TraitImpl_10 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Impl: TraitImpl_10> TraitDef_1Class_0Param<AntiScalar> for Elaborated<Impl> {
+impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
         standard_documentation(
-            <Elaborated<Impl> as TraitDef_1Class_0Param<AntiScalar>>::trait_names(self),
+            <Elaborated<Impl> as TraitDef_1Class_0Param>::trait_names(self),
             self.blurb
         )
     }
@@ -133,13 +133,13 @@ impl<Impl: TraitImpl_11> TraitImpl_11 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Impl: TraitImpl_11> TraitDef_1Class_1Param<AntiScalar> for Elaborated<Impl> {
+impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
         standard_documentation(
-            <Elaborated<Impl> as TraitDef_1Class_1Param<AntiScalar>>::trait_names(self),
+            <Elaborated<Impl> as TraitDef_1Class_1Param>::trait_names(self),
             self.blurb
         )
     }
@@ -152,13 +152,13 @@ impl<Impl: TraitImpl_21> TraitImpl_21 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Impl: TraitImpl_21> TraitDef_2Class_1Param<AntiScalar> for Elaborated<Impl> {
+impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
         standard_documentation(
-            <Elaborated<Impl> as TraitDef_2Class_1Param<AntiScalar>>::trait_names(self),
+            <Elaborated<Impl> as TraitDef_2Class_1Param>::trait_names(self),
             self.blurb
         )
     }
@@ -171,13 +171,13 @@ impl<Impl: TraitImpl_22> TraitImpl_22 for Elaborated<Impl> {
     }
 }
 #[async_trait]
-impl<const AntiScalar: BasisElement, Impl: TraitImpl_22> TraitDef_2Class_2Param<AntiScalar> for Elaborated<Impl> {
+impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for Elaborated<Impl> {
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
     fn general_documentation(&self) -> String {
         standard_documentation(
-            <Elaborated<Impl> as TraitDef_2Class_2Param<AntiScalar>>::trait_names(self),
+            <Elaborated<Impl> as TraitDef_2Class_2Param>::trait_names(self),
             self.blurb
         )
     }

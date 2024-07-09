@@ -90,7 +90,7 @@ pub trait TraitImpl_10: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_0Param<const AntiScalar: BasisElement>: TraitImpl_10 {
+pub trait TraitDef_1Class_0Param: TraitImpl_10 {
     type Owner: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
@@ -105,9 +105,9 @@ pub trait TraitDef_1Class_0Param<const AntiScalar: BasisElement>: TraitImpl_10 {
         })
     }
 
-    async fn invoke<'impl_ctx>(
+    async fn invoke<const AntiScalar: BasisElement>(
         &self,
-        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, AntiScalar, HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
@@ -162,9 +162,9 @@ pub trait TraitDef_1Class_0Param<const AntiScalar: BasisElement>: TraitImpl_10 {
         Some(invocation_expression)
     }
 
-    async fn inline<'impl_ctx>(
+    async fn inline<const AntiScalar: BasisElement>(
         &self,
-        b: &'impl_ctx mut TraitImplBuilder<'impl_ctx, AntiScalar, HasNotReturned>,
+        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
@@ -203,7 +203,7 @@ pub trait TraitImpl_11: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_1Param<const AntiScalar: BasisElement>: TraitImpl_11 {
+pub trait TraitDef_1Class_1Param: TraitImpl_11 {
     type Owner: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
@@ -218,7 +218,7 @@ pub trait TraitDef_1Class_1Param<const AntiScalar: BasisElement>: TraitImpl_11 {
         })
     }
 
-    async fn invoke<Expr: Expression<MultiVector>>(
+    async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, owner: Expr
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
@@ -282,7 +282,7 @@ pub trait TraitDef_1Class_1Param<const AntiScalar: BasisElement>: TraitImpl_11 {
 
         Some(invocation_expression)
     }
-    async fn inline<Expr: Expression<MultiVector>>(
+    async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr
@@ -325,7 +325,7 @@ pub trait TraitImpl_21: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_1Param<const AntiScalar: BasisElement>: TraitImpl_21 {
+pub trait TraitDef_2Class_1Param: TraitImpl_21 {
     type Owner: ClassesFromRegistry = AnyClasses;
     type Other: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
@@ -341,7 +341,7 @@ pub trait TraitDef_2Class_1Param<const AntiScalar: BasisElement>: TraitImpl_21 {
         })
     }
 
-    async fn invoke<Expr: Expression<MultiVector>>(
+    async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
@@ -410,7 +410,7 @@ pub trait TraitDef_2Class_1Param<const AntiScalar: BasisElement>: TraitImpl_21 {
         Some(invocation_expression)
     }
 
-    async fn inline<Expr: Expression<MultiVector>>(
+    async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
@@ -454,7 +454,9 @@ pub trait TraitImpl_22: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_2Param<const AntiScalar: BasisElement>: TraitImpl_22 {
+pub trait TraitDef_2Class_2Param: TraitImpl_22 {
+    // TODO do I want to move these associated types to TraitImpl_22?
+    //  and similar for other TraitDefs too obviously
     type Owner: ClassesFromRegistry = AnyClasses;
     type Other: ClassesFromRegistry = AnyClasses;
     fn trait_names(&self) -> TraitNames;
@@ -470,7 +472,7 @@ pub trait TraitDef_2Class_2Param<const AntiScalar: BasisElement>: TraitImpl_22 {
         })
     }
 
-    async fn invoke<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+    async fn invoke<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
@@ -547,7 +549,7 @@ pub trait TraitDef_2Class_2Param<const AntiScalar: BasisElement>: TraitImpl_22 {
         Some(invocation_expression)
     }
 
-    async fn inline<Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+    async fn inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
@@ -590,10 +592,10 @@ impl<I> CanNameTrait for I where I: TraitImpl_22 {}
 
 #[const_trait]
 pub trait NameTrait: Sized + Copy {
-    fn name(self, name: &'static str) -> Elaborated<Self>;
+    fn new_trait_named(self, name: &'static str) -> Elaborated<Self>;
 }
 impl<I> const NameTrait for I where I: CanNameTrait + Copy {
-    fn name(self, name: &'static str) -> Elaborated<Self> {
+    fn new_trait_named(self, name: &'static str) -> Elaborated<Self> {
         Elaborated::new_with_name(self, name)
     }
 }
@@ -952,7 +954,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
     }
 
     fn inline_by_copy_existing_10<
-        T: TraitDef_1Class_0Param<AntiScalar> + ?Sized,
+        T: TraitDef_1Class_0Param + ?Sized,
     >(
         &mut self,
         trait_key: &TraitKey,
@@ -976,7 +978,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
     }
 
     fn inline_by_copy_existing_11<
-        T: TraitDef_1Class_1Param<AntiScalar> + ?Sized,
+        T: TraitDef_1Class_1Param + ?Sized,
         Expr: Expression<MultiVector>
     >(
         &mut self,
@@ -1004,7 +1006,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
     }
 
     fn inline_by_copy_existing_21<
-        T: TraitDef_2Class_1Param<AntiScalar> + ?Sized,
+        T: TraitDef_2Class_1Param + ?Sized,
         Expr: Expression<MultiVector>
     >(
         &mut self,
@@ -1032,7 +1034,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
     }
 
     fn inline_by_copy_existing_22<
-        T: TraitDef_2Class_2Param<AntiScalar> + ?Sized,
+        T: TraitDef_2Class_2Param + ?Sized,
         Expr1: Expression<MultiVector>,
         Expr2: Expression<MultiVector>,
     >(

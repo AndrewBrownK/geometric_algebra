@@ -748,6 +748,7 @@ impl DynamicMultiVector {
         let keys = self.vals.keys().map(|el| el.signature()).collect();
         let mv = repo.get_at_least(keys);
         let mv = MultiVector::from(mv);
+        // TODO properly handle BasisElement sign mismatch, and also infect element names
         Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Zero)))
     }
 
@@ -758,6 +759,7 @@ impl DynamicMultiVector {
         let keys = self.vals.keys().map(|el| el.signature()).collect();
         let mv = repo.get_exact(keys)?;
         let mv = MultiVector::from(mv);
+        // TODO properly handle BasisElement sign mismatch, and also infect element names
         Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Zero)))
     }
 }

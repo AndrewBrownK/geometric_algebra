@@ -13,7 +13,7 @@ struct AntiDual;
 struct Expansion;
 
 pub static WEDGE: Elaborated<Wedge> = Wedge
-    .name("Wedge")
+    .new_trait_named("Wedge")
     .alias("Join")
     .alias_docs_only("ExteriorProduct")
     .blurb("The famous Wedge product, also known as ExteriorProduct. \
@@ -23,8 +23,8 @@ pub static WEDGE: Elaborated<Wedge> = Wedge
     hyperplane-based interpretations, the Wedge is a Meet because increasing grade corresponds \
     to the intersection of objects.");
 
-static ANTI_DUAL: Elaborated<AntiDual> = AntiDual.name("AntiDual");
-static EXPANSION: Elaborated<Expansion> = Expansion.name("Expansion");
+static ANTI_DUAL: Elaborated<AntiDual> = AntiDual.new_trait_named("AntiDual");
+static EXPANSION: Elaborated<Expansion> = Expansion.new_trait_named("Expansion");
 
 
 

@@ -498,6 +498,10 @@ impl BasisElement {
     pub const fn grade(&self) -> u32 {
         self.signature.bits().count_ones()
     }
+
+    pub const fn anti_grade(&self, anti_scalar: BasisElement) -> u32 {
+        anti_scalar.grade() - self.grade()
+    }
     pub const fn grades(&self) -> Grades {
         Grades::from_sig(self.signature)
     }
