@@ -1,12 +1,13 @@
 #![allow(non_upper_case_globals)]
 use std::future::Future;
 use std::pin::Pin;
+
 use crate::{ga, multi_vecs, register_all};
 use crate::algebra2::basis::elements::e12345;
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::impls::{Specialize_22, Specialized_21, Specialized_22, SpecializedImpl_22};
-use crate::ast2::traits::{Register10, Register11, Register21, Register22, TraitImplRegistry};
+use crate::ast2::impls::{Specialize_22, Specialized_22};
 use crate::ast2::traits::{HasNotReturned, TraitImplBuilder};
+use crate::ast2::traits::TraitImplRegistry;
 use crate::ast2::Variable;
 use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkExpansion, GeometricAntiProduct, GeometricProduct, Grade, One, Unit, Wedge, Zero};
 
@@ -39,10 +40,10 @@ pub fn cga3d_script() {
     let repo = declarations.finished();
     let traits = register_all!(
         Plane_BulkExpansion_Plane
-        =>
+        |
         Zero One AntiOne Unit
         Grade AntiGrade
-        =>
+        |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
     );
 
@@ -61,6 +62,7 @@ fn plane_bulk_expansion_plane<'impls>(
     slf: Variable<MultiVector>,
     other: Variable<MultiVector>,
 ) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + 'static>> {
+    // TODO this async lifetime is not static because it uses 'impls
     Box::pin(async move {
         // TODO actually implement
         b.return_expr(slf)

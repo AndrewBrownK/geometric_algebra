@@ -803,96 +803,49 @@ impl TraitImplRegistry {
 
 
 #[async_trait]
-pub trait Register10 {
-    async fn register<T: TraitDef_1Class_0Param>(&self, t: T);
-
-    async fn register_all<const N: usize, T: TraitDef_1Class_0Param>(&self, ts: [T; N]) {
-        let mut i = 0;
-        while i < N {
-            let t = ts[i];
-            tokio::spawn(async {
-                self.register(t).await;
-            });
-            i += 1;
-        }
-    }
+pub trait Register10: TraitDef_1Class_0Param {
+    async fn register(self, tr: TraitImplRegistry);
 }
 #[async_trait]
-impl Register10 for TraitImplRegistry {
-    async fn register<T: TraitDef_1Class_0Param>(&self, t: T) {
-
-
-
+impl<T: TraitDef_1Class_0Param> Register10 for T {
+    async fn register(self, tr: TraitImplRegistry) {
         todo!()
     }
 }
 #[async_trait]
-pub trait Register11 {
-    async fn register<T: TraitDef_1Class_1Param>(&self, t: T);
-
-    async fn register_all<const N: usize, T: TraitDef_1Class_1Param>(&self, ts: [T; N]) {
-        let mut i = 0;
-        while i < N {
-            let t = ts[i];
-            tokio::spawn(async {
-                self.register(t).await;
-            });
-            i += 1;
-        }
-    }
+pub trait Register11: TraitDef_1Class_1Param {
+    async fn register(self, tr: TraitImplRegistry);
 }
 #[async_trait]
-impl Register11 for TraitImplRegistry {
-    async fn register<T: TraitDef_1Class_1Param>(&self, t: T) {
+impl<T: TraitDef_1Class_1Param> Register11 for T {
+    async fn register(self, tr: TraitImplRegistry) {
         todo!()
     }
 }
 #[async_trait]
-pub trait Register21 {
-    async fn register<T: TraitDef_2Class_1Param>(&self, t: T);
-
-    async fn register_all<const N: usize, T: TraitDef_2Class_1Param>(&self, ts: [T; N]) {
-        let mut i = 0;
-        while i < N {
-            let t = ts[i];
-            tokio::spawn(async {
-                self.register(t).await;
-            });
-            i += 1;
-        }
-    }
+pub trait Register21: TraitDef_2Class_1Param {
+    async fn register(&self, tr: TraitImplRegistry);
 }
 #[async_trait]
-impl Register21 for TraitImplRegistry {
-    async fn register<T: TraitDef_2Class_1Param>(&self, t: T) {
+impl<T: TraitDef_2Class_1Param> Register21 for T {
+    async fn register(&self, tr: TraitImplRegistry) {
         todo!()
     }
 }
 #[async_trait]
-pub trait Register22 {
-    async fn register<T: TraitDef_2Class_2Param>(&self, t: T);
-
-    async fn register_all<const N: usize, T: TraitDef_2Class_2Param>(&self, ts: [T; N]) {
-        let mut i = 0;
-        while i < N {
-            let t = ts[i];
-            tokio::spawn(async {
-                self.register(t).await;
-            });
-            i += 1;
-        }
-    }
+pub trait Register22: TraitDef_2Class_2Param {
+    async fn register(&self, tr: TraitImplRegistry);
 }
 #[async_trait]
-impl Register22 for TraitImplRegistry {
-    async fn register<T: TraitDef_2Class_2Param>(&self, t: T) {
+impl<T: TraitDef_2Class_2Param> Register22 for T {
+    async fn register(&self, tr: TraitImplRegistry) {
         todo!()
     }
 }
 
 #[macro_export]
 macro_rules! register_all {
-    ($($t:expr)+ $(=> $($t2:expr)+)*) => {
+    ($($t:ident)+ $(| $($t2:ident)+)*) => {
         {
             let traits = TraitImplRegistry::new();
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
@@ -900,8 +853,9 @@ macro_rules! register_all {
             let _: () = rt.block_on(async {
                 let mut js = tokio::task::JoinSet::new();
                 $(
-                js.spawn(async {
-                    traits.register($t).await;
+                let tc = traits.clone();
+                js.spawn(async move {
+                    $t.register(tc).await;
                 });
                 )+
                 while let Some(_) = js.join_next().await {}
@@ -909,8 +863,9 @@ macro_rules! register_all {
                 $(
                 let mut js = tokio::task::JoinSet::new();
                 $(
-                js.spawn(async {
-                    traits.register($t2).await;
+                let tc = traits.clone();
+                js.spawn(async move {
+                    $t2.register(tc).await;
                 });
                 )+
                 while let Some(_) = js.join_next().await {}

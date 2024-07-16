@@ -329,11 +329,11 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
 }
 
 
-
-pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static (dyn for<'impls> Fn(
+type RawSpecializedImpl_10<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     MultiVector,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_10<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_10<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -361,7 +361,13 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_10 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
-        self.3(b, owner).await
+        let f = unsafe {
+            let p0 = &self.3;
+            let p1: *const SpecializedImpl_10<AntiScalar, Output> = p0 as *const SpecializedImpl_10<AntiScalar, Output>;
+            let p2: *const SpecializedImpl_10<AntiScalar2, Output> = p1.cast::<SpecializedImpl_10<AntiScalar2, Output>>();
+            *(p2) as SpecializedImpl_10<AntiScalar2, Output>
+        };
+        (*f)(b, owner).await
     }
 }
 #[async_trait]
@@ -392,10 +398,11 @@ impl<TD> const Specialize_10 for TD where TD: TraitImpl_10 + ProvideTraitNames +
 }
 
 
-pub type SpecializedImpl_11<const AntiScalar: BasisElement, Output> = &'static (dyn for<'impls> Fn(
+type RawSpecializedImpl_11<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+pub type SpecializedImpl_11<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_11<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_11<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -423,7 +430,13 @@ impl<Output: TraitResultType, const AntiScalar: BasisElement> TraitImpl_11 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
-        self.3(b, slf).await
+        let f = unsafe {
+            let p0 = &self.3;
+            let p1: *const SpecializedImpl_11<AntiScalar, Output> = p0 as *const SpecializedImpl_11<AntiScalar, Output>;
+            let p2: *const SpecializedImpl_11<AntiScalar2, Output> = p1.cast::<SpecializedImpl_11<AntiScalar2, Output>>();
+            *(p2) as SpecializedImpl_11<AntiScalar2, Output>
+        };
+        (*f)(b, slf).await
     }
 }
 #[async_trait]
@@ -455,11 +468,12 @@ impl<TD> const Specialize_11 for TD where TD: TraitImpl_11 + ProvideTraitNames +
 
 
 
-pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static (dyn for<'impls> Fn(
+type RawSpecializedImpl_21<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
     MultiVector,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_21<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_21<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -489,7 +503,13 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_21 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
-        self.4(b, slf, other).await
+        let f = unsafe {
+            let p0 = &self.4;
+            let p1: *const SpecializedImpl_21<AntiScalar, Output> = p0 as *const SpecializedImpl_21<AntiScalar, Output>;
+            let p2: *const SpecializedImpl_21<AntiScalar2, Output> = p1.cast::<SpecializedImpl_21<AntiScalar2, Output>>();
+            *(p2) as SpecializedImpl_21<AntiScalar2, Output>
+        };
+        (*f)(b, slf, other).await
     }
 }
 #[async_trait]
@@ -524,11 +544,12 @@ impl<TD> const Specialize_21 for TD where TD: TraitImpl_21 + ProvideTraitNames +
 
 
 
-pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static (dyn for<'impls> Fn(
+type RawSpecializedImpl_22<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
     Variable<MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_22<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_22<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -558,7 +579,13 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_22 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
-        self.4(b, slf, other).await
+        let f = unsafe {
+            let p0 = &self.4;
+            let p1: *const SpecializedImpl_22<AntiScalar, Output> = p0 as *const SpecializedImpl_22<AntiScalar, Output>;
+            let p2: *const SpecializedImpl_22<AntiScalar2, Output> = p1.cast::<SpecializedImpl_22<AntiScalar2, Output>>();
+            *(p2) as SpecializedImpl_22<AntiScalar2, Output>
+        };
+        (*f)(b, slf, other).await
     }
 }
 #[async_trait]
