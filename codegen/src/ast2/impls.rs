@@ -380,13 +380,13 @@ pub trait Specialize_10: ProvideTraitNames + TraitImpl_10 {
         the_impl: SpecializedImpl_10<AntiScalar, Output>,
     ) -> Specialized_10<AntiScalar, Output>;
 }
-impl<TD> const Specialize_10 for TD where TD: ProvideTraitNames + TraitImpl_10 {
+impl<TD> const Specialize_10 for TD where TD: TraitImpl_10 + ProvideTraitNames + ~const ProvideTraitNames {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_10<AntiScalar, Output>,
     ) -> Specialized_10<AntiScalar, Output> {
-        let trait_names: TraitNames = self.trait_names();
+        let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
         Specialized_10(trait_names, owner, PhantomData, the_impl)
     }
 }
@@ -442,13 +442,13 @@ pub trait Specialize_11: ProvideTraitNames + TraitImpl_11 {
         the_impl: SpecializedImpl_11<AntiScalar, Output>,
     ) -> Specialized_11<AntiScalar, Output>;
 }
-impl<TD> const Specialize_11 for TD where TD: ProvideTraitNames + TraitImpl_11 {
+impl<TD> const Specialize_11 for TD where TD: TraitImpl_11 + ProvideTraitNames + ~const ProvideTraitNames {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_11<AntiScalar, Output>
     ) -> Specialized_11<AntiScalar, Output> {
-        let trait_names: TraitNames = self.trait_names();
+        let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
         Specialized_11(trait_names, owner, PhantomData, the_impl)
     }
 }
@@ -510,14 +510,14 @@ pub trait Specialize_21: ProvideTraitNames + TraitImpl_21 {
         the_impl: SpecializedImpl_21<AntiScalar, Output>,
     ) -> Specialized_21<AntiScalar, Output>;
 }
-impl<TD> const Specialize_21 for TD where TD: ProvideTraitNames + TraitImpl_21 {
+impl<TD> const Specialize_21 for TD where TD: TraitImpl_21 + ProvideTraitNames + ~const ProvideTraitNames {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_21<AntiScalar, Output>,
     ) -> Specialized_21<AntiScalar, Output> {
-        let trait_names: TraitNames = self.trait_names();
+        let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
         Specialized_21(trait_names, owner, other, PhantomData, the_impl)
     }
 }
@@ -579,14 +579,14 @@ pub trait Specialize_22: ProvideTraitNames + TraitImpl_22 {
         the_impl: SpecializedImpl_22<AntiScalar, Output>,
     ) -> Specialized_22<AntiScalar, Output>;
 }
-impl<TD> const Specialize_22 for TD where TD: ProvideTraitNames + TraitImpl_22 {
+impl<TD> const Specialize_22 for TD where TD: TraitImpl_22 + ProvideTraitNames + ~const ProvideTraitNames {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_22<AntiScalar, Output>,
     ) -> Specialized_22<AntiScalar, Output> {
-        let trait_names: TraitNames = self.trait_names();
+        let trait_names: TraitNames = ProvideTraitNames::trait_names(self);
         Specialized_22(trait_names, owner, other, PhantomData, the_impl)
     }
 }
