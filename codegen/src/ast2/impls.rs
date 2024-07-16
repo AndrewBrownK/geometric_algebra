@@ -1,8 +1,8 @@
-#[allow(non_camel_case_types)]
+#![allow(non_camel_case_types)]
 
 use std::future::Future;
 use std::marker::PhantomData;
-
+use std::pin::Pin;
 use async_trait::async_trait;
 
 use crate::algebra2::basis::BasisElement;
@@ -80,22 +80,16 @@ impl<Impl: Copy> Elaborated<Impl> {
         self
     }
 
-    pub const fn alias(mut self, alias: &'static str) -> Self {
-        let alias = TraitAlias::usual(alias);
-        self.alias_custom(alias);
-        self
+    pub const fn alias(self, alias: &'static str) -> Self {
+        self.alias_custom(TraitAlias::usual(alias))
     }
 
-    pub const fn alias_docs_only(mut self, alias: &'static str) -> Self {
-        let alias = TraitAlias::docs_only(alias);
-        self.alias_custom(alias);
-        self
+    pub const fn alias_docs_only(self, alias: &'static str) -> Self {
+        self.alias_custom(TraitAlias::docs_only(alias))
     }
 
-    pub const fn alias_except_shaders(mut self, alias: &'static str) -> Self {
-        let alias = TraitAlias::usual_except_shaders(alias);
-        self.alias_custom(alias);
-        self
+    pub const fn alias_except_shaders(self, alias: &'static str) -> Self {
+        self.alias_custom(TraitAlias::usual_except_shaders(alias))
     }
 
     pub const fn alias_custom(mut self, alias: TraitAlias) -> Self {
@@ -246,7 +240,8 @@ impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for InlineOnly<Impl> {
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        self.inline(b, owner).await
+        let return_as_var = self.inline(b, owner).await?;
+        return Some(<Self::Output as TraitResultType>::inlined_expr_10(return_as_var));
     }
 }
 #[async_trait]
@@ -272,7 +267,8 @@ impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for InlineOnly<Impl> {
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        self.inline(b, owner).await
+        let return_as_var = self.inline(b, owner).await?;
+        return Some(<Self::Output as TraitResultType>::inlined_expr_11(return_as_var));
     }
 }
 #[async_trait]
@@ -299,7 +295,8 @@ impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for InlineOnly<Impl> {
         owner: Expr,
         other: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        self.inline(b, owner, other).await
+        let return_as_var = self.inline(b, owner, other.clone()).await?;
+        return Some(<Self::Output as TraitResultType>::inlined_expr_21(return_as_var));
     }
 }
 #[async_trait]
@@ -326,7 +323,8 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
         owner: Expr1,
         other: Expr2
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        self.inline(b, owner, other).await
+        let return_as_var = self.inline(b, owner, other).await?;
+        return Some(<Self::Output as TraitResultType>::inlined_expr_22(return_as_var));
     }
 }
 
@@ -335,7 +333,7 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
 pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static (dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     MultiVector,
-) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
 #[derive(Clone, Copy)]
 pub struct Specialized_10<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -375,20 +373,21 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitDef_1Class_0P
     }
 }
 #[const_trait]
-pub trait Specialize_10: TraitDef_1Class_0Param {
+pub trait Specialize_10: ProvideTraitNames + TraitImpl_10 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_10<AntiScalar, Output>,
     ) -> Specialized_10<AntiScalar, Output>;
 }
-impl<TD> const Specialize_10 for TD where TD: TraitDef_1Class_0Param {
+impl<TD> const Specialize_10 for TD where TD: ProvideTraitNames + TraitImpl_10 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_10<AntiScalar, Output>,
     ) -> Specialized_10<AntiScalar, Output> {
-        Specialized_10(self.trait_names(), owner, PhantomData, the_impl)
+        let trait_names: TraitNames = self.trait_names();
+        Specialized_10(trait_names, owner, PhantomData, the_impl)
     }
 }
 
@@ -396,7 +395,7 @@ impl<TD> const Specialize_10 for TD where TD: TraitDef_1Class_0Param {
 pub type SpecializedImpl_11<const AntiScalar: BasisElement, Output> = &'static (dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
-) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
 #[derive(Clone, Copy)]
 pub struct Specialized_11<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -436,20 +435,21 @@ where Self: Copy {
     }
 }
 #[const_trait]
-pub trait Specialize_11: TraitDef_1Class_1Param {
+pub trait Specialize_11: ProvideTraitNames + TraitImpl_11 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_11<AntiScalar, Output>,
     ) -> Specialized_11<AntiScalar, Output>;
 }
-impl<TD> const Specialize_11 for TD where TD: TraitDef_1Class_1Param {
+impl<TD> const Specialize_11 for TD where TD: ProvideTraitNames + TraitImpl_11 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_11<AntiScalar, Output>
     ) -> Specialized_11<AntiScalar, Output> {
-        Specialized_11(self.trait_names(), owner, PhantomData, the_impl)
+        let trait_names: TraitNames = self.trait_names();
+        Specialized_11(trait_names, owner, PhantomData, the_impl)
     }
 }
 
@@ -459,7 +459,7 @@ pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static (
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
     MultiVector,
-) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
 #[derive(Clone, Copy)]
 pub struct Specialized_21<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -502,7 +502,7 @@ where Self: Copy {
     }
 }
 #[const_trait]
-pub trait Specialize_21: TraitDef_2Class_1Param {
+pub trait Specialize_21: ProvideTraitNames + TraitImpl_21 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
@@ -510,14 +510,15 @@ pub trait Specialize_21: TraitDef_2Class_1Param {
         the_impl: SpecializedImpl_21<AntiScalar, Output>,
     ) -> Specialized_21<AntiScalar, Output>;
 }
-impl<TD> const Specialize_21 for TD where TD: TraitDef_2Class_1Param {
+impl<TD> const Specialize_21 for TD where TD: ProvideTraitNames + TraitImpl_21 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_21<AntiScalar, Output>,
     ) -> Specialized_21<AntiScalar, Output> {
-        Specialized_21(self.trait_names(), owner, other, PhantomData, the_impl)
+        let trait_names: TraitNames = self.trait_names();
+        Specialized_21(trait_names, owner, other, PhantomData, the_impl)
     }
 }
 
@@ -527,7 +528,7 @@ pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static (
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
     Variable<MultiVector>,
-) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static> + Send + Sync);
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync);
 #[derive(Clone, Copy)]
 pub struct Specialized_22<const AntiScalar: BasisElement, Output: TraitResultType>(
     TraitNames,
@@ -570,7 +571,7 @@ where Self: Copy {
     }
 }
 #[const_trait]
-pub trait Specialize_22: TraitDef_2Class_2Param {
+pub trait Specialize_22: ProvideTraitNames + TraitImpl_22 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
@@ -578,14 +579,15 @@ pub trait Specialize_22: TraitDef_2Class_2Param {
         the_impl: SpecializedImpl_22<AntiScalar, Output>,
     ) -> Specialized_22<AntiScalar, Output>;
 }
-impl<TD> const Specialize_22 for TD where TD: TraitDef_2Class_2Param {
+impl<TD> const Specialize_22 for TD where TD: ProvideTraitNames + TraitImpl_22 {
     fn specialize<const AntiScalar: BasisElement, Output: TraitResultType>(
         &self,
         owner: &'static MultiVec<AntiScalar>,
         other: &'static MultiVec<AntiScalar>,
         the_impl: SpecializedImpl_22<AntiScalar, Output>,
     ) -> Specialized_22<AntiScalar, Output> {
-        Specialized_22(self.trait_names(), owner, other, PhantomData, the_impl)
+        let trait_names: TraitNames = self.trait_names();
+        Specialized_22(trait_names, owner, other, PhantomData, the_impl)
     }
 }
 

@@ -204,7 +204,7 @@ impl ClassesFromRegistry for AnyClasses {
 
 
 /// Good for manual implementations
-pub struct Specifically(MultiVector);
+pub struct Specifically(pub MultiVector);
 
 impl ClassesFromRegistry for Specifically {
     fn include_class(&self, mvc: &MultiVector) -> bool {

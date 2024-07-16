@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 use std::future::Future;
-
+use std::pin::Pin;
 use crate::{ga, multi_vecs, register_all};
 use crate::algebra2::basis::elements::e12345;
 use crate::ast2::datatype::MultiVector;
@@ -60,8 +60,8 @@ fn plane_bulk_expansion_plane<'impls>(
     mut b: TraitImplBuilder<'impls, e12345, HasNotReturned>,
     slf: Variable<MultiVector>,
     other: Variable<MultiVector>,
-) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + 'static> {
-    Box::new(async move {
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + 'static>> {
+    Box::pin(async move {
         // TODO actually implement
         b.return_expr(slf)
     })
