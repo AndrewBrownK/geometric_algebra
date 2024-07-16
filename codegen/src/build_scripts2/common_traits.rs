@@ -310,7 +310,7 @@ mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct SelectGradesImpl(Grades);
+    pub struct SelectGradesImpl(pub Grades);
     #[async_trait]
     impl TraitImpl_11 for SelectGradesImpl {
         type Output = MultiVector;
@@ -332,7 +332,7 @@ mod impls {
     }
 
     #[derive(Clone, Copy)]
-    pub struct SelectAntiGradesImpl(AntiGrades);
+    pub struct SelectAntiGradesImpl(pub AntiGrades);
     #[async_trait]
     impl TraitImpl_11 for SelectAntiGradesImpl {
         type Output = MultiVector;

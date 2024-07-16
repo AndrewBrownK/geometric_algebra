@@ -4,7 +4,7 @@ use std::future::Future;
 use crate::{ga, multi_vecs, register_all};
 use crate::algebra2::basis::elements::e12345;
 use crate::ast2::datatype::MultiVector;
-use crate::ast2::impls::{Specialize_22, Specialized_22};
+use crate::ast2::impls::{Specialize_22, Specialized_21, Specialized_22, SpecializedImpl_22};
 use crate::ast2::traits::{Register10, Register11, Register21, Register22, TraitImplRegistry};
 use crate::ast2::traits::{HasNotReturned, TraitImplBuilder};
 use crate::ast2::Variable;
@@ -53,11 +53,14 @@ pub fn cga3d_script() {
 
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
     = BulkExpansion.specialize(&Plane, &Plane, &plane_bulk_expansion_plane);
+//     = BulkExpansion.specialize(&Plane, &Plane, &plane_bulk_expansion_plane as SpecializedImpl_22<e12345, MultiVector>);
+// static PLANE_BULK_EXPANSION_PLANE: SpecializedImpl_22<e12345, MultiVector>
+//     = &plane_bulk_expansion_plane as SpecializedImpl_22<e12345, MultiVector>;
 fn plane_bulk_expansion_plane<'impls>(
-    mut b: TraitImplBuilder<'impls, { e12345 }, HasNotReturned>,
+    mut b: TraitImplBuilder<'impls, e12345, HasNotReturned>,
     slf: Variable<MultiVector>,
     other: Variable<MultiVector>,
-) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, { e12345 }, MultiVector>>>> {
+) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + 'static> {
     Box::new(async move {
         // TODO actually implement
         b.return_expr(slf)

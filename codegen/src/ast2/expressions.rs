@@ -8,7 +8,7 @@ use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::traits::TraitKey;
 
-pub trait TraitResultType: Clone + Debug + Sized {
+pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
     type Expr: Expression<Self>;
     #[allow(unused)]
     fn expr_10(trait_name: TraitKey, owner: MultiVector, mv_out: Option<MultiVector>) -> Self::Expr {

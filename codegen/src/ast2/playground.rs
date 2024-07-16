@@ -33,6 +33,7 @@ impl TraitImpl_22 for Wedge {
     type Output = MultiVector;
 
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
@@ -46,6 +47,7 @@ impl TraitImpl_11 for AntiDual {
     type Output = MultiVector;
 
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>
     ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
@@ -60,6 +62,7 @@ impl TraitImpl_22 for Expansion {
     type Output = MultiVector;
 
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
         mut b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>

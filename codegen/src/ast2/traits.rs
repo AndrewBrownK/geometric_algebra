@@ -65,6 +65,11 @@ pub struct RawTraitDefinition {
 
 // TODO infix operators
 
+#[const_trait]
+pub trait ProvideTraitNames {
+    fn trait_names(&self) -> TraitNames;
+}
+
 
 // The "Copy" ancestor for TraitImpls is experimental.
 //  It might seem absurd and far too constraining at first, but actually it might be pretty
@@ -78,7 +83,7 @@ pub struct RawTraitDefinition {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitImpl_10: Copy + Send + 'static {
+pub trait TraitImpl_10: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
 
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
@@ -91,9 +96,8 @@ pub trait TraitImpl_10: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_0Param: TraitImpl_10 {
+pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
-    fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
     fn domain(&self) -> Self::Owner;
 
@@ -196,7 +200,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitImpl_11: Copy + Send + 'static {
+pub trait TraitImpl_11: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
         self,
@@ -207,9 +211,8 @@ pub trait TraitImpl_11: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_1Class_1Param: TraitImpl_11 {
+pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
-    fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
     fn domain(&self) -> Self::Owner;
 
@@ -320,7 +323,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitImpl_21: Copy + Send + 'static {
+pub trait TraitImpl_21: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
         self,
@@ -332,10 +335,9 @@ pub trait TraitImpl_21: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_1Param: TraitImpl_21 {
+pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
     type Owner: ClassesFromRegistry;
     type Other: ClassesFromRegistry;
-    fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
     fn domain(&self) -> (Self::Owner, Self::Other);
 
@@ -452,7 +454,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitImpl_22: Copy + Send + 'static {
+pub trait TraitImpl_22: Copy + Send + Sync + 'static {
     type Output: TraitResultType;
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
         self,
@@ -464,12 +466,11 @@ pub trait TraitImpl_22: Copy + Send + 'static {
 
 #[async_trait]
 #[allow(non_camel_case_types)]
-pub trait TraitDef_2Class_2Param: TraitImpl_22 {
+pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
     // TODO do I want to move these associated types to TraitImpl_22?
     //  and similar for other TraitDefs too obviously
     type Owner: ClassesFromRegistry;
     type Other: ClassesFromRegistry;
-    fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
     fn domain(&self) -> (Self::Owner, Self::Other);
 
