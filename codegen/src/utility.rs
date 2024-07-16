@@ -66,6 +66,9 @@ impl<
     K: Eq + Hash + Clone + Send + Sync + 'static,
     V: Clone + Send + Sync + 'static,
 > AsyncMap<K, V> {
+    pub fn new() -> Self {
+        AsyncMap(Arc::new(tokio::sync::RwLock::new(HashMap::new())))
+    }
     pub async fn get(&self, k: &K) -> Option<V> {
         let guard = self.0.read().await;
         let awaiter = guard.get(k).cloned()?;

@@ -72,10 +72,11 @@ pub enum ExpressionType {
 // MultiVector should not use methods on the multi_vec field that depend on
 // a correct AntiScalar type. Currently, this is only enforced by manual
 // inspection and diligence. If you want a method that changes behavior depending
-// on an accurate AntiScalar, then accept an AntiScalar as a type parameter of the method,
-// and use the implementation of From or Into to convert multi_vec to the correct type first.
-// If rust had dependent types, then we could trivially do this using the anti_scalar field.
-// But if rust had dependent types, we probably wouldn't be using DUMMY_ANTI_SCALAR to begin with.
+// on an accurate AntiScalar, then use the anti_scalar field instead, or accept an AntiScalar
+// type parameter for the function and use the implementation of From or Into to convert
+// multi_vec to the correct type first. If rust had dependent types, then we could trivially do
+// this using the anti_scalar field. But if rust had dependent types, we probably wouldn't be
+// using DUMMY_ANTI_SCALAR to begin with.
 impl MultiVector {
     pub fn construct<F: FnMut(BasisElement) -> FloatExpr>(&self, mut f: F) -> MultiVectorExpr {
         let mut outer = vec![];
@@ -110,9 +111,9 @@ impl MultiVector {
         grade
     }
 
-    pub fn anti_grade(&self, anti_scalar: BasisElement) -> Option<u32> {
+    pub fn anti_grade(&self) -> Option<u32> {
         let gr = self.grade()?;
-        Some(anti_scalar.grade() - gr)
+        Some(self.anti_scalar.grade() - gr)
     }
 
     pub fn grades(&self) -> Grades {

@@ -1,6 +1,9 @@
+use std::future::Future;
+use std::marker::PhantomData;
 use async_trait::async_trait;
 use crate::algebra2::basis::BasisElement;
-use crate::ast2::datatype::MultiVector;
+use crate::algebra2::multivector::MultiVec;
+use crate::ast2::datatype::{AnyClasses, MultiVector, Specifically};
 use crate::ast2::expressions::{Expression, TraitResultType};
 use crate::ast2::traits::{HasNotReturned, TraitAlias, TraitDef_1Class_0Param, TraitDef_1Class_1Param, TraitDef_2Class_1Param, TraitDef_2Class_2Param, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder, TraitKey, TraitNames};
 use crate::ast2::Variable;
@@ -115,6 +118,8 @@ impl<Impl: TraitImpl_10> TraitImpl_10 for Elaborated<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for Elaborated<Impl> {
+    type Owner = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
@@ -123,6 +128,9 @@ impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for Elaborated<Impl> {
             <Elaborated<Impl> as TraitDef_1Class_0Param>::trait_names(self),
             self.blurb
         )
+    }
+    fn domain(&self) -> Self::Owner {
+        AnyClasses
     }
 }
 #[async_trait]
@@ -135,6 +143,8 @@ impl<Impl: TraitImpl_11> TraitImpl_11 for Elaborated<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for Elaborated<Impl> {
+    type Owner = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
@@ -143,6 +153,9 @@ impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for Elaborated<Impl> {
             <Elaborated<Impl> as TraitDef_1Class_1Param>::trait_names(self),
             self.blurb
         )
+    }
+    fn domain(&self) -> Self::Owner {
+        AnyClasses
     }
 }
 #[async_trait]
@@ -154,6 +167,9 @@ impl<Impl: TraitImpl_21> TraitImpl_21 for Elaborated<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for Elaborated<Impl> {
+    type Owner = AnyClasses;
+    type Other = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
@@ -162,6 +178,9 @@ impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for Elaborated<Impl> {
             <Elaborated<Impl> as TraitDef_2Class_1Param>::trait_names(self),
             self.blurb
         )
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        (AnyClasses, AnyClasses)
     }
 }
 #[async_trait]
@@ -173,6 +192,9 @@ impl<Impl: TraitImpl_22> TraitImpl_22 for Elaborated<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for Elaborated<Impl> {
+    type Owner = AnyClasses;
+    type Other = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         self.trait_names.clone()
     }
@@ -181,6 +203,9 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for Elaborated<Impl> {
             <Elaborated<Impl> as TraitDef_2Class_2Param>::trait_names(self),
             self.blurb
         )
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        (AnyClasses, AnyClasses)
     }
 }
 
@@ -209,11 +234,16 @@ impl<Impl: TraitImpl_10> TraitImpl_10 for InlineOnly<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for InlineOnly<Impl> {
+    type Owner = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         TraitNames::just(self.name)
     }
     fn general_documentation(&self) -> String {
         String::new()
+    }
+    fn domain(&self) -> Self::Owner {
+        AnyClasses
     }
 
     async fn invoke<const AntiScalar: BasisElement>(
@@ -234,11 +264,16 @@ impl<Impl: TraitImpl_11> TraitImpl_11 for InlineOnly<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for InlineOnly<Impl> {
+    type Owner = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         TraitNames::just(self.name)
     }
     fn general_documentation(&self) -> String {
         String::new()
+    }
+    fn domain(&self) -> Self::Owner {
+        AnyClasses
     }
 
     async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
@@ -258,11 +293,17 @@ impl<Impl: TraitImpl_21> TraitImpl_21 for InlineOnly<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for InlineOnly<Impl> {
+    type Owner = AnyClasses;
+    type Other = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         TraitNames::just(self.name)
     }
     fn general_documentation(&self) -> String {
         String::new()
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        (AnyClasses, AnyClasses)
     }
 
     async fn invoke<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
@@ -283,11 +324,17 @@ impl<Impl: TraitImpl_22> TraitImpl_22 for InlineOnly<Impl> {
 }
 #[async_trait]
 impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
+    type Owner = AnyClasses;
+    type Other = AnyClasses;
+
     fn trait_names(&self) -> TraitNames {
         TraitNames::just(self.name)
     }
     fn general_documentation(&self) -> String {
         String::new()
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        (AnyClasses,  AnyClasses)
     }
 
     async fn invoke<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
@@ -299,3 +346,286 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
         self.inline(b, owner, other).await
     }
 }
+
+
+
+#[derive(Clone, Copy)]
+pub struct Specialized_10<const AntiScalar: BasisElement, Output>(
+    TraitNames,
+    &'static MultiVec<AntiScalar>,
+    PhantomData<Output>,
+    &'static for<'impls> fn(
+        TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        MultiVector,
+    ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+);
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitImpl_10 for Specialized_10<AntiScalar, Output>
+    where Self: Copy {
+    type Output = Output;
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        owner: MultiVector
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b.mark_as_specialized_implementation();
+        self.3(b, owner).await
+    }
+}
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitDef_1Class_0Param for Specialized_10<AntiScalar, Output>
+    where Self: Copy {
+    type Owner = Specifically;
+    fn trait_names(&self) -> TraitNames {
+        self.0
+    }
+    fn domain(&self) -> Self::Owner {
+        Specifically(MultiVector::from(self.1))
+    }
+}
+pub trait Specialize_10: TraitDef_1Class_0Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            MultiVector,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_10<AntiScalar, Output>;
+}
+impl<TD> Specialize_10 for TD where TD: TraitDef_1Class_0Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            MultiVector,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_10<AntiScalar, Output> {
+        Specialized_10(self.trait_names(), owner, PhantomData, the_impl)
+    }
+}
+
+
+
+#[derive(Clone, Copy)]
+pub struct Specialized_11<const AntiScalar: BasisElement, Output>(
+    TraitNames,
+    &'static MultiVec<AntiScalar>,
+    PhantomData<Output>,
+    &'static for<'impls> fn(
+        TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        Variable<MultiVector>,
+    ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+);
+#[async_trait]
+impl<Owner, Output, const AntiScalar: BasisElement> TraitImpl_11 for Specialized_11<AntiScalar, Output>
+    where Self: Copy {
+    type Output = Output;
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b.mark_as_specialized_implementation();
+        self.3(b, slf).await
+    }
+}
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitDef_1Class_1Param for Specialized_11<AntiScalar, Output>
+where Self: Copy {
+    type Owner = Specifically;
+    fn trait_names(&self) -> TraitNames {
+        self.0
+    }
+    fn domain(&self) -> Self::Owner {
+        Specifically(MultiVector::from(self.1))
+    }
+}
+pub trait Specialize_11: TraitDef_1Class_1Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            Variable<MultiVector>,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_11<AntiScalar, Output>;
+}
+impl<TD> Specialize_11 for TD where TD: TraitDef_1Class_1Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            Variable<MultiVector>,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_11<AntiScalar, Output> {
+        Specialized_11(self.trait_names(), owner, PhantomData, the_impl)
+    }
+}
+
+
+
+
+#[derive(Clone, Copy)]
+pub struct Specialized_21<const AntiScalar: BasisElement, Output>(
+    TraitNames,
+    &'static MultiVec<AntiScalar>,
+    &'static MultiVec<AntiScalar>,
+    PhantomData<Output>,
+    &'static for<'impls> fn(
+        TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        Variable<MultiVector>,
+        MultiVector,
+    ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+);
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitImpl_21 for Specialized_21<AntiScalar, Output>
+    where Self: Copy {
+    type Output = Output;
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: MultiVector
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b.mark_as_specialized_implementation();
+        self.4(b, slf, other).await
+    }
+}
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitDef_2Class_1Param for Specialized_21<AntiScalar, Output>
+where Self: Copy {
+    type Owner = Specifically;
+    type Other = Specifically;
+    fn trait_names(&self) -> TraitNames {
+        self.0
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        (Specifically(MultiVector::from(self.1)), Specifically(MultiVector::from(self.1)))
+    }
+}
+pub trait Specialize_21: TraitDef_2Class_1Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        other: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            Variable<MultiVector>,
+            MultiVector,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_21<AntiScalar, Output>;
+}
+impl<TD> Specialize_21 for TD where TD: TraitDef_2Class_1Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        other: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            Variable<MultiVector>,
+            MultiVector,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_21<AntiScalar, Output> {
+        Specialized_21(self.trait_names(), owner, other, PhantomData, the_impl)
+    }
+}
+
+
+
+#[derive(Clone, Copy)]
+pub struct Specialized_22<const AntiScalar: BasisElement, Output>(
+    TraitNames,
+    &'static MultiVec<AntiScalar>,
+    &'static MultiVec<AntiScalar>,
+    PhantomData<Output>,
+    &'static for<'impls> fn(
+        TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        Variable<MultiVector>,
+        Variable<MultiVector>,
+    ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+);
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitImpl_22 for Specialized_22<AntiScalar, Output>
+    where Self: Copy {
+    type Output = Output;
+    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+        self,
+        mut b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b.mark_as_specialized_implementation();
+        self.4(b, slf, other).await
+    }
+}
+#[async_trait]
+impl<const AntiScalar: BasisElement, Output> TraitDef_2Class_2Param for Specialized_22<AntiScalar, Output>
+where Self: Copy {
+    type Owner = Specifically;
+    type Other = Specifically;
+    fn trait_names(&self) -> TraitNames {
+        self.0
+    }
+    fn domain(&self) -> (Self::Owner, Self::Other) {
+        (Specifically(MultiVector::from(self.1)), Specifically(MultiVector::from(self.1)))
+    }
+}
+pub trait Specialize_22: TraitDef_2Class_2Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        other: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            Variable<MultiVector>,
+            Variable<MultiVector>,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_22<AntiScalar, Output>;
+}
+impl<TD> Specialize_22 for TD where TD: TraitDef_2Class_2Param {
+    fn specialize<const AntiScalar: BasisElement, Output>(
+        &self,
+        owner: &'static MultiVec<AntiScalar>,
+        other: &'static MultiVec<AntiScalar>,
+        the_impl: &'static for<'impls> fn(
+            TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            Variable<MultiVector>,
+            Variable<MultiVector>,
+        ) -> Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>>>
+    ) -> Specialized_22<AntiScalar, Output> {
+        Specialized_22(self.trait_names(), owner, other, PhantomData, the_impl)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//

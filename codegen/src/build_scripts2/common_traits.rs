@@ -24,7 +24,7 @@ pub static Grade: Elaborated<GradeImpl> = GradeImpl
 pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
     .new_trait_named("AntiGrade")
     .blurb("The AntiGrade can be described as the missing Grade with respect to an \
-    AntiScalar.");
+    AntiScalar. This trait only characterizes uniform anti-grade multivectors.");
 
 pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
     .new_trait_named("Wedge")
@@ -39,6 +39,22 @@ pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProduct
 
 pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
     .new_trait_named("GeometricAntiProduct")
+    .blurb("TODO");
+
+pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
+    .new_trait_named("BulkContraction")
+    .blurb("TODO");
+
+pub static WeightContraction: Elaborated<WeightContractionImpl> = WeightContractionImpl
+    .new_trait_named("WeightContraction")
+    .blurb("TODO");
+
+pub static BulkExpansion: Elaborated<BulkExpansionImpl> = BulkExpansionImpl
+    .new_trait_named("BulkExpansion")
+    .blurb("TODO");
+
+pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImpl
+    .new_trait_named("WeightExpansion")
     .blurb("TODO");
 
 // NOTE: If you find yourself wanting to generate grade selection traits, you are
@@ -106,6 +122,9 @@ mod impls {
             b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            if !owner.elements().into_iter().any(|el| el.signature() == BasisSignature::scalar) {
+                return None;
+            }
             b.return_expr(owner.construct(|element| {
                 if element.signature() == BasisSignature::scalar {
                     FloatExpr::One
@@ -126,6 +145,9 @@ mod impls {
             b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            if !owner.elements().into_iter().any(|el| el.signature() == AntiScalar.signature()) {
+                return None;
+            }
             b.return_expr(owner.construct(|element| {
                 if element.signature() == AntiScalar.signature() {
                     FloatExpr::One
@@ -175,7 +197,7 @@ mod impls {
             b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
-            let ag = owner.anti_grade(AntiScalar)?;
+            let ag = owner.anti_grade()?;
             b.return_expr(IntExpr::Literal(ag))
         }
     }
@@ -330,4 +352,69 @@ mod impls {
             b.return_expr(mv)
         }
     }
+
+    #[derive(Clone, Copy)]
+    pub struct BulkExpansionImpl;
+    #[async_trait]
+    impl TraitImpl_22 for BulkExpansionImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            todo!()
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct WeightExpansionImpl;
+    #[async_trait]
+    impl TraitImpl_22 for WeightExpansionImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            todo!()
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct BulkContractionImpl;
+    #[async_trait]
+    impl TraitImpl_22 for BulkContractionImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            todo!()
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct WeightContractionImpl;
+    #[async_trait]
+    impl TraitImpl_22 for WeightContractionImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+            todo!()
+        }
+    }
+
 }

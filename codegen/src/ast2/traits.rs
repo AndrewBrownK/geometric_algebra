@@ -92,9 +92,10 @@ pub trait TraitImpl_10: Copy + Send + 'static {
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_1Class_0Param: TraitImpl_10 {
-    type Owner: ClassesFromRegistry = AnyClasses;
+    type Owner: ClassesFromRegistry;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
+    fn domain(&self) -> Self::Owner;
 
     fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
@@ -207,9 +208,10 @@ pub trait TraitImpl_11: Copy + Send + 'static {
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_1Class_1Param: TraitImpl_11 {
-    type Owner: ClassesFromRegistry = AnyClasses;
+    type Owner: ClassesFromRegistry;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
+    fn domain(&self) -> Self::Owner;
 
     fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
@@ -331,10 +333,11 @@ pub trait TraitImpl_21: Copy + Send + 'static {
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_2Class_1Param: TraitImpl_21 {
-    type Owner: ClassesFromRegistry = AnyClasses;
-    type Other: ClassesFromRegistry = AnyClasses;
+    type Owner: ClassesFromRegistry;
+    type Other: ClassesFromRegistry;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
+    fn domain(&self) -> (Self::Owner, Self::Other);
 
     fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
@@ -464,10 +467,11 @@ pub trait TraitImpl_22: Copy + Send + 'static {
 pub trait TraitDef_2Class_2Param: TraitImpl_22 {
     // TODO do I want to move these associated types to TraitImpl_22?
     //  and similar for other TraitDefs too obviously
-    type Owner: ClassesFromRegistry = AnyClasses;
-    type Other: ClassesFromRegistry = AnyClasses;
+    type Owner: ClassesFromRegistry;
+    type Other: ClassesFromRegistry;
     fn trait_names(&self) -> TraitNames;
     fn general_documentation(&self) -> String { String::new() }
+    fn domain(&self) -> (Self::Owner, Self::Other);
 
     fn def(&self) -> Arc<RawTraitDefinition> {
         Arc::new(RawTraitDefinition {
@@ -773,6 +777,147 @@ pub struct TraitDefRegistry {
     traits11: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits21: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
     traits22: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
+}
+impl TraitDefRegistry {
+    fn new() -> Self {
+        TraitDefRegistry {
+            traits10: AsyncMap::new(),
+            traits11: AsyncMap::new(),
+            traits21: AsyncMap::new(),
+            traits22: AsyncMap::new(),
+        }
+    }
+}
+impl TraitImplRegistry {
+    pub fn new() -> Self {
+        TraitImplRegistry {
+            defs: TraitDefRegistry::new(),
+            traits10: AsyncMap::new(),
+            traits11: AsyncMap::new(),
+            traits21: AsyncMap::new(),
+            traits22: AsyncMap::new(),
+        }
+    }
+}
+
+
+#[async_trait]
+pub trait Register10 {
+    async fn register<T: TraitDef_1Class_0Param>(&self, t: T);
+
+    async fn register_all<const N: usize, T: TraitDef_1Class_0Param>(&self, ts: [T; N]) {
+        let mut i = 0;
+        while i < N {
+            let t = ts[i];
+            tokio::spawn(async {
+                self.register(t).await;
+            });
+            i += 1;
+        }
+    }
+}
+#[async_trait]
+impl Register10 for TraitImplRegistry {
+    async fn register<T: TraitDef_1Class_0Param>(&self, t: T) {
+
+
+
+        todo!()
+    }
+}
+#[async_trait]
+pub trait Register11 {
+    async fn register<T: TraitDef_1Class_1Param>(&self, t: T);
+
+    async fn register_all<const N: usize, T: TraitDef_1Class_1Param>(&self, ts: [T; N]) {
+        let mut i = 0;
+        while i < N {
+            let t = ts[i];
+            tokio::spawn(async {
+                self.register(t).await;
+            });
+            i += 1;
+        }
+    }
+}
+#[async_trait]
+impl Register11 for TraitImplRegistry {
+    async fn register<T: TraitDef_1Class_1Param>(&self, t: T) {
+        todo!()
+    }
+}
+#[async_trait]
+pub trait Register21 {
+    async fn register<T: TraitDef_2Class_1Param>(&self, t: T);
+
+    async fn register_all<const N: usize, T: TraitDef_2Class_1Param>(&self, ts: [T; N]) {
+        let mut i = 0;
+        while i < N {
+            let t = ts[i];
+            tokio::spawn(async {
+                self.register(t).await;
+            });
+            i += 1;
+        }
+    }
+}
+#[async_trait]
+impl Register21 for TraitImplRegistry {
+    async fn register<T: TraitDef_2Class_1Param>(&self, t: T) {
+        todo!()
+    }
+}
+#[async_trait]
+pub trait Register22 {
+    async fn register<T: TraitDef_2Class_2Param>(&self, t: T);
+
+    async fn register_all<const N: usize, T: TraitDef_2Class_2Param>(&self, ts: [T; N]) {
+        let mut i = 0;
+        while i < N {
+            let t = ts[i];
+            tokio::spawn(async {
+                self.register(t).await;
+            });
+            i += 1;
+        }
+    }
+}
+#[async_trait]
+impl Register22 for TraitImplRegistry {
+    async fn register<T: TraitDef_2Class_2Param>(&self, t: T) {
+        todo!()
+    }
+}
+
+#[macro_export]
+macro_rules! register_all {
+    ($($t:expr)+ $(=> $($t2:expr)+)*) => {
+        {
+            let traits = TraitImplRegistry::new();
+            use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
+            let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
+            let _: () = rt.block_on(async {
+                let mut js = tokio::task::JoinSet::new();
+                $(
+                js.spawn(async {
+                    traits.register($t).await;
+                });
+                )+
+                while let Some(_) = js.join_next().await {}
+
+                $(
+                let mut js = tokio::task::JoinSet::new();
+                $(
+                js.spawn(async {
+                    traits.register($t2).await;
+                });
+                )+
+                while let Some(_) = js.join_next().await {}
+                )*
+            });
+            traits
+        }
+    };
 }
 
 
