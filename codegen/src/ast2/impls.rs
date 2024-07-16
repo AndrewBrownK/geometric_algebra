@@ -361,6 +361,7 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_10 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
+        // SAFETY: This is actually safe because of the above AntiScalar != AntiScalar2 check
         let f = unsafe {
             let p0 = &self.3;
             let p1: *const SpecializedImpl_10<AntiScalar, Output> = p0 as *const SpecializedImpl_10<AntiScalar, Output>;
@@ -430,6 +431,7 @@ impl<Output: TraitResultType, const AntiScalar: BasisElement> TraitImpl_11 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
+        // SAFETY: This is actually safe because of the above AntiScalar != AntiScalar2 check
         let f = unsafe {
             let p0 = &self.3;
             let p1: *const SpecializedImpl_11<AntiScalar, Output> = p0 as *const SpecializedImpl_11<AntiScalar, Output>;
@@ -503,6 +505,7 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_21 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
+        // SAFETY: This is actually safe because of the above AntiScalar != AntiScalar2 check
         let f = unsafe {
             let p0 = &self.4;
             let p1: *const SpecializedImpl_21<AntiScalar, Output> = p0 as *const SpecializedImpl_21<AntiScalar, Output>;
@@ -579,6 +582,7 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_22 for S
             {AntiScalar}")
         }
         b.mark_as_specialized_implementation();
+        // SAFETY: This is actually safe because of the above AntiScalar != AntiScalar2 check
         let f = unsafe {
             let p0 = &self.4;
             let p1: *const SpecializedImpl_22<AntiScalar, Output> = p0 as *const SpecializedImpl_22<AntiScalar, Output>;
@@ -619,31 +623,3 @@ impl<TD> const Specialize_22 for TD where TD: TraitImpl_22 + ProvideTraitNames +
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//

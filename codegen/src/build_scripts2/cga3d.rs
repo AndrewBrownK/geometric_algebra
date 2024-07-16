@@ -54,9 +54,6 @@ pub fn cga3d_script() {
 
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
     = BulkExpansion.specialize(&Plane, &Plane, &plane_bulk_expansion_plane);
-//     = BulkExpansion.specialize(&Plane, &Plane, &plane_bulk_expansion_plane as SpecializedImpl_22<e12345, MultiVector>);
-// static PLANE_BULK_EXPANSION_PLANE: SpecializedImpl_22<e12345, MultiVector>
-//     = &plane_bulk_expansion_plane as SpecializedImpl_22<e12345, MultiVector>;
 fn plane_bulk_expansion_plane<'impls>(
     mut b: TraitImplBuilder<'impls, e12345, HasNotReturned>,
     slf: Variable<MultiVector>,
