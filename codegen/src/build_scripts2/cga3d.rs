@@ -53,15 +53,7 @@ pub fn cga3d_script() {
 
 
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
-    = BulkExpansion.specialize(&Plane, &Plane, &plane_bulk_expansion_plane);
-fn plane_bulk_expansion_plane<'impls>(
-    mut b: TraitImplBuilder<'impls, e12345, HasNotReturned>,
-    slf: Variable<MultiVector>,
-    other: Variable<MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + Send + 'impls>> {
-    // TODO this async lifetime is not static because it uses 'impls
-    Box::pin(async move {
+    = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| Box::pin(async move {
         // TODO actually implement
         b.return_expr(slf)
-    })
-}
+    }));

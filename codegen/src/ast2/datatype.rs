@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
@@ -57,6 +58,13 @@ impl PartialEq for MultiVector {
     }
 }
 impl Eq for MultiVector {}
+impl Display for MultiVector {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let anti_scalar = self.anti_scalar;
+        write!(f, "<{anti_scalar}> ")?;
+        self.multi_vec.fmt_for_macro(f)
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ExpressionType {

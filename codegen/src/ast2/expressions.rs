@@ -1,5 +1,6 @@
 use std::fmt::Debug;
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+use std::mem;
+use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
 use either::Either;
 use crate::algebra2::basis::BasisElement;
@@ -156,8 +157,7 @@ pub enum IntExpr {
 #[derive(PartialEq, Clone, Debug)]
 pub enum FloatExpr {
     Variable(RawVariableInvocation),
-    // TODO only keep lit and get rid of the others
-    Zero, One, NegOne, Two, Half, Lit(f32),
+    Literal(f32),
     AccessVec2(Box<Vec2Expr>, u8),
     AccessVec3(Box<Vec3Expr>, u8),
     AccessVec4(Box<Vec4Expr>, u8),
@@ -167,7 +167,7 @@ pub enum FloatExpr {
     TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
     Product(Vec<FloatExpr>),
     Sum(Vec<FloatExpr>)
-    // TODO sqrt etc
+    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec2Expr {
@@ -177,6 +177,7 @@ pub enum Vec2Expr {
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec2Expr>),
     Sum(Vec<Vec2Expr>),
+    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec3Expr {
@@ -186,6 +187,7 @@ pub enum Vec3Expr {
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec3Expr>),
     Sum(Vec<Vec3Expr>),
+    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec4Expr {
@@ -195,6 +197,7 @@ pub enum Vec4Expr {
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec4Expr>),
     Sum(Vec<Vec4Expr>),
+    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum MultiVectorGroupExpr {
@@ -211,7 +214,6 @@ pub struct MultiVectorExpr {
 #[derive(PartialEq, Clone, Debug)]
 pub enum MultiVectorVia {
     Variable(RawVariableInvocation),
-    // TODO shall I replace this with MultiVec? or not replace, but integrate?
     Construct(Vec<MultiVectorGroupExpr>),
     // e.g. Involutions
     TraitInvoke11ToClass(TraitKey, MultiVectorExpr),
@@ -380,12 +382,7 @@ impl Expression<Float> for FloatExpr {
                     var.decl = new;
                 }
             }
-            FloatExpr::Zero => {}
-            FloatExpr::One => {}
-            FloatExpr::NegOne => {}
-            FloatExpr::Two => {}
-            FloatExpr::Half => {}
-            FloatExpr::Lit(_) => {}
+            FloatExpr::Literal(_) => {}
             FloatExpr::AccessVec2(v, _) => v.substitute_variable(old, new),
             FloatExpr::AccessVec3(v, _) => v.substitute_variable(old, new),
             FloatExpr::AccessVec4(v, _) => v.substitute_variable(old, new),
@@ -1023,31 +1020,298 @@ impl MultiVectorExpr {
 }
 
 
+impl FloatExpr {
+    fn simplify(&mut self) {
+        match self {
+            FloatExpr::Variable(_) => {}
+            FloatExpr::Literal(_) => {}
+            FloatExpr::AccessVec2(av2, idx) => {
+                av2.simplify();
+                match av2.as_mut() {
+                    Vec2Expr::Gather1(fe) => {
+                        *self = fe.clone();
+                    }
+                    Vec2Expr::Gather2(fe0, fe1) => {
+                        *self = [fe0, fe1][*idx as usize].clone();
+                    }
+                    _ => {}
+                }
+            }
+            FloatExpr::AccessVec3(av3, idx) => {
+                av3.simplify();
+                match av3.as_mut() {
+                    Vec3Expr::Gather1(fe) => {
+                        *self = fe.clone();
+                    }
+                    Vec3Expr::Gather3(fe0, fe1, fe2) => {
+                        *self = [fe0, fe1, fe2][*idx as usize].clone();
+                    }
+                    _ => {}
+                }
+            }
+            FloatExpr::AccessVec4(av4, idx) => {
+                av4.simplify();
+                match av4.as_mut() {
+                    Vec4Expr::Gather1(fe) => {
+                        *self = fe.clone();
+                    }
+                    Vec4Expr::Gather4(fe0, fe1, fe2, fe3) => {
+                        *self = [fe0, fe1, fe2, fe3][*idx as usize].clone();
+                    }
+                    _ => {}
+                }
+            }
+            FloatExpr::AccessMultiVecGroup(mve, idx) => {
+                mve.simplify();
+                let idx = *idx;
+                let mv = mve.mv_class;
+                if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
+                    let size = match &mut groups[idx as usize] {
+                        MultiVectorGroupExpr::JustFloat(f) => {
+                            *self = f.clone();
+                            1
+                        }
+                        MultiVectorGroupExpr::Vec2(_) => 2,
+                        MultiVectorGroupExpr::Vec3(_) => 3,
+                        MultiVectorGroupExpr::Vec4(_) => 4,
+                    };
+                    if size != 1 {
+                        panic!("Invalid expression detected: MultiVector group {idx} has size \
+                        {size}, but is used in a place where we expect size 1. {mv}")
+                    }
+                }
+            }
+            FloatExpr::AccessMultiVecFlat(mve, idx) => {
+                mve.simplify();
+                if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
+                    let mut scan_idx = 0;
+                    let mut scan_group = 0;
+                    while scan_group < groups.len() {
+                        let i = (*idx as i32) - scan_idx;
+                        if i < 0 {
+                            // This can happen if the index is valid but does not simplify
+                            break
+                        }
+                        match &mut groups[scan_group] {
+                            MultiVectorGroupExpr::JustFloat(f) => {
+                                if i == 0 {
+                                    *self = f.clone();
+                                    return
+                                }
+                                scan_idx += 1;
+                            }
+                            MultiVectorGroupExpr::Vec2(v2) => {
+                                if i < 2 {
+                                    match v2 {
+                                        Vec2Expr::Gather1(f) => {
+                                            *self = f.clone();
+                                            return
+                                        }
+                                        Vec2Expr::Gather2(f0, f1) => {
+                                            *self = [f0, f1][i as usize].clone();
+                                            return
+                                        }
+                                        _ => {}
+                                    }
+                                }
+                                scan_idx += 2;
+                            }
+                            MultiVectorGroupExpr::Vec3(v3) => {
+                                if i < 3 {
+                                    match v3 {
+                                        Vec3Expr::Gather1(f) => {
+                                            *self = f.clone();
+                                            return
+                                        }
+                                        Vec3Expr::Gather3(f0, f1, f2) => {
+                                            *self = [f0, f1, f2][i as usize].clone();
+                                            return
+                                        }
+                                        _ => {}
+                                    }
+                                }
+                                scan_idx += 3;
+                            }
+                            MultiVectorGroupExpr::Vec4(v4) => {
+                                if i < 4 {
+                                    match v4 {
+                                        Vec4Expr::Gather1(f) => {
+                                            *self = f.clone();
+                                            return
+                                        }
+                                        Vec4Expr::Gather4(f0, f1, f2, f3) => {
+                                            *self = [f0, f1, f2, f3][i as usize].clone();
+                                            return
+                                        }
+                                        _ => {}
+                                    }
+                                }
+                                scan_idx += 4;
+                            }
+                        }
+                        scan_group += 1;
+                    }
+                }
+            }
+            FloatExpr::TraitInvoke11ToFloat(_, _) => {}
+            FloatExpr::Product(product) => {
+                for s in  product.iter_mut() {
+                    s.simplify();
+                    if let FloatExpr::Literal(0.0) = s {
+                        *self = FloatExpr::Literal(0.0);
+                        return
+                    }
+                }
+                let mut coalesce = 1.0;
+                let mut flatten = vec![];
+                product.retain_mut(|it| {
+                    if let FloatExpr::Literal(f) = it {
+                        coalesce *= *f;
+                        false
+                    } else if let FloatExpr::Product(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let FloatExpr::Literal(f) = it {
+                        coalesce *= f;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != 1.0 {
+                    product.push(FloatExpr::Literal(coalesce));
+                }
+                product.append(&mut flatten);
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                }
+            }
+            FloatExpr::Sum(sum) => {
+                for s in  sum.iter_mut() {
+                    s.simplify();
+                }
+                let mut coalesce = 0.0;
+                let mut flatten = vec![];
+                sum.retain_mut(|it| {
+                    if let FloatExpr::Literal(f) = it {
+                        coalesce += *f;
+                        false
+                    } else if let FloatExpr::Sum(ref mut s) = it {
+                        flatten.append(s);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let FloatExpr::Literal(f) = it {
+                        coalesce += f;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != 0.0 {
+                    sum.push(FloatExpr::Literal(coalesce));
+                }
+                sum.append(&mut flatten);
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                }
+            }
+        }
+    }
+}
+impl Vec2Expr {
+    fn simplify(&mut self) {
+        todo!()
+    }
+}
+impl Vec3Expr {
+    fn simplify(&mut self) {
+        todo!()
+    }
+}
+impl Vec4Expr {
+    fn simplify(&mut self) {
+        todo!()
+    }
+}
+impl MultiVectorGroupExpr {
+    fn simplify(&mut self) {
+        todo!()
+    }
+}
+impl MultiVectorExpr {
+    fn simplify(&mut self) {
+        todo!()
+    }
+}
+
 
 impl Add<FloatExpr> for FloatExpr {
     type Output = FloatExpr;
 
     fn add(self, rhs: FloatExpr) -> Self::Output {
-        todo!()
+        let mut s = FloatExpr::Sum(vec![self, rhs]);
+        s.simplify();
+        s
     }
 }
 impl AddAssign<FloatExpr> for FloatExpr {
     fn add_assign(&mut self, rhs: FloatExpr) {
-        todo!()
+        let mut x = FloatExpr::Literal(0.0);
+        mem::swap(&mut x, self);
+        *self = FloatExpr::Sum(vec![x, rhs]);
+        self.simplify();
     }
 }
 impl Mul<FloatExpr> for FloatExpr {
     type Output = FloatExpr;
 
     fn mul(self, rhs: FloatExpr) -> Self::Output {
-        todo!()
+        let mut s = FloatExpr::Product(vec![self, rhs]);
+        s.simplify();
+        s
     }
 }
 impl MulAssign<FloatExpr> for FloatExpr {
     fn mul_assign(&mut self, rhs: FloatExpr) {
-        todo!()
+        let mut x = FloatExpr::Literal(1.0);
+        mem::swap(&mut x, self);
+        *self = FloatExpr::Product(vec![x, rhs]);
+        self.simplify();
     }
 }
+impl Neg for FloatExpr {
+    type Output = FloatExpr;
+
+    fn neg(self) -> Self::Output {
+        let mut result = self.mul(FloatExpr::Literal(-1.0));
+        result.simplify();
+        result
+    }
+}
+impl Sub for FloatExpr {
+    type Output = FloatExpr;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        self.add(-rhs)
+    }
+}
+impl SubAssign for FloatExpr {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.add_assign(-rhs);
+    }
+}
+
+
+
 impl Add<Vec2Expr> for Vec2Expr {
     type Output = Vec2Expr;
 

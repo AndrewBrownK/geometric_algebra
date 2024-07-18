@@ -108,7 +108,7 @@ mod impls {
             b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
-            b.return_expr(owner.construct(|_| FloatExpr::Zero))
+            b.return_expr(owner.construct(|_| FloatExpr::Literal(0.0)))
         }
     }
 
@@ -127,9 +127,9 @@ mod impls {
             }
             b.return_expr(owner.construct(|element| {
                 if element.signature() == BasisSignature::scalar {
-                    FloatExpr::One
+                    FloatExpr::Literal(1.0)
                 } else {
-                    FloatExpr::Zero
+                    FloatExpr::Literal(0.0)
                 }
             }))
         }
@@ -150,9 +150,9 @@ mod impls {
             }
             b.return_expr(owner.construct(|element| {
                 if element.signature() == AntiScalar.signature() {
-                    FloatExpr::One
+                    FloatExpr::Literal(1.0)
                 } else {
-                    FloatExpr::Zero
+                    FloatExpr::Literal(0.0)
                 }
             }))
         }
@@ -168,7 +168,7 @@ mod impls {
             b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
             owner: MultiVector
         ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
-            b.return_expr(owner.construct(|_| FloatExpr::One))
+            b.return_expr(owner.construct(|_| FloatExpr::Literal(1.0)))
         }
     }
 
@@ -269,7 +269,7 @@ mod impls {
                     for p in sop.sum {
                         let a = a.clone();
                         let b = b.clone();
-                        let c = FloatExpr::Lit(p.coefficient);
+                        let c = FloatExpr::Literal(p.coefficient);
                         dyn_mv += (a * b * c, p.element);
                     }
                 }
@@ -299,7 +299,7 @@ mod impls {
                     for p in sop.sum {
                         let a = a.clone();
                         let b = b.clone();
-                        let c = FloatExpr::Lit(p.coefficient);
+                        let c = FloatExpr::Literal(p.coefficient);
                         dyn_mv += (a * b * c, p.element);
                     }
                 }

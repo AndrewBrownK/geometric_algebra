@@ -771,7 +771,7 @@ impl DynamicMultiVector {
         let mv = repo.get_at_least(keys);
         let mv = MultiVector::from(mv);
         // TODO properly handle BasisElement sign mismatch, and also infect element names
-        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Zero)))
+        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 
     pub fn construct_exact<const AntiScalar: BasisElement>(mut self, repo: &MultiVecRepository<AntiScalar>) -> Option<MultiVectorExpr> {
@@ -782,7 +782,7 @@ impl DynamicMultiVector {
         let mv = repo.get_exact(keys)?;
         let mv = MultiVector::from(mv);
         // TODO properly handle BasisElement sign mismatch, and also infect element names
-        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Zero)))
+        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 }
 impl AddAssign<(FloatExpr, BasisElement)> for DynamicMultiVector {
@@ -790,9 +790,9 @@ impl AddAssign<(FloatExpr, BasisElement)> for DynamicMultiVector {
         if rhs.1.coefficient() == 0 {
             return
         }
-        let mut thing = self.vals.entry(rhs.1).or_insert(FloatExpr::Zero);
+        let mut thing = self.vals.entry(rhs.1).or_insert(FloatExpr::Literal(0.0));
         thing.add_assign(rhs.0);
-        if let FloatExpr::Zero = thing {
+        if let FloatExpr::Literal(0.0) = thing {
             self.vals.remove(&rhs.1);
         }
     }
