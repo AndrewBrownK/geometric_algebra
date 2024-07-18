@@ -332,7 +332,7 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
 type RawSpecializedImpl_10<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     MultiVector,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_10<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_10<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -402,7 +402,7 @@ impl<TD> const Specialize_10 for TD where TD: TraitImpl_10 + ProvideTraitNames +
 type RawSpecializedImpl_11<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_11<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_11<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_11<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -474,7 +474,7 @@ type RawSpecializedImpl_21<const AntiScalar: BasisElement, Output> = dyn for<'im
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
     MultiVector,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_21<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_21<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -551,7 +551,8 @@ type RawSpecializedImpl_22<const AntiScalar: BasisElement, Output> = dyn for<'im
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
     Variable<MultiVector>,
     Variable<MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + 'static>> + Send + Sync;
+    // TODO problem with putting 'impls in Box
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_22<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_22<const AntiScalar: BasisElement, Output: TraitResultType>(

@@ -38,14 +38,14 @@ pub fn cga3d_script() {
     );
     let mut declarations = register_multi_vecs(cga3d);
     let repo = declarations.finished();
-    let traits = register_all!(
+    let traits = register_all! {
         Plane_BulkExpansion_Plane
         |
         Zero One AntiOne Unit
         Grade AntiGrade
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
-    );
+    };
 
     // TODO output files
 }
@@ -58,7 +58,7 @@ fn plane_bulk_expansion_plane<'impls>(
     mut b: TraitImplBuilder<'impls, e12345, HasNotReturned>,
     slf: Variable<MultiVector>,
     other: Variable<MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + 'static>> {
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, e12345, MultiVector>>> + Send + 'impls>> {
     // TODO this async lifetime is not static because it uses 'impls
     Box::pin(async move {
         // TODO actually implement
