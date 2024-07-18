@@ -640,6 +640,11 @@ pub struct MultiVecRepository<const AntiScalar: BasisElement> {
 
 
 impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
+
+    pub fn ga(&self) -> Arc<GeometricAlgebra<AntiScalar>> {
+        self.declarations.ga.clone()
+    }
+
     pub fn default(ga: Arc<GeometricAlgebra<AntiScalar>>) -> Arc<Self> {
         Self::new(DeclareMultiVecs::new(ga))
     }
@@ -657,6 +662,12 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
 
         // Generate fallback types.
         let all_elements: Vec<_> = ga.all_elements().map(|el| ga.name_and_sign_out(el)).collect();
+
+        // TODO don't actually include fallbacks for MultiVecs that are already declared.
+        //  in other words, check which MultiVecs are needed pre-emptively, not lazily.
+        //  Necessary for all_classes() to know what to include and not include.
+        //  Might not even need a second separate fallback field. All declarations are just
+        //  declarations.
 
         use crate::algebra2::basis::elements::*;
         mvr.fallback(MultiVec::<AntiScalar>::new("Scalar", [scalar]));
@@ -714,12 +725,23 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         todo!()
     }
 
-    pub fn get_at_least(self: &Self, signature: BTreeSet<BasisSignature>) -> &'static MultiVec<AntiScalar> {
+    pub fn get_at_least(&self, signature: BTreeSet<BasisSignature>) -> &'static MultiVec<AntiScalar> {
         todo!()
     }
 
-    pub fn get_exact(self: &Self, signature: BTreeSet<BasisSignature>) -> Option<&'static MultiVec<AntiScalar>> {
+    pub fn get_exact(&self, signature: BTreeSet<BasisSignature>) -> Option<&'static MultiVec<AntiScalar>> {
         todo!()
+    }
+
+    pub fn all_classes(&self) -> impl Iterator<Item=&'static MultiVec<AntiScalar>> {
+        let mut v = vec![];
+        for mv in self.declarations.declared.iter() {
+            v.push(*mv);
+        }
+        for (_, mv) in self.fallback.iter() {
+            v.push(*mv);
+        }
+        v.into_iter()
     }
 }
 

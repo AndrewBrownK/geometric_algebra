@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -8,6 +8,7 @@ use either::Either;
 use lazy_static::lazy_static;
 use parking_lot::RwLock;
 use regex::Regex;
+use tokio::task::JoinSet;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::GeometricAlgebra;
 use crate::algebra2::multivector::MultiVecRepository;
@@ -804,58 +805,234 @@ impl TraitImplRegistry {
 
 #[async_trait]
 pub trait Register10: TraitDef_1Class_0Param {
-    async fn register(self, tr: TraitImplRegistry);
+    // TODO can I simplify the parameters at all?
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tr: TraitImplRegistry,
+        mvs: Arc<MultiVecRepository<AntiScalar>>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_1Class_0Param> Register10 for T {
-    async fn register(self, tr: TraitImplRegistry) {
-        todo!()
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    ) {
+        let ga = mv_repo.ga();
+        let trait_key = self.trait_names().trait_key;
+        let def = tir.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let mut js = JoinSet::new();
+        for mv_a in mv_repo.all_classes() {
+            let tir_2 = tir.clone();
+            let ga_2 = ga.clone();
+            let mv_repo_2 = mv_repo.clone();
+            let def_2 = def.clone();
+            js.spawn(async move {
+                let mv_a = MultiVector::from(mv_a);
+                let tir_3 = tir_2.clone();
+                tir_2.traits10.get_or_create_or_panic((trait_key, mv_a), async move {
+                    let mut variables = HashMap::new();
+                    let b = TraitImplBuilder::new(
+                        ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
+                    );
+                    let result = self.general_implementation(b, mv_a.clone()).await;
+                    match result {
+                        None => None,
+                        Some(result) => Some(result.into_trait10(mv_a)),
+                    }
+                }).await;
+            });
+        }
+        while let Some(result) = js.join_next().await {
+            let _: () = result.expect("async machinery should work");
+        }
     }
 }
 #[async_trait]
 pub trait Register11: TraitDef_1Class_1Param {
-    async fn register(self, tr: TraitImplRegistry);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_1Class_1Param> Register11 for T {
-    async fn register(self, tr: TraitImplRegistry) {
-        todo!()
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    ) {
+        let ga = mv_repo.ga();
+        let trait_key = self.trait_names().trait_key;
+        let def = tir.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let mut js = JoinSet::new();
+        for mv_a in mv_repo.all_classes() {
+            let tir_2 = tir.clone();
+            let ga_2 = ga.clone();
+            let mv_repo_2 = mv_repo.clone();
+            let def_2 = def.clone();
+            js.spawn(async move {
+                let mv_a = MultiVector::from(mv_a);
+                let tir_3 = tir_2.clone();
+                tir_2.traits11.get_or_create_or_panic((trait_key, mv_a), async move {
+                    let mut variables = HashMap::new();
+                    let declare_self = param_self();
+                    variables.insert(declare_self.name.clone(), declare_self.clone());
+                    let b = TraitImplBuilder::new(
+                        ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
+                    );
+                    let var_self: Variable<MultiVector> = Variable {
+                        expr_type: mv_a.clone(),
+                        decl: declare_self,
+                    };
+                    let result = self.general_implementation(b, var_self).await;
+                    match result {
+                        None => None,
+                        Some(result) => Some(result.into_trait11(mv_a)),
+                    }
+                }).await;
+            });
+        }
+        while let Some(result) = js.join_next().await {
+            let _: () = result.expect("async machinery should work");
+        }
     }
 }
 #[async_trait]
 pub trait Register21: TraitDef_2Class_1Param {
-    async fn register(&self, tr: TraitImplRegistry);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_2Class_1Param> Register21 for T {
-    async fn register(&self, tr: TraitImplRegistry) {
-        todo!()
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    ) {
+        let ga = mv_repo.ga();
+        let trait_key = self.trait_names().trait_key;
+        let def = tir.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let mut js = JoinSet::new();
+        for mv_a in mv_repo.all_classes() {
+            for mv_b in mv_repo.all_classes() {
+                let tir_2 = tir.clone();
+                let ga_2 = ga.clone();
+                let mv_repo_2 = mv_repo.clone();
+                let def_2 = def.clone();
+                js.spawn(async move {
+                    let mv_a = MultiVector::from(mv_a);
+                    let mv_b = MultiVector::from(mv_b);
+                    let tir_3 = tir_2.clone();
+                    tir_2.traits21.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
+                        let mut variables = HashMap::new();
+                        let declare_self = param_self();
+                        variables.insert(declare_self.name.clone(), declare_self.clone());
+                        let b = TraitImplBuilder::new(
+                            ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
+                        );
+                        let var_self: Variable<MultiVector> = Variable {
+                            expr_type: mv_a.clone(),
+                            decl: declare_self,
+                        };
+                        let result = self.general_implementation(b, var_self, mv_b.clone()).await;
+                        match result {
+                            None => None,
+                            Some(result) => Some(result.into_trait21(mv_a, mv_b)),
+                        }
+                    }).await;
+                });
+            }
+        }
+        while let Some(result) = js.join_next().await {
+            let _: () = result.expect("async machinery should work");
+        }
     }
 }
 #[async_trait]
 pub trait Register22: TraitDef_2Class_2Param {
-    async fn register(&self, tr: TraitImplRegistry);
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    );
 }
 #[async_trait]
 impl<T: TraitDef_2Class_2Param> Register22 for T {
-    async fn register(&self, tr: TraitImplRegistry) {
-        todo!()
+    async fn register<const AntiScalar: BasisElement>(
+        self,
+        tir: TraitImplRegistry,
+        mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+    ) {
+        let ga = mv_repo.ga();
+        let trait_key = self.trait_names().trait_key;
+        let def = tir.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let mut js = JoinSet::new();
+        for mv_a in mv_repo.all_classes() {
+            for mv_b in mv_repo.all_classes() {
+                let tir_2 = tir.clone();
+                let ga_2 = ga.clone();
+                let mv_repo_2 = mv_repo.clone();
+                let def_2 = def.clone();
+                js.spawn(async move {
+                    let mv_a = MultiVector::from(mv_a);
+                    let mv_b = MultiVector::from(mv_b);
+                    let tir_3 = tir_2.clone();
+                    tir_2.traits22.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
+                        let mut variables = HashMap::new();
+                        let declare_self = param_self();
+                        let declare_other = param_other();
+                        variables.insert(declare_self.name.clone(), declare_self.clone());
+                        variables.insert(declare_other.name.clone(), declare_other.clone());
+                        let b = TraitImplBuilder::new(
+                            ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
+                        );
+                        let var_self: Variable<MultiVector> = Variable {
+                            expr_type: mv_a.clone(),
+                            decl: declare_self,
+                        };
+                        let var_other: Variable<MultiVector> = Variable {
+                            expr_type: mv_b.clone(),
+                            decl: declare_other,
+                        };
+                        let result = self.general_implementation(b, var_self, var_other).await;
+                        match result {
+                            None => None,
+                            Some(result) => Some(result.into_trait22(mv_a, mv_b)),
+                        }
+                    }).await;
+                });
+            }
+        }
+        while let Some(result) = js.join_next().await {
+            let _: () = result.expect("async machinery should work");
+        }
     }
 }
 
 #[macro_export]
 macro_rules! register_all {
-    ($($t:ident)+ $(| $($t2:ident)+)*) => {
+    ($mv_repo:expr; $($t:ident)+ $(| $($t2:ident)+)*) => {
         {
-            let traits = TraitImplRegistry::new();
+            let tir = TraitImplRegistry::new();
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
             let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
             let _: () = rt.block_on(async {
                 let mut js = tokio::task::JoinSet::new();
                 $(
-                let tc = traits.clone();
+                let tir_c = tir.clone();
+                let mv_repo_c = $mv_repo.clone();
                 js.spawn(async move {
-                    $t.register(tc).await;
+                    $t.register(tir_c, mv_repo_c).await;
                 });
                 )+
                 while let Some(_) = js.join_next().await {}
@@ -863,15 +1040,16 @@ macro_rules! register_all {
                 $(
                 let mut js = tokio::task::JoinSet::new();
                 $(
-                let tc = traits.clone();
+                let tir_c = tir.clone();
+                let mv_repo_c = $mv_repo.clone();
                 js.spawn(async move {
-                    $t2.register(tc).await;
+                    $t2.register(tir_c, mv_repo_c).await;
                 });
                 )+
                 while let Some(_) = js.join_next().await {}
                 )*
             });
-            traits
+            tir
         }
     };
 }

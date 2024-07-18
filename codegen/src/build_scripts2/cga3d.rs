@@ -36,9 +36,9 @@ pub fn cga3d_script() {
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
     );
-    let mut declarations = register_multi_vecs(cga3d);
+    let mut declarations = register_multi_vecs(cga3d.clone());
     let repo = declarations.finished();
-    let traits = register_all! {
+    let traits = register_all! { repo;
         Plane_BulkExpansion_Plane
         |
         Zero One AntiOne Unit
