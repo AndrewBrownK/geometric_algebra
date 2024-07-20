@@ -51,7 +51,7 @@ impl TraitResultType for Integer {
 
     fn inlined_expr_10(var: Variable<Self>) -> Self::Expr {
         IntExpr::Variable(RawVariableInvocation {
-            decl: var.decl,
+            decl: var.decl.clone(),
         })
     }
 
@@ -72,7 +72,7 @@ impl TraitResultType for Float {
 
     fn inlined_expr_11(var: Variable<Self>) -> Self::Expr {
         FloatExpr::Variable(RawVariableInvocation {
-            decl: var.decl,
+            decl: var.decl.clone(),
         })
     }
 
@@ -99,7 +99,7 @@ impl TraitResultType for MultiVector {
         MultiVectorExpr {
             mv_class: var.expr_type,
             expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
-                decl: var.decl,
+                decl: var.decl.clone(),
             })),
         }
     }
@@ -116,7 +116,7 @@ impl TraitResultType for MultiVector {
         MultiVectorExpr {
             mv_class: var.expr_type,
             expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
-                decl: var.decl,
+                decl: var.decl.clone(),
             })),
         }
     }
@@ -133,7 +133,7 @@ impl TraitResultType for MultiVector {
         MultiVectorExpr {
             mv_class: var.expr_type,
             expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
-                decl: var.decl,
+                decl: var.decl.clone(),
             })),
         }
     }
@@ -147,6 +147,10 @@ impl TraitResultType for MultiVector {
 }
 
 
+// TODO it makes sense for variables to be copy, since they are reusable and that is the 
+//  whole point of assigning them to begin with. However expressions should not necessarily
+//  be Copy, because UNLESS they are variables, they could be elaborate ASTs that you want
+//  to think twice before expanding repeatedly. 
 #[derive(PartialEq, Clone, Debug)]
 pub enum IntExpr {
     Variable(RawVariableInvocation),
@@ -245,7 +249,7 @@ impl AnyExpression {
         }
     }
 
-    pub fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    pub fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self {
             AnyExpression::Int(i) => i.substitute_variable(old, new),
             AnyExpression::Float(f) => f.substitute_variable(old, new),
@@ -265,13 +269,13 @@ pub trait Expression<ExprType>: Send + Sized {
     fn from_any_expression(any: AnyExpression) -> Option<Self>;
     fn strong_expression_type(&self) -> ExprType;
     fn type_from_any(any: &AnyExpression) -> Option<ExprType>;
-    fn try_into_variable(self) -> Either<Self, Variable<ExprType>>;
+    fn try_into_variable(&self) -> Option<Variable<ExprType>>;
 
     // TODO it seems this method is not used
     //  Well, ExpressionType is used. So hold off deleting this until you're sure you don't need it.
     fn soft_expression_type(&self) -> ExpressionType;
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>);
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>);
 }
 
 /// This helps unify Variable<MultiVector> and MultiVectorExpr
@@ -307,15 +311,15 @@ impl Expression<Integer> for IntExpr {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Integer>> {
+    fn try_into_variable(&self) -> Option<Variable<Integer>> {
         match self {
             IntExpr::Variable(v) => {
-                Either::Right(Variable {
+                Some(Variable {
                     expr_type: Integer,
-                    decl: v.decl,
+                    decl: &v.decl,
                 })
             }
-            _ => Either::Left(self)
+            _ => None
         }
     }
 
@@ -323,11 +327,11 @@ impl Expression<Integer> for IntExpr {
         ExpressionType::Int(Integer)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self {
             IntExpr::Variable(var) => {
-                if var.decl == old {
-                    var.decl = new;
+                if var.decl.as_ref() == old.as_ref() {
+                    var.decl = new.clone();
                 }
             }
             IntExpr::Literal(_) => {}
@@ -359,15 +363,15 @@ impl Expression<Float> for FloatExpr {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Float>> {
+    fn try_into_variable(&self) -> Option<Variable<Float>> {
         match self {
             FloatExpr::Variable(v) => {
-                Either::Right(Variable {
+                Some(Variable {
                     expr_type: Float,
-                    decl: v.decl,
+                    decl: &v.decl,
                 })
             }
-            _ => Either::Left(self)
+            _ => None
         }
     }
 
@@ -375,11 +379,11 @@ impl Expression<Float> for FloatExpr {
         ExpressionType::Float(Float)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self {
             FloatExpr::Variable(var) => {
-                if var.decl == old {
-                    var.decl = new;
+                if var.decl.as_ref() == old.as_ref() {
+                    var.decl = new.clone();
                 }
             }
             FloatExpr::Literal(_) => {}
@@ -391,12 +395,12 @@ impl Expression<Float> for FloatExpr {
             FloatExpr::AccessMultiVecFlat(mve, _) => mve.substitute_variable(old, new),
             FloatExpr::Product(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
             FloatExpr::Sum(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
         }
@@ -426,15 +430,15 @@ impl Expression<Vec2> for Vec2Expr {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Vec2>> {
+    fn try_into_variable(&self) -> Option<Variable<Vec2>> {
         match self {
             Vec2Expr::Variable(v) => {
-                Either::Right(Variable {
+                Some(Variable {
                     expr_type: Vec2,
-                    decl: v.decl,
+                    decl: &v.decl,
                 })
             }
-            _ => Either::Left(self)
+            _ => None
         }
     }
 
@@ -442,27 +446,27 @@ impl Expression<Vec2> for Vec2Expr {
         ExpressionType::Vec2(Vec2)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self {
             Vec2Expr::Variable(var) => {
-                if var.decl == old {
-                    var.decl = new;
+                if var.decl.as_ref() == old.as_ref() {
+                    var.decl = new.clone();
                 }
             }
             Vec2Expr::Gather1(f) => f.substitute_variable(old, new),
             Vec2Expr::Gather2(f1, f2) => {
-                f1.substitute_variable(old.clone(), new.clone());
+                f1.substitute_variable(old, new);
                 f2.substitute_variable(old, new);
             }
             Vec2Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
             Vec2Expr::Product(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
             Vec2Expr::Sum(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
         }
@@ -492,15 +496,15 @@ impl Expression<Vec3> for Vec3Expr {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Vec3>> {
+    fn try_into_variable(&self) -> Option<Variable<Vec3>> {
         match self {
             Vec3Expr::Variable(v) => {
-                Either::Right(Variable {
+                Some(Variable {
                     expr_type: Vec3,
-                    decl: v.decl,
+                    decl: &v.decl,
                 })
             }
-            _ => Either::Left(self)
+            _ => None
         }
     }
 
@@ -508,28 +512,28 @@ impl Expression<Vec3> for Vec3Expr {
         ExpressionType::Vec3(Vec3)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self {
             Vec3Expr::Variable(var) => {
-                if var.decl == old {
-                    var.decl = new;
+                if var.decl.as_ref() == old.as_ref() {
+                    var.decl = new.clone();
                 }
             }
             Vec3Expr::Gather1(f) => f.substitute_variable(old, new),
             Vec3Expr::Gather3(f1, f2, f3) => {
-                f1.substitute_variable(old.clone(), new.clone());
-                f2.substitute_variable(old.clone(), new.clone());
+                f1.substitute_variable(old, new);
+                f2.substitute_variable(old, new);
                 f3.substitute_variable(old, new);
             }
             Vec3Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
             Vec3Expr::Product(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
             Vec3Expr::Sum(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
         }
@@ -559,15 +563,15 @@ impl Expression<Vec4> for Vec4Expr {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Vec4>> {
+    fn try_into_variable(&self) -> Option<Variable<Vec4>> {
         match self {
             Vec4Expr::Variable(v) => {
-                Either::Right(Variable {
+                Some(Variable {
                     expr_type: Vec4,
-                    decl: v.decl,
+                    decl: &v.decl,
                 })
             }
-            _ => Either::Left(self)
+            _ => None
         }
     }
 
@@ -575,29 +579,29 @@ impl Expression<Vec4> for Vec4Expr {
         ExpressionType::Vec4(Vec4)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self {
             Vec4Expr::Variable(var) => {
-                if var.decl == old {
-                    var.decl = new;
+                if var.decl.as_ref() == old.as_ref() {
+                    var.decl = new.clone();
                 }
             }
             Vec4Expr::Gather1(f) => f.substitute_variable(old, new),
             Vec4Expr::Gather4(f1, f2, f3, f4) => {
-                f1.substitute_variable(old.clone(), new.clone());
-                f2.substitute_variable(old.clone(), new.clone());
-                f3.substitute_variable(old.clone(), new.clone());
+                f1.substitute_variable(old, new);
+                f2.substitute_variable(old, new);
+                f3.substitute_variable(old, new);
                 f4.substitute_variable(old, new);
             }
             Vec4Expr::AccessMultiVecGroup(mve, _) => mve.substitute_variable(old, new),
             Vec4Expr::Product(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
             Vec4Expr::Sum(v) => {
                 for v in v.iter_mut() {
-                    v.substitute_variable(old.clone(), new.clone());
+                    v.substitute_variable(old, new);
                 }
             }
         }
@@ -627,15 +631,15 @@ impl Expression<MultiVector> for MultiVectorExpr {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<MultiVector>> {
+    fn try_into_variable(&self) -> Option<Variable<MultiVector>> {
         match *self.expr {
             MultiVectorVia::Variable(v) => {
-                Either::Right(Variable {
+                Some(Variable {
                     expr_type: self.mv_class,
-                    decl: v.decl,
+                    decl: &v.decl,
                 })
             }
-            _ => Either::Left(self)
+            _ => None
         }
     }
 
@@ -643,45 +647,44 @@ impl Expression<MultiVector> for MultiVectorExpr {
         ExpressionType::Class(self.strong_expression_type())
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
         match self.expr.as_mut() {
             MultiVectorVia::Variable(var) => {
-                if var.decl == old {
-                    var.decl = new;
+                if var.decl.as_ref() == old.as_ref() {
+                    var.decl = new.clone();
                 }
             }
             MultiVectorVia::Construct(stuff) => {
                 for stuff in stuff {
                     match stuff {
-                        MultiVectorGroupExpr::JustFloat(f) => f.substitute_variable(old.clone(), new.clone()),
-                        MultiVectorGroupExpr::Vec2(v) => v.substitute_variable(old.clone(), new.clone()),
-                        MultiVectorGroupExpr::Vec3(v) => v.substitute_variable(old.clone(), new.clone()),
-                        MultiVectorGroupExpr::Vec4(v) => v.substitute_variable(old.clone(), new.clone()),
+                        MultiVectorGroupExpr::JustFloat(f) => f.substitute_variable(old, new),
+                        MultiVectorGroupExpr::Vec2(v) => v.substitute_variable(old, new),
+                        MultiVectorGroupExpr::Vec3(v) => v.substitute_variable(old, new),
+                        MultiVectorGroupExpr::Vec4(v) => v.substitute_variable(old, new),
                     }
                 }
             }
             MultiVectorVia::TraitInvoke11ToClass(_, a) => a.substitute_variable(old, new),
             MultiVectorVia::TraitInvoke21ToClass(_, a, _) => a.substitute_variable(old, new),
             MultiVectorVia::TraitInvoke22ToClass(_, a, b) => {
-                a.substitute_variable(old.clone(), new.clone());
+                a.substitute_variable(old, new);
                 b.substitute_variable(old, new);
             }
         }
     }
 }
 
-impl Expression<Integer> for Variable<Integer> {
+impl<'v> Expression<Integer> for Variable<'v, Integer> {
 
     fn into_any_expression(self) -> AnyExpression {
-        let decl = self.decl.clone();
-        AnyExpression::Int(IntExpr::Variable(RawVariableInvocation { decl }))
+        AnyExpression::Int(IntExpr::Variable(RawVariableInvocation { decl: self.decl.clone() }))
     }
 
     fn from_any_expression(any: AnyExpression) -> Option<Self> {
         match any {
             AnyExpression::Int(IntExpr::Variable(v)) => Some(Variable {
                 expr_type: Integer,
-                decl: v.decl.clone(),
+                decl: &v.decl,
             }),
             _ => None,
         }
@@ -698,32 +701,31 @@ impl Expression<Integer> for Variable<Integer> {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Integer>> {
-        Either::Right(self)
+    fn try_into_variable(&self) -> Option<Variable<Integer>> {
+        Some(self.clone())
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Int(Integer)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        if self.decl == old {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
+        if self.decl.as_ref() == old.as_ref() {
             self.decl = new;
         }
     }
 }
-impl Expression<Float> for Variable<Float> {
+impl<'v> Expression<Float> for Variable<'v, Float> {
 
     fn into_any_expression(self) -> AnyExpression {
-        let decl = self.decl.clone();
-        AnyExpression::Float(FloatExpr::Variable(RawVariableInvocation { decl }))
+        AnyExpression::Float(FloatExpr::Variable(RawVariableInvocation { decl: self.decl.clone() }))
     }
 
     fn from_any_expression(any: AnyExpression) -> Option<Self> {
         match any {
             AnyExpression::Float(FloatExpr::Variable(v)) => Some(Variable {
                 expr_type: Float,
-                decl: v.decl.clone(),
+                decl: &v.decl,
             }),
             _ => None,
         }
@@ -740,32 +742,31 @@ impl Expression<Float> for Variable<Float> {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Float>> {
-        Either::Right(self)
+    fn try_into_variable(&self) -> Option<Variable<Float>> {
+        Some(self.clone())
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Float(Float)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        if self.decl == old {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
+        if self.decl.as_ref() == old.as_ref() {
             self.decl = new;
         }
     }
 }
-impl Expression<Vec2> for Variable<Vec2> {
+impl<'v> Expression<Vec2> for Variable<'v, Vec2> {
 
     fn into_any_expression(self) -> AnyExpression {
-        let decl = self.decl.clone();
-        AnyExpression::Vec2(Vec2Expr::Variable(RawVariableInvocation { decl }))
+        AnyExpression::Vec2(Vec2Expr::Variable(RawVariableInvocation { decl: self.decl.clone() }))
     }
 
     fn from_any_expression(any: AnyExpression) -> Option<Self> {
         match any {
             AnyExpression::Vec2(Vec2Expr::Variable(v)) => Some(Variable {
                 expr_type: Vec2,
-                decl: v.decl.clone(),
+                decl: &v.decl,
             }),
             _ => None,
         }
@@ -782,32 +783,31 @@ impl Expression<Vec2> for Variable<Vec2> {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Vec2>> {
-        Either::Right(self)
+    fn try_into_variable(&self) -> Option<Variable<Vec2>> {
+        Some(self.clone())
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec2(Vec2)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        if self.decl == old {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
+        if self.decl.as_ref() == old.as_ref() {
             self.decl = new;
         }
     }
 }
-impl Expression<Vec3> for Variable<Vec3> {
+impl<'v> Expression<Vec3> for Variable<'v, Vec3> {
 
     fn into_any_expression(self) -> AnyExpression {
-        let decl = self.decl.clone();
-        AnyExpression::Vec3(Vec3Expr::Variable(RawVariableInvocation { decl }))
+        AnyExpression::Vec3(Vec3Expr::Variable(RawVariableInvocation { decl: self.decl.clone() }))
     }
 
     fn from_any_expression(any: AnyExpression) -> Option<Self> {
         match any {
             AnyExpression::Vec3(Vec3Expr::Variable(v)) => Some(Variable {
                 expr_type: Vec3,
-                decl: v.decl.clone(),
+                decl: &v.decl,
             }),
             _ => None,
         }
@@ -824,32 +824,31 @@ impl Expression<Vec3> for Variable<Vec3> {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Vec3>> {
-        Either::Right(self)
+    fn try_into_variable(&self) -> Option<Variable<Vec3>> {
+        Some(self.clone())
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec3(Vec3)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        if self.decl == old {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
+        if self.decl.as_ref() == old.as_ref() {
             self.decl = new;
         }
     }
 }
-impl Expression<Vec4> for Variable<Vec4> {
+impl<'v> Expression<Vec4> for Variable<'v, Vec4> {
 
     fn into_any_expression(self) -> AnyExpression {
-        let decl = self.decl.clone();
-        AnyExpression::Vec4(Vec4Expr::Variable(RawVariableInvocation { decl }))
+        AnyExpression::Vec4(Vec4Expr::Variable(RawVariableInvocation { decl: self.decl.clone() }))
     }
 
     fn from_any_expression(any: AnyExpression) -> Option<Self> {
         match any {
             AnyExpression::Vec4(Vec4Expr::Variable(v)) => Some(Variable {
                 expr_type: Vec4,
-                decl: v.decl.clone(),
+                decl: &v.decl,
             }),
             _ => None,
         }
@@ -866,27 +865,26 @@ impl Expression<Vec4> for Variable<Vec4> {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<Vec4>> {
-        Either::Right(self)
+    fn try_into_variable(&self) -> Option<Variable<Vec4>> {
+        Some(self.clone())
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Vec4(Vec4)
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        if self.decl == old {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
+        if self.decl.as_ref() == old.as_ref() {
             self.decl = new;
         }
     }
 }
-impl Expression<MultiVector> for Variable<MultiVector> {
+impl<'v> Expression<MultiVector> for Variable<'v, MultiVector> {
 
     fn into_any_expression(self) -> AnyExpression {
-        let decl = self.decl.clone();
         AnyExpression::Class(MultiVectorExpr {
             mv_class: self.expr_type,
-            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation { decl })),
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation { decl: self.decl.clone() })),
         })
     }
 
@@ -896,7 +894,7 @@ impl Expression<MultiVector> for Variable<MultiVector> {
                 if let MultiVectorVia::Variable(var) = *expr {
                     Some(Variable {
                         expr_type: mv_class,
-                        decl: var.decl.clone(),
+                        decl: &var.decl,
                     })
                 } else {
                     None
@@ -923,23 +921,23 @@ impl Expression<MultiVector> for Variable<MultiVector> {
         }
     }
 
-    fn try_into_variable(self) -> Either<Self, Variable<MultiVector>> {
-        Either::Right(self)
+    fn try_into_variable(&self) -> Option<Variable<MultiVector>> {
+        Some(self.clone())
     }
 
     fn soft_expression_type(&self) -> ExpressionType {
         ExpressionType::Class(self.strong_expression_type())
     }
 
-    fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>) {
-        if self.decl == old {
+    fn substitute_variable<'vars>(&mut self, old: &'vars Arc<RawVariableDeclaration>, new: &'vars Arc<RawVariableDeclaration>) {
+        if self.decl.as_ref() == old.as_ref() {
             self.decl = new;
         }
     }
 }
 
 // TODO this but for other variable types
-impl Variable<MultiVector> {
+impl<'vars> Variable<'vars, MultiVector> {
     pub fn expr(self) -> MultiVectorExpr {
         MultiVectorExpr {
             mv_class: self.expr_type,
@@ -950,7 +948,7 @@ impl Variable<MultiVector> {
     }
 }
 
-impl Variable<MultiVector> {
+impl<'vars> Variable<'vars, MultiVector> {
     pub fn elements(&self) -> impl Iterator<Item=(FloatExpr, BasisElement)> + '_ {
         let mv_expr = self.clone().expr();
         self.expr_type.elements().into_iter().enumerate().map(move |(i, el)| {
@@ -1254,6 +1252,7 @@ impl MultiVectorExpr {
 }
 
 
+// TODO implement arithmetic for things that can turn INTO FloatExpr, not FloatExpr directly. UGH.
 impl Add<FloatExpr> for FloatExpr {
     type Output = FloatExpr;
 

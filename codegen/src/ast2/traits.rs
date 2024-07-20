@@ -206,7 +206,7 @@ pub trait TraitImpl_11: Copy + Send + Sync + 'static {
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
         self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        slf: Variable<MultiVector>,
+        slf: Variable<'impls, MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
 
@@ -261,7 +261,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = param_self();
-            fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
+            let declare_self = fresh_variable_scope.entry(declare_self.name.clone()).or_insert(declare_self);
             let builder = TraitImplBuilder::new(
                 ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
@@ -329,7 +329,7 @@ pub trait TraitImpl_21: Copy + Send + Sync + 'static {
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
         self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        slf: Variable<MultiVector>,
+        slf: Variable<'impls, MultiVector>,
         other: MultiVector,
     ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
@@ -390,7 +390,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = param_self();
-            fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
+            let declare_self = fresh_variable_scope.entry(declare_self.name.clone()).or_insert(declare_self);
             let builder = TraitImplBuilder::new(
                 ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
@@ -460,8 +460,8 @@ pub trait TraitImpl_22: Copy + Send + Sync + 'static {
     async fn general_implementation<'impls, const AntiScalar: BasisElement>(
         self,
         b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        slf: Variable<MultiVector>,
-        other: Variable<MultiVector>,
+        slf: Variable<'impls, MultiVector>,
+        other: Variable<'impls, MultiVector>,
     ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>>;
 }
 
@@ -524,9 +524,9 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             // Create and register the implementation
             let mut fresh_variable_scope = HashMap::new();
             let declare_self = param_self();
+            let declare_self = fresh_variable_scope.entry(declare_self.name.clone()).or_insert(declare_self);
             let declare_other = param_other();
-            fresh_variable_scope.insert(declare_self.name.clone(), declare_self.clone());
-            fresh_variable_scope.insert(declare_other.name.clone(), declare_other.clone());
+            let declare_other = fresh_variable_scope.entry(declare_self.name.clone()).or_insert(declare_other);
             let builder = TraitImplBuilder::new(
                 ga, mvs, the_def_clone, registry, false, &mut fresh_variable_scope, cycle_detector_clone
             );
@@ -881,7 +881,7 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
                 tir_2.traits11.get_or_create_or_panic((trait_key, mv_a), async move {
                     let mut variables = HashMap::new();
                     let declare_self = param_self();
-                    variables.insert(declare_self.name.clone(), declare_self.clone());
+                    let declare_self = variables.entry(declare_self.name.clone()).or_insert(declare_self);
                     let b = TraitImplBuilder::new(
                         ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
                     );
@@ -935,7 +935,7 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
                     tir_2.traits21.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
                         let mut variables = HashMap::new();
                         let declare_self = param_self();
-                        variables.insert(declare_self.name.clone(), declare_self.clone());
+                        let declare_self = variables.entry(declare_self.name.clone()).or_insert(declare_self);
                         let b = TraitImplBuilder::new(
                             ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
                         );
@@ -990,8 +990,9 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
                     tir_2.traits22.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
                         let mut variables = HashMap::new();
                         let declare_self = param_self();
+                        let declare_self = variables.entry(declare_self.name.clone()).or_insert(declare_self);
                         let declare_other = param_other();
-                        variables.insert(declare_self.name.clone(), declare_self.clone());
+                        let declare_other = variables.entry(declare_self.name.clone()).or_insert(declare_other);
                         variables.insert(declare_other.name.clone(), declare_other.clone());
                         let b = TraitImplBuilder::new(
                             ga_2, mv_repo_2, def_2, tir_3, false, &mut variables, im::HashSet::new()
@@ -1093,6 +1094,27 @@ pub struct TraitImplBuilder<'impl_ctx, const AntiScalar: BasisElement, ReturnTyp
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
+    // TODO ironically if we want Copy Variables, we might need this to be concurrency safe
+    //  Because we can't have an immutable reference to a member of this map but still
+    //  let the map be mutable to add new variables. Unless... there was an append only map?
+    //  Well anyway. Yeah so if TraitImplBuilder API works completely with immutable references
+    //  instead of mutable references, then we can have the Copy Variable no problem.
+    //  The thing is... Ugh. I can't give Variables an unborrowed Arc, or they won't be Copy.
+    //  So either I create an arena-like system with an identifier and keep Copy, or just hold
+    //  a true Arc and don't be Copy, or I... yeah I can't even actually have &Arc<> at all,
+    //  because even if I put the HashMap in a mutex then what? Ownership still applies, if you
+    //  leak an &Arc<> then you're just holding onto a read lock. So if for restrictive purposes
+    //  I want a lifetime anyway, then I'd be choosing to impose it with PhantomData pretty much,
+    //  in other words choosing to be an asshole to make the code more strict.
+    //  Hmmm.... maybe... maybe variable use sites should be strong Arcs, and these should be
+    //  Weaks? That's a thought.... then instead of making Variables Copy, just accept that they're
+    //  not, and make the API accept borrowed Variables instead of owned Variables. It makes
+    //  just as much sense, right? Heck of a lot more sense than cloning or owned consumption.
+    //  Variables are reused, and also not reassigned, so they are borrowed.
+    //  So what about material leaking then? Well.... The trait implementations being written
+    //  inside trait implementations is already a decent deterrent against material leaking.
+    //  It's not fool proof, but it's something. Is it worth the ergonomics to just get rid of
+    //  the stupid lifetimes entirely to begin with? Maybe.
     variables: &'impl_ctx mut HashMap<(String, usize), Arc<RawVariableDeclaration>>,
     lines: Vec<CommentOrVariableDeclaration>,
     return_comment: Option<String>,
@@ -1182,7 +1204,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         var_name: V,
         expr_type: ExprType,
         expr: AnyExpression
-    ) -> Variable<ExprType> {
+    ) -> Variable<'impl_ctx, ExprType> {
         let var_name = var_name.into();
         let unique_name = self.make_var_name_unique(var_name);
         let decl = Arc::new(RawVariableDeclaration {
@@ -1193,13 +1215,14 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         let existing = self.variables.insert(unique_name.clone(), decl.clone());
         assert!(existing.is_none(), "Variable {unique_name:?} is already taken");
         self.lines.push(CommentOrVariableDeclaration::VarDec(decl.clone()));
+        let decl = self.variables.get(&unique_name).expect("was just inserted");
         Variable { expr_type, decl, }
     }
 
     fn coerce_variable<V: Into<String>, ExprType, Expr: Expression<ExprType>>(&mut self, name_if_new_var: V, expr: Expr) -> Variable<ExprType> {
         return match expr.try_into_variable() {
-            Either::Right(already_done) => already_done,
-            Either::Left(not_yet) => self.variable(name_if_new_var, not_yet),
+            Some(already_done) => already_done,
+            None => self.variable(name_if_new_var, expr),
         }
     }
 
@@ -1252,7 +1275,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         let mut return_expr = raw_impl.return_expr.clone();
         for (old, new) in var_replacements.iter() {
             // Update all variables used in this expression
-            return_expr.substitute_variable(old.clone(), new.clone());
+            return_expr.substitute_variable(old, new);
         }
         let return_expr_type = T::Output::of_expr(&return_expr)?;
         let var = self.comment_variable_impl(
@@ -1273,14 +1296,14 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         raw_impl: Arc<RawTraitImplementation>,
         owner: Expr,
     ) -> Option<Variable<T::Output>> {
-        let new_self = self.coerce_variable("self", owner).decl;
+        let new_self = self.coerce_variable("self", owner).decl.clone();
         let old_self =  param_self();
         let mut var_replacements = vec![(old_self, new_self)];
         self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
         let mut return_expr = raw_impl.return_expr.clone();
         for (old, new) in var_replacements.iter() {
             // Update all variables used in this expression
-            return_expr.substitute_variable(old.clone(), new.clone());
+            return_expr.substitute_variable(old, new);
         }
         let return_expr_type = T::Output::of_expr(&return_expr)?;
         let var = self.comment_variable_impl(
@@ -1301,14 +1324,14 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         raw_impl: Arc<RawTraitImplementation>,
         owner: Expr,
     ) -> Option<Variable<T::Output>> {
-        let new_self = self.coerce_variable("self", owner).decl;
+        let new_self = self.coerce_variable("self", owner).decl.clone();
         let old_self =  param_self();
         let mut var_replacements = vec![(old_self, new_self)];
         self.inline_the_lines(&mut var_replacements, &raw_impl.lines);
         let mut return_expr = raw_impl.return_expr.clone();
         for (old, new) in var_replacements.iter() {
             // Update all variables used in this expression
-            return_expr.substitute_variable(old.clone(), new.clone());
+            return_expr.substitute_variable(old, new);
         }
         let return_expr_type = T::Output::of_expr(&return_expr)?;
         let var = self.comment_variable_impl(
@@ -1331,8 +1354,8 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         owner: Expr1,
         other: Expr2,
     ) -> Option<Variable<T::Output>> {
-        let new_self = self.coerce_variable("self", owner).decl;
-        let new_other = self.coerce_variable("other", other).decl;
+        let new_self = self.coerce_variable("self", owner).decl.clone();
+        let new_other = self.coerce_variable("other", other).decl.clone();
         let old_self =  param_self();
         let old_other =  param_other();
         let mut var_replacements = vec![(old_self, new_self), (old_other, new_other)];
@@ -1340,7 +1363,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
         let mut return_expr = raw_impl.return_expr.clone();
         for (old, new) in var_replacements.iter() {
             // Update all variables used in this expression
-            return_expr.substitute_variable(old.clone(), new.clone());
+            return_expr.substitute_variable(old, new);
         }
         let return_expr_type = T::Output::of_expr(&return_expr)?;
         let var = self.comment_variable_impl(
@@ -1369,7 +1392,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement> TraitImplBuilder<'impl_ctx, Anti
                         .expect("Non-Parameter Variables are always initialized");
                     for (old, new) in var_replacements.iter() {
                         // Update all variables used in this expression
-                        new_var_expr.substitute_variable(old.clone(), new.clone());
+                        new_var_expr.substitute_variable(old, new);
                     }
                     // And create the new replacement declaration for this variable
                     let new_decl = Arc::new(RawVariableDeclaration {
@@ -1496,7 +1519,7 @@ impl<'impl_ctx, const AntiScalar: BasisElement, ExprType> TraitImplBuilder<'impl
 }
 
 impl<ExprType> InlineFinisher<ExprType> {
-    fn finish_inline<const AntiScalar: BasisElement, V: Into<String>>(self, b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+    fn finish_inline<'i, const AntiScalar: BasisElement, V: Into<String>>(self, b: &mut TraitImplBuilder<'i, AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<'i, ExprType>> {
         for line in self.lines {
             b.lines.push(line);
         }

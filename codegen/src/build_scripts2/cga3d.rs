@@ -1,14 +1,9 @@
 #![allow(non_upper_case_globals)]
-use std::future::Future;
-use std::pin::Pin;
-
 use crate::{ga, multi_vecs, register_all};
 use crate::algebra2::basis::elements::e12345;
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
-use crate::ast2::traits::{HasNotReturned, TraitImplBuilder};
 use crate::ast2::traits::TraitImplRegistry;
-use crate::ast2::Variable;
 use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkExpansion, GeometricAntiProduct, GeometricProduct, Grade, One, Unit, Wedge, Zero};
 
 multi_vecs!(e12345;

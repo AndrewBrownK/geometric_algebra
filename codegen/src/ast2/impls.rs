@@ -401,7 +401,7 @@ impl<TD> const Specialize_10 for TD where TD: TraitImpl_10 + ProvideTraitNames +
 
 type RawSpecializedImpl_11<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-    Variable<MultiVector>,
+    Variable<'impls, MultiVector>,
 ) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_11<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_11<AntiScalar, Output>;
 #[derive(Clone, Copy)]
@@ -472,7 +472,7 @@ impl<TD> const Specialize_11 for TD where TD: TraitImpl_11 + ProvideTraitNames +
 
 type RawSpecializedImpl_21<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-    Variable<MultiVector>,
+    Variable<'impls, MultiVector>,
     MultiVector,
 ) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_21<AntiScalar, Output>;
@@ -549,8 +549,8 @@ impl<TD> const Specialize_21 for TD where TD: TraitImpl_21 + ProvideTraitNames +
 
 type RawSpecializedImpl_22<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
     TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-    Variable<MultiVector>,
-    Variable<MultiVector>,
+    Variable<'impls, MultiVector>,
+    Variable<'impls, MultiVector>,
     // TODO problem with putting 'impls in Box
 ) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
 pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_22<AntiScalar, Output>;
