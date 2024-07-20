@@ -10,10 +10,10 @@ pub mod expressions;
 pub mod impls;
 // TODO Hamish recommends terms "intrinsic" and "extrinsic" instead of "Space" and "antispace"
 
-#[derive(PartialEq, Clone, Copy, Debug)]
-pub struct Variable<'var, ExprType> {
+#[derive(PartialEq, Clone, Debug)]
+pub struct Variable<ExprType> {
     pub expr_type: ExprType,
-    decl: &'var Arc<RawVariableDeclaration>,
+    decl: Arc<RawVariableDeclaration>,
 }
 
 #[derive(Clone, Debug, PartialEq)]

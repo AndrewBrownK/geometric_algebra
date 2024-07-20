@@ -115,7 +115,7 @@ impl<Impl> const ProvideTraitNames for Elaborated<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_10> TraitImpl_10 for Elaborated<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, owner: MultiVector) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, owner: MultiVector) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, owner).await
     }
 }
@@ -136,7 +136,7 @@ impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for Elaborated<Impl> {
 impl<Impl: TraitImpl_11> TraitImpl_11 for Elaborated<Impl> {
     type Output = Impl::Output;
 
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, slf).await
     }
 }
@@ -156,7 +156,7 @@ impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for Elaborated<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_21> TraitImpl_21 for Elaborated<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: MultiVector) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: MultiVector) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, slf, other).await
     }
 }
@@ -177,7 +177,7 @@ impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for Elaborated<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_22> TraitImpl_22 for Elaborated<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, slf, other).await
     }
 }
@@ -218,10 +218,10 @@ impl<Impl> const ProvideTraitNames for InlineOnly<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_10> TraitImpl_10 for InlineOnly<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+    async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        owner: MultiVector) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: MultiVector) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, owner).await
     }
 }
@@ -248,7 +248,7 @@ impl<Impl: TraitImpl_10> TraitDef_1Class_0Param for InlineOnly<Impl> {
 impl<Impl: TraitImpl_11> TraitImpl_11 for InlineOnly<Impl> {
     type Output = Impl::Output;
 
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, slf).await
     }
 }
@@ -274,7 +274,7 @@ impl<Impl: TraitImpl_11> TraitDef_1Class_1Param for InlineOnly<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_21> TraitImpl_21 for InlineOnly<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: MultiVector) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: MultiVector) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, slf, other).await
     }
 }
@@ -302,7 +302,7 @@ impl<Impl: TraitImpl_21> TraitDef_2Class_1Param for InlineOnly<Impl> {
 #[async_trait]
 impl<Impl: TraitImpl_22> TraitImpl_22 for InlineOnly<Impl> {
     type Output = Impl::Output;
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(self, b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: Variable<MultiVector>) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+    async fn general_implementation<const AntiScalar: BasisElement>(self, b: TraitImplBuilder<AntiScalar, HasNotReturned>, slf: Variable<MultiVector>, other: Variable<MultiVector>) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         self.the_impl.general_implementation(b, slf, other).await
     }
 }
@@ -329,10 +329,10 @@ impl<Impl: TraitImpl_22> TraitDef_2Class_2Param for InlineOnly<Impl> {
 }
 
 
-type RawSpecializedImpl_10<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
-    TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
+type RawSpecializedImpl_10<const AntiScalar: BasisElement, Output> = dyn Fn(
+    TraitImplBuilder<AntiScalar, HasNotReturned>,
     MultiVector,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<AntiScalar, Output>>> + Send>> + Send + Sync;
 pub type SpecializedImpl_10<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_10<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_10<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -350,11 +350,11 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> const ProvideTrait
 impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_10 for Specialized_10<AntiScalar, Output>
     where Self: Copy {
     type Output = Output;
-    async fn general_implementation<'impls, const AntiScalar2: BasisElement>(
+    async fn general_implementation<const AntiScalar2: BasisElement>(
         self,
-        mut b: TraitImplBuilder<'impls, AntiScalar2, HasNotReturned>,
+        mut b: TraitImplBuilder<AntiScalar2, HasNotReturned>,
         owner: MultiVector
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar2, Self::Output>> {
+    ) -> Option<TraitImplBuilder<AntiScalar2, Self::Output>> {
         if AntiScalar != AntiScalar2 {
             panic!("When specializing trait implementations, ensure you are using an AntiScalar \
             that matches your GeometricAlgebra and MultiVecs. Expected {AntiScalar2}, found \
@@ -399,10 +399,10 @@ impl<TD> const Specialize_10 for TD where TD: TraitImpl_10 + ProvideTraitNames +
 }
 
 
-type RawSpecializedImpl_11<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
-    TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-    Variable<'impls, MultiVector>,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
+type RawSpecializedImpl_11<const AntiScalar: BasisElement, Output> = dyn Fn(
+    TraitImplBuilder<AntiScalar, HasNotReturned>,
+    Variable<MultiVector>,
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<AntiScalar, Output>>> + Send>> + Send + Sync;
 pub type SpecializedImpl_11<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_11<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_11<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -420,11 +420,11 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> const ProvideTrait
 impl<Output: TraitResultType, const AntiScalar: BasisElement> TraitImpl_11 for Specialized_11<AntiScalar, Output>
     where Self: Copy {
     type Output = Output;
-    async fn general_implementation<'impls, const AntiScalar2: BasisElement>(
+    async fn general_implementation<const AntiScalar2: BasisElement>(
         self,
-        mut b: TraitImplBuilder<'impls, AntiScalar2, HasNotReturned>,
+        mut b: TraitImplBuilder<AntiScalar2, HasNotReturned>,
         slf: Variable<MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar2, Self::Output>> {
+    ) -> Option<TraitImplBuilder<AntiScalar2, Self::Output>> {
         if AntiScalar != AntiScalar2 {
             panic!("When specializing trait implementations, ensure you are using an AntiScalar \
             that matches your GeometricAlgebra and MultiVecs. Expected {AntiScalar2}, found \
@@ -470,11 +470,11 @@ impl<TD> const Specialize_11 for TD where TD: TraitImpl_11 + ProvideTraitNames +
 
 
 
-type RawSpecializedImpl_21<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
-    TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-    Variable<'impls, MultiVector>,
+type RawSpecializedImpl_21<const AntiScalar: BasisElement, Output> = dyn Fn(
+    TraitImplBuilder<AntiScalar, HasNotReturned>,
+    Variable<MultiVector>,
     MultiVector,
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<AntiScalar, Output>>> + Send>> + Send + Sync;
 pub type SpecializedImpl_21<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_21<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_21<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -493,12 +493,12 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> const ProvideTrait
 impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_21 for Specialized_21<AntiScalar, Output>
     where Self: Copy {
     type Output = Output;
-    async fn general_implementation<'impls, const AntiScalar2: BasisElement>(
+    async fn general_implementation<const AntiScalar2: BasisElement>(
         self,
-        mut b: TraitImplBuilder<'impls, AntiScalar2, HasNotReturned>,
+        mut b: TraitImplBuilder<AntiScalar2, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: MultiVector
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar2, Self::Output>> {
+    ) -> Option<TraitImplBuilder<AntiScalar2, Self::Output>> {
         if AntiScalar != AntiScalar2 {
             panic!("When specializing trait implementations, ensure you are using an AntiScalar \
             that matches your GeometricAlgebra and MultiVecs. Expected {AntiScalar2}, found \
@@ -547,12 +547,12 @@ impl<TD> const Specialize_21 for TD where TD: TraitImpl_21 + ProvideTraitNames +
 
 
 
-type RawSpecializedImpl_22<const AntiScalar: BasisElement, Output> = dyn for<'impls> Fn(
-    TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-    Variable<'impls, MultiVector>,
-    Variable<'impls, MultiVector>,
+type RawSpecializedImpl_22<const AntiScalar: BasisElement, Output> = dyn Fn(
+    TraitImplBuilder<AntiScalar, HasNotReturned>,
+    Variable<MultiVector>,
+    Variable<MultiVector>,
     // TODO problem with putting 'impls in Box
-) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<'impls, AntiScalar, Output>>> + Send + 'impls>> + Send + Sync;
+) -> Pin<Box<dyn Future<Output=Option<TraitImplBuilder<AntiScalar, Output>>> + Send>> + Send + Sync;
 pub type SpecializedImpl_22<const AntiScalar: BasisElement, Output> = &'static RawSpecializedImpl_22<AntiScalar, Output>;
 #[derive(Clone, Copy)]
 pub struct Specialized_22<const AntiScalar: BasisElement, Output: TraitResultType>(
@@ -571,12 +571,12 @@ impl<const AntiScalar: BasisElement, Output: TraitResultType> const ProvideTrait
 impl<const AntiScalar: BasisElement, Output: TraitResultType> TraitImpl_22 for Specialized_22<AntiScalar, Output>
     where Self: Copy {
     type Output = Output;
-    async fn general_implementation<'impls, const AntiScalar2: BasisElement>(
+    async fn general_implementation<const AntiScalar2: BasisElement>(
         self,
-        mut b: TraitImplBuilder<'impls, AntiScalar2, HasNotReturned>,
+        mut b: TraitImplBuilder<AntiScalar2, HasNotReturned>,
         slf: Variable<MultiVector>,
         other: Variable<MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar2, Self::Output>> {
+    ) -> Option<TraitImplBuilder<AntiScalar2, Self::Output>> {
         if AntiScalar != AntiScalar2 {
             panic!("When specializing trait implementations, ensure you are using an AntiScalar \
             that matches your GeometricAlgebra and MultiVecs. Expected {AntiScalar2}, found \

@@ -32,12 +32,12 @@ static EXPANSION: Elaborated<Expansion> = Expansion.new_trait_named("Expansion")
 impl TraitImpl_22 for Wedge {
     type Output = MultiVector;
 
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+    async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        slf: Variable<'impls, MultiVector>,
-        other: Variable<'impls, MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         return None;
     }
 }
@@ -46,11 +46,11 @@ impl TraitImpl_22 for Wedge {
 impl TraitImpl_11 for AntiDual {
     type Output = MultiVector;
 
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+    async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        slf: Variable<'impls, MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         return None;
     }
 }
@@ -61,12 +61,12 @@ impl TraitImpl_11 for AntiDual {
 impl TraitImpl_22 for Expansion {
     type Output = MultiVector;
 
-    async fn general_implementation<'impls, const AntiScalar: BasisElement>(
+    async fn general_implementation<const AntiScalar: BasisElement>(
         self,
-        mut b: TraitImplBuilder<'impls, AntiScalar, HasNotReturned>,
-        slf: Variable<'impls, MultiVector>,
-        other: Variable<'impls, MultiVector>
-    ) -> Option<TraitImplBuilder<'impls, AntiScalar, Self::Output>> {
+        mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+        slf: Variable<MultiVector>,
+        other: Variable<MultiVector>
+    ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
         let anti_dual = ANTI_DUAL.invoke(&mut b, other).await?;
         let anti_dual = b.variable("anti_dual", anti_dual);
         let wedge = WEDGE.inline(&mut b, slf, anti_dual).await?;
