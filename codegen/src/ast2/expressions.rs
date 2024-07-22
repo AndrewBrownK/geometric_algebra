@@ -1153,9 +1153,9 @@ impl FloatExpr {
             }
             FloatExpr::TraitInvoke11ToFloat(_, _) => {}
             FloatExpr::Product(product) => {
-                for s in  product.iter_mut() {
-                    s.simplify();
-                    if let FloatExpr::Literal(0.0) = s {
+                for p in  product.iter_mut() {
+                    p.simplify();
+                    if let FloatExpr::Literal(0.0) = p {
                         *self = FloatExpr::Literal(0.0);
                         return
                     }
@@ -1227,27 +1227,590 @@ impl FloatExpr {
 }
 impl Vec2Expr {
     fn simplify(&mut self) {
-        todo!()
+        match self {
+            Vec2Expr::Variable(_) => {}
+            Vec2Expr::Gather1(f) => {
+                f.simplify();
+                // Do I really want to do more here?
+            }
+            Vec2Expr::Gather2(f0, f1) => {
+                f0.simplify();
+                f1.simplify();
+                if f0 == f1 {
+                    *self = Vec2Expr::Gather1(f0.clone());
+                    return;
+                }
+                if let (FloatExpr::AccessVec2(v2_a, 0), FloatExpr::AccessVec2(v2_b, 1)) = (f0, f1) {
+                    if v2_a == v2_b {
+                        *self = *v2_a.clone();
+                        return;
+                    }
+                }
+            }
+            Vec2Expr::AccessMultiVecGroup(mve, idx) => {
+                mve.simplify();
+                let idx = *idx;
+                let mv = mve.mv_class;
+                if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
+                    let size = match &mut groups[idx as usize] {
+                        MultiVectorGroupExpr::JustFloat(_) => 1,
+                        MultiVectorGroupExpr::Vec2(v2) => {
+                            *self = v2.clone();
+                            2
+                        },
+                        MultiVectorGroupExpr::Vec3(_) => 3,
+                        MultiVectorGroupExpr::Vec4(_) => 4,
+                    };
+                    if size != 2 {
+                        panic!("Invalid expression detected: MultiVector group {idx} has size \
+                        {size}, but is used in a place where we expect size 2. {mv}")
+                    }
+                }
+            }
+            Vec2Expr::Product(product) => {
+                for p in product.iter_mut() {
+                    p.simplify();
+                    if let Vec2Expr::Gather1(FloatExpr::Literal(0.0)) = p {
+                        *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
+                        return;
+                    }
+                    if let Vec2Expr::Gather2(
+                        FloatExpr::Literal(0.0),
+                        FloatExpr::Literal(0.0)) = p {
+                        *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
+                        return;
+                    }
+                }
+                let mut coalesce = [1.0, 1.0];
+                let mut flatten = vec![];
+                product.retain_mut(|it| {
+                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] *= *f;
+                        coalesce[1] *= *f;
+                        false
+                    } else if let Vec2Expr::Gather2(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1)) = it {
+                        coalesce[0] *= *f0;
+                        coalesce[1] *= *f1;
+                        false
+                    } else if let Vec2Expr::Product(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] *= *f;
+                        coalesce[1] *= *f;
+                        false
+                    } else if let Vec2Expr::Gather2(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1)) = it {
+                        coalesce[0] *= *f0;
+                        coalesce[1] *= *f1;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != [1.0, 1.0] {
+                    product.push(Vec2Expr::Gather2(
+                        FloatExpr::Literal(coalesce[0]),
+                        FloatExpr::Literal(coalesce[1]),
+                    ))
+                }
+                product.append(&mut flatten);
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                }
+            }
+            Vec2Expr::Sum(sum) => {
+                for s in sum.iter_mut() {
+                    s.simplify();
+                }
+                let mut coalesce = [0.0, 0.0];
+                let mut flatten = vec![];
+                sum.retain_mut(|it| {
+                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] += *f;
+                        coalesce[1] += *f;
+                        false
+                    } else if let Vec2Expr::Gather2(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1)) = it {
+                        coalesce[0] += *f0;
+                        coalesce[1] += *f1;
+                        false
+                    } else if let Vec2Expr::Sum(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] += *f;
+                        coalesce[1] += *f;
+                        false
+                    } else if let Vec2Expr::Gather2(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1)) = it {
+                        coalesce[0] += *f0;
+                        coalesce[1] += *f1;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != [0.0, 0.0] {
+                    sum.push(Vec2Expr::Gather2(
+                        FloatExpr::Literal(coalesce[0]),
+                        FloatExpr::Literal(coalesce[1]),
+                    ))
+                }
+                sum.append(&mut flatten);
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                }
+            }
+        }
     }
 }
 impl Vec3Expr {
     fn simplify(&mut self) {
-        todo!()
+        match self {
+            Vec3Expr::Variable(_) => {}
+            Vec3Expr::Gather1(f) => {
+                f.simplify();
+                // Do I really want to do more here?
+            }
+            Vec3Expr::Gather3(f0, f1, f2) => {
+                f0.simplify();
+                f1.simplify();
+                f2.simplify();
+                if f0 == f1 && f0 == f2 {
+                    *self = Vec3Expr::Gather1(f0.clone());
+                    return;
+                }
+                if let (
+                    FloatExpr::AccessVec3(v3_a, 0),
+                    FloatExpr::AccessVec3(v3_b, 1),
+                    FloatExpr::AccessVec3(v3_c, 2),
+                ) = (f0, f1, f2) {
+                    if v3_a == v3_b && v3_a == v3_c {
+                        *self = *v3_a.clone();
+                        return;
+                    }
+                }
+            }
+            Vec3Expr::AccessMultiVecGroup(mve, idx) => {
+                mve.simplify();
+                let idx = *idx;
+                let mv = mve.mv_class;
+                if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
+                    let size = match &mut groups[idx as usize] {
+                        MultiVectorGroupExpr::JustFloat(_) => 1,
+                        MultiVectorGroupExpr::Vec2(_) => 2,
+                        MultiVectorGroupExpr::Vec3(v3) => {
+                            *self = v3.clone();
+                            3
+                        },
+                        MultiVectorGroupExpr::Vec4(_) => 4,
+                    };
+                    if size != 3 {
+                        panic!("Invalid expression detected: MultiVector group {idx} has size \
+                        {size}, but is used in a place where we expect size 3. {mv}")
+                    }
+                }
+            }
+            Vec3Expr::Product(product) => {
+                for p in product.iter_mut() {
+                    p.simplify();
+                    if let Vec3Expr::Gather1(FloatExpr::Literal(0.0)) = p {
+                        *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
+                        return;
+                    }
+                    if let Vec3Expr::Gather3(
+                        FloatExpr::Literal(0.0),
+                        FloatExpr::Literal(0.0),
+                        FloatExpr::Literal(0.0)) = p {
+                        *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
+                        return;
+                    }
+                }
+                let mut coalesce = [1.0, 1.0, 1.0];
+                let mut flatten = vec![];
+                product.retain_mut(|it| {
+                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] *= *f;
+                        coalesce[1] *= *f;
+                        coalesce[2] *= *f;
+                        false
+                    } else if let Vec3Expr::Gather3(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2)) = it {
+                        coalesce[0] *= *f0;
+                        coalesce[1] *= *f1;
+                        coalesce[2] *= *f2;
+                        false
+                    } else if let Vec3Expr::Product(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] *= *f;
+                        coalesce[1] *= *f;
+                        coalesce[2] *= *f;
+                        false
+                    } else if let Vec3Expr::Gather3(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2)) = it {
+                        coalesce[0] *= *f0;
+                        coalesce[1] *= *f1;
+                        coalesce[2] *= *f2;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != [1.0, 1.0, 1.0] {
+                    product.push(Vec3Expr::Gather3(
+                        FloatExpr::Literal(coalesce[0]),
+                        FloatExpr::Literal(coalesce[1]),
+                        FloatExpr::Literal(coalesce[2]),
+                    ))
+                }
+                product.append(&mut flatten);
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                }
+            }
+            Vec3Expr::Sum(sum) => {
+                for s in sum.iter_mut() {
+                    s.simplify();
+                }
+                let mut coalesce = [0.0, 0.0, 0.0];
+                let mut flatten = vec![];
+                sum.retain_mut(|it| {
+                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] += *f;
+                        coalesce[1] += *f;
+                        coalesce[2] += *f;
+                        false
+                    } else if let Vec3Expr::Gather3(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2)) = it {
+                        coalesce[0] += *f0;
+                        coalesce[1] += *f1;
+                        coalesce[2] += *f2;
+                        false
+                    } else if let Vec3Expr::Sum(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] += *f;
+                        coalesce[1] += *f;
+                        coalesce[2] += *f;
+                        false
+                    } else if let Vec3Expr::Gather3(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2)) = it {
+                        coalesce[0] += *f0;
+                        coalesce[1] += *f1;
+                        coalesce[2] += *f2;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != [0.0, 0.0, 0.0] {
+                    sum.push(Vec3Expr::Gather3(
+                        FloatExpr::Literal(coalesce[0]),
+                        FloatExpr::Literal(coalesce[1]),
+                        FloatExpr::Literal(coalesce[2]),
+                    ))
+                }
+                sum.append(&mut flatten);
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                }
+            }
+        }
     }
 }
 impl Vec4Expr {
     fn simplify(&mut self) {
-        todo!()
+        match self {
+            Vec4Expr::Variable(_) => {}
+            Vec4Expr::Gather1(f) => {
+                f.simplify();
+                // Do I really want to do more here?
+            }
+            Vec4Expr::Gather4(f0, f1, f2, f3) => {
+                f0.simplify();
+                f1.simplify();
+                f2.simplify();
+                f3.simplify();
+                if f0 == f1 && f0 == f2 && f0 == f3 {
+                    *self = Vec4Expr::Gather1(f0.clone());
+                    return;
+                }
+                if let (
+                    FloatExpr::AccessVec4(v4_a, 0),
+                    FloatExpr::AccessVec4(v4_b, 1),
+                    FloatExpr::AccessVec4(v4_c, 2),
+                    FloatExpr::AccessVec4(v4_d, 3),
+                ) = (f0, f1, f2, f3) {
+                    if v4_a == v4_b && v4_a == v4_c && v4_a == v4_d {
+                        *self = *v4_a.clone();
+                        return;
+                    }
+                }
+            }
+            Vec4Expr::AccessMultiVecGroup(mve, idx) => {
+                mve.simplify();
+                let idx = *idx;
+                let mv = mve.mv_class;
+                if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
+                    let size = match &mut groups[idx as usize] {
+                        MultiVectorGroupExpr::JustFloat(_) => 1,
+                        MultiVectorGroupExpr::Vec2(_) => 2,
+                        MultiVectorGroupExpr::Vec3(_) => 3,
+                        MultiVectorGroupExpr::Vec4(v4) => {
+                            *self = v4.clone();
+                            4
+                        },
+                    };
+                    if size != 4 {
+                        panic!("Invalid expression detected: MultiVector group {idx} has size \
+                        {size}, but is used in a place where we expect size 4. {mv}")
+                    }
+                }
+            }
+            Vec4Expr::Product(product) => {
+                for p in product.iter_mut() {
+                    p.simplify();
+                    if let Vec4Expr::Gather1(FloatExpr::Literal(0.0)) = p {
+                        *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
+                        return;
+                    }
+                    if let Vec4Expr::Gather4(
+                        FloatExpr::Literal(0.0),
+                        FloatExpr::Literal(0.0),
+                        FloatExpr::Literal(0.0),
+                        FloatExpr::Literal(0.0)) = p {
+                        *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
+                        return;
+                    }
+                }
+                let mut coalesce = [1.0, 1.0, 1.0, 1.0];
+                let mut flatten = vec![];
+                product.retain_mut(|it| {
+                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] *= *f;
+                        coalesce[1] *= *f;
+                        coalesce[2] *= *f;
+                        coalesce[3] *= *f;
+                        false
+                    } else if let Vec4Expr::Gather4(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2),
+                        FloatExpr::Literal(f3)) = it {
+                        coalesce[0] *= *f0;
+                        coalesce[1] *= *f1;
+                        coalesce[2] *= *f2;
+                        coalesce[3] *= *f3;
+                        false
+                    } else if let Vec4Expr::Product(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] *= *f;
+                        coalesce[1] *= *f;
+                        coalesce[2] *= *f;
+                        coalesce[3] *= *f;
+                        false
+                    } else if let Vec4Expr::Gather4(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2),
+                        FloatExpr::Literal(f3)) = it {
+                        coalesce[0] *= *f0;
+                        coalesce[1] *= *f1;
+                        coalesce[2] *= *f2;
+                        coalesce[3] *= *f3;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != [1.0, 1.0, 1.0, 1.0] {
+                    product.push(Vec4Expr::Gather4(
+                        FloatExpr::Literal(coalesce[0]),
+                        FloatExpr::Literal(coalesce[1]),
+                        FloatExpr::Literal(coalesce[2]),
+                        FloatExpr::Literal(coalesce[3]),
+                    ))
+                }
+                product.append(&mut flatten);
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                }
+            }
+            Vec4Expr::Sum(sum) => {
+                for s in sum.iter_mut() {
+                    s.simplify();
+                }
+                let mut coalesce = [0.0, 0.0, 0.0, 0.0];
+                let mut flatten = vec![];
+                sum.retain_mut(|it| {
+                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] += *f;
+                        coalesce[1] += *f;
+                        coalesce[2] += *f;
+                        coalesce[3] += *f;
+                        false
+                    } else if let Vec4Expr::Gather4(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2),
+                        FloatExpr::Literal(f3)) = it {
+                        coalesce[0] += *f0;
+                        coalesce[1] += *f1;
+                        coalesce[2] += *f2;
+                        coalesce[3] += *f3;
+                        false
+                    } else if let Vec4Expr::Sum(ref mut p) = it {
+                        flatten.append(p);
+                        false
+                    } else {
+                        true
+                    }
+                });
+                flatten.retain(|it| {
+                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
+                        coalesce[0] += *f;
+                        coalesce[1] += *f;
+                        coalesce[2] += *f;
+                        coalesce[3] += *f;
+                        false
+                    } else if let Vec4Expr::Gather4(
+                        FloatExpr::Literal(f0),
+                        FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2),
+                        FloatExpr::Literal(f3)) = it {
+                        coalesce[0] += *f0;
+                        coalesce[1] += *f1;
+                        coalesce[2] += *f2;
+                        coalesce[3] += *f3;
+                        false
+                    } else {
+                        true
+                    }
+                });
+                if coalesce != [0.0, 0.0, 0.0, 0.0] {
+                    sum.push(Vec4Expr::Gather4(
+                        FloatExpr::Literal(coalesce[0]),
+                        FloatExpr::Literal(coalesce[1]),
+                        FloatExpr::Literal(coalesce[2]),
+                        FloatExpr::Literal(coalesce[3]),
+                    ))
+                }
+                sum.append(&mut flatten);
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                }
+            }
+        }
     }
 }
 impl MultiVectorGroupExpr {
     fn simplify(&mut self) {
-        todo!()
+        match self {
+            MultiVectorGroupExpr::JustFloat(f) => {
+                f.simplify();
+                if let FloatExpr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = f {
+                    if let MultiVectorVia::Construct(v) = expr.as_mut() {
+                        *self = v[idx].clone();
+                    }
+                }
+            }
+            MultiVectorGroupExpr::Vec2(v2) => {
+                v2.simplify();
+                if let Vec2Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v2 {
+                    if let MultiVectorVia::Construct(v) = expr.as_mut() {
+                        *self = v[idx].clone();
+                    }
+                }
+            }
+            MultiVectorGroupExpr::Vec3(v3) => {
+                v3.simplify();
+                if let Vec3Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v3 {
+                    if let MultiVectorVia::Construct(v) = expr.as_mut() {
+                        *self = v[idx].clone();
+                    }
+                }
+            }
+            MultiVectorGroupExpr::Vec4(v4) => {
+                v4.simplify();
+                if let Vec4Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v4 {
+                    if let MultiVectorVia::Construct(v) = expr.as_mut() {
+                        *self = v[idx].clone();
+                    }
+                }
+            }
+        }
     }
 }
 impl MultiVectorExpr {
     fn simplify(&mut self) {
-        todo!()
+        match &mut *self.expr {
+            MultiVectorVia::Variable(_) => {}
+            MultiVectorVia::Construct(groups) => {
+                for group in groups.iter_mut() {
+                    group.simplify();
+                }
+                let result = groups.iter()
+                    .map(|it| Some(it))
+                    .enumerate()
+                    .reduce(|(a_idx, a), (b_idx, b)| {
+                        match (a, b) {
+                            // TODO I think we might want to rework/inline MultiVectorGroupExpr
+                            (Some(Mu), Some(b)) => {
+                                (b_idx, None)
+                            }
+                            _ => (b_idx, None)
+                        }
+                    }).flatten();
+                todo!()
+            }
+            MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
+            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
+        }
     }
 }
 
