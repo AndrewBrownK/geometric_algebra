@@ -1794,18 +1794,29 @@ impl MultiVectorExpr {
                     group.simplify();
                 }
                 let result = groups.iter()
-                    .map(|it| Some(it))
                     .enumerate()
-                    .reduce(|(a_idx, a), (b_idx, b)| {
-                        match (a, b) {
-                            // TODO I think we might want to rework/inline MultiVectorGroupExpr
-                            (Some(Mu), Some(b)) => {
-                                (b_idx, None)
-                            }
-                            _ => (b_idx, None)
+                    .fold(None, |a, (b_idx, b)| {
+                        let mv_b = match b {
+                            MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
+                            MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
+                            MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
+                            MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv, idx)) if *idx as usize == b_idx => Some(mv),
+                            _ => None,
+                        };
+                        if b_idx == 0 {
+                            return mv_b;
                         }
-                    }).flatten();
-                todo!()
+                        let a = a?;
+                        let b = mv_b?;
+                        if a == b {
+                            Some(a)
+                        } else {
+                            None
+                        }
+                    });
+                if let Some(result) = result {
+                    *self = result.clone();
+                }
             }
             MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
             MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
