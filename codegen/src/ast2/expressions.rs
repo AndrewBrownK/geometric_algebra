@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::mem;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
-use either::Either;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::BasisElementGroup;
 use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
@@ -1013,6 +1012,35 @@ impl MultiVectorExpr {
     }
 }
 
+impl From<Variable<Float>> for FloatExpr {
+    fn from(value: Variable<Float>) -> Self {
+        FloatExpr::Variable(RawVariableInvocation {
+            decl: value.decl.clone(),
+        })
+    }
+}
+impl From<Variable<Vec2>> for Vec2Expr {
+    fn from(value: Variable<Vec2>) -> Self {
+        Vec2Expr::Variable(RawVariableInvocation {
+            decl: value.decl.clone(),
+        })
+    }
+}
+impl From<Variable<Vec3>> for Vec3Expr {
+    fn from(value: Variable<Vec3>) -> Self {
+        Vec3Expr::Variable(RawVariableInvocation {
+            decl: value.decl.clone(),
+        })
+    }
+}
+impl From<Variable<Vec4>> for Vec4Expr {
+    fn from(value: Variable<Vec4>) -> Self {
+        Vec4Expr::Variable(RawVariableInvocation {
+            decl: value.decl.clone(),
+        })
+    }
+}
+
 
 impl FloatExpr {
     fn simplify(&mut self) {
@@ -1750,7 +1778,7 @@ impl MultiVectorGroupExpr {
                 f.simplify();
                 if let FloatExpr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = f {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
-                        *self = v[idx].clone();
+                        *self = v[*idx as usize].clone();
                     }
                 }
             }
@@ -1758,7 +1786,7 @@ impl MultiVectorGroupExpr {
                 v2.simplify();
                 if let Vec2Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v2 {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
-                        *self = v[idx].clone();
+                        *self = v[*idx as usize].clone();
                     }
                 }
             }
@@ -1766,7 +1794,7 @@ impl MultiVectorGroupExpr {
                 v3.simplify();
                 if let Vec3Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v3 {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
-                        *self = v[idx].clone();
+                        *self = v[*idx as usize].clone();
                     }
                 }
             }
@@ -1774,7 +1802,7 @@ impl MultiVectorGroupExpr {
                 v4.simplify();
                 if let Vec4Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v4 {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
-                        *self = v[idx].clone();
+                        *self = v[*idx as usize].clone();
                     }
                 }
             }
@@ -1823,34 +1851,38 @@ impl MultiVectorExpr {
 
 
 // TODO implement arithmetic for things that can turn INTO FloatExpr, not FloatExpr directly. UGH.
-impl Add<FloatExpr> for FloatExpr {
+impl<FE: Into<FloatExpr>> Add<FE> for FloatExpr {
     type Output = FloatExpr;
 
-    fn add(self, rhs: FloatExpr) -> Self::Output {
+    fn add(self, rhs: FE) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = FloatExpr::Sum(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl AddAssign<FloatExpr> for FloatExpr {
-    fn add_assign(&mut self, rhs: FloatExpr) {
+impl<FE: Into<FloatExpr>> AddAssign<FE> for FloatExpr {
+    fn add_assign(&mut self, rhs: FE) {
+        let rhs = rhs.into();
         let mut x = FloatExpr::Literal(0.0);
         mem::swap(&mut x, self);
         *self = FloatExpr::Sum(vec![x, rhs]);
         self.simplify();
     }
 }
-impl Mul<FloatExpr> for FloatExpr {
+impl<FE: Into<FloatExpr>> Mul<FE> for FloatExpr {
     type Output = FloatExpr;
 
-    fn mul(self, rhs: FloatExpr) -> Self::Output {
+    fn mul(self, rhs: FE) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = FloatExpr::Product(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl MulAssign<FloatExpr> for FloatExpr {
-    fn mul_assign(&mut self, rhs: FloatExpr) {
+impl<FE: Into<FloatExpr>> MulAssign<FE> for FloatExpr {
+    fn mul_assign(&mut self, rhs: FE) {
+        let rhs = rhs.into();
         let mut x = FloatExpr::Literal(1.0);
         mem::swap(&mut x, self);
         *self = FloatExpr::Product(vec![x, rhs]);

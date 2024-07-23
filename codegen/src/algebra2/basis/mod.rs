@@ -711,6 +711,9 @@ impl BasisElement {
     }
 
     pub const fn left_complement(&self, anti_scalar: BasisElement) -> BasisElement {
+        if self.coefficient == 0 {
+            return BasisElement::zero();
+        }
         let mut rc = self.right_complement(anti_scalar);
 
         // let d = anti_scalar.grade();

@@ -62,7 +62,8 @@ impl Display for MultiVector {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let anti_scalar = self.anti_scalar;
         write!(f, "<{anti_scalar}> ")?;
-        self.multi_vec.fmt_for_macro(f)
+        let s = self.multi_vec.macro_expression();
+        write!(f, "{s}")
     }
 }
 

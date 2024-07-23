@@ -203,25 +203,29 @@ impl<const AntiScalar: BasisElement> Display for MultiVec<AntiScalar> {
 
 
 impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
-
-    pub fn fmt_for_macro(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    pub fn macro_expression(&self) -> String {
+        use std::fmt::Write;
         let n = self.name;
-        write!(f, "{n} as ")?;
+        let mut f = format!("{n} as ");
         let mut i = 0;
         while i < self.element_groups.len() {
             let group = self.element_groups.get(i).into_vec();
-            let group_separator = if i == 0 { "" } else { " | " };
-            write!(f, "{group_separator}")?;
+            if i > 0 {
+                write!(f, " | ").unwrap();
+            }
             let mut j = 0;
             while j < group.len() {
                 let el = group.get(j);
-                let comma = if j == 0 { "" } else { ", " };
-                write!(f, "{comma}{el}")?;
+                if j > 0 {
+                    write!(f, ", ").unwrap();
+                }
+                write!(f, "{}", el).unwrap();
                 j += 1;
             }
             i += 1;
         }
-        write!(f, ";")
+        write!(f, ";").unwrap();
+        f
     }
 
     pub fn elements(&self) -> Vec<BasisElement> {
@@ -557,27 +561,11 @@ fn test_construction() {
 }
 
 
-pub struct FallbackWasUsed(AtomSetOnce<Box<()>>);
-impl FallbackWasUsed {
-    pub fn new() -> Self {
-        FallbackWasUsed(AtomSetOnce::empty())
-    }
-
-    pub fn has_been_used(&self) -> bool {
-        !self.0.is_none(Ordering::AcqRel)
-    }
-
-    /// Returns true if you won the race
-    pub fn mark_used(&self) -> bool {
-        self.0.set_if_none(Box::new(()), Ordering::AcqRel).is_none()
-    }
-}
-
 
 pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     ga: Arc<GeometricAlgebra<AntiScalar>>,
     anti_scalar_sig: BasisSignature,
-    declared: Vec<&'static MultiVec<AntiScalar>>,
+    declared: Vec<(Grades, BTreeSet<BasisSignature>, &'static MultiVec<AntiScalar>)>,
 }
 
 impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
@@ -590,6 +578,8 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         let mut nb = ga.named_bases.write();
         let mut declared = vec![];
         for multi_vec in multi_vecs {
+            let mut grades = Grades::none;
+            let mut sig = BTreeSet::new();
             for el in multi_vec.elements() {
                 if !AntiScalar.signature().contains(el.signature()) {
                     panic!("Element does not fit in anti_scalar {AntiScalar}: {el} in {multi_vec}");
@@ -598,15 +588,31 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                     Ok(_) => {}
                     Err(err) => panic!("Could not accept BasisElement {el}: {err}"),
                 }
+                grades |= el.grades();
+                sig.insert(el.signature());
             }
-            declared.push(multi_vec);
+            declared.push((grades, sig, multi_vec));
         }
         drop(nb);
-        DeclareMultiVecs {
+        let mut slf = DeclareMultiVecs {
             ga,
             anti_scalar_sig: AntiScalar.signature(),
             declared,
-        }
+        };
+        slf.sort_declarations();
+        slf
+    }
+
+    fn sort_declarations(&mut self) {
+        self.declared.sort_unstable_by(|(a_grade, a_sig, a_mv), (b_grade, b_sig, b_mv)| {
+            a_grade.cmp(b_grade).then_with(|| {
+                a_sig.len().cmp(&b_sig.len()).then_with(|| {
+                    a_sig.cmp(b_sig).then_with(|| {
+                        a_mv.name.cmp(b_mv.name)
+                    })
+                })
+            })
+        });
     }
 
     pub fn new(ga: Arc<GeometricAlgebra<AntiScalar>>) -> Self {
@@ -631,8 +637,6 @@ pub struct MultiVecRepository<const AntiScalar: BasisElement> {
     uniform_grade_groups: BTreeMap<BasisSignature, Vec<&'static BasisElementGroup>>,
     mixed_grade_groups: BTreeMap<(BasisSignature, Grades), Vec<&'static BasisElementGroup>>,
 
-    fallback: Vec<(FallbackWasUsed, &'static MultiVec<AntiScalar>)>,
-
     // TODO I might need a MultiVecSignature type thing here instead of named MultiVec
     wanted: Mutex<Vec<(&'static MultiVec<AntiScalar>, Vec<Arc<RawTraitImplementation>>)>>,
     strongly_wanted: Mutex<Vec<(&'static MultiVec<AntiScalar>, Vec<Arc<RawTraitImplementation>>)>>,
@@ -655,7 +659,6 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             declarations,
             uniform_grade_groups: Default::default(),
             mixed_grade_groups: Default::default(),
-            fallback: vec![],
             wanted: Default::default(),
             strongly_wanted: Default::default(),
         };
@@ -663,17 +666,17 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         // Generate fallback types.
         let all_elements: Vec<_> = ga.all_elements().map(|el| ga.name_and_sign_out(el)).collect();
 
-        // TODO don't actually include fallbacks for MultiVecs that are already declared.
-        //  in other words, check which MultiVecs are needed pre-emptively, not lazily.
-        //  Necessary for all_classes() to know what to include and not include.
-        //  Might not even need a second separate fallback field. All declarations are just
-        //  declarations.
-
         use crate::algebra2::basis::elements::*;
-        mvr.fallback(MultiVec::<AntiScalar>::new("Scalar", [scalar]));
-        mvr.fallback(MultiVec::<AntiScalar>::new("AntiScalar", [AntiScalar]));
-        mvr.fallback(MultiVec::<AntiScalar>::new("DualNum", [scalar, AntiScalar]));
-        mvr.fallback(MultiVec::<AntiScalar>::new("MultiVector", all_elements.clone()));
+        let mut has_fell_back = false;
+        mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("Scalar", [scalar]));
+        mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("AntiScalar", [AntiScalar]));
+        mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new_by_groups("DualNum", {
+            let mut cv = ConstVec::new();
+            cv.push(BasisElementGroup::G2(scalar, AntiScalar));
+            cv
+        }));
+        // TODO reuse existing groups to create MultiVector.
+        mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("MultiVector", all_elements.clone()));
 
         // 1..AntiScalar.grade() skips scalar and anti_scalar (since we already added them)
         for gr in 1..AntiScalar.grade() {
@@ -700,46 +703,113 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 // This isn't possible because max grade of AntiScalar is 16
                 _ => unreachable!("MultiVecs of D<0 or D>16 are not supported"),
             };
-            mvr.fallback(mv);
+            mvr.fallback(&mut has_fell_back, mv);
         }
-
+        mvr.declarations.sort_declarations();
         Arc::new(mvr)
     }
 
-    fn fallback(&mut self, multi_vec: MultiVec<AntiScalar>) {
-        self.fallback.push((
-            FallbackWasUsed::new(),
-            Box::leak(Box::new(multi_vec))
-        ));
+    fn fallback(&mut self, has_fell_back: &mut bool, multi_vec: MultiVec<AntiScalar>) {
+        let mut signature = BTreeSet::new();
+        let mut grades = Grades::none;
+        for el in multi_vec.elements().iter() {
+            grades |= el.grades();
+            signature.insert(el.signature());
+        }
+        let idx = self.declarations.declared.binary_search_by(|(gr, sig, mv)| {
+            match gr.cmp(&grades) {
+                std::cmp::Ordering::Less => return std::cmp::Ordering::Less,
+                std::cmp::Ordering::Greater => return std::cmp::Ordering::Greater,
+                std::cmp::Ordering::Equal => {}
+            }
+            if sig.eq(&signature) {
+                return std::cmp::Ordering::Equal;
+            }
+            sig.len().cmp(&signature.len()).then_with(|| {
+                sig.cmp(&signature).then_with(|| {
+                    mv.name.cmp(multi_vec.name)
+                })
+            })
+        });
+        let Err(insert_idx) = idx else { return };
+        let nice_declaration = multi_vec.macro_expression();
+        if !*has_fell_back {
+            println!("// Required MultiVecs were implicitly declared:");
+            *has_fell_back = true;
+        }
+        println!("{nice_declaration}");
+        self.declarations.declared.insert(insert_idx, (grades, signature, Box::leak(Box::new(multi_vec))));
     }
 
     pub fn scalar(&self) -> &'static MultiVec<AntiScalar> {
-        todo!()
+        let signature = BTreeSet::from([BasisSignature::scalar]);
+        self.get_exact(signature).expect("Scalar should always be declared (if not explicitly, then implicitly)")
     }
 
     pub fn anti_scalar(&self) -> &'static MultiVec<AntiScalar> {
-        todo!()
+        let signature = BTreeSet::from([AntiScalar.signature()]);
+        self.get_exact(signature).expect("AntiScalar should always be declared (if not explicitly, then implicitly)")
+    }
+
+    pub fn dual_num(&self) -> &'static MultiVec<AntiScalar> {
+        let signature = BTreeSet::from([BasisSignature::scalar, AntiScalar.signature()]);
+        self.get_exact(signature).expect("DualNum should always be declared (if not explicitly, then implicitly)")
     }
 
     pub fn full_multi_vector(&self) -> &'static MultiVec<AntiScalar> {
-        todo!()
+        // Maximum filled grades is sorted to the end,
+        // then sorted by signatures lengths,
+        // so the full multivector can only be at the end.
+        self.declarations.declared.last().expect("Full MultiVec is always declared").2
     }
 
     pub fn get_at_least(&self, signature: BTreeSet<BasisSignature>) -> &'static MultiVec<AntiScalar> {
-        todo!()
+        let mut grades = Grades::none;
+        for sig in signature.iter() {
+            grades |= Grades::from_sig(*sig);
+        }
+        let grades = grades;
+
+        let mut result = self.declarations.declared.last().expect("Full MultiVec is always declared");
+        for tuple in self.declarations.declared.iter() {
+            let (gr, sig, _) = tuple;
+            if !gr.contains(grades) {
+                continue;
+            }
+            if !sig.is_superset(&signature) {
+                continue
+            }
+            if result.0.into_bits().count_ones() > gr.into_bits().count_ones() {
+                result = tuple;
+                continue
+            }
+            if result.1.len() > sig.len() {
+                result = tuple;
+            }
+        }
+        result.2
     }
 
     pub fn get_exact(&self, signature: BTreeSet<BasisSignature>) -> Option<&'static MultiVec<AntiScalar>> {
-        todo!()
+        let mut grades = Grades::none;
+        for sig in signature.iter() {
+            grades |= Grades::from_sig(*sig);
+        }
+        let thing = self.declarations.declared.binary_search_by(|(gr, sig, mv)| {
+            gr.cmp(&grades).then_with(|| {
+                sig.len().cmp(&signature.len()).then_with(|| {
+                    sig.cmp(&signature)
+                })
+            })
+        }).ok()?;
+        let mv = self.declarations.declared.get(thing)?.2;
+        Some(mv)
     }
 
     pub fn all_classes(&self) -> impl Iterator<Item=&'static MultiVec<AntiScalar>> {
         let mut v = vec![];
         for mv in self.declarations.declared.iter() {
-            v.push(*mv);
-        }
-        for (_, mv) in self.fallback.iter() {
-            v.push(*mv);
+            v.push(mv.2);
         }
         v.into_iter()
     }
@@ -767,22 +837,40 @@ impl DynamicMultiVector {
         if self.vals.is_empty() {
             return None;
         }
-        let keys = self.vals.keys().map(|el| el.signature()).collect();
+        let mut vals = BTreeMap::new();
+        for (el, mut f) in self.vals.into_iter() {
+            // TODO test if this is proper handling of sign and names
+            let s = el.coefficient();
+            let el = repo.ga().name_and_sign_out(el);
+            if el.coefficient() != s {
+                f = -f;
+            }
+            vals.insert(el, f);
+        }
+        let keys = vals.keys().map(|el| el.signature()).collect();
         let mv = repo.get_at_least(keys);
         let mv = MultiVector::from(mv);
-        // TODO properly handle BasisElement sign mismatch, and also infect element names
-        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
+        Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 
     pub fn construct_exact<const AntiScalar: BasisElement>(mut self, repo: &MultiVecRepository<AntiScalar>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
-        let keys = self.vals.keys().map(|el| el.signature()).collect();
+        let mut vals = BTreeMap::new();
+        for (el, mut f) in self.vals.into_iter() {
+            // TODO test if this is proper handling of sign and names
+            let s = el.coefficient();
+            let el = repo.ga().name_and_sign_out(el);
+            if el.coefficient() != s {
+                f = -f;
+            }
+            vals.insert(el, f);
+        }
+        let keys = vals.keys().map(|el| el.signature()).collect();
         let mv = repo.get_exact(keys)?;
         let mv = MultiVector::from(mv);
-        // TODO properly handle BasisElement sign mismatch, and also infect element names
-        Some(mv.construct(|el| self.vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
+        Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 }
 impl AddAssign<(FloatExpr, BasisElement)> for DynamicMultiVector {

@@ -365,7 +365,8 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            todo!()
+            // TODO actual implementation
+            b.return_expr(slf)
         }
     }
 
@@ -381,7 +382,8 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            todo!()
+            // TODO actual implementation
+            b.return_expr(slf)
         }
     }
 
@@ -397,7 +399,8 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            todo!()
+            // TODO actual implementation
+            b.return_expr(slf)
         }
     }
 
@@ -413,7 +416,8 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            todo!()
+            // TODO actual implementation
+            b.return_expr(slf)
         }
     }
 
