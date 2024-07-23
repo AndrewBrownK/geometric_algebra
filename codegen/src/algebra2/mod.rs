@@ -129,6 +129,16 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         self.name_out(self.repo.apply_anti_metric(a))
     }
 
+    pub fn dual(&self, a: BasisElement) -> BasisElement {
+        let a = self.name_in(a);
+        self.name_out(self.repo.apply_metric(a).right_complement(AntiScalar))
+    }
+
+    pub fn anti_dual(&self, a: BasisElement) -> BasisElement {
+        let a = self.name_in(a);
+        self.name_out(self.repo.apply_metric(a).right_complement(AntiScalar))
+    }
+
     fn internalize_element_names(&self, mv: &MultiVec<AntiScalar>) {
 
         for el in MultiVec::<AntiScalar>::elements(&mv).into_iter() {

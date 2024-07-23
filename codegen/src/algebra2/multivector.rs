@@ -576,6 +576,7 @@ pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     ga: Arc<GeometricAlgebra<AntiScalar>>,
     anti_scalar_sig: BasisSignature,
     declared: Vec<(Grades, BTreeSet<BasisSignature>, &'static MultiVec<AntiScalar>)>,
+    unique_names: BTreeSet<&'static str>,
 }
 
 impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
@@ -591,11 +592,15 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             }
             unique_names.insert(n);
         }
-        drop(unique_names);
 
         let mut nb = ga.named_bases.write();
         let mut declared = vec![];
+        if !multi_vecs.is_empty() {
+            println!("\n// Manually Specified MultiVecs:");
+        }
         for multi_vec in multi_vecs {
+            let nice = multi_vec.macro_expression();
+            println!("{nice}");
             let mut grades = Grades::none;
             let mut sig = BTreeSet::new();
             for el in multi_vec.elements() {
@@ -616,6 +621,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             ga,
             anti_scalar_sig: AntiScalar.signature(),
             declared,
+            unique_names,
         };
         slf.sort_declarations();
         slf
@@ -639,6 +645,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             ga,
             anti_scalar_sig: anti_scalar.signature(),
             declared: vec![],
+            unique_names: BTreeSet::new(),
         }
     }
 
@@ -646,7 +653,145 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         MultiVecRepository::new(self)
     }
 
-    // TODO some methods to dynamically generate some MultiVecs e.g. OnOrigin or AtInfinity variants
+    pub fn variants<
+        S1: Into<String>, S2: Into<String>,
+        F1: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool, F2: Fn(BasisSignature) -> bool, F3: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool,
+    >(
+        &mut self, prefix: S1, suffix: S2, filter_multi_vecs: F1, filter_elements: F2, filter_out: F3
+    ) {
+        let mut add_these = vec![];
+        let prefix = prefix.into();
+        let suffix = suffix.into();
+        for (gr, sigs, mv) in self.declared.iter() {
+            if !filter_multi_vecs(gr, sigs) {
+                continue;
+            }
+            let old_name = mv.name;
+            let new_name = format!("{prefix}{old_name}{suffix}");
+            let mut did_filter_out_some = false;
+            let mut new_groups = ConstVec::new();
+            let mut new_grades = Grades::none;
+            let mut new_sigs = BTreeSet::new();
+            for mvg in mv.element_groups.clone().into_iter() {
+                let mut cv = ConstVec::new();
+                for el in mvg.into_vec() {
+                    if filter_elements(el.signature()) {
+                        new_grades |= el.grades();
+                        new_sigs.insert(el.signature());
+                        cv.push(el);
+                    } else {
+                        did_filter_out_some = true;
+                    }
+                }
+                if cv.len() > 0 {
+                    new_groups.push(BasisElementGroup::from_vec(cv));
+                }
+            }
+            if !did_filter_out_some || new_sigs.is_empty() || !filter_out(&new_grades, &new_sigs) {
+                continue;
+            }
+            add_these.push((new_grades, new_sigs, new_name, new_groups));
+        }
+
+        let mut intro = false;
+        for (new_grades, new_sigs, new_name, new_groups) in add_these.into_iter() {
+            let idx = self.declared.binary_search_by(|(gr, sig, mv)| {
+                gr.cmp(&new_grades).then_with(|| {
+                    sig.len().cmp(&new_sigs.len()).then_with(|| {
+                        sig.cmp(&new_sigs)
+                    })
+                })
+            });
+            let idx = match idx {
+                Ok(_) => {
+                    // already exists
+                    continue
+                }
+                Err(idx) => idx,
+            };
+            if self.unique_names.contains(new_name.as_str()) {
+                // A panic might seem extreme, but the fact that this
+                // implies semantic ambiguity feels very important.
+                panic!("The generated variant {new_name} conflicts with an existing MultiVec of \
+                    the same name but different signature.");
+                // eprintln!("The generated variant {new_name} conflicts with an existing MultiVec \
+                //     of the same name but different signature.");
+                // continue;
+            }
+            if !intro {
+                println!("\n// Variants: {prefix}{{Vector}}{suffix}");
+                intro = true;
+            }
+
+            let new_name = Box::leak(new_name.into_boxed_str());
+            self.unique_names.insert(new_name);
+            let new_mv = MultiVec::<AntiScalar>::new_by_groups(new_name, new_groups);
+            let new_mv = Box::leak(Box::new(new_mv));
+            let nice = new_mv.macro_expression();
+            println!("{nice}");
+            self.declared.insert(idx, (new_grades, new_sigs, new_mv));
+        }
+    }
+
+    pub fn generate_missing_duals(&mut self) {
+        let mut add_these = vec![];
+        for (_, _, mv) in self.declared.iter() {
+            let old_name = mv.name;
+            let new_name = format!("Anti{old_name}");
+            let mut new_groups = ConstVec::new();
+            let mut new_grades = Grades::none;
+            let mut new_sigs = BTreeSet::new();
+            for mvg in mv.element_groups.clone().into_iter() {
+                let mut cv = ConstVec::new();
+                for el in mvg.into_vec() {
+                    let d = self.ga.name_and_sign_out(self.ga.dual(el));
+                    new_grades |= d.grades();
+                    new_sigs.insert(d.signature());
+                    cv.push(d);
+                }
+                new_groups.push(BasisElementGroup::from_vec(cv));
+            }
+            add_these.push((new_grades, new_sigs, new_name, new_groups));
+        }
+
+        let mut intro = false;
+        for (new_grades, new_sigs, new_name, new_groups) in add_these.into_iter() {
+            let idx = self.declared.binary_search_by(|(gr, sig, mv)| {
+                gr.cmp(&new_grades).then_with(|| {
+                    sig.len().cmp(&new_sigs.len()).then_with(|| {
+                        sig.cmp(&new_sigs)
+                    })
+                })
+            });
+            let idx = match idx {
+                Ok(_) => {
+                    // already exists
+                    continue
+                }
+                Err(idx) => idx,
+            };
+            if self.unique_names.contains(new_name.as_str()) {
+                // A panic might seem extreme, but the fact that this
+                // implies semantic ambiguity feels very important.
+                panic!("The generated variant {new_name} conflicts with an existing MultiVec of \
+                    the same name but different signature.");
+                // eprintln!("The generated variant {new_name} conflicts with an existing MultiVec \
+                //     of the same name but different signature.");
+                // continue;
+            }
+            if !intro {
+                println!("\n// Variants: Anti{{Vector}}");
+                intro = true;
+            }
+            let new_name = Box::leak(new_name.into_boxed_str());
+            self.unique_names.insert(new_name);
+            let new_mv = MultiVec::<AntiScalar>::new_by_groups(new_name, new_groups);
+            let new_mv = Box::leak(Box::new(new_mv));
+            let nice = new_mv.macro_expression();
+            println!("{nice}");
+            self.declared.insert(idx, (new_grades, new_sigs, new_mv));
+        }
+    }
 }
 
 
@@ -853,7 +998,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         }
         let nice_declaration = multi_vec.macro_expression();
         if !*has_fell_back {
-            println!("// Required MultiVecs were implicitly declared:");
+            println!("\n// Required MultiVecs were generated:");
             *has_fell_back = true;
         }
         println!("{nice_declaration}");
