@@ -47,8 +47,7 @@ pub fn cga3d_script() {
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
     );
-    let mut declarations = register_multi_vecs(cga3d.clone());
-    let repo = generate_variants(declarations);
+    let repo = generate_variants(register_multi_vecs(cga3d));
     let traits = register_all! { repo;
         Plane_BulkExpansion_Plane
         |
@@ -62,6 +61,7 @@ pub fn cga3d_script() {
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
+    use crate::algebra2::basis::elements::*;
 
     let origin = e4.signature();
     let infinity = e5.signature();
