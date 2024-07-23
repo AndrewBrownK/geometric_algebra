@@ -220,7 +220,7 @@ mod impls {
                     dyn_mv += (a * b, a_el.wedge(b_el));
                 }
             }
-            let mv = dyn_mv.construct(&b.mvs)?;
+            let mv = dyn_mv.construct(&b)?;
             b.return_expr(mv)
         }
     }
@@ -244,7 +244,7 @@ mod impls {
                     dyn_mv += (a * b, a_el.anti_wedge(b_el, AntiScalar));
                 }
             }
-            let mv = dyn_mv.construct(&b.mvs)?;
+            let mv = dyn_mv.construct(&b)?;
             b.return_expr(mv)
         }
     }
@@ -274,7 +274,7 @@ mod impls {
                     }
                 }
             }
-            let mv = dyn_mv.construct(&b.mvs)?;
+            let mv = dyn_mv.construct(&b)?;
             b.return_expr(mv)
         }
     }
@@ -304,7 +304,7 @@ mod impls {
                     }
                 }
             }
-            let mv = dyn_mv.construct(&b.mvs)?;
+            let mv = dyn_mv.construct(&b)?;
             b.return_expr(mv)
         }
     }
@@ -326,7 +326,7 @@ mod impls {
                     dyn_mv += (a, a_el);
                 }
             }
-            let mv = dyn_mv.construct(&b.mvs)?;
+            let mv = dyn_mv.construct(&b)?;
             b.return_expr(mv)
         }
     }
@@ -348,7 +348,7 @@ mod impls {
                     dyn_mv += (a, a_el);
                 }
             }
-            let mv = dyn_mv.construct(&b.mvs)?;
+            let mv = dyn_mv.construct(&b)?;
             b.return_expr(mv)
         }
     }

@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::AddAssign;
 use std::sync::Arc;
@@ -16,7 +16,7 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr};
-use crate::ast2::traits::RawTraitImplementation;
+use crate::ast2::traits::{HasNotReturned, RawTraitDefinition, RawTraitImplementation, TraitImplBuilder};
 use crate::utility::ConstVec;
 
 // We COULD use { qty_groups(AntiScalar) } everywhere to specify the size of
@@ -573,7 +573,15 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         ga: Arc<GeometricAlgebra<AntiScalar>>,
         multi_vecs: [&'static MultiVec<AntiScalar>; N],
     ) -> Self {
-        // TODO disallow duplicated multivector names
+        let mut unique_names = BTreeSet::new();
+        for mv in multi_vecs.iter() {
+            let n = mv.name;
+            if unique_names.contains(n) {
+                panic!("MultiVec names must be unique, but this one shows up multiple times: {n}");
+            }
+            unique_names.insert(n);
+        }
+        drop(unique_names);
 
         let mut nb = ga.named_bases.write();
         let mut declared = vec![];
@@ -636,10 +644,8 @@ pub struct MultiVecRepository<const AntiScalar: BasisElement> {
     declarations: DeclareMultiVecs<AntiScalar>,
     uniform_grade_groups: BTreeMap<BasisSignature, Vec<&'static BasisElementGroup>>,
     mixed_grade_groups: BTreeMap<(BasisSignature, Grades), Vec<&'static BasisElementGroup>>,
-
-    // TODO I might need a MultiVecSignature type thing here instead of named MultiVec
-    wanted: Mutex<Vec<(&'static MultiVec<AntiScalar>, Vec<Arc<RawTraitImplementation>>)>>,
-    strongly_wanted: Mutex<Vec<(&'static MultiVec<AntiScalar>, Vec<Arc<RawTraitImplementation>>)>>,
+    wanted: Mutex<HashMap<BTreeSet<BasisSignature>, Vec<Arc<RawTraitImplementation>>>>,
+    strongly_wanted: Mutex<HashMap<BTreeSet<BasisSignature>, Vec<Arc<RawTraitDefinition>>>>,
 }
 
 
@@ -743,17 +749,17 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
 
     pub fn scalar(&self) -> &'static MultiVec<AntiScalar> {
         let signature = BTreeSet::from([BasisSignature::scalar]);
-        self.get_exact(signature).expect("Scalar should always be declared (if not explicitly, then implicitly)")
+        self.get_exact(&signature).expect("Scalar should always be declared (if not explicitly, then implicitly)")
     }
 
     pub fn anti_scalar(&self) -> &'static MultiVec<AntiScalar> {
         let signature = BTreeSet::from([AntiScalar.signature()]);
-        self.get_exact(signature).expect("AntiScalar should always be declared (if not explicitly, then implicitly)")
+        self.get_exact(&signature).expect("AntiScalar should always be declared (if not explicitly, then implicitly)")
     }
 
     pub fn dual_num(&self) -> &'static MultiVec<AntiScalar> {
         let signature = BTreeSet::from([BasisSignature::scalar, AntiScalar.signature()]);
-        self.get_exact(signature).expect("DualNum should always be declared (if not explicitly, then implicitly)")
+        self.get_exact(&signature).expect("DualNum should always be declared (if not explicitly, then implicitly)")
     }
 
     pub fn full_multi_vector(&self) -> &'static MultiVec<AntiScalar> {
@@ -763,7 +769,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         self.declarations.declared.last().expect("Full MultiVec is always declared").2
     }
 
-    pub fn get_at_least(&self, signature: BTreeSet<BasisSignature>) -> &'static MultiVec<AntiScalar> {
+    pub(crate) fn get_at_least(&self, signature: &BTreeSet<BasisSignature>) -> (&'static MultiVec<AntiScalar>, bool) {
         let mut grades = Grades::none;
         for sig in signature.iter() {
             grades |= Grades::from_sig(*sig);
@@ -776,8 +782,11 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             if !gr.contains(grades) {
                 continue;
             }
-            if !sig.is_superset(&signature) {
+            if !sig.is_superset(signature) {
                 continue
+            }
+            if sig.len() == signature.len() {
+                return (result.2, true);
             }
             if result.0.into_bits().count_ones() > gr.into_bits().count_ones() {
                 result = tuple;
@@ -787,10 +796,10 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 result = tuple;
             }
         }
-        result.2
+        (result.2, false)
     }
 
-    pub fn get_exact(&self, signature: BTreeSet<BasisSignature>) -> Option<&'static MultiVec<AntiScalar>> {
+    pub(crate) fn get_exact(&self, signature: &BTreeSet<BasisSignature>) -> Option<&'static MultiVec<AntiScalar>> {
         let mut grades = Grades::none;
         for sig in signature.iter() {
             grades |= Grades::from_sig(*sig);
@@ -798,7 +807,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         let thing = self.declarations.declared.binary_search_by(|(gr, sig, mv)| {
             gr.cmp(&grades).then_with(|| {
                 sig.len().cmp(&signature.len()).then_with(|| {
-                    sig.cmp(&signature)
+                    sig.cmp(signature)
                 })
             })
         }).ok()?;
@@ -812,6 +821,22 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             v.push(mv.2);
         }
         v.into_iter()
+    }
+
+    pub(crate) fn note_wanted(&self, sig: BTreeSet<BasisSignature>, ti: Arc<RawTraitImplementation>) {
+        let mut w = self.wanted.lock();
+        let ti2 = ti.clone();
+        w.entry(sig)
+            .and_modify(move |v| v.push(ti2))
+            .or_insert(vec![ti]);
+    }
+
+    pub(crate) fn note_strongly_wanted(&self, sig: BTreeSet<BasisSignature>, td: Arc<RawTraitDefinition>) {
+        let mut w = self.strongly_wanted.lock();
+        let td2 = td.clone();
+        w.entry(sig)
+            .and_modify(move |v| v.push(td2))
+            .or_insert(vec![td]);
     }
 }
 
@@ -833,10 +858,11 @@ impl DynamicMultiVector {
         g
     }
 
-    pub fn construct<const AntiScalar: BasisElement>(mut self, repo: &MultiVecRepository<AntiScalar>) -> Option<MultiVectorExpr> {
+    pub fn construct<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
+        let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
         for (el, mut f) in self.vals.into_iter() {
             // TODO test if this is proper handling of sign and names
@@ -848,15 +874,19 @@ impl DynamicMultiVector {
             vals.insert(el, f);
         }
         let keys = vals.keys().map(|el| el.signature()).collect();
-        let mv = repo.get_at_least(keys);
+        let (mv, exact) = repo.get_at_least(&keys);
+        if !exact {
+            b.note_wanted(keys)
+        }
         let mv = MultiVector::from(mv);
         Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 
-    pub fn construct_exact<const AntiScalar: BasisElement>(mut self, repo: &MultiVecRepository<AntiScalar>) -> Option<MultiVectorExpr> {
+    pub fn construct_exact<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
+        let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
         for (el, mut f) in self.vals.into_iter() {
             // TODO test if this is proper handling of sign and names
@@ -868,7 +898,11 @@ impl DynamicMultiVector {
             vals.insert(el, f);
         }
         let keys = vals.keys().map(|el| el.signature()).collect();
-        let mv = repo.get_exact(keys)?;
+        let mv = repo.get_exact(&keys);
+        let Some(mv) = mv else {
+            b.mvs.note_strongly_wanted(keys, b.trait_def.clone());
+            return None;
+        };
         let mv = MultiVector::from(mv);
         Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }

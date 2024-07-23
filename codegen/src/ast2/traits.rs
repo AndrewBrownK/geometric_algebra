@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -9,12 +9,12 @@ use lazy_static::lazy_static;
 use parking_lot::{Mutex, RwLock};
 use regex::Regex;
 use tokio::task::JoinSet;
-use crate::algebra2::basis::BasisElement;
+use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::GeometricAlgebra;
-use crate::algebra2::multivector::MultiVecRepository;
+use crate::algebra2::multivector::{DynamicMultiVector, MultiVecRepository};
 use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{AnyClasses, ClassesFromRegistry, ExpressionType, MultiVector};
-use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, TraitResultType};
+use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, FloatExpr, MultiVectorExpr, TraitResultType};
 use crate::ast2::impls::Elaborated;
 use crate::utility::AsyncMap;
 
@@ -1083,7 +1083,7 @@ pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     pub mvs: Arc<MultiVecRepository<AntiScalar>>,
     // TODO statistics tracker for fun
     registry: TraitImplRegistry,
-    trait_def: Arc<RawTraitDefinition>,
+    pub(crate) trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
     specialized: bool,
 
@@ -1092,6 +1092,7 @@ pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
+    wanted_multi_vecs: Mutex<HashSet<BTreeSet<BasisSignature>>>,
 
     variables: Arc<Mutex<HashMap<(String, usize), Arc<RawVariableDeclaration>>>>,
     lines: Vec<CommentOrVariableDeclaration>,
@@ -1122,6 +1123,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             traits11_dependencies: Default::default(),
             traits21_dependencies: Default::default(),
             traits22_dependencies: Default::default(),
+            wanted_multi_vecs: Default::default(),
             variables,
             lines: vec![],
             return_comment: None,
@@ -1217,6 +1219,18 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         self.comment_return_impl(Some(comment), expr)
     }
 
+    pub fn construct(&self, dynamic_multi_vector: DynamicMultiVector) -> Option<MultiVectorExpr> {
+        dynamic_multi_vector.construct(&self)
+    }
+
+    pub fn construct_exact(&self, dynamic_multi_vector: DynamicMultiVector) -> Option<MultiVectorExpr> {
+        dynamic_multi_vector.construct_exact(&self)
+    }
+
+    pub(crate) fn note_wanted(&self, sig: BTreeSet<BasisSignature>) {
+        self.wanted_multi_vecs.lock().insert(sig);
+    }
+
     fn comment_return_impl<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: Option<C>, expr: Expr
     ) -> Option<TraitImplBuilder<AntiScalar, ExprType>> {
@@ -1233,6 +1247,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
             traits22_dependencies: self.traits22_dependencies,
+            wanted_multi_vecs: self.wanted_multi_vecs,
             variables: self.variables,
             lines: self.lines,
             return_comment: comment.map(|it| it.into()),
@@ -1394,7 +1409,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     fn into_trait10(
         self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        return Arc::new(RawTraitImplementation {
+        let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -1410,12 +1425,17 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
             specialized: self.specialized,
         });
+        let w = self.wanted_multi_vecs.into_inner();
+        for mv in w {
+            self.mvs.note_wanted(mv, ti.clone());
+        }
+        return ti;
     }
 
     fn into_trait11(
         self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        return Arc::new(RawTraitImplementation {
+        let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -1431,12 +1451,17 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
             specialized: self.specialized,
         });
+        let w = self.wanted_multi_vecs.into_inner();
+        for mv in w {
+            self.mvs.note_wanted(mv, ti.clone());
+        }
+        return ti;
     }
 
     fn into_trait21(
         self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        return Arc::new(RawTraitImplementation {
+        let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -1452,12 +1477,17 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
             specialized: self.specialized,
         });
+        let w = self.wanted_multi_vecs.into_inner();
+        for mv in w {
+            self.mvs.note_wanted(mv, ti.clone());
+        }
+        return ti;
     }
 
     fn into_trait22(
         self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
-        let the_impl = Arc::new(RawTraitImplementation {
+        let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
@@ -1473,9 +1503,11 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
             specialized: self.specialized,
         });
-        // TODO record wanted MultiVecs
-        // self.
-        return the_impl;
+        let w = self.wanted_multi_vecs.into_inner();
+        for mv in w {
+            self.mvs.note_wanted(mv, ti.clone());
+        }
+        return ti;
     }
 }
 

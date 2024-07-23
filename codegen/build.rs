@@ -28,7 +28,6 @@ fn generate_multi_bases() {
 
     // 8 dimensions -> 255 elements
     let mut max = u8::MAX as u16;
-    //TODO not seeing the results of this flag yet.
     if cfg!(feature = "large-basis-elements") {
         // 12 dimensions -> 4095 elements
         max = (1u16 << 12) - 1;
