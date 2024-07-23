@@ -848,7 +848,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         }
 
         // Generate fallback types.
-        let all_elements: Vec<_> = ga.all_elements().map(|el| ga.name_and_sign_out(el)).collect();
+        let all_elements: Vec<_> = ga.all_elements().map(|el| ga.fix_name_and_sign(el).1).collect();
 
         use crate::algebra2::basis::elements::*;
         let mut has_fell_back = false;
@@ -1142,16 +1142,12 @@ impl DynamicMultiVector {
                 FloatExpr::Sum(v) if v.is_empty() => continue,
                 _ => {}
             }
-            let preferred_sign = repo.ga().name_and_sign_out(el).coefficient();
-            if preferred_sign == 0 {
-                continue
+            let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
+            if fix_f == 0.0 {
+                continue;
             }
-            el = repo.ga().name_out(el);
-            let sign = el.coefficient();
-            if sign != preferred_sign {
-                el = el.set_coefficient(preferred_sign / sign);
-                f = f * FloatExpr::Literal((sign as f32) / (preferred_sign as f32))
-            }
+            f = f * fix_f;
+            el = fix_el;
             vals.insert(el, f);
         }
         let keys = vals.keys().map(|el| el.signature()).collect();
@@ -1182,16 +1178,12 @@ impl DynamicMultiVector {
                 FloatExpr::Sum(v) if v.is_empty() => continue,
                 _ => {}
             }
-            let preferred_sign = repo.ga().name_and_sign_out(el).coefficient();
-            if preferred_sign == 0 {
-                continue
+            let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
+            if fix_f == 0.0 {
+                continue;
             }
-            el = repo.ga().name_out(el);
-            let sign = el.coefficient();
-            if sign != preferred_sign {
-                el = el.set_coefficient(preferred_sign / sign);
-                f = f * FloatExpr::Literal((sign as f32) / (preferred_sign as f32))
-            }
+            f = f * fix_f;
+            el = fix_el;
             vals.insert(el, f);
         }
         let keys = vals.keys().map(|el| el.signature()).collect();
@@ -1204,13 +1196,13 @@ impl DynamicMultiVector {
         Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 }
-impl AddAssign<(FloatExpr, BasisElement)> for DynamicMultiVector {
-    fn add_assign(&mut self, rhs: (FloatExpr, BasisElement)) {
+impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
+    fn add_assign(&mut self, rhs: (FE, BasisElement)) {
         if rhs.1.coefficient() == 0 {
             return
         }
         let mut thing = self.vals.entry(rhs.1).or_insert(FloatExpr::Literal(0.0));
-        thing.add_assign(rhs.0);
+        thing.add_assign(rhs.0.into());
         if let FloatExpr::Literal(0.0) = thing {
             self.vals.remove(&rhs.1);
         }

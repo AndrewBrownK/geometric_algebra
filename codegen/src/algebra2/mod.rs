@@ -1,4 +1,5 @@
 use std::marker::PhantomData;
+use std::ops::MulAssign;
 use std::sync::Arc;
 
 use parking_lot::RwLock;
@@ -75,22 +76,15 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         }
     }
 
-    fn name_out(&self, el: BasisElement) -> BasisElement {
-        self.named_bases.read().provide_name(el)
-    }
+    pub(crate) fn fix_name_and_sign(&self, a: BasisElement) -> (f32, BasisElement) {
+        let mut nb = self.named_bases.read();
+        let preferred_sign = nb.provide_name_and_sign(a).coefficient();
+        let mut result = nb.provide_name(a);
+        drop(nb);
 
-    fn name_and_sign_out(&self, el: BasisElement) -> BasisElement {
-        self.named_bases.read().provide_name_and_sign(el)
-    }
-
-    // TODO might need to use this in a few other places
-    //  Actually... this should be used to totally replace the other BasisElement "out" methods
-    fn fix_name_and_sign(&self, a: BasisElement) -> (f32, BasisElement) {
-        let preferred_sign = self.name_and_sign_out(a).coefficient();
-        let mut result = self.name_out(a);
         let sign = result.coefficient();
         if sign == 0 {
-            return (0.0, self.name_out(BasisElement::zero()))
+            return (0.0, self.named_bases.read().provide_name(BasisElement::zero()))
         }
         let mut f = 1.0;
         if sign != preferred_sign {
@@ -102,13 +96,16 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
 
     fn name_out_sum(&self, mut sum: Sum) -> Sum {
         for p in sum.sum.iter_mut() {
-            p.element = self.name_out(p.element);
+            let (f, el) = self.fix_name_and_sign(p.element);
+            p.mul_assign(f);
+            p.element = el;
         }
+        sum.sort_and_simplify();
         sum
     }
 
     pub fn anti_scalar(&self) -> BasisElement {
-        self.name_out(self.repo.anti_scalar())
+        self.named_bases.read().provide_name(self.repo.anti_scalar())
     }
 
     pub fn product(&self, a: BasisElement, b: BasisElement) -> Sum {
