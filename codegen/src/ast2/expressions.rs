@@ -931,21 +931,9 @@ impl Expression<MultiVector> for Variable<MultiVector> {
     }
 }
 
-// TODO this but for other variable types
-impl Variable<MultiVector> {
-    pub fn expr(self) -> MultiVectorExpr {
-        MultiVectorExpr {
-            mv_class: self.expr_type,
-            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
-                decl: self.decl.clone(),
-            })),
-        }
-    }
-}
-
 impl Variable<MultiVector> {
     pub fn elements(&self) -> impl Iterator<Item=(FloatExpr, BasisElement)> + '_ {
-        let mv_expr = self.clone().expr();
+        let mv_expr: MultiVectorExpr = self.clone().into();
         self.expr_type.elements().into_iter().enumerate().map(move |(i, el)| {
             (FloatExpr::AccessMultiVecFlat(mv_expr.clone(), i as u16), el)
         })
@@ -953,7 +941,7 @@ impl Variable<MultiVector> {
 
     // TODO still not exactly sure how I feel about this, but we'll see.
     pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
-        let mv_expr = self.clone().expr();
+        let mv_expr: MultiVectorExpr = self.clone().into();
         self.expr_type.groups().into_iter().enumerate().map(move |(g, group)| {
             let g = g as u16;
             match group {
@@ -1064,6 +1052,16 @@ impl From<[f32; 4]> for Vec4Expr {
         let mut v = Vec4Expr::Gather4(FloatExpr::Literal(value[0]), FloatExpr::Literal(value[1]), FloatExpr::Literal(value[2]), FloatExpr::Literal(value[3]));
         v.simplify();
         v
+    }
+}
+impl From<Variable<MultiVector>> for MultiVectorExpr {
+    fn from(value: Variable<MultiVector>) -> Self {
+        MultiVectorExpr {
+            mv_class: value.expr_type,
+            expr: Box::new(MultiVectorVia::Variable(RawVariableInvocation {
+                decl: value.decl.clone(),
+            })),
+        }
     }
 }
 
@@ -1876,7 +1874,6 @@ impl MultiVectorExpr {
 }
 
 
-// TODO implement arithmetic for things that can turn INTO FloatExpr, not FloatExpr directly. UGH.
 impl<FE: Into<FloatExpr>> Add<FE> for FloatExpr {
     type Output = FloatExpr;
 
@@ -1939,34 +1936,38 @@ impl SubAssign for FloatExpr {
 
 
 
-impl Add<Vec2Expr> for Vec2Expr {
+impl<V: Into<Vec2Expr>> Add<V> for Vec2Expr {
     type Output = Vec2Expr;
 
-    fn add(self, rhs: Vec2Expr) -> Self::Output {
+    fn add(self, rhs: V) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = Vec2Expr::Sum(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl AddAssign<Vec2Expr> for Vec2Expr {
-    fn add_assign(&mut self, rhs: Vec2Expr) {
+impl<V: Into<Vec2Expr>> AddAssign<V> for Vec2Expr {
+    fn add_assign(&mut self, rhs: V) {
+        let rhs = rhs.into();
         let mut x = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
         *self = Vec2Expr::Sum(vec![x, rhs]);
         self.simplify();
     }
 }
-impl Mul<Vec2Expr> for Vec2Expr {
+impl<V: Into<Vec2Expr>> Mul<V> for Vec2Expr {
     type Output = Vec2Expr;
 
-    fn mul(self, rhs: Vec2Expr) -> Self::Output {
+    fn mul(self, rhs: V) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = Vec2Expr::Product(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl MulAssign<Vec2Expr> for Vec2Expr {
-    fn mul_assign(&mut self, rhs: Vec2Expr) {
+impl<V: Into<Vec2Expr>> MulAssign<V> for Vec2Expr {
+    fn mul_assign(&mut self, rhs: V) {
+        let rhs = rhs.into();
         let mut x = Vec2Expr::Gather1(FloatExpr::Literal(1.0));
         mem::swap(&mut x, self);
         *self = Vec2Expr::Product(vec![x, rhs]);
@@ -1997,34 +1998,38 @@ impl SubAssign for Vec2Expr {
 
 
 
-impl Add<Vec3Expr> for Vec3Expr {
+impl<V: Into<Vec3Expr>> Add<V> for Vec3Expr {
     type Output = Vec3Expr;
 
-    fn add(self, rhs: Vec3Expr) -> Self::Output {
+    fn add(self, rhs: V) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = Vec3Expr::Sum(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl AddAssign<Vec3Expr> for Vec3Expr {
-    fn add_assign(&mut self, rhs: Vec3Expr) {
+impl<V: Into<Vec3Expr>> AddAssign<V> for Vec3Expr {
+    fn add_assign(&mut self, rhs: V) {
+        let rhs = rhs.into();
         let mut x = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
         *self = Vec3Expr::Sum(vec![x, rhs]);
         self.simplify();
     }
 }
-impl Mul<Vec3Expr> for Vec3Expr {
+impl<V: Into<Vec3Expr>> Mul<V> for Vec3Expr {
     type Output = Vec3Expr;
 
-    fn mul(self, rhs: Vec3Expr) -> Self::Output {
+    fn mul(self, rhs: V) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = Vec3Expr::Product(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl MulAssign<Vec3Expr> for Vec3Expr {
-    fn mul_assign(&mut self, rhs: Vec3Expr) {
+impl<V: Into<Vec3Expr>> MulAssign<V> for Vec3Expr {
+    fn mul_assign(&mut self, rhs: V) {
+        let rhs = rhs.into();
         let mut x = Vec3Expr::Gather1(FloatExpr::Literal(1.0));
         mem::swap(&mut x, self);
         *self = Vec3Expr::Product(vec![x, rhs]);
@@ -2055,34 +2060,38 @@ impl SubAssign for Vec3Expr {
 
 
 
-impl Add<Vec4Expr> for Vec4Expr {
+impl<V: Into<Vec4Expr>> Add<V> for Vec4Expr {
     type Output = Vec4Expr;
 
-    fn add(self, rhs: Vec4Expr) -> Self::Output {
+    fn add(self, rhs: V) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = Vec4Expr::Sum(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl AddAssign<Vec4Expr> for Vec4Expr {
-    fn add_assign(&mut self, rhs: Vec4Expr) {
+impl<V: Into<Vec4Expr>> AddAssign<V> for Vec4Expr {
+    fn add_assign(&mut self, rhs: V) {
+        let rhs = rhs.into();
         let mut x = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
         *self = Vec4Expr::Sum(vec![x, rhs]);
         self.simplify();
     }
 }
-impl Mul<Vec4Expr> for Vec4Expr {
+impl<V: Into<Vec4Expr>> Mul<V> for Vec4Expr {
     type Output = Vec4Expr;
 
-    fn mul(self, rhs: Vec4Expr) -> Self::Output {
+    fn mul(self, rhs: V) -> Self::Output {
+        let rhs = rhs.into();
         let mut s = Vec4Expr::Product(vec![self, rhs]);
         s.simplify();
         s
     }
 }
-impl MulAssign<Vec4Expr> for Vec4Expr {
-    fn mul_assign(&mut self, rhs: Vec4Expr) {
+impl<V: Into<Vec4Expr>> MulAssign<V> for Vec4Expr {
+    fn mul_assign(&mut self, rhs: V) {
+        let rhs = rhs.into();
         let mut x = Vec4Expr::Gather1(FloatExpr::Literal(1.0));
         mem::swap(&mut x, self);
         *self = Vec4Expr::Product(vec![x, rhs]);

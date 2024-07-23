@@ -4,8 +4,6 @@ use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 
-// TODO move these items to better locations
-
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
 pub struct Integer;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
