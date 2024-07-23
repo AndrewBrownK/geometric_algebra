@@ -20,7 +20,6 @@ pub struct GeometricAlgebra<const AntiScalar: BasisElement> {
 
 
 
-// TODO do a DETAILED search through macros for any unqualified types or symbols
 #[macro_export]
 macro_rules! ga {
     ($anti_scalar:ident; $( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {

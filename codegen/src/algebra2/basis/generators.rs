@@ -30,7 +30,7 @@ macro_rules! generator_squares {
     ($( $i8_lit:expr => $( $generator:expr ),+ $(,)? );+ $(;)? ) => {
         {
             use $crate::algebra2::basis::generators::*;
-            let mut gs = GeneratorSquares::empty();
+            let mut gs = $crate::algebra2::basis::generators::GeneratorSquares::empty();
             $($(gs = gs.overwrite([($generator, $i8_lit)]);)+)+
             gs
         }

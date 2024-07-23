@@ -1023,7 +1023,7 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
 macro_rules! register_all {
     ($mv_repo:expr; $($t:ident)+ $(| $($t2:ident)+)*) => {
         {
-            let tir = TraitImplRegistry::new();
+            let tir = $crate::ast2::traits::TraitImplRegistry::new();
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
             let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
             let _: () = rt.block_on(async {

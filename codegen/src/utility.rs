@@ -305,12 +305,3 @@ impl<T: Copy> ConstOption<T> {
 }
 
 
-
-//
-// macro_rules! array {
-//     ($($item:expr),* $(,)?) => {
-//         [
-//             $($item,)
-//         ]
-//     };
-// }
