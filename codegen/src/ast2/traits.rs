@@ -53,13 +53,8 @@ pub enum TraitParam {
 pub struct RawTraitDefinition {
     documentation: String,
     names: TraitNames,
-    // TODO inherits?
-    // inherits: Vec<Arc<RawTraitDefinition>>,
-
     owner: Arc<RwLock<TraitTypeConsensus>>,
     owner_is_param: bool,
-    // TODO generic params?
-    // params: Vec<TraitParam>,
     output: Arc<RwLock<TraitTypeConsensus>>,
 }
 
@@ -195,7 +190,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         );
         let trait_impl = self.general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.release_context().finish_inline(b, var_name)
+        trait_impl.finish_inline(b, var_name)
     }
 }
 
@@ -318,7 +313,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = self.general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.release_context().finish_inline(b, var_name)
+        trait_impl.finish_inline(b, var_name)
     }
 }
 
@@ -449,7 +444,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         let owner = builder.coerce_variable("self", owner);
         let trait_impl = self.general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.release_context().finish_inline(b, var_name)
+        trait_impl.finish_inline(b, var_name)
     }
 }
 
@@ -468,8 +463,6 @@ pub trait TraitImpl_22: Copy + Send + Sync + 'static {
 #[async_trait]
 #[allow(non_camel_case_types)]
 pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
-    // TODO do I want to move these associated types to TraitImpl_22?
-    //  and similar for other TraitDefs too obviously
     type Owner: ClassesFromRegistry;
     type Other: ClassesFromRegistry;
     fn general_documentation(&self) -> String { String::new() }
@@ -591,7 +584,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         let other = builder.coerce_variable("other", other);
         let trait_impl = self.general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
-        trait_impl.release_context().finish_inline(b, var_name)
+        trait_impl.finish_inline(b, var_name)
     }
 }
 
@@ -805,7 +798,6 @@ impl TraitImplRegistry {
 
 #[async_trait]
 pub trait Register10: TraitDef_1Class_0Param {
-    // TODO can I simplify the parameters at all?
     async fn register<const AntiScalar: BasisElement>(
         self,
         tr: TraitImplRegistry,
@@ -1513,29 +1505,11 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     }
 }
 
-pub struct InlineFinisher<ReturnType> {
-    lines: Vec<CommentOrVariableDeclaration>,
-    return_comment: Option<String>,
-    return_expr: Option<AnyExpression>,
-    return_type: ReturnType,
-}
-
 impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, ExprType> {
-    // TODO do we really need this, since we got rid of the builder lifetime?
-    fn release_context(self) -> InlineFinisher<ExprType> {
-        InlineFinisher {
-            lines: self.lines.into_inner(),
-            return_comment: self.return_comment,
-            return_expr: self.return_expr,
-            return_type: self.return_type,
-        }
-    }
-}
-
-impl<ExprType> InlineFinisher<ExprType> {
-    fn finish_inline<const AntiScalar: BasisElement, V: Into<String>>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+    fn finish_inline<V: Into<String>>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
         let mut outer_lines = b.lines.lock();
-        for line in self.lines {
+        let inner_lines = self.lines.into_inner();
+        for line in inner_lines.into_iter() {
             outer_lines.push(line);
         }
 
