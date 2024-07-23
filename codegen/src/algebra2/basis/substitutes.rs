@@ -202,7 +202,7 @@ impl Substitutions {
                             let el = term.element;
                             // eprintln!("Adding {thing} to {el}");
                             let _s = underlying_to_substitutions.entry(el)
-                                .and_modify(|it| { *it = it.add(&thing); })
+                                .and_modify(|it| { it.add_assign(thing.clone()); })
                                 .or_insert(thing);
                             // eprintln!("{el} is now looking like: {s}");
                         }
@@ -266,7 +266,7 @@ impl Substitutions {
 
         // Also add negated entries in this direction too
         for (under, orig_substitutions) in underlying_to_substitutions.clone().iter() {
-            underlying_to_substitutions.insert(under.negate(), orig_substitutions.mul(-1.0));
+            underlying_to_substitutions.insert(under.negate(), orig_substitutions.clone().mul(-1.0));
         }
 
         let substitution_anti_scalar = substitution_anti_scalar
@@ -314,10 +314,7 @@ impl Substitutions {
         for (sub, und) in transposed_substitutions_to_underlying.iter()
             .map(|(s, u)| (s.clone(), u.clone()))
             .collect::<Vec<_>>().into_iter() {
-
-            // TODO it might be nice to make arithmetic on Sum not use a reference after all.
-            //  Consume when allowed, and only clone when the old one needs to be preserved.
-            transposed_substitutions_to_underlying.insert(-sub, -1.0 * &und);
+            transposed_substitutions_to_underlying.insert(-sub, -1.0 * und);
         }
         // for (sub, und) in transposed_substitutions_to_underlying.iter() {
         //     eprintln!("TRANSPOSED: {sub}' := {und}")
@@ -382,7 +379,7 @@ impl Substitutions {
         let mut result = Sum { sum: vec![] };
         for sub_p in s.sum.iter() {
             let und_s = self.substitute_product_to_underlying_sum(*sub_p);
-            result += &und_s;
+            result += und_s;
         }
         result
     }
@@ -391,7 +388,7 @@ impl Substitutions {
         let mut result = Sum { sum: vec![] };
         for und_p in s.sum.iter() {
             let sub_s = self.underlying_product_to_substitute_sum(*und_p);
-            result += &sub_s;
+            result += sub_s;
         }
         result
     }
@@ -423,7 +420,7 @@ impl Substitutions {
                         })
                         .unwrap_or(Sum { sum: vec![underlying_term] });
                     // eprintln!("    Intermediate sum: {substitution_terms}");
-                    result = result.add(&substitution_terms);
+                    result = result.add(substitution_terms);
                 }
                 // eprintln!("    Substitution product: {result}");
                 result
@@ -451,7 +448,7 @@ impl Substitutions {
                             it
                         })
                         .unwrap_or(Sum { sum: vec![underlying_term] });
-                    result = result.add(&substitution_terms);
+                    result = result.add(substitution_terms);
                 }
                 result
             }).clone()

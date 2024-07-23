@@ -349,7 +349,7 @@ impl BasisElement {
 
             const_panic::PanicVal::write_str(")"),
         ]};
-        let mut sign = self.coefficient;
+        let sign = self.coefficient;
         if sign == 0 {
             result[1] = const_panic::PanicVal::write_str("0");
         }
