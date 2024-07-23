@@ -744,7 +744,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             for mvg in mv.element_groups.clone().into_iter() {
                 let mut cv = ConstVec::new();
                 for el in mvg.into_vec() {
-                    let d = self.ga.name_and_sign_out(self.ga.dual(el));
+                    let (_, d) = self.ga.dual(el);
                     new_grades |= d.grades();
                     new_sigs.insert(d.signature());
                     cv.push(d);

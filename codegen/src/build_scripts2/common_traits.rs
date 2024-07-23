@@ -26,6 +26,14 @@ pub static AntiGrade: Elaborated<AntiGradeImpl> = AntiGradeImpl
     .blurb("The AntiGrade can be described as the missing Grade with respect to an \
     AntiScalar. This trait only characterizes uniform anti-grade multivectors.");
 
+pub static Dual: Elaborated<DualImpl> = DualImpl
+    .new_trait_named("Dual")
+    .blurb("TODO");
+
+pub static AntiDual: Elaborated<AntiDualImpl> = AntiDualImpl
+    .new_trait_named("AntiDual")
+    .blurb("TODO");
+
 pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
     .new_trait_named("Wedge")
     .blurb("TODO");
@@ -95,8 +103,9 @@ mod impls {
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
     use crate::ast2::expressions::{FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitImpl_10, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitDef_1Class_0Param, TraitDef_2Class_1Param, TraitImpl_10, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
+    use crate::build_scripts2::common_traits::{Dual, AntiWedge, AntiDual, Wedge};
 
     #[derive(Clone, Copy)]
     pub struct ZeroImpl;
@@ -199,6 +208,48 @@ mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let ag = owner.anti_grade()?;
             b.return_expr(IntExpr::Literal(ag))
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct DualImpl;
+    #[async_trait]
+    impl TraitImpl_11 for DualImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements() {
+                let (f, el) = b.ga.dual(el);
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AntiDualImpl;
+    #[async_trait]
+    impl TraitImpl_11 for AntiDualImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements() {
+                let (f, el) = b.ga.anti_dual(el);
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
         }
     }
 
@@ -365,8 +416,9 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            // TODO actual implementation
-            b.return_expr(slf)
+            let dual = Dual.inline(&b, other).await?;
+            let wedge = Wedge.inline(&b, slf, dual).await?;
+            b.return_expr(wedge)
         }
     }
 
@@ -382,8 +434,9 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            // TODO actual implementation
-            b.return_expr(slf)
+            let anti_dual = AntiDual.inline(&b, other).await?;
+            let wedge = Wedge.inline(&b, slf, anti_dual).await?;
+            b.return_expr(wedge)
         }
     }
 
@@ -399,8 +452,9 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            // TODO actual implementation
-            b.return_expr(slf)
+            let dual = Dual.inline(&b, other).await?;
+            let anti_wedge = AntiWedge.inline(&b, slf, dual).await?;
+            b.return_expr(anti_wedge)
         }
     }
 
@@ -416,8 +470,9 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            // TODO actual implementation
-            b.return_expr(slf)
+            let anti_dual = AntiDual.inline(&b, other).await?;
+            let anti_wedge = AntiWedge.inline(&b, slf, anti_dual).await?;
+            b.return_expr(anti_wedge)
         }
     }
 

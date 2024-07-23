@@ -83,6 +83,23 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         self.named_bases.read().provide_name_and_sign(el)
     }
 
+    // TODO might need to use this in a few other places
+    //  Actually... this should be used to totally replace the other BasisElement "out" methods
+    fn fix_name_and_sign(&self, a: BasisElement) -> (f32, BasisElement) {
+        let preferred_sign = self.name_and_sign_out(a).coefficient();
+        let mut result = self.name_out(a);
+        let sign = result.coefficient();
+        if sign == 0 {
+            return (0.0, self.name_out(BasisElement::zero()))
+        }
+        let mut f = 1.0;
+        if sign != preferred_sign {
+            f = (preferred_sign as f32) / (sign as f32);
+            result = result.set_coefficient(preferred_sign);
+        }
+        (f, result)
+    }
+
     fn name_out_sum(&self, mut sum: Sum) -> Sum {
         for p in sum.sum.iter_mut() {
             p.element = self.name_out(p.element);
@@ -118,28 +135,31 @@ impl<const AntiScalar: BasisElement> GeometricAlgebra<AntiScalar> {
         self.name_out_sum(self.repo.anti_scalar_product(a, b))
     }
 
-    pub fn apply_metric(&self, a: BasisElement) -> BasisElement {
+    pub fn apply_metric(&self, a: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
-        self.name_out(self.repo.apply_metric(a))
+        let a = self.repo.apply_metric(a);
+        self.fix_name_and_sign(a)
     }
 
-    pub fn apply_anti_metric(&self, a: BasisElement) -> BasisElement {
+    pub fn apply_anti_metric(&self, a: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
-        self.name_out(self.repo.apply_anti_metric(a))
+        let a = self.repo.apply_anti_metric(a);
+        self.fix_name_and_sign(a)
     }
 
-    pub fn dual(&self, a: BasisElement) -> BasisElement {
+    pub fn dual(&self, a: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
-        self.name_out(self.repo.apply_metric(a).right_complement(AntiScalar))
+        let a = self.repo.apply_metric(a).right_complement(AntiScalar);
+        self.fix_name_and_sign(a)
     }
 
-    pub fn anti_dual(&self, a: BasisElement) -> BasisElement {
+    pub fn anti_dual(&self, a: BasisElement) -> (f32, BasisElement) {
         let a = self.name_in(a);
-        self.name_out(self.repo.apply_metric(a).right_complement(AntiScalar))
+        let a = self.repo.apply_metric(a).right_complement(AntiScalar);
+        self.fix_name_and_sign(a)
     }
 
     fn internalize_element_names(&self, mv: &MultiVec<AntiScalar>) {
-
         for el in MultiVec::<AntiScalar>::elements(&mv).into_iter() {
             self.name_in(el);
         }

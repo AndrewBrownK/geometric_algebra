@@ -172,7 +172,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
@@ -294,7 +294,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
     }
     async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
@@ -424,7 +424,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr,
         other: MultiVector
     ) -> Option<Variable<Self::Output>> {
@@ -565,7 +565,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
 
     async fn inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
-        b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2
     ) -> Option<Variable<Self::Output>> {
@@ -1095,7 +1095,7 @@ pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     wanted_multi_vecs: Mutex<HashSet<BTreeSet<BasisSignature>>>,
 
     variables: Arc<Mutex<HashMap<(String, usize), Arc<RawVariableDeclaration>>>>,
-    lines: Vec<CommentOrVariableDeclaration>,
+    lines: Mutex<Vec<CommentOrVariableDeclaration>>,
     return_comment: Option<String>,
     return_expr: Option<AnyExpression>,
     return_type: ReturnType,
@@ -1125,7 +1125,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             traits22_dependencies: Default::default(),
             wanted_multi_vecs: Default::default(),
             variables,
-            lines: vec![],
+            lines: Mutex::new(vec![]),
             return_comment: None,
             return_expr: None,
             return_type: HasNotReturned,
@@ -1136,7 +1136,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         self.specialized = true;
     }
 
-    fn make_var_name_unique(&mut self, var_name: String) -> (String, usize) {
+    fn make_var_name_unique(&self, var_name: String) -> (String, usize) {
         let mut key = (var_name.to_string(), 0);
         let vars = self.variables.lock();
         while vars.contains_key(&mut key) {
@@ -1146,7 +1146,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     }
 
     pub fn comment<C: Into<String>>(&mut self, comment: C) {
-        self.lines.push(CommentOrVariableDeclaration::Comment(Cow::Owned(comment.into())))
+        self.lines.lock().push(CommentOrVariableDeclaration::Comment(Cow::Owned(comment.into())))
     }
 
     pub fn variable<
@@ -1154,7 +1154,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         ExprType,
         Expr: Expression<ExprType>
     >(
-        &mut self,
+        &self,
         var_name: V,
         expr: Expr
     ) -> Variable<ExprType> {
@@ -1180,7 +1180,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         V: Into<String>,
         ExprType,
     >(
-        &mut self,
+        &self,
         comment: Option<C>,
         var_name: V,
         expr_type: ExprType,
@@ -1196,11 +1196,11 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         let mut vars = self.variables.lock();
         let existing = vars.insert(unique_name.clone(), decl.clone());
         assert!(existing.is_none(), "Variable {unique_name:?} is already taken");
-        self.lines.push(CommentOrVariableDeclaration::VarDec(decl.clone()));
+        self.lines.lock().push(CommentOrVariableDeclaration::VarDec(decl.clone()));
         Variable { expr_type, decl, }
     }
 
-    fn coerce_variable<V: Into<String>, ExprType, Expr: Expression<ExprType>>(&mut self, name_if_new_var: V, expr: Expr) -> Variable<ExprType> {
+    fn coerce_variable<V: Into<String>, ExprType, Expr: Expression<ExprType>>(&self, name_if_new_var: V, expr: Expr) -> Variable<ExprType> {
         return match expr.try_into_variable() {
             Some(already_done) => already_done,
             None => self.variable(name_if_new_var, expr),
@@ -1260,7 +1260,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     fn inline_by_copy_existing_10<
         T: TraitDef_1Class_0Param + ?Sized,
     >(
-        &mut self,
+        &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
     ) -> Option<Variable<T::Output>> {
@@ -1285,7 +1285,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         T: TraitDef_1Class_1Param + ?Sized,
         Expr: Expression<MultiVector>
     >(
-        &mut self,
+        &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
         owner: Expr,
@@ -1313,7 +1313,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         T: TraitDef_2Class_1Param + ?Sized,
         Expr: Expression<MultiVector>
     >(
-        &mut self,
+        &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
         owner: Expr,
@@ -1342,7 +1342,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         Expr1: Expression<MultiVector>,
         Expr2: Expression<MultiVector>,
     >(
-        &mut self,
+        &self,
         trait_key: &TraitKey,
         raw_impl: Arc<RawTraitImplementation>,
         owner: Expr1,
@@ -1370,14 +1370,16 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     }
 
     fn inline_the_lines(
-        &mut self,
+        &self,
         var_replacements: &mut Vec<(Arc<RawVariableDeclaration>, Arc<RawVariableDeclaration>)>,
         lines: &Vec<CommentOrVariableDeclaration>,
     ) {
-        for line in lines.iter() {
+        let mut our_lines = self.lines.lock();
+        let their_lines = lines;
+        for line in their_lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
-                    self.lines.push(CommentOrVariableDeclaration::Comment(c.clone()))
+                    our_lines.push(CommentOrVariableDeclaration::Comment(c.clone()))
                 }
                 CommentOrVariableDeclaration::VarDec(old_decl) => {
                     let new_var_comment = old_decl.comment.clone();
@@ -1397,7 +1399,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
                     // Then add it to the list
                     var_replacements.push((old_decl.clone(), new_decl.clone()));
                     // Then add it to lines
-                    self.lines.push(CommentOrVariableDeclaration::VarDec(new_decl))
+                    our_lines.push(CommentOrVariableDeclaration::VarDec(new_decl))
                 }
             }
         }
@@ -1419,7 +1421,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: false,
             other_type_params: vec![],
             other_var_params: vec![],
-            lines: self.lines,
+            lines: self.lines.into_inner(),
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
@@ -1445,7 +1447,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: true,
             other_type_params: vec![],
             other_var_params: vec![],
-            lines: self.lines,
+            lines: self.lines.into_inner(),
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
@@ -1471,7 +1473,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: true,
             other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
             other_var_params: vec![],
-            lines: self.lines,
+            lines: self.lines.into_inner(),
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
@@ -1497,7 +1499,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: true,
             other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other.clone()))],
             other_var_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
-            lines: self.lines,
+            lines: self.lines.into_inner(),
             return_comment: self.return_comment,
             // This shouldn't be a problem because of type level state and function visibilities
             return_expr: self.return_expr.expect("Must have return expression in order to register"),
@@ -1522,7 +1524,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     // TODO do we really need this, since we got rid of the builder lifetime?
     fn release_context(self) -> InlineFinisher<ExprType> {
         InlineFinisher {
-            lines: self.lines,
+            lines: self.lines.into_inner(),
             return_comment: self.return_comment,
             return_expr: self.return_expr,
             return_type: self.return_type,
@@ -1531,9 +1533,10 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
 }
 
 impl<ExprType> InlineFinisher<ExprType> {
-    fn finish_inline<const AntiScalar: BasisElement, V: Into<String>>(self, b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+    fn finish_inline<const AntiScalar: BasisElement, V: Into<String>>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
+        let mut outer_lines = b.lines.lock();
         for line in self.lines {
-            b.lines.push(line);
+            outer_lines.push(line);
         }
 
         // If there was no return expression provided, assume the implementation "failed"
