@@ -70,7 +70,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     let all = |_: &Grades, _: &BTreeSet<BasisSignature>| true;
     let is_flat = |_: &Grades, sigs: &BTreeSet<BasisSignature>| sigs.iter().all(|sig| sig.contains(infinity));
     let is_not_flat = |_: &Grades, sigs: &BTreeSet<BasisSignature>| sigs.iter().any(|sig| !sig.contains(infinity));
-    let tangent_horosphere = |_: &Grades, sigs: &BTreeSet<BasisSignature>| {
+    let tangent_null_cone = |_: &Grades, sigs: &BTreeSet<BasisSignature>| {
         let mut has_e4 = false;
         let mut has_e5 = false;
         for sig in sigs.iter() {
@@ -82,18 +82,18 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
         }
         return has_e4 || has_e5
     };
-    let intersects_horosphere = |_: &Grades, sigs: &BTreeSet<BasisSignature>| {
+    let intersects_null_cone = |_: &Grades, sigs: &BTreeSet<BasisSignature>| {
         sigs.iter().any(|sig| sig.contains(origin)) && sigs.iter().any(|sig| sig.contains(infinity))
     };
 
     // TODO extra documentation for variants
-    declarations.variants("Null", "AtOrigin", is_not_flat, |sig| sig.contains(origin) && !sig.contains(infinity), tangent_horosphere);
-    declarations.variants("", "OnOrigin", all, |sig| sig.contains(origin), intersects_horosphere);
-    declarations.variants("", "AtInfinity", is_flat, |sig| !sig.contains(origin), tangent_horosphere);
-    declarations.variants("", "AtOrigin", is_not_flat, |sig| sig.contains(origin) ^ sig.contains(infinity), intersects_horosphere);
-    declarations.variants("", "AligningOrigin", is_not_flat, |sig| sig.contains(origin) || sig.contains(infinity), intersects_horosphere);
-    declarations.variants("", "OrthogonalOrigin", is_not_flat, |sig| !sig.contains(flat_origin), intersects_horosphere);
-    declarations.variants("", "AtInfinity", is_not_flat, |sig| !sig.contains(origin) || sig.contains(flat_origin), intersects_horosphere);
+    declarations.variants("Null", "AtOrigin", is_not_flat, |sig| sig.contains(origin) && !sig.contains(infinity), tangent_null_cone);
+    declarations.variants("", "OnOrigin", all, |sig| sig.contains(origin), intersects_null_cone);
+    declarations.variants("", "AtInfinity", is_flat, |sig| !sig.contains(origin), tangent_null_cone);
+    declarations.variants("", "AtOrigin", is_not_flat, |sig| sig.contains(origin) ^ sig.contains(infinity), intersects_null_cone);
+    declarations.variants("", "AligningOrigin", is_not_flat, |sig| sig.contains(origin) || sig.contains(infinity), intersects_null_cone);
+    declarations.variants("", "OrthogonalOrigin", is_not_flat, |sig| !sig.contains(flat_origin), intersects_null_cone);
+    declarations.variants("", "AtInfinity", is_not_flat, |sig| !sig.contains(origin) || sig.contains(flat_origin), intersects_null_cone);
     declarations.generate_missing_duals();
     declarations.finished()
 }
