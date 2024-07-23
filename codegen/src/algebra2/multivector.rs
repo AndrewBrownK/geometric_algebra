@@ -48,6 +48,16 @@ pub enum BasisElementGroup {
     G3(BasisElement, BasisElement, BasisElement),
     G4(BasisElement, BasisElement, BasisElement, BasisElement),
 }
+impl PartialOrd for BasisElementGroup {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.into_vec().partial_cmp(&other.into_vec())
+    }
+}
+impl Ord for BasisElementGroup {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.into_vec().cmp(&other.into_vec())
+    }
+}
 #[derive(Copy, Clone)]
 pub struct BasisElementGroupIter(usize, BasisElement, [Option<BasisElement>; 3]);
 impl IntoIterator for BasisElementGroup {
@@ -642,8 +652,8 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
 
 pub struct MultiVecRepository<const AntiScalar: BasisElement> {
     declarations: DeclareMultiVecs<AntiScalar>,
-    uniform_grade_groups: BTreeMap<BasisSignature, Vec<&'static BasisElementGroup>>,
-    mixed_grade_groups: BTreeMap<(BasisSignature, Grades), Vec<&'static BasisElementGroup>>,
+    uniform_grade_groups: BTreeMap<Grades, BTreeSet<&'static BasisElementGroup>>,
+    mixed_grade_groups: BTreeMap<Grades, BTreeSet<&'static BasisElementGroup>>,
     wanted: Mutex<HashMap<BTreeSet<BasisSignature>, Vec<Arc<RawTraitImplementation>>>>,
     strongly_wanted: Mutex<HashMap<BTreeSet<BasisSignature>, Vec<Arc<RawTraitDefinition>>>>,
 }
@@ -669,6 +679,29 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             strongly_wanted: Default::default(),
         };
 
+        for (_, _, mv) in mvr.declarations.declared.iter() {
+            let mut i = 0;
+            while i < mv.element_groups.len() {
+                let mvg = mv.element_groups.get(i);
+                i += 1;
+
+                let mut gr = Grades::none;
+                for el in mvg.clone().into_vec() {
+                    gr |= el.grades();
+                }
+                let qty_grades = gr.into_bits().count_ones();
+                if qty_grades == 1 {
+                    mvr.uniform_grade_groups.entry(gr)
+                        .and_modify(|v| { v.insert(mvg); })
+                        .or_insert(BTreeSet::from([mvg]));
+                } else {
+                    mvr.mixed_grade_groups.entry(gr)
+                        .and_modify(|v| { v.insert(mvg); })
+                        .or_insert(BTreeSet::from([mvg]));
+                }
+            }
+        }
+
         // Generate fallback types.
         let all_elements: Vec<_> = ga.all_elements().map(|el| ga.name_and_sign_out(el)).collect();
 
@@ -681,8 +714,6 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             cv.push(BasisElementGroup::G2(scalar, AntiScalar));
             cv
         }));
-        // TODO reuse existing groups to create MultiVector.
-        mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("MultiVector", all_elements.clone()));
 
         // 1..AntiScalar.grade() skips scalar and anti_scalar (since we already added them)
         for gr in 1..AntiScalar.grade() {
@@ -711,8 +742,71 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             };
             mvr.fallback(&mut has_fell_back, mv);
         }
+        // Full MultiVector
+        {
+            let mut remaining_els = BTreeMap::from_iter(all_elements.iter().map(|it| {
+                (it.signature(), *it)
+            }));
+            let mut cv = ConstVec::new();
+            cv.push(BasisElementGroup::G2(scalar, AntiScalar));
+            remaining_els.remove(&scalar.signature());
+            remaining_els.remove(&AntiScalar.signature());
+            let cv = mvr.use_preferred_groups(cv, remaining_els);
+            mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new_by_groups("MultiVector", cv));
+        }
         mvr.declarations.sort_declarations();
         Arc::new(mvr)
+    }
+
+    fn use_preferred_groups(
+        &self, mut cv: ConstVec<BasisElementGroup, QTY_GROUPS>, mut remaining_els: BTreeMap<BasisSignature, BasisElement>
+    ) -> ConstVec<BasisElementGroup, QTY_GROUPS> {
+        let mut used_sigs = BTreeSet::new();
+        let mut i = 0;
+        while i < cv.len() {
+            let used_group = cv.get(i);
+            for el in used_group.into_iter() {
+                used_sigs.insert(el.signature());
+            }
+            i += 1;
+        }
+        let mut all_groups =
+            self.uniform_grade_groups.iter().map(|it| it.1)
+                .chain(self.mixed_grade_groups.iter().map(|it| it.1));
+        for mvgs in all_groups {
+            if remaining_els.is_empty() {
+                break;
+            }
+            for mvg in mvgs.iter() {
+                let can_use = mvg.clone().into_iter().all(|el| {
+                    !used_sigs.contains(&el.signature())
+                });
+                if can_use {
+                    for el in mvg.clone().into_iter() {
+                        remaining_els.remove(&el.signature());
+                        used_sigs.insert(el.signature());
+                    }
+                    cv.push(*mvg.clone());
+                }
+            }
+        }
+        let mut last_group = vec![];
+        for (_, el) in remaining_els {
+            last_group.push(el);
+            if last_group.len() == 4 {
+                cv.push(BasisElementGroup::G4(last_group[0], last_group[1], last_group[2], last_group[3]));
+                last_group = vec![];
+            }
+        }
+        if !last_group.is_empty() {
+            cv.push(match last_group.len() {
+                1 => BasisElementGroup::G1(last_group[0]),
+                2 => BasisElementGroup::G2(last_group[0], last_group[1]),
+                3 => BasisElementGroup::G3(last_group[0], last_group[1], last_group[2]),
+                _ => unreachable!("last_group.len() cannot be <1 or >3 in this branch.")
+            });
+        }
+        cv
     }
 
     fn fallback(&mut self, has_fell_back: &mut bool, multi_vec: MultiVec<AntiScalar>) {
@@ -738,13 +832,32 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             })
         });
         let Err(insert_idx) = idx else { return };
+        let multi_vec = Box::leak(Box::new(multi_vec));
+        let mut i = 0;
+        while i < multi_vec.element_groups.len() {
+            let mvg = multi_vec.element_groups.get(i);
+            i += 1;
+            let mut gr = Grades::none;
+            for el in mvg.clone().into_iter() {
+                gr |= el.grades();
+            }
+            if gr.into_bits().count_ones() == 1 {
+                self.uniform_grade_groups.entry(gr)
+                    .and_modify(move |s| { s.insert(mvg); })
+                    .or_insert(BTreeSet::from([mvg]));
+            } else {
+                self.mixed_grade_groups.entry(gr)
+                    .and_modify(move |s| { s.insert(mvg); })
+                    .or_insert(BTreeSet::from([mvg]));
+            }
+        }
         let nice_declaration = multi_vec.macro_expression();
         if !*has_fell_back {
             println!("// Required MultiVecs were implicitly declared:");
             *has_fell_back = true;
         }
         println!("{nice_declaration}");
-        self.declarations.declared.insert(insert_idx, (grades, signature, Box::leak(Box::new(multi_vec))));
+        self.declarations.declared.insert(insert_idx, (grades, signature, multi_vec));
     }
 
     pub fn scalar(&self) -> &'static MultiVec<AntiScalar> {

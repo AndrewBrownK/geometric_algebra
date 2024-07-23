@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::fmt::Debug;
@@ -188,6 +189,59 @@ impl<T: Copy + Debug, const N: usize> ConstVec<T, N> {
                 return stuff
             }
         }
+    }
+}
+impl<T: Copy, const N: usize> IntoIterator for ConstVec<T, N> {
+    type Item = T;
+    type IntoIter = <Vec<T> as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        let mut v = vec![];
+        for t in self.0.into_iter().filter_map(|it| it) {
+            v.push(t);
+        }
+        v.into_iter()
+    }
+}
+impl<T: Copy + PartialOrd, const N: usize> PartialOrd for ConstVec<T, N> {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        let mut i = 0;
+        while i < N {
+            let a = &self.0[i];
+            let b = &other.0[i];
+            i += 1;
+            match (a, b) {
+                (None, None) => return Some(Ordering::Equal),
+                (Some(_), None) => return Some(Ordering::Greater),
+                (None, Some(_)) => return Some(Ordering::Less),
+                (Some(a), Some(b)) => match a.partial_cmp(b) {
+                    None => return None,
+                    Some(Ordering::Equal) => continue,
+                    Some(o) => return Some(o),
+                },
+            }
+        }
+        return Some(Ordering::Equal);
+    }
+}
+impl<T: Copy + Ord, const N: usize> Ord for ConstVec<T, N> {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let mut i = 0;
+        while i < N {
+            let a = &self.0[i];
+            let b = &other.0[i];
+            i += 1;
+            match (a, b) {
+                (None, None) => return Ordering::Equal,
+                (Some(_), None) => return Ordering::Greater,
+                (None, Some(_)) => return Ordering::Less,
+                (Some(a), Some(b)) => match a.cmp(b) {
+                    Ordering::Equal => continue,
+                    o => return o,
+                },
+            }
+        }
+        return Ordering::Equal;
     }
 }
 
