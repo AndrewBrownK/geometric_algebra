@@ -18,11 +18,9 @@ use crate::utility::ConstOption;
 // against the AntiScalar at runtime.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct GeneratorSquares {
-    // TODO un-pub
-    pub negative_anti_scalar: bool,
+    pub(crate) negative_anti_scalar: bool,
     active_bases: BasisSignature,
-    // TODO un-pub
-    pub raw_squares: [i8; 16],
+    pub(crate) raw_squares: [i8; 16],
 }
 
 #[macro_export]
@@ -38,8 +36,6 @@ macro_rules! generator_squares {
 }
 
 
-// TODO any chance of some of these being const fn?
-// TODO validate that only 1, 0, and -1 are used.
 impl GeneratorSquares {
     pub const fn anti_scalar(&self) -> BasisElement {
         let signature = self.active_bases;
@@ -77,6 +73,9 @@ impl GeneratorSquares {
         let mut active_bases = BasisSignature::empty();
         let mut raw_squares = [0i8; 16];
         for (basis, square) in generator_squares {
+            if square > 1 || square < -1 {
+                panic!("Generator square of {square} is not allowed. Please choose 1, -1, or 0.")
+            }
             active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
@@ -87,6 +86,9 @@ impl GeneratorSquares {
         let mut active_bases = self.active_bases;
         let mut raw_squares = self.raw_squares;
         for (basis, square) in generator_squares {
+            if square > 1 || square < -1 {
+                panic!("Generator square of {square} is not allowed. Please choose 1, -1, or 0.")
+            }
             let sig = basis.signature();
             if active_bases.contains(sig) {
                 return Err(anyhow::format_err!("The PrimaryBasis {basis:?} is already taken on {self:?}"))
@@ -101,6 +103,9 @@ impl GeneratorSquares {
         let mut active_bases = self.active_bases;
         let mut raw_squares = self.raw_squares;
         for (basis, square) in generator_squares {
+            if square > 1 || square < -1 {
+                panic!("Generator square of {square} is not allowed. Please choose 1, -1, or 0.")
+            }
             active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
@@ -256,7 +261,6 @@ impl GeneratorSquares {
     /// the underlying bases before you can properly use this function.
     pub const fn geometric_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
 
-        // TODO determine if actually const compatible
         // Implementation may look a bit strange because it is const compatible
         let s = a;
         let o = b;

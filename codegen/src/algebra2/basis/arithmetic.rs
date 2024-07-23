@@ -9,16 +9,13 @@ use crate::grade_constraint;
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Product {
-    // TODO un-pub?
-    pub coefficient: f32,
-    // TODO un-pub?
-    pub element: BasisElement
+    pub(crate) coefficient: f32,
+    pub(crate) element: BasisElement
 }
 
 #[derive(Clone, PartialEq)]
 pub struct Sum {
-    // TODO un-pub?
-    pub sum: Vec<Product>
+    pub(crate) sum: Vec<Product>
 }
 
 

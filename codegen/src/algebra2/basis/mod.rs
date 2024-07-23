@@ -270,18 +270,6 @@ impl BasisSignature {
     }
 }
 
-
-// TODO I have concerns about BasisElements with different names but the same signature
-//  and sign not being treated as equal. So I could manually implement PartialEq, Eq, etc
-//  but I have to be careful and also re-implement Hash and check if there are any problems
-//  on PartialOrd or Ord. Then I may or may not want a "strong_eq" method that checks display name
-//  too (although so far I think it won't be necessary, I'll need to consider it). And overall
-//  I need to do research on how Rust community/documentation feels about such niche uses
-//  of Eq and if there are any show stopper problems I'm not yet foreseeing.
-
-// TODO actually the best solution might be to litter BasisElementNames::contaminate(&mut a, &mut b)
-//  the statement before any invocation of PartialEq or Eq
-
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 pub struct BasisElement {
     // BasisElements will mathematically operate
