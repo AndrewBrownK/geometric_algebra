@@ -477,6 +477,11 @@ impl BasisElement {
         self.coefficient
     }
 
+    pub(crate) fn set_coefficient(mut self, c: i8) -> Self {
+        self.coefficient = c;
+        self
+    }
+
     pub const fn signature(&self) -> BasisSignature {
         self.signature
     }

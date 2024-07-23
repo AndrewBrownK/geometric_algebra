@@ -1124,18 +1124,33 @@ impl DynamicMultiVector {
         g
     }
 
+    //noinspection DuplicatedCode
     pub fn construct<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
-        for (el, mut f) in self.vals.into_iter() {
-            // TODO test if this is proper handling of sign and names
-            let s = el.coefficient();
-            let el = repo.ga().name_and_sign_out(el);
-            if el.coefficient() != s {
-                f = -f;
+        for (mut el, mut f) in self.vals.into_iter() {
+            f.simplify();
+            if el.coefficient() == 0 {
+                continue
+            }
+            match f {
+                FloatExpr::Literal(0.0) => continue,
+                FloatExpr::Product(v) if v.is_empty() => continue,
+                FloatExpr::Sum(v) if v.is_empty() => continue,
+                _ => {}
+            }
+            let preferred_sign = repo.ga().name_and_sign_out(el).coefficient();
+            if preferred_sign == 0 {
+                continue
+            }
+            el = repo.ga().name_out(el);
+            let sign = el.coefficient();
+            if sign != preferred_sign {
+                el = el.set_coefficient(preferred_sign / sign);
+                f = f * FloatExpr::Literal((sign as f32) / (preferred_sign as f32))
             }
             vals.insert(el, f);
         }
@@ -1148,18 +1163,34 @@ impl DynamicMultiVector {
         Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 
+
+    //noinspection DuplicatedCode
     pub fn construct_exact<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
         }
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
-        for (el, mut f) in self.vals.into_iter() {
-            // TODO test if this is proper handling of sign and names
-            let s = el.coefficient();
-            let el = repo.ga().name_and_sign_out(el);
-            if el.coefficient() != s {
-                f = -f;
+        for (mut el, mut f) in self.vals.into_iter() {
+            f.simplify();
+            if el.coefficient() == 0 {
+                continue
+            }
+            match f {
+                FloatExpr::Literal(0.0) => continue,
+                FloatExpr::Product(v) if v.is_empty() => continue,
+                FloatExpr::Sum(v) if v.is_empty() => continue,
+                _ => {}
+            }
+            let preferred_sign = repo.ga().name_and_sign_out(el).coefficient();
+            if preferred_sign == 0 {
+                continue
+            }
+            el = repo.ga().name_out(el);
+            let sign = el.coefficient();
+            if sign != preferred_sign {
+                el = el.set_coefficient(preferred_sign / sign);
+                f = f * FloatExpr::Literal((sign as f32) / (preferred_sign as f32))
             }
             vals.insert(el, f);
         }

@@ -1043,7 +1043,7 @@ impl From<Variable<Vec4>> for Vec4Expr {
 
 
 impl FloatExpr {
-    fn simplify(&mut self) {
+    pub(crate) fn simplify(&mut self) {
         match self {
             FloatExpr::Variable(_) => {}
             FloatExpr::Literal(_) => {}
@@ -1250,7 +1250,7 @@ impl FloatExpr {
     }
 }
 impl Vec2Expr {
-    fn simplify(&mut self) {
+    pub(crate) fn simplify(&mut self) {
         match self {
             Vec2Expr::Variable(_) => {}
             Vec2Expr::Gather1(f) => {
@@ -1405,7 +1405,7 @@ impl Vec2Expr {
     }
 }
 impl Vec3Expr {
-    fn simplify(&mut self) {
+    pub(crate) fn simplify(&mut self) {
         match self {
             Vec3Expr::Variable(_) => {}
             Vec3Expr::Gather1(f) => {
@@ -1580,7 +1580,7 @@ impl Vec3Expr {
     }
 }
 impl Vec4Expr {
-    fn simplify(&mut self) {
+    pub(crate) fn simplify(&mut self) {
         match self {
             Vec4Expr::Variable(_) => {}
             Vec4Expr::Gather1(f) => {
@@ -1772,7 +1772,7 @@ impl Vec4Expr {
     }
 }
 impl MultiVectorGroupExpr {
-    fn simplify(&mut self) {
+    pub(crate) fn simplify(&mut self) {
         match self {
             MultiVectorGroupExpr::JustFloat(f) => {
                 f.simplify();
@@ -1810,7 +1810,7 @@ impl MultiVectorGroupExpr {
     }
 }
 impl MultiVectorExpr {
-    fn simplify(&mut self) {
+    pub(crate) fn simplify(&mut self) {
         match &mut *self.expr {
             MultiVectorVia::Variable(_) => {}
             MultiVectorVia::Construct(groups) => {
