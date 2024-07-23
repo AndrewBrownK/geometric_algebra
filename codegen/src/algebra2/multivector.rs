@@ -922,7 +922,15 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             if remaining_els.is_empty() {
                 break;
             }
-            for mvg in mvgs.iter() {
+            let mut mvgs = Vec::from_iter(mvgs);
+            mvgs.sort_unstable_by(|a, b| {
+                let a = a.into_vec();
+                let b = b.into_vec();
+                b.len().cmp(&a.len()).then_with(|| {
+                    a.cmp(&b)
+                })
+            });
+            for mvg in mvgs.into_iter() {
                 let can_use = mvg.clone().into_iter().all(|el| {
                     !used_sigs.contains(&el.signature())
                 });

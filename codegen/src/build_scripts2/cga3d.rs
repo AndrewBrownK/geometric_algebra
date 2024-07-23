@@ -15,10 +15,10 @@ use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkEx
 multi_vecs!(e12345;
 
     // Special Objects
-    Origin as e4;
-    Infinity as e5;
+    Origin     as e4;
+    Infinity   as e5;
     FlatOrigin as e45;
-    Horizon as e3215;
+    Horizon    as e3215;
 
     // Uniform Grade Flat Objects
     FlatPoint  as e15, e25, e35, e45;
