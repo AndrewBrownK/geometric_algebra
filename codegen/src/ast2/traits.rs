@@ -1174,7 +1174,7 @@ macro_rules! register_all {
 
 #[macro_export]
 macro_rules! operators {
-    ($tir:ident $(; infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? ) => {
+    ($tir:ident $(; infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? $(;)? ) => {
         {
             use $crate::ast2::traits::BinaryOps::*;
             use $crate::ast2::traits::UnaryOps::*;

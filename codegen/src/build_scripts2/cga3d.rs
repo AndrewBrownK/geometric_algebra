@@ -65,7 +65,7 @@ pub fn cga3d_script() {
         Mul => GeometricProduct;
 
         unary
-        Not => Dual
+        Not => Dual;
     }
 
     // TODO output files

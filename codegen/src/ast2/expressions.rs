@@ -165,8 +165,11 @@ pub enum FloatExpr {
     // e.g. UnitizedNorm
     TraitInvoke11ToFloat(TraitKey, MultiVectorExpr),
     Product(Vec<FloatExpr>),
-    Sum(Vec<FloatExpr>)
-    // TODO divide, sqrt, pow, etc
+    Sum(Vec<FloatExpr>),
+    Divide(Vec<FloatExpr>),
+    // Use Pow instead of Sqrt
+    // Sqrt(Box<FloatExpr>),
+    Pow(Box<FloatExpr>, Box<FloatExpr>),
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec2Expr {
@@ -176,7 +179,6 @@ pub enum Vec2Expr {
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec2Expr>),
     Sum(Vec<Vec2Expr>),
-    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec3Expr {
@@ -186,7 +188,6 @@ pub enum Vec3Expr {
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec3Expr>),
     Sum(Vec<Vec3Expr>),
-    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec4Expr {
@@ -196,7 +197,6 @@ pub enum Vec4Expr {
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec4Expr>),
     Sum(Vec<Vec4Expr>),
-    // TODO divide, sqrt, pow, etc
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum MultiVectorGroupExpr {
@@ -397,6 +397,14 @@ impl Expression<Float> for FloatExpr {
                 for v in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
+            }
+            FloatExpr::Divide(v) => {
+                for v in v.iter_mut() {
+                    v.substitute_variable(old.clone(), new.clone());
+                }}
+            FloatExpr::Pow(f1, f2) => {
+                f1.substitute_variable(old.clone(), new.clone());
+                f2.substitute_variable(old.clone(), new.clone());
             }
         }
     }
@@ -1268,6 +1276,39 @@ impl FloatExpr {
                 sum.append(&mut flatten);
                 if sum.len() == 1 {
                     *self = sum.remove(0);
+                }
+            }
+            FloatExpr::Divide(_) => {}
+            FloatExpr::Pow(f1, f2) => {
+                f1.simplify();
+                f2.simplify();
+                match f2.as_mut() {
+                    FloatExpr::Literal(0.0) => {
+                        *self = FloatExpr::Literal(1.0);
+                        return
+                    }
+                    FloatExpr::Literal(1.0) => {
+                        *self = f1.as_ref().clone();
+                        return
+                    }
+                    _ => {}
+                }
+                match f1.as_mut() {
+                    FloatExpr::Literal(0.0) => {
+                        *self = FloatExpr::Literal(0.0);
+                        return
+                    }
+                    FloatExpr::Literal(1.0) => {
+                        *self = FloatExpr::Literal(1.0);
+                        return
+                    }
+                    FloatExpr::Pow(f3, f4) => {
+                        let mut new_pow = FloatExpr::Product(vec![*f2.clone(), *f4.clone()]);
+                        new_pow.simplify();
+                        *self = FloatExpr::Pow(f3.clone(), Box::new(new_pow));
+                        return
+                    }
+                    _ => {}
                 }
             }
         }
