@@ -863,8 +863,7 @@ impl TraitImplRegistry {
         let mut set_ops = self.has_set_operators.lock();
         let op = Ops::Binary(op);
         if set_ops.contains(&op) {
-            // TODO more details here
-            panic!("There was an attempt to set an operator's trait more than once")
+            panic!("There was an attempt to set an operator's trait more than once: {op:?}")
         }
         set_ops.insert(op);
         drop(set_ops);
@@ -879,7 +878,7 @@ impl TraitImplRegistry {
             if the_op.is_some() {
                 // Shouldn't really happen because of previous panic/check in this function
                 panic!("Somehow an operator was set twice, we should try to prevent this \
-                    earlier than when we enter async machinery.");
+                    earlier than when we enter async machinery. {op:?}");
             }
             *the_op = Some(op);
         });
@@ -889,8 +888,7 @@ impl TraitImplRegistry {
         let mut set_ops = self.has_set_operators.lock();
         let op = Ops::Unary(op);
         if set_ops.contains(&op) {
-            // TODO more details here
-            panic!("There was an attempt to set an operator's trait more than once")
+            panic!("There was an attempt to set an operator's trait more than once: {op:?}")
         }
         set_ops.insert(op);
         drop(set_ops);
@@ -905,7 +903,7 @@ impl TraitImplRegistry {
             if the_op.is_some() {
                 // Shouldn't really happen because of previous panic/check in this function
                 panic!("Somehow an operator was set twice, we should try to prevent this \
-                    earlier than when we enter async machinery.");
+                    earlier than when we enter async machinery. {op:?}");
             }
             *the_op = Some(op);
         });
