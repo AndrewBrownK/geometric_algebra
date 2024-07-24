@@ -3,7 +3,7 @@
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use crate::{ga, multi_vecs, register_all};
+use crate::{ga, multi_vecs, operators, register_all};
 use crate::algebra2::basis::BasisSignature;
 use crate::algebra2::basis::elements::e12345;
 use crate::algebra2::basis::grades::Grades;
@@ -11,7 +11,7 @@ use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
 use crate::ast2::traits::BinaryOps;
-use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkExpansion, GeometricAntiProduct, GeometricProduct, Grade, One, Unit, Wedge, Zero};
+use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkExpansion, Dual, GeometricAntiProduct, GeometricProduct, Grade, One, Unit, Wedge, Zero};
 
 multi_vecs!(e12345;
 
@@ -57,9 +57,16 @@ pub fn cga3d_script() {
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
     };
-    traits.set_binary_operator(BinaryOps::BitXor, Wedge);
-    traits.set_binary_operator(BinaryOps::Mul, GeometricProduct);
-    traits.generate_infix_trick(BinaryOps::Div);
+    operators! { traits;
+        infix => Div;
+
+        binary
+        BitXor => Wedge,
+        Mul => GeometricProduct;
+
+        unary
+        Not => Dual
+    }
 
     // TODO output files
 }

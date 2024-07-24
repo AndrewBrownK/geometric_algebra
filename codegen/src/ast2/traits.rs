@@ -61,7 +61,6 @@ pub struct RawTraitDefinition {
 }
 
 
-// TODO infix operators
 
 #[const_trait]
 pub trait ProvideTraitNames {
@@ -1169,6 +1168,23 @@ macro_rules! register_all {
                 )*
             });
             tir
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! operators {
+    ($tir:ident $(; infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? ) => {
+        {
+            use $crate::ast2::traits::BinaryOps::*;
+            use $crate::ast2::traits::UnaryOps::*;
+            $($tir.generate_infix_trick($itr);)?
+            $($(
+                $tir.set_binary_operator($bop, $btr);
+            )+)?
+            $($(
+                $tir.set_unary_operator($uop, $utr);
+            )+)?
         }
     };
 }
