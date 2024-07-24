@@ -5,11 +5,9 @@ use std::fmt::Debug;
 use std::future::Future;
 use std::hash::Hash;
 use std::marker::ConstParamTy;
-use std::mem;
-use std::mem::ManuallyDrop;
 use std::ops::{Index, IndexMut};
 use std::sync::Arc;
-use const_panic::PanicFmt;
+
 use tokio::sync::broadcast;
 use tokio::sync::broadcast::error::RecvError;
 
@@ -305,3 +303,33 @@ impl<T: Copy> ConstOption<T> {
 }
 
 
+
+
+
+
+
+
+// pub trait TypeFlags<const F: usize> {}
+// pub trait SetFlags<const Idx: u32, const F: usize>: TypeFlags<F> {
+//     type Output: TypeFlags<{F | (1usize << Idx)}>;
+// }
+// pub trait UnSetFlags<const Idx: u32, const F: usize>: TypeFlags<F> {
+//     type Output: TypeFlags<{F & !(1usize << Idx)}>;
+// }
+//
+//
+//
+// impl<Thing, const Idx: u32> UnSetFlags<Idx, {usize::MAX}> for (Thing, {usize::MAX})
+// where Thing: TypeFlags<{usize::MAX}> {
+//     type Output = ();
+// }
+// impl<Thing, const Idx: u32> SetFlags<Idx, {0usize}> for Thing
+// where Thing: TypeFlags<{0usize}> {
+//     type Output = ();
+// }
+//
+// impl<const F: usize, Thing> UnSetFlags<{0u32}, F> for Thing
+// where Thing: TypeFlags<F> + TypeFlags<{(1usize << 0u32) | F}> {}
+//
+// impl<Thing, const Idx: usize, const F: usize> SetFlags<Idx, F> for Thing
+// where Thing: TypeFlags<F> + TypeFlags<{(!(1usize << Idx)) & F}> {}

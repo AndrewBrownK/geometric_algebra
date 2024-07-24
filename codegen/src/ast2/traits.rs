@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap, HashSet};
+use std::marker::PhantomData;
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -759,11 +760,13 @@ impl TraitAlias {
 }
 
 
+#[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum UnaryOps {
     Neg,
     Not,
 }
+#[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum BinaryOps {
     Add,
@@ -776,6 +779,7 @@ pub enum BinaryOps {
     BitOr,
     BitXor,
 }
+#[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum ExperimentalOps {
     Deref,
@@ -793,6 +797,18 @@ pub enum Ops {
     Unary(UnaryOps),
     Binary(BinaryOps),
     // Exp(ExperimentalOps),
+}
+impl Ops {
+    pub const fn into_u32(self) -> u32 {
+        match self {
+            Ops::Unary(o) => {
+                o as u32
+            }
+            Ops::Binary(o) => {
+                (o as u32) + 2
+            }
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -813,8 +829,6 @@ impl TraitDefRegistry {
     }
 }
 
-pub struct NoOperators;
-pub struct YesOperators;
 
 #[derive(Clone)]
 pub struct TraitImplRegistry {
@@ -829,6 +843,7 @@ pub struct TraitImplRegistry {
     traits22: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
 
     has_set_operators: Arc<Mutex<BTreeSet<Ops>>>,
+    infix_trick: Arc<Mutex<Option<BinaryOps>>>,
 }
 
 
@@ -841,6 +856,7 @@ impl TraitImplRegistry {
             traits21: AsyncMap::new(),
             traits22: AsyncMap::new(),
             has_set_operators: Arc::new(Mutex::new(BTreeSet::new())),
+            infix_trick: Arc::new(Mutex::new(None)),
         }
     }
 
@@ -894,6 +910,15 @@ impl TraitImplRegistry {
             }
             *the_op = Some(op);
         });
+    }
+
+    pub fn generate_infix_trick(&self, op: BinaryOps) {
+        let mut trick = self.infix_trick.lock();
+        if trick.is_some() {
+            panic!("Do not set the infix trick more than once. Just decide what you want it to be \
+                once and leave it.")
+        }
+        *trick = Some(op);
     }
 }
 

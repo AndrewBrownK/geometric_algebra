@@ -59,6 +59,7 @@ pub fn cga3d_script() {
     };
     traits.set_binary_operator(BinaryOps::BitXor, Wedge);
     traits.set_binary_operator(BinaryOps::Mul, GeometricProduct);
+    traits.generate_infix_trick(BinaryOps::Div);
 
     // TODO output files
 }
