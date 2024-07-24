@@ -48,7 +48,7 @@ pub fn cga3d_script() {
         e5 => eP + eM;
     );
     let repo = generate_variants(register_multi_vecs(cga3d));
-    let traits = register_all! { repo;
+    let mut traits = register_all! { repo;
         Plane_BulkExpansion_Plane
         |
         Zero One AntiOne Unit
@@ -56,6 +56,13 @@ pub fn cga3d_script() {
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
     };
+
+    // TODO although this technically works, I'm thinking I might prefer simple map
+    traits.set_operators(|ops| {
+        ops.bit_xor(Wedge);
+        ops.mul(GeometricProduct);
+        ops.mul(AntiWedge);
+    })
 
     // TODO output files
 }

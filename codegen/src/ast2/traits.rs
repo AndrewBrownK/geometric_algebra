@@ -56,6 +56,7 @@ pub struct RawTraitDefinition {
     owner: Arc<RwLock<TraitTypeConsensus>>,
     owner_is_param: bool,
     output: Arc<RwLock<TraitTypeConsensus>>,
+    op: Arc<Mutex<Option<Ops>>>
 }
 
 
@@ -104,6 +105,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: false,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
+            op: Arc::new(Default::default()),
         })
     }
 
@@ -219,6 +221,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
+            op: Arc::new(Default::default()),
         })
     }
 
@@ -344,6 +347,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
+            op: Arc::new(Default::default()),
         })
     }
 
@@ -475,6 +479,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             owner_is_param: true,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
+            op: Arc::new(Default::default()),
         })
     }
 
@@ -753,19 +758,31 @@ impl TraitAlias {
     }
 }
 
-
-#[derive(Clone)]
-pub struct TraitImplRegistry {
-    defs: TraitDefRegistry,
-    // The use of options is to help short circuit the forgoing of implementations
-    // that we've already determined cannot exist. Basically, the map might get fat with
-    // None entries, but should save us a bit of compute cycles from repeatedly attempting
-    // and failing to generate some trait implementations.
-    traits10: AsyncMap<(TraitKey, MultiVector), Option<Arc<RawTraitImplementation>>>,
-    traits11: AsyncMap<(TraitKey, MultiVector), Option<Arc<RawTraitImplementation>>>,
-    traits21: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
-    traits22: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
+enum Ops {
+    // Seems like a good idea, and don't forget "Assign" variants
+    Neg,
+    Not,
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Shl,
+    Shr,
+    BitAnd,
+    BitOr,
+    BitXor,
+    // More interesting and strange, or questionable
+    Deref,
+    Fn,
+    Index,
+    RangeBounds,
+    Rem,
+    FromResidual,
+    OneSidedRange,
+    Residual,
+    Try
 }
+
 #[derive(Clone)]
 pub struct TraitDefRegistry {
     traits10: AsyncMap<TraitKey, Arc<RawTraitDefinition>>,
@@ -783,6 +800,26 @@ impl TraitDefRegistry {
         }
     }
 }
+
+pub struct NoOperators;
+pub struct YesOperators;
+
+#[derive(Clone)]
+pub struct TraitImplRegistry {
+    defs: TraitDefRegistry,
+    // The use of options is to help short circuit the forgoing of implementations
+    // that we've already determined cannot exist. Basically, the map might get fat with
+    // None entries, but should save us a bit of compute cycles from repeatedly attempting
+    // and failing to generate some trait implementations.
+    traits10: AsyncMap<(TraitKey, MultiVector), Option<Arc<RawTraitImplementation>>>,
+    traits11: AsyncMap<(TraitKey, MultiVector), Option<Arc<RawTraitImplementation>>>,
+    traits21: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
+    traits22: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
+
+    has_set_operators: bool,
+}
+
+
 impl TraitImplRegistry {
     pub fn new() -> Self {
         TraitImplRegistry {
@@ -791,8 +828,81 @@ impl TraitImplRegistry {
             traits11: AsyncMap::new(),
             traits21: AsyncMap::new(),
             traits22: AsyncMap::new(),
+            has_set_operators: false,
         }
     }
+
+    pub fn set_operators<F: FnOnce(RegisterOperators)>(&mut self, f: F) {
+        if self.has_set_operators {
+            // TODO This could be done with type level parameters, but I'll have to bite the bullet
+            //  and infect the parameter everywhere, or have a two layered API where it has the
+            //  type level data at one level but not the other
+            eprintln!("Attempted to set operators multiple times. This shouldn't be necessary. \
+                We disallow/discourage this in order to help prevent multiple traits from \
+                getting assigned the same operators.");
+            return
+        }
+        self.has_set_operators = true;
+        macro_rules! do_the_stuff {
+            ($op:ident $Op:ident $traitsXX:ident; $TraitDefXX:ty) => {
+                let tdr = self.defs.clone();
+                let $op = Box::new(move |td: $TraitDefXX| {
+                    let rt = tokio::runtime::Runtime::new().expect("tokio should work");
+                    rt.block_on(async move {
+                        let def = td.def();
+                        let name = def.names.trait_key;
+                        let def = tdr.$traitsXX.get_or_create_or_panic(name, async move { def }).await;
+                        let mut op = def.op.lock();
+                        if op.is_none() {
+                            *op = Some(Ops::$Op);
+                        }
+                    });
+                });
+            };
+        }
+        macro_rules! unary {
+            ($op:ident $Op:ident) => {
+                do_the_stuff!($op $Op traits11; dyn TraitDef_1Class_1Param<Output=MultiVector, Owner=AnyClasses>);
+            };
+        }
+        macro_rules! binary {
+            ($op:ident $Op:ident) => {
+                do_the_stuff!($op $Op traits22; dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>);
+            };
+        }
+
+        unary!(neg Neg);
+        unary!(not Not);
+        binary!(add Add);
+        binary!(sub Sub);
+        binary!(mul Mul);
+        binary!(div Div);
+        binary!(shl Shl);
+        binary!(shr Shr);
+        binary!(bit_and BitAnd);
+        binary!(bit_or BitOr);
+        binary!(bit_xor BitXor);
+
+        f(RegisterOperators {
+            neg, not,
+            add, sub, mul, div,
+            shl, shr, bit_and, bit_or, bit_xor,
+        });
+    }
+}
+
+pub struct RegisterOperators {
+    pub neg: Box<dyn FnOnce(dyn TraitDef_1Class_1Param<Output=MultiVector, Owner=AnyClasses>)>,
+    pub not: Box<dyn FnOnce(dyn TraitDef_1Class_1Param<Output=MultiVector, Owner=AnyClasses>)>,
+    pub add: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub sub: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub mul: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub div: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub shl: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub shr: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub bit_and: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub bit_or:  Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
+    pub bit_xor: Box<dyn FnOnce(dyn TraitDef_2Class_2Param<Output=MultiVector, Owner=AnyClasses, Other=AnyClasses>)>,
 }
 
 
