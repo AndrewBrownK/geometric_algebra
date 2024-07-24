@@ -2,6 +2,7 @@
 
 use std::collections::BTreeSet;
 use std::sync::Arc;
+
 use crate::{ga, multi_vecs, register_all};
 use crate::algebra2::basis::BasisSignature;
 use crate::algebra2::basis::elements::e12345;
@@ -9,7 +10,7 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
-use crate::ast2::traits::TraitImplRegistry;
+use crate::ast2::traits::BinaryOps;
 use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkExpansion, GeometricAntiProduct, GeometricProduct, Grade, One, Unit, Wedge, Zero};
 
 multi_vecs!(e12345;
@@ -48,7 +49,7 @@ pub fn cga3d_script() {
         e5 => eP + eM;
     );
     let repo = generate_variants(register_multi_vecs(cga3d));
-    let mut traits = register_all! { repo;
+    let traits = register_all! { repo;
         Plane_BulkExpansion_Plane
         |
         Zero One AntiOne Unit
@@ -56,13 +57,8 @@ pub fn cga3d_script() {
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
     };
-
-    // TODO although this technically works, I'm thinking I might prefer simple map
-    traits.set_operators(|ops| {
-        ops.bit_xor(Wedge);
-        ops.mul(GeometricProduct);
-        ops.mul(AntiWedge);
-    })
+    traits.set_binary_operator(BinaryOps::BitXor, Wedge);
+    traits.set_binary_operator(BinaryOps::Mul, GeometricProduct);
 
     // TODO output files
 }
