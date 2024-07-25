@@ -1,3 +1,5 @@
+mod rust;
+
 use std::collections::{HashMap, HashSet};
 use std::ffi::OsStr;
 use std::fs;
@@ -99,13 +101,6 @@ impl FileOrganizing {
 
             }
             DataTypesVsTraits::OneGinormousFile => {
-                let file_name = root
-                    .join(Path::new(self.algebra_name))
-                    .with_extension(E::file_extension());
-                let mut file = File::create(file_name)?;
-                for mv in multi_vecs.declarations() {
-                    E::emit_multi_vector(&mut file, &self, mv)?;
-                }
                 //
             }
         }
@@ -116,6 +111,7 @@ impl FileOrganizing {
         P: AsRef<Path> + AsRef<OsStr>, S: Into<String>, E: AstEmitter, const AntiScalar: BasisElement
     >(
         &self,
+        e: E,
         join_set: &mut JoinSet<anyhow::Result<()>>,
         folder_owning_file: P,
         file_name_no_extension: S,
@@ -154,7 +150,7 @@ impl FileOrganizing {
 
         let mut trait_deps = vec![];
         let mut mv_deps = vec![];
-        if E::supports_imports() {
+        if e.supports_imports() {
             for td in trait_declarations.iter() {
                 let out = td.output.read();
                 match *out {
@@ -191,20 +187,20 @@ impl FileOrganizing {
         let file_name = PathBuf::from(&folder_owning_file)
             .join(Path::new(file_name_no_extension.as_str()))
             .with_extension(E::file_extension());
-        if !use_customizable_stub || !E::supports_includes() {
+        if !use_customizable_stub || !e.supports_includes() {
             let slf = self.clone();
             join_set.spawn(async move {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
                     .open(file_name)?;
-                E::emit_comment(
+                e.emit_comment(
                     &mut file,
                     "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
                     Changes to this file may be clobbered by code generation at any time."
                 )?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
+                    e, &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
                 ).await
             });
             return Ok(())
@@ -220,7 +216,7 @@ impl FileOrganizing {
         };
 
         if let Some(stub_file) = &mut stub_file {
-            E::emit_comment(
+            e.emit_comment(
                 stub_file,
                 "This file may `include` other files in its contents.\n\
                     This file will not be clobbered by code generation, \n\
@@ -232,12 +228,12 @@ impl FileOrganizing {
                     from scratch by deleting it first."
             )?;
             self.write_file_dumb::<&mut File, E, AntiScalar>(
-                stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
+                e, stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
             ).await?;
         }
         for mv in types {
             if let Some(stub_file) = &mut stub_file {
-                E::emit_comment(stub_file, "TODO custom documentation")?;
+                e.emit_comment(stub_file, "TODO custom documentation")?;
             }
             let included_file_name = if is_per_type {
                 let mut n = file_name_no_extension.clone();
@@ -254,7 +250,7 @@ impl FileOrganizing {
                     .with_extension(E::file_extension())
             };
             if let Some(stub_file) = &mut stub_file {
-                E::include_file(stub_file, &included_file_name)?;
+                e.include_file(stub_file, &included_file_name)?;
             }
             let slf = self.clone();
             join_set.spawn(async move {
@@ -263,13 +259,13 @@ impl FileOrganizing {
                     .create(true)
                     .open(included_file_name)?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, vec![], vec![], vec![mv], vec![], vec![]
+                    e, &mut file, vec![], vec![], vec![mv], vec![], vec![]
                 ).await
             });
         }
         for def in trait_declarations {
             if let Some(stub_file) = &mut stub_file {
-                E::emit_comment(stub_file, "TODO custom documentation")?;
+                e.emit_comment(stub_file, "TODO custom documentation")?;
             }
             let included_file_name = if is_per_trait {
                 let mut n = file_name_no_extension.clone();
@@ -286,7 +282,7 @@ impl FileOrganizing {
                     .with_extension(E::file_extension())
             };
             if let Some(stub_file) = &mut stub_file {
-                E::include_file(stub_file, &included_file_name)?;
+                e.include_file(stub_file, &included_file_name)?;
             }
             let slf = self.clone();
             join_set.spawn(async move {
@@ -295,7 +291,7 @@ impl FileOrganizing {
                     .create(true)
                     .open(included_file_name)?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, vec![], vec![], vec![], vec![def], vec![]
+                    e, &mut file, vec![], vec![], vec![], vec![def], vec![]
                 ).await
             });
         }
@@ -308,7 +304,7 @@ impl FileOrganizing {
                     .with_extension(E::file_extension())
             };
             if let Some(stub_file) = &mut stub_file {
-                E::include_file(stub_file, &included_file_name)?;
+                e.include_file(stub_file, &included_file_name)?;
             }
             let slf = self.clone();
             join_set.spawn(async move {
@@ -317,7 +313,7 @@ impl FileOrganizing {
                     .create(true)
                     .open(included_file_name)?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, vec![], vec![], vec![], vec![], trait_implementations
+                    e, &mut file, vec![], vec![], vec![], vec![], trait_implementations
                 ).await
             });
         }
@@ -326,6 +322,7 @@ impl FileOrganizing {
 
     async fn write_file_dumb<W: Write, E: AstEmitter, const AntiScalar: BasisElement>(
         &self,
+        e: E,
         mut file: W,
         type_dependencies: Vec<&'static MultiVec<AntiScalar>>,
         trait_dependencies: Vec<Arc<RawTraitDefinition>>,
@@ -334,19 +331,19 @@ impl FileOrganizing {
         trait_implementations: Vec<Arc<RawTraitImplementation>>,
     ) -> anyhow::Result<()> {
         for dep in type_dependencies {
-            E::import_multi_vector(&mut file, self, dep)?;
+            e.import_multi_vector(&mut file, self, dep)?;
         }
         for dep in trait_dependencies {
-            E::import_trait_def(&mut file, self, dep)?;
+            e.import_trait_def(&mut file, self, dep)?;
         }
         for multi_vec in types {
-            E::emit_multi_vector(&mut file, self, multi_vec)?;
+            e.emit_multi_vector(&mut file, self, multi_vec)?;
         }
         for td in trait_declarations {
-            E::emit_trait_def(&mut file, self, td)?;
+            e.emit_trait_def(&mut file, self, td)?;
         }
         for ti in trait_implementations {
-            E::emit_trait_impl(&mut file, self, ti)?;
+            e.emit_trait_impl(&mut file, self, ti)?;
         }
         Ok(())
     }
@@ -467,38 +464,46 @@ pub trait IdentifierQualifier {
     fn qualifying_path_of_trait_def(&self, trait_def: Arc<RawTraitDefinition>) -> PathBuf;
 }
 
-pub trait AstEmitter {
+pub trait AstEmitter: Copy + Send + Sync + 'static {
     fn file_extension() -> &'static str;
-    fn supports_includes() -> bool { false }
-    fn include_file<W: Write, P: AsRef<Path>>(w: &mut W, p: P) -> anyhow::Result<()> { bail!("Includes are not supported") }
-    fn supports_imports() -> bool { false }
+    fn supports_includes(&self) -> bool { false }
+    fn include_file<W: Write, P: AsRef<Path>>(&self, w: &mut W, p: P) -> anyhow::Result<()> { bail!("Includes are not supported") }
+    fn supports_imports(&self) -> bool { false }
     fn import_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
+        &self,
         w: &mut W,
         q: &Q,
         multi_vec: &'static MultiVec<AntiScalar>,
     ) -> anyhow::Result<()> { bail!("Imports not supported") }
     fn import_trait_def<W: Write, Q: IdentifierQualifier>(
+        &self,
         w: &mut W,
         q: &Q,
         defs: Arc<RawTraitDefinition>,
     ) -> anyhow::Result<()> { bail!("Imports not supported") }
     fn emit_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
+        &self,
         w: &mut W,
         q: &Q,
         multi_vec: &'static MultiVec<AntiScalar>,
     ) -> anyhow::Result<()>;
     fn emit_trait_def<W: Write, Q: IdentifierQualifier>(
+        &self,
         w: &mut W,
         q: &Q,
         defs: Arc<RawTraitDefinition>,
     ) -> anyhow::Result<()>;
     fn emit_trait_impl<W: Write, Q: IdentifierQualifier>(
+        &self,
         w: &mut W,
         q: &Q,
         impls: Arc<RawTraitImplementation>,
     ) -> anyhow::Result<()>;
-    fn emit_comment<W: Write, S: Into<String>>(w: &mut W, s: S) -> anyhow::Result<()>;
+    fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, s: S) -> anyhow::Result<()>;
 }
+
+
+
 
 
 
