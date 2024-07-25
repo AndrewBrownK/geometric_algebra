@@ -6,6 +6,7 @@ use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::BasisElementGroup;
 use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
+use crate::ast2::operations_tracker::VectoredOperationsTracker;
 use crate::ast2::traits::TraitKey;
 
 pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
@@ -170,6 +171,7 @@ pub enum FloatExpr {
     // Use Pow instead of Sqrt
     // Sqrt(Box<FloatExpr>),
     Pow(Box<FloatExpr>, Box<FloatExpr>),
+    // TODO trig? floor? log? round? trunc? mix? step? smoothstep? fma? fract? modf?
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec2Expr {
@@ -254,6 +256,17 @@ impl AnyExpression {
             AnyExpression::Class(c) => c.substitute_variable(old.clone(), new.clone()),
         }
     }
+
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self {
+            AnyExpression::Int(a) => a.count_operations(),
+            AnyExpression::Float(a) => a.count_operations(),
+            AnyExpression::Vec2(a) => a.count_operations(),
+            AnyExpression::Vec3(a) => a.count_operations(),
+            AnyExpression::Vec4(a) => a.count_operations(),
+            AnyExpression::Class(a) => a.count_operations(),
+        }
+    }
 }
 
 
@@ -268,6 +281,7 @@ pub trait Expression<ExprType>: Send + Sized {
 
     // TODO it seems this method is not used
     //  Well, ExpressionType is used. So hold off deleting this until you're sure you don't need it.
+    //  I think I'll have a better idea after I've actually emitted any code.
     fn soft_expression_type(&self) -> ExpressionType;
 
     fn substitute_variable(&mut self, old: Arc<RawVariableDeclaration>, new: Arc<RawVariableDeclaration>);
@@ -947,31 +961,30 @@ impl Variable<MultiVector> {
         })
     }
 
-    // TODO still not exactly sure how I feel about this, but we'll see.
-    pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
-        let mv_expr: MultiVectorExpr = self.clone().into();
-        self.expr_type.groups().into_iter().enumerate().map(move |(g, group)| {
-            let g = g as u16;
-            match group {
-                BasisElementGroup::G1(a) => (
-                    MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G1(a),
-                ),
-                BasisElementGroup::G2(a, b) => (
-                    MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G2(a, b),
-                ),
-                BasisElementGroup::G3(a, b, c) => (
-                    MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G3(a, b, c),
-                ),
-                BasisElementGroup::G4(a, b, c, d) => (
-                    MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G4(a, b, c, d),
-                ),
-            }
-        })
-    }
+    // pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
+    //     let mv_expr: MultiVectorExpr = self.clone().into();
+    //     self.expr_type.groups().into_iter().enumerate().map(move |(g, group)| {
+    //         let g = g as u16;
+    //         match group {
+    //             BasisElementGroup::G1(a) => (
+    //                 MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G1(a),
+    //             ),
+    //             BasisElementGroup::G2(a, b) => (
+    //                 MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G2(a, b),
+    //             ),
+    //             BasisElementGroup::G3(a, b, c) => (
+    //                 MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G3(a, b, c),
+    //             ),
+    //             BasisElementGroup::G4(a, b, c, d) => (
+    //                 MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G4(a, b, c, d),
+    //             ),
+    //         }
+    //     })
+    // }
 }
 
 impl MultiVectorExpr {
@@ -981,31 +994,30 @@ impl MultiVectorExpr {
         })
     }
 
-    // TODO still not exactly sure how I feel about this, but we'll see.
-    pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
-        let mv_expr = self.clone();
-        self.mv_class.groups().into_iter().enumerate().map(move |(g, group)| {
-            let g = g as u16;
-            match group {
-                BasisElementGroup::G1(a) => (
-                    MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G1(a),
-                ),
-                BasisElementGroup::G2(a, b) => (
-                    MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G2(a, b),
-                ),
-                BasisElementGroup::G3(a, b, c) => (
-                    MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G3(a, b, c),
-                ),
-                BasisElementGroup::G4(a, b, c, d) => (
-                    MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
-                    BasisElementGroup::G4(a, b, c, d),
-                ),
-            }
-        })
-    }
+    // pub fn groups(&self) -> impl Iterator<Item=(MultiVectorGroupExpr, BasisElementGroup)> + '_ {
+    //     let mv_expr = self.clone();
+    //     self.mv_class.groups().into_iter().enumerate().map(move |(g, group)| {
+    //         let g = g as u16;
+    //         match group {
+    //             BasisElementGroup::G1(a) => (
+    //                 MultiVectorGroupExpr::JustFloat(FloatExpr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G1(a),
+    //             ),
+    //             BasisElementGroup::G2(a, b) => (
+    //                 MultiVectorGroupExpr::Vec2(Vec2Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G2(a, b),
+    //             ),
+    //             BasisElementGroup::G3(a, b, c) => (
+    //                 MultiVectorGroupExpr::Vec3(Vec3Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G3(a, b, c),
+    //             ),
+    //             BasisElementGroup::G4(a, b, c, d) => (
+    //                 MultiVectorGroupExpr::Vec4(Vec4Expr::AccessMultiVecGroup(mv_expr.clone(), g)),
+    //                 BasisElementGroup::G4(a, b, c, d),
+    //             ),
+    //         }
+    //     })
+    // }
 }
 
 impl From<Variable<Float>> for FloatExpr {
@@ -2158,5 +2170,189 @@ impl Sub for Vec4Expr {
 impl SubAssign for Vec4Expr {
     fn sub_assign(&mut self, rhs: Self) {
         self.add_assign(-rhs);
+    }
+}
+
+
+
+
+
+
+
+
+impl FloatExpr {
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self {
+            FloatExpr::Variable(_) => VectoredOperationsTracker::zero(),
+            FloatExpr::Literal(_) => VectoredOperationsTracker::zero(),
+            FloatExpr::AccessVec2(v, _) => v.count_operations(),
+            FloatExpr::AccessVec3(v, _) => v.count_operations(),
+            FloatExpr::AccessVec4(v, _) => v.count_operations(),
+            FloatExpr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            FloatExpr::AccessMultiVecFlat(m, _) => m.count_operations(),
+            FloatExpr::TraitInvoke11ToFloat(t, m) => {
+                // TODO look up operations using the trait key
+                m.count_operations()
+            }
+            FloatExpr::Product(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.floats.mul += v.len() - 1;
+                }
+                result
+            }
+            FloatExpr::Sum(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.floats.add_sub += v.len() - 1;
+                }
+                result
+            }
+            FloatExpr::Divide(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.floats.div += v.len() - 1;
+                }
+                result
+            }
+            FloatExpr::Pow(f1, f2) => {
+                f1.count_operations() + f2.count_operations()
+            }
+        }
+    }
+}
+impl Vec2Expr {
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self {
+            Vec2Expr::Variable(_) => VectoredOperationsTracker::zero(),
+            Vec2Expr::Gather1(f) => f.count_operations(),
+            Vec2Expr::Gather2(f0, f1) => f0.count_operations() + f1.count_operations(),
+            Vec2Expr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            Vec2Expr::Product(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.simd2.mul += v.len() - 1;
+                }
+                result
+            }
+            Vec2Expr::Sum(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.simd2.add_sub += v.len() - 1;
+                }
+                result
+            }
+        }
+    }
+}
+impl Vec3Expr {
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self {
+            Vec3Expr::Variable(_) => VectoredOperationsTracker::zero(),
+            Vec3Expr::Gather1(f) => f.count_operations(),
+            Vec3Expr::Gather3(f0, f1, f2) => f0.count_operations() + f1.count_operations() + f2.count_operations(),
+            Vec3Expr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            Vec3Expr::Product(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.simd3.mul += v.len() - 1;
+                }
+                result
+            }
+            Vec3Expr::Sum(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.simd3.add_sub += v.len() - 1;
+                }
+                result
+            }
+        }
+    }
+}
+impl Vec4Expr {
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self {
+            Vec4Expr::Variable(_) => VectoredOperationsTracker::zero(),
+            Vec4Expr::Gather1(f) => f.count_operations(),
+            Vec4Expr::Gather4(f0, f1, f2, f3) => f0.count_operations() + f1.count_operations() + f2.count_operations() + f3.count_operations(),
+            Vec4Expr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            Vec4Expr::Product(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.simd4.mul += v.len() - 1;
+                }
+                result
+            }
+            Vec4Expr::Sum(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                if v.len() > 1 {
+                    result.simd4.add_sub += v.len() - 1;
+                }
+                result
+            }
+        }
+    }
+}
+impl MultiVectorGroupExpr {
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self {
+            MultiVectorGroupExpr::JustFloat(f) => f.count_operations(),
+            MultiVectorGroupExpr::Vec2(v) => v.count_operations(),
+            MultiVectorGroupExpr::Vec3(v) => v.count_operations(),
+            MultiVectorGroupExpr::Vec4(v) => v.count_operations()
+        }
+    }
+}
+impl MultiVectorExpr {
+    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+        match self.expr.as_ref() {
+            MultiVectorVia::Variable(_) => VectoredOperationsTracker::zero(),
+            MultiVectorVia::Construct(v) => {
+                let mut result = VectoredOperationsTracker::zero();
+                for f in v.iter() {
+                    result += f.count_operations();
+                }
+                result
+            }
+            MultiVectorVia::TraitInvoke11ToClass(t, m) => {
+                // TODO look up operations using the trait key
+                m.count_operations()
+            }
+            MultiVectorVia::TraitInvoke21ToClass(t, a, _) => {
+                // TODO look up operations using the trait key
+                a.count_operations()
+            }
+            MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
+                // TODO look up operations using the trait key
+                a.count_operations() + b.count_operations()
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ mod playground;
 pub mod traits;
 pub mod expressions;
 pub mod impls;
-// TODO Hamish recommends terms "intrinsic" and "extrinsic" instead of "Space" and "antispace"
+mod operations_tracker;
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Variable<ExprType> {

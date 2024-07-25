@@ -1,6 +1,5 @@
 use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap, HashSet};
-use std::marker::PhantomData;
 use std::ops::Deref;
 use std::sync::Arc;
 
@@ -17,6 +16,7 @@ use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, MultiVectorExpr, TraitResultType};
 use crate::ast2::impls::Elaborated;
+use crate::ast2::operations_tracker::VectoredOperationsTracker;
 use crate::utility::AsyncMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -629,6 +629,7 @@ pub struct RawTraitImplementation {
     return_comment: Option<String>,
     return_expr: AnyExpression,
     specialized: bool,
+    statistics: VectoredOperationsTracker,
 }
 
 /// Each TraitKey should be the final name of a trait, and correspond
@@ -1214,7 +1215,6 @@ pub enum CommentOrVariableDeclaration {
 pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     pub ga: Arc<GeometricAlgebra<AntiScalar>>,
     pub mvs: Arc<MultiVecRepository<AntiScalar>>,
-    // TODO statistics tracker for fun
     registry: TraitImplRegistry,
     pub(crate) trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
