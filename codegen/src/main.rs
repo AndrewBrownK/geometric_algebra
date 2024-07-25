@@ -23,6 +23,7 @@ mod shader_support;
 pub mod ast2;
 pub mod algebra2;
 mod utility;
+mod emit2;
 
 mod build_scripts2 {
     pub mod common_traits;

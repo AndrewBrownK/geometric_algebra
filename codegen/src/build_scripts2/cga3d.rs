@@ -10,8 +10,6 @@ use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
-use crate::ast2::traits::BinaryOps;
-use crate::build_scripts2::common_traits::{AntiGrade, AntiOne, AntiWedge, BulkExpansion, Dual, GeometricAntiProduct, GeometricProduct, Grade, One, Unit, Wedge, Zero};
 
 multi_vecs!(e12345;
 
@@ -111,6 +109,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
 
 
 
+use crate::build_scripts2::common_traits::BulkExpansion;
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
     = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| Box::pin(async move {
         // TODO actually implement

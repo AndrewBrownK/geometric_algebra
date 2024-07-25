@@ -1140,6 +1140,7 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
 macro_rules! register_all {
     ($mv_repo:expr; $($t:ident)+ $(| $($t2:ident)+)*) => {
         {
+            use $crate::build_scripts2::common_traits::*;
             let tir = $crate::ast2::traits::TraitImplRegistry::new();
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
             let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
@@ -1175,6 +1176,7 @@ macro_rules! register_all {
 macro_rules! operators {
     ($tir:ident $(; infix => $itr:ident)? $(; binary $($bop:ident => $btr:ident),+)? $(; unary $($uop:ident => $utr:ident),+ )? $(;)? ) => {
         {
+            use $crate::build_scripts2::common_traits::*;
             use $crate::ast2::traits::BinaryOps::*;
             use $crate::ast2::traits::UnaryOps::*;
             $($tir.generate_infix_trick($itr);)?
