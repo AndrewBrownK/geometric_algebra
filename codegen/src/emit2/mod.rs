@@ -9,6 +9,7 @@ use std::sync::Arc;
 use anyhow::bail;
 use parking_lot::lock_api::RwLockReadGuard;
 use parking_lot::RawRwLock;
+use tokio::task::JoinSet;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
@@ -52,8 +53,8 @@ pub struct FileOrganizing {
     pub data_types: (DataTypesBelong, ExtensiveFile),
     pub trait_defs: (TraitDefsBelong, ExtensiveFile),
     pub trait_impls: TraitImplsBelong,
-    pub override_data_types: HashMap<MultiVector, (DataTypesBelong, ExtensiveFile)>,
-    pub override_trait_defs: HashMap<TraitKey,    (TraitDefsBelong, ExtensiveFile)>,
+    pub override_data_types: Arc<HashMap<MultiVector, (DataTypesBelong, ExtensiveFile)>>,
+    pub override_trait_defs: Arc<HashMap<TraitKey,    (TraitDefsBelong, ExtensiveFile)>>,
 }
 impl FileOrganizing {
     pub fn recommended_for_rust(algebra_name: &'static str) -> Self {
@@ -115,6 +116,7 @@ impl FileOrganizing {
         P: AsRef<Path> + AsRef<OsStr>, S: Into<String>, E: AstEmitter, const AntiScalar: BasisElement
     >(
         &self,
+        join_set: &mut JoinSet<anyhow::Result<()>>,
         folder_owning_file: P,
         file_name_no_extension: S,
         is_per_type: bool,
@@ -189,123 +191,135 @@ impl FileOrganizing {
         let file_name = PathBuf::from(&folder_owning_file)
             .join(Path::new(file_name_no_extension.as_str()))
             .with_extension(E::file_extension());
-        if use_customizable_stub && E::supports_includes() {
-            let maybe_stub_file = fs::OpenOptions::new()
-                .write(true)
-                .create_new(true)
-                .open(file_name);
-            let mut stub_file = match maybe_stub_file {
-                Ok(f) => Some(f),
-                Err(e) if e.kind() == AlreadyExists => None,
-                Err(e) => Err(e)?
-            };
-
-            if let Some(stub_file) = &mut stub_file {
+        if !use_customizable_stub || !E::supports_includes() {
+            let slf = self.clone();
+            join_set.spawn(async move {
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(file_name)?;
                 E::emit_comment(
-                    stub_file,
-                    "This file may `include` other files in its contents.\n\
-                        This file will not be clobbered by code generation, \n\
-                        and so can be manually customized or documented by hand.\n\
-                        Any `included` files seen across this file WILL be \n\
-                        clobbered by code generation.\n\
-                        If you accidentally break this file, or the content \n\
-                        it relies upon changes, you can regenerate this file \n\
-                        from scratch by deleting it first."
+                    &mut file,
+                    "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
+                    Changes to this file may be clobbered by code generation at any time."
                 )?;
-                self.write_file_dumb::<&mut File, E, AntiScalar>(
-                    stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
-                ).await?;
-            }
-            for mv in types {
-                if let Some(stub_file) = &mut stub_file {
-                    E::emit_comment(stub_file, "TODO custom documentation")?;
-                }
-                let included_file_name = if is_per_type {
-                    let mut n = file_name_no_extension.clone();
-                    n.push_str("_datatype");
-                    PathBuf::from(&folder_owning_file)
-                        .join(Path::new(n.as_str()))
-                        .with_extension(E::file_extension())
-                } else {
-                    let mut n = file_name_no_extension.clone();
-                    n.push_str("_");
-                    n.push_str(TraitKey::new(mv.name).as_lower_snake().as_str());
-                    PathBuf::from(&folder_owning_file)
-                        .join(Path::new(file_name_no_extension.as_str()))
-                        .with_extension(E::file_extension())
-                };
-                if let Some(stub_file) = &mut stub_file {
-                    E::include_file(stub_file, &included_file_name)?;
-                }
-                let mut file = fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .open(included_file_name)?;
-                self.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, vec![], vec![], vec![mv], vec![], vec![]
-                ).await?;
-            }
-            for def in trait_declarations {
-                if let Some(stub_file) = &mut stub_file {
-                    E::emit_comment(stub_file, "TODO custom documentation")?;
-                }
-                let included_file_name = if is_per_trait {
-                    let mut n = file_name_no_extension.clone();
-                    n.push_str("_def");
-                    PathBuf::from(&folder_owning_file)
-                        .join(Path::new(n.as_str()))
-                        .with_extension(E::file_extension())
-                } else {
-                    let mut n = file_name_no_extension.clone();
-                    n.push_str("_");
-                    n.push_str(def.names.trait_key.as_lower_snake().as_str());
-                    PathBuf::from(&folder_owning_file)
-                        .join(Path::new(file_name_no_extension.as_str()))
-                        .with_extension(E::file_extension())
-                };
-                if let Some(stub_file) = &mut stub_file {
-                    E::include_file(stub_file, &included_file_name)?;
-                }
-                let mut file = fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .open(included_file_name)?;
-                self.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, vec![], vec![], vec![], vec![def], vec![]
-                ).await?;
-            }
-            if !trait_implementations.is_empty() {
-                let included_file_name = {
-                    let mut n = file_name_no_extension.clone();
-                    n.push_str("_impls");
-                    PathBuf::from(&folder_owning_file)
-                        .join(Path::new(file_name_no_extension.as_str()))
-                        .with_extension(E::file_extension())
-                };
-                if let Some(stub_file) = &mut stub_file {
-                    E::include_file(stub_file, &included_file_name)?;
-                }
-                let mut file = fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .open(included_file_name)?;
-                self.write_file_dumb::<&mut File, E, AntiScalar>(
-                    &mut file, vec![], vec![], vec![], vec![], trait_implementations
-                ).await?;
-            }
-        } else {
-            let mut file = fs::OpenOptions::new()
-                .write(true)
-                .create(true)
-                .open(file_name)?;
+                slf.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
+                ).await
+            });
+            return Ok(())
+        }
+        let maybe_stub_file = fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(file_name);
+        let mut stub_file = match maybe_stub_file {
+            Ok(f) => Some(f),
+            Err(e) if e.kind() == AlreadyExists => None,
+            Err(e) => Err(e)?
+        };
+
+        if let Some(stub_file) = &mut stub_file {
             E::emit_comment(
-                &mut file,
-                "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
-                Changes to this file may be clobbered by code generation at any time."
+                stub_file,
+                "This file may `include` other files in its contents.\n\
+                    This file will not be clobbered by code generation, \n\
+                    and so can be manually customized or documented by hand.\n\
+                    Any `included` files seen across this file WILL be \n\
+                    clobbered by code generation.\n\
+                    If you accidentally break this file, or the content \n\
+                    it relies upon changes, you can regenerate this file \n\
+                    from scratch by deleting it first."
             )?;
             self.write_file_dumb::<&mut File, E, AntiScalar>(
-                &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
+                stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
             ).await?;
+        }
+        for mv in types {
+            if let Some(stub_file) = &mut stub_file {
+                E::emit_comment(stub_file, "TODO custom documentation")?;
+            }
+            let included_file_name = if is_per_type {
+                let mut n = file_name_no_extension.clone();
+                n.push_str("_datatype");
+                PathBuf::from(&folder_owning_file)
+                    .join(Path::new(n.as_str()))
+                    .with_extension(E::file_extension())
+            } else {
+                let mut n = file_name_no_extension.clone();
+                n.push_str("_");
+                n.push_str(TraitKey::new(mv.name).as_lower_snake().as_str());
+                PathBuf::from(&folder_owning_file)
+                    .join(Path::new(file_name_no_extension.as_str()))
+                    .with_extension(E::file_extension())
+            };
+            if let Some(stub_file) = &mut stub_file {
+                E::include_file(stub_file, &included_file_name)?;
+            }
+            let slf = self.clone();
+            join_set.spawn(async move {
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(included_file_name)?;
+                slf.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, vec![], vec![], vec![mv], vec![], vec![]
+                ).await
+            });
+        }
+        for def in trait_declarations {
+            if let Some(stub_file) = &mut stub_file {
+                E::emit_comment(stub_file, "TODO custom documentation")?;
+            }
+            let included_file_name = if is_per_trait {
+                let mut n = file_name_no_extension.clone();
+                n.push_str("_def");
+                PathBuf::from(&folder_owning_file)
+                    .join(Path::new(n.as_str()))
+                    .with_extension(E::file_extension())
+            } else {
+                let mut n = file_name_no_extension.clone();
+                n.push_str("_");
+                n.push_str(def.names.trait_key.as_lower_snake().as_str());
+                PathBuf::from(&folder_owning_file)
+                    .join(Path::new(file_name_no_extension.as_str()))
+                    .with_extension(E::file_extension())
+            };
+            if let Some(stub_file) = &mut stub_file {
+                E::include_file(stub_file, &included_file_name)?;
+            }
+            let slf = self.clone();
+            join_set.spawn(async move {
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(included_file_name)?;
+                slf.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, vec![], vec![], vec![], vec![def], vec![]
+                ).await
+            });
+        }
+        if !trait_implementations.is_empty() {
+            let included_file_name = {
+                let mut n = file_name_no_extension.clone();
+                n.push_str("_impls");
+                PathBuf::from(&folder_owning_file)
+                    .join(Path::new(file_name_no_extension.as_str()))
+                    .with_extension(E::file_extension())
+            };
+            if let Some(stub_file) = &mut stub_file {
+                E::include_file(stub_file, &included_file_name)?;
+            }
+            let slf = self.clone();
+            join_set.spawn(async move {
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(included_file_name)?;
+                slf.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, vec![], vec![], vec![], vec![], trait_implementations
+                ).await
+            });
         }
         Ok(())
     }
