@@ -1,12 +1,19 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use std::ffi::OsStr;
+use std::fs;
+use std::fs::File;
+use std::io::ErrorKind::AlreadyExists;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-
+use anyhow::bail;
+use parking_lot::lock_api::RwLockReadGuard;
+use parking_lot::RawRwLock;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
-use crate::ast2::datatype::MultiVector;
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey};
+use crate::ast2::datatype::{ExpressionType, MultiVector};
+use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey, TraitTypeConsensus};
 
 #[derive(Copy, Clone)]
 pub enum ExtensiveFile {
@@ -73,19 +80,261 @@ impl FileOrganizing {
         }
     }
 
-    pub async fn go_do_it<P: AsRef<Path>, const AntiScalar: BasisElement>(
+    pub async fn go_do_it<P: AsRef<Path> + AsRef<OsStr>, E: AstEmitter, const AntiScalar: BasisElement>(
         self,
         root: P,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
-        impls: TraitImplRegistry,
-    ) {
+        impls: Arc<TraitImplRegistry>,
+    ) -> anyhow::Result<()> {
+        let root: &Path = root.as_ref();
+        fs::create_dir_all(root)?;
         match self.overall_split {
             DataTypesVsTraits::Adjacent => {
+                // TODO scan through all materials and divide them up by their destination
+                //  files, then from there we can scan complete list of dependencies for the
+                //  imports at top
+            }
+            DataTypesVsTraits::SeparateFolders => {
 
             }
-            DataTypesVsTraits::SeparateFolders => {}
-            DataTypesVsTraits::OneGinormousFile => {}
+            DataTypesVsTraits::OneGinormousFile => {
+                let file_name = root
+                    .join(Path::new(self.algebra_name))
+                    .with_extension(E::file_extension());
+                let mut file = File::create(file_name)?;
+                for mv in multi_vecs.declarations() {
+                    E::emit_multi_vector(&mut file, &self, mv)?;
+                }
+                //
+            }
         }
+        Ok(())
+    }
+
+    async fn write_file_smart<
+        P: AsRef<Path> + AsRef<OsStr>, S: Into<String>, E: AstEmitter, const AntiScalar: BasisElement
+    >(
+        &self,
+        folder_owning_file: P,
+        file_name_no_extension: S,
+        is_per_type: bool,
+        is_per_trait: bool,
+        types: Vec<&'static MultiVec<AntiScalar>>,
+        trait_declarations: Vec<Arc<RawTraitDefinition>>,
+        trait_implementations: Vec<Arc<RawTraitImplementation>>,
+    ) -> anyhow::Result<()> {
+
+        let mut use_customizable_stub = false;
+        for multi_vec in types.iter() {
+            let mv = MultiVector::from(*multi_vec);
+            let (_, extensive_file) = match self.override_data_types.get(&mv) {
+                None => self.data_types,
+                Some(stuff) => *stuff,
+            };
+            if let ExtensiveFile::CustomizableStubWithIncludes = extensive_file {
+                use_customizable_stub = true;
+                break;
+            }
+        }
+        if !use_customizable_stub {
+            for td in trait_declarations.iter() {
+                let k = td.names.trait_key;
+                let (_, extensive_file) = match self.override_trait_defs.get(&k) {
+                    None => self.trait_defs,
+                    Some(stuff) => *stuff,
+                };
+                if let ExtensiveFile::CustomizableStubWithIncludes = extensive_file {
+                    use_customizable_stub = true;
+                    break;
+                }
+            }
+        }
+
+        let mut trait_deps = vec![];
+        let mut mv_deps = vec![];
+        if E::supports_imports() {
+            for td in trait_declarations.iter() {
+                let out = td.output.read();
+                match *out {
+                    TraitTypeConsensus::AllAgree(ExpressionType::Class(mv)) => {
+                        let mv: Option<&'static MultiVec<AntiScalar>> = mv.into();
+                        let mv = mv.expect("Must use correct AntiScalar");
+                        mv_deps.push(mv);
+                    }
+                    _ => {}
+                }
+            }
+            for ti in trait_implementations.iter() {
+                for m in ti.multivector_dependencies.iter() {
+                    let mv: Option<&'static MultiVec<AntiScalar>> = (*m).into();
+                    let mv = mv.expect("Must use correct AntiScalar");
+                    mv_deps.push(mv);
+                }
+                for (_, d) in ti.traits10_dependencies.iter() {
+                    trait_deps.push(d.definition.clone());
+                }
+                for (_, d) in ti.traits11_dependencies.iter() {
+                    trait_deps.push(d.definition.clone());
+                }
+                for (_, d) in ti.traits21_dependencies.iter() {
+                    trait_deps.push(d.definition.clone());
+                }
+                for (_, d) in ti.traits22_dependencies.iter() {
+                    trait_deps.push(d.definition.clone());
+                }
+            }
+        }
+
+        let file_name_no_extension = file_name_no_extension.into();
+        let file_name = PathBuf::from(&folder_owning_file)
+            .join(Path::new(file_name_no_extension.as_str()))
+            .with_extension(E::file_extension());
+        if use_customizable_stub && E::supports_includes() {
+            let maybe_stub_file = fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(file_name);
+            let mut stub_file = match maybe_stub_file {
+                Ok(f) => Some(f),
+                Err(e) if e.kind() == AlreadyExists => None,
+                Err(e) => Err(e)?
+            };
+
+            if let Some(stub_file) = &mut stub_file {
+                E::emit_comment(
+                    stub_file,
+                    "This file may `include` other files in its contents.\n\
+                        This file will not be clobbered by code generation, \n\
+                        and so can be manually customized or documented by hand.\n\
+                        Any `included` files seen across this file WILL be \n\
+                        clobbered by code generation.\n\
+                        If you accidentally break this file, or the content \n\
+                        it relies upon changes, you can regenerate this file \n\
+                        from scratch by deleting it first."
+                )?;
+                self.write_file_dumb::<&mut File, E, AntiScalar>(
+                    stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
+                ).await?;
+            }
+            for mv in types {
+                if let Some(stub_file) = &mut stub_file {
+                    E::emit_comment(stub_file, "TODO custom documentation")?;
+                }
+                let included_file_name = if is_per_type {
+                    let mut n = file_name_no_extension.clone();
+                    n.push_str("_datatype");
+                    PathBuf::from(&folder_owning_file)
+                        .join(Path::new(n.as_str()))
+                        .with_extension(E::file_extension())
+                } else {
+                    let mut n = file_name_no_extension.clone();
+                    n.push_str("_");
+                    n.push_str(TraitKey::new(mv.name).as_lower_snake().as_str());
+                    PathBuf::from(&folder_owning_file)
+                        .join(Path::new(file_name_no_extension.as_str()))
+                        .with_extension(E::file_extension())
+                };
+                if let Some(stub_file) = &mut stub_file {
+                    E::include_file(stub_file, &included_file_name)?;
+                }
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(included_file_name)?;
+                self.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, vec![], vec![], vec![mv], vec![], vec![]
+                ).await?;
+            }
+            for def in trait_declarations {
+                if let Some(stub_file) = &mut stub_file {
+                    E::emit_comment(stub_file, "TODO custom documentation")?;
+                }
+                let included_file_name = if is_per_trait {
+                    let mut n = file_name_no_extension.clone();
+                    n.push_str("_def");
+                    PathBuf::from(&folder_owning_file)
+                        .join(Path::new(n.as_str()))
+                        .with_extension(E::file_extension())
+                } else {
+                    let mut n = file_name_no_extension.clone();
+                    n.push_str("_");
+                    n.push_str(def.names.trait_key.as_lower_snake().as_str());
+                    PathBuf::from(&folder_owning_file)
+                        .join(Path::new(file_name_no_extension.as_str()))
+                        .with_extension(E::file_extension())
+                };
+                if let Some(stub_file) = &mut stub_file {
+                    E::include_file(stub_file, &included_file_name)?;
+                }
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(included_file_name)?;
+                self.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, vec![], vec![], vec![], vec![def], vec![]
+                ).await?;
+            }
+            if !trait_implementations.is_empty() {
+                let included_file_name = {
+                    let mut n = file_name_no_extension.clone();
+                    n.push_str("_impls");
+                    PathBuf::from(&folder_owning_file)
+                        .join(Path::new(file_name_no_extension.as_str()))
+                        .with_extension(E::file_extension())
+                };
+                if let Some(stub_file) = &mut stub_file {
+                    E::include_file(stub_file, &included_file_name)?;
+                }
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .open(included_file_name)?;
+                self.write_file_dumb::<&mut File, E, AntiScalar>(
+                    &mut file, vec![], vec![], vec![], vec![], trait_implementations
+                ).await?;
+            }
+        } else {
+            let mut file = fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .open(file_name)?;
+            E::emit_comment(
+                &mut file,
+                "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
+                Changes to this file may be clobbered by code generation at any time."
+            )?;
+            self.write_file_dumb::<&mut File, E, AntiScalar>(
+                &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
+            ).await?;
+        }
+        Ok(())
+    }
+
+    async fn write_file_dumb<W: Write, E: AstEmitter, const AntiScalar: BasisElement>(
+        &self,
+        mut file: W,
+        type_dependencies: Vec<&'static MultiVec<AntiScalar>>,
+        trait_dependencies: Vec<Arc<RawTraitDefinition>>,
+        types: Vec<&'static MultiVec<AntiScalar>>,
+        trait_declarations: Vec<Arc<RawTraitDefinition>>,
+        trait_implementations: Vec<Arc<RawTraitImplementation>>,
+    ) -> anyhow::Result<()> {
+        for dep in type_dependencies {
+            E::import_multi_vector(&mut file, self, dep)?;
+        }
+        for dep in trait_dependencies {
+            E::import_trait_def(&mut file, self, dep)?;
+        }
+        for multi_vec in types {
+            E::emit_multi_vector(&mut file, self, multi_vec)?;
+        }
+        for td in trait_declarations {
+            E::emit_trait_def(&mut file, self, td)?;
+        }
+        for ti in trait_implementations {
+            E::emit_trait_impl(&mut file, self, ti)?;
+        }
+        Ok(())
     }
 }
 
@@ -205,21 +454,36 @@ pub trait IdentifierQualifier {
 }
 
 pub trait AstEmitter {
-    fn emit_multi_vector<W: std::io::Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
-        w: W,
+    fn file_extension() -> &'static str;
+    fn supports_includes() -> bool { false }
+    fn include_file<W: Write, P: AsRef<Path>>(w: &mut W, p: P) -> anyhow::Result<()> { bail!("Includes are not supported") }
+    fn supports_imports() -> bool { false }
+    fn import_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
+        w: &mut W,
         q: &Q,
         multi_vec: &'static MultiVec<AntiScalar>,
-    );
-    fn emit_trait_def<W: std::io::Write, Q: IdentifierQualifier>(
-        w: W,
+    ) -> anyhow::Result<()> { bail!("Imports not supported") }
+    fn import_trait_def<W: Write, Q: IdentifierQualifier>(
+        w: &mut W,
         q: &Q,
         defs: Arc<RawTraitDefinition>,
-    );
-    fn emit_trait_impl<W: std::io::Write, Q: IdentifierQualifier>(
-        w: W,
+    ) -> anyhow::Result<()> { bail!("Imports not supported") }
+    fn emit_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
+        w: &mut W,
+        q: &Q,
+        multi_vec: &'static MultiVec<AntiScalar>,
+    ) -> anyhow::Result<()>;
+    fn emit_trait_def<W: Write, Q: IdentifierQualifier>(
+        w: &mut W,
+        q: &Q,
+        defs: Arc<RawTraitDefinition>,
+    ) -> anyhow::Result<()>;
+    fn emit_trait_impl<W: Write, Q: IdentifierQualifier>(
+        w: &mut W,
         q: &Q,
         impls: Arc<RawTraitImplementation>,
-    );
+    ) -> anyhow::Result<()>;
+    fn emit_comment<W: Write, S: Into<String>>(w: &mut W, s: S) -> anyhow::Result<()>;
 }
 
 

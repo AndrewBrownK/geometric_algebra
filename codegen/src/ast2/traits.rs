@@ -57,7 +57,7 @@ pub(crate) struct RawTraitDefinition {
     pub(crate) owner: Arc<RwLock<TraitTypeConsensus>>,
     pub(crate) arity: u8,
     pub(crate) output: Arc<RwLock<TraitTypeConsensus>>,
-    pub(crate) op: Arc<Mutex<Option<Ops>>>
+    pub(crate) op: Arc<Mutex<Option<Ops>>>,
 }
 
 
@@ -614,12 +614,14 @@ impl<I> const NameTrait for I where I: CanNameTrait + Copy {
 
 
 pub struct RawTraitImplementation {
-    definition: Arc<RawTraitDefinition>,
+    pub(crate) definition: Arc<RawTraitDefinition>,
 
-    traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
-    traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
-    traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
+    // TODO fill this in
+    pub(crate) multivector_dependencies: HashSet<MultiVector>,
+    pub(crate) traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
+    pub(crate) traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
+    pub(crate) traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
+    pub(crate) traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
     owner: TraitParam,
     owner_is_param: bool,
@@ -1224,6 +1226,7 @@ pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     specialized: bool,
 
     cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
+    multivector_dependencies: HashSet<MultiVector>,
     traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
@@ -1255,6 +1258,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             inline_dependencies,
             specialized: false,
             cycle_detector,
+            multivector_dependencies: Default::default(),
             traits10_dependencies: Default::default(),
             traits11_dependencies: Default::default(),
             traits21_dependencies: Default::default(),
@@ -1379,6 +1383,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             trait_def: self.trait_def,
             inline_dependencies: false,
             cycle_detector: self.cycle_detector,
+            multivector_dependencies: self.multivector_dependencies,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1570,6 +1575,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
+            multivector_dependencies: self.multivector_dependencies,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1617,6 +1623,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
+            multivector_dependencies: self.multivector_dependencies,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1664,6 +1671,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
+            multivector_dependencies: self.multivector_dependencies,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1711,6 +1719,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
+            multivector_dependencies: self.multivector_dependencies,
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,

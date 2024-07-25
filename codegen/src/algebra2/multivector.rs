@@ -1104,6 +1104,10 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             .and_modify(move |v| v.push(td2))
             .or_insert(vec![td]);
     }
+
+    pub(crate) fn declarations(&self) -> Vec<&'static MultiVec<AntiScalar>> {
+        self.declarations.declared.iter().map(|it| it.2).collect()
+    }
 }
 
 
