@@ -158,7 +158,7 @@ impl BasisElementGroup {
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct MultiVec<const AntiScalar: BasisElement> {
-    name: &'static str,
+    pub name: &'static str,
     grades: Grades,
     element_groups: ConstVec<BasisElementGroup, QTY_GROUPS>,
 }

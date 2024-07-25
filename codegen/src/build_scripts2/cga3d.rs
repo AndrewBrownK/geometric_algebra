@@ -96,6 +96,9 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     };
 
     // TODO extra documentation for variants
+    // TODO I'm getting ideas on how to make this read more succinct. struct FilterSig(BasisSignature)
+    //  Then impl operators on FilterSig, and give it multiple different methods to filter either
+    //  MultiVecs, or BasisElements. Make it Copy too so it is easy to use.
     declarations.variants("Null", "AtOrigin", is_not_flat, |sig| sig.contains(origin) && !sig.contains(infinity), tangent_null_cone);
     declarations.variants("", "OnOrigin", all, |sig| sig.contains(origin), intersects_null_cone);
     declarations.variants("", "AtInfinity", is_flat, |sig| !sig.contains(origin), tangent_null_cone);

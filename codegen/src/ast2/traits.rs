@@ -51,13 +51,13 @@ pub enum TraitParam {
     Fixed(ExpressionType)
 }
 
-pub struct RawTraitDefinition {
-    documentation: String,
-    names: TraitNames,
-    owner: Arc<RwLock<TraitTypeConsensus>>,
-    owner_is_param: bool,
-    output: Arc<RwLock<TraitTypeConsensus>>,
-    op: Arc<Mutex<Option<Ops>>>
+pub(crate) struct RawTraitDefinition {
+    pub(crate) documentation: String,
+    pub(crate) names: TraitNames,
+    pub(crate) owner: Arc<RwLock<TraitTypeConsensus>>,
+    pub(crate) arity: u8,
+    pub(crate) output: Arc<RwLock<TraitTypeConsensus>>,
+    pub(crate) op: Arc<Mutex<Option<Ops>>>
 }
 
 
@@ -103,7 +103,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            owner_is_param: false,
+            arity: 0,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
         })
@@ -219,7 +219,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            owner_is_param: true,
+            arity: 1,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
         })
@@ -345,7 +345,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            owner_is_param: true,
+            arity: 1,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
         })
@@ -477,7 +477,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            owner_is_param: true,
+            arity: 2,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
         })
@@ -641,6 +641,7 @@ pub struct RawTraitImplementation {
 pub struct TraitKey {
     final_name: &'static str,
 }
+
 
 lazy_static! {
     static ref TRAIT_KEY_REGEX: Regex = Regex::new("^[A-Z][a-zA-Z0-9]+$").expect("TraitKey regex is valid");
