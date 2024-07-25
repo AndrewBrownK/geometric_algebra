@@ -16,7 +16,7 @@ use crate::ast2::{RawVariableDeclaration, Variable};
 use crate::ast2::datatype::{ClassesFromRegistry, ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, Expression, extract_multivector_expr, MultiVectorExpr, TraitResultType};
 use crate::ast2::impls::Elaborated;
-use crate::ast2::operations_tracker::VectoredOperationsTracker;
+use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
 use crate::utility::AsyncMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -629,7 +629,7 @@ pub struct RawTraitImplementation {
     return_comment: Option<String>,
     return_expr: AnyExpression,
     specialized: bool,
-    statistics: VectoredOperationsTracker,
+    pub(crate) statistics: VectoredOperationsTracker,
 }
 
 /// Each TraitKey should be the final name of a trait, and correspond
@@ -1546,6 +1546,27 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     fn into_trait10(
         self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
+        let lookup = TraitOperationsLookup {
+            traits10: &self.traits10_dependencies,
+            traits11: &self.traits11_dependencies,
+            traits21: &self.traits21_dependencies,
+            traits22: &self.traits22_dependencies,
+        };
+        let mut statistics = VectoredOperationsTracker::zero();
+        let lines = self.lines.into_inner();
+        for line in lines.iter() {
+            match line {
+                CommentOrVariableDeclaration::Comment(_) => {}
+                CommentOrVariableDeclaration::VarDec(vd) => {
+                    if let Some(v) = &vd.expr {
+                        statistics += v.count_operations(&lookup);
+                    }
+                }
+            }
+        }
+        // This shouldn't be a problem because of type level state and function visibilities
+        let return_expr = self.return_expr.expect("Must have return expression in order to register");
+        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
@@ -1556,11 +1577,11 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: false,
             other_type_params: vec![],
             other_var_params: vec![],
-            lines: self.lines.into_inner(),
+            lines,
             return_comment: self.return_comment,
-            // This shouldn't be a problem because of type level state and function visibilities
-            return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            return_expr,
             specialized: self.specialized,
+            statistics,
         });
         let w = self.wanted_multi_vecs.into_inner();
         for mv in w {
@@ -1572,6 +1593,27 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     fn into_trait11(
         self, owner: MultiVector,
     ) -> Arc<RawTraitImplementation> {
+        let lookup = TraitOperationsLookup {
+            traits10: &self.traits10_dependencies,
+            traits11: &self.traits11_dependencies,
+            traits21: &self.traits21_dependencies,
+            traits22: &self.traits22_dependencies,
+        };
+        let mut statistics = VectoredOperationsTracker::zero();
+        let lines = self.lines.into_inner();
+        for line in lines.iter() {
+            match line {
+                CommentOrVariableDeclaration::Comment(_) => {}
+                CommentOrVariableDeclaration::VarDec(vd) => {
+                    if let Some(v) = &vd.expr {
+                        statistics += v.count_operations(&lookup);
+                    }
+                }
+            }
+        }
+        // This shouldn't be a problem because of type level state and function visibilities
+        let return_expr = self.return_expr.expect("Must have return expression in order to register");
+        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
@@ -1582,11 +1624,11 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: true,
             other_type_params: vec![],
             other_var_params: vec![],
-            lines: self.lines.into_inner(),
+            lines,
             return_comment: self.return_comment,
-            // This shouldn't be a problem because of type level state and function visibilities
-            return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            return_expr,
             specialized: self.specialized,
+            statistics
         });
         let w = self.wanted_multi_vecs.into_inner();
         for mv in w {
@@ -1598,6 +1640,27 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     fn into_trait21(
         self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
+        let lookup = TraitOperationsLookup {
+            traits10: &self.traits10_dependencies,
+            traits11: &self.traits11_dependencies,
+            traits21: &self.traits21_dependencies,
+            traits22: &self.traits22_dependencies,
+        };
+        let mut statistics = VectoredOperationsTracker::zero();
+        let lines = self.lines.into_inner();
+        for line in lines.iter() {
+            match line {
+                CommentOrVariableDeclaration::Comment(_) => {}
+                CommentOrVariableDeclaration::VarDec(vd) => {
+                    if let Some(v) = &vd.expr {
+                        statistics += v.count_operations(&lookup);
+                    }
+                }
+            }
+        }
+        // This shouldn't be a problem because of type level state and function visibilities
+        let return_expr = self.return_expr.expect("Must have return expression in order to register");
+        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
@@ -1608,11 +1671,11 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: true,
             other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
             other_var_params: vec![],
-            lines: self.lines.into_inner(),
+            lines,
             return_comment: self.return_comment,
-            // This shouldn't be a problem because of type level state and function visibilities
-            return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            return_expr,
             specialized: self.specialized,
+            statistics
         });
         let w = self.wanted_multi_vecs.into_inner();
         for mv in w {
@@ -1624,6 +1687,27 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     fn into_trait22(
         self, owner: MultiVector, other: MultiVector,
     ) -> Arc<RawTraitImplementation> {
+        let lookup = TraitOperationsLookup {
+            traits10: &self.traits10_dependencies,
+            traits11: &self.traits11_dependencies,
+            traits21: &self.traits21_dependencies,
+            traits22: &self.traits22_dependencies,
+        };
+        let mut statistics = VectoredOperationsTracker::zero();
+        let lines = self.lines.into_inner();
+        for line in lines.iter() {
+            match line {
+                CommentOrVariableDeclaration::Comment(_) => {}
+                CommentOrVariableDeclaration::VarDec(vd) => {
+                    if let Some(v) = &vd.expr {
+                        statistics += v.count_operations(&lookup);
+                    }
+                }
+            }
+        }
+        // This shouldn't be a problem because of type level state and function visibilities
+        let return_expr = self.return_expr.expect("Must have return expression in order to register");
+        statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
             traits10_dependencies: self.traits10_dependencies,
@@ -1634,11 +1718,11 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             owner_is_param: true,
             other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other.clone()))],
             other_var_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
-            lines: self.lines.into_inner(),
+            lines,
             return_comment: self.return_comment,
-            // This shouldn't be a problem because of type level state and function visibilities
-            return_expr: self.return_expr.expect("Must have return expression in order to register"),
+            return_expr,
             specialized: self.specialized,
+            statistics
         });
         let w = self.wanted_multi_vecs.into_inner();
         for mv in w {

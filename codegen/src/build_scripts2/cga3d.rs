@@ -11,7 +11,7 @@ use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
 
-multi_vecs!(e12345;
+multi_vecs! { e12345;
 
     // Special Objects
     Origin     as e4;
@@ -33,19 +33,19 @@ multi_vecs!(e12345;
     // Versors
     Motor      as e415, e425, e435, e12345 | e235, e315, e125;
     Flector    as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
-);
+}
 
 
 /// Lengyel styled CGA of 5 dimensions representing 3 dimensions
 #[test]
 pub fn cga3d_script() {
-    let cga3d = ga!(e12345;
+    let cga3d = ga! { e12345;
         1 => e1, e2, e3, eP;
         -1 => eM;
         where
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
-    );
+    };
     let repo = generate_variants(register_multi_vecs(cga3d));
     let traits = register_all! { repo;
         Plane_BulkExpansion_Plane

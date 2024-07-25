@@ -2,11 +2,11 @@ use std::fmt::Debug;
 use std::mem;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
+
 use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::BasisElementGroup;
 use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
-use crate::ast2::operations_tracker::VectoredOperationsTracker;
+use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
 use crate::ast2::traits::TraitKey;
 
 pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
@@ -254,17 +254,6 @@ impl AnyExpression {
             AnyExpression::Vec3(v3) => v3.substitute_variable(old.clone(), new.clone()),
             AnyExpression::Vec4(v4) => v4.substitute_variable(old.clone(), new.clone()),
             AnyExpression::Class(c) => c.substitute_variable(old.clone(), new.clone()),
-        }
-    }
-
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
-        match self {
-            AnyExpression::Int(a) => a.count_operations(),
-            AnyExpression::Float(a) => a.count_operations(),
-            AnyExpression::Vec2(a) => a.count_operations(),
-            AnyExpression::Vec3(a) => a.count_operations(),
-            AnyExpression::Vec4(a) => a.count_operations(),
-            AnyExpression::Class(a) => a.count_operations(),
         }
     }
 }
@@ -2175,29 +2164,47 @@ impl SubAssign for Vec4Expr {
 
 
 
+impl TrackOperations for AnyExpression {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
+        match self {
+            AnyExpression::Int(a) => a.count_operations(lookup),
+            AnyExpression::Float(a) => a.count_operations(lookup),
+            AnyExpression::Vec2(a) => a.count_operations(lookup),
+            AnyExpression::Vec3(a) => a.count_operations(lookup),
+            AnyExpression::Vec4(a) => a.count_operations(lookup),
+            AnyExpression::Class(a) => a.count_operations(lookup),
+        }
+    }
+}
 
 
 
-
-
-impl FloatExpr {
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+impl TrackOperations for IntExpr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
+        match self {
+            IntExpr::Variable(_) => VectoredOperationsTracker::zero(),
+            IntExpr::Literal(_) => VectoredOperationsTracker::zero(),
+            IntExpr::TraitInvoke10ToInt(t, m) => lookup.trait_10_ops(t, m),
+        }
+    }
+}
+impl TrackOperations for FloatExpr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
         match self {
             FloatExpr::Variable(_) => VectoredOperationsTracker::zero(),
             FloatExpr::Literal(_) => VectoredOperationsTracker::zero(),
-            FloatExpr::AccessVec2(v, _) => v.count_operations(),
-            FloatExpr::AccessVec3(v, _) => v.count_operations(),
-            FloatExpr::AccessVec4(v, _) => v.count_operations(),
-            FloatExpr::AccessMultiVecGroup(m, _) => m.count_operations(),
-            FloatExpr::AccessMultiVecFlat(m, _) => m.count_operations(),
+            FloatExpr::AccessVec2(v, _) => v.count_operations(lookup),
+            FloatExpr::AccessVec3(v, _) => v.count_operations(lookup),
+            FloatExpr::AccessVec4(v, _) => v.count_operations(lookup),
+            FloatExpr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
+            FloatExpr::AccessMultiVecFlat(m, _) => m.count_operations(lookup),
             FloatExpr::TraitInvoke11ToFloat(t, m) => {
-                // TODO look up operations using the trait key
-                m.count_operations()
+                m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class)
             }
             FloatExpr::Product(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.floats.mul += v.len() - 1;
@@ -2207,7 +2214,7 @@ impl FloatExpr {
             FloatExpr::Sum(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.floats.add_sub += v.len() - 1;
@@ -2217,7 +2224,7 @@ impl FloatExpr {
             FloatExpr::Divide(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.floats.div += v.len() - 1;
@@ -2225,22 +2232,22 @@ impl FloatExpr {
                 result
             }
             FloatExpr::Pow(f1, f2) => {
-                f1.count_operations() + f2.count_operations()
+                f1.count_operations(lookup) + f2.count_operations(lookup)
             }
         }
     }
 }
-impl Vec2Expr {
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+impl TrackOperations for Vec2Expr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
         match self {
             Vec2Expr::Variable(_) => VectoredOperationsTracker::zero(),
-            Vec2Expr::Gather1(f) => f.count_operations(),
-            Vec2Expr::Gather2(f0, f1) => f0.count_operations() + f1.count_operations(),
-            Vec2Expr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            Vec2Expr::Gather1(f) => f.count_operations(lookup),
+            Vec2Expr::Gather2(f0, f1) => f0.count_operations(lookup) + f1.count_operations(lookup),
+            Vec2Expr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
             Vec2Expr::Product(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd2.mul += v.len() - 1;
@@ -2250,7 +2257,7 @@ impl Vec2Expr {
             Vec2Expr::Sum(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd2.add_sub += v.len() - 1;
@@ -2260,17 +2267,17 @@ impl Vec2Expr {
         }
     }
 }
-impl Vec3Expr {
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+impl TrackOperations for Vec3Expr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
         match self {
             Vec3Expr::Variable(_) => VectoredOperationsTracker::zero(),
-            Vec3Expr::Gather1(f) => f.count_operations(),
-            Vec3Expr::Gather3(f0, f1, f2) => f0.count_operations() + f1.count_operations() + f2.count_operations(),
-            Vec3Expr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            Vec3Expr::Gather1(f) => f.count_operations(lookup),
+            Vec3Expr::Gather3(f0, f1, f2) => f0.count_operations(lookup) + f1.count_operations(lookup) + f2.count_operations(lookup),
+            Vec3Expr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
             Vec3Expr::Product(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd3.mul += v.len() - 1;
@@ -2280,7 +2287,7 @@ impl Vec3Expr {
             Vec3Expr::Sum(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd3.add_sub += v.len() - 1;
@@ -2290,17 +2297,17 @@ impl Vec3Expr {
         }
     }
 }
-impl Vec4Expr {
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+impl TrackOperations for Vec4Expr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
         match self {
             Vec4Expr::Variable(_) => VectoredOperationsTracker::zero(),
-            Vec4Expr::Gather1(f) => f.count_operations(),
-            Vec4Expr::Gather4(f0, f1, f2, f3) => f0.count_operations() + f1.count_operations() + f2.count_operations() + f3.count_operations(),
-            Vec4Expr::AccessMultiVecGroup(m, _) => m.count_operations(),
+            Vec4Expr::Gather1(f) => f.count_operations(lookup),
+            Vec4Expr::Gather4(f0, f1, f2, f3) => f0.count_operations(lookup) + f1.count_operations(lookup) + f2.count_operations(lookup) + f3.count_operations(lookup),
+            Vec4Expr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
             Vec4Expr::Product(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd4.mul += v.len() - 1;
@@ -2310,7 +2317,7 @@ impl Vec4Expr {
             Vec4Expr::Sum(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd4.add_sub += v.len() - 1;
@@ -2320,38 +2327,35 @@ impl Vec4Expr {
         }
     }
 }
-impl MultiVectorGroupExpr {
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+impl TrackOperations for MultiVectorGroupExpr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
         match self {
-            MultiVectorGroupExpr::JustFloat(f) => f.count_operations(),
-            MultiVectorGroupExpr::Vec2(v) => v.count_operations(),
-            MultiVectorGroupExpr::Vec3(v) => v.count_operations(),
-            MultiVectorGroupExpr::Vec4(v) => v.count_operations()
+            MultiVectorGroupExpr::JustFloat(f) => f.count_operations(lookup),
+            MultiVectorGroupExpr::Vec2(v) => v.count_operations(lookup),
+            MultiVectorGroupExpr::Vec3(v) => v.count_operations(lookup),
+            MultiVectorGroupExpr::Vec4(v) => v.count_operations(lookup)
         }
     }
 }
-impl MultiVectorExpr {
-    pub(crate) fn count_operations(&self) -> VectoredOperationsTracker {
+impl TrackOperations for MultiVectorExpr {
+    fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker {
         match self.expr.as_ref() {
             MultiVectorVia::Variable(_) => VectoredOperationsTracker::zero(),
             MultiVectorVia::Construct(v) => {
                 let mut result = VectoredOperationsTracker::zero();
                 for f in v.iter() {
-                    result += f.count_operations();
+                    result += f.count_operations(lookup);
                 }
                 result
             }
             MultiVectorVia::TraitInvoke11ToClass(t, m) => {
-                // TODO look up operations using the trait key
-                m.count_operations()
+                m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class)
             }
-            MultiVectorVia::TraitInvoke21ToClass(t, a, _) => {
-                // TODO look up operations using the trait key
-                a.count_operations()
+            MultiVectorVia::TraitInvoke21ToClass(t, a, b) => {
+                a.count_operations(lookup) + lookup.trait_21_ops(t, &a.mv_class, b)
             }
             MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
-                // TODO look up operations using the trait key
-                a.count_operations() + b.count_operations()
+                a.count_operations(lookup) + b.count_operations(lookup) + lookup.trait_22_ops(t, &a.mv_class, &b.mv_class)
             }
         }
     }
