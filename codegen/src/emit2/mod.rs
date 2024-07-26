@@ -8,7 +8,7 @@ use std::io::ErrorKind::AlreadyExists;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use anyhow::bail;
+use anyhow::{anyhow, bail};
 use parking_lot::lock_api::RwLockReadGuard;
 use parking_lot::RawRwLock;
 use tokio::task::JoinSet;
@@ -16,7 +16,8 @@ use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey, TraitTypeConsensus};
+use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
+use crate::utility::CollectResults;
 
 #[derive(Copy, Clone)]
 pub enum ExtensiveFile {
@@ -57,6 +58,7 @@ pub struct FileOrganizing {
     pub trait_impls: TraitImplsBelong,
     pub override_data_types: Arc<HashMap<MultiVector, (DataTypesBelong, ExtensiveFile)>>,
     pub override_trait_defs: Arc<HashMap<TraitKey,    (TraitDefsBelong, ExtensiveFile)>>,
+    pub override_trait_impls: Arc<HashMap<TraitKey,   TraitImplsBelong>>,
 }
 impl FileOrganizing {
     pub fn recommended_for_rust(algebra_name: &'static str) -> Self {
@@ -68,6 +70,7 @@ impl FileOrganizing {
             trait_impls: TraitImplsBelong::WithTraitDef,
             override_data_types: Default::default(),
             override_trait_defs: Default::default(),
+            override_trait_impls: Arc::new(Default::default()),
         }
     }
 
@@ -80,47 +83,165 @@ impl FileOrganizing {
             trait_impls: TraitImplsBelong::WithTraitDef,
             override_data_types: Default::default(),
             override_trait_defs: Default::default(),
+            override_trait_impls: Arc::new(Default::default()),
         }
     }
 
     pub async fn go_do_it<P: AsRef<Path> + AsRef<OsStr>, E: AstEmitter, const AntiScalar: BasisElement>(
         self,
         e: E,
-        join_set: &mut JoinSet<anyhow::Result<()>>,
         root: P,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
+        let defs = impls.get_defs().await;
+        let impls = impls.get_impls().await;
+        let mvs = multi_vecs.declarations();
+
         let root: &Path = root.as_ref();
         fs::create_dir_all(root)?;
+
+        let mut separate_folders = false;
         let (dt_folder, ts_folder) = match self.overall_split {
-            DataTypesVsTraits::Adjacent => (root.clone().to_path_buf(), root.clone().to_path_buf()),
+            DataTypesVsTraits::Adjacent => {
+                (root.clone().to_path_buf(), root.clone().to_path_buf())
+            },
             DataTypesVsTraits::SeparateFolders => {
+                separate_folders = true;
                 let dt = root.join(Path::new("data"));
                 let ts = root.join(Path::new("traits"));
                 (dt, ts)
             }
             DataTypesVsTraits::OneGinormousFile => {
+                let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
                 self.write_file_smart(
-                    e,
-                    join_set,
-                    root,
-                    self.algebra_name,
-                    false,
-                    false,
-                    multi_vecs.declarations(),
-                    impls.get_defs().await,
-                    impls.get_impls().await,
+                    e, &mut join_set, root, self.algebra_name, false, false,
+                    mvs, defs, impls,
                 ).await?;
-                return Ok(())
+                return join_set.collect_results()
             }
         };
-        let mut mvs = multi_vecs.declarations();
-        let mut defs = impls.get_defs();
-        let mut impls = impls.get_impls();
-        // TODO this part
 
-        Ok(())
+        let mut mv_guide = HashMap::new();
+        let mut mv_files: HashMap<
+            (PathBuf, &str),
+            (Vec<&'static MultiVec<AntiScalar>>, Vec<Arc<RawTraitImplementation>>, bool)
+        > = HashMap::new();
+        for multi_vec in mvs {
+            let mv = MultiVector::from(multi_vec);
+            let (belong, extensive) = match self.override_data_types.get(&mv) {
+                None => self.data_types,
+                Some(stuff) => *stuff,
+            };
+            let mut is_per_type = false;
+            let (folder, file) = match belong {
+                // Naming a file "mod" is a little biased towards rust, but we'll roll with it for now.
+                DataTypesBelong::AllTogether => if separate_folders { (dt_folder.clone(), "mod") } else { (root.to_path_buf(), "data") },
+                DataTypesBelong::FilePerGrade => (dt_folder.clone(), folder_of_grades(multi_vec.grades)),
+                DataTypesBelong::FilePerType => {
+                    is_per_type = true;
+                    (dt_folder.clone(), TraitKey::new(multi_vec.name).as_lower_snake().as_str())
+                },
+                DataTypesBelong::FilePerGradeThenPerType => {
+                    is_per_type = true;
+                    (dt_folder.join(Path::new(folder_of_grades(multi_vec.grades))),
+                        TraitKey::new(multi_vec.name).as_lower_snake().as_str())
+                },
+            };
+            mv_guide.insert(mv, (folder.clone(), file));
+            mv_files.entry((folder, file))
+                .and_modify(|(mvs, impls, _)| mvs.push(multi_vec))
+                .or_insert((vec![multi_vec], vec![], is_per_type));
+        }
+
+        let mut td_guide = HashMap::new();
+        let mut td_files: HashMap<
+            (PathBuf, &str),
+            (Vec<Arc<RawTraitDefinition>>, Vec<Arc<RawTraitImplementation>>, bool)
+        > = HashMap::new();
+        for td in defs {
+            let k = td.names.trait_key;
+            let (belong, _) = match self.override_trait_defs.get(&k) {
+                None => self.trait_defs,
+                Some(stuff) => *stuff,
+            };
+            let arity = match td.arity {
+                0 => "arity0",
+                1 => "arity1",
+                2 => "arity2",
+                _ => panic!("High arity traits are not supported yet")
+            };
+
+            let mut is_per_trait = false;
+            let (folder, file) = match belong {
+                // Naming a file "mod" is a little biased towards rust, but we'll roll with it for now.
+                TraitDefsBelong::AllTogether => if separate_folders { (ts_folder.clone(), "mod") } else { (root.to_path_buf(), "traits") },
+                TraitDefsBelong::FilePerArity => (ts_folder.clone(), arity),
+                TraitDefsBelong::FilePerDef => {
+                    is_per_trait = true;
+                    (ts_folder.clone(), k.as_lower_snake().as_str())
+                }
+                TraitDefsBelong::FilePerArityThenPerDef => {
+                    is_per_trait = true;
+                    (ts_folder.join(Path::new(arity)), k.as_lower_snake().as_str())
+                }
+            };
+            td_guide.insert(k, (folder.clone(), file));
+            td_files.entry((folder, file))
+                .and_modify(|(tds, impls, _)| tds.push(td))
+                .or_insert((vec![td], vec![], is_per_trait));
+        }
+
+        for i in impls {
+            let k = i.definition.names.trait_key;
+            let belong = match self.override_trait_impls.get(&k) {
+                None => self.trait_impls,
+                Some(stuff) => *stuff,
+            };
+            match (&i.owner, belong) {
+                (TraitParam::Fixed(ExpressionType::Class(mv)), TraitImplsBelong::WithOwnerType) => {
+                    // Belongs with owner type
+                    let mv_k = mv_guide.get(&mv)
+                        .expect("Owning type should have file arranged already. 1");
+                    let mut stuff = mv_files.get_mut(mv_k)
+                        .expect("Owning type should have file arranged already. 2");
+                    stuff.1.push(i);
+                },
+                _ => {
+                    // Belongs with trait def
+                    let td_k = td_guide.get(&k)
+                        .expect("Trait Def should have file arranged already. 1");
+                    let mut stuff = td_files.get_mut(td_k)
+                        .expect("Trait Def should have file arranged already. 2");
+                    stuff.1.push(i);
+                }
+            };
+        }
+
+        let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
+        for ((p, n), (mvs, tis, is_per_type)) in mv_files {
+            let slf = self.clone();
+            join_set.spawn(async move {
+                let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
+                slf.write_file_smart(
+                    e, &mut join_set, p, n, is_per_type, false,
+                    mvs, vec![], tis,
+                ).await?;
+                join_set.collect_results()
+            });
+        }
+        for ((p, n), (tds, tis, is_per_trait)) in td_files {
+            let slf = self.clone();
+            join_set.spawn(async move {
+                let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
+                slf.write_file_smart(
+                    e, &mut join_set, p, n, false, is_per_trait,
+                    vec![], tds, tis,
+                ).await?;
+                join_set.collect_results()
+            });
+        }
+        join_set.collect_results()
     }
 
     async fn write_file_smart<
@@ -137,6 +258,8 @@ impl FileOrganizing {
         trait_declarations: Vec<Arc<RawTraitDefinition>>,
         trait_implementations: Vec<Arc<RawTraitImplementation>>,
     ) -> anyhow::Result<()> {
+
+        fs::create_dir_all(&folder_owning_file)?;
 
         let mut use_customizable_stub = false;
         for multi_vec in types.iter() {
@@ -251,6 +374,7 @@ impl FileOrganizing {
             if let Some(stub_file) = &mut stub_file {
                 e.emit_comment(stub_file, "TODO custom documentation")?;
             }
+            // TODO allow included files to have different root than stub files
             let included_file_name = if is_per_type {
                 let mut n = file_name_no_extension.clone();
                 n.push_str("_datatype");
@@ -449,11 +573,7 @@ impl IdentifierQualifier for FileOrganizing {
         return match belong {
             DataTypesBelong::AllTogether => path,
             DataTypesBelong::FilePerGrade => {
-                let mut gr = Grades::none;
-                for el in data_type.elements() {
-                    gr |= el.grades();
-                }
-                path.join(Path::new(folder_of_grades(gr)))
+                path.join(Path::new(folder_of_grades(data_type.grades)))
             }
             DataTypesBelong::FilePerType => {
                 // Hi if you are reading this line of code because you defined
@@ -465,12 +585,8 @@ impl IdentifierQualifier for FileOrganizing {
                 path.join(Path::new(&n))
             }
             DataTypesBelong::FilePerGradeThenPerType => {
-                let mut gr = Grades::none;
-                for el in data_type.elements() {
-                    gr |= el.grades();
-                }
                 let n = TraitKey::new(data_type.name).as_lower_snake();
-                path.join(Path::new(folder_of_grades(gr))).join(Path::new(&n))
+                path.join(Path::new(folder_of_grades(data_type.grades))).join(Path::new(&n))
             }
         }
     }

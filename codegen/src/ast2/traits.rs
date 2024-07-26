@@ -630,7 +630,7 @@ pub(crate) struct RawTraitImplementation {
     pub(crate) traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
     pub(crate) traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
-    owner: TraitParam,
+    pub(crate) owner: TraitParam,
     owner_is_param: bool,
     other_type_params: Vec<TraitParam>,
     other_var_params: Vec<TraitParam>,

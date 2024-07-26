@@ -7,9 +7,11 @@ use std::hash::Hash;
 use std::marker::ConstParamTy;
 use std::ops::{Index, IndexMut};
 use std::sync::Arc;
-
+use anyhow::anyhow;
+use async_trait::async_trait;
 use tokio::sync::broadcast;
 use tokio::sync::broadcast::error::RecvError;
+use tokio::task::JoinSet;
 
 pub enum AwaitOrClone<T: Clone> {
     InProgress(broadcast::Receiver<T>),
@@ -313,6 +315,32 @@ impl<T: Copy> ConstOption<T> {
 
 
 
+#[async_trait]
+pub trait CollectResults {
+    async fn collect_results(self) -> anyhow::Result<()>;
+}
+#[async_trait]
+impl CollectResults for JoinSet<anyhow::Result<()>> {
+    async fn collect_results(mut self) -> anyhow::Result<()> {
+        let mut errs = vec![];
+        while let Some(result) = self.join_next().await {
+            match result {
+                Ok(_) => continue,
+                Err(e) => errs.push(Err(e)),
+            }
+        }
+        return if errs.is_empty() {
+            Ok(())
+        } else {
+            // Combine all errors into a single error
+            let combined_error = errs.into_iter()
+                .map(|e| format!("{}", e))
+                .collect::<Vec<_>>()
+                .join(", ");
+            Err(anyhow!(combined_error))
+        }
+    }
+}
 
 
 
