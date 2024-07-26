@@ -1160,6 +1160,7 @@ impl DynamicMultiVector {
             b.note_wanted(keys)
         }
         let mv = MultiVector::from(mv);
+        b.multivector_dependencies.lock().insert(mv);
         Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 
@@ -1197,6 +1198,7 @@ impl DynamicMultiVector {
             return None;
         };
         let mv = MultiVector::from(mv);
+        b.multivector_dependencies.lock().insert(mv);
         Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
     }
 }

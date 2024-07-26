@@ -58,6 +58,7 @@ pub(crate) struct RawTraitDefinition {
     pub(crate) arity: u8,
     pub(crate) output: Arc<RwLock<TraitTypeConsensus>>,
     pub(crate) op: Arc<Mutex<Option<Ops>>>,
+    pub(crate) dependencies: Arc<Mutex<HashSet<TraitKey>>>,
 }
 
 
@@ -106,6 +107,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
             arity: 0,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
+            dependencies: Arc::new(Default::default()),
         })
     }
 
@@ -153,6 +155,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
         TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits10_dependencies.insert(impl_key, the_impl.clone()) {
@@ -222,6 +225,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             arity: 1,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
+            dependencies: Arc::new(Default::default()),
         })
     }
 
@@ -276,6 +280,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
         TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits11_dependencies.insert(impl_key, the_impl.clone()) {
@@ -348,6 +353,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             arity: 1,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
+            dependencies: Arc::new(Default::default()),
         })
     }
 
@@ -406,6 +412,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
         TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits21_dependencies.insert(impl_key, the_impl.clone()) {
@@ -480,6 +487,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             arity: 2,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
+            dependencies: Arc::new(Default::default()),
         })
     }
 
@@ -545,6 +553,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
 
         TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
         TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
         if let Some(_) = b.traits22_dependencies.insert(impl_key, the_impl.clone()) {
@@ -613,10 +622,8 @@ impl<I> const NameTrait for I where I: CanNameTrait + Copy {
 }
 
 
-pub struct RawTraitImplementation {
+pub(crate) struct RawTraitImplementation {
     pub(crate) definition: Arc<RawTraitDefinition>,
-
-    // TODO fill this in
     pub(crate) multivector_dependencies: HashSet<MultiVector>,
     pub(crate) traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     pub(crate) traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
@@ -920,6 +927,48 @@ impl TraitImplRegistry {
                 once and leave it.")
         }
         *trick = Some(op);
+    }
+
+    pub(crate) async fn get_defs(&self) -> Vec<Arc<RawTraitDefinition>> {
+        let mut v = vec![];
+        for dep in self.defs.traits10.to_vec().await {
+            v.push(dep);
+        }
+        for dep in self.defs.traits11.to_vec().await {
+            v.push(dep);
+        }
+        for dep in self.defs.traits21.to_vec().await {
+            v.push(dep);
+        }
+        for dep in self.defs.traits22.to_vec().await {
+            v.push(dep);
+        }
+        v
+    }
+
+    pub(crate) async fn get_impls(&self) -> Vec<Arc<RawTraitImplementation>> {
+        let mut v = vec![];
+        for dep in self.traits10.to_vec().await {
+            if let Some(dep) = dep {
+                v.push(dep);
+            }
+        }
+        for dep in self.traits11.to_vec().await {
+            if let Some(dep) = dep {
+                v.push(dep);
+            }
+        }
+        for dep in self.traits21.to_vec().await {
+            if let Some(dep) = dep {
+                v.push(dep);
+            }
+        }
+        for dep in self.traits22.to_vec().await {
+            if let Some(dep) = dep {
+                v.push(dep);
+            }
+        }
+        v
     }
 }
 
@@ -1226,7 +1275,7 @@ pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     specialized: bool,
 
     cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
-    multivector_dependencies: HashSet<MultiVector>,
+    pub(crate) multivector_dependencies: Mutex<HashSet<MultiVector>>,
     traits10_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits11_dependencies: HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     traits21_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
@@ -1575,7 +1624,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies,
+            multivector_dependencies: self.multivector_dependencies.into_inner(),
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1623,7 +1672,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies,
+            multivector_dependencies: self.multivector_dependencies.into_inner(),
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1671,7 +1720,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies,
+            multivector_dependencies: self.multivector_dependencies.into_inner(),
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
@@ -1719,7 +1768,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         statistics += return_expr.count_operations(&lookup);
         let ti = Arc::new(RawTraitImplementation {
             definition: self.trait_def,
-            multivector_dependencies: self.multivector_dependencies,
+            multivector_dependencies: self.multivector_dependencies.into_inner(),
             traits10_dependencies: self.traits10_dependencies,
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,

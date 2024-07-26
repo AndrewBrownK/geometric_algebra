@@ -85,25 +85,41 @@ impl FileOrganizing {
 
     pub async fn go_do_it<P: AsRef<Path> + AsRef<OsStr>, E: AstEmitter, const AntiScalar: BasisElement>(
         self,
+        e: E,
+        join_set: &mut JoinSet<anyhow::Result<()>>,
         root: P,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
         let root: &Path = root.as_ref();
         fs::create_dir_all(root)?;
-        match self.overall_split {
-            DataTypesVsTraits::Adjacent => {
-                // TODO scan through all materials and divide them up by their destination
-                //  files, then from there we can scan complete list of dependencies for the
-                //  imports at top
-            }
+        let (dt_folder, ts_folder) = match self.overall_split {
+            DataTypesVsTraits::Adjacent => (root.clone().to_path_buf(), root.clone().to_path_buf()),
             DataTypesVsTraits::SeparateFolders => {
-
+                let dt = root.join(Path::new("data"));
+                let ts = root.join(Path::new("traits"));
+                (dt, ts)
             }
             DataTypesVsTraits::OneGinormousFile => {
-                //
+                self.write_file_smart(
+                    e,
+                    join_set,
+                    root,
+                    self.algebra_name,
+                    false,
+                    false,
+                    multi_vecs.declarations(),
+                    impls.get_defs().await,
+                    impls.get_impls().await,
+                ).await?;
+                return Ok(())
             }
-        }
+        };
+        let mut mvs = multi_vecs.declarations();
+        let mut defs = impls.get_defs();
+        let mut impls = impls.get_impls();
+        // TODO this part
+
         Ok(())
     }
 
@@ -330,10 +346,17 @@ impl FileOrganizing {
         trait_declarations: Vec<Arc<RawTraitDefinition>>,
         trait_implementations: Vec<Arc<RawTraitImplementation>>,
     ) -> anyhow::Result<()> {
+        // Trait implementations have to be ordered such that dependent
+        // items are not declared before their dependencies (for shaders at least).
+        // So start by indicating that imports are considered declared.
+        let mut already_ordered = HashSet::new();
+
+        // Alright now actually start emitting stuff.
         for dep in type_dependencies {
             e.import_multi_vector(&mut file, self, dep)?;
         }
         for dep in trait_dependencies {
+            already_ordered.insert(dep.names.trait_key);
             e.import_trait_def(&mut file, self, dep)?;
         }
         for multi_vec in types {
@@ -342,7 +365,40 @@ impl FileOrganizing {
         for td in trait_declarations {
             e.emit_trait_def(&mut file, self, td)?;
         }
-        for ti in trait_implementations {
+
+        // Ok now lets properly order the implementations that
+        // are actually declared here.
+        let mut needs_ordering: Vec<_> = trait_implementations.clone();
+        let mut ordered_implementations = vec![];
+        while !needs_ordering.is_empty() {
+            let size_before = needs_ordering.len();
+            let mut already_disqualified_this_pass = HashSet::new();
+            needs_ordering.retain(|it| {
+                let k = it.definition.names.trait_key;
+                if already_ordered.contains(&k) {
+                    ordered_implementations.push(it.clone());
+                    return false
+                }
+                if already_disqualified_this_pass.contains(&k) {
+                    return true;
+                }
+                let deps = it.definition.dependencies.lock();
+                if deps.iter().all(|dep| already_ordered.contains(dep)) {
+                    already_ordered.insert(k);
+                    ordered_implementations.push(it.clone());
+                    return false
+                }
+                already_disqualified_this_pass.insert(k);
+                return true
+            });
+            let size_after = needs_ordering.len();
+            if size_before == size_after {
+                bail!("There is a missing dependency of a trait implementation. It needs to be \
+                included/declared in this file, or else imported to this file.")
+            }
+        }
+
+        for ti in ordered_implementations {
             e.emit_trait_impl(&mut file, self, ti)?;
         }
         Ok(())

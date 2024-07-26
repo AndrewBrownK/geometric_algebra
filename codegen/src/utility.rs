@@ -122,6 +122,15 @@ impl<
             }
         }
     }
+
+    pub async fn to_vec(&self) -> Vec<V> {
+        let mut result = vec![];
+        for (_k, v) in self.0.read().await.iter() {
+            let v = v.await_clone().await.expect("Shouldn't get receive error");
+            result.push(v);
+        }
+        result
+    }
 }
 
 
