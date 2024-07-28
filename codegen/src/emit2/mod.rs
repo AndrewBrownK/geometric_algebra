@@ -65,7 +65,7 @@ impl FileOrganizing {
         Self {
             algebra_name,
             overall_split: DataTypesVsTraits::Adjacent,
-            data_types: (DataTypesBelong::FilePerType, ExtensiveFile::CustomizableStubWithIncludes),
+            data_types: (DataTypesBelong::FilePerGradeThenPerType, ExtensiveFile::OverwriteAllInOneFile),
             trait_defs: (TraitDefsBelong::FilePerArityThenPerDef, ExtensiveFile::OverwriteAllInOneFile),
             trait_impls: TraitImplsBelong::WithTraitDef,
             override_data_types: Default::default(),
@@ -166,9 +166,9 @@ impl FileOrganizing {
                 Some(stuff) => *stuff,
             };
             let arity = match td.arity {
-                0 => "arity0",
-                1 => "arity1",
-                2 => "arity2",
+                0 => "arity_0",
+                1 => "arity_1",
+                2 => "arity_2",
                 _ => panic!("High arity traits are not supported yet")
             };
 
@@ -298,6 +298,8 @@ impl FileOrganizing {
 
         let mut trait_deps = vec![];
         let mut mv_deps = vec![];
+        let mut trait_deps_set = HashSet::new();
+        let mut mv_deps_set = HashSet::new();
         if e.supports_imports() {
             for td in trait_declarations.iter() {
                 let out = td.output.read();
@@ -308,7 +310,9 @@ impl FileOrganizing {
                             None => bail!("Must use correct AntiScalar"),
                             Some(mv) => mv,
                         };
-                        mv_deps.push(mv);
+                        if mv_deps_set.insert(mv.name) {
+                            mv_deps.push(mv);
+                        }
                     }
                     _ => {}
                 }
@@ -320,19 +324,29 @@ impl FileOrganizing {
                         None => bail!("Must use correct AntiScalar"),
                         Some(mv) => mv,
                     };
-                    mv_deps.push(mv);
+                    if mv_deps_set.insert(mv.name) {
+                        mv_deps.push(mv);
+                    }
                 }
                 for (_, d) in ti.traits10_dependencies.iter() {
-                    trait_deps.push(d.definition.clone());
+                    if trait_deps_set.insert(d.definition.names.trait_key) {
+                        trait_deps.push(d.definition.clone());
+                    }
                 }
                 for (_, d) in ti.traits11_dependencies.iter() {
-                    trait_deps.push(d.definition.clone());
+                    if trait_deps_set.insert(d.definition.names.trait_key) {
+                        trait_deps.push(d.definition.clone());
+                    }
                 }
                 for (_, d) in ti.traits21_dependencies.iter() {
-                    trait_deps.push(d.definition.clone());
+                    if trait_deps_set.insert(d.definition.names.trait_key) {
+                        trait_deps.push(d.definition.clone());
+                    }
                 }
                 for (_, d) in ti.traits22_dependencies.iter() {
-                    trait_deps.push(d.definition.clone());
+                    if trait_deps_set.insert(d.definition.names.trait_key) {
+                        trait_deps.push(d.definition.clone());
+                    }
                 }
             }
         }
@@ -552,25 +566,45 @@ fn folder_of_grades(gr: Grades) -> &'static str {
     // So grade 0 = 0x1
     // Grade 1 = 0x2
     // and NO GRADES that is to say NOT EVEN GRADE 0 is represented as 0x0
+    // match bits {
+    //     1 => "scalar",
+    //     2 => "vector",
+    //     4 => "bivector",
+    //     8 => "trivector",
+    //     16 => "quadvector",
+    //     32 => "vector_gr5",
+    //     64 => "vector_gr6",
+    //     128 => "vector_gr7",
+    //     256 => "vector_gr8",
+    //     512 => "vector_gr9",
+    //     1024 => "vector_gr10",
+    //     2048 => "vector_gr11",
+    //     4096 => "vector_gr12",
+    //     8192 => "vector_gr13",
+    //     16384 => "vector_gr14",
+    //     32768 => "vector_gr15",
+    //     65536 => "vector_gr16",
+    //     _ => "mixed_grade"
+    // }
     match bits {
-        1 => "scalar",
-        2 => "vector",
-        4 => "bivector",
-        8 => "trivector",
-        16 => "quadvector",
-        32 => "vector_gr5",
-        64 => "vector_gr6",
-        128 => "vector_gr7",
-        256 => "vector_gr8",
-        512 => "vector_gr9",
-        1024 => "vector_gr10",
-        2048 => "vector_gr11",
-        4096 => "vector_gr12",
-        8192 => "vector_gr13",
-        16384 => "vector_gr14",
-        32768 => "vector_gr15",
-        65536 => "vector_gr16",
-        _ => "mixed_grade"
+        1 => "vector_00",
+        2 => "vector_01",
+        4 => "vector_02",
+        8 => "vector_03",
+        16 => "vector_04",
+        32 => "vector_05",
+        64 => "vector_06",
+        128 => "vector_07",
+        256 => "vector_08",
+        512 => "vector_09",
+        1024 => "vector_10",
+        2048 => "vector_11",
+        4096 => "vector_12",
+        8192 => "vector_13",
+        16384 => "vector_14",
+        32768 => "vector_15",
+        65536 => "vector_16",
+        _ => "vector_mixed"
     }
 }
 
@@ -623,9 +657,9 @@ impl IdentifierQualifier for FileOrganizing {
             TraitDefsBelong::AllTogether => path,
             TraitDefsBelong::FilePerArity => {
                 match trait_def.arity {
-                    0 => path.join(Path::new("arity0")),
-                    1 => path.join(Path::new("arity1")),
-                    2 => path.join(Path::new("arity2")),
+                    0 => path.join(Path::new("arity_0")),
+                    1 => path.join(Path::new("arity_1")),
+                    2 => path.join(Path::new("arity_2")),
                     _ => panic!("High arity traits are not supported yet")
                 }
             }
@@ -635,9 +669,9 @@ impl IdentifierQualifier for FileOrganizing {
             }
             TraitDefsBelong::FilePerArityThenPerDef => {
                 path = match trait_def.arity {
-                    0 => path.join(Path::new("arity0")),
-                    1 => path.join(Path::new("arity1")),
-                    2 => path.join(Path::new("arity2")),
+                    0 => path.join(Path::new("arity_0")),
+                    1 => path.join(Path::new("arity_1")),
+                    2 => path.join(Path::new("arity_2")),
                     _ => panic!("High arity traits are not supported yet")
                 };
                 let n = k.as_lower_snake();

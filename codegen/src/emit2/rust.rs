@@ -41,7 +41,7 @@ impl AstEmitter for Rust {
     fn supports_includes(&self) -> bool { true }
     fn include_file<W: Write, P: AsRef<Path>>(&self, w: &mut W, p: P) -> anyhow::Result<()> {
         let p = p.as_ref();
-        let path_str = p.to_string_lossy();
+        let path_str = p.to_string_lossy().replace("\\", "/");
         writeln!(w, "include!(\"{path_str}\");")?;
         Ok(())
     }
@@ -50,7 +50,7 @@ impl AstEmitter for Rust {
         &self, w: &mut W, q: &Q, multi_vec: &'static MultiVec<AntiScalar>
     ) -> anyhow::Result<()> {
         let p = q.qualifying_path_of_data_type(multi_vec);
-        let path_str = p.to_string_lossy().replace("/", "::");
+        let path_str = p.to_string_lossy().replace("/", "::").replace("\\", "::");
         writeln!(w, "use crate::{path_str};")?;
         Ok(())
     }
@@ -77,7 +77,7 @@ impl AstEmitter for Rust {
         writeln!(w, "#[derive(Clone, Copy)]")?;
         writeln!(w, "pub struct {ucc}Groups {{")?;
         for (g, group) in multi_vec.groups().into_iter().enumerate() {
-            writeln!(w, "/// ")?;
+            write!(w, "/// ")?;
             for (i, el) in group.into_iter().enumerate() {
                 if i > 0 {
                     write!(w, ", ")?;
@@ -98,7 +98,7 @@ impl AstEmitter for Rust {
         let mut total_len = 0;
         for (i, g) in  multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
-                write!(w, ",")?;
+                write!(w, ", ")?;
             }
             let mut g = g.into_vec();
             while g.len() < 4 {
@@ -125,7 +125,7 @@ impl AstEmitter for Rust {
             write!(w, "{el}: f32")?;
         }
         writeln!(w, "\n) -> Self {{")?;
-        writeln!(w, "Self {{ elements: [")?;
+        write!(w, "Self {{ elements: [")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
@@ -153,7 +153,7 @@ impl AstEmitter for Rust {
             write!(w, "g{i}: ")?;
             self.write_type(w, g.expr_type())?;
         }
-        writeln!(w, ") -> Self {{")?;
+        writeln!(w, "\n) -> Self {{")?;
         writeln!(w, "Self {{\ngroups: {ucc}Groups {{")?;
         for (i, _) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
@@ -220,7 +220,7 @@ impl AstEmitter for Rust {
 
         writeln!(w, "impl std::convert::From<{ucc}> for [f32; {element_count}] {{")?;
         writeln!(w, "fn from(vector: {ucc}) -> Self {{")?;
-        writeln!(w, "unsafe {{ [")?;
+        write!(w, "unsafe {{ [")?;
         let mut i = 0;
         for (j, g) in multi_vec.groups().into_iter().enumerate() {
             if j > 0 {
@@ -241,7 +241,7 @@ impl AstEmitter for Rust {
 
         writeln!(w, "impl std::convert::From<[f32; {element_count}]> for {ucc} {{")?;
         writeln!(w, "fn from(array: [f32; {element_count}]) -> Self {{")?;
-        writeln!(w, "Self {{ elements: [")?;
+        write!(w, "Self {{ elements: [")?;
         let mut i = 0;
         for (j, g) in multi_vec.groups().into_iter().enumerate() {
             if j > 0 {
