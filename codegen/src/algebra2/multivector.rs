@@ -14,7 +14,7 @@ use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::elements::*;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
-use crate::ast2::datatype::MultiVector;
+use crate::ast2::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr};
 use crate::ast2::traits::{HasNotReturned, RawTraitDefinition, RawTraitImplementation, TraitImplBuilder};
 use crate::utility::ConstVec;
@@ -152,6 +152,24 @@ impl BasisElementGroup {
                 v.push(d);
                 v
             }
+        }
+    }
+
+    pub(crate) fn expr_type(&self) -> ExpressionType {
+        match self {
+            BasisElementGroup::G1(_) => ExpressionType::Float(Float),
+            BasisElementGroup::G2(_, _) => ExpressionType::Vec2(Vec2),
+            BasisElementGroup::G3(_, _, _) => ExpressionType::Vec3(Vec3),
+            BasisElementGroup::G4(_, _, _, _) => ExpressionType::Vec4(Vec4),
+        }
+    }
+
+    pub(crate) fn simd_width(&self) -> u8 {
+        match self {
+            BasisElementGroup::G1(_) => 1,
+            BasisElementGroup::G2(_, _) => 2,
+            BasisElementGroup::G3(_, _, _) => 3,
+            BasisElementGroup::G4(_, _, _, _) => 4,
         }
     }
 }
@@ -899,6 +917,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             let cv = mvr.use_preferred_groups(cv, remaining_els);
             mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new_by_groups("MultiVector", cv));
         }
+        println!();
         mvr.declarations.sort_declarations();
         Arc::new(mvr)
     }

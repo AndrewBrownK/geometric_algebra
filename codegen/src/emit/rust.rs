@@ -417,11 +417,16 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n\n")?;
             emit_indentation(collector, indentation)?;
+
+
+
+
             collector.write_fmt(format_args!("impl {} {{\n", class.class_name))?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"#[allow(clippy::too_many_arguments)]\n")?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"pub const fn new(")?;
+
             let elements = class.flat_basis().into_iter().map(|mut it| {
                 assert_ne!(it.coefficient, 0);
                 let negative = it.coefficient == -1;
@@ -442,6 +447,8 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 let element = &elements[i];
                 collector.write_fmt(format_args!("{}: f32", element))?;
             }
+
+
             collector.write_all(b") -> Self {\n")?;
             emit_indentation(collector, indentation + 2)?;
             collector.write_all(b"Self { elements: [")?;

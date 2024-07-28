@@ -1,6 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 use std::collections::BTreeSet;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use crate::{ga, multi_vecs, operators, register_all};
@@ -67,6 +68,15 @@ pub fn cga3d_script() {
     }
 
     // TODO output files
+    let mut file_path = PathBuf::from("../cga3d_new/src/");
+    let rust = Rust { prefer_fancy_infix: false };
+    let fo = FileOrganizing::recommended_for_rust("cga3d_new");
+    let rt = tokio::runtime::Runtime::new().expect("tokio works");
+    rt.spawn(async move {
+        if let Err(e) = fo.go_do_it(rust, file_path, repo, Arc::new(traits)).await {
+            eprintln!("Errors: {e:?}")
+        }
+    });
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
@@ -113,6 +123,9 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
 
 
 use crate::build_scripts2::common_traits::BulkExpansion;
+use crate::emit2::FileOrganizing;
+use crate::emit2::rust::Rust;
+
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
     = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| Box::pin(async move {
         // TODO actually implement

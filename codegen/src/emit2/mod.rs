@@ -1,5 +1,3 @@
-mod rust;
-
 use std::collections::{HashMap, HashSet};
 use std::ffi::OsStr;
 use std::fs;
@@ -8,16 +6,18 @@ use std::io::ErrorKind::AlreadyExists;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use anyhow::{anyhow, bail};
-use parking_lot::lock_api::RwLockReadGuard;
-use parking_lot::RawRwLock;
+
+use anyhow::bail;
 use tokio::task::JoinSet;
+
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
 use crate::utility::CollectResults;
+
+pub mod rust;
 
 #[derive(Copy, Clone)]
 pub enum ExtensiveFile {
@@ -118,13 +118,13 @@ impl FileOrganizing {
                     e, &mut join_set, root, self.algebra_name, false, false,
                     mvs, defs, impls,
                 ).await?;
-                return join_set.collect_results()
+                return join_set.collect_results().await
             }
         };
 
         let mut mv_guide = HashMap::new();
         let mut mv_files: HashMap<
-            (PathBuf, &str),
+            (PathBuf, String),
             (Vec<&'static MultiVec<AntiScalar>>, Vec<Arc<RawTraitImplementation>>, bool)
         > = HashMap::new();
         for multi_vec in mvs {
@@ -136,19 +136,19 @@ impl FileOrganizing {
             let mut is_per_type = false;
             let (folder, file) = match belong {
                 // Naming a file "mod" is a little biased towards rust, but we'll roll with it for now.
-                DataTypesBelong::AllTogether => if separate_folders { (dt_folder.clone(), "mod") } else { (root.to_path_buf(), "data") },
-                DataTypesBelong::FilePerGrade => (dt_folder.clone(), folder_of_grades(multi_vec.grades)),
+                DataTypesBelong::AllTogether => if separate_folders { (dt_folder.clone(), "mod".to_string()) } else { (root.to_path_buf(), "data".to_string()) },
+                DataTypesBelong::FilePerGrade => (dt_folder.clone(), folder_of_grades(multi_vec.grades).to_string()),
                 DataTypesBelong::FilePerType => {
                     is_per_type = true;
-                    (dt_folder.clone(), TraitKey::new(multi_vec.name).as_lower_snake().as_str())
+                    (dt_folder.clone(), TraitKey::new(multi_vec.name).as_lower_snake())
                 },
                 DataTypesBelong::FilePerGradeThenPerType => {
                     is_per_type = true;
                     (dt_folder.join(Path::new(folder_of_grades(multi_vec.grades))),
-                        TraitKey::new(multi_vec.name).as_lower_snake().as_str())
+                        TraitKey::new(multi_vec.name).as_lower_snake())
                 },
             };
-            mv_guide.insert(mv, (folder.clone(), file));
+            mv_guide.insert(mv, (folder.clone(), file.clone()));
             mv_files.entry((folder, file))
                 .and_modify(|(mvs, impls, _)| mvs.push(multi_vec))
                 .or_insert((vec![multi_vec], vec![], is_per_type));
@@ -156,7 +156,7 @@ impl FileOrganizing {
 
         let mut td_guide = HashMap::new();
         let mut td_files: HashMap<
-            (PathBuf, &str),
+            (PathBuf, String),
             (Vec<Arc<RawTraitDefinition>>, Vec<Arc<RawTraitImplementation>>, bool)
         > = HashMap::new();
         for td in defs {
@@ -175,21 +175,22 @@ impl FileOrganizing {
             let mut is_per_trait = false;
             let (folder, file) = match belong {
                 // Naming a file "mod" is a little biased towards rust, but we'll roll with it for now.
-                TraitDefsBelong::AllTogether => if separate_folders { (ts_folder.clone(), "mod") } else { (root.to_path_buf(), "traits") },
-                TraitDefsBelong::FilePerArity => (ts_folder.clone(), arity),
+                TraitDefsBelong::AllTogether => if separate_folders { (ts_folder.clone(), "mod".to_string()) } else { (root.to_path_buf(), "traits".to_string()) },
+                TraitDefsBelong::FilePerArity => (ts_folder.clone(), arity.to_string()),
                 TraitDefsBelong::FilePerDef => {
                     is_per_trait = true;
-                    (ts_folder.clone(), k.as_lower_snake().as_str())
+                    (ts_folder.clone(), k.as_lower_snake())
                 }
                 TraitDefsBelong::FilePerArityThenPerDef => {
                     is_per_trait = true;
-                    (ts_folder.join(Path::new(arity)), k.as_lower_snake().as_str())
+                    (ts_folder.join(Path::new(arity)), k.as_lower_snake())
                 }
             };
-            td_guide.insert(k, (folder.clone(), file));
+            td_guide.insert(k, (folder.clone(), file.clone()));
+            let td2 = td.clone();
             td_files.entry((folder, file))
-                .and_modify(|(tds, impls, _)| tds.push(td))
-                .or_insert((vec![td], vec![], is_per_trait));
+                .and_modify(move |(tds, impls, _)| tds.push(td))
+                .or_insert((vec![td2], vec![], is_per_trait));
         }
 
         for i in impls {
@@ -201,18 +202,26 @@ impl FileOrganizing {
             match (&i.owner, belong) {
                 (TraitParam::Fixed(ExpressionType::Class(mv)), TraitImplsBelong::WithOwnerType) => {
                     // Belongs with owner type
-                    let mv_k = mv_guide.get(&mv)
-                        .expect("Owning type should have file arranged already. 1");
-                    let mut stuff = mv_files.get_mut(mv_k)
-                        .expect("Owning type should have file arranged already. 2");
+                    let mv_k = match mv_guide.get(&mv) {
+                        None => bail!("Owning type should have file arranged already. 1"),
+                        Some(k) => k,
+                    };
+                    let mut stuff = match mv_files.get_mut(mv_k) {
+                        None => bail!("Owning type should have file arranged already. 2"),
+                        Some(k) => k,
+                    };
                     stuff.1.push(i);
                 },
                 _ => {
                     // Belongs with trait def
-                    let td_k = td_guide.get(&k)
-                        .expect("Trait Def should have file arranged already. 1");
-                    let mut stuff = td_files.get_mut(td_k)
-                        .expect("Trait Def should have file arranged already. 2");
+                    let td_k = match td_guide.get(&k) {
+                        None => bail!("Trait Def should have file arranged already. 1"),
+                        Some(k) => k,
+                    };
+                    let mut stuff = match td_files.get_mut(td_k) {
+                        None => bail!("Trait Def should have file arranged already. 2"),
+                        Some(k) => k
+                    };
                     stuff.1.push(i);
                 }
             };
@@ -227,21 +236,21 @@ impl FileOrganizing {
                     e, &mut join_set, p, n, is_per_type, false,
                     mvs, vec![], tis,
                 ).await?;
-                join_set.collect_results()
+                join_set.collect_results().await
             });
         }
         for ((p, n), (tds, tis, is_per_trait)) in td_files {
             let slf = self.clone();
             join_set.spawn(async move {
                 let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
-                slf.write_file_smart(
+                slf.write_file_smart::<PathBuf, String, E, AntiScalar>(
                     e, &mut join_set, p, n, false, is_per_trait,
                     vec![], tds, tis,
                 ).await?;
-                join_set.collect_results()
+                join_set.collect_results().await
             });
         }
-        join_set.collect_results()
+        join_set.collect_results().await
     }
 
     async fn write_file_smart<
@@ -295,7 +304,10 @@ impl FileOrganizing {
                 match *out {
                     TraitTypeConsensus::AllAgree(ExpressionType::Class(mv)) => {
                         let mv: Option<&'static MultiVec<AntiScalar>> = mv.into();
-                        let mv = mv.expect("Must use correct AntiScalar");
+                        let mv = match mv {
+                            None => bail!("Must use correct AntiScalar"),
+                            Some(mv) => mv,
+                        };
                         mv_deps.push(mv);
                     }
                     _ => {}
@@ -304,7 +316,10 @@ impl FileOrganizing {
             for ti in trait_implementations.iter() {
                 for m in ti.multivector_dependencies.iter() {
                     let mv: Option<&'static MultiVec<AntiScalar>> = (*m).into();
-                    let mv = mv.expect("Must use correct AntiScalar");
+                    let mv = match mv {
+                        None => bail!("Must use correct AntiScalar"),
+                        Some(mv) => mv,
+                    };
                     mv_deps.push(mv);
                 }
                 for (_, d) in ti.traits10_dependencies.iter() {
@@ -336,7 +351,8 @@ impl FileOrganizing {
                 e.emit_comment(
                     &mut file,
                     "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
-                    Changes to this file may be clobbered by code generation at any time."
+                    Changes to this file may be clobbered by code generation at any time.",
+                    false
                 )?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
@@ -364,7 +380,8 @@ impl FileOrganizing {
                     clobbered by code generation.\n\
                     If you accidentally break this file, or the content \n\
                     it relies upon changes, you can regenerate this file \n\
-                    from scratch by deleting it first."
+                    from scratch by deleting it first.",
+                false
             )?;
             self.write_file_dumb::<&mut File, E, AntiScalar>(
                 e, stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
@@ -372,7 +389,7 @@ impl FileOrganizing {
         }
         for mv in types {
             if let Some(stub_file) = &mut stub_file {
-                e.emit_comment(stub_file, "TODO custom documentation")?;
+                e.emit_comment(stub_file, "TODO custom documentation", true)?;
             }
             // TODO allow included files to have different root than stub files
             let included_file_name = if is_per_type {
@@ -405,7 +422,7 @@ impl FileOrganizing {
         }
         for def in trait_declarations {
             if let Some(stub_file) = &mut stub_file {
-                e.emit_comment(stub_file, "TODO custom documentation")?;
+                e.emit_comment(stub_file, "TODO custom documentation", true)?;
             }
             let included_file_name = if is_per_trait {
                 let mut n = file_name_no_extension.clone();
@@ -651,7 +668,7 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         &self,
         w: &mut W,
         q: &Q,
-        defs: Arc<RawTraitDefinition>,
+        def: Arc<RawTraitDefinition>,
     ) -> anyhow::Result<()> { bail!("Imports not supported") }
     fn emit_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
         &self,
@@ -671,7 +688,7 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         q: &Q,
         impls: Arc<RawTraitImplementation>,
     ) -> anyhow::Result<()>;
-    fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, s: S) -> anyhow::Result<()>;
+    fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, s: S, is_documentation: bool) -> anyhow::Result<()>;
 }
 
 

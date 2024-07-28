@@ -7,6 +7,7 @@ use std::hash::Hash;
 use std::marker::ConstParamTy;
 use std::ops::{Index, IndexMut};
 use std::sync::Arc;
+
 use anyhow::anyhow;
 use async_trait::async_trait;
 use tokio::sync::broadcast;
@@ -212,6 +213,22 @@ impl<T: Copy, const N: usize> IntoIterator for ConstVec<T, N> {
         v.into_iter()
     }
 }
+/*
+// TODO see if you can get the below item to work and remove the above item
+type ConstVecIterator<T> = FilterMap<std::vec::IntoIter<Option<T>>, fn(Option<T>) -> Option<T>>;
+impl<T: Copy, const N: usize> IntoIterator for ConstVec<T, N> {
+    type Item = T;
+    type IntoIter = ConstVecIterator<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        // This technique uses Copy to directly copy memory to the heap, instead of manually
+        // iterating to construct the Vec (and we want a Vec so that we don't have to worry about
+        // a type level size)
+        let result = self.0.into_vec().into_iter().filter_map(|it| it);
+        result
+    }
+}
+ */
 impl<T: Copy + PartialOrd, const N: usize> PartialOrd for ConstVec<T, N> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         let mut i = 0;
@@ -325,8 +342,9 @@ impl CollectResults for JoinSet<anyhow::Result<()>> {
         let mut errs = vec![];
         while let Some(result) = self.join_next().await {
             match result {
-                Ok(_) => continue,
-                Err(e) => errs.push(Err(e)),
+                Ok(Ok(())) => continue,
+                Ok(Err(e)) => errs.push(e),
+                Err(e) => errs.push(anyhow::Error::new(e)),
             }
         }
         return if errs.is_empty() {
@@ -334,7 +352,7 @@ impl CollectResults for JoinSet<anyhow::Result<()>> {
         } else {
             // Combine all errors into a single error
             let combined_error = errs.into_iter()
-                .map(|e| format!("{}", e))
+                .map(|e| format!("{e:?}"))
                 .collect::<Vec<_>>()
                 .join(", ");
             Err(anyhow!(combined_error))

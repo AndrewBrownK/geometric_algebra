@@ -153,6 +153,10 @@ impl MultiVector {
         }
         v
     }
+
+    pub fn name(&self) -> &'static str {
+        self.multi_vec.name
+    }
 }
 
 impl<const AntiScalar: BasisElement> From<&'static MultiVec<AntiScalar>> for MultiVector {

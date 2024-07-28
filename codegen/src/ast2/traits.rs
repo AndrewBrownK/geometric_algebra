@@ -715,6 +715,10 @@ impl TraitKey {
 
         snake
     }
+
+    pub fn as_screaming_snake(&self) -> String {
+        self.as_lower_snake().to_uppercase()
+    }
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
