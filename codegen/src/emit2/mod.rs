@@ -304,7 +304,7 @@ impl FileOrganizing {
             for td in trait_declarations.iter() {
                 let out = td.output.read();
                 match *out {
-                    TraitTypeConsensus::AllAgree(ExpressionType::Class(mv)) => {
+                    TraitTypeConsensus::AllAgree(ExpressionType::Class(mv), _) => {
                         let mv: Option<&'static MultiVec<AntiScalar>> = mv.into();
                         let mv = match mv {
                             None => bail!("Must use correct AntiScalar"),
@@ -364,9 +364,9 @@ impl FileOrganizing {
                     .open(file_name)?;
                 e.emit_comment(
                     &mut file,
+                    false,
                     "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
-                    Changes to this file may be clobbered by code generation at any time.",
-                    false
+                    Changes to this file may be clobbered by code generation at any time."
                 )?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
@@ -387,6 +387,7 @@ impl FileOrganizing {
         if let Some(stub_file) = &mut stub_file {
             e.emit_comment(
                 stub_file,
+                false,
                 "This file may `include` other files in its contents.\n\
                     This file will not be clobbered by code generation, \n\
                     and so can be manually customized or documented by hand.\n\
@@ -394,8 +395,7 @@ impl FileOrganizing {
                     clobbered by code generation.\n\
                     If you accidentally break this file, or the content \n\
                     it relies upon changes, you can regenerate this file \n\
-                    from scratch by deleting it first.",
-                false
+                    from scratch by deleting it first."
             )?;
             self.write_file_dumb::<&mut File, E, AntiScalar>(
                 e, stub_file, mv_deps, trait_deps, vec![], vec![], vec![]
@@ -403,7 +403,7 @@ impl FileOrganizing {
         }
         for mv in types {
             if let Some(stub_file) = &mut stub_file {
-                e.emit_comment(stub_file, "TODO custom documentation", true)?;
+                e.emit_comment(stub_file, true, "TODO custom documentation")?;
             }
             // TODO allow included files to have different root than stub files
             let included_file_name = if is_per_type {
@@ -436,7 +436,7 @@ impl FileOrganizing {
         }
         for def in trait_declarations {
             if let Some(stub_file) = &mut stub_file {
-                e.emit_comment(stub_file, "TODO custom documentation", true)?;
+                e.emit_comment(stub_file, true, "TODO custom documentation")?;
             }
             let included_file_name = if is_per_trait {
                 let mut n = file_name_no_extension.clone();
@@ -586,6 +586,7 @@ fn folder_of_grades(gr: Grades) -> &'static str {
     //     65536 => "vector_gr16",
     //     _ => "mixed_grade"
     // }
+    // TODO strip leading 0 if not going to need it, based on dimensionality
     match bits {
         1 => "vector_00",
         2 => "vector_01",
@@ -656,6 +657,7 @@ impl IdentifierQualifier for FileOrganizing {
         match belong {
             TraitDefsBelong::AllTogether => path,
             TraitDefsBelong::FilePerArity => {
+                // TODO consolidate the duplicates of this match expression into some function
                 match trait_def.arity {
                     0 => path.join(Path::new("arity_0")),
                     1 => path.join(Path::new("arity_1")),
@@ -714,7 +716,7 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         &self,
         w: &mut W,
         q: &Q,
-        defs: Arc<RawTraitDefinition>,
+        def: Arc<RawTraitDefinition>,
     ) -> anyhow::Result<()>;
     fn emit_trait_impl<W: Write, Q: IdentifierQualifier>(
         &self,
@@ -722,7 +724,7 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         q: &Q,
         impls: Arc<RawTraitImplementation>,
     ) -> anyhow::Result<()>;
-    fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, s: S, is_documentation: bool) -> anyhow::Result<()>;
+    fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, is_documentation: bool, s: S) -> anyhow::Result<()>;
 }
 
 

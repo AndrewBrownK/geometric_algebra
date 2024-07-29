@@ -1,10 +1,13 @@
 use std::io::Write;
+use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
+use parking_lot::lock_api::RwLockReadGuard;
+use parking_lot::RawRwLock;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::datatype::ExpressionType;
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitKey};
+use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitKey, TraitParam, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, IdentifierQualifier};
 
 #[derive(Copy, Clone)]
@@ -49,17 +52,19 @@ impl AstEmitter for Rust {
     fn import_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
         &self, w: &mut W, q: &Q, multi_vec: &'static MultiVec<AntiScalar>
     ) -> anyhow::Result<()> {
+        let n = multi_vec.name;
         let p = q.qualifying_path_of_data_type(multi_vec);
         let path_str = p.to_string_lossy().replace("/", "::").replace("\\", "::");
-        writeln!(w, "use crate::{path_str};")?;
+        writeln!(w, "use crate::{path_str}::{n};")?;
         Ok(())
     }
     fn import_trait_def<W: Write, Q: IdentifierQualifier>(
         &self, w: &mut W, q: &Q, def: Arc<RawTraitDefinition>
     ) -> anyhow::Result<()> {
+        let ucc = def.names.trait_key.as_upper_camel();
         let p = q.qualifying_path_of_trait_def(def);
         let path_str = p.to_string_lossy().replace("/", "::");
-        writeln!(w, "use crate::{path_str};")?;
+        writeln!(w, "use crate::{path_str}::{ucc};")?;
         Ok(())
     }
 
@@ -278,21 +283,205 @@ impl AstEmitter for Rust {
     }
 
     fn emit_trait_def<W: Write, Q: IdentifierQualifier>(
-        &self, w: &mut W, q: &Q, defs: Arc<RawTraitDefinition>
+        &self, w: &mut W, q: &Q, def: Arc<RawTraitDefinition>
     ) -> anyhow::Result<()> {
-        write!(w, "")?;
+        let ucc = def.names.trait_key.as_upper_camel();
+        let lsc = def.names.trait_key.as_lower_snake();
+        self.emit_comment(w, true, &def.documentation)?;
+        // todo alias documentation
+        write!(w, "pub trait {ucc}")?;
+        match def.arity {
+            0 => {}
+            1 => {}
+            2 => write!(w, "<T>")?,
+            _ => {}
+        }
+        writeln!(w, " {{")?;
+
+        let output_ty = def.output.read();
+        match *output_ty {
+            TraitTypeConsensus::AlwaysSelf | TraitTypeConsensus::AllAgree(_, _) => {
+                // We don't actually output it here
+                // self.write_type(w, et)?;
+            }
+            TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => {
+                writeln!(w, "    type Output;")?;
+            }
+        }
+        write!(w, "    fn {lsc}(")?;
+        if def.arity >= 1 {
+            write!(w, "self")?;
+        }
+        if def.arity >= 2 {
+            write!(w, ", other: T")?;
+        }
+        write!(w, ") -> ")?;
+        match *output_ty {
+            TraitTypeConsensus::AlwaysSelf => write!(w, "Self")?,
+            TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+            TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
+        }
+        writeln!(w, ";\n}}")?;
         Ok(())
     }
 
     fn emit_trait_impl<W: Write, Q: IdentifierQualifier>(
         &self, w: &mut W, q: &Q, impls: Arc<RawTraitImplementation>
     ) -> anyhow::Result<()> {
-        write!(w, "")?;
+        let def = &impls.definition;
+        let ucc = def.names.trait_key.as_upper_camel();
+        let lsc = def.names.trait_key.as_lower_snake();
+        let output_kind = def.output.read();
+        let output_ty = impls.return_expr.expression_type();
+        let owner_ty = match &impls.owner {
+            TraitParam::Generic => panic!("Generic output types are not supported yet."),
+            TraitParam::Fixed(ty) => ty,
+        };
+        if impls.other_var_params.len() > 1 || impls.other_type_params.len() > 1 {
+            panic!("We do not support high arity traits yet")
+        }
+        let mut var_param = None;
+        if !impls.other_var_params.is_empty() {
+            let ty_param = &impls.other_type_params[0];
+            let v_param = &impls.other_var_params[0];
+            let TraitParam::Fixed(ty_param) = ty_param else {
+                panic!("We do not support generic implementations yet (but hope too eventually)")
+            };
+            let TraitParam::Fixed(v_param) = v_param else {
+                panic!("We do not support generic implementations yet (but hope too eventually)")
+            };
+            if ty_param != v_param {
+                // TODO I feel like this is a representation problem, need to review and maybe
+                //  refactor the algebraic data types involved here
+                panic!("Type of trait implementation does not agree")
+            }
+            var_param = Some(v_param);
+        }
+        // todo alias documentation
+        // TODO using a match on tuple here already seems like a mistake. Sure it might be easier
+        //  to read each block, but there's too many duplicate snippets. It'd be harder to read
+        //  but better for maintenance to only branch each independent condition as few times as
+        //  necessary
+        match (def.arity, &impls.owner, output_kind.deref()) {
+            (2, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AllAgree(output_ty, _)) => {
+                let var_param = var_param.unwrap();
+                write!(w, "impl {ucc}<")?;
+                self.write_type(w, *var_param)?;
+                write!(w, "> for ")?;
+                self.write_type(w, *owner_ty)?;
+                write!(w, " {{\n    fn {lsc}(self, other: T) -> ")?;
+                self.write_type(w, *output_ty)?;
+                writeln!(w, " {{")?;
+            }
+            (2, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AlwaysSelf) => {
+                let var_param = var_param.unwrap();
+                write!(w, "impl {ucc}<")?;
+                self.write_type(w, *var_param)?;
+                write!(w, "> for ")?;
+                self.write_type(w, *owner_ty)?;
+                writeln!(w, " {{\n    fn {lsc}(self, other: T) -> Self {{")?;
+            }
+            (2, TraitParam::Fixed(owner_ty), _) => {
+                let var_param = var_param.unwrap();
+                write!(w, "impl {ucc}<")?;
+                self.write_type(w, *var_param)?;
+                write!(w, "> for ")?;
+                self.write_type(w, *owner_ty)?;
+                write!(w, " {{\n    type Output = ")?;
+                self.write_type(w, output_ty)?;
+                writeln!(w, ";\n    fn {lsc}(self, other: T) -> Self::Output {{")?;
+            }
+            (2, TraitParam::Generic, TraitTypeConsensus::AllAgree(output_ty, _)) => {
+                let var_param = var_param.unwrap();
+                write!(w, "impl<Owner> {ucc}<")?;
+                self.write_type(w, *var_param)?;
+                writeln!(w, "> for Owner {{")?;
+                write!(w, "{{\n    fn {lsc}(self, other: T) -> ")?;
+                self.write_type(w, *output_ty)?;
+                writeln!(w, " {{")?;
+            }
+            (2, TraitParam::Generic, TraitTypeConsensus::AlwaysSelf) => {
+                let var_param = var_param.unwrap();
+                write!(w, "impl<Owner> {ucc}<")?;
+                self.write_type(w, *var_param)?;
+                writeln!(w, "> for Owner {{")?;
+                write!(w, "{{\n    fn {lsc}(self, other: T) -> Self {{")?;
+            }
+            (2, TraitParam::Generic, _) => {
+                let var_param = var_param.unwrap();
+                write!(w, "impl<Owner> {ucc}<")?;
+                self.write_type(w, *var_param)?;
+                writeln!(w, "> for Owner {{")?;
+                write!(w, "    type Output = ")?;
+                self.write_type(w, output_ty)?;
+                writeln!(w, ";\n    fn {lsc}(self, other: T) -> Self::Output {{")?;
+            }
+            (1, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AllAgree(output_ty, _)) => {
+                write!(w, "impl {ucc} for ")?;
+                self.write_type(w, *owner_ty)?;
+                writeln!(w, " {{")?;
+                write!(w, "    fn {lsc}(self) -> ")?;
+                self.write_type(w, *output_ty)?;
+                writeln!(w, " {{")?;
+            }
+            (1, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AlwaysSelf) => {
+                write!(w, "impl {ucc} for ")?;
+                self.write_type(w, *owner_ty)?;
+                writeln!(w, " {{")?;
+                write!(w, "    fn {lsc}(self) -> Self {{")?;
+            }
+            (1, TraitParam::Fixed(owner_ty), _) => {
+                write!(w, "impl {ucc} for ")?;
+                self.write_type(w, *owner_ty)?;
+                write!(w, " {{\n    type Output = ")?;
+                self.write_type(w, output_ty)?;
+                writeln!(w, ";\n    fn {lsc}(self) -> Self::Output {{")?;
+            }
+            (1, TraitParam::Generic, TraitTypeConsensus::AllAgree(output_ty, _)) => {
+                writeln!(w, "impl<Owner> {ucc} for Owner {{")?;
+                write!(w, "    fn {lsc}(self) -> ")?;
+                self.write_type(w, *output_ty)?;
+                writeln!(w, " {{")?;
+            }
+            (1, TraitParam::Generic, TraitTypeConsensus::AlwaysSelf) => {
+                writeln!(w, "impl<Owner> {ucc} for Owner {{")?;
+                write!(w, "    fn {lsc}(self) -> Self {{")?;
+            }
+            (1, TraitParam::Generic, _) => {
+                writeln!(w, "impl<Owner> {ucc} for Owner {{")?;
+                write!(w, "    type Output = ")?;
+                self.write_type(w, output_ty)?;
+                writeln!(w, ";\n    fn {lsc}(self) -> Self::Output {{")?;
+            }
+            (0, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AllAgree(output_ty, _)) => {
+                write!(w, "impl {ucc} for ")?;
+                self.write_type(w, *owner_ty)?;
+                write!(w, " {{\n    fn {lsc}() -> ")?;
+                self.write_type(w, *output_ty)?;
+                writeln!(w, " {{")?;
+            }
+            (0, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AlwaysSelf) => {
+                write!(w, "impl {ucc} for ")?;
+                self.write_type(w, *owner_ty)?;
+                writeln!(w, " {{\n    fn {lsc}() -> Self {{")?;
+            }
+            (0, TraitParam::Fixed(owner_ty), _) => {
+                write!(w, "impl {ucc} for ")?;
+                self.write_type(w, *owner_ty)?;
+                write!(w, " {{\n    type Output = ")?;
+                self.write_type(w, output_ty)?;
+                writeln!(w, ";\n    fn {lsc}() -> Self::Output {{")?;
+            }
+            _ => {
+                panic!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}")
+            }
+        }
+        writeln!(w, "        todo!();\n    }}\n}}")?;
         Ok(())
     }
 
     fn emit_comment<W: Write, S: Into<String>>(
-        &self, w: &mut W, s: S, is_documentation: bool
+        &self, w: &mut W, is_documentation: bool, s: S
     ) -> anyhow::Result<()> {
         let slashy = if is_documentation { "/// " } else { "// " };
         let s = s.into();

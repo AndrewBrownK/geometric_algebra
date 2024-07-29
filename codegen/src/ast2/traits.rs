@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 use std::collections::{BTreeSet, HashMap, HashSet};
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 use std::sync::Arc;
 
 use async_trait::async_trait;
@@ -22,31 +22,42 @@ use crate::utility::AsyncMap;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TraitTypeConsensus {
     NoVotes,
-    AllAgree(ExpressionType),
+    AllAgree(ExpressionType, bool),
+    AlwaysSelf,
     Disagreement
 }
 impl TraitTypeConsensus {
-    pub fn add_vote(slf: &Arc<RwLock<TraitTypeConsensus>>, expr_type: ExpressionType) {
+    pub fn add_vote(slf: &Arc<RwLock<TraitTypeConsensus>>, expr_type: ExpressionType, is_self: bool) {
         let output = slf.read();
         match output.deref() {
             TraitTypeConsensus::Disagreement => return,
-            TraitTypeConsensus::AllAgree(agreed) if *agreed == expr_type => return,
-            TraitTypeConsensus::NoVotes | TraitTypeConsensus::AllAgree(_) => {
-                drop(output);
-                let mut owners = slf.write();
-                *owners = match owners.deref() {
-                    TraitTypeConsensus::NoVotes => TraitTypeConsensus::AllAgree(expr_type),
-                    TraitTypeConsensus::AllAgree(agreed) if *agreed == expr_type => return,
-                    TraitTypeConsensus::AllAgree(_actually_not) => TraitTypeConsensus::Disagreement,
-                    _ => return,
+            TraitTypeConsensus::AlwaysSelf if is_self => return,
+            TraitTypeConsensus::AllAgree(agreed, was_self)
+                if *agreed == expr_type && is_self == *was_self => return,
+            _ => {}
+        }
+        drop(output);
+        let mut owners = slf.write();
+        *owners = match owners.deref() {
+            TraitTypeConsensus::Disagreement => return,
+            TraitTypeConsensus::AlwaysSelf if is_self => return,
+            TraitTypeConsensus::AlwaysSelf => TraitTypeConsensus::Disagreement,
+            TraitTypeConsensus::NoVotes => TraitTypeConsensus::AllAgree(expr_type, is_self),
+            TraitTypeConsensus::AllAgree(agreed_type, was_self) => {
+                match (*agreed_type == expr_type, *was_self && is_self) {
+                    (true, true) => return,
+                    (true, false) => TraitTypeConsensus::AllAgree(expr_type, false),
+                    (false, true) => TraitTypeConsensus::AlwaysSelf,
+                    (false, false) => TraitTypeConsensus::Disagreement,
                 }
-            }
+            },
         }
     }
 }
 
 
 pub enum TraitParam {
+    // TODO I don't think we really use this Generic variant yet
     Generic,
     Fixed(ExpressionType)
 }
@@ -153,8 +164,8 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         let owner_type = ExpressionType::Class(owner.clone());
         let return_type = the_impl.return_expr.expression_type();
 
-        TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
-        TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
+        TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
         the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
@@ -278,8 +289,8 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
-        TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
-        TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
+        TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
         the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
@@ -410,8 +421,8 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
-        TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
-        TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
+        TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
         the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
@@ -551,8 +562,8 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         let owner_type = ExpressionType::Class(owner_class.clone());
         let return_type = the_impl.return_expr.expression_type();
 
-        TraitTypeConsensus::add_vote(&the_def.owner, owner_type);
-        TraitTypeConsensus::add_vote(&the_def.output, return_type);
+        TraitTypeConsensus::add_vote(&the_def.owner, owner_type, true);
+        TraitTypeConsensus::add_vote(&the_def.output, return_type, owner_type == return_type);
         the_def.dependencies.lock().insert(trait_key);
 
         // We have an implementation. Great. Let's add the dependency.
@@ -631,13 +642,13 @@ pub(crate) struct RawTraitImplementation {
     pub(crate) traits22_dependencies: HashMap<(TraitKey, MultiVector, MultiVector), Arc<RawTraitImplementation>>,
 
     pub(crate) owner: TraitParam,
-    owner_is_param: bool,
-    other_type_params: Vec<TraitParam>,
-    other_var_params: Vec<TraitParam>,
-    lines: Vec<CommentOrVariableDeclaration>,
-    return_comment: Option<String>,
-    return_expr: AnyExpression,
-    specialized: bool,
+    pub(crate) owner_is_param: bool,
+    pub(crate) other_type_params: Vec<TraitParam>,
+    pub(crate) other_var_params: Vec<TraitParam>,
+    pub(crate) lines: Vec<CommentOrVariableDeclaration>,
+    pub(crate) return_comment: Option<String>,
+    pub(crate) return_expr: AnyExpression,
+    pub(crate) specialized: bool,
     pub(crate) statistics: VectoredOperationsTracker,
 }
 
@@ -1005,10 +1016,11 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
             js.spawn(async move {
                 let mv_a = MultiVector::from(mv_a);
                 let tir_3 = tir_2.clone();
-                tir_2.traits10.get_or_create_or_panic((trait_key, mv_a), async move {
+                let def_3 = def_2.clone();
+                let the_impl = tir_2.traits10.get_or_create_or_panic((trait_key, mv_a), async move {
                     let mut variables = Arc::new(Mutex::new(HashMap::new()));
                     let b = TraitImplBuilder::new(
-                        ga_2, mv_repo_2, def_2, tir_3, false, variables, im::HashSet::new()
+                        ga_2, mv_repo_2, def_3, tir_3, false, variables, im::HashSet::new()
                     );
                     let result = self.general_implementation(b, mv_a.clone()).await;
                     match result {
@@ -1016,6 +1028,11 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
                         Some(result) => Some(result.into_trait10(mv_a)),
                     }
                 }).await;
+                let Some(the_impl) = the_impl else { return };
+                let owner_type = ExpressionType::Class(mv_a.clone());
+                let return_type = the_impl.return_expr.expression_type();
+                TraitTypeConsensus::add_vote(&def_2.owner, owner_type, true);
+                TraitTypeConsensus::add_vote(&def_2.output, return_type, owner_type == return_type);
             });
         }
         while let Some(result) = js.join_next().await {
@@ -1051,12 +1068,13 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
             js.spawn(async move {
                 let mv_a = MultiVector::from(mv_a);
                 let tir_3 = tir_2.clone();
-                tir_2.traits11.get_or_create_or_panic((trait_key, mv_a), async move {
+                let def_3 = def_2.clone();
+                let the_impl = tir_2.traits11.get_or_create_or_panic((trait_key, mv_a), async move {
                     let mut variables = HashMap::new();
                     let declare_self = param_self();
                     variables.entry(declare_self.name.clone()).or_insert(declare_self.clone());
                     let b = TraitImplBuilder::new(
-                        ga_2, mv_repo_2, def_2, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new()
+                        ga_2, mv_repo_2, def_3, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new()
                     );
                     let var_self: Variable<MultiVector> = Variable {
                         expr_type: mv_a.clone(),
@@ -1068,6 +1086,11 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
                         Some(result) => Some(result.into_trait11(mv_a)),
                     }
                 }).await;
+                let Some(the_impl) = the_impl else { return };
+                let owner_type = ExpressionType::Class(mv_a.clone());
+                let return_type = the_impl.return_expr.expression_type();
+                TraitTypeConsensus::add_vote(&def_2.owner, owner_type, true);
+                TraitTypeConsensus::add_vote(&def_2.output, return_type, owner_type == return_type);
             });
         }
         while let Some(result) = js.join_next().await {
@@ -1105,12 +1128,13 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
                     let mv_a = MultiVector::from(mv_a);
                     let mv_b = MultiVector::from(mv_b);
                     let tir_3 = tir_2.clone();
-                    tir_2.traits21.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
+                    let def_3 = def_2.clone();
+                    let the_impl = tir_2.traits21.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
                         let mut variables = HashMap::new();
                         let declare_self = param_self();
                         variables.entry(declare_self.name.clone()).or_insert(declare_self.clone());
                         let b = TraitImplBuilder::new(
-                            ga_2, mv_repo_2, def_2, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new()
+                            ga_2, mv_repo_2, def_3, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new()
                         );
                         let var_self: Variable<MultiVector> = Variable {
                             expr_type: mv_a.clone(),
@@ -1122,6 +1146,11 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
                             Some(result) => Some(result.into_trait21(mv_a, mv_b)),
                         }
                     }).await;
+                    let Some(the_impl) = the_impl else { return };
+                    let owner_type = ExpressionType::Class(mv_a.clone());
+                    let return_type = the_impl.return_expr.expression_type();
+                    TraitTypeConsensus::add_vote(&def_2.owner, owner_type, true);
+                    TraitTypeConsensus::add_vote(&def_2.output, return_type, owner_type == return_type);
                 });
             }
         }
@@ -1160,14 +1189,15 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
                     let mv_a = MultiVector::from(mv_a);
                     let mv_b = MultiVector::from(mv_b);
                     let tir_3 = tir_2.clone();
-                    tir_2.traits22.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
+                    let def_3 = def_2.clone();
+                    let the_impl = tir_2.traits22.get_or_create_or_panic((trait_key, mv_a, mv_b), async move {
                         let mut variables = HashMap::new();
                         let declare_self = param_self();
                         variables.entry(declare_self.name.clone()).or_insert(declare_self.clone());
                         let declare_other = param_other();
                         variables.entry(declare_self.name.clone()).or_insert(declare_other.clone());
                         let b = TraitImplBuilder::new(
-                            ga_2, mv_repo_2, def_2, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new()
+                            ga_2, mv_repo_2, def_3, tir_3, false, Arc::new(Mutex::new(variables)), im::HashSet::new()
                         );
                         let var_self: Variable<MultiVector> = Variable {
                             expr_type: mv_a.clone(),
@@ -1183,6 +1213,11 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
                             Some(result) => Some(result.into_trait22(mv_a, mv_b)),
                         }
                     }).await;
+                    let Some(the_impl) = the_impl else { return };
+                    let owner_type = ExpressionType::Class(mv_a.clone());
+                    let return_type = the_impl.return_expr.expression_type();
+                    TraitTypeConsensus::add_vote(&def_2.owner, owner_type, true);
+                    TraitTypeConsensus::add_vote(&def_2.output, return_type, owner_type == return_type);
                 });
             }
         }
