@@ -335,10 +335,7 @@ impl AstEmitter for Rust {
         let lsc = def.names.trait_key.as_lower_snake();
         let output_kind = def.output.read();
         let output_ty = impls.return_expr.expression_type();
-        let owner_ty = match &impls.owner {
-            TraitParam::Generic => panic!("Generic output types are not supported yet."),
-            TraitParam::Fixed(ty) => ty,
-        };
+        let owner_ty = &impls.owner;
         if impls.other_var_params.len() > 1 || impls.other_type_params.len() > 1 {
             panic!("We do not support high arity traits yet")
         }
@@ -346,12 +343,6 @@ impl AstEmitter for Rust {
         if !impls.other_var_params.is_empty() {
             let ty_param = &impls.other_type_params[0];
             let v_param = &impls.other_var_params[0];
-            let TraitParam::Fixed(ty_param) = ty_param else {
-                panic!("We do not support generic implementations yet (but hope too eventually)")
-            };
-            let TraitParam::Fixed(v_param) = v_param else {
-                panic!("We do not support generic implementations yet (but hope too eventually)")
-            };
             if ty_param != v_param {
                 // TODO I feel like this is a representation problem, need to review and maybe
                 //  refactor the algebraic data types involved here
@@ -364,8 +355,8 @@ impl AstEmitter for Rust {
         //  to read each block, but there's too many duplicate snippets. It'd be harder to read
         //  but better for maintenance to only branch each independent condition as few times as
         //  necessary
-        match (def.arity, &impls.owner, output_kind.deref()) {
-            (TraitArity::Two, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AllAgree(output_ty, _)) => {
+        match (def.arity, output_kind.deref()) {
+            (TraitArity::Two, TraitTypeConsensus::AllAgree(output_ty, _)) => {
                 let var_param = var_param.unwrap();
                 write!(w, "impl {ucc}<")?;
                 self.write_type(w, *var_param)?;
@@ -375,7 +366,7 @@ impl AstEmitter for Rust {
                 self.write_type(w, *output_ty)?;
                 writeln!(w, " {{")?;
             }
-            (TraitArity::Two, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AlwaysSelf) => {
+            (TraitArity::Two, TraitTypeConsensus::AlwaysSelf) => {
                 let var_param = var_param.unwrap();
                 write!(w, "impl {ucc}<")?;
                 self.write_type(w, *var_param)?;
@@ -383,7 +374,7 @@ impl AstEmitter for Rust {
                 self.write_type(w, *owner_ty)?;
                 writeln!(w, " {{\n    fn {lsc}(self, other: T) -> Self {{")?;
             }
-            (TraitArity::Two, TraitParam::Fixed(owner_ty), _) => {
+            (TraitArity::Two, _) => {
                 let var_param = var_param.unwrap();
                 write!(w, "impl {ucc}<")?;
                 self.write_type(w, *var_param)?;
@@ -393,32 +384,7 @@ impl AstEmitter for Rust {
                 self.write_type(w, output_ty)?;
                 writeln!(w, ";\n    fn {lsc}(self, other: T) -> Self::Output {{")?;
             }
-            (TraitArity::Two, TraitParam::Generic, TraitTypeConsensus::AllAgree(output_ty, _)) => {
-                let var_param = var_param.unwrap();
-                write!(w, "impl<Owner> {ucc}<")?;
-                self.write_type(w, *var_param)?;
-                writeln!(w, "> for Owner {{")?;
-                write!(w, "{{\n    fn {lsc}(self, other: T) -> ")?;
-                self.write_type(w, *output_ty)?;
-                writeln!(w, " {{")?;
-            }
-            (TraitArity::Two, TraitParam::Generic, TraitTypeConsensus::AlwaysSelf) => {
-                let var_param = var_param.unwrap();
-                write!(w, "impl<Owner> {ucc}<")?;
-                self.write_type(w, *var_param)?;
-                writeln!(w, "> for Owner {{")?;
-                write!(w, "{{\n    fn {lsc}(self, other: T) -> Self {{")?;
-            }
-            (TraitArity::Two, TraitParam::Generic, _) => {
-                let var_param = var_param.unwrap();
-                write!(w, "impl<Owner> {ucc}<")?;
-                self.write_type(w, *var_param)?;
-                writeln!(w, "> for Owner {{")?;
-                write!(w, "    type Output = ")?;
-                self.write_type(w, output_ty)?;
-                writeln!(w, ";\n    fn {lsc}(self, other: T) -> Self::Output {{")?;
-            }
-            (TraitArity::Two, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AllAgree(output_ty, _)) => {
+            (TraitArity::Two, TraitTypeConsensus::AllAgree(output_ty, _)) => {
                 write!(w, "impl {ucc} for ")?;
                 self.write_type(w, *owner_ty)?;
                 writeln!(w, " {{")?;
@@ -426,48 +392,32 @@ impl AstEmitter for Rust {
                 self.write_type(w, *output_ty)?;
                 writeln!(w, " {{")?;
             }
-            (TraitArity::One, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AlwaysSelf) => {
+            (TraitArity::One, TraitTypeConsensus::AlwaysSelf) => {
                 write!(w, "impl {ucc} for ")?;
                 self.write_type(w, *owner_ty)?;
                 writeln!(w, " {{")?;
                 write!(w, "    fn {lsc}(self) -> Self {{")?;
             }
-            (TraitArity::One, TraitParam::Fixed(owner_ty), _) => {
+            (TraitArity::One, _) => {
                 write!(w, "impl {ucc} for ")?;
                 self.write_type(w, *owner_ty)?;
                 write!(w, " {{\n    type Output = ")?;
                 self.write_type(w, output_ty)?;
                 writeln!(w, ";\n    fn {lsc}(self) -> Self::Output {{")?;
             }
-            (TraitArity::One, TraitParam::Generic, TraitTypeConsensus::AllAgree(output_ty, _)) => {
-                writeln!(w, "impl<Owner> {ucc} for Owner {{")?;
-                write!(w, "    fn {lsc}(self) -> ")?;
-                self.write_type(w, *output_ty)?;
-                writeln!(w, " {{")?;
-            }
-            (TraitArity::One, TraitParam::Generic, TraitTypeConsensus::AlwaysSelf) => {
-                writeln!(w, "impl<Owner> {ucc} for Owner {{")?;
-                write!(w, "    fn {lsc}(self) -> Self {{")?;
-            }
-            (TraitArity::One, TraitParam::Generic, _) => {
-                writeln!(w, "impl<Owner> {ucc} for Owner {{")?;
-                write!(w, "    type Output = ")?;
-                self.write_type(w, output_ty)?;
-                writeln!(w, ";\n    fn {lsc}(self) -> Self::Output {{")?;
-            }
-            (TraitArity::Zero, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AllAgree(output_ty, _)) => {
+            (TraitArity::Zero, TraitTypeConsensus::AllAgree(output_ty, _)) => {
                 write!(w, "impl {ucc} for ")?;
                 self.write_type(w, *owner_ty)?;
                 write!(w, " {{\n    fn {lsc}() -> ")?;
                 self.write_type(w, *output_ty)?;
                 writeln!(w, " {{")?;
             }
-            (TraitArity::Zero, TraitParam::Fixed(owner_ty), TraitTypeConsensus::AlwaysSelf) => {
+            (TraitArity::Zero, TraitTypeConsensus::AlwaysSelf) => {
                 write!(w, "impl {ucc} for ")?;
                 self.write_type(w, *owner_ty)?;
                 writeln!(w, " {{\n    fn {lsc}() -> Self {{")?;
             }
-            (TraitArity::Zero, TraitParam::Fixed(owner_ty), _) => {
+            (TraitArity::Zero, _) => {
                 write!(w, "impl {ucc} for ")?;
                 self.write_type(w, *owner_ty)?;
                 write!(w, " {{\n    type Output = ")?;

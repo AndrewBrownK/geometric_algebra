@@ -33,7 +33,7 @@ multi_vecs! { e12345;
     Sphere     as e4235, e4315, e4125 | e1234, e3215;
 
     // Versors
-    Motor      as e415, e425, e435, e12345 | e235, e315, e125;
+    Motor      as e415, e425, e435, e12345 | e235, e315, e125, scalar;
     Flector    as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
 }
 

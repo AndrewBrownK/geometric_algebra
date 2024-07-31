@@ -55,12 +55,7 @@ impl TraitTypeConsensus {
     }
 }
 
-
-pub enum TraitParam {
-    // TODO I don't think we really use this Generic variant yet
-    Generic,
-    Fixed(ExpressionType)
-}
+pub type TraitParam = ExpressionType;
 
 #[derive(Clone, Copy)]
 pub enum TraitArity {
@@ -1684,7 +1679,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
             traits22_dependencies: self.traits22_dependencies,
-            owner: TraitParam::Fixed(ExpressionType::Class(owner.clone())),
+            owner: ExpressionType::Class(owner.clone()),
             owner_is_param: false,
             other_type_params: vec![],
             other_var_params: vec![],
@@ -1732,7 +1727,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
             traits22_dependencies: self.traits22_dependencies,
-            owner: TraitParam::Fixed(ExpressionType::Class(owner.clone())),
+            owner: ExpressionType::Class(owner.clone()),
             owner_is_param: true,
             other_type_params: vec![],
             other_var_params: vec![],
@@ -1780,9 +1775,9 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
             traits22_dependencies: self.traits22_dependencies,
-            owner: TraitParam::Fixed(ExpressionType::Class(owner.clone())),
+            owner: ExpressionType::Class(owner.clone()),
             owner_is_param: true,
-            other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
+            other_type_params: vec![ExpressionType::Class(other)],
             other_var_params: vec![],
             lines,
             return_comment: self.return_comment,
@@ -1828,10 +1823,10 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
             traits11_dependencies: self.traits11_dependencies,
             traits21_dependencies: self.traits21_dependencies,
             traits22_dependencies: self.traits22_dependencies,
-            owner: TraitParam::Fixed(ExpressionType::Class(owner.clone())),
+            owner: ExpressionType::Class(owner.clone()),
             owner_is_param: true,
-            other_type_params: vec![TraitParam::Fixed(ExpressionType::Class(other.clone()))],
-            other_var_params: vec![TraitParam::Fixed(ExpressionType::Class(other))],
+            other_type_params: vec![ExpressionType::Class(other.clone())],
+            other_var_params: vec![ExpressionType::Class(other)],
             lines,
             return_comment: self.return_comment,
             return_expr,

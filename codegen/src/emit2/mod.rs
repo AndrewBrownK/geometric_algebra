@@ -14,7 +14,7 @@ use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
+use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitImplRegistry, TraitKey, TraitTypeConsensus};
 use crate::utility::CollectResults;
 
 pub mod rust;
@@ -195,7 +195,7 @@ impl FileOrganizing {
                 Some(stuff) => *stuff,
             };
             match (&i.owner, belong) {
-                (TraitParam::Fixed(ExpressionType::Class(mv)), TraitImplsBelong::WithOwnerType) => {
+                (ExpressionType::Class(mv), TraitImplsBelong::WithOwnerType) => {
                     // Belongs with owner type
                     let mv_k = match mv_guide.get(&mv) {
                         None => bail!("Owning type should have file arranged already. 1"),
