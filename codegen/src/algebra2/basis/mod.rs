@@ -16,6 +16,7 @@ pub mod generators;
 pub mod substitutes;
 pub mod arithmetic;
 pub mod grades;
+pub mod filter;
 
 // Would love to use bitflags::bitflags!, but cannot because
 // we need to implement ConstParamTy

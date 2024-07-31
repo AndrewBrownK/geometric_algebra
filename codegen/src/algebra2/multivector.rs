@@ -12,6 +12,7 @@ use parking_lot::Mutex;
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::elements::*;
+use crate::algebra2::basis::filter::{SigFilter, SignatureFilter, SignatureSetFilter, SigSetFilter};
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
@@ -673,7 +674,26 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
 
     pub fn variants<
         S1: Into<String>, S2: Into<String>,
-        F1: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool, F2: Fn(BasisSignature) -> bool, F3: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool,
+        F1: SigSetFilter,
+        F2: SigFilter,
+        F3: SigSetFilter,
+    >(
+        &mut self, prefix: S1, suffix: S2,
+        filter_vecs_in: F1, filter_elements: F2, filter_vecs_out: F3
+    ) {
+        self.variants2(
+            prefix, suffix,
+            |_, s| filter_vecs_in.filter_sig_set(s),
+            |s| filter_elements.filter_sig(s),
+            |_, s| filter_vecs_out.filter_sig_set(s),
+        );
+    }
+
+    pub fn variants2<
+        S1: Into<String>, S2: Into<String>,
+        F1: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool,
+        F2: Fn(BasisSignature) -> bool,
+        F3: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool,
     >(
         &mut self, prefix: S1, suffix: S2, filter_multi_vecs: F1, filter_elements: F2, filter_out: F3
     ) {
@@ -751,7 +771,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         }
     }
 
-    pub fn generate_missing_duals(&mut self) {
+    pub fn generate_missing_duals(&mut self) -> &mut Self {
         let mut add_these = vec![];
         for (_, _, mv) in self.declared.iter() {
             let old_name = mv.name;
@@ -809,6 +829,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             println!("{nice}");
             self.declared.insert(idx, (new_grades, new_sigs, new_mv));
         }
+        self
     }
 }
 

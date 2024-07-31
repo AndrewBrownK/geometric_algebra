@@ -1844,3 +1844,42 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         Some(var)
     }
 }
+
+
+#[macro_export]
+macro_rules! variants {
+    (
+        $declarations:ident;
+        $(
+        $($prefix:ident)? {type} $($suffix:ident)? => ($el_filter:expr) where $mv_in:expr => $mv_out:expr
+        );+
+        $(;)?
+    ) => {
+        {
+            $(
+            $declarations.variants(
+                stringify!($($prefix)?),
+                stringify!($($suffix)?),
+                $mv_in, $el_filter, $mv_out,
+            );
+            )+
+        }
+    };
+    (
+        $declarations:ident;
+        $(
+        $($prefix:ident)? {Vector} $($suffix:ident)? => ($el_filter:expr) where $mv_in:expr => $mv_out:expr
+        );+
+        $(;)?
+    ) => {
+        {
+            $(
+            $declarations.variants(
+                stringify!($($prefix)?),
+                stringify!($($suffix)?),
+                $mv_in, $el_filter, $mv_out,
+            );
+            )+
+        }
+    };
+}

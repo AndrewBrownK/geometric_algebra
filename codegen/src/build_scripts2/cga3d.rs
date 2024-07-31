@@ -1,16 +1,20 @@
 #![allow(non_upper_case_globals)]
 
 use std::collections::BTreeSet;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 
-use crate::{ga, multi_vecs, operators, register_all};
+use crate::{ga, multi_vecs, operators, register_all, variants};
 use crate::algebra2::basis::BasisSignature;
 use crate::algebra2::basis::elements::e12345;
+use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, SignatureFilter, signatures_containing};
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
+use crate::build_scripts2::common_traits::BulkExpansion;
+use crate::emit2::FileOrganizing;
+use crate::emit2::rust::Rust;
 
 multi_vecs! { e12345;
 
@@ -82,49 +86,31 @@ pub fn cga3d_script() {
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
     use crate::algebra2::basis::elements::*;
 
-    let origin = e4.signature();
-    let infinity = e5.signature();
-    let flat_origin = e45.signature();
+    let origin = signatures_containing(e4);
+    let infinity = signatures_containing(e5);
+    let flat_origin = origin & infinity;
 
-    let all = |_: &Grades, _: &BTreeSet<BasisSignature>| true;
-    let is_flat = |_: &Grades, sigs: &BTreeSet<BasisSignature>| sigs.iter().all(|sig| sig.contains(infinity));
-    let is_not_flat = |_: &Grades, sigs: &BTreeSet<BasisSignature>| sigs.iter().any(|sig| !sig.contains(infinity));
-    let tangent_null_cone = |_: &Grades, sigs: &BTreeSet<BasisSignature>| {
-        let mut has_e4 = false;
-        let mut has_e5 = false;
-        for sig in sigs.iter() {
-            has_e4 |= sig.contains(origin);
-            has_e5 |= sig.contains(infinity);
-            if has_e4 && has_e5 {
-                return false
-            }
-        }
-        return has_e4 || has_e5
-    };
-    let intersects_null_cone = |_: &Grades, sigs: &BTreeSet<BasisSignature>| {
-        sigs.iter().any(|sig| sig.contains(origin)) && sigs.iter().any(|sig| sig.contains(infinity))
-    };
+    let all = allow_all_signatures();
+    let is_flat = infinity.all_match();
+    let is_not_flat = (!infinity).any_match();
+    let tangent_null_cone = origin.any_match() ^ infinity.any_match();
+    let intersects_null_cone = origin.any_match() & infinity.any_match();
 
-    // TODO extra documentation for variants
-    // TODO I'm getting ideas on how to make this read more succinct. struct FilterSig(BasisSignature)
-    //  Then impl operators on FilterSig, and give it multiple different methods to filter either
-    //  MultiVecs, or BasisElements. Make it Copy too so it is easy to use.
-    declarations.variants("Null", "AtOrigin", is_not_flat, |sig| sig.contains(origin) && !sig.contains(infinity), tangent_null_cone);
-    declarations.variants("", "OnOrigin", all, |sig| sig.contains(origin), intersects_null_cone);
-    declarations.variants("", "AtInfinity", is_flat, |sig| !sig.contains(origin), tangent_null_cone);
-    declarations.variants("", "AtOrigin", is_not_flat, |sig| sig.contains(origin) ^ sig.contains(infinity), intersects_null_cone);
-    declarations.variants("", "AligningOrigin", is_not_flat, |sig| sig.contains(origin) || sig.contains(infinity), intersects_null_cone);
-    declarations.variants("", "OrthogonalOrigin", is_not_flat, |sig| !sig.contains(flat_origin), intersects_null_cone);
-    declarations.variants("", "AtInfinity", is_not_flat, |sig| !sig.contains(origin) || sig.contains(flat_origin), intersects_null_cone);
+    variants! { declarations;
+        Null{type}AtOrigin => (origin & !infinity)  where is_not_flat => tangent_null_cone;
+        {type}OnOrigin => (origin)                  where all => intersects_null_cone;
+        {type}AtInfinity => (!origin)               where is_flat => tangent_null_cone;
+        {type}AtOrigin => (origin ^ infinity)       where is_not_flat => intersects_null_cone;
+        {type}AligningOrigin => (origin | infinity) where is_not_flat => intersects_null_cone;
+        {type}OrthogonalOrigin => (!flat_origin)    where is_not_flat => intersects_null_cone;
+        {type}AtInfinity => (!origin | flat_origin) where is_not_flat => intersects_null_cone;
+    }
+
     declarations.generate_missing_duals();
     declarations.finished()
 }
 
 
-
-use crate::build_scripts2::common_traits::BulkExpansion;
-use crate::emit2::FileOrganizing;
-use crate::emit2::rust::Rust;
 
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
     = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| Box::pin(async move {
