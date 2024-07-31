@@ -165,12 +165,7 @@ impl FileOrganizing {
                 None => self.trait_defs,
                 Some(stuff) => *stuff,
             };
-            let arity = match td.arity {
-                0 => "arity_0",
-                1 => "arity_1",
-                2 => "arity_2",
-                _ => panic!("High arity traits are not supported yet")
-            };
+            let arity = td.arity.as_str();
 
             let mut is_per_trait = false;
             let (folder, file) = match belong {
@@ -656,26 +651,13 @@ impl IdentifierQualifier for FileOrganizing {
         };
         match belong {
             TraitDefsBelong::AllTogether => path,
-            TraitDefsBelong::FilePerArity => {
-                // TODO consolidate the duplicates of this match expression into some function
-                match trait_def.arity {
-                    0 => path.join(Path::new("arity_0")),
-                    1 => path.join(Path::new("arity_1")),
-                    2 => path.join(Path::new("arity_2")),
-                    _ => panic!("High arity traits are not supported yet")
-                }
-            }
+            TraitDefsBelong::FilePerArity => path.join(Path::new(trait_def.arity.as_str())),
             TraitDefsBelong::FilePerDef => {
                 let n = k.as_lower_snake();
                 path.join(Path::new(&n))
             }
             TraitDefsBelong::FilePerArityThenPerDef => {
-                path = match trait_def.arity {
-                    0 => path.join(Path::new("arity_0")),
-                    1 => path.join(Path::new("arity_1")),
-                    2 => path.join(Path::new("arity_2")),
-                    _ => panic!("High arity traits are not supported yet")
-                };
+                path = path.join(Path::new(trait_def.arity.as_str()));
                 let n = k.as_lower_snake();
                 path.join(Path::new(&n))
             }

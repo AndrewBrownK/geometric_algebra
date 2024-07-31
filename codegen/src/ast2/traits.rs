@@ -62,11 +62,27 @@ pub enum TraitParam {
     Fixed(ExpressionType)
 }
 
+#[derive(Clone, Copy)]
+pub enum TraitArity {
+    Zero, 
+    One, 
+    Two
+}
+impl TraitArity {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            TraitArity::Zero => "arity_0",
+            TraitArity::One => "arity_1",
+            TraitArity::Two => "arity_2",
+        }
+    }
+}
+
 pub(crate) struct RawTraitDefinition {
     pub(crate) documentation: String,
     pub(crate) names: TraitNames,
     pub(crate) owner: Arc<RwLock<TraitTypeConsensus>>,
-    pub(crate) arity: u8,
+    pub(crate) arity: TraitArity,
     pub(crate) output: Arc<RwLock<TraitTypeConsensus>>,
     pub(crate) op: Arc<Mutex<Option<Ops>>>,
     pub(crate) dependencies: Arc<Mutex<HashSet<TraitKey>>>,
@@ -115,7 +131,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            arity: 0,
+            arity: TraitArity::Zero,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
             dependencies: Arc::new(Default::default()),
@@ -233,7 +249,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            arity: 1,
+            arity: TraitArity::One,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
             dependencies: Arc::new(Default::default()),
@@ -361,7 +377,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            arity: 1,
+            arity: TraitArity::One,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
             dependencies: Arc::new(Default::default()),
@@ -495,7 +511,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             documentation: self.general_documentation(),
             names: self.trait_names(),
             owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
-            arity: 2,
+            arity: TraitArity::Two,
             output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
             op: Arc::new(Default::default()),
             dependencies: Arc::new(Default::default()),
