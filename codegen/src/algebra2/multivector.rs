@@ -1084,7 +1084,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
 
         let mut result = self.declarations.declared.last().expect("Full MultiVec is always declared");
         for tuple in self.declarations.declared.iter() {
-            let (gr, sig, _) = tuple;
+            let (gr, sig, mv) = tuple;
             if !gr.contains(grades) {
                 continue;
             }
@@ -1092,7 +1092,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 continue
             }
             if sig.len() == signature.len() {
-                return (result.2, true);
+                return (*mv, true);
             }
             if result.0.into_bits().count_ones() > gr.into_bits().count_ones() {
                 result = tuple;
@@ -1175,6 +1175,7 @@ impl DynamicMultiVector {
         }
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
+        let mut keys = BTreeSet::new();
         for (mut el, mut f) in self.vals.into_iter() {
             f.simplify();
             if el.coefficient() == 0 {
@@ -1192,9 +1193,9 @@ impl DynamicMultiVector {
             }
             f = f * fix_f;
             el = fix_el;
+            keys.insert(el.signature());
             vals.insert(el, f);
         }
-        let keys = vals.keys().map(|el| el.signature()).collect();
         let (mv, exact) = repo.get_at_least(&keys);
         if !exact {
             b.note_wanted(keys)

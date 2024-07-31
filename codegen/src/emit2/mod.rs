@@ -356,12 +356,13 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
+                    .truncate(true)
                     .open(file_name.clone())?;
                 e.emit_comment(
                     &mut file,
                     false,
                     "AUTO-GENERATED - DO NOT MODIFY BY HAND\n\
-                    Changes to this file may be clobbered by code generation at any time."
+                    Changes to this file may be clobbered by code generation at any time.\n"
                 )?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
@@ -424,6 +425,7 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
+                    .truncate(true)
                     .open(included_file_name.clone())?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, vec![], vec![], vec![mv], vec![], vec![]
@@ -457,6 +459,7 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
+                    .truncate(true)
                     .open(included_file_name.clone())?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, vec![], vec![], vec![], vec![def], vec![]
@@ -480,6 +483,7 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
+                    .truncate(true)
                     .open(included_file_name.clone())?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, vec![], vec![], vec![], vec![], trait_implementations

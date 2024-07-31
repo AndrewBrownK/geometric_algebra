@@ -382,22 +382,6 @@ impl AstEmitter for Rust {
         let ssc = name.as_screaming_snake();
         // TODO built in documentation, statistics, and traits that output this type
         writeln!(w, "/// TODO documentation")?;
-        // TODO special traits like serde and bytemuck etc
-        writeln!(w, "#[derive(Clone, Copy)]")?;
-        writeln!(w, "pub struct {ucc}Groups {{")?;
-        for (g, group) in multi_vec.groups().into_iter().enumerate() {
-            write!(w, "    /// ")?;
-            for (i, el) in group.into_iter().enumerate() {
-                if i > 0 {
-                    write!(w, ", ")?;
-                }
-                write!(w, "{el}")?;
-            }
-            write!(w, "\n    g{g}: ")?;
-            self.write_type(w, group.expr_type())?;
-            writeln!(w, ",")?;
-        }
-        writeln!(w, "}}")?;
 
         // TODO special traits like serde and bytemuck etc
         writeln!(w, "#[derive(Clone, Copy)]")?;
@@ -422,6 +406,23 @@ impl AstEmitter for Rust {
             total_len += 4;
         }
         writeln!(w, "\n    elements: [f32; {total_len}],")?;
+        writeln!(w, "}}")?;
+
+        // TODO special traits like serde and bytemuck etc
+        writeln!(w, "#[derive(Clone, Copy)]")?;
+        writeln!(w, "pub struct {ucc}Groups {{")?;
+        for (g, group) in multi_vec.groups().into_iter().enumerate() {
+            write!(w, "    /// ")?;
+            for (i, el) in group.into_iter().enumerate() {
+                if i > 0 {
+                    write!(w, ", ")?;
+                }
+                write!(w, "{el}")?;
+            }
+            write!(w, "\n    g{g}: ")?;
+            self.write_type(w, group.expr_type())?;
+            writeln!(w, ",")?;
+        }
         writeln!(w, "}}")?;
 
         writeln!(w, "impl {ucc} {{")?;
@@ -725,13 +726,14 @@ impl AstEmitter for Rust {
         let s = s.into();
         let comment = s.trim();
         if comment.is_empty() {
-            writeln!(w, "{slashy}")?;
+            writeln!(w, "\n{slashy}")?;
             return Ok(())
         }
         let mut comment_iter = comment.split("\n")
             .map(|it| it.trim())
             .skip_while(|it| it.is_empty())
             .peekable();
+        writeln!(w)?;
         while let Some(line) = comment_iter.next() {
             if line.is_empty() {
                 if let Some(next_line) = comment_iter.peek() {
