@@ -2,12 +2,11 @@ use std::io::Write;
 use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
-use parking_lot::lock_api::RwLockReadGuard;
-use parking_lot::RawRwLock;
+
 use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
+use crate::algebra2::multivector::MultiVec;
 use crate::ast2::datatype::ExpressionType;
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitArity, TraitKey, TraitParam, TraitTypeConsensus};
+use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitArity, TraitKey, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, IdentifierQualifier};
 
 #[derive(Copy, Clone)]
@@ -351,83 +350,37 @@ impl AstEmitter for Rust {
             var_param = Some(v_param);
         }
         // todo alias documentation
-        // TODO using a match on tuple here already seems like a mistake. Sure it might be easier
-        //  to read each block, but there's too many duplicate snippets. It'd be harder to read
-        //  but better for maintenance to only branch each independent condition as few times as
-        //  necessary
-        match (def.arity, output_kind.deref()) {
-            (TraitArity::Two, TraitTypeConsensus::AllAgree(output_ty, _)) => {
-                let var_param = var_param.unwrap();
-                write!(w, "impl {ucc}<")?;
-                self.write_type(w, *var_param)?;
-                write!(w, "> for ")?;
-                self.write_type(w, *owner_ty)?;
-                write!(w, " {{\n    fn {lsc}(self, other: T) -> ")?;
-                self.write_type(w, *output_ty)?;
-                writeln!(w, " {{")?;
-            }
-            (TraitArity::Two, TraitTypeConsensus::AlwaysSelf) => {
-                let var_param = var_param.unwrap();
-                write!(w, "impl {ucc}<")?;
-                self.write_type(w, *var_param)?;
-                write!(w, "> for ")?;
-                self.write_type(w, *owner_ty)?;
-                writeln!(w, " {{\n    fn {lsc}(self, other: T) -> Self {{")?;
-            }
-            (TraitArity::Two, _) => {
-                let var_param = var_param.unwrap();
-                write!(w, "impl {ucc}<")?;
-                self.write_type(w, *var_param)?;
-                write!(w, "> for ")?;
-                self.write_type(w, *owner_ty)?;
-                write!(w, " {{\n    type Output = ")?;
-                self.write_type(w, output_ty)?;
-                writeln!(w, ";\n    fn {lsc}(self, other: T) -> Self::Output {{")?;
-            }
-            (TraitArity::Two, TraitTypeConsensus::AllAgree(output_ty, _)) => {
-                write!(w, "impl {ucc} for ")?;
-                self.write_type(w, *owner_ty)?;
-                writeln!(w, " {{")?;
-                write!(w, "    fn {lsc}(self) -> ")?;
-                self.write_type(w, *output_ty)?;
-                writeln!(w, " {{")?;
-            }
-            (TraitArity::One, TraitTypeConsensus::AlwaysSelf) => {
-                write!(w, "impl {ucc} for ")?;
-                self.write_type(w, *owner_ty)?;
-                writeln!(w, " {{")?;
-                write!(w, "    fn {lsc}(self) -> Self {{")?;
-            }
-            (TraitArity::One, _) => {
-                write!(w, "impl {ucc} for ")?;
-                self.write_type(w, *owner_ty)?;
-                write!(w, " {{\n    type Output = ")?;
-                self.write_type(w, output_ty)?;
-                writeln!(w, ";\n    fn {lsc}(self) -> Self::Output {{")?;
-            }
-            (TraitArity::Zero, TraitTypeConsensus::AllAgree(output_ty, _)) => {
-                write!(w, "impl {ucc} for ")?;
-                self.write_type(w, *owner_ty)?;
-                write!(w, " {{\n    fn {lsc}() -> ")?;
-                self.write_type(w, *output_ty)?;
-                writeln!(w, " {{")?;
-            }
-            (TraitArity::Zero, TraitTypeConsensus::AlwaysSelf) => {
-                write!(w, "impl {ucc} for ")?;
-                self.write_type(w, *owner_ty)?;
-                writeln!(w, " {{\n    fn {lsc}() -> Self {{")?;
-            }
-            (TraitArity::Zero, _) => {
-                write!(w, "impl {ucc} for ")?;
-                self.write_type(w, *owner_ty)?;
-                write!(w, " {{\n    type Output = ")?;
-                self.write_type(w, output_ty)?;
-                writeln!(w, ";\n    fn {lsc}() -> Self::Output {{")?;
-            }
-            _ => {
+        write!(w, "impl {ucc}")?;
+        if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
+            write!(w, "<")?;
+            self.write_type(w, *var_param)?;
+            write!(w, ">")?;
+        }
+        write!(w, " for ")?;
+        self.write_type(w, *owner_ty)?;
+        writeln!(w, " {{")?;
+        if let TraitTypeConsensus::Disagreement = output_kind.deref() {
+            write!(w, "    type Output = ")?;
+            self.write_type(w, output_ty)?;
+            writeln!(w, ";")?;
+        }
+        write!(w, "    fn {lsc}(")?;
+        match def.arity {
+            TraitArity::Zero => {}
+            TraitArity::One => write!(w, "self")?,
+            TraitArity::Two => write!(w, "self, other: T")?,
+        }
+        write!(w, ") -> ")?;
+        match output_kind.deref() {
+            TraitTypeConsensus::AlwaysSelf => write!(w, "Self")?,
+            TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
+            TraitTypeConsensus::AllAgree(mv, _) => self.write_type(w, *mv)?,
+            TraitTypeConsensus::NoVotes => {
+                // Currently, we have no use for traits that do not return values
                 panic!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}")
             }
         }
+        writeln!(w, " {{")?;
         writeln!(w, "        todo!();\n    }}\n}}")?;
         Ok(())
     }
