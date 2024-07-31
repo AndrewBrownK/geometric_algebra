@@ -51,8 +51,13 @@ impl Rust {
         match expr {
             IntExpr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let no = v.decl.name.1;
-                write!(w, "{name}_{no}")?;
+                let mut no = v.decl.name.1;
+                if no == 0 {
+                    write!(w, "{name}")?;
+                } else {
+                    no += 1;
+                    write!(w, "{name}_{no}")?;
+                }
             }
             IntExpr::Literal(l) => {
                 write!(w, "{l}")?;
@@ -70,8 +75,13 @@ impl Rust {
         match expr {
             FloatExpr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let no = v.decl.name.1;
-                write!(w, "{name}_{no}")?;
+                let mut no = v.decl.name.1;
+                if no == 0 {
+                    write!(w, "{name}")?;
+                } else {
+                    no += 1;
+                    write!(w, "{name}_{no}")?;
+                }
             }
             FloatExpr::Literal(l) => {
                 write!(w, "{l}")?;
@@ -148,8 +158,13 @@ impl Rust {
         match expr {
             Vec2Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let no = v.decl.name.1;
-                write!(w, "{name}_{no}")?;
+                let mut no = v.decl.name.1;
+                if no == 0 {
+                    write!(w, "{name}")?;
+                } else {
+                    no += 1;
+                    write!(w, "{name}_{no}")?;
+                }
             }
             Vec2Expr::Gather1(f) => {
                 write!(w, "Simd32x2::from(")?;
@@ -195,8 +210,13 @@ impl Rust {
         match expr {
             Vec3Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let no = v.decl.name.1;
-                write!(w, "{name}_{no}")?;
+                let mut no = v.decl.name.1;
+                if no == 0 {
+                    write!(w, "{name}")?;
+                } else {
+                    no += 1;
+                    write!(w, "{name}_{no}")?;
+                }
             }
             Vec3Expr::Gather1(f) => {
                 write!(w, "Simd32x3::from(")?;
@@ -244,8 +264,13 @@ impl Rust {
         match expr {
             Vec4Expr::Variable(v) => {
                 let name = &v.decl.name.0;
-                let no = v.decl.name.1;
-                write!(w, "{name}_{no}")?;
+                let mut no = v.decl.name.1;
+                if no == 0 {
+                    write!(w, "{name}")?;
+                } else {
+                    no += 1;
+                    write!(w, "{name}_{no}")?;
+                }
             }
             Vec4Expr::Gather1(f) => {
                 write!(w, "Simd32x4::from(")?;
@@ -296,8 +321,13 @@ impl Rust {
         match &*expr.expr {
             MultiVectorVia::Variable(v) => {
                 let name = &v.decl.name.0;
-                let no = v.decl.name.1;
-                write!(w, "{name}_{no}")?;
+                let mut no = v.decl.name.1;
+                if no == 0 {
+                    write!(w, "{name}")?;
+                } else {
+                    no += 1;
+                    write!(w, "{name}_{no}")?;
+                }
             }
             MultiVectorVia::Construct(v) => {
                 let n = mv.name();
@@ -702,8 +732,13 @@ impl AstEmitter for Rust {
                         self.emit_comment(w, false, c.to_string())?;
                     }
                     let name = var_dec.name.0.to_string();
-                    let no = var_dec.name.1;
-                    write!(w, "let {name}_{no} = ")?;
+                    let mut no = var_dec.name.1;
+                    if no == 0 {
+                        write!(w, "let {name} = ")?;
+                    } else {
+                        no += 1;
+                        write!(w, "let {name}_{no} = ")?;
+                    }
                     self.write_expression(w, expr)?;
                     writeln!(w, ";")?;
                 }
