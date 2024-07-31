@@ -1,12 +1,15 @@
 use std::io::Write;
 use std::ops::Deref;
 use std::path::Path;
+use std::process::Command;
 use std::sync::Arc;
-use anyhow::bail;
+
+use anyhow::{bail, Error};
+
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
 use crate::ast2::datatype::ExpressionType;
-use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitKey, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, IdentifierQualifier};
 
@@ -289,7 +292,6 @@ impl Rust {
     }
 
     fn write_multi_vec<W: Write>(&self, w: &mut W, expr: &MultiVectorExpr) -> anyhow::Result<()> {
-        // TODO left off here
         let mv = expr.mv_class;
         match &*expr.expr {
             MultiVectorVia::Variable(v) => {
@@ -297,10 +299,41 @@ impl Rust {
                 let no = v.decl.name.1;
                 write!(w, "{name}_{no}")?;
             }
-            MultiVectorVia::Construct(_) => {}
-            MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
-            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
-            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
+            MultiVectorVia::Construct(v) => {
+                let n = mv.name();
+                write!(w, "{n}::from_groups(")?;
+                for (i, g) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, ", ")?;
+                    }
+                    match g {
+                        MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f)?,
+                        MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g)?,
+                        MultiVectorGroupExpr::Vec3(g) => self.write_vec3(w, g)?,
+                        MultiVectorGroupExpr::Vec4(g) => self.write_vec4(w, g)?,
+                    }
+                }
+                write!(w, ")")?;
+            }
+            MultiVectorVia::TraitInvoke11ToClass(t, arg) => {
+                self.write_multi_vec(w, arg)?;
+                let method = t.as_lower_snake();
+                write!(w, ".{method}()")?;
+            }
+            MultiVectorVia::TraitInvoke21ToClass(t, arg, mv) => {
+                self.write_multi_vec(w, arg)?;
+                let method = t.as_lower_snake();
+                let b = mv.name();
+                write!(w, ".{method}::<{b}>()")?;
+            }
+            MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
+                // TODO fancy infix
+                self.write_multi_vec(w, a)?;
+                let method = t.as_lower_snake();
+                write!(w, ".{method}(")?;
+                self.write_multi_vec(w, b)?;
+                write!(w, ")")?;
+            }
         }
         Ok(())
     }
@@ -595,6 +628,10 @@ impl AstEmitter for Rust {
             TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "Self::Output")?,
         }
         writeln!(w, ";\n}}")?;
+
+        // TODO fancy infix
+
+
         Ok(())
     }
 
@@ -653,7 +690,7 @@ impl AstEmitter for Rust {
             }
         }
         writeln!(w, " {{")?;
-        for line in impls.lines {
+        for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {
                     self.emit_comment(w, false, c.to_string())?;
@@ -707,5 +744,14 @@ impl AstEmitter for Rust {
             }
         }
         Ok(())
+    }
+
+    fn format_file<P: AsRef<Path>>(&self, p: P) -> anyhow::Result<()> {
+        let mut cmd = Command::new("rustfmt");
+        cmd.arg(p.as_ref().to_string_lossy().to_string());
+        match cmd.spawn() {
+            Ok(_) => Ok(()),
+            Err(e) => Err(Error::from(e))
+        }
     }
 }

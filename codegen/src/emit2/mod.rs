@@ -356,7 +356,7 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
-                    .open(file_name)?;
+                    .open(file_name.clone())?;
                 e.emit_comment(
                     &mut file,
                     false,
@@ -365,14 +365,15 @@ impl FileOrganizing {
                 )?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, mv_deps, trait_deps, types, trait_declarations, trait_implementations
-                ).await
+                ).await?;
+                e.format_file(file_name)
             });
             return Ok(())
         }
         let maybe_stub_file = fs::OpenOptions::new()
             .write(true)
             .create_new(true)
-            .open(file_name);
+            .open(file_name.clone());
         let mut stub_file = match maybe_stub_file {
             Ok(f) => Some(f),
             Err(e) if e.kind() == AlreadyExists => None,
@@ -423,10 +424,11 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
-                    .open(included_file_name)?;
+                    .open(included_file_name.clone())?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, vec![], vec![], vec![mv], vec![], vec![]
-                ).await
+                ).await?;
+                e.format_file(included_file_name)
             });
         }
         for def in trait_declarations {
@@ -455,10 +457,11 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
-                    .open(included_file_name)?;
+                    .open(included_file_name.clone())?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, vec![], vec![], vec![], vec![def], vec![]
-                ).await
+                ).await?;
+                e.format_file(included_file_name)
             });
         }
         if !trait_implementations.is_empty() {
@@ -477,13 +480,14 @@ impl FileOrganizing {
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
-                    .open(included_file_name)?;
+                    .open(included_file_name.clone())?;
                 slf.write_file_dumb::<&mut File, E, AntiScalar>(
                     e, &mut file, vec![], vec![], vec![], vec![], trait_implementations
-                ).await
+                ).await?;
+                e.format_file(included_file_name)
             });
         }
-        Ok(())
+        e.format_file(file_name)
     }
 
     async fn write_file_dumb<W: Write, E: AstEmitter, const AntiScalar: BasisElement>(
@@ -555,6 +559,7 @@ impl FileOrganizing {
     }
 }
 
+// TODO allow grouping by k-reflection instead of grades
 fn folder_of_grades<const AntiScalar: BasisElement>(gr: Grades) -> &'static str {
     let bits = gr.into_bits();
     // Grade 0 takes 1 bit of grades
@@ -717,6 +722,8 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         impls: Arc<RawTraitImplementation>,
     ) -> anyhow::Result<()>;
     fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, is_documentation: bool, s: S) -> anyhow::Result<()>;
+
+    fn format_file<P: AsRef<Path>>(&self, p: P) -> anyhow::Result<()>;
 }
 
 

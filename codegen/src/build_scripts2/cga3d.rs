@@ -73,8 +73,9 @@ pub fn cga3d_script() {
     let rust = Rust { prefer_fancy_infix: false };
     let fo = FileOrganizing::recommended_for_rust("cga3d_new");
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
+    let file_path_2 = file_path.clone();
     rt.block_on(async move {
-        if let Err(e) = fo.go_do_it(rust, file_path, repo, Arc::new(traits)).await {
+        if let Err(e) = fo.go_do_it(rust, file_path_2, repo, Arc::new(traits)).await {
             eprintln!("Errors: {e:?}")
         }
     });
