@@ -2,11 +2,12 @@ use std::io::Write;
 use std::ops::Deref;
 use std::path::Path;
 use std::sync::Arc;
-
+use anyhow::bail;
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
 use crate::ast2::datatype::ExpressionType;
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitArity, TraitKey, TraitTypeConsensus};
+use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitKey, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, IdentifierQualifier};
 
 #[derive(Copy, Clone)]
@@ -16,8 +17,6 @@ pub struct Rust {
 
 
 impl Rust {
-    // TODO various methods to emit line, etc
-
     fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType) -> anyhow::Result<()> {
         match data_type {
             ExpressionType::Int(i) => write!(w, "usize")?,
@@ -29,6 +28,279 @@ impl Rust {
                 let n = mv.name();
                 write!(w, "{n}")?;
             }
+        }
+        Ok(())
+    }
+
+    fn write_expression<W: Write>(&self, w: &mut W, expr: &AnyExpression) -> anyhow::Result<()> {
+        match expr {
+            AnyExpression::Int(e) => self.write_int(w, e)?,
+            AnyExpression::Float(e) => self.write_float(w, e)?,
+            AnyExpression::Vec2(e) => self.write_vec2(w, e)?,
+            AnyExpression::Vec3(e) => self.write_vec3(w, e)?,
+            AnyExpression::Vec4(e) => self.write_vec4(w, e)?,
+            AnyExpression::Class(e) => self.write_multi_vec(w, e)?,
+        }
+        Ok(())
+    }
+
+    fn write_int<W: Write>(&self, w: &mut W, expr: &IntExpr) -> anyhow::Result<()> {
+        match expr {
+            IntExpr::Variable(v) => {
+                let name = &v.decl.name.0;
+                let no = v.decl.name.1;
+                write!(w, "{name}_{no}")?;
+            }
+            IntExpr::Literal(l) => {
+                write!(w, "{l}")?;
+            }
+            IntExpr::TraitInvoke10ToInt(t, mv) => {
+                let n = mv.name();
+                let method = t.as_lower_snake();
+                write!(w, "{n}::{method}()")?;
+            }
+        }
+        Ok(())
+    }
+
+    fn write_float<W: Write>(&self, w: &mut W, expr: &FloatExpr) -> anyhow::Result<()> {
+        match expr {
+            FloatExpr::Variable(v) => {
+                let name = &v.decl.name.0;
+                let no = v.decl.name.1;
+                write!(w, "{name}_{no}")?;
+            }
+            FloatExpr::Literal(l) => {
+                write!(w, "{l}")?;
+            }
+            FloatExpr::AccessVec2(v, i) => {
+                self.write_vec2(w, v.as_ref())?;
+                write!(w, "[{i}]")?;
+            }
+            FloatExpr::AccessVec3(v, i) => {
+                self.write_vec3(w, v.as_ref())?;
+                write!(w, "[{i}]")?;
+            }
+            FloatExpr::AccessVec4(v, i) => {
+                self.write_vec4(w, v.as_ref())?;
+                write!(w, "[{i}]")?;
+            }
+            FloatExpr::AccessMultiVecGroup(mv, i) => {
+                self.write_multi_vec(w, mv)?;
+                write!(w, ".group{i}()")?;
+            }
+            FloatExpr::AccessMultiVecFlat(mv, i) => {
+                self.write_multi_vec(w, mv)?;
+                write!(w, "[{i}]")?;
+            }
+            FloatExpr::TraitInvoke11ToFloat(t, arg) => {
+                self.write_multi_vec(w, arg)?;
+                let method = t.as_lower_snake();
+                write!(w, ".{method}()")?;
+            }
+            FloatExpr::Product(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " * ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_float(w, e)?;
+                }
+            }
+            FloatExpr::Sum(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " + ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_float(w, e)?;
+                }
+            }
+            FloatExpr::Divide(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " / ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    // TODO but division is not associative, so I should reconsider if
+                    //  FloatExpr::Divide should contain a Vec to begin with
+                    self.write_float(w, e)?;
+                }
+            }
+            FloatExpr::Pow(a, b) => {
+                write!(w, "f32::pow(")?;
+                self.write_float(w, a.as_ref())?;
+                write!(w, ", ")?;
+                self.write_float(w, b.as_ref())?;
+                write!(w, ")")?;
+            }
+        }
+        Ok(())
+    }
+
+    fn write_vec2<W: Write>(&self, w: &mut W, expr: &Vec2Expr) -> anyhow::Result<()> {
+        match expr {
+            Vec2Expr::Variable(v) => {
+                let name = &v.decl.name.0;
+                let no = v.decl.name.1;
+                write!(w, "{name}_{no}")?;
+            }
+            Vec2Expr::Gather1(f) => {
+                write!(w, "Simd32x2::from(")?;
+                self.write_float(w, f)?;
+                write!(w, ")")?;
+            }
+            Vec2Expr::Gather2(f0, f1) => {
+                write!(w, "Simd32x2::from([")?;
+                self.write_float(w, f0)?;
+                write!(w, ", ")?;
+                self.write_float(w, f1)?;
+                write!(w, "])")?;
+            }
+            Vec2Expr::AccessMultiVecGroup(mv, i) => {
+                self.write_multi_vec(w, mv)?;
+                write!(w, ".group{i}()")?;
+            }
+            Vec2Expr::Product(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " * ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_vec2(w, e)?;
+                }
+            }
+            Vec2Expr::Sum(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " + ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_vec2(w, e)?;
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn write_vec3<W: Write>(&self, w: &mut W, expr: &Vec3Expr) -> anyhow::Result<()> {
+        match expr {
+            Vec3Expr::Variable(v) => {
+                let name = &v.decl.name.0;
+                let no = v.decl.name.1;
+                write!(w, "{name}_{no}")?;
+            }
+            Vec3Expr::Gather1(f) => {
+                write!(w, "Simd32x3::from(")?;
+                self.write_float(w, f)?;
+                write!(w, ")")?;
+            }
+            Vec3Expr::Gather3(f0, f1, f2) => {
+                write!(w, "Simd32x2::from([")?;
+                self.write_float(w, f0)?;
+                write!(w, ", ")?;
+                self.write_float(w, f1)?;
+                write!(w, ", ")?;
+                self.write_float(w, f2)?;
+                write!(w, "])")?;
+            }
+            Vec3Expr::AccessMultiVecGroup(mv, i) => {
+                self.write_multi_vec(w, mv)?;
+                write!(w, ".group{i}()")?;
+            }
+            Vec3Expr::Product(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " * ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_vec3(w, e)?;
+                }
+            }
+            Vec3Expr::Sum(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " + ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_vec3(w, e)?;
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn write_vec4<W: Write>(&self, w: &mut W, expr: &Vec4Expr) -> anyhow::Result<()> {
+        match expr {
+            Vec4Expr::Variable(v) => {
+                let name = &v.decl.name.0;
+                let no = v.decl.name.1;
+                write!(w, "{name}_{no}")?;
+            }
+            Vec4Expr::Gather1(f) => {
+                write!(w, "Simd32x4::from(")?;
+                self.write_float(w, f)?;
+                write!(w, ")")?;
+            }
+            Vec4Expr::Gather4(f0, f1, f2, f3) => {
+                write!(w, "Simd32x2::from([")?;
+                self.write_float(w, f0)?;
+                write!(w, ", ")?;
+                self.write_float(w, f1)?;
+                write!(w, ", ")?;
+                self.write_float(w, f2)?;
+                write!(w, ", ")?;
+                self.write_float(w, f3)?;
+                write!(w, "])")?;
+            }
+            Vec4Expr::AccessMultiVecGroup(mv, i) => {
+                self.write_multi_vec(w, mv)?;
+                write!(w, ".group{i}()")?;
+            }
+            Vec4Expr::Product(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " * ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_vec4(w, e)?;
+                }
+            }
+            Vec4Expr::Sum(v) => {
+                for (i, e) in v.iter().enumerate() {
+                    if i > 0 {
+                        write!(w, " + ")?;
+                    }
+                    // This recursion is unlikely to cause a stack overflow,
+                    // because expression simplification flattens out associative operations.
+                    self.write_vec4(w, e)?;
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn write_multi_vec<W: Write>(&self, w: &mut W, expr: &MultiVectorExpr) -> anyhow::Result<()> {
+        // TODO left off here
+        let mv = expr.mv_class;
+        match &*expr.expr {
+            MultiVectorVia::Variable(v) => {
+                let name = &v.decl.name.0;
+                let no = v.decl.name.1;
+                write!(w, "{name}_{no}")?;
+            }
+            MultiVectorVia::Construct(_) => {}
+            MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
+            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
         }
         Ok(())
     }
@@ -336,7 +608,7 @@ impl AstEmitter for Rust {
         let output_ty = impls.return_expr.expression_type();
         let owner_ty = &impls.owner;
         if impls.other_var_params.len() > 1 || impls.other_type_params.len() > 1 {
-            panic!("We do not support high arity traits yet")
+            bail!("We do not support high arity traits yet");
         }
         let mut var_param = None;
         if !impls.other_var_params.is_empty() {
@@ -345,7 +617,7 @@ impl AstEmitter for Rust {
             if ty_param != v_param {
                 // TODO I feel like this is a representation problem, need to review and maybe
                 //  refactor the algebraic data types involved here
-                panic!("Type of trait implementation does not agree")
+                bail!("Type of trait implementation does not agree");
             }
             var_param = Some(v_param);
         }
@@ -377,11 +649,35 @@ impl AstEmitter for Rust {
             TraitTypeConsensus::AllAgree(mv, _) => self.write_type(w, *mv)?,
             TraitTypeConsensus::NoVotes => {
                 // Currently, we have no use for traits that do not return values
-                panic!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}")
+                bail!("Unsupported or invalid trait def implementation: {ucc} for {owner_ty:?}");
             }
         }
         writeln!(w, " {{")?;
-        writeln!(w, "        todo!();\n    }}\n}}")?;
+        for line in impls.lines {
+            match line {
+                CommentOrVariableDeclaration::Comment(c) => {
+                    self.emit_comment(w, false, c.to_string())?;
+                }
+                CommentOrVariableDeclaration::VarDec(var_dec) => {
+                    let Some(expr) = &var_dec.expr else { continue };
+                    if let Some(c) = &var_dec.comment {
+                        self.emit_comment(w, false, c.to_string())?;
+                    }
+                    let name = var_dec.name.0.to_string();
+                    let no = var_dec.name.1;
+                    write!(w, "let {name}_{no} = ")?;
+                    self.write_expression(w, expr)?;
+                    writeln!(w, ";")?;
+                }
+            }
+        }
+        if let Some(c) = &impls.return_comment {
+            self.emit_comment(w, false, c.to_string())?;
+        }
+        write!(w, "        return ")?;
+        self.write_expression(w, &impls.return_expr)?;
+        writeln!(w, ";")?;
+        writeln!(w, "    }}\n}}")?;
         Ok(())
     }
 

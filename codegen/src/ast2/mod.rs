@@ -17,12 +17,12 @@ pub struct Variable<ExprType> {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-struct RawVariableDeclaration {
-    comment: Option<Cow<'static, String>>,
-    name: (String, usize),
-    expr: Option<AnyExpression>
+pub(crate) struct RawVariableDeclaration {
+    pub(crate) comment: Option<Cow<'static, String>>,
+    pub(crate) name: (String, usize),
+    pub(crate) expr: Option<AnyExpression>
 }
 #[derive(Clone, Debug, PartialEq)]
-struct RawVariableInvocation {
-    decl: Arc<RawVariableDeclaration>,
+pub(crate) struct RawVariableInvocation {
+    pub(crate) decl: Arc<RawVariableDeclaration>,
 }
