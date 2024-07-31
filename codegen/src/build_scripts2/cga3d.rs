@@ -1,14 +1,11 @@
 #![allow(non_upper_case_globals)]
 
-use std::collections::BTreeSet;
 use std::path::PathBuf;
 use std::sync::Arc;
 
 use crate::{ga, multi_vecs, operators, register_all, variants};
-use crate::algebra2::basis::BasisSignature;
 use crate::algebra2::basis::elements::e12345;
-use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, SignatureFilter, signatures_containing};
-use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
 use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};

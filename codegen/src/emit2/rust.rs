@@ -82,14 +82,14 @@ impl AstEmitter for Rust {
         writeln!(w, "#[derive(Clone, Copy)]")?;
         writeln!(w, "pub struct {ucc}Groups {{")?;
         for (g, group) in multi_vec.groups().into_iter().enumerate() {
-            write!(w, "/// ")?;
+            write!(w, "    /// ")?;
             for (i, el) in group.into_iter().enumerate() {
                 if i > 0 {
                     write!(w, ", ")?;
                 }
                 write!(w, "{el}")?;
             }
-            write!(w, "\ng{g}: ")?;
+            write!(w, "\n    g{g}: ")?;
             self.write_type(w, group.expr_type())?;
             writeln!(w, ",")?;
         }
@@ -98,8 +98,8 @@ impl AstEmitter for Rust {
         // TODO special traits like serde and bytemuck etc
         writeln!(w, "#[derive(Clone, Copy)]")?;
         writeln!(w, "pub union {ucc} {{")?;
-        writeln!(w, "groups: {ucc}Groups,")?;
-        write!(w, "/// ")?;
+        writeln!(w, "    groups: {ucc}Groups,")?;
+        write!(w, "    /// ")?;
         let mut total_len = 0;
         for (i, g) in  multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
@@ -117,8 +117,8 @@ impl AstEmitter for Rust {
             }
             total_len += 4;
         }
-        writeln!(w, "\nelements: [f32; {total_len}],")?;
-        writeln!(w, "\n}}")?;
+        writeln!(w, "\n    elements: [f32; {total_len}],")?;
+        writeln!(w, "}}")?;
 
         writeln!(w, "impl {ucc} {{")?;
         writeln!(w, "#[allow(clippy::too_many_arguments)]")?;
@@ -126,11 +126,13 @@ impl AstEmitter for Rust {
         for (i, el) in multi_vec.elements().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
+            } else {
+                write!(w, "    ")?;
             }
             write!(w, "{el}: f32")?;
         }
         writeln!(w, "\n) -> Self {{")?;
-        write!(w, "Self {{ elements: [")?;
+        write!(w, "    Self {{ elements: [")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
@@ -154,19 +156,23 @@ impl AstEmitter for Rust {
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
+            } else {
+                write!(w, "    ")?;
             }
             write!(w, "g{i}: ")?;
             self.write_type(w, g.expr_type())?;
         }
         writeln!(w, "\n) -> Self {{")?;
-        writeln!(w, "Self {{\ngroups: {ucc}Groups {{")?;
+        writeln!(w, "    Self {{\n        groups: {ucc}Groups {{")?;
         for (i, _) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
+            } else {
+                write!(w, "            ")?;
             }
             write!(w, "g{i}")?;
         }
-        writeln!(w, " }} }}\n}}")?;
+        writeln!(w, "\n        }}\n    }}\n}}")?;
 
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
             let t = g.expr_type();
@@ -175,14 +181,14 @@ impl AstEmitter for Rust {
             write!(w, "pub fn group{i}(&self) -> ")?;
             self.write_type(w, t)?;
             writeln!(w, " {{")?;
-            writeln!(w, "unsafe {{ self.groups.g{i} }}")?;
+            writeln!(w, "    unsafe {{ self.groups.g{i} }}")?;
             writeln!(w, "}}")?;
 
             writeln!(w, "#[inline(always)]")?;
             write!(w, "pub fn group{i}_mut(&mut self) -> &mut ")?;
             self.write_type(w, t)?;
             writeln!(w, " {{")?;
-            writeln!(w, "unsafe {{ &mut self.groups.g{i} }}")?;
+            writeln!(w, "    unsafe {{ &mut self.groups.g{i} }}")?;
             writeln!(w, "}}")?;
         }
         writeln!(w, "}}")?;
@@ -214,18 +220,18 @@ impl AstEmitter for Rust {
         writeln!(w, "impl std::ops::Index<usize> for {ucc} {{")?;
         writeln!(w, "type Output = f32;")?;
         writeln!(w, "fn index(&self, index: usize) -> &Self::Output {{")?;
-        writeln!(w, "unsafe {{ &self.elements[{ssc}_INDEX_REMAP[index]] }}")?;
+        writeln!(w, "    unsafe {{ &self.elements[{ssc}_INDEX_REMAP[index]] }}")?;
         writeln!(w, "}}\n}}")?;
 
         writeln!(w, "impl std::ops::IndexMut<usize> for {ucc} {{")?;
         writeln!(w, "fn index_mut(&mut self, index: usize) -> &mut Self::Output {{")?;
-        writeln!(w, "unsafe {{ &mut self.elements[{ssc}_INDEX_REMAP[index]] }}")?;
+        writeln!(w, "    unsafe {{ &mut self.elements[{ssc}_INDEX_REMAP[index]] }}")?;
         writeln!(w, "}}\n}}")?;
 
 
         writeln!(w, "impl std::convert::From<{ucc}> for [f32; {element_count}] {{")?;
         writeln!(w, "fn from(vector: {ucc}) -> Self {{")?;
-        write!(w, "unsafe {{ [")?;
+        write!(w, "    unsafe {{\n        [")?;
         let mut i = 0;
         for (j, g) in multi_vec.groups().into_iter().enumerate() {
             if j > 0 {
@@ -241,12 +247,12 @@ impl AstEmitter for Rust {
             }
             i += 4 - g.len();
         }
-        writeln!(w, "] }}\n}}\n}}")?;
+        writeln!(w, "] }}\n    }}\n}}")?;
 
 
         writeln!(w, "impl std::convert::From<[f32; {element_count}]> for {ucc} {{")?;
-        writeln!(w, "fn from(array: [f32; {element_count}]) -> Self {{")?;
-        write!(w, "Self {{ elements: [")?;
+        writeln!(w, "    fn from(array: [f32; {element_count}]) -> Self {{")?;
+        write!(w, "        Self {{ elements: [")?;
         let mut i = 0;
         for (j, g) in multi_vec.groups().into_iter().enumerate() {
             if j > 0 {
@@ -266,16 +272,16 @@ impl AstEmitter for Rust {
                 i += 1;
             }
         }
-        writeln!(w, "] }}\n}}\n}}")?;
+        writeln!(w, "] }}\n    }}\n}}")?;
 
 
         writeln!(w, "impl std::fmt::Debug for {ucc} {{")?;
         writeln!(w, "fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {{")?;
-        writeln!(w, "formatter.debug_struct(\"{ucc}\")")?;
+        writeln!(w, "    formatter.debug_struct(\"{ucc}\")")?;
         for (i, el) in multi_vec.elements().into_iter().enumerate() {
-            writeln!(w, ".field(\"{el}\", &self[{i}])")?;
+            writeln!(w, "        .field(\"{el}\", &self[{i}])")?;
         }
-        writeln!(w, ".finish()\n}}\n}}")?;
+        writeln!(w, "        .finish()\n}}\n}}")?;
 
 
 
@@ -309,12 +315,7 @@ impl AstEmitter for Rust {
         match def.arity {
             TraitArity::Zero => {}
             TraitArity::One => write!(w, "self")?,
-            TraitArity::Two => write!(w, "self")?,
-        }
-        match def.arity {
-            TraitArity::Zero => {}
-            TraitArity::One => {}
-            TraitArity::Two => write!(w, ", other: T")?,
+            TraitArity::Two => write!(w, "self, other: T")?,
         }
         write!(w, ") -> ")?;
         match *output_ty {
