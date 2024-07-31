@@ -137,14 +137,14 @@ impl FileOrganizing {
             let (folder, file) = match belong {
                 // Naming a file "mod" is a little biased towards rust, but we'll roll with it for now.
                 DataTypesBelong::AllTogether => if separate_folders { (dt_folder.clone(), "mod".to_string()) } else { (root.to_path_buf(), "data".to_string()) },
-                DataTypesBelong::FilePerGrade => (dt_folder.clone(), folder_of_grades(multi_vec.grades).to_string()),
+                DataTypesBelong::FilePerGrade => (dt_folder.clone(), folder_of_grades::<AntiScalar>(multi_vec.grades).to_string()),
                 DataTypesBelong::FilePerType => {
                     is_per_type = true;
                     (dt_folder.clone(), TraitKey::new(multi_vec.name).as_lower_snake())
                 },
                 DataTypesBelong::FilePerGradeThenPerType => {
                     is_per_type = true;
-                    (dt_folder.join(Path::new(folder_of_grades(multi_vec.grades))),
+                    (dt_folder.join(Path::new(folder_of_grades::<AntiScalar>(multi_vec.grades))),
                         TraitKey::new(multi_vec.name).as_lower_snake())
                 },
             };
@@ -555,7 +555,7 @@ impl FileOrganizing {
     }
 }
 
-fn folder_of_grades(gr: Grades) -> &'static str {
+fn folder_of_grades<const AntiScalar: BasisElement>(gr: Grades) -> &'static str {
     let bits = gr.into_bits();
     // Grade 0 takes 1 bit of grades
     // So grade 0 = 0x1
@@ -581,8 +581,18 @@ fn folder_of_grades(gr: Grades) -> &'static str {
     //     65536 => "vector_gr16",
     //     _ => "mixed_grade"
     // }
-    // TODO strip leading 0 if not going to need it, based on dimensionality
+    let d = AntiScalar.signature().bits().count_ones();
     match bits {
+        1 if d < 10 => "vector_0",
+        2 if d < 10 => "vector_1",
+        4 if d < 10 => "vector_2",
+        8 if d < 10 => "vector_3",
+        16 if d < 10 => "vector_4",
+        32 if d < 10 => "vector_5",
+        64 if d < 10 => "vector_6",
+        128 if d < 10 => "vector_7",
+        256 if d < 10 => "vector_8",
+        512 if d < 10 => "vector_9",
         1 => "vector_00",
         2 => "vector_01",
         4 => "vector_02",
@@ -620,7 +630,7 @@ impl IdentifierQualifier for FileOrganizing {
         return match belong {
             DataTypesBelong::AllTogether => path,
             DataTypesBelong::FilePerGrade => {
-                path.join(Path::new(folder_of_grades(data_type.grades)))
+                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades)))
             }
             DataTypesBelong::FilePerType => {
                 // Hi if you are reading this line of code because you defined
@@ -633,7 +643,7 @@ impl IdentifierQualifier for FileOrganizing {
             }
             DataTypesBelong::FilePerGradeThenPerType => {
                 let n = TraitKey::new(data_type.name).as_lower_snake();
-                path.join(Path::new(folder_of_grades(data_type.grades))).join(Path::new(&n))
+                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades))).join(Path::new(&n))
             }
         }
     }
