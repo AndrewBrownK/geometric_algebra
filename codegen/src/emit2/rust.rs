@@ -115,6 +115,7 @@ impl Rust {
                 if v.is_empty() {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -123,11 +124,13 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_float(w, e)?;
                 }
+                write!(w, ")")?;
             }
             FloatExpr::Sum(v) => {
                 if v.is_empty() {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -136,11 +139,13 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_float(w, e)?;
                 }
+                write!(w, ")")?;
             }
             FloatExpr::Divide(v) => {
                 if v.is_empty() {
                     bail!("Attempted to write an empty division that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " / ")?;
@@ -151,6 +156,7 @@ impl Rust {
                     //  FloatExpr::Divide should contain a Vec to begin with
                     self.write_float(w, e)?;
                 }
+                write!(w, ")")?;
             }
             FloatExpr::Pow(a, b) => {
                 write!(w, "f32::pow(")?;
@@ -195,6 +201,7 @@ impl Rust {
                 if v.is_empty() {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -203,11 +210,13 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_vec2(w, e)?;
                 }
+                write!(w, ")")?;
             }
             Vec2Expr::Sum(v) => {
                 if v.is_empty() {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -216,6 +225,7 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_vec2(w, e)?;
                 }
+                write!(w, ")")?;
             }
         }
         Ok(())
@@ -255,6 +265,7 @@ impl Rust {
                 if v.is_empty() {
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -263,11 +274,13 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_vec3(w, e)?;
                 }
+                write!(w, ")")?;
             }
             Vec3Expr::Sum(v) => {
                 if v.is_empty() {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -276,6 +289,7 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_vec3(w, e)?;
                 }
+                write!(w, ")")?;
             }
         }
         Ok(())
@@ -321,6 +335,7 @@ impl Rust {
                     //  even 2 elements. But we'll see.
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -329,11 +344,13 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_vec4(w, e)?;
                 }
+                write!(w, ")")?;
             }
             Vec4Expr::Sum(v) => {
                 if v.is_empty() {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
+                write!(w, "(")?;
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -342,6 +359,7 @@ impl Rust {
                     // because expression simplification flattens out associative operations.
                     self.write_vec4(w, e)?;
                 }
+                write!(w, ")")?;
             }
         }
         Ok(())
