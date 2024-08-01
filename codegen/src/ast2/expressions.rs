@@ -1196,6 +1196,18 @@ fn test_match_mut_2(t: &mut T) {
 // TODO scanning for good places to simplify... where I left off:
 //  impl Wedge<AntiCircleOnOrigin> for AntiFlectorAtInfinity
 
+// TODO definitely want a particularly close scan of
+//  geometric_anti_product.rs `for Sphere`
+/*
+    //  impl GeometricAntiProduct<FlatPoint> for Sphere
+    /* e415, e425, e435 */
+    (Simd32x3::from(-1)
+        * Simd32x3::from([
+            ((self.group0()[0] * other.group0()[3]) + (self.group1()[0] * other.group0()[0])),
+            ((self.group0()[1] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
+            ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[2])),
+        ])),
+*/
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
         match self {
@@ -1509,23 +1521,17 @@ impl Vec2Expr {
                         });
                         // Pull out Vec2Expr
                         float_product_0.retain(|it0| {
-                            if let AccessVec2(box v0, 0) = it0 {
-                                let mut pulling_out_factor = false;
-                                float_product_1.retain(|it1| {
-                                    if let AccessVec2(box v1, 1) = it1 {
-                                        pulling_out_factor = v0 == v1;
-                                        !pulling_out_factor
-                                    } else {
-                                        true
-                                    }
-                                });
-                                if pulling_out_factor {
-                                    vec2_product.push(v0.clone());
-                                }
+                            let AccessVec2(box v0, 0) = it0 else { return true };
+                            let mut pulling_out_factor = false;
+                            float_product_1.retain(|it1| {
+                                let AccessVec2(box v1, 1) = it1 else { return true };
+                                pulling_out_factor = v0 == v1;
                                 !pulling_out_factor
-                            } else {
-                                true
+                            });
+                            if pulling_out_factor {
+                                vec2_product.push(v0.clone());
                             }
+                            !pulling_out_factor
                         });
                         if !vec2_product.is_empty() {
                             let mut keep_remaining = false;
@@ -1548,8 +1554,8 @@ impl Vec2Expr {
                         }
                     }
                     (
-                        Sum(ref mut v0),
-                        Sum(ref mut v1),
+                        Sum(ref mut float_sum_0),
+                        Sum(ref mut float_sum_1),
                     ) => {
                         // See if we can pull out a Vec2Expr::Sum
                         // TODO
@@ -1795,12 +1801,11 @@ impl Wedge<RoundPoint> for RoundPoint {
                         float_product_0.retain(|it0| {
                             let mut pulling_out_factor = false;
                             float_product_1.retain(|it1| {
-                                if it0 == it1 {
-                                    float_product_2.retain(|it2| {
-                                        pulling_out_factor = it1 == it2;
-                                        !pulling_out_factor
-                                    });
-                                }
+                                if it0 != it1 { return true }
+                                float_product_2.retain(|it2| {
+                                    pulling_out_factor = it1 == it2;
+                                    !pulling_out_factor
+                                });
                                 !pulling_out_factor
                             });
                             if pulling_out_factor {
@@ -1810,32 +1815,22 @@ impl Wedge<RoundPoint> for RoundPoint {
                         });
                         // Pull out Vec3Expr
                         float_product_0.retain(|it0| {
-                            if let AccessVec3(box v0, 0) = it0 {
-                                let mut pulling_out_factor = false;
-                                float_product_1.retain(|it1| {
-                                    if let AccessVec3(box v1, 1) = it1 {
-                                        if v0 == v1 {
-                                            float_product_2.retain(|it2| {
-                                                if let AccessVec3(box v2, 2) = it2 {
-                                                    pulling_out_factor = v1 == v2;
-                                                    !pulling_out_factor
-                                                } else {
-                                                    true
-                                                }
-                                            });
-                                        }
-                                        !pulling_out_factor
-                                    } else {
-                                        true
-                                    }
+                            let AccessVec3(box v0, 0) = it0 else { return true };
+                            let mut pulling_out_factor = false;
+                            float_product_1.retain(|it1| {
+                                let AccessVec3(box v1, 1) = it1 else { return true };
+                                if v0 != v1 { return true }
+                                float_product_2.retain(|it2| {
+                                    let AccessVec3(box v2, 2) = it2 else { return true };
+                                    pulling_out_factor = v1 == v2;
+                                    !pulling_out_factor
                                 });
-                                if pulling_out_factor {
-                                    vec3_product.push(v0.clone());
-                                }
                                 !pulling_out_factor
-                            } else {
-                                true
+                            });
+                            if pulling_out_factor {
+                                vec3_product.push(v0.clone());
                             }
+                            !pulling_out_factor
                         });
                         if !vec3_product.is_empty() {
                             let mut keep_remaining = false;
@@ -1864,12 +1859,113 @@ impl Wedge<RoundPoint> for RoundPoint {
                         }
                     }
                     (
-                        Sum(ref mut v0),
-                        Sum(ref mut v1),
-                        Sum(ref mut v2),
+                        Sum(ref mut float_sum_0),
+                        Sum(ref mut float_sum_1),
+                        Sum(ref mut float_sum_2),
                     ) => {
                         // See if we can pull out a Vec3Expr::Sum
-                        // TODO
+                        let mut coalesce = [0.0, 0.0, 0.0];
+                        float_sum_0.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[0] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        float_sum_1.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[1] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        float_sum_2.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[2] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        let mut vec3_sum = vec![];
+                        if coalesce != [0.0, 0.0, 0.0] {
+                            if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] {
+                                vec3_sum.push(Vec3Expr::Gather1(Literal(coalesce[0])));
+                            } else {
+                                vec3_sum.push(Vec3Expr::Gather3(
+                                    Literal(coalesce[0]),
+                                    Literal(coalesce[1]),
+                                    Literal(coalesce[2]),
+                                ));
+                            }
+                        }
+                        // Pull out Vec3Expr::Gather1
+                        float_sum_0.retain(|it0| {
+                            let mut pulling_out_addend = false;
+                            float_sum_1.retain(|it1| {
+                                if it0 != it1 { return true }
+                                float_sum_2.retain(|it2| {
+                                    pulling_out_addend = it1 == it2;
+                                    !pulling_out_addend
+                                });
+                                !pulling_out_addend
+                            });
+                            if pulling_out_addend {
+                                vec3_sum.push(Vec3Expr::Gather1(it0.clone()));
+                            }
+                            !pulling_out_addend
+                        });
+                        // Pull out Vec3Expr
+                        float_sum_0.retain(|it0| {
+                            let AccessVec3(box v0, 0) = it0 else { return true };
+                            let mut pulling_out_addend = false;
+                            float_sum_1.retain(|it1| {
+                                let AccessVec3(box v1, 1) = it1 else { return true };
+                                if v0 != v1 { return true }
+                                float_sum_2.retain(|it2| {
+                                    let AccessVec3(box v2, 2) = it2 else { return true };
+                                    pulling_out_addend = v1 == v2;
+                                    !pulling_out_addend
+                                });
+                                !pulling_out_addend
+                            });
+                            if pulling_out_addend {
+                                vec3_sum.push(v0.clone());
+                            }
+                            !pulling_out_addend
+                        });
+                        // TODO sum of products
+
+
+
+
+                        if !vec3_sum.is_empty() {
+                            let mut keep_remaining = false;
+                            let p0 = if float_sum_0.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_0.clone())
+                            };
+                            let p1 = if float_sum_1.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_1.clone())
+                            };
+                            let p2 = if float_sum_2.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_2.clone())
+                            };
+                            if keep_remaining {
+                                vec3_sum.push(Vec3Expr::Gather3(p0, p1, p2));
+                            }
+                            *self = Vec3Expr::Sum(vec3_sum);
+                        }
                     }
                     _ => {}
                 }
@@ -2117,17 +2213,15 @@ impl Vec4Expr {
                         float_product_0.retain(|it0| {
                             let mut pulling_out_factor = false;
                             float_product_1.retain(|it1| {
-                                if it0 == it1 {
-                                    float_product_2.retain(|it2| {
-                                        if it1 == it2 {
-                                            float_product_3.retain(|it3| {
-                                                pulling_out_factor = it2 == it3;
-                                                !pulling_out_factor
-                                            });
-                                        }
+                                if it0 != it1 { return true };
+                                float_product_2.retain(|it2| {
+                                    if it1 != it2 { return true }
+                                    float_product_3.retain(|it3| {
+                                        pulling_out_factor = it2 == it3;
                                         !pulling_out_factor
                                     });
-                                }
+                                    !pulling_out_factor
+                                });
                                 !pulling_out_factor
                             });
                             if pulling_out_factor {
@@ -2137,41 +2231,27 @@ impl Vec4Expr {
                         });
                         // Pull out Vec4Expr
                         float_product_0.retain(|it0| {
-                            if let AccessVec4(box v0, 0) = it0 {
-                                let mut pulling_out_factor = false;
-                                float_product_1.retain(|it1| {
-                                    if let AccessVec4(box v1, 1) = it1 {
-                                        if v0 == v1 {
-                                            float_product_2.retain(|it2| {
-                                                if let AccessVec4(box v2, 2) = it2 {
-                                                    if v1 == v2 {
-                                                        float_product_3.retain(|it3| {
-                                                            if let AccessVec4(box v3, 2) = it3 {
-                                                                pulling_out_factor = v2 == v3;
-                                                                !pulling_out_factor
-                                                            } else {
-                                                                true
-                                                            }
-                                                        });
-                                                    }
-                                                    !pulling_out_factor
-                                                } else {
-                                                    true
-                                                }
-                                            });
-                                        }
+                            let AccessVec4(box v0, 0) = it0 else { return true };
+                            let mut pulling_out_factor = false;
+                            float_product_1.retain(|it1| {
+                                let AccessVec4(box v1, 1) = it1 else { return true };
+                                if v0 != v1 { return true }
+                                float_product_2.retain(|it2| {
+                                    let AccessVec4(box v2, 2) = it2 else { return true };
+                                    if v1 != v2 { return true }
+                                    float_product_3.retain(|it3| {
+                                        let AccessVec4(box v3, 2) = it3 else { return true };
+                                        pulling_out_factor = v2 == v3;
                                         !pulling_out_factor
-                                    } else {
-                                        true
-                                    }
+                                    });
+                                    !pulling_out_factor
                                 });
-                                if pulling_out_factor {
-                                    vec4_product.push(v0.clone());
-                                }
                                 !pulling_out_factor
-                            } else {
-                                true
+                            });
+                            if pulling_out_factor {
+                                vec4_product.push(v0.clone());
                             }
+                            !pulling_out_factor
                         });
                         if !vec4_product.is_empty() {
                             let mut keep_remaining = false;
@@ -2206,10 +2286,10 @@ impl Vec4Expr {
                         }
                     }
                     (
-                        Sum(ref mut v0),
-                        Sum(ref mut v1),
-                        Sum(ref mut v2),
-                        Sum(ref mut v3),
+                        Sum(ref mut float_sum_0),
+                        Sum(ref mut float_sum_1),
+                        Sum(ref mut float_sum_2),
+                        Sum(ref mut float_sum_3),
                     ) => {
                         // See if we can pull out a Vec4Expr::Sum
                         // TODO
