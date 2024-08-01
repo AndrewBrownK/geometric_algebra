@@ -1558,7 +1558,82 @@ impl Vec2Expr {
                         Sum(ref mut float_sum_1),
                     ) => {
                         // See if we can pull out a Vec2Expr::Sum
-                        // TODO
+                        let mut coalesce = [0.0, 0.0, 0.0];
+                        float_sum_0.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[0] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        float_sum_1.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[1] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        let mut vec2_sum = vec![];
+                        if coalesce != [0.0, 0.0, 0.0] {
+                            if coalesce[0] == coalesce[1] {
+                                vec2_sum.push(Vec2Expr::Gather1(Literal(coalesce[0])));
+                            } else {
+                                vec2_sum.push(Vec2Expr::Gather2(
+                                    Literal(coalesce[0]),
+                                    Literal(coalesce[1]),
+                                ));
+                            }
+                        }
+                        // Pull out Vec3Expr::Gather1
+                        float_sum_0.retain(|it0| {
+                            let mut pulling_out_addend = false;
+                            float_sum_1.retain(|it1| {
+                                pulling_out_addend = it0 == it1;
+                                !pulling_out_addend
+                            });
+                            if pulling_out_addend {
+                                vec2_sum.push(Vec2Expr::Gather1(it0.clone()));
+                            }
+                            !pulling_out_addend
+                        });
+                        // Pull out Vec3Expr
+                        float_sum_0.retain(|it0| {
+                            let AccessVec2(box v0, 0) = it0 else { return true };
+                            let mut pulling_out_addend = false;
+                            float_sum_1.retain(|it1| {
+                                let AccessVec2(box v1, 1) = it1 else { return true };
+                                pulling_out_addend = v0 == v1;
+                                !pulling_out_addend
+                            });
+                            if pulling_out_addend {
+                                vec2_sum.push(v0.clone());
+                            }
+                            !pulling_out_addend
+                        });
+                        // TODO sum of products
+
+
+                        if !vec2_sum.is_empty() {
+                            let mut keep_remaining = false;
+                            let p0 = if float_sum_0.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_0.clone())
+                            };
+                            let p1 = if float_sum_1.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_1.clone())
+                            };
+                            if keep_remaining {
+                                vec2_sum.push(Vec2Expr::Gather2(p0, p1));
+                            }
+                            *self = Vec2Expr::Sum(vec2_sum);
+                        }
                     }
                     _ => {}
                 }
@@ -2292,7 +2367,132 @@ impl Vec4Expr {
                         Sum(ref mut float_sum_3),
                     ) => {
                         // See if we can pull out a Vec4Expr::Sum
-                        // TODO
+                        let mut coalesce = [0.0, 0.0, 0.0, 0.0];
+                        float_sum_0.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[0] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        float_sum_1.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[1] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        float_sum_2.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[2] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        float_sum_3.retain(|it| {
+                            if let Literal(f) = it {
+                                coalesce[3] += *f;
+                                false
+                            } else {
+                                true
+                            }
+                        });
+                        let mut vec4_sum = vec![];
+                        if coalesce != [0.0, 0.0, 0.0, 0.0] {
+                            if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] && coalesce[2] == coalesce[3] {
+                                vec4_sum.push(Vec4Expr::Gather1(Literal(coalesce[0])));
+                            } else {
+                                vec4_sum.push(Vec4Expr::Gather4(
+                                    Literal(coalesce[0]),
+                                    Literal(coalesce[1]),
+                                    Literal(coalesce[2]),
+                                    Literal(coalesce[3]),
+                                ));
+                            }
+                        }
+                        // Pull out Vec4Expr::Gather1
+                        float_sum_0.retain(|it0| {
+                            let mut pulling_out_addend = false;
+                            float_sum_1.retain(|it1| {
+                                if it0 != it1 { return true }
+                                float_sum_2.retain(|it2| {
+                                    if it1 != it2 { return true }
+                                    float_sum_3.retain(|it3| {
+                                        pulling_out_addend = it2 == it3;
+                                        !pulling_out_addend
+                                    });
+                                    !pulling_out_addend
+                                });
+                                !pulling_out_addend
+                            });
+                            if pulling_out_addend {
+                                vec4_sum.push(Vec4Expr::Gather1(it0.clone()));
+                            }
+                            !pulling_out_addend
+                        });
+                        // Pull out Vec4Expr
+                        float_sum_0.retain(|it0| {
+                            let AccessVec4(box v0, 0) = it0 else { return true };
+                            let mut pulling_out_addend = false;
+                            float_sum_1.retain(|it1| {
+                                let AccessVec4(box v1, 1) = it1 else { return true };
+                                if v0 != v1 { return true }
+                                float_sum_2.retain(|it2| {
+                                    let AccessVec4(box v2, 2) = it2 else { return true };
+                                    if v1 != v2 { return true }
+                                    float_sum_3.retain(|it3| {
+                                        let AccessVec4(box v3, 2) = it3 else { return true };
+                                        pulling_out_addend = v2 == v3;
+                                        !pulling_out_addend
+                                    });
+                                    !pulling_out_addend
+                                });
+                                !pulling_out_addend
+                            });
+                            if pulling_out_addend {
+                                vec4_sum.push(v0.clone());
+                            }
+                            !pulling_out_addend
+                        });
+                        // TODO sum of products
+
+
+
+
+                        if !vec4_sum.is_empty() {
+                            let mut keep_remaining = false;
+                            let p0 = if float_sum_0.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_0.clone())
+                            };
+                            let p1 = if float_sum_1.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_1.clone())
+                            };
+                            let p2 = if float_sum_2.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_2.clone())
+                            };
+                            let p3 = if float_sum_3.is_empty() {
+                                Literal(0.0)
+                            } else {
+                                keep_remaining = true;
+                                Product(float_sum_3.clone())
+                            };
+                            if keep_remaining {
+                                vec4_sum.push(Vec4Expr::Gather4(p0, p1, p2, p3));
+                            }
+                            *self = Vec4Expr::Sum(vec4_sum);
+                        }
                     }
                     _ => {}
                 }
