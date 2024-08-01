@@ -381,10 +381,19 @@ impl Rust {
             MultiVectorVia::Construct(v) => {
                 let n = mv.name();
                 write!(w, "{n}::from_groups(")?;
+                let groups = mv.groups();
                 for (i, g) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, ", ")?;
                     }
+                    write!(w, "/* ")?;
+                    for (i, el) in groups[i].into_vec().into_iter().enumerate() {
+                        if i > 0 {
+                            write!(w, ", ")?;
+                        }
+                        write!(w, "{el}")?;
+                    }
+                    write!(w, " */")?;
                     match g {
                         MultiVectorGroupExpr::JustFloat(f) => self.write_float(w, f)?,
                         MultiVectorGroupExpr::Vec2(g) => self.write_vec2(w, g)?,
