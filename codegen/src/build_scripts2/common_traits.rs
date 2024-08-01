@@ -223,7 +223,7 @@ mod impls {
             slf: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut result = DynamicMultiVector::zero();
-            for (fe, el) in slf.elements() {
+            for (fe, el) in slf.elements_by_groups() {
                 let (f, el) = b.ga.dual(el);
                 result += (fe * f, el);
             }
@@ -244,7 +244,7 @@ mod impls {
             slf: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut result = DynamicMultiVector::zero();
-            for (fe, el) in slf.elements() {
+            for (fe, el) in slf.elements_by_groups() {
                 let (f, el) = b.ga.anti_dual(el);
                 result += (fe * f, el);
             }
@@ -265,8 +265,13 @@ mod impls {
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements() {
-                for (b, b_el) in other.elements() {
+            for (a, a_group) in slf.groups() {
+                for (b, b_group) in other.groups() {
+
+                }
+            }
+            for (a, a_el) in slf.elements_by_groups() {
+                for (b, b_el) in other.elements_by_groups() {
                     let a = a.clone();
                     dyn_mv += (a * b, a_el.wedge(b_el));
                 }
@@ -289,8 +294,8 @@ mod impls {
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements() {
-                for (b, b_el) in other.elements() {
+            for (a, a_el) in slf.elements_by_groups() {
+                for (b, b_el) in other.elements_by_groups() {
                     let a = a.clone();
                     dyn_mv += (a * b, a_el.anti_wedge(b_el, AntiScalar));
                 }
@@ -314,8 +319,8 @@ mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let ga = &b.ga;
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements() {
-                for (b, b_el) in other.elements() {
+            for (a, a_el) in slf.elements_by_groups() {
+                for (b, b_el) in other.elements_by_groups() {
                     let sop = ga.product(a_el, b_el);
                     for p in sop.sum {
                         let a = a.clone();
@@ -344,8 +349,8 @@ mod impls {
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let ga = &b.ga;
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements() {
-                for (b, b_el) in other.elements() {
+            for (a, a_el) in slf.elements_by_groups() {
+                for (b, b_el) in other.elements_by_groups() {
                     let sop = ga.anti_product(a_el, b_el);
                     for p in sop.sum {
                         let a = a.clone();
@@ -372,7 +377,7 @@ mod impls {
             slf: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements() {
+            for (a, a_el) in slf.elements_by_groups() {
                 if self.0.contains(a_el.grades()) {
                     dyn_mv += (a, a_el);
                 }
@@ -394,7 +399,7 @@ mod impls {
             slf: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_el) in slf.elements() {
+            for (a, a_el) in slf.elements_by_groups() {
                 if self.0.contains(a_el.anti_grades(AntiScalar)) {
                     dyn_mv += (a, a_el);
                 }

@@ -112,6 +112,9 @@ impl Rust {
                 write!(w, ".{method}()")?;
             }
             FloatExpr::Product(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty product that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -122,6 +125,9 @@ impl Rust {
                 }
             }
             FloatExpr::Sum(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty sum that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -132,6 +138,9 @@ impl Rust {
                 }
             }
             FloatExpr::Divide(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty division that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " / ")?;
@@ -183,6 +192,9 @@ impl Rust {
                 write!(w, ".group{i}()")?;
             }
             Vec2Expr::Product(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty product that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -193,6 +205,9 @@ impl Rust {
                 }
             }
             Vec2Expr::Sum(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty sum that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -224,7 +239,7 @@ impl Rust {
                 write!(w, ")")?;
             }
             Vec3Expr::Gather3(f0, f1, f2) => {
-                write!(w, "Simd32x2::from([")?;
+                write!(w, "Simd32x3::from([")?;
                 self.write_float(w, f0)?;
                 write!(w, ", ")?;
                 self.write_float(w, f1)?;
@@ -237,6 +252,9 @@ impl Rust {
                 write!(w, ".group{i}()")?;
             }
             Vec3Expr::Product(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty product that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -247,6 +265,9 @@ impl Rust {
                 }
             }
             Vec3Expr::Sum(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty sum that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;
@@ -278,7 +299,7 @@ impl Rust {
                 write!(w, ")")?;
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
-                write!(w, "Simd32x2::from([")?;
+                write!(w, "Simd32x4::from([")?;
                 self.write_float(w, f0)?;
                 write!(w, ", ")?;
                 self.write_float(w, f1)?;
@@ -293,6 +314,13 @@ impl Rust {
                 write!(w, ".group{i}()")?;
             }
             Vec4Expr::Product(v) => {
+                if v.is_empty() {
+                    // TODO these sorts of cases should really be handled by making Vec4Expr::Product
+                    //  (and other similar Expr types obviously) have an additional element
+                    //  that is not inside the Vec, so that it can never be empty. Heck... maybe
+                    //  even 2 elements. But we'll see.
+                    bail!("Attempted to write an empty product that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " * ")?;
@@ -303,6 +331,9 @@ impl Rust {
                 }
             }
             Vec4Expr::Sum(v) => {
+                if v.is_empty() {
+                    bail!("Attempted to write an empty sum that should have been simplified");
+                }
                 for (i, e) in v.iter().enumerate() {
                     if i > 0 {
                         write!(w, " + ")?;

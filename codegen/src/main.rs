@@ -12,6 +12,7 @@
 #![feature(const_mut_refs)]
 #![feature(concat_idents)]
 #![feature(const_swap)]
+#![feature(box_patterns)]
 
 mod algebra;
 mod ast;

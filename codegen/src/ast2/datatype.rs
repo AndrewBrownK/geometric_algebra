@@ -100,10 +100,12 @@ impl MultiVector {
             });
             i += 1;
         }
-        MultiVectorExpr {
+        let mut result = MultiVectorExpr {
             mv_class: self.clone(),
             expr: Box::new(MultiVectorVia::Construct(outer)),
-        }
+        };
+        result.simplify();
+        result
     }
 
     pub fn grade(&self) -> Option<u32> {
