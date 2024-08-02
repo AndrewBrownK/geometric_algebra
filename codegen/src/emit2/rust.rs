@@ -247,6 +247,11 @@ impl Rust {
                     write!(w, ")")?;
                 }
             }
+            Vec2Expr::SwizzleVec2(box v, i0, i1) => {
+                // TODO
+                write!(w, "/* TODO swizzle {i0} {i1} */")?;
+                self.write_vec2(w, v)?;
+            }
         }
         Ok(())
     }
@@ -318,6 +323,11 @@ impl Rust {
                 if v.len() > 1 {
                     write!(w, ")")?;
                 }
+            }
+            Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
+                // TODO
+                write!(w, "/* TODO swizzle {i0} {i1} {i2} */")?;
+                self.write_vec3(w, v)?;
             }
         }
         Ok(())
@@ -396,6 +406,11 @@ impl Rust {
                 if v.len() > 1 {
                     write!(w, ")")?;
                 }
+            }
+            Vec4Expr::SwizzleVec4(box v, i0, i1, i2, i3) => {
+                // TODO
+                write!(w, "/* TODO swizzle {i0} {i1} {i2} {i3} */")?;
+                self.write_vec4(w, v)?;
             }
         }
         Ok(())

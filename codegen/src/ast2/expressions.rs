@@ -1,14 +1,12 @@
-use std::collections::HashMap;
 use std::fmt::Debug;
 use std::mem;
-use std::ops::{Add, AddAssign, DerefMut, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 use std::sync::Arc;
-use either::Either;
+
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::BasisElementGroup;
 use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
-use crate::ast2::expressions::FloatExpr::{Product, Sum};
 use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
 use crate::ast2::traits::TraitKey;
 
@@ -481,6 +479,7 @@ impl Expression<Vec2> for Vec2Expr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
+            Vec2Expr::SwizzleVec2(v, _, _) => v.substitute_variable(old.clone(), new.clone()),
         }
     }
 }
@@ -617,6 +616,7 @@ impl Expression<Vec4> for Vec4Expr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
+            Vec4Expr::SwizzleVec4(v, _, _, _, _) => v.substitute_variable(old.clone(), new.clone()),
         }
     }
 }
@@ -1314,12 +1314,19 @@ impl FloatExpr {
             }
             FloatExpr::TraitInvoke11ToFloat(_, _) => {}
             FloatExpr::Product(product) => {
+                if product.is_empty() {
+                    panic!("Problem")
+                }
                 for p in  product.iter_mut() {
                     p.simplify();
                     if let FloatExpr::Literal(0.0) = p {
                         *self = FloatExpr::Literal(0.0);
                         return
                     }
+                }
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                    return
                 }
                 let mut coalesce = 1.0;
                 let mut flatten = vec![];
@@ -1351,8 +1358,15 @@ impl FloatExpr {
                 }
             }
             FloatExpr::Sum(sum) => {
+                if sum.is_empty() {
+                    panic!("Problem")
+                }
                 for s in  sum.iter_mut() {
                     s.simplify();
+                }
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                    return
                 }
                 let mut coalesce = 0.0;
                 let mut flatten = vec![];
@@ -1489,6 +1503,9 @@ impl Vec2Expr {
                 }
             }
             Vec2Expr::Product(ref mut product) => {
+                if product.is_empty() {
+                    panic!("Problem")
+                }
                 for p in product.iter_mut() {
                     p.simplify();
                     if let Vec2Expr::Gather1(FloatExpr::Literal(0.0)) = p {
@@ -1501,6 +1518,10 @@ impl Vec2Expr {
                         *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
                         return;
                     }
+                }
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                    return
                 }
                 let mut coalesce = [1.0, 1.0];
                 let mut flatten = vec![];
@@ -1553,8 +1574,15 @@ impl Vec2Expr {
                 }
             }
             Vec2Expr::Sum(ref mut sum) => {
+                if sum.is_empty() {
+                    panic!("Problem")
+                }
                 for s in sum.iter_mut() {
                     s.simplify();
+                }
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                    return
                 }
                 let mut coalesce = [0.0, 0.0];
                 let mut flatten = vec![];
@@ -1686,6 +1714,9 @@ impl Vec3Expr {
                 }
             }
             Vec3Expr::Product(ref mut product) => {
+                if product.is_empty() {
+                    panic!("Problem")
+                }
                 for p in product.iter_mut() {
                     p.simplify();
                     if let Vec3Expr::Gather1(FloatExpr::Literal(0.0)) = p {
@@ -1699,6 +1730,10 @@ impl Vec3Expr {
                         *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
                         return;
                     }
+                }
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                    return
                 }
                 let mut coalesce = [1.0, 1.0, 1.0];
                 let mut flatten = vec![];
@@ -1758,8 +1793,15 @@ impl Vec3Expr {
                 }
             }
             Vec3Expr::Sum(ref mut sum) => {
+                if sum.is_empty() {
+                    panic!("Problem")
+                }
                 for s in sum.iter_mut() {
                     s.simplify();
+                }
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                    return
                 }
                 let mut coalesce = [0.0, 0.0, 0.0];
                 let mut flatten = vec![];
@@ -1902,6 +1944,9 @@ impl Vec4Expr {
                 }
             }
             Vec4Expr::Product(product) => {
+                if product.is_empty() {
+                    panic!("Problem")
+                }
                 for p in product.iter_mut() {
                     p.simplify();
                     if let Vec4Expr::Gather1(FloatExpr::Literal(0.0)) = p {
@@ -1916,6 +1961,10 @@ impl Vec4Expr {
                         *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
                         return;
                     }
+                }
+                if product.len() == 1 {
+                    *self = product.remove(0);
+                    return
                 }
                 let mut coalesce = [1.0, 1.0, 1.0, 1.0];
                 let mut flatten = vec![];
@@ -1982,8 +2031,15 @@ impl Vec4Expr {
                 }
             }
             Vec4Expr::Sum(sum) => {
+                if sum.is_empty() {
+                    panic!("Problem")
+                }
                 for s in sum.iter_mut() {
                     s.simplify();
+                }
+                if sum.len() == 1 {
+                    *self = sum.remove(0);
+                    return
                 }
                 let mut coalesce = [0.0, 0.0, 0.0, 0.0];
                 let mut flatten = vec![];
@@ -2482,6 +2538,7 @@ impl TrackOperations for Vec2Expr {
                 }
                 result
             }
+            Vec2Expr::SwizzleVec2(v, _, _) => v.count_operations(lookup),
         }
     }
 }
@@ -2512,6 +2569,7 @@ impl TrackOperations for Vec3Expr {
                 }
                 result
             }
+            Vec3Expr::SwizzleVec3(v, _, _, _) => v.count_operations(lookup),
         }
     }
 }
@@ -2542,6 +2600,7 @@ impl TrackOperations for Vec4Expr {
                 }
                 result
             }
+            Vec4Expr::SwizzleVec4(v, _, _, _, _) => v.count_operations(lookup),
         }
     }
 }
@@ -2586,12 +2645,15 @@ fn transpose_vec2_product(
     float_product_1: &mut Vec<FloatExpr>,
 ) -> Option<Vec2Expr> {
     use crate::ast2::expressions::FloatExpr::*;
-    // See if we can pull out a Vec3Expr::Product
+    // See if we can pull out a Vec2Expr::Product
     let mut coalesce_product_literals = [1.0, 1.0];
     let mut vec2_product = vec![];
     float_product_0.retain_mut(|it0| {
         let mut pulling_out_factor = false;
         float_product_1.retain_mut(|it1| {
+            if pulling_out_factor {
+                return true
+            }
             pulling_out_factor = vec2_product_extract(
                 &mut vec2_product, &mut coalesce_product_literals,
                 it0, it1,
@@ -2697,12 +2759,15 @@ fn transpose_vec2_sum(
     float_sum_1: &mut Vec<FloatExpr>,
 ) -> Option<Vec2Expr> {
     use crate::ast2::expressions::FloatExpr::*;
-    // See if we can pull out a Vec3Expr::Sum
+    // See if we can pull out a Vec2Expr::Sum
     let mut vec2_sum = vec![];
     let mut coalesce_sum_literal = [0.0, 0.0];
     float_sum_0.retain_mut(|it0| {
         let mut pulling_out_addend = false;
         float_sum_1.retain_mut(|it1| {
+            if pulling_out_addend {
+                return true
+            }
             pulling_out_addend = vec2_sum_extract(
                 &mut vec2_sum, &mut coalesce_sum_literal,
                 it0, it1
@@ -2819,8 +2884,14 @@ fn transpose_vec3_product(
     float_product_0.retain_mut(|it0| {
         let mut pulling_out_factor = false;
         float_product_1.retain_mut(|it1| {
+            if pulling_out_factor {
+                return true
+            }
             float_product_2.retain_mut(|it2| {
-                pulling_out_factor = crate::ast2::expressions::vec3_product_extract(
+                if pulling_out_factor {
+                    return true
+                }
+                pulling_out_factor = vec3_product_extract(
                     &mut vec3_product, &mut coalesce_product_literals,
                     it0, it1, it2,
                 );
@@ -2948,7 +3019,7 @@ fn vec3_product_extract(
             // mutated. If it returns something, then it serves as a total replacement, cloning
             // anything necessary. It performs its own "leftover" Gather3 on anything that doesn't
             // transpose, but the `transposed` variable itself will be a Vec3Expr::Sum.
-            let Some(transposed) = crate::ast2::expressions::transpose_vec3_sum(v0, v1, v2) else { return false };
+            let Some(transposed) = transpose_vec3_sum(v0, v1, v2) else { return false };
             vec3_product.push(transposed);
             true
         }
@@ -2968,8 +3039,14 @@ fn transpose_vec3_sum(
     float_sum_0.retain_mut(|it0| {
         let mut pulling_out_addend = false;
         float_sum_1.retain_mut(|it1| {
+            if pulling_out_addend {
+                return true
+            }
             float_sum_2.retain_mut(|it2| {
-                pulling_out_addend = crate::ast2::expressions::vec3_sum_extract(
+                if pulling_out_addend {
+                    return true
+                }
+                pulling_out_addend = vec3_sum_extract(
                     &mut vec3_sum, &mut coalesce_sum_literal,
                     it0, it1, it2
                 );
@@ -3084,7 +3161,7 @@ fn vec3_sum_extract(
             Product(v1),
             Product(v2),
         ) => {
-            let Some(transposed) = crate::ast2::expressions::transpose_vec3_product(v0, v1, v2) else { return false };
+            let Some(transposed) = transpose_vec3_product(v0, v1, v2) else { return false };
             vec3_sum.push(transposed);
             true
         }
@@ -3101,14 +3178,23 @@ fn transpose_vec4_product(
     float_product_3: &mut Vec<FloatExpr>,
 ) -> Option<Vec4Expr> {
     use crate::ast2::expressions::FloatExpr::*;
-    // See if we can pull out a Vec3Expr::Product
+    // See if we can pull out a Vec4Expr::Product
     let mut coalesce_product_literals = [1.0, 1.0, 1.0, 1.0];
     let mut vec4_product = vec![];
     float_product_0.retain_mut(|it0| {
         let mut pulling_out_factor = false;
         float_product_1.retain_mut(|it1| {
+            if pulling_out_factor {
+                return true
+            }
             float_product_2.retain_mut(|it2| {
+                if pulling_out_factor {
+                    return true
+                }
                 float_product_3.retain_mut(|it3| {
+                    if pulling_out_factor {
+                        return true
+                    }
                     pulling_out_factor = vec4_product_extract(
                         &mut vec4_product, &mut coalesce_product_literals,
                         it0, it1, it2, it3
@@ -3258,14 +3344,23 @@ fn transpose_vec4_sum(
     float_sum_3: &mut Vec<FloatExpr>,
 ) -> Option<Vec4Expr> {
     use crate::ast2::expressions::FloatExpr::*;
-    // See if we can pull out a Vec3Expr::Sum
+    // See if we can pull out a Vec4Expr::Sum
     let mut vec4_sum = vec![];
     let mut coalesce_sum_literal = [0.0, 0.0, 0.0, 0.0];
     float_sum_0.retain_mut(|it0| {
         let mut pulling_out_addend = false;
         float_sum_1.retain_mut(|it1| {
+            if pulling_out_addend {
+                return true
+            }
             float_sum_2.retain_mut(|it2| {
+                if pulling_out_addend {
+                    return true
+                }
                 float_sum_3.retain_mut(|it3| {
+                    if pulling_out_addend {
+                        return true
+                    }
                     pulling_out_addend = vec4_sum_extract(
                         &mut vec4_sum, &mut coalesce_sum_literal,
                         it0, it1, it2, it3

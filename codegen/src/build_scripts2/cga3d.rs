@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 use std::sync::Arc;
-
+use parking_lot::Mutex;
 use crate::{ga, multi_vecs, operators, register_all, variants};
 use crate::algebra2::basis::elements::e12345;
 use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
@@ -74,11 +74,18 @@ pub fn cga3d_script() {
     let fo = FileOrganizing::recommended_for_rust("cga3d_new");
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let file_path_2 = file_path.clone();
+    let err = Arc::new(Mutex::new(None));
+    let err2 = err.clone();
     rt.block_on(async move {
         if let Err(e) = fo.go_do_it(rust, file_path_2, repo, Arc::new(traits)).await {
-            eprintln!("Errors: {e:?}")
+            let mut me = err2.lock();
+            *me = Some(e);
         }
     });
+    let me = err.lock();
+    if let Some(e) = me.as_ref() {
+        panic!("Errors: {e:?}");
+    }
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
