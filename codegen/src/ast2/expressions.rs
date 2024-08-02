@@ -181,6 +181,7 @@ pub enum Vec2Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather2(FloatExpr, FloatExpr),
+    SwizzleVec2(Box<Vec2Expr>, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec2Expr>),
     Sum(Vec<Vec2Expr>),
@@ -190,7 +191,6 @@ pub enum Vec3Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather3(FloatExpr, FloatExpr, FloatExpr),
-    // TODO swizzle Vec2 and Vec4?
     SwizzleVec3(Box<Vec3Expr>, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec3Expr>),
@@ -201,6 +201,7 @@ pub enum Vec4Expr {
     Variable(RawVariableInvocation),
     Gather1(FloatExpr),
     Gather4(FloatExpr, FloatExpr, FloatExpr, FloatExpr),
+    SwizzleVec4(Box<Vec4Expr>, u8, u8, u8, u8),
     AccessMultiVecGroup(MultiVectorExpr, u16),
     Product(Vec<Vec4Expr>),
     Sum(Vec<Vec4Expr>),
@@ -2003,130 +2004,10 @@ impl Vec4Expr {
                         Product(ref mut float_product_2),
                         Product(ref mut float_product_3),
                     ) => {
-                        // See if we can pull out a Vec3Expr::Product
-                        let mut coalesce = [1.0, 1.0, 1.0, 1.0];
-                        float_product_0.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[0] *= *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_product_1.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[1] *= *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_product_2.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[2] *= *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_product_3.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[3] *= *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        let mut vec4_product = vec![];
-                        if coalesce != [1.0, 1.0, 1.0, 1.0] {
-                            if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] && coalesce[2] == coalesce[3] {
-                                vec4_product.push(Vec4Expr::Gather1(Literal(coalesce[0])));
-                            } else {
-                                vec4_product.push(Vec4Expr::Gather4(
-                                    Literal(coalesce[0]),
-                                    Literal(coalesce[1]),
-                                    Literal(coalesce[2]),
-                                    Literal(coalesce[3]),
-                                ));
-                            }
-                        }
-                        // Pull out Vec4Expr::Gather1
-                        float_product_0.retain(|it0| {
-                            let mut pulling_out_factor = false;
-                            float_product_1.retain(|it1| {
-                                if it0 != it1 { return true };
-                                float_product_2.retain(|it2| {
-                                    if it1 != it2 { return true }
-                                    float_product_3.retain(|it3| {
-                                        pulling_out_factor = it2 == it3;
-                                        !pulling_out_factor
-                                    });
-                                    !pulling_out_factor
-                                });
-                                !pulling_out_factor
-                            });
-                            if pulling_out_factor {
-                                vec4_product.push(Vec4Expr::Gather1(it0.clone()));
-                            }
-                            !pulling_out_factor
-                        });
-                        // Pull out Vec4Expr
-                        float_product_0.retain(|it0| {
-                            let AccessVec4(box v0, 0) = it0 else { return true };
-                            let mut pulling_out_factor = false;
-                            float_product_1.retain(|it1| {
-                                let AccessVec4(box v1, 1) = it1 else { return true };
-                                if v0 != v1 { return true }
-                                float_product_2.retain(|it2| {
-                                    let AccessVec4(box v2, 2) = it2 else { return true };
-                                    if v1 != v2 { return true }
-                                    float_product_3.retain(|it3| {
-                                        let AccessVec4(box v3, 2) = it3 else { return true };
-                                        pulling_out_factor = v2 == v3;
-                                        !pulling_out_factor
-                                    });
-                                    !pulling_out_factor
-                                });
-                                !pulling_out_factor
-                            });
-                            if pulling_out_factor {
-                                vec4_product.push(v0.clone());
-                            }
-                            !pulling_out_factor
-                        });
-                        if !vec4_product.is_empty() {
-                            let mut keep_remaining = false;
-                            let p0 = if float_product_0.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_0.clone())
-                            };
-                            let p1 = if float_product_1.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_1.clone())
-                            };
-                            let p2 = if float_product_2.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_2.clone())
-                            };
-                            let p3 = if float_product_3.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_3.clone())
-                            };
-                            if keep_remaining {
-                                vec4_product.push(Vec4Expr::Gather4(p0, p1, p2, p3));
-                            }
-                            *self = Vec4Expr::Product(vec4_product);
-                            // Since this was a non-trivial transposition of structures,
-                            // run simplification again on the result.
-                            self.simplify();
+                        if let Some(transposed) = transpose_vec4_product(
+                            float_product_0, float_product_1, float_product_2, float_product_3
+                        ) {
+                            *self = transposed;
                         }
                     }
                     (
@@ -2135,135 +2016,10 @@ impl Vec4Expr {
                         Sum(ref mut float_sum_2),
                         Sum(ref mut float_sum_3),
                     ) => {
-                        // See if we can pull out a Vec4Expr::Sum
-                        let mut coalesce = [0.0, 0.0, 0.0, 0.0];
-                        float_sum_0.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[0] += *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_sum_1.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[1] += *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_sum_2.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[2] += *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_sum_3.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[3] += *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        let mut vec4_sum = vec![];
-                        if coalesce != [0.0, 0.0, 0.0, 0.0] {
-                            if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] && coalesce[2] == coalesce[3] {
-                                vec4_sum.push(Vec4Expr::Gather1(Literal(coalesce[0])));
-                            } else {
-                                vec4_sum.push(Vec4Expr::Gather4(
-                                    Literal(coalesce[0]),
-                                    Literal(coalesce[1]),
-                                    Literal(coalesce[2]),
-                                    Literal(coalesce[3]),
-                                ));
-                            }
-                        }
-                        // Pull out Vec4Expr::Gather1
-                        float_sum_0.retain(|it0| {
-                            let mut pulling_out_addend = false;
-                            float_sum_1.retain(|it1| {
-                                if it0 != it1 { return true }
-                                float_sum_2.retain(|it2| {
-                                    if it1 != it2 { return true }
-                                    float_sum_3.retain(|it3| {
-                                        pulling_out_addend = it2 == it3;
-                                        !pulling_out_addend
-                                    });
-                                    !pulling_out_addend
-                                });
-                                !pulling_out_addend
-                            });
-                            if pulling_out_addend {
-                                vec4_sum.push(Vec4Expr::Gather1(it0.clone()));
-                            }
-                            !pulling_out_addend
-                        });
-                        // Pull out Vec4Expr
-                        float_sum_0.retain(|it0| {
-                            let AccessVec4(box v0, 0) = it0 else { return true };
-                            let mut pulling_out_addend = false;
-                            float_sum_1.retain(|it1| {
-                                let AccessVec4(box v1, 1) = it1 else { return true };
-                                if v0 != v1 { return true }
-                                float_sum_2.retain(|it2| {
-                                    let AccessVec4(box v2, 2) = it2 else { return true };
-                                    if v1 != v2 { return true }
-                                    float_sum_3.retain(|it3| {
-                                        let AccessVec4(box v3, 2) = it3 else { return true };
-                                        pulling_out_addend = v2 == v3;
-                                        !pulling_out_addend
-                                    });
-                                    !pulling_out_addend
-                                });
-                                !pulling_out_addend
-                            });
-                            if pulling_out_addend {
-                                vec4_sum.push(v0.clone());
-                            }
-                            !pulling_out_addend
-                        });
-                        // TODO sum of products
-
-
-
-
-                        if !vec4_sum.is_empty() {
-                            let mut keep_remaining = false;
-                            let p0 = if float_sum_0.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_0.clone())
-                            };
-                            let p1 = if float_sum_1.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_1.clone())
-                            };
-                            let p2 = if float_sum_2.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_2.clone())
-                            };
-                            let p3 = if float_sum_3.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_3.clone())
-                            };
-                            if keep_remaining {
-                                vec4_sum.push(Vec4Expr::Gather4(p0, p1, p2, p3));
-                            }
-                            *self = Vec4Expr::Sum(vec4_sum);
-                            // Since this was a non-trivial transposition of structures,
-                            // run simplification again on the result.
-                            self.simplify();
+                        if let Some(transposed) = transpose_vec4_sum(
+                            float_sum_0, float_sum_1, float_sum_2, float_sum_3
+                        ) {
+                            *self = transposed;
                         }
                     }
                     _ => {}
@@ -2436,6 +2192,9 @@ impl Vec4Expr {
                 if sum.len() == 1 {
                     *self = sum.remove(0);
                 }
+            }
+            Vec4Expr::SwizzleVec4(_, _, _, _, _) => {
+                // TODO
             }
         }
     }
@@ -3033,7 +2792,6 @@ fn transpose_vec3_product(
     Some(result)
 }
 
-
 fn vec3_product_extract(
     vec3_product: &mut Vec<Vec3Expr>,
     coalesce_product_literals: &mut [f32; 3],
@@ -3075,7 +2833,7 @@ fn vec3_product_extract(
         (
             AccessVec3(box v0, 0),
             AccessVec3(box v1, 1),
-            AccessVec3(box v2, 2)
+            AccessVec3(box v2, 2),
         ) if v0 == v1 && v1 == v2 => {
             vec3_product.push(v0.clone());
             true
@@ -3083,7 +2841,7 @@ fn vec3_product_extract(
         (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
-            AccessVec3(box v2, i2)
+            AccessVec3(box v2, i2),
         ) if v0 == v1 && v1 == v2 => {
             vec3_product.push(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2));
             true
@@ -3116,7 +2874,6 @@ fn vec3_product_extract(
     }
 }
 
-
 fn transpose_vec3_sum(
     float_sum_0: &mut Vec<FloatExpr>,
     float_sum_1: &mut Vec<FloatExpr>,
@@ -3130,7 +2887,6 @@ fn transpose_vec3_sum(
         let mut pulling_out_addend = false;
         float_sum_1.retain_mut(|it1| {
             float_sum_2.retain_mut(|it2| {
-                // TODO create vec4_product_extract, etc
                 pulling_out_addend = vec3_sum_extract(
                     &mut vec3_sum, &mut coalesce_sum_literal,
                     it0, it1, it2
@@ -3228,7 +2984,7 @@ fn vec3_sum_extract(
         (
             AccessVec3(box v0, 0),
             AccessVec3(box v1, 1),
-            AccessVec3(box v2, 2)
+            AccessVec3(box v2, 2),
         ) if v0 == v1 && v1 == v2 => {
             vec3_sum.push(v0.clone());
             true
@@ -3236,7 +2992,7 @@ fn vec3_sum_extract(
         (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
-            AccessVec3(box v2, i2)
+            AccessVec3(box v2, i2),
         ) if v0 == v1 && v1 == v2 => {
             vec3_sum.push(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2));
             true
@@ -3248,6 +3004,324 @@ fn vec3_sum_extract(
         ) => {
             let Some(transposed) = transpose_vec3_product(v0, v1, v2) else { return false };
             vec3_sum.push(transposed);
+            true
+        }
+        _ => false
+    }
+}
+
+
+
+fn transpose_vec4_product(
+    float_product_0: &mut Vec<FloatExpr>,
+    float_product_1: &mut Vec<FloatExpr>,
+    float_product_2: &mut Vec<FloatExpr>,
+    float_product_3: &mut Vec<FloatExpr>,
+) -> Option<Vec4Expr> {
+    use crate::ast2::expressions::FloatExpr::*;
+    // See if we can pull out a Vec3Expr::Product
+    let mut coalesce_product_literals = [1.0, 1.0, 1.0, 1.0];
+    let mut vec4_product = vec![];
+    float_product_0.retain_mut(|it0| {
+        let mut pulling_out_factor = false;
+        float_product_1.retain_mut(|it1| {
+            float_product_2.retain_mut(|it2| {
+                float_product_3.retain_mut(|it3| {
+                    pulling_out_factor = vec4_product_extract(
+                        &mut vec4_product, &mut coalesce_product_literals,
+                        it0, it1, it2, it3
+                    );
+                    !pulling_out_factor
+                });
+                !pulling_out_factor
+            });
+            !pulling_out_factor
+        });
+        !pulling_out_factor
+    });
+    if coalesce_product_literals != [1.0, 1.0, 1.0, 1.0] {
+        if coalesce_product_literals[0] == coalesce_product_literals[1]
+            && coalesce_product_literals[1] == coalesce_product_literals[2]
+            && coalesce_product_literals[2] == coalesce_product_literals[3] {
+            vec4_product.push(Vec4Expr::Gather1(Literal(coalesce_product_literals[0])));
+        } else {
+            vec4_product.push(Vec4Expr::Gather4(
+                Literal(coalesce_product_literals[0]),
+                Literal(coalesce_product_literals[1]),
+                Literal(coalesce_product_literals[2]),
+                Literal(coalesce_product_literals[3]),
+            ));
+        }
+    }
+    if vec4_product.is_empty() {
+        return None;
+    }
+    let mut keep_remaining = false;
+    let p0 = if float_product_0.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_0.clone())
+    };
+    let p1 = if float_product_1.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_1.clone())
+    };
+    let p2 = if float_product_2.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_2.clone())
+    };
+    let p3 = if float_product_3.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_3.clone())
+    };
+    if keep_remaining {
+        vec4_product.push(Vec4Expr::Gather4(p0, p1, p2, p3));
+    }
+    let mut result = Vec4Expr::Product(vec4_product);
+    // Since this was a non-trivial transposition of structures,
+    // run simplification again on the result.
+    result.simplify();
+    Some(result)
+}
+
+fn vec4_product_extract(
+    vec4_product: &mut Vec<Vec4Expr>,
+    coalesce_product_literals: &mut [f32; 4],
+    f0: &mut FloatExpr,
+    f1: &mut FloatExpr,
+    f2: &mut FloatExpr,
+    f3: &mut FloatExpr,
+) -> bool {
+    use crate::ast2::expressions::FloatExpr::*;
+    let mut pulled_out_literal = false;
+    if let Literal(f) = f0 {
+        if *f != 1.0 {
+            coalesce_product_literals[0] *= *f;
+            *f = 1.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f1 {
+        if *f != 1.0 {
+            coalesce_product_literals[1] *= *f;
+            *f = 1.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f2 {
+        if *f != 1.0 {
+            coalesce_product_literals[2] *= *f;
+            *f = 1.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f3 {
+        if *f != 1.0 {
+            coalesce_product_literals[3] *= *f;
+            *f = 1.0;
+            pulled_out_literal = true;
+        }
+    }
+    if pulled_out_literal {
+        return false
+    }
+    if f0 == f1 && f1 == f2 && f2 == f3 {
+        vec4_product.push(Vec4Expr::Gather1(f0.clone()));
+        return true
+    }
+    return match (f0, f1, f2, f3) {
+        (
+            AccessVec4(box v0, 0),
+            AccessVec4(box v1, 1),
+            AccessVec4(box v2, 2),
+            AccessVec4(box v3, 3),
+        ) if v0 == v1 && v1 == v2 && v2 == v3 => {
+            vec4_product.push(v0.clone());
+            true
+        }
+        (
+            AccessVec4(box v0, i0),
+            AccessVec4(box v1, i1),
+            AccessVec4(box v2, i2),
+            AccessVec4(box v3, i3),
+        ) if v0 == v1 && v1 == v2 && v2 == v3 => {
+            vec4_product.push(Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3));
+            true
+        }
+        (
+            Sum(v0),
+            Sum(v1),
+            Sum(v2),
+            Sum(v3),
+        ) => {
+            let Some(transposed) = transpose_vec4_sum(v0, v1, v2, v3) else { return false };
+            vec4_product.push(transposed);
+            true
+        }
+        _ => false
+    }
+}
+
+fn transpose_vec4_sum(
+    float_sum_0: &mut Vec<FloatExpr>,
+    float_sum_1: &mut Vec<FloatExpr>,
+    float_sum_2: &mut Vec<FloatExpr>,
+    float_sum_3: &mut Vec<FloatExpr>,
+) -> Option<Vec4Expr> {
+    use crate::ast2::expressions::FloatExpr::*;
+    // See if we can pull out a Vec3Expr::Sum
+    let mut vec4_sum = vec![];
+    let mut coalesce_sum_literal = [0.0, 0.0, 0.0, 0.0];
+    float_sum_0.retain_mut(|it0| {
+        let mut pulling_out_addend = false;
+        float_sum_1.retain_mut(|it1| {
+            float_sum_2.retain_mut(|it2| {
+                float_sum_3.retain_mut(|it3| {
+                    pulling_out_addend = vec4_sum_extract(
+                        &mut vec4_sum, &mut coalesce_sum_literal,
+                        it0, it1, it2, it3
+                    );
+                    !pulling_out_addend
+                });
+                !pulling_out_addend
+            });
+            !pulling_out_addend
+        });
+        !pulling_out_addend
+    });
+    if coalesce_sum_literal != [0.0, 0.0, 0.0, 0.0] {
+        if coalesce_sum_literal[0] == coalesce_sum_literal[1]
+            && coalesce_sum_literal[1] == coalesce_sum_literal[2]
+            && coalesce_sum_literal[2] == coalesce_sum_literal[3] {
+            vec4_sum.push(Vec4Expr::Gather1(Literal(coalesce_sum_literal[0])));
+        } else {
+            vec4_sum.push(Vec4Expr::Gather4(
+                Literal(coalesce_sum_literal[0]),
+                Literal(coalesce_sum_literal[1]),
+                Literal(coalesce_sum_literal[2]),
+                Literal(coalesce_sum_literal[3]),
+            ));
+        }
+    }
+
+    if vec4_sum.is_empty() {
+        return None;
+    }
+    let mut keep_remaining = false;
+    let p0 = if float_sum_0.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_0.clone())
+    };
+    let p1 = if float_sum_1.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_1.clone())
+    };
+    let p2 = if float_sum_2.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_2.clone())
+    };
+    let p3 = if float_sum_3.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_3.clone())
+    };
+    if keep_remaining {
+        vec4_sum.push(Vec4Expr::Gather4(p0, p1, p2, p3));
+    }
+    let mut result = Vec4Expr::Sum(vec4_sum);
+
+    // Since this was a non-trivial transposition of structures,
+    // run simplification again on the result.
+    result.simplify();
+    Some(result)
+}
+
+fn vec4_sum_extract(
+    vec4_sum: &mut Vec<Vec4Expr>,
+    coalesce_sum_literals: &mut [f32; 4],
+    f0: &mut FloatExpr,
+    f1: &mut FloatExpr,
+    f2: &mut FloatExpr,
+    f3: &mut FloatExpr,
+) -> bool {
+    use crate::ast2::expressions::FloatExpr::*;
+    let mut pulled_out_literal = false;
+    if let Literal(f) = f0 {
+        if *f != 0.0 {
+            coalesce_sum_literals[0] += *f;
+            *f = 0.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f1 {
+        if *f != 0.0 {
+            coalesce_sum_literals[1] += *f;
+            *f = 0.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f2 {
+        if *f != 0.0 {
+            coalesce_sum_literals[2] += *f;
+            *f = 0.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f3 {
+        if *f != 0.0 {
+            coalesce_sum_literals[3] += *f;
+            *f = 0.0;
+            pulled_out_literal = true;
+        }
+    }
+    if pulled_out_literal {
+        return false
+    }
+    if f0 == f1 && f1 == f2 && f2 == f3 {
+        vec4_sum.push(Vec4Expr::Gather1(f0.clone()));
+        return true
+    }
+    return match (f0, f1, f2, f3) {
+        (
+            AccessVec4(box v0, 0),
+            AccessVec4(box v1, 1),
+            AccessVec4(box v2, 2),
+            AccessVec4(box v3, 3),
+        ) if v0 == v1 && v1 == v2 && v2 == v3 => {
+            vec4_sum.push(v0.clone());
+            true
+        }
+        (
+            AccessVec4(box v0, i0),
+            AccessVec4(box v1, i1),
+            AccessVec4(box v2, i2),
+            AccessVec4(box v3, i3),
+        ) if v0 == v1 && v1 == v2 && v2 == v3 => {
+            vec4_sum.push(Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3));
+            true
+        }
+        (
+            Product(v0),
+            Product(v1),
+            Product(v2),
+            Product(v3),
+        ) => {
+            let Some(transposed) = transpose_vec4_product(v0, v1, v2, v3) else { return false };
+            vec4_sum.push(transposed);
             true
         }
         _ => false
