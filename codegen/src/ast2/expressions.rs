@@ -1449,167 +1449,20 @@ impl Vec2Expr {
                         Product(ref mut float_product_0),
                         Product(ref mut float_product_1),
                     ) => {
-                        // See if we can pull out a Vec3Expr::Product
-                        let mut coalesce = [1.0, 1.0];
-                        float_product_0.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[0] *= *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_product_1.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[1] *= *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        let mut vec2_product = vec![];
-                        if coalesce != [1.0, 1.0] {
-                            if coalesce[0] == coalesce[1] {
-                                vec2_product.push(Vec2Expr::Gather1(Literal(coalesce[0])));
-                            } else {
-                                vec2_product.push(Vec2Expr::Gather2(
-                                    Literal(coalesce[0]),
-                                    Literal(coalesce[1]),
-                                ));
-                            }
-                        }
-                        // Pull out Vec2Expr::Gather1
-                        float_product_0.retain(|it0| {
-                            let mut pulling_out_factor = false;
-                            float_product_1.retain(|it1| {
-                                pulling_out_factor = it0 == it1;
-                                !pulling_out_factor
-                            });
-                            if pulling_out_factor {
-                                vec2_product.push(Vec2Expr::Gather1(it0.clone()));
-                            }
-                            !pulling_out_factor
-                        });
-                        // Pull out Vec2Expr
-                        float_product_0.retain(|it0| {
-                            let AccessVec2(box v0, 0) = it0 else { return true };
-                            let mut pulling_out_factor = false;
-                            float_product_1.retain(|it1| {
-                                let AccessVec2(box v1, 1) = it1 else { return true };
-                                pulling_out_factor = v0 == v1;
-                                !pulling_out_factor
-                            });
-                            if pulling_out_factor {
-                                vec2_product.push(v0.clone());
-                            }
-                            !pulling_out_factor
-                        });
-                        if !vec2_product.is_empty() {
-                            let mut keep_remaining = false;
-                            let p0 = if float_product_0.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_0.clone())
-                            };
-                            let p1 = if float_product_1.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_1.clone())
-                            };
-                            if keep_remaining {
-                                vec2_product.push(Vec2Expr::Gather2(p0, p1));
-                            }
-                            *self = Vec2Expr::Product(vec2_product);
-                            // Since this was a non-trivial transposition of structures,
-                            // run simplification again on the result.
-                            self.simplify();
+                        if let Some(transposed) = transpose_vec2_product(
+                            float_product_0, float_product_1,
+                        ) {
+                            *self = transposed;
                         }
                     }
                     (
                         Sum(ref mut float_sum_0),
                         Sum(ref mut float_sum_1),
                     ) => {
-                        // See if we can pull out a Vec2Expr::Sum
-                        let mut coalesce = [0.0, 0.0, 0.0];
-                        float_sum_0.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[0] += *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        float_sum_1.retain(|it| {
-                            if let Literal(f) = it {
-                                coalesce[1] += *f;
-                                false
-                            } else {
-                                true
-                            }
-                        });
-                        let mut vec2_sum = vec![];
-                        if coalesce != [0.0, 0.0, 0.0] {
-                            if coalesce[0] == coalesce[1] {
-                                vec2_sum.push(Vec2Expr::Gather1(Literal(coalesce[0])));
-                            } else {
-                                vec2_sum.push(Vec2Expr::Gather2(
-                                    Literal(coalesce[0]),
-                                    Literal(coalesce[1]),
-                                ));
-                            }
-                        }
-                        // Pull out Vec3Expr::Gather1
-                        float_sum_0.retain(|it0| {
-                            let mut pulling_out_addend = false;
-                            float_sum_1.retain(|it1| {
-                                pulling_out_addend = it0 == it1;
-                                !pulling_out_addend
-                            });
-                            if pulling_out_addend {
-                                vec2_sum.push(Vec2Expr::Gather1(it0.clone()));
-                            }
-                            !pulling_out_addend
-                        });
-                        // Pull out Vec3Expr
-                        float_sum_0.retain(|it0| {
-                            let AccessVec2(box v0, 0) = it0 else { return true };
-                            let mut pulling_out_addend = false;
-                            float_sum_1.retain(|it1| {
-                                let AccessVec2(box v1, 1) = it1 else { return true };
-                                pulling_out_addend = v0 == v1;
-                                !pulling_out_addend
-                            });
-                            if pulling_out_addend {
-                                vec2_sum.push(v0.clone());
-                            }
-                            !pulling_out_addend
-                        });
-                        // TODO sum of products
-
-
-                        if !vec2_sum.is_empty() {
-                            let mut keep_remaining = false;
-                            let p0 = if float_sum_0.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_0.clone())
-                            };
-                            let p1 = if float_sum_1.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_1.clone())
-                            };
-                            if keep_remaining {
-                                vec2_sum.push(Vec2Expr::Gather2(p0, p1));
-                            }
-                            *self = Vec2Expr::Sum(vec2_sum);
-                            // Since this was a non-trivial transposition of structures,
-                            // run simplification again on the result.
-                            self.simplify();
+                        if let Some(transposed) = transpose_vec2_sum(
+                            float_sum_0, float_sum_1,
+                        ) {
+                            *self = transposed;
                         }
                     }
                     _ => {}
@@ -1752,6 +1605,9 @@ impl Vec2Expr {
                 if sum.len() == 1 {
                     *self = sum.remove(0);
                 }
+            }
+            Vec2Expr::SwizzleVec2(_, _, _) => {
+                // TODO
             }
         }
     }
@@ -2725,6 +2581,232 @@ impl TrackOperations for MultiVectorExpr {
 
 
 
+fn transpose_vec2_product(
+    float_product_0: &mut Vec<FloatExpr>,
+    float_product_1: &mut Vec<FloatExpr>,
+) -> Option<Vec2Expr> {
+    use crate::ast2::expressions::FloatExpr::*;
+    // See if we can pull out a Vec3Expr::Product
+    let mut coalesce_product_literals = [1.0, 1.0];
+    let mut vec2_product = vec![];
+    float_product_0.retain_mut(|it0| {
+        let mut pulling_out_factor = false;
+        float_product_1.retain_mut(|it1| {
+            pulling_out_factor = vec2_product_extract(
+                &mut vec2_product, &mut coalesce_product_literals,
+                it0, it1,
+            );
+            !pulling_out_factor
+        });
+        !pulling_out_factor
+    });
+    if coalesce_product_literals != [1.0, 1.0] {
+        if coalesce_product_literals[0] == coalesce_product_literals[1] {
+            vec2_product.push(Vec2Expr::Gather1(Literal(coalesce_product_literals[0])));
+        } else {
+            vec2_product.push(Vec2Expr::Gather2(
+                Literal(coalesce_product_literals[0]),
+                Literal(coalesce_product_literals[1]),
+            ));
+        }
+    }
+    if vec2_product.is_empty() {
+        return None;
+    }
+    let mut keep_remaining = false;
+    let p0 = if float_product_0.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_0.clone())
+    };
+    let p1 = if float_product_1.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_1.clone())
+    };
+    if keep_remaining {
+        vec2_product.push(Vec2Expr::Gather2(p0, p1));
+    }
+    let mut result = Vec2Expr::Product(vec2_product);
+    // Since this was a non-trivial transposition of structures,
+    // run simplification again on the result.
+    result.simplify();
+    Some(result)
+}
+
+fn vec2_product_extract(
+    vec2_product: &mut Vec<Vec2Expr>,
+    coalesce_product_literals: &mut [f32; 2],
+    f0: &mut FloatExpr,
+    f1: &mut FloatExpr,
+) -> bool {
+    use crate::ast2::expressions::FloatExpr::*;
+    let mut pulled_out_literal = false;
+    if let Literal(f) = f0 {
+        if *f != 1.0 {
+            coalesce_product_literals[0] *= *f;
+            *f = 1.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f1 {
+        if *f != 1.0 {
+            coalesce_product_literals[1] *= *f;
+            *f = 1.0;
+            pulled_out_literal = true;
+        }
+    }
+    if pulled_out_literal {
+        return false
+    }
+    if f0 == f1 {
+        vec2_product.push(Vec2Expr::Gather1(f0.clone()));
+        return true
+    }
+    return match (f0, f1) {
+        (
+            AccessVec2(box v0, 0),
+            AccessVec2(box v1, 1),
+        ) if v0 == v1 => {
+            vec2_product.push(v0.clone());
+            true
+        }
+        (
+            AccessVec2(box v0, i0),
+            AccessVec2(box v1, i1),
+        ) if v0 == v1 => {
+            vec2_product.push(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1));
+            true
+        }
+        (
+            Sum(v0),
+            Sum(v1),
+        ) => {
+            let Some(transposed) = transpose_vec2_sum(v0, v1) else { return false };
+            vec2_product.push(transposed);
+            true
+        }
+        _ => false
+    }
+}
+
+fn transpose_vec2_sum(
+    float_sum_0: &mut Vec<FloatExpr>,
+    float_sum_1: &mut Vec<FloatExpr>,
+) -> Option<Vec2Expr> {
+    use crate::ast2::expressions::FloatExpr::*;
+    // See if we can pull out a Vec3Expr::Sum
+    let mut vec2_sum = vec![];
+    let mut coalesce_sum_literal = [0.0, 0.0];
+    float_sum_0.retain_mut(|it0| {
+        let mut pulling_out_addend = false;
+        float_sum_1.retain_mut(|it1| {
+            pulling_out_addend = vec2_sum_extract(
+                &mut vec2_sum, &mut coalesce_sum_literal,
+                it0, it1
+            );
+            !pulling_out_addend
+        });
+        !pulling_out_addend
+    });
+    if coalesce_sum_literal != [0.0, 0.0] {
+        if coalesce_sum_literal[0] == coalesce_sum_literal[1] {
+            vec2_sum.push(Vec2Expr::Gather1(Literal(coalesce_sum_literal[0])));
+        } else {
+            vec2_sum.push(Vec2Expr::Gather2(
+                Literal(coalesce_sum_literal[0]),
+                Literal(coalesce_sum_literal[1]),
+            ));
+        }
+    }
+
+    if vec2_sum.is_empty() {
+        return None;
+    }
+    let mut keep_remaining = false;
+    let p0 = if float_sum_0.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_0.clone())
+    };
+    let p1 = if float_sum_1.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_1.clone())
+    };
+    if keep_remaining {
+        vec2_sum.push(Vec2Expr::Gather2(p0, p1));
+    }
+    let mut result = Vec2Expr::Sum(vec2_sum);
+
+    // Since this was a non-trivial transposition of structures,
+    // run simplification again on the result.
+    result.simplify();
+    Some(result)
+}
+
+fn vec2_sum_extract(
+    vec2_sum: &mut Vec<Vec2Expr>,
+    coalesce_sum_literals: &mut [f32; 2],
+    f0: &mut FloatExpr,
+    f1: &mut FloatExpr,
+) -> bool {
+    use crate::ast2::expressions::FloatExpr::*;
+    let mut pulled_out_literal = false;
+    if let Literal(f) = f0 {
+        if *f != 0.0 {
+            coalesce_sum_literals[0] += *f;
+            *f = 0.0;
+            pulled_out_literal = true;
+        }
+    }
+    if let Literal(f) = f1 {
+        if *f != 0.0 {
+            coalesce_sum_literals[1] += *f;
+            *f = 0.0;
+            pulled_out_literal = true;
+        }
+    }
+    if pulled_out_literal {
+        return false
+    }
+    if f0 == f1 {
+        vec2_sum.push(Vec2Expr::Gather1(f0.clone()));
+        return true
+    }
+    return match (f0, f1) {
+        (
+            AccessVec2(box v0, 0),
+            AccessVec2(box v1, 1),
+        ) if v0 == v1 => {
+            vec2_sum.push(v0.clone());
+            true
+        }
+        (
+            AccessVec2(box v0, i0),
+            AccessVec2(box v1, i1),
+        ) if v0 == v1 => {
+            vec2_sum.push(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1));
+            true
+        }
+        (
+            Product(v0),
+            Product(v1),
+        ) => {
+            let Some(transposed) = transpose_vec2_product(v0, v1) else { return false };
+            vec2_sum.push(transposed);
+            true
+        }
+        _ => false
+    }
+}
+
+
+
 fn transpose_vec3_product(
     float_product_0: &mut Vec<FloatExpr>,
     float_product_1: &mut Vec<FloatExpr>,
@@ -2738,7 +2820,7 @@ fn transpose_vec3_product(
         let mut pulling_out_factor = false;
         float_product_1.retain_mut(|it1| {
             float_product_2.retain_mut(|it2| {
-                pulling_out_factor = vec3_product_extract(
+                pulling_out_factor = crate::ast2::expressions::vec3_product_extract(
                     &mut vec3_product, &mut coalesce_product_literals,
                     it0, it1, it2,
                 );
@@ -2866,7 +2948,7 @@ fn vec3_product_extract(
             // mutated. If it returns something, then it serves as a total replacement, cloning
             // anything necessary. It performs its own "leftover" Gather3 on anything that doesn't
             // transpose, but the `transposed` variable itself will be a Vec3Expr::Sum.
-            let Some(transposed) = transpose_vec3_sum(v0, v1, v2) else { return false };
+            let Some(transposed) = crate::ast2::expressions::transpose_vec3_sum(v0, v1, v2) else { return false };
             vec3_product.push(transposed);
             true
         }
@@ -2887,7 +2969,7 @@ fn transpose_vec3_sum(
         let mut pulling_out_addend = false;
         float_sum_1.retain_mut(|it1| {
             float_sum_2.retain_mut(|it2| {
-                pulling_out_addend = vec3_sum_extract(
+                pulling_out_addend = crate::ast2::expressions::vec3_sum_extract(
                     &mut vec3_sum, &mut coalesce_sum_literal,
                     it0, it1, it2
                 );
@@ -3002,7 +3084,7 @@ fn vec3_sum_extract(
             Product(v1),
             Product(v2),
         ) => {
-            let Some(transposed) = transpose_vec3_product(v0, v1, v2) else { return false };
+            let Some(transposed) = crate::ast2::expressions::transpose_vec3_product(v0, v1, v2) else { return false };
             vec3_sum.push(transposed);
             true
         }
