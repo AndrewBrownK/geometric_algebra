@@ -1788,62 +1788,10 @@ impl Vec3Expr {
                         Product(ref mut float_product_1),
                         Product(ref mut float_product_2),
                     ) => {
-                        // See if we can pull out a Vec3Expr::Product
-                        let mut coalesce_product_literals = [1.0, 1.0, 1.0];
-                        let mut vec3_product = vec![];
-                        float_product_0.retain_mut(|it0| {
-                            let mut pulling_out_factor = false;
-                            float_product_1.retain_mut(|it1| {
-                                float_product_2.retain_mut(|it2| {
-                                    pulling_out_factor = vec3_product_extract(
-                                        &mut vec3_product, &mut coalesce_product_literals,
-                                        it0, it1, it2,
-                                    );
-                                    !pulling_out_factor
-                                });
-                                !pulling_out_factor
-                            });
-                            !pulling_out_factor
-                        });
-                        if coalesce_product_literals != [1.0, 1.0, 1.0] {
-                            if coalesce_product_literals[0] == coalesce_product_literals[1]
-                                && coalesce_product_literals[1] == coalesce_product_literals[2] {
-                                vec3_product.push(Vec3Expr::Gather1(Literal(coalesce_product_literals[0])));
-                            } else {
-                                vec3_product.push(Vec3Expr::Gather3(
-                                    Literal(coalesce_product_literals[0]),
-                                    Literal(coalesce_product_literals[1]),
-                                    Literal(coalesce_product_literals[2]),
-                                ));
-                            }
-                        }
-                        if !vec3_product.is_empty() {
-                            let mut keep_remaining = false;
-                            let p0 = if float_product_0.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_0.clone())
-                            };
-                            let p1 = if float_product_1.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_1.clone())
-                            };
-                            let p2 = if float_product_2.is_empty() {
-                                Literal(1.0)
-                            } else {
-                                keep_remaining = true;
-                                Product(float_product_2.clone())
-                            };
-                            if keep_remaining {
-                                vec3_product.push(Vec3Expr::Gather3(p0, p1, p2));
-                            }
-                            *self = Vec3Expr::Product(vec3_product);
-                            // Since this was a non-trivial transposition of structures,
-                            // run simplification again on the result.
-                            self.simplify();
+                        if let Some(transposed) = transpose_vec3_product(
+                            float_product_0, float_product_1, float_product_2
+                        ) {
+                            *self = transposed;
                         }
                     }
                     (
@@ -1851,64 +1799,10 @@ impl Vec3Expr {
                         Sum(ref mut float_sum_1),
                         Sum(ref mut float_sum_2),
                     ) => {
-                        // See if we can pull out a Vec3Expr::Sum
-                        let mut vec3_sum = vec![];
-                        let mut coalesce_sum_literal = [0.0, 0.0, 0.0];
-                        float_sum_0.retain_mut(|it0| {
-                            let mut pulling_out_addend = false;
-                            float_sum_1.retain_mut(|it1| {
-                                float_sum_2.retain_mut(|it2| {
-                                    // TODO create vec3_product_extract, etc
-                                    pulling_out_addend = vec3_sum_extract(
-                                        &mut vec3_sum, &mut coalesce_sum_literal,
-                                        it0, it1, it2
-                                    );
-                                    !pulling_out_addend
-                                });
-                                !pulling_out_addend
-                            });
-                            !pulling_out_addend
-                        });
-                        if coalesce_sum_literal != [0.0, 0.0, 0.0] {
-                            if coalesce_sum_literal[0] == coalesce_sum_literal[1]
-                                && coalesce_sum_literal[1] == coalesce_sum_literal[2] {
-                                vec3_sum.push(Vec3Expr::Gather1(Literal(coalesce_sum_literal[0])));
-                            } else {
-                                vec3_sum.push(Vec3Expr::Gather3(
-                                    Literal(coalesce_sum_literal[0]),
-                                    Literal(coalesce_sum_literal[1]),
-                                    Literal(coalesce_sum_literal[2]),
-                                ));
-                            }
-                        }
-
-                        if !vec3_sum.is_empty() {
-                            let mut keep_remaining = false;
-                            let p0 = if float_sum_0.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_0.clone())
-                            };
-                            let p1 = if float_sum_1.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_1.clone())
-                            };
-                            let p2 = if float_sum_2.is_empty() {
-                                Literal(0.0)
-                            } else {
-                                keep_remaining = true;
-                                Sum(float_sum_2.clone())
-                            };
-                            if keep_remaining {
-                                vec3_sum.push(Vec3Expr::Gather3(p0, p1, p2));
-                            }
-                            *self = Vec3Expr::Sum(vec3_sum);
-                            // Since this was a non-trivial transposition of structures,
-                            // run simplification again on the result.
-                            self.simplify();
+                        if let Some(transposed) = transpose_vec3_sum(
+                            float_sum_0, float_sum_1, float_sum_2
+                        ) {
+                            *self = transposed;
                         }
                     }
                     _ => {}
@@ -2066,6 +1960,9 @@ impl Vec3Expr {
                 if sum.len() == 1 {
                     *self = sum.remove(0);
                 }
+            }
+            Vec3Expr::SwizzleVec3(_, _, _, _) => {
+                // TODO
             }
         }
     }
@@ -3069,6 +2966,73 @@ impl TrackOperations for MultiVectorExpr {
 
 
 
+fn transpose_vec3_product(
+    float_product_0: &mut Vec<FloatExpr>,
+    float_product_1: &mut Vec<FloatExpr>,
+    float_product_2: &mut Vec<FloatExpr>,
+) -> Option<Vec3Expr> {
+    use crate::ast2::expressions::FloatExpr::*;
+    // See if we can pull out a Vec3Expr::Product
+    let mut coalesce_product_literals = [1.0, 1.0, 1.0];
+    let mut vec3_product = vec![];
+    float_product_0.retain_mut(|it0| {
+        let mut pulling_out_factor = false;
+        float_product_1.retain_mut(|it1| {
+            float_product_2.retain_mut(|it2| {
+                pulling_out_factor = vec3_product_extract(
+                    &mut vec3_product, &mut coalesce_product_literals,
+                    it0, it1, it2,
+                );
+                !pulling_out_factor
+            });
+            !pulling_out_factor
+        });
+        !pulling_out_factor
+    });
+    if coalesce_product_literals != [1.0, 1.0, 1.0] {
+        if coalesce_product_literals[0] == coalesce_product_literals[1]
+            && coalesce_product_literals[1] == coalesce_product_literals[2] {
+            vec3_product.push(Vec3Expr::Gather1(Literal(coalesce_product_literals[0])));
+        } else {
+            vec3_product.push(Vec3Expr::Gather3(
+                Literal(coalesce_product_literals[0]),
+                Literal(coalesce_product_literals[1]),
+                Literal(coalesce_product_literals[2]),
+            ));
+        }
+    }
+    if vec3_product.is_empty() {
+        return None;
+    }
+    let mut keep_remaining = false;
+    let p0 = if float_product_0.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_0.clone())
+    };
+    let p1 = if float_product_1.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_1.clone())
+    };
+    let p2 = if float_product_2.is_empty() {
+        Literal(1.0)
+    } else {
+        keep_remaining = true;
+        Product(float_product_2.clone())
+    };
+    if keep_remaining {
+        vec3_product.push(Vec3Expr::Gather3(p0, p1, p2));
+    }
+    let mut result = Vec3Expr::Product(vec3_product);
+    // Since this was a non-trivial transposition of structures,
+    // run simplification again on the result.
+    result.simplify();
+    Some(result)
+}
+
 
 fn vec3_product_extract(
     vec3_product: &mut Vec<Vec3Expr>,
@@ -3129,18 +3093,100 @@ fn vec3_product_extract(
             Sum(v1),
             Sum(v2),
         ) => {
-            // TODO?
-            false
+            // Is this actually a correct/desired transposition that doesn't
+            //  change the meaning of the math? It's hard to keep track of.
+            // ...after examining, but not testing yet...
+            // I'm fairly confident it is right.
+            // It basically transforms...
+            // Gather3( (a + b)(c + d), (e + f)(g + h), (i + j)(k + l) )
+            // where a-l are FloatExpr, into...
+            // ( [aei] + [bfj] )( [cgk] + [dhl] )
+            // where each [xyz] is a Vec3Expr.
+            //
+            // Tracking the transposition can get confusing, but at no point are order of operations
+            // mixed up. If transpose_vec3_sum returns nothing, then none of its arguments are
+            // mutated. If it returns something, then it serves as a total replacement, cloning
+            // anything necessary. It performs its own "leftover" Gather3 on anything that doesn't
+            // transpose, but the `transposed` variable itself will be a Vec3Expr::Sum.
+            let Some(transposed) = transpose_vec3_sum(v0, v1, v2) else { return false };
+            vec3_product.push(transposed);
+            true
         }
-
         _ => false
     }
 }
 
 
+fn transpose_vec3_sum(
+    float_sum_0: &mut Vec<FloatExpr>,
+    float_sum_1: &mut Vec<FloatExpr>,
+    float_sum_2: &mut Vec<FloatExpr>,
+) -> Option<Vec3Expr> {
+    use crate::ast2::expressions::FloatExpr::*;
+    // See if we can pull out a Vec3Expr::Sum
+    let mut vec3_sum = vec![];
+    let mut coalesce_sum_literal = [0.0, 0.0, 0.0];
+    float_sum_0.retain_mut(|it0| {
+        let mut pulling_out_addend = false;
+        float_sum_1.retain_mut(|it1| {
+            float_sum_2.retain_mut(|it2| {
+                // TODO create vec4_product_extract, etc
+                pulling_out_addend = vec3_sum_extract(
+                    &mut vec3_sum, &mut coalesce_sum_literal,
+                    it0, it1, it2
+                );
+                !pulling_out_addend
+            });
+            !pulling_out_addend
+        });
+        !pulling_out_addend
+    });
+    if coalesce_sum_literal != [0.0, 0.0, 0.0] {
+        if coalesce_sum_literal[0] == coalesce_sum_literal[1]
+            && coalesce_sum_literal[1] == coalesce_sum_literal[2] {
+            vec3_sum.push(Vec3Expr::Gather1(Literal(coalesce_sum_literal[0])));
+        } else {
+            vec3_sum.push(Vec3Expr::Gather3(
+                Literal(coalesce_sum_literal[0]),
+                Literal(coalesce_sum_literal[1]),
+                Literal(coalesce_sum_literal[2]),
+            ));
+        }
+    }
 
-// TODO I think this might actually be an all-in-one implementation of the
-//  nested retain refactorizations
+    if vec3_sum.is_empty() {
+        return None;
+    }
+    let mut keep_remaining = false;
+    let p0 = if float_sum_0.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_0.clone())
+    };
+    let p1 = if float_sum_1.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_1.clone())
+    };
+    let p2 = if float_sum_2.is_empty() {
+        Literal(0.0)
+    } else {
+        keep_remaining = true;
+        Sum(float_sum_2.clone())
+    };
+    if keep_remaining {
+        vec3_sum.push(Vec3Expr::Gather3(p0, p1, p2));
+    }
+    let mut result = Vec3Expr::Sum(vec3_sum);
+
+    // Since this was a non-trivial transposition of structures,
+    // run simplification again on the result.
+    result.simplify();
+    Some(result)
+}
+
 fn vec3_sum_extract(
     vec3_sum: &mut Vec<Vec3Expr>,
     coalesce_sum_literals: &mut [f32; 3],
@@ -3200,10 +3246,9 @@ fn vec3_sum_extract(
             Product(v1),
             Product(v2),
         ) => {
-            let mut coalesce_product_literals = [1.0, 1.0, 1.0];
-
-
-            false
+            let Some(transposed) = transpose_vec3_product(v0, v1, v2) else { return false };
+            vec3_sum.push(transposed);
+            true
         }
         _ => false
     }
