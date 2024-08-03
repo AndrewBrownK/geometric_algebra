@@ -98,14 +98,18 @@ macro_rules! swizzle {
     ($self:expr, $x:literal, $y:literal, $z:literal, $w:literal) => {
         $crate::match_architecture!(
             Simd32x4,
+            // x86
             { f128: $crate::simd::_mm_permute_ps($self.f128, ($x as i32) | (($y as i32) << 2) | (($z as i32) << 4) | (($w as i32) << 6)) },
+            // arm
             { f32x4: [
                 $self.f32x4[$x],
                 $self.f32x4[$y],
                 $self.f32x4[$z],
                 $self.f32x4[$w],
             ] },
+            // web
             { v128: $crate::simd::i32x4_shuffle::<$x, $y, $z, $w>($self.v128, $self.v128) },
+            // fallback
             { f32x4: [
                 $self.f32x4[$x],
                 $self.f32x4[$y],
@@ -117,7 +121,9 @@ macro_rules! swizzle {
     ($self:expr, $x:literal, $y:literal, $z:literal) => {
         $crate::match_architecture!(
             Simd32x3,
+            // native
             { v32x4: $crate::swizzle!($self.v32x4, $x, $y, $z, 0) },
+            // fallback
             { f32x3: [
                 $self.f32x3[$x],
                 $self.f32x3[$y],
@@ -128,7 +134,9 @@ macro_rules! swizzle {
     ($self:expr, $x:literal, $y:literal) => {
         $crate::match_architecture!(
             Simd32x2,
+            // native
             { v32x4: $crate::swizzle!($self.v32x4, $x, $y, 0, 0) },
+            // fallback
             { f32x2: [
                 $self.f32x2[$x],
                 $self.f32x2[$y],

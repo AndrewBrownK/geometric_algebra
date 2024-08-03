@@ -248,9 +248,9 @@ impl Rust {
                 }
             }
             Vec2Expr::SwizzleVec2(box v, i0, i1) => {
-                // TODO
-                write!(w, "/* TODO swizzle {i0} {i1} */")?;
+                write!(w, "swizzle!(")?;
                 self.write_vec2(w, v)?;
+                write!(w, ", {i0}, {i1})")?;
             }
         }
         Ok(())
@@ -325,9 +325,9 @@ impl Rust {
                 }
             }
             Vec3Expr::SwizzleVec3(box v, i0, i1, i2) => {
-                // TODO
-                write!(w, "/* TODO swizzle {i0} {i1} {i2} */")?;
+                write!(w, "swizzle!(")?;
                 self.write_vec3(w, v)?;
+                write!(w, ", {i0}, {i1}, {i2})")?;
             }
         }
         Ok(())
@@ -408,9 +408,9 @@ impl Rust {
                 }
             }
             Vec4Expr::SwizzleVec4(box v, i0, i1, i2, i3) => {
-                // TODO
-                write!(w, "/* TODO swizzle {i0} {i1} {i2} {i3} */")?;
+                write!(w, "swizzle!(")?;
                 self.write_vec4(w, v)?;
+                write!(w, ", {i0}, {i1}, {i2}, {i3})")?;
             }
         }
         Ok(())
@@ -814,10 +814,14 @@ impl AstEmitter for Rust {
             writeln!(w, ";")?;
         }
         write!(w, "    fn {lsc}(")?;
-        match def.arity {
-            TraitArity::Zero => {}
-            TraitArity::One => write!(w, "self")?,
-            TraitArity::Two => write!(w, "self, other: T")?,
+        match (def.arity, var_param) {
+            (TraitArity::Zero, _) => {}
+            (TraitArity::One, _) => write!(w, "self")?,
+            (TraitArity::Two, Some(other_ty)) => {
+                write!(w, "self, other: ")?;
+                self.write_type(w, *other_ty)?;
+            }
+            _ => panic!("Arity 2 should always have other type")
         }
         write!(w, ") -> ")?;
         match output_kind.deref() {
