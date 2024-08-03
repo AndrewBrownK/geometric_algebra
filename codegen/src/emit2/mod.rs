@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use anyhow::bail;
+use parking_lot::Mutex;
 use tokio::task::JoinSet;
 
 use crate::algebra2::basis::BasisElement;
@@ -87,6 +88,18 @@ impl FileOrganizing {
         }
     }
 
+    pub fn block_on_go_do_it<P: AsRef<Path> + AsRef<OsStr>, E: AstEmitter, const AntiScalar: BasisElement>(
+        self,
+        e: E,
+        root: P,
+        multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
+        impls: Arc<TraitImplRegistry>,
+    ) -> anyhow::Result<()> {
+        let rt = tokio::runtime::Runtime::new().expect("tokio works");
+        rt.block_on(async move {
+            self.go_do_it(e, root, multi_vecs, impls).await
+        })
+    }
     pub async fn go_do_it<P: AsRef<Path> + AsRef<OsStr>, E: AstEmitter, const AntiScalar: BasisElement>(
         self,
         e: E,

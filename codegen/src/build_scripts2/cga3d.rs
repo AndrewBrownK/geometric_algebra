@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 use std::sync::Arc;
-use parking_lot::Mutex;
+
 use crate::{ga, multi_vecs, operators, register_all, variants};
 use crate::algebra2::basis::elements::e12345;
 use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
@@ -68,22 +68,10 @@ pub fn cga3d_script() {
         Not => Dual;
     }
 
-    // TODO output files
-    let mut file_path = PathBuf::from("../cga3d_new/src/");
+    let file_path = PathBuf::from("../cga3d_new/src/");
     let rust = Rust { prefer_fancy_infix: false };
     let fo = FileOrganizing::recommended_for_rust("cga3d_new");
-    let rt = tokio::runtime::Runtime::new().expect("tokio works");
-    let file_path_2 = file_path.clone();
-    let err = Arc::new(Mutex::new(None));
-    let err2 = err.clone();
-    rt.block_on(async move {
-        if let Err(e) = fo.go_do_it(rust, file_path_2, repo, Arc::new(traits)).await {
-            let mut me = err2.lock();
-            *me = Some(e);
-        }
-    });
-    let me = err.lock();
-    if let Some(e) = me.as_ref() {
+    if let Err(e) = fo.block_on_go_do_it(rust, file_path, repo, Arc::new(traits)) {
         panic!("Errors: {e:?}");
     }
 }
