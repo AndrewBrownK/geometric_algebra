@@ -8,7 +8,6 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use anyhow::bail;
-use parking_lot::Mutex;
 use tokio::task::JoinSet;
 
 use crate::algebra2::basis::BasisElement;
@@ -50,6 +49,54 @@ pub enum TraitImplsBelong {
     WithTraitDef,
     WithOwnerType,
 }
+
+
+
+// New Idea...
+//  Since it could be nice to organize data types by multiple different patterns
+//  (grade, k-reflection, base, meet, join), I want to make extensive use of re-exports (pub use).
+//  Then instead of forcing the user to choose which organization pattern is the true owner of the
+//  type, we can publish the types in all relevant patterns. But then how to choose which one it is
+//  written in? Well maybe we just put it all into a centralized `data.rs` file. Then to prevent
+//  the need for arbitrary categorization in submodules of the raw `data` module, we can just put
+//  them there flat, but use includes so that we can still write them as separate files. Well...
+//  We COULD still make one module per datatype, idk. Just depends on how truly bloated these files
+//  can actually get. If it were just the structs/unions and a few methods without any traits,
+//  it could be pretty clean. I think it is mainly the From/Into implementations that scale out
+//  drastically and would be obnoxious to compile into the same file. In any case.... the file
+//  organization and module organization can be more or less totally independent this way. And
+//  we can still do includes of includes of includes, as much as makes sense.
+//
+//  So... that's a decent idea and all... for the matter of using multiple organization patterns.
+//  but is it ACTUALLY something that would be useful? If someone wants to import a data type,
+//  are they ACTUALLY going to want to import it from multiple different routes? Probably not,
+//  to be honest... they'll just want the one true import for that type, and leave it alone.
+//  Of course there is the original and valid concern about large files... but includes solve that
+//  problem totally independently of module structure. Another thing to consider is, by the time
+//  you've categorized stuff by grade, meet, join, and k-reflection, it gets tempting to categorize
+//  based on other trait outputs too. Like maybe bulk or weight objects. Then we're just running
+//  away with it. So maybe it's better to leave the categorizations and stuff to the realm of
+//  trait outputs and not screw around with module organization to begin with.
+//
+//  Well... I guess I can imagine one use for the modules. Imagine you are browsing and attempting
+//  to learn the library, then how are you going to parse 50+ datatypes in a flat module without
+//  any organization at all? It's pretty overwhelming, and especially unclear when it comes to the
+//  similarity of an AntiCircle and a Dipole for example. But if they do look into the `data.rs`
+//  file, then what do they find? Just 50 includes? It's simultaneously too much information, and
+//  not any information at all. What if above the 50 includes were all the module patterns that
+//  helped clue in any browsers/learners how different stuff is classified? Then if you can't choose
+//  which one you prefer to import, then so what. At the end of the day, people do re-exports,
+//  sometimes they allow multiple public paths, and its not the end of the world. Most people use
+//  their IDE to automatically manage the imports anyway. If they accidentally bring in X from
+//  data, and Y from data::grade_mixed, then who cares?
+
+// TODO I think what else I need to realize is... there's no point abstracting file organization.
+//  It is impractical to make a FileOrganizing abstraction independent of code emitters, because
+//  pretty much every code emitter will have its own opinions about how to organize the code.
+//  So instead I should just make a DependencyOrganizer, that can make sure trait implementations
+//  are ordered correctly and stuff like that, so that in things like shader files, stuff is declared
+//  in order. But beyond that? Imports, includes, modules, files... that should be per language/emitter.
+
 #[derive(Clone)]
 pub struct FileOrganizing {
     pub algebra_name: &'static str,
