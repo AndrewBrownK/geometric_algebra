@@ -72,6 +72,9 @@ impl Rust {
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
 
+        // TODO create a text file of all created files, so they can be safely deleted in subsequent rounds
+        //  and we don't leave junk files around if for example we give a generated variant a tailored name
+
         let src_folder = src_folder.as_ref().to_path_buf();
         let folder_data = src_folder.join(Path::new("data"));
         let folder_data_impls = src_folder.join(Path::new("data/impls"));
@@ -81,9 +84,13 @@ impl Rust {
         fs::create_dir_all(&folder_data_impls)?;
         fs::create_dir_all(&folder_traits_impls)?;
 
-        let defs = impls.get_defs().await;
+        let mut defs = impls.get_defs().await;
+        defs.sort_by(|a, b| a.names.trait_key.cmp(&b.names.trait_key));
+        let defs = defs;
         let impls = impls.get_impls().await;
-        let mvs = multi_vecs.declarations();
+        let mut mvs = multi_vecs.declarations();
+        mvs.sort_by(|a, b| a.name.cmp(&b.name));
+        let mvs = mvs;
         let mv_docs = multi_vecs.documentation();
 
 

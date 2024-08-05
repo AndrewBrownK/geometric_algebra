@@ -88,7 +88,7 @@ pub fn cga3d_script() {
 fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMultiVecs<e12345> {
     declarations.append_documentation(&Origin, "\
     The Origin is the RoundPoint where x, y, z, and radius are all zero.
-    It is the generator element e4.
+    It is the base element e4.
     Not to be confused with FlatOrigin, which is a Dipole connecting Origin and Infinity.
     ");
     // TODO more documentation
@@ -136,8 +136,9 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
         "This variant of {super} is the Dual to {type}. It is common for
         objects of this type to not intersect the null cone, which also prevents them from
         projecting onto the horosphere in the usual manner. When this happens, this
-        object has behavioral and operative similarity to {super}, but
-        spacial presence in the shape of a {type}."
+        object has behavioral and operative similarity to a {super},
+        but an imaginary radius, and a spacial presence in the shape of a
+        {type} with a real radius."
     ));
     declarations.finished()
 }
