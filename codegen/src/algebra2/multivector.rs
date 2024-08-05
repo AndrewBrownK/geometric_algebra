@@ -596,6 +596,7 @@ pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     anti_scalar_sig: BasisSignature,
     declared: Vec<(Grades, BTreeSet<BasisSignature>, &'static MultiVec<AntiScalar>)>,
     unique_names: BTreeSet<&'static str>,
+    documentation: BTreeMap<&'static str, Arc<Mutex<String>>>,
 }
 
 impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
@@ -641,6 +642,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             anti_scalar_sig: AntiScalar.signature(),
             declared,
             unique_names,
+            documentation: Default::default(),
         };
         slf.sort_declarations();
         slf
@@ -665,6 +667,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             anti_scalar_sig: anti_scalar.signature(),
             declared: vec![],
             unique_names: BTreeSet::new(),
+            documentation: Default::default(),
         }
     }
 
@@ -681,27 +684,11 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         &mut self, prefix: S1, suffix: S2,
         filter_vecs_in: F1, filter_elements: F2, filter_vecs_out: F3
     ) {
-        self.variants2(
-            prefix, suffix,
-            |_, s| filter_vecs_in.filter_sig_set(s),
-            |s| filter_elements.filter_sig(s),
-            |_, s| filter_vecs_out.filter_sig_set(s),
-        );
-    }
-
-    pub fn variants2<
-        S1: Into<String>, S2: Into<String>,
-        F1: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool,
-        F2: Fn(BasisSignature) -> bool,
-        F3: Fn(&Grades, &BTreeSet<BasisSignature>) -> bool,
-    >(
-        &mut self, prefix: S1, suffix: S2, filter_multi_vecs: F1, filter_elements: F2, filter_out: F3
-    ) {
         let mut add_these = vec![];
         let prefix = prefix.into();
         let suffix = suffix.into();
         for (gr, sigs, mv) in self.declared.iter() {
-            if !filter_multi_vecs(gr, sigs) {
+            if !filter_vecs_in.filter_sig_set(sigs) {
                 continue;
             }
             let old_name = mv.name;
@@ -713,7 +700,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             for mvg in mv.element_groups.clone().into_iter() {
                 let mut cv = ConstVec::new();
                 for el in mvg.into_vec() {
-                    if filter_elements(el.signature()) {
+                    if filter_elements.filter_sig(el.signature())  {
                         new_grades |= el.grades();
                         new_sigs.insert(el.signature());
                         cv.push(el);
@@ -725,7 +712,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                     new_groups.push(BasisElementGroup::from_vec(cv));
                 }
             }
-            if !did_filter_out_some || new_sigs.is_empty() || !filter_out(&new_grades, &new_sigs) {
+            if !did_filter_out_some || new_sigs.is_empty() || !filter_vecs_out.filter_sig_set(&new_sigs) {
                 continue;
             }
             add_these.push((new_grades, new_sigs, new_name, new_groups));

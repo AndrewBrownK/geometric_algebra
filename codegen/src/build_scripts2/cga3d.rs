@@ -96,6 +96,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     let tangent_null_cone = origin.any_match() ^ infinity.any_match();
     let intersects_null_cone = origin.any_match() & infinity.any_match();
 
+    // TODO multivec documentations
     variants! { declarations;
         Null{type}AtOrigin => (origin & !infinity)  where is_not_flat => tangent_null_cone;
         {type}OnOrigin => (origin)                  where all => intersects_null_cone;
