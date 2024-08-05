@@ -7,6 +7,7 @@ fn main() {
     generate_multi_bases();
 }
 
+// TODO 65k constants is NOTHING compared to what we're generating here, don't worry about it.
 
 /// Code-gen for code-gen for code-gen.... kind of absurd
 /// Speaking of absurd

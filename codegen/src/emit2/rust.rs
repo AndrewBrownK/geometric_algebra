@@ -27,50 +27,109 @@ pub struct Rust {
 
 
 
-/*
-Copilot Advice:
-
-Using the include! macro to pull in multiple large files into a single unifying file can impact
-compile times, but it won't be due to the effort of concatenation. The include! macro essentially
-inserts the content of the included files directly into the source file at the point of the macro
-call, so the compiler treats it as if the code were written directly in the file
-https://doc.rust-lang.org/std/macro.include.html.
-
-However, the overall compile time can be affected by the size and complexity of the generated
-code. When you include many large files, the compiler has to process a significant amount of
-code in a single compilation unit, which can slow down the compilation process. On the other hand,
-using separate modules can help distribute the compilation workload, potentially allowing for
-better parallelism and incremental compilation benefits
-https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
-
-In summary, while the include! macro itself doesn't add significant overhead, the way you
-structure your code can impact compile times. If you find that compile times are becoming an
-issue, you might want to consider organizing your code into separate modules to take advantage
-of Rust's incremental compilation and parallel processing capabilities
-https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
-*/
-
-/*
-So because of the above advice, we will give each MultiVec its own module after all.
-
-It just gets a little tedious to fully qualify my_trait_name::MyTraitName and my_vector::MyVector,
-so we will re-export in a more convenient module.
- */
-
 
 impl Rust {
+    pub async fn write_crate<P: AsRef<Path>>(
+        crate_folder: P,
+        algebra_name: &str,
+        version: semver::Version,
+        description: &str,
+        repository: &str,
+        authors: &[&str],
+    ) -> anyhow::Result<()> {
+        let crate_folder = crate_folder.as_ref().to_path_buf();
+        fs::create_dir_all(&crate_folder)?;
+        let file_path = crate_folder.join(Path::new("Cargo.toml"));
+        let mut file = fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .truncate(true)
+            .open(&file_path)?;
+        let major = version.major;
+        let minor = version.minor;
+        let patch = version.patch;
+        let mut pre = version.pre.as_str().to_string();
+        if !pre.is_empty() {
+            pre = format!("-{pre}");
+        }
+        // TODO look forward to rust edition 2024
+        //  https://doc.rust-lang.org/edition-guide/rust-2024/index.html
 
-    pub async fn write_crate<P: AsRef<Path>>(crate_folder: P) -> anyhow::Result<()> {
-        //
+        // TODO see if we can upgrade dependency versions or not (naga was sensitive, last I remember)
+
+        let mut additional_authors = String::new();
+        for a in authors {
+            additional_authors.push_str(", \"");
+            additional_authors.push_str(a);
+            additional_authors.push('"');
+        }
+
+        write!(&mut file, r#"
+[package]
+name = "{algebra_name}"
+version = "{major}.{minor}.{patch}{pre}"
+authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>", "Alexander Meißner <AlexanderMeissner@gmx.net>"{additional_authors}]
+description = "{description}"
+repository = "{repository}"
+keywords = ["math", "simd", "vector", "geometric-algebra", "geometry"]
+license = "MIT"
+edition = "2021"
+
+[features]
+default = []
+wgsl = []
+glsl = []
+postgres = []
+
+[dependencies]
+naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
+naga = "0.19.2"
+anyhow = "1.0.86"
+bytemuck = "1.16.0"
+"#)?;
+
         Ok(())
     }
+
     pub async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
         self,
         src_folder: P,
-        algebra_name: &str,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
+
+
+        /*
+        Copilot Advice:
+
+        Using the include! macro to pull in multiple large files into a single unifying file can impact
+        compile times, but it won't be due to the effort of concatenation. The include! macro essentially
+        inserts the content of the included files directly into the source file at the point of the macro
+        call, so the compiler treats it as if the code were written directly in the file
+        https://doc.rust-lang.org/std/macro.include.html.
+
+        However, the overall compile time can be affected by the size and complexity of the generated
+        code. When you include many large files, the compiler has to process a significant amount of
+        code in a single compilation unit, which can slow down the compilation process. On the other hand,
+        using separate modules can help distribute the compilation workload, potentially allowing for
+        better parallelism and incremental compilation benefits
+        https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
+
+        In summary, while the include! macro itself doesn't add significant overhead, the way you
+        structure your code can impact compile times. If you find that compile times are becoming an
+        issue, you might want to consider organizing your code into separate modules to take advantage
+        of Rust's incremental compilation and parallel processing capabilities
+        https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
+        */
+
+        /*
+        So because of the above advice, we will give each MultiVec its own module after all.
+
+        It just gets a little tedious to fully qualify my_trait_name::MyTraitName and my_vector::MyVector,
+        so we will re-export in a more convenient module.
+         */
+
+        // TODO need to copy over the SIMD stuff too
 
         // TODO create a text file of all created files, so they can be safely deleted in subsequent rounds
         //  and we don't leave junk files around if for example we give a generated variant a tailored name
