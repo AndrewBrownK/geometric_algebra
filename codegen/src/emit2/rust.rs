@@ -84,6 +84,7 @@ impl Rust {
         let defs = impls.get_defs().await;
         let impls = impls.get_impls().await;
         let mvs = multi_vecs.declarations();
+        let mv_docs = multi_vecs.documentation();
 
 
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
@@ -95,6 +96,7 @@ impl Rust {
             let n = mv.name();
             let lsc = TraitKey::new(n).as_lower_snake();
             let folder_data = folder_data.clone();
+            let doc = mv_docs.get(&n.to_string()).cloned();
             join_set.spawn(async move {
                 let file_path = folder_data.join(Path::new(&lsc)).with_extension("rs");
                 let mut file = fs::OpenOptions::new()
@@ -103,7 +105,7 @@ impl Rust {
                     .truncate(true)
                     .open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
-                self.emit_multi_vector(&mut file, multi_vec)?;
+                self.emit_multi_vector(&mut file, multi_vec, doc)?;
                 // TODO what if this file is empty? ...nahhh. not after Add, Sub, etc.
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
@@ -769,7 +771,7 @@ impl AstEmitter for Rust {
     fn file_extension() -> &'static str { "rs" }
 
     fn emit_multi_vector<W: Write, const AntiScalar: BasisElement>(
-        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>
+        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>,
     ) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
@@ -777,7 +779,8 @@ impl AstEmitter for Rust {
         let lsc = name.as_lower_snake();
         let ssc = name.as_screaming_snake();
         // TODO built in documentation, statistics, and traits that output this type
-        writeln!(w, "/// TODO documentation")?;
+        let docs = docs.unwrap_or(ucc.clone());
+        self.emit_comment(w, true, docs)?;
 
         // TODO special traits like serde and bytemuck etc
         writeln!(w, "#[derive(Clone, Copy)]")?;

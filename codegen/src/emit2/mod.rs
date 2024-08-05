@@ -59,6 +59,7 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         &self,
         w: &mut W,
         multi_vec: &'static MultiVec<AntiScalar>,
+        docs: Option<String>,
     ) -> anyhow::Result<()>;
     fn emit_trait_def<W: Write>(
         &self,

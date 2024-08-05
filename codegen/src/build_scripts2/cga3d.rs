@@ -34,6 +34,8 @@ multi_vecs! { e12345;
     // Versors
     Motor      as e415, e425, e435, e12345 | e235, e315, e125, e5;
     Flector    as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
+
+    // TODO more versors, non-flat versors
 }
 
 
@@ -47,7 +49,7 @@ pub fn cga3d_script() {
         e4 => 0.5 * (eM - eP);
         e5 => eP + eM;
     };
-    let repo = generate_variants(register_multi_vecs(cga3d));
+    let repo = generate_variants(base_documentation(register_multi_vecs(cga3d)));
     let traits = register_all! { repo;
         Plane_BulkExpansion_Plane
         |
@@ -83,6 +85,16 @@ pub fn cga3d_script() {
     }
 }
 
+fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMultiVecs<e12345> {
+    declarations.append_documentation(&Origin, "\
+    The Origin is the RoundPoint where x, y, z, and radius are all zero.
+    It is the generator element e4.
+    Not to be confused with FlatOrigin, which is a Dipole connecting Origin and Infinity.
+    ");
+    // TODO more documentation
+    declarations
+}
+
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
     use crate::algebra2::basis::elements::*;
 
@@ -96,7 +108,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     let tangent_null_cone = origin.any_match() ^ infinity.any_match();
     let intersects_null_cone = origin.any_match() & infinity.any_match();
 
-    // TODO multivec documentations
+    // TODO variant documentations
     variants! { declarations;
         Null{type}AtOrigin => (origin & !infinity)  where is_not_flat => tangent_null_cone;
         {type}OnOrigin => (origin)                  where all => intersects_null_cone;

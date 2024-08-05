@@ -1875,6 +1875,7 @@ macro_rules! variants {
                 stringify!($($prefix)?),
                 stringify!($($suffix)?),
                 $mv_in, $el_filter, $mv_out,
+                None,
             );
             )+
         }
@@ -1892,6 +1893,7 @@ macro_rules! variants {
                 stringify!($($prefix)?),
                 stringify!($($suffix)?),
                 $mv_in, $el_filter, $mv_out,
+                None,
             );
             )+
         }

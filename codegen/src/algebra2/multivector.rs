@@ -4,15 +4,13 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt::{Debug, Display, Formatter};
 use std::ops::AddAssign;
 use std::sync::Arc;
-use std::sync::atomic::Ordering;
 
-use atom::AtomSetOnce;
 use const_panic::concat_panic;
 use parking_lot::Mutex;
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::elements::*;
-use crate::algebra2::basis::filter::{SigFilter, SignatureFilter, SignatureSetFilter, SigSetFilter};
+use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra2::basis::grades::Grades;
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
@@ -596,7 +594,7 @@ pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     anti_scalar_sig: BasisSignature,
     declared: Vec<(Grades, BTreeSet<BasisSignature>, &'static MultiVec<AntiScalar>)>,
     unique_names: BTreeSet<&'static str>,
-    documentation: BTreeMap<&'static str, Arc<Mutex<String>>>,
+    documentation: BTreeMap<String, String>,
 }
 
 impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
@@ -682,7 +680,8 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         F3: SigSetFilter,
     >(
         &mut self, prefix: S1, suffix: S2,
-        filter_vecs_in: F1, filter_elements: F2, filter_vecs_out: F3
+        filter_vecs_in: F1, filter_elements: F2, filter_vecs_out: F3,
+        documentation: Option<&'static str>,
     ) {
         let mut add_these = vec![];
         let prefix = prefix.into();
@@ -755,6 +754,10 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             let nice = new_mv.macro_expression();
             println!("{nice}");
             self.declared.insert(idx, (new_grades, new_sigs, new_mv));
+            if let Some(d) = documentation {
+                let mut docs = self.documentation.entry(new_mv.name.to_string()).or_insert(String::new());
+                docs.push_str(d);
+            }
         }
     }
 
@@ -816,6 +819,13 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             println!("{nice}");
             self.declared.insert(idx, (new_grades, new_sigs, new_mv));
         }
+        self
+    }
+
+    pub fn append_documentation<S: Into<String>>(&mut self, mv: &'static MultiVec<AntiScalar>, s: S) -> &mut Self {
+        let docs = self.documentation.entry(mv.name.to_string()).or_insert(String::new());
+        let s = s.into();
+        docs.push_str(s.as_str());
         self
     }
 }
@@ -880,6 +890,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         let mut has_fell_back = false;
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("Scalar", [scalar]));
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("AntiScalar", [AntiScalar]));
+        // TODO fix DualNum, should be e5 and AntiScalar for CGA
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new_by_groups("DualNum", {
             let mut cv = ConstVec::new();
             cv.push(BasisElementGroup::G2(scalar, AntiScalar));
@@ -1134,6 +1145,10 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
 
     pub(crate) fn declarations(&self) -> Vec<&'static MultiVec<AntiScalar>> {
         self.declarations.declared.iter().map(|it| it.2).collect()
+    }
+
+    pub(crate) fn documentation(&self) -> &BTreeMap<String, String> {
+        &self.declarations.documentation
     }
 }
 
