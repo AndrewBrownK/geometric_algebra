@@ -10,7 +10,7 @@ use anyhow::{bail, Error};
 use tokio::task::JoinSet;
 
 use crate::algebra2::basis::BasisElement;
-use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::grades::{Grades, plane_based_k_reflections, point_based_k_reflections};
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
@@ -24,6 +24,38 @@ pub struct Rust {
     pub point_based: bool,
     pub censor_grades: bool,
 }
+
+
+
+/*
+Copilot Advice:
+
+Using the include! macro to pull in multiple large files into a single unifying file can impact
+compile times, but it won't be due to the effort of concatenation. The include! macro essentially
+inserts the content of the included files directly into the source file at the point of the macro
+call, so the compiler treats it as if the code were written directly in the file
+https://doc.rust-lang.org/std/macro.include.html.
+
+However, the overall compile time can be affected by the size and complexity of the generated
+code. When you include many large files, the compiler has to process a significant amount of
+code in a single compilation unit, which can slow down the compilation process. On the other hand,
+using separate modules can help distribute the compilation workload, potentially allowing for
+better parallelism and incremental compilation benefits
+https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
+
+In summary, while the include! macro itself doesn't add significant overhead, the way you
+structure your code can impact compile times. If you find that compile times are becoming an
+issue, you might want to consider organizing your code into separate modules to take advantage
+of Rust's incremental compilation and parallel processing capabilities
+https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
+*/
+
+/*
+So because of the above advice, we will give each MultiVec its own module after all.
+
+It just gets a little tedious to fully qualify my_trait_name::MyTraitName and my_vector::MyVector,
+so we will re-export in a more convenient module.
+ */
 
 
 impl Rust {
@@ -56,20 +88,20 @@ impl Rust {
         let mut join_set = JoinSet::new();
 
         let mut data_mods = HashMap::new();
-
-
-        for multi_vec in mvs {
+        for multi_vec in mvs.iter() {
+            let multi_vec = *multi_vec;
             let mv = MultiVector::from(multi_vec);
             let n = mv.name();
+            let lsc = TraitKey::new(n).as_lower_snake();
             join_set.spawn(async {
-                let mut mv_file = fs::OpenOptions::new()
+                let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
                     .truncate(true)
-                    .open(folder_data.join(Path::new(n)).with_extension("rs"))?;
-                writeln!(&mut mv_file, "use crate::data::*")?;
-                self.emit_multi_vector(&mut mv_file, multi_vec)?;
-                writeln!(&mut mv_file, "include!(\"./data/impls/{n}.rs\");")
+                    .open(folder_data.join(Path::new(lsc.as_ref())).with_extension("rs"))?;
+                writeln!(&mut file, "use crate::data::*")?;
+                self.emit_multi_vector(&mut file, multi_vec)?;
+                writeln!(&mut file, "include!(\"./data/impls/{lsc}.rs\");")
             });
 
             if let Some(gr) = mv.grade() {
@@ -97,7 +129,6 @@ impl Rust {
                     .or_insert(vec![multi_vec]);
             }
 
-            use crate::algebra2::basis::grades::*;
             let gr = mv.grades();
             let k_reflection = if self.point_based {
                 point_based_k_reflections::<AntiScalar>()
@@ -114,21 +145,28 @@ impl Rust {
             }
         }
 
-        for td in defs {
+
+        let mut trait_mods = HashMap::new();
+        for td in defs.iter() {
+            let td = td.clone();
             let k = td.names.trait_key;
             let n = k.as_upper_camel();
+            let lsc = k.as_lower_snake();
+            let arity = td.arity.as_str();
+            trait_mods.entry(arity)
+                .and_modify(|v| v.push(td.clone()))
+                .or_insert(vec![td.clone()]);
             join_set.spawn(async {
-                let mut mv_file = fs::OpenOptions::new()
+                let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
                     .truncate(true)
-                    .open(folder_traits.join(Path::new(n.as_str())).with_extension("rs"))?;
-                writeln!(&mut mv_file, "use crate::data::*")?;
-                self.emit_trait_def(&mut mv_file, td)?;
-                writeln!(&mut mv_file, "include!(\"./traits/impls/{n}.rs\");")
+                    .open(folder_traits.join(Path::new(lsc.as_str())).with_extension("rs"))?;
+                writeln!(&mut file, "use crate::data::*")?;
+                self.emit_trait_def(&mut file, td)?;
+                writeln!(&mut file, "include!(\"./traits/impls/{n}.rs\");")
             });
         }
-
 
         let mut impl_files: HashMap<String, Vec<Arc<RawTraitImplementation>>> = HashMap::new();
 
@@ -150,9 +188,9 @@ impl Rust {
                 .or_insert(vec![i]);
         }
 
-
         for (file_path, mut impls) in impl_files {
             join_set.spawn(async move {
+                // TODO actually you should / need to pull in the dependencies and imports
                 sort_trait_impls(&mut impls, HashSet::new())?;
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
                 let mut file = fs::OpenOptions::new()
@@ -167,15 +205,54 @@ impl Rust {
         }
 
         join_set.spawn(async move {
-
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
                 .truncate(true)
                 .open(src_folder.join(Path::new("data.rs")))?;
             for (the_mod, mvs) in data_mods {
-                writeln!(&mut file, "pub mod {the_mod}")
+                writeln!(&mut file, "pub mod {the_mod} {{")?;
+                for mv in mvs {
+                    let n = mv.name;
+                    let lsc = TraitKey::new(n).as_lower_snake();
+                    writeln!(&mut file, "pub use crate::data::{lsc}::{n};")?;
+                }
+                writeln!(&mut file, "}}")?;
             }
+            for mv in mvs {
+                let n = mv.name;
+                let lsc = TraitKey::new(n).as_lower_snake();
+                writeln!(&mut file, "mod {lsc};")?;
+                writeln!(&mut file, "pub use {lsc}::{n};")?;
+            }
+            Ok(())
+        });
+
+        join_set.spawn(async move {
+            let mut file = fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(src_folder.join(Path::new("traits.rs")))?;
+            for td in defs.iter() {
+                let td = td.clone();
+                let k = td.names.trait_key;
+                let n = k.as_upper_camel();
+                let lsc = k.as_lower_snake();
+                writeln!(&mut file, "mod {lsc};")?;
+                writeln!(&mut file, "pub use {lsc}::{n};")?;
+            }
+            for (the_mod, ts) in trait_mods {
+                writeln!(&mut file, "pub mod {the_mod} {{")?;
+                for t in ts {
+                    let n = t.names.trait_key;
+                    let lsc = n.as_lower_snake();
+                    let n = n.as_upper_camel();
+                    writeln!(&mut file, "pub use crate::traits::{lsc}::{n};")?;
+                }
+                writeln!(&mut file, "}}")?;
+            }
+            Ok(())
         });
 
         join_set.collect_results().await
