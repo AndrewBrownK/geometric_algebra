@@ -1,25 +1,188 @@
+use std::collections::{HashMap, HashSet};
+use std::fs;
 use std::io::Write;
 use std::ops::Deref;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
 
 use anyhow::{bail, Error};
+use tokio::task::JoinSet;
 
 use crate::algebra2::basis::BasisElement;
-use crate::algebra2::multivector::MultiVec;
-use crate::ast2::datatype::ExpressionType;
+use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
+use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitKey, TraitTypeConsensus};
-use crate::emit2::{AstEmitter, IdentifierQualifier};
+use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitTypeConsensus};
+use crate::emit2::{AstEmitter, DataTypesBelong, DataTypesVsTraits, sort_trait_impls, TraitDefsBelong};
+use crate::utility::CollectResults;
 
 #[derive(Copy, Clone)]
 pub struct Rust {
     pub prefer_fancy_infix: bool,
+    pub point_based: bool,
+    pub censor_grades: bool,
 }
 
 
 impl Rust {
+
+    pub async fn write_crate<P: AsRef<Path>>(crate_folder: P) -> anyhow::Result<()> {
+        //
+        Ok(())
+    }
+    pub async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
+        self,
+        src_folder: P,
+        multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
+        impls: Arc<TraitImplRegistry>,
+    ) -> anyhow::Result<()> {
+
+        let src_folder = src_folder.as_ref();
+        let folder_data = src_folder.join(Path::new("data"));
+        let folder_data_impls = src_folder.join(Path::new("data/impls"));
+        let folder_traits = src_folder.join(Path::new("traits"));
+        let folder_traits_impls = src_folder.join(Path::new("traits/impls"));
+
+        fs::create_dir_all(&folder_data_impls)?;
+        fs::create_dir_all(&folder_traits_impls)?;
+
+        let defs = impls.get_defs().await;
+        let impls = impls.get_impls().await;
+        let mvs = multi_vecs.declarations();
+
+
+        let mut join_set = JoinSet::new();
+
+        let mut data_mods = HashMap::new();
+
+
+        for multi_vec in mvs {
+            let mv = MultiVector::from(multi_vec);
+            let n = mv.name();
+            join_set.spawn(async {
+                let mut mv_file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .truncate(true)
+                    .open(folder_data.join(Path::new(n)).with_extension("rs"))?;
+                writeln!(&mut mv_file, "use crate::data::*")?;
+                self.emit_multi_vector(&mut mv_file, multi_vec)?;
+                writeln!(&mut mv_file, "include!(\"./data/impls/{n}.rs\");")
+            });
+
+            if let Some(gr) = mv.grade() {
+                if !self.censor_grades {
+                    data_mods.entry(format!("grade_{gr}"))
+                        .and_modify(|v| v.push(multi_vec))
+                        .or_insert(vec![multi_vec]);
+                    if gr == 1 {
+                        data_mods.entry("base".to_string())
+                            .and_modify(|v| v.push(multi_vec))
+                            .or_insert(vec![multi_vec]);
+                    }
+                }
+                let as_gr = AntiScalar.grade();
+                let (m, j) = if self.point_based {
+                    ((as_gr - 1) - gr, gr - 1)
+                } else {
+                    (gr - 1, (as_gr - 1) - gr)
+                };
+                data_mods.entry(format!("join_{j}"))
+                    .and_modify(|v| v.push(multi_vec))
+                    .or_insert(vec![multi_vec]);
+                data_mods.entry(format!("meet_{m}"))
+                    .and_modify(|v| v.push(multi_vec))
+                    .or_insert(vec![multi_vec]);
+            }
+
+            use crate::algebra2::basis::grades::*;
+            let gr = mv.grades();
+            let k_reflection = if self.point_based {
+                point_based_k_reflections::<AntiScalar>()
+            } else {
+                plane_based_k_reflections
+            }.into_iter()
+                .enumerate()
+                .find(|(i, it)| it.contains(gr))
+                .map(|(i, _)| i);
+            if let Some(i) = k_reflection {
+                data_mods.entry(format!("k_reflection_{i}"))
+                    .and_modify(|v| v.push(multi_vec))
+                    .or_insert(vec![multi_vec]);
+            }
+        }
+
+        for td in defs {
+            let k = td.names.trait_key;
+            let n = k.as_upper_camel();
+            join_set.spawn(async {
+                let mut mv_file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .truncate(true)
+                    .open(folder_traits.join(Path::new(n.as_str())).with_extension("rs"))?;
+                writeln!(&mut mv_file, "use crate::data::*")?;
+                self.emit_trait_def(&mut mv_file, td)?;
+                writeln!(&mut mv_file, "include!(\"./traits/impls/{n}.rs\");")
+            });
+        }
+
+
+        let mut impl_files: HashMap<String, Vec<Arc<RawTraitImplementation>>> = HashMap::new();
+
+        for i in impls {
+            let k = i.definition.names.trait_key;
+            let (folder, name) = match k.as_upper_camel().as_str() {
+                "From" | "Add" | "Sub" | "Mul" | "Div"
+                | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor"
+                | "Neg" | "Not" => {
+                    let ExpressionType::Class(mv) = i.owner else { continue };
+                    let n = mv.name();
+                    ("data", n.to_string())
+                }
+                _ => ("traits", k.as_upper_camel()),
+            };
+            let i2 = i.clone();
+            impl_files.entry(format!("{folder}/impls/{name}.rs"))
+                .and_modify(move |v| v.push(i2))
+                .or_insert(vec![i]);
+        }
+
+
+        for (file_path, mut impls) in impl_files {
+            join_set.spawn(async move {
+                sort_trait_impls(&mut impls, HashSet::new())?;
+                let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
+                let mut file = fs::OpenOptions::new()
+                    .write(true)
+                    .create(true)
+                    .truncate(true)
+                    .open(file_path)?;
+                for i in impls {
+                    self.emit_trait_impl(&mut file, i)?;
+                }
+            });
+        }
+
+        join_set.spawn(async move {
+
+            let mut file = fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(src_folder.join(Path::new("data.rs")))?;
+            for (the_mod, mvs) in data_mods {
+                writeln!(&mut file, "pub mod {the_mod}")
+            }
+        });
+
+        join_set.collect_results().await
+    }
+
+
+
     fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType) -> anyhow::Result<()> {
         match data_type {
             ExpressionType::Int(i) => write!(w, "usize")?,
@@ -476,13 +639,6 @@ impl Rust {
         }
         Ok(())
     }
-}
-
-
-
-
-impl AstEmitter for Rust {
-    fn file_extension() -> &'static str { "rs" }
 
     fn supports_includes(&self) -> bool { true }
     fn include_file<W: Write, P: AsRef<Path>>(&self, w: &mut W, p: P) -> anyhow::Result<()> {
@@ -492,8 +648,8 @@ impl AstEmitter for Rust {
         Ok(())
     }
     fn supports_imports(&self) -> bool { true }
-    fn import_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
-        &self, w: &mut W, q: &Q, multi_vec: &'static MultiVec<AntiScalar>
+    fn import_multi_vector<W: Write, const AntiScalar: BasisElement>(
+        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>
     ) -> anyhow::Result<()> {
         let n = multi_vec.name;
         let p = q.qualifying_path_of_data_type(multi_vec);
@@ -501,8 +657,8 @@ impl AstEmitter for Rust {
         writeln!(w, "use crate::{path_str}::{n};")?;
         Ok(())
     }
-    fn import_trait_def<W: Write, Q: IdentifierQualifier>(
-        &self, w: &mut W, q: &Q, def: Arc<RawTraitDefinition>
+    fn import_trait_def<W: Write>(
+        &self, w: &mut W, def: Arc<RawTraitDefinition>
     ) -> anyhow::Result<()> {
         let ucc = def.names.trait_key.as_upper_camel();
         let p = q.qualifying_path_of_trait_def(def);
@@ -511,8 +667,134 @@ impl AstEmitter for Rust {
         Ok(())
     }
 
-    fn emit_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
-        &self, w: &mut W, q: &Q, multi_vec: &'static MultiVec<AntiScalar>
+    fn qualifying_path_of_data_type<const AntiScalar: BasisElement>(&self, data_type: &'static MultiVec<AntiScalar>) -> PathBuf {
+        let mut path = match self.overall_split {
+            DataTypesVsTraits::Adjacent => PathBuf::new(),
+            DataTypesVsTraits::SeparateFolders => Path::new("data").to_path_buf(),
+            DataTypesVsTraits::OneGinormousFile => PathBuf::new(),
+        };
+        let mv = MultiVector::from(data_type);
+        let (belong, _) = match self.override_data_types.get(&mv) {
+            None => self.data_types,
+            Some(stuff) => *stuff,
+        };
+        return match belong {
+            DataTypesBelong::AllTogether => path,
+            DataTypesBelong::FilePerGrade => {
+                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades)))
+            }
+            DataTypesBelong::FilePerType => {
+                // Hi if you are reading this line of code because you defined
+                // a MultiVec with a non-UpperCamelCase name and the error said
+                // something about TraitKeys, but you debugged your way here,
+                // sorry for the inconvenience. I'll reorganize camel/snake
+                // conversions eventually.
+                let n = TraitKey::new(data_type.name).as_lower_snake();
+                path.join(Path::new(&n))
+            }
+            DataTypesBelong::FilePerGradeThenPerType => {
+                let n = TraitKey::new(data_type.name).as_lower_snake();
+                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades))).join(Path::new(&n))
+            }
+        }
+    }
+
+    fn qualifying_path_of_trait_def(&self, trait_def: Arc<RawTraitDefinition>) -> PathBuf {
+        let mut path = match self.overall_split {
+            DataTypesVsTraits::Adjacent => PathBuf::new(),
+            DataTypesVsTraits::SeparateFolders => Path::new("traits").to_path_buf(),
+            DataTypesVsTraits::OneGinormousFile => PathBuf::new(),
+        };
+        let k = trait_def.names.trait_key;
+        let (belong, _) = match self.override_trait_defs.get(&k) {
+            None => self.trait_defs,
+            Some(stuff) => *stuff,
+        };
+        match belong {
+            TraitDefsBelong::AllTogether => path,
+            TraitDefsBelong::FilePerArity => path.join(Path::new(trait_def.arity.as_str())),
+            TraitDefsBelong::FilePerDef => {
+                let n = k.as_lower_snake();
+                path.join(Path::new(&n))
+            }
+            TraitDefsBelong::FilePerArityThenPerDef => {
+                path = path.join(Path::new(trait_def.arity.as_str()));
+                let n = k.as_lower_snake();
+                path.join(Path::new(&n))
+            }
+        }
+    }
+}
+
+
+// TODO allow grouping by k-reflection instead of grades
+fn folder_of_grades<const AntiScalar: BasisElement>(gr: Grades) -> &'static str {
+    let bits = gr.into_bits();
+    // Grade 0 takes 1 bit of grades
+    // So grade 0 = 0x1
+    // Grade 1 = 0x2
+    // and NO GRADES that is to say NOT EVEN GRADE 0 is represented as 0x0
+    // match bits {
+    //     1 => "scalar",
+    //     2 => "vector",
+    //     4 => "bivector",
+    //     8 => "trivector",
+    //     16 => "quadvector",
+    //     32 => "vector_gr5",
+    //     64 => "vector_gr6",
+    //     128 => "vector_gr7",
+    //     256 => "vector_gr8",
+    //     512 => "vector_gr9",
+    //     1024 => "vector_gr10",
+    //     2048 => "vector_gr11",
+    //     4096 => "vector_gr12",
+    //     8192 => "vector_gr13",
+    //     16384 => "vector_gr14",
+    //     32768 => "vector_gr15",
+    //     65536 => "vector_gr16",
+    //     _ => "mixed_grade"
+    // }
+    let d = AntiScalar.signature().bits().count_ones();
+    match bits {
+        1 if d < 10 => "vector_0",
+        2 if d < 10 => "vector_1",
+        4 if d < 10 => "vector_2",
+        8 if d < 10 => "vector_3",
+        16 if d < 10 => "vector_4",
+        32 if d < 10 => "vector_5",
+        64 if d < 10 => "vector_6",
+        128 if d < 10 => "vector_7",
+        256 if d < 10 => "vector_8",
+        512 if d < 10 => "vector_9",
+        1 => "vector_00",
+        2 => "vector_01",
+        4 => "vector_02",
+        8 => "vector_03",
+        16 => "vector_04",
+        32 => "vector_05",
+        64 => "vector_06",
+        128 => "vector_07",
+        256 => "vector_08",
+        512 => "vector_09",
+        1024 => "vector_10",
+        2048 => "vector_11",
+        4096 => "vector_12",
+        8192 => "vector_13",
+        16384 => "vector_14",
+        32768 => "vector_15",
+        65536 => "vector_16",
+        _ => "vector_mixed"
+    }
+}
+
+
+
+
+impl AstEmitter for Rust {
+    fn file_extension() -> &'static str { "rs" }
+
+    fn emit_multi_vector<W: Write, const AntiScalar: BasisElement>(
+        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>
     ) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
@@ -732,8 +1014,8 @@ impl AstEmitter for Rust {
         Ok(())
     }
 
-    fn emit_trait_def<W: Write, Q: IdentifierQualifier>(
-        &self, w: &mut W, q: &Q, def: Arc<RawTraitDefinition>
+    fn emit_trait_def<W: Write>(
+        &self, w: &mut W, def: Arc<RawTraitDefinition>
     ) -> anyhow::Result<()> {
         let ucc = def.names.trait_key.as_upper_camel();
         let lsc = def.names.trait_key.as_lower_snake();
@@ -775,8 +1057,8 @@ impl AstEmitter for Rust {
         Ok(())
     }
 
-    fn emit_trait_impl<W: Write, Q: IdentifierQualifier>(
-        &self, w: &mut W, q: &Q, impls: Arc<RawTraitImplementation>
+    fn emit_trait_impl<W: Write>(
+        &self, w: &mut W, impls: Arc<RawTraitImplementation>
     ) -> anyhow::Result<()> {
         let def = &impls.definition;
         let ucc = def.names.trait_key.as_upper_camel();

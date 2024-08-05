@@ -578,10 +578,10 @@ impl FileOrganizing {
             e.import_trait_def(&mut file, self, dep)?;
         }
         for multi_vec in types {
-            e.emit_multi_vector(&mut file, self, multi_vec)?;
+            e.emit_multi_vector(&mut file, multi_vec)?;
         }
         for td in trait_declarations {
-            e.emit_trait_def(&mut file, self, td)?;
+            e.emit_trait_def(&mut file, td)?;
         }
 
         // Ok now lets properly order the implementations that
@@ -623,166 +623,61 @@ impl FileOrganizing {
     }
 }
 
-// TODO allow grouping by k-reflection instead of grades
-fn folder_of_grades<const AntiScalar: BasisElement>(gr: Grades) -> &'static str {
-    let bits = gr.into_bits();
-    // Grade 0 takes 1 bit of grades
-    // So grade 0 = 0x1
-    // Grade 1 = 0x2
-    // and NO GRADES that is to say NOT EVEN GRADE 0 is represented as 0x0
-    // match bits {
-    //     1 => "scalar",
-    //     2 => "vector",
-    //     4 => "bivector",
-    //     8 => "trivector",
-    //     16 => "quadvector",
-    //     32 => "vector_gr5",
-    //     64 => "vector_gr6",
-    //     128 => "vector_gr7",
-    //     256 => "vector_gr8",
-    //     512 => "vector_gr9",
-    //     1024 => "vector_gr10",
-    //     2048 => "vector_gr11",
-    //     4096 => "vector_gr12",
-    //     8192 => "vector_gr13",
-    //     16384 => "vector_gr14",
-    //     32768 => "vector_gr15",
-    //     65536 => "vector_gr16",
-    //     _ => "mixed_grade"
-    // }
-    let d = AntiScalar.signature().bits().count_ones();
-    match bits {
-        1 if d < 10 => "vector_0",
-        2 if d < 10 => "vector_1",
-        4 if d < 10 => "vector_2",
-        8 if d < 10 => "vector_3",
-        16 if d < 10 => "vector_4",
-        32 if d < 10 => "vector_5",
-        64 if d < 10 => "vector_6",
-        128 if d < 10 => "vector_7",
-        256 if d < 10 => "vector_8",
-        512 if d < 10 => "vector_9",
-        1 => "vector_00",
-        2 => "vector_01",
-        4 => "vector_02",
-        8 => "vector_03",
-        16 => "vector_04",
-        32 => "vector_05",
-        64 => "vector_06",
-        128 => "vector_07",
-        256 => "vector_08",
-        512 => "vector_09",
-        1024 => "vector_10",
-        2048 => "vector_11",
-        4096 => "vector_12",
-        8192 => "vector_13",
-        16384 => "vector_14",
-        32768 => "vector_15",
-        65536 => "vector_16",
-        _ => "vector_mixed"
-    }
-}
-
-
-impl IdentifierQualifier for FileOrganizing {
-    fn qualifying_path_of_data_type<const AntiScalar: BasisElement>(&self, data_type: &'static MultiVec<AntiScalar>) -> PathBuf {
-        let mut path = match self.overall_split {
-            DataTypesVsTraits::Adjacent => PathBuf::new(),
-            DataTypesVsTraits::SeparateFolders => Path::new("data").to_path_buf(),
-            DataTypesVsTraits::OneGinormousFile => PathBuf::new(),
-        };
-        let mv = MultiVector::from(data_type);
-        let (belong, _) = match self.override_data_types.get(&mv) {
-            None => self.data_types,
-            Some(stuff) => *stuff,
-        };
-        return match belong {
-            DataTypesBelong::AllTogether => path,
-            DataTypesBelong::FilePerGrade => {
-                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades)))
+fn sort_trait_impls(
+    trait_implementations: &mut Vec<Arc<RawTraitImplementation>>,
+    mut already_ordered: HashSet<TraitKey>,
+) -> anyhow::Result<()> {
+    // Ok now lets properly order the implementations that
+    // are actually declared here.
+    let mut needs_ordering: Vec<_> = trait_implementations.clone();
+    let mut ordered_implementations = vec![];
+    while !needs_ordering.is_empty() {
+        let size_before = needs_ordering.len();
+        let mut already_disqualified_this_pass = HashSet::new();
+        needs_ordering.retain(|it| {
+            let k = it.definition.names.trait_key;
+            if already_ordered.contains(&k) {
+                ordered_implementations.push(it.clone());
+                return false
             }
-            DataTypesBelong::FilePerType => {
-                // Hi if you are reading this line of code because you defined
-                // a MultiVec with a non-UpperCamelCase name and the error said
-                // something about TraitKeys, but you debugged your way here,
-                // sorry for the inconvenience. I'll reorganize camel/snake
-                // conversions eventually.
-                let n = TraitKey::new(data_type.name).as_lower_snake();
-                path.join(Path::new(&n))
+            if already_disqualified_this_pass.contains(&k) {
+                return true;
             }
-            DataTypesBelong::FilePerGradeThenPerType => {
-                let n = TraitKey::new(data_type.name).as_lower_snake();
-                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades))).join(Path::new(&n))
+            let deps = it.definition.dependencies.lock();
+            if deps.iter().all(|dep| already_ordered.contains(dep)) {
+                already_ordered.insert(k);
+                ordered_implementations.push(it.clone());
+                return false
             }
+            already_disqualified_this_pass.insert(k);
+            return true
+        });
+        let size_after = needs_ordering.len();
+        if size_before == size_after {
+            bail!("There is a missing dependency of a trait implementation. It needs to be \
+                included/declared in this file, or else imported to this file.")
         }
     }
-
-    fn qualifying_path_of_trait_def(&self, trait_def: Arc<RawTraitDefinition>) -> PathBuf {
-        let mut path = match self.overall_split {
-            DataTypesVsTraits::Adjacent => PathBuf::new(),
-            DataTypesVsTraits::SeparateFolders => Path::new("traits").to_path_buf(),
-            DataTypesVsTraits::OneGinormousFile => PathBuf::new(),
-        };
-        let k = trait_def.names.trait_key;
-        let (belong, _) = match self.override_trait_defs.get(&k) {
-            None => self.trait_defs,
-            Some(stuff) => *stuff,
-        };
-        match belong {
-            TraitDefsBelong::AllTogether => path,
-            TraitDefsBelong::FilePerArity => path.join(Path::new(trait_def.arity.as_str())),
-            TraitDefsBelong::FilePerDef => {
-                let n = k.as_lower_snake();
-                path.join(Path::new(&n))
-            }
-            TraitDefsBelong::FilePerArityThenPerDef => {
-                path = path.join(Path::new(trait_def.arity.as_str()));
-                let n = k.as_lower_snake();
-                path.join(Path::new(&n))
-            }
-        }
-    }
+    *trait_implementations = ordered_implementations;
+    Ok(())
 }
 
-
-pub trait IdentifierQualifier {
-    fn qualifying_path_of_data_type<const AntiScalar: BasisElement>(&self, data_type: &'static MultiVec<AntiScalar>) -> PathBuf;
-    fn qualifying_path_of_trait_def(&self, trait_def: Arc<RawTraitDefinition>) -> PathBuf;
-}
 
 pub trait AstEmitter: Copy + Send + Sync + 'static {
     fn file_extension() -> &'static str;
-    fn supports_includes(&self) -> bool { false }
-    fn include_file<W: Write, P: AsRef<Path>>(&self, w: &mut W, p: P) -> anyhow::Result<()> { bail!("Includes are not supported") }
-    fn supports_imports(&self) -> bool { false }
-    fn import_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
+    fn emit_multi_vector<W: Write, const AntiScalar: BasisElement>(
         &self,
         w: &mut W,
-        q: &Q,
-        multi_vec: &'static MultiVec<AntiScalar>,
-    ) -> anyhow::Result<()> { bail!("Imports not supported") }
-    fn import_trait_def<W: Write, Q: IdentifierQualifier>(
-        &self,
-        w: &mut W,
-        q: &Q,
-        def: Arc<RawTraitDefinition>,
-    ) -> anyhow::Result<()> { bail!("Imports not supported") }
-    fn emit_multi_vector<W: Write, Q: IdentifierQualifier, const AntiScalar: BasisElement>(
-        &self,
-        w: &mut W,
-        q: &Q,
         multi_vec: &'static MultiVec<AntiScalar>,
     ) -> anyhow::Result<()>;
-    fn emit_trait_def<W: Write, Q: IdentifierQualifier>(
+    fn emit_trait_def<W: Write>(
         &self,
         w: &mut W,
-        q: &Q,
         def: Arc<RawTraitDefinition>,
     ) -> anyhow::Result<()>;
-    fn emit_trait_impl<W: Write, Q: IdentifierQualifier>(
+    fn emit_trait_impl<W: Write>(
         &self,
         w: &mut W,
-        q: &Q,
         impls: Arc<RawTraitImplementation>,
     ) -> anyhow::Result<()>;
     fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, is_documentation: bool, s: S) -> anyhow::Result<()>;

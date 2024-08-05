@@ -805,6 +805,9 @@ pub enum UnaryOps {
 #[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum BinaryOps {
+    // TODO should not allow overriding Add and Sub... ...which also means Neg...
+    //  ah whatever... maybe to just allow full freedom, but create an easy method to
+    //  activate sensible defaults.
     Add,
     Sub,
     Mul,

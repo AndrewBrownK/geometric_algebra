@@ -5,7 +5,7 @@ use std::marker::{ConstParamTy};
 use std::cmp::{PartialEq};
 use std::hash::{Hash};
 use std::ops::{BitOr, BitAnd, Not, BitOrAssign};
-use crate::algebra2::basis::BasisSignature;
+use crate::algebra2::basis::{BasisElement, BasisSignature};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Grades(u32);
@@ -73,6 +73,41 @@ pub const grade13: Grades = Grades(0x2000);
 pub const grade14: Grades = Grades(0x4000);
 pub const grade15: Grades = Grades(0x8000);
 pub const grade16: Grades = Grades(0x10000);
+
+
+pub const plane_based_k_reflections: [Grades; 17] = [
+    grade0,
+    grade1,
+    grade0 | grade2,
+    grade1 | grade3,
+    grade0 | grade2 | grade4,
+    grade1 | grade3 | grade5,
+    grade0 | grade2 | grade4 | grade6,
+    grade1 | grade3 | grade5 | grade7,
+    grade0 | grade2 | grade4 | grade6 | grade8,
+    grade1 | grade3 | grade5 | grade7 | grade9,
+    grade0 | grade2 | grade4 | grade6 | grade8 | grade10,
+    grade1 | grade3 | grade5 | grade7 | grade9 | grade11,
+    grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12,
+    grade1 | grade3 | grade5 | grade7 | grade9 | grade11 | grade13,
+    grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12 | grade14,
+    grade1 | grade3 | grade5 | grade7 | grade9 | grade11 | grade13 | grade15,
+    grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12 | grade14 | grade16,
+];
+pub fn point_based_k_reflections<const AntiScalar: BasisElement>() -> [Grades; 17] {
+    let mut grades = AntiScalar.grades();
+    let mut result = [grades; 17];
+    for mut k in 0..17 {
+        if k > 0 {
+            grades.0 = grades.0 >> 1;
+            if k % 2 == 0 {
+                grades.0 |= AntiScalar.grades().0;
+            }
+        }
+        result[k] = grades;
+    }
+    result
+}
 
 
 impl BitOr for Grades {
