@@ -10,7 +10,6 @@ use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
 use crate::ast2::datatype::MultiVector;
 use crate::ast2::impls::{Specialize_22, Specialized_22};
 use crate::build_scripts2::common_traits::BulkExpansion;
-use crate::emit2::FileOrganizing;
 use crate::emit2::rust::Rust;
 
 multi_vecs! { e12345;
@@ -33,7 +32,7 @@ multi_vecs! { e12345;
     Sphere     as e4235, e4315, e4125 | e1234, e3215;
 
     // Versors
-    Motor      as e415, e425, e435, e12345 | e235, e315, e125, scalar;
+    Motor      as e415, e425, e435, e12345 | e235, e315, e125, e5;
     Flector    as e15, e25, e35, e45 | e4235, e4315, e4125, e3215;
 }
 
@@ -69,9 +68,17 @@ pub fn cga3d_script() {
     }
 
     let file_path = PathBuf::from("../cga3d_new/src/");
-    let rust = Rust { prefer_fancy_infix: false };
-    let fo = FileOrganizing::recommended_for_rust("cga3d_new");
-    if let Err(e) = fo.block_on_go_do_it(rust, file_path, repo, Arc::new(traits)) {
+    let rust = Rust {
+        prefer_fancy_infix: false,
+        point_based: true,
+        censor_grades: false,
+    };
+
+    let rt = tokio::runtime::Runtime::new().expect("tokio works");
+    let e = rt.block_on(async move {
+        rust.write_src(file_path, "cga3d_new", repo, Arc::new(traits)).await
+    });
+    if let Err(e) = e {
         panic!("Errors: {e:?}");
     }
 }

@@ -75,25 +75,27 @@ pub const grade15: Grades = Grades(0x8000);
 pub const grade16: Grades = Grades(0x10000);
 
 
-pub const plane_based_k_reflections: [Grades; 17] = [
-    grade0,
-    grade1,
-    grade0 | grade2,
-    grade1 | grade3,
-    grade0 | grade2 | grade4,
-    grade1 | grade3 | grade5,
-    grade0 | grade2 | grade4 | grade6,
-    grade1 | grade3 | grade5 | grade7,
-    grade0 | grade2 | grade4 | grade6 | grade8,
-    grade1 | grade3 | grade5 | grade7 | grade9,
-    grade0 | grade2 | grade4 | grade6 | grade8 | grade10,
-    grade1 | grade3 | grade5 | grade7 | grade9 | grade11,
-    grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12,
-    grade1 | grade3 | grade5 | grade7 | grade9 | grade11 | grade13,
-    grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12 | grade14,
-    grade1 | grade3 | grade5 | grade7 | grade9 | grade11 | grade13 | grade15,
-    grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12 | grade14 | grade16,
-];
+pub fn plane_based_k_reflections() -> [Grades; 17] {
+    [
+        grade0,
+        grade1,
+        grade0 | grade2,
+        grade1 | grade3,
+        grade0 | grade2 | grade4,
+        grade1 | grade3 | grade5,
+        grade0 | grade2 | grade4 | grade6,
+        grade1 | grade3 | grade5 | grade7,
+        grade0 | grade2 | grade4 | grade6 | grade8,
+        grade1 | grade3 | grade5 | grade7 | grade9,
+        grade0 | grade2 | grade4 | grade6 | grade8 | grade10,
+        grade1 | grade3 | grade5 | grade7 | grade9 | grade11,
+        grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12,
+        grade1 | grade3 | grade5 | grade7 | grade9 | grade11 | grade13,
+        grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12 | grade14,
+        grade1 | grade3 | grade5 | grade7 | grade9 | grade11 | grade13 | grade15,
+        grade0 | grade2 | grade4 | grade6 | grade8 | grade10 | grade12 | grade14 | grade16,
+    ]
+}
 pub fn point_based_k_reflections<const AntiScalar: BasisElement>() -> [Grades; 17] {
     let mut grades = AntiScalar.grades();
     let mut result = [grades; 17];

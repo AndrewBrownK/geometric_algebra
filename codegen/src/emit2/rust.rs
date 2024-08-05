@@ -1,8 +1,8 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fs;
 use std::io::Write;
 use std::ops::Deref;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Command;
 use std::sync::Arc;
 
@@ -10,12 +10,12 @@ use anyhow::{bail, Error};
 use tokio::task::JoinSet;
 
 use crate::algebra2::basis::BasisElement;
-use crate::algebra2::basis::grades::{Grades, plane_based_k_reflections, point_based_k_reflections};
+use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitTypeConsensus};
-use crate::emit2::{AstEmitter, DataTypesBelong, DataTypesVsTraits, sort_trait_impls, TraitDefsBelong};
+use crate::emit2::{AstEmitter, sort_trait_impls};
 use crate::utility::CollectResults;
 
 #[derive(Copy, Clone)]
@@ -67,11 +67,12 @@ impl Rust {
     pub async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
         self,
         src_folder: P,
+        algebra_name: &str,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
 
-        let src_folder = src_folder.as_ref();
+        let src_folder = src_folder.as_ref().to_path_buf();
         let folder_data = src_folder.join(Path::new("data"));
         let folder_data_impls = src_folder.join(Path::new("data/impls"));
         let folder_traits = src_folder.join(Path::new("traits"));
@@ -85,86 +86,108 @@ impl Rust {
         let mvs = multi_vecs.declarations();
 
 
-        let mut join_set = JoinSet::new();
+        let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
 
-        let mut data_mods = HashMap::new();
+        let mut data_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for multi_vec in mvs.iter() {
             let multi_vec = *multi_vec;
             let mv = MultiVector::from(multi_vec);
             let n = mv.name();
             let lsc = TraitKey::new(n).as_lower_snake();
-            join_set.spawn(async {
+            let folder_data = folder_data.clone();
+            join_set.spawn(async move {
+                let file_path = folder_data.join(Path::new(&lsc)).with_extension("rs");
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
                     .truncate(true)
-                    .open(folder_data.join(Path::new(lsc.as_ref())).with_extension("rs"))?;
-                writeln!(&mut file, "use crate::data::*")?;
+                    .open(&file_path)?;
+                writeln!(&mut file, "use crate::data::*;")?;
                 self.emit_multi_vector(&mut file, multi_vec)?;
-                writeln!(&mut file, "include!(\"./data/impls/{lsc}.rs\");")
+                // TODO what if this file is empty? ...nahhh. not after Add, Sub, etc.
+                writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
+                self.format_file(&file_path)?;
+                Ok(())
             });
 
             if let Some(gr) = mv.grade() {
-                if !self.censor_grades {
-                    data_mods.entry(format!("grade_{gr}"))
+                if !self.censor_grades && gr == 1 {
+                    data_mods.entry("base".to_string())
                         .and_modify(|v| v.push(multi_vec))
                         .or_insert(vec![multi_vec]);
-                    if gr == 1 {
-                        data_mods.entry("base".to_string())
-                            .and_modify(|v| v.push(multi_vec))
-                            .or_insert(vec![multi_vec]);
-                    }
                 }
                 let as_gr = AntiScalar.grade();
-                let (m, j) = if self.point_based {
-                    ((as_gr - 1) - gr, gr - 1)
-                } else {
-                    (gr - 1, (as_gr - 1) - gr)
-                };
-                data_mods.entry(format!("join_{j}"))
-                    .and_modify(|v| v.push(multi_vec))
-                    .or_insert(vec![multi_vec]);
-                data_mods.entry(format!("meet_{m}"))
-                    .and_modify(|v| v.push(multi_vec))
-                    .or_insert(vec![multi_vec]);
+                if gr > 0 && gr < as_gr {
+                    let (m, j) = if self.point_based {
+                        ((as_gr - 1) - gr, gr - 1)
+                    } else {
+                        (gr - 1, (as_gr - 1) - gr)
+                    };
+                    data_mods.entry(format!("join_{j}"))
+                        .and_modify(|v| v.push(multi_vec))
+                        .or_insert(vec![multi_vec]);
+                    data_mods.entry(format!("meet_{m}"))
+                        .and_modify(|v| v.push(multi_vec))
+                        .or_insert(vec![multi_vec]);
+                }
             }
 
             let gr = mv.grades();
+            if !self.censor_grades {
+                let d = AntiScalar.signature().bits().count_ones();
+                let gr = gr.into_bits();
+                let vec_name = if gr.count_ones() == 1 {
+                    if d < 10 {
+                        format!("vector_{}", gr.trailing_zeros())
+                    } else {
+                        format!("vector_{:02}", gr.trailing_zeros())
+                    }
+                } else {
+                    "vector_mixed".to_string()
+                };
+                data_mods.entry(vec_name.to_string())
+                    .and_modify(|v| v.push(multi_vec))
+                    .or_insert(vec![multi_vec]);
+            }
             let k_reflection = if self.point_based {
                 point_based_k_reflections::<AntiScalar>()
             } else {
-                plane_based_k_reflections
+                plane_based_k_reflections()
             }.into_iter()
                 .enumerate()
                 .find(|(i, it)| it.contains(gr))
                 .map(|(i, _)| i);
             if let Some(i) = k_reflection {
-                data_mods.entry(format!("k_reflection_{i}"))
+                data_mods.entry(format!("reflection_{i}"))
                     .and_modify(|v| v.push(multi_vec))
                     .or_insert(vec![multi_vec]);
             }
         }
 
 
-        let mut trait_mods = HashMap::new();
+        let mut trait_mods: BTreeMap<String, Vec<_>>  = BTreeMap::new();
         for td in defs.iter() {
             let td = td.clone();
             let k = td.names.trait_key;
             let n = k.as_upper_camel();
             let lsc = k.as_lower_snake();
-            let arity = td.arity.as_str();
+            let arity = td.arity.as_str().to_string();
             trait_mods.entry(arity)
                 .and_modify(|v| v.push(td.clone()))
                 .or_insert(vec![td.clone()]);
-            join_set.spawn(async {
+            let folder_traits = folder_traits.clone();
+            join_set.spawn(async move {
+                let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
                     .truncate(true)
-                    .open(folder_traits.join(Path::new(lsc.as_str())).with_extension("rs"))?;
-                writeln!(&mut file, "use crate::data::*")?;
+                    .open(&file_path)?;
+                writeln!(&mut file, "use crate::data::*;")?;
                 self.emit_trait_def(&mut file, td)?;
-                writeln!(&mut file, "include!(\"./traits/impls/{n}.rs\");")
+                writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
+                self.format_file(&file_path)?;
+                Ok(())
             });
         }
 
@@ -177,10 +200,10 @@ impl Rust {
                 | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor"
                 | "Neg" | "Not" => {
                     let ExpressionType::Class(mv) = i.owner else { continue };
-                    let n = mv.name();
-                    ("data", n.to_string())
+                    let n = TraitKey::new(mv.name()).as_lower_snake();
+                    ("data", n)
                 }
-                _ => ("traits", k.as_upper_camel()),
+                _ => ("traits", k.as_lower_snake()),
             };
             let i2 = i.clone();
             impl_files.entry(format!("{folder}/impls/{name}.rs"))
@@ -189,6 +212,7 @@ impl Rust {
         }
 
         for (file_path, mut impls) in impl_files {
+            let src_folder = src_folder.clone();
             join_set.spawn(async move {
                 // TODO actually you should / need to pull in the dependencies and imports
                 sort_trait_impls(&mut impls, HashSet::new())?;
@@ -197,19 +221,23 @@ impl Rust {
                     .write(true)
                     .create(true)
                     .truncate(true)
-                    .open(file_path)?;
+                    .open(&file_path)?;
                 for i in impls {
                     self.emit_trait_impl(&mut file, i)?;
                 }
+                self.format_file(&file_path)?;
+                Ok(())
             });
         }
 
+        let src_folder2 = src_folder.clone();
         join_set.spawn(async move {
+            let file_path = src_folder2.join(Path::new("data.rs"));
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
                 .truncate(true)
-                .open(src_folder.join(Path::new("data.rs")))?;
+                .open(&file_path)?;
             for (the_mod, mvs) in data_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for mv in mvs {
@@ -225,23 +253,18 @@ impl Rust {
                 writeln!(&mut file, "mod {lsc};")?;
                 writeln!(&mut file, "pub use {lsc}::{n};")?;
             }
+            self.format_file(&file_path)?;
             Ok(())
         });
 
+        let src_folder2 = src_folder.clone();
         join_set.spawn(async move {
+            let file_path = src_folder2.join(Path::new("traits.rs"));
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
                 .truncate(true)
-                .open(src_folder.join(Path::new("traits.rs")))?;
-            for td in defs.iter() {
-                let td = td.clone();
-                let k = td.names.trait_key;
-                let n = k.as_upper_camel();
-                let lsc = k.as_lower_snake();
-                writeln!(&mut file, "mod {lsc};")?;
-                writeln!(&mut file, "pub use {lsc}::{n};")?;
-            }
+                .open(&file_path)?;
             for (the_mod, ts) in trait_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for t in ts {
@@ -252,6 +275,28 @@ impl Rust {
                 }
                 writeln!(&mut file, "}}")?;
             }
+            for td in defs.iter() {
+                let td = td.clone();
+                let k = td.names.trait_key;
+                let n = k.as_upper_camel();
+                let lsc = k.as_lower_snake();
+                writeln!(&mut file, "mod {lsc};")?;
+                writeln!(&mut file, "pub use {lsc}::{n};")?;
+            }
+            self.format_file(&file_path)?;
+            Ok(())
+        });
+
+        join_set.spawn(async move {
+            let file_path = src_folder.join(Path::new("lib.rs"));
+            let mut file = fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(&file_path)?;
+            writeln!(&mut file, "pub mod data;")?;
+            writeln!(&mut file, "pub mod traits;")?;
+            self.format_file(&file_path)?;
             Ok(())
         });
 
@@ -716,154 +761,7 @@ impl Rust {
         }
         Ok(())
     }
-
-    fn supports_includes(&self) -> bool { true }
-    fn include_file<W: Write, P: AsRef<Path>>(&self, w: &mut W, p: P) -> anyhow::Result<()> {
-        let p = p.as_ref();
-        let path_str = p.to_string_lossy().replace("\\", "/");
-        writeln!(w, "include!(\"{path_str}\");")?;
-        Ok(())
-    }
-    fn supports_imports(&self) -> bool { true }
-    fn import_multi_vector<W: Write, const AntiScalar: BasisElement>(
-        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>
-    ) -> anyhow::Result<()> {
-        let n = multi_vec.name;
-        let p = q.qualifying_path_of_data_type(multi_vec);
-        let path_str = p.to_string_lossy().replace("/", "::").replace("\\", "::");
-        writeln!(w, "use crate::{path_str}::{n};")?;
-        Ok(())
-    }
-    fn import_trait_def<W: Write>(
-        &self, w: &mut W, def: Arc<RawTraitDefinition>
-    ) -> anyhow::Result<()> {
-        let ucc = def.names.trait_key.as_upper_camel();
-        let p = q.qualifying_path_of_trait_def(def);
-        let path_str = p.to_string_lossy().replace("/", "::");
-        writeln!(w, "use crate::{path_str}::{ucc};")?;
-        Ok(())
-    }
-
-    fn qualifying_path_of_data_type<const AntiScalar: BasisElement>(&self, data_type: &'static MultiVec<AntiScalar>) -> PathBuf {
-        let mut path = match self.overall_split {
-            DataTypesVsTraits::Adjacent => PathBuf::new(),
-            DataTypesVsTraits::SeparateFolders => Path::new("data").to_path_buf(),
-            DataTypesVsTraits::OneGinormousFile => PathBuf::new(),
-        };
-        let mv = MultiVector::from(data_type);
-        let (belong, _) = match self.override_data_types.get(&mv) {
-            None => self.data_types,
-            Some(stuff) => *stuff,
-        };
-        return match belong {
-            DataTypesBelong::AllTogether => path,
-            DataTypesBelong::FilePerGrade => {
-                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades)))
-            }
-            DataTypesBelong::FilePerType => {
-                // Hi if you are reading this line of code because you defined
-                // a MultiVec with a non-UpperCamelCase name and the error said
-                // something about TraitKeys, but you debugged your way here,
-                // sorry for the inconvenience. I'll reorganize camel/snake
-                // conversions eventually.
-                let n = TraitKey::new(data_type.name).as_lower_snake();
-                path.join(Path::new(&n))
-            }
-            DataTypesBelong::FilePerGradeThenPerType => {
-                let n = TraitKey::new(data_type.name).as_lower_snake();
-                path.join(Path::new(folder_of_grades::<AntiScalar>(data_type.grades))).join(Path::new(&n))
-            }
-        }
-    }
-
-    fn qualifying_path_of_trait_def(&self, trait_def: Arc<RawTraitDefinition>) -> PathBuf {
-        let mut path = match self.overall_split {
-            DataTypesVsTraits::Adjacent => PathBuf::new(),
-            DataTypesVsTraits::SeparateFolders => Path::new("traits").to_path_buf(),
-            DataTypesVsTraits::OneGinormousFile => PathBuf::new(),
-        };
-        let k = trait_def.names.trait_key;
-        let (belong, _) = match self.override_trait_defs.get(&k) {
-            None => self.trait_defs,
-            Some(stuff) => *stuff,
-        };
-        match belong {
-            TraitDefsBelong::AllTogether => path,
-            TraitDefsBelong::FilePerArity => path.join(Path::new(trait_def.arity.as_str())),
-            TraitDefsBelong::FilePerDef => {
-                let n = k.as_lower_snake();
-                path.join(Path::new(&n))
-            }
-            TraitDefsBelong::FilePerArityThenPerDef => {
-                path = path.join(Path::new(trait_def.arity.as_str()));
-                let n = k.as_lower_snake();
-                path.join(Path::new(&n))
-            }
-        }
-    }
 }
-
-
-// TODO allow grouping by k-reflection instead of grades
-fn folder_of_grades<const AntiScalar: BasisElement>(gr: Grades) -> &'static str {
-    let bits = gr.into_bits();
-    // Grade 0 takes 1 bit of grades
-    // So grade 0 = 0x1
-    // Grade 1 = 0x2
-    // and NO GRADES that is to say NOT EVEN GRADE 0 is represented as 0x0
-    // match bits {
-    //     1 => "scalar",
-    //     2 => "vector",
-    //     4 => "bivector",
-    //     8 => "trivector",
-    //     16 => "quadvector",
-    //     32 => "vector_gr5",
-    //     64 => "vector_gr6",
-    //     128 => "vector_gr7",
-    //     256 => "vector_gr8",
-    //     512 => "vector_gr9",
-    //     1024 => "vector_gr10",
-    //     2048 => "vector_gr11",
-    //     4096 => "vector_gr12",
-    //     8192 => "vector_gr13",
-    //     16384 => "vector_gr14",
-    //     32768 => "vector_gr15",
-    //     65536 => "vector_gr16",
-    //     _ => "mixed_grade"
-    // }
-    let d = AntiScalar.signature().bits().count_ones();
-    match bits {
-        1 if d < 10 => "vector_0",
-        2 if d < 10 => "vector_1",
-        4 if d < 10 => "vector_2",
-        8 if d < 10 => "vector_3",
-        16 if d < 10 => "vector_4",
-        32 if d < 10 => "vector_5",
-        64 if d < 10 => "vector_6",
-        128 if d < 10 => "vector_7",
-        256 if d < 10 => "vector_8",
-        512 if d < 10 => "vector_9",
-        1 => "vector_00",
-        2 => "vector_01",
-        4 => "vector_02",
-        8 => "vector_03",
-        16 => "vector_04",
-        32 => "vector_05",
-        64 => "vector_06",
-        128 => "vector_07",
-        256 => "vector_08",
-        512 => "vector_09",
-        1024 => "vector_10",
-        2048 => "vector_11",
-        4096 => "vector_12",
-        8192 => "vector_13",
-        16384 => "vector_14",
-        32768 => "vector_15",
-        65536 => "vector_16",
-        _ => "vector_mixed"
-    }
-}
-
 
 
 
