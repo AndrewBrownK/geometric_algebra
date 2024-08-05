@@ -1865,17 +1865,20 @@ macro_rules! variants {
     (
         $declarations:ident;
         $(
+        $(#docs($docs:expr))?
         $($prefix:ident)? {type} $($suffix:ident)? => ($el_filter:expr) where $mv_in:expr => $mv_out:expr
         );+
         $(;)?
     ) => {
         {
             $(
+            let mut doc: std::option::Option<&'static str> = None;
+            $(doc = Some($docs);)?
             $declarations.variants(
                 stringify!($($prefix)?),
                 stringify!($($suffix)?),
                 $mv_in, $el_filter, $mv_out,
-                None,
+                doc,
             );
             )+
         }
@@ -1883,17 +1886,20 @@ macro_rules! variants {
     (
         $declarations:ident;
         $(
+        $(#docs($docs:expr))?
         $($prefix:ident)? {Vector} $($suffix:ident)? => ($el_filter:expr) where $mv_in:expr => $mv_out:expr
         );+
         $(;)?
     ) => {
         {
             $(
+            let mut doc: std::option::Option<&'static str> = None;
+            $(doc = Some($docs);)?
             $declarations.variants(
                 stringify!($($prefix)?),
                 stringify!($($suffix)?),
                 $mv_in, $el_filter, $mv_out,
-                None,
+                doc,
             );
             )+
         }

@@ -108,18 +108,37 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
     let tangent_null_cone = origin.any_match() ^ infinity.any_match();
     let intersects_null_cone = origin.any_match() & infinity.any_match();
 
-    // TODO variant documentations
     variants! { declarations;
+
+        #docs("This variant of {type} has a radius of zero and is centered on the Origin.")
         Null{type}AtOrigin => (origin & !infinity)  where is_not_flat => tangent_null_cone;
+
+        #docs("This variant of {type} intersects the Origin.")
         {type}OnOrigin => (origin)                  where all => intersects_null_cone;
+
+        #docs("This variant of {type} exists in the Horizon.")
         {type}AtInfinity => (!origin)               where is_flat => tangent_null_cone;
+
+        #docs("This variant of {type} is centered on the Origin.")
         {type}AtOrigin => (origin ^ infinity)       where is_not_flat => intersects_null_cone;
+
+        #docs("This variant of {type} has a Carrier that intersects the Origin.")
         {type}AligningOrigin => (origin | infinity) where is_not_flat => intersects_null_cone;
+
+        #docs("This variant of {type} has a CoCarrier that intersects the Origin.")
         {type}OrthogonalOrigin => (!flat_origin)    where is_not_flat => intersects_null_cone;
+
+        #docs("This variant of {type} exists at the Horizon.")
         {type}AtInfinity => (!origin | flat_origin) where is_not_flat => intersects_null_cone;
     }
 
-    declarations.generate_missing_duals();
+    declarations.generate_missing_duals(Some(
+        "This variant of {super} is the Dual to {type}. It is common for
+        objects of this type to not intersect the null cone, which also prevents them from
+        projecting onto the horosphere in the usual manner. When this happens, this
+        object has behavioral and operative similarity to {super}, but
+        spacial presence in the shape of a {type}."
+    ));
     declarations.finished()
 }
 

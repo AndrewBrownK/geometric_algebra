@@ -714,11 +714,11 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             if !did_filter_out_some || new_sigs.is_empty() || !filter_vecs_out.filter_sig_set(&new_sigs) {
                 continue;
             }
-            add_these.push((new_grades, new_sigs, new_name, new_groups));
+            add_these.push((new_grades, new_sigs, old_name, new_name, new_groups));
         }
 
         let mut intro = false;
-        for (new_grades, new_sigs, new_name, new_groups) in add_these.into_iter() {
+        for (new_grades, new_sigs, old_name, new_name, new_groups) in add_these.into_iter() {
             let idx = self.declared.binary_search_by(|(gr, sig, mv)| {
                 gr.cmp(&new_grades).then_with(|| {
                     sig.len().cmp(&new_sigs.len()).then_with(|| {
@@ -755,13 +755,17 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             println!("{nice}");
             self.declared.insert(idx, (new_grades, new_sigs, new_mv));
             if let Some(d) = documentation {
-                let mut docs = self.documentation.entry(new_mv.name.to_string()).or_insert(String::new());
-                docs.push_str(d);
+                let n = new_mv.name;
+                let mut docs = self.documentation.entry(new_mv.name.to_string()).or_insert(format!("{n}.\n"));
+                let mut d = d.to_string();
+                d = d.replace("{type}", old_name);
+                d = d.replace("{Vector}", old_name);
+                docs.push_str(d.as_str());
             }
         }
     }
 
-    pub fn generate_missing_duals(&mut self) -> &mut Self {
+    pub fn generate_missing_duals(&mut self, documentation: Option<&'static str>) -> &mut Self {
         let mut add_these = vec![];
         for (_, _, mv) in self.declared.iter() {
             let old_name = mv.name;
@@ -779,11 +783,11 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                 }
                 new_groups.push(BasisElementGroup::from_vec(cv));
             }
-            add_these.push((new_grades, new_sigs, new_name, new_groups));
+            add_these.push((new_grades, new_sigs, old_name, new_name, new_groups));
         }
 
         let mut intro = false;
-        for (new_grades, new_sigs, new_name, new_groups) in add_these.into_iter() {
+        for (new_grades, new_sigs, old_name, new_name, new_groups) in add_these.into_iter() {
             let idx = self.declared.binary_search_by(|(gr, sig, mv)| {
                 gr.cmp(&new_grades).then_with(|| {
                     sig.len().cmp(&new_sigs.len()).then_with(|| {
@@ -817,13 +821,40 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             let new_mv = Box::leak(Box::new(new_mv));
             let nice = new_mv.macro_expression();
             println!("{nice}");
-            self.declared.insert(idx, (new_grades, new_sigs, new_mv));
+            self.declared.insert(idx, (new_grades, new_sigs.clone(), new_mv));
+            if let Some(d) = documentation {
+                let mut idx = idx + 1;
+                let mut closest_to = None;
+                while idx < self.declared.len() {
+                    let Some((gr, sigs, mv)) = self.declared.get(idx) else { break };
+                    if !gr.contains(new_grades) {
+                        idx += 1;
+                        continue
+                    }
+                    if sigs.is_superset(&new_sigs) {
+                        closest_to = Some(mv.name);
+                        break;
+                    }
+                    idx += 1;
+                }
+
+                let n = new_mv.name;
+                let mut docs = self.documentation.entry(new_mv.name.to_string()).or_insert(format!("{n}.\n"));
+                let mut d = d.to_string();
+                d = d.replace("{type}", old_name);
+                d = d.replace("{Vector}", old_name);
+                let n = closest_to.unwrap_or("MultiVector");
+                d = d.replace("{super}", n);
+                d = d.replace("{Super}", n);
+                docs.push_str(d.as_str());
+            }
         }
         self
     }
 
     pub fn append_documentation<S: Into<String>>(&mut self, mv: &'static MultiVec<AntiScalar>, s: S) -> &mut Self {
-        let docs = self.documentation.entry(mv.name.to_string()).or_insert(String::new());
+        let n = mv.name;
+        let docs = self.documentation.entry(mv.name.to_string()).or_insert(format!("{n}.\n"));
         let s = s.into();
         docs.push_str(s.as_str());
         self
