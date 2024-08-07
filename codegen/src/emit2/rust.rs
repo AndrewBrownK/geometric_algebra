@@ -33,14 +33,6 @@ pub struct Rust {
     pub serde: bool,
 }
 
-// TODO generate ApproxEq implementations
-//  https://docs.rs/float-cmp/latest/float_cmp/#implementing-these-traits
-
-// TODO implement Ord and Eq using FloatOrd
-//  https://docs.rs/float-ord/latest/float_ord/
-
-// TODO "clamp_zeros" function that accepts an F32Margin from float_cmp
-
 // TODO f64 support??? maybe???
 
 impl Rust {
@@ -117,7 +109,7 @@ encase = "0.9.0""#)?;
 postgres-types = "0.2.7""#)?;
         }
         if self.serde {
-            // TODO
+            writeln!(&mut file, r#"serde = {{ version = "1.0.204", features = ["derive"] }}"#)?;
         }
 
         Ok(())
@@ -160,8 +152,6 @@ postgres-types = "0.2.7""#)?;
         It just gets a little tedious to fully qualify my_trait_name::MyTraitName and my_vector::MyVector,
         so we will re-export in a more convenient module.
          */
-
-        // TODO need to copy over the SIMD stuff too
 
         // TODO create a text file of all created files, so they can be safely deleted in subsequent rounds
         //  and we don't leave junk files around if for example we give a generated variant a tailored name
@@ -1016,13 +1006,15 @@ impl AstEmitter for Rust {
         let docs = docs.unwrap_or(ucc.clone());
         self.emit_comment(w, true, docs)?;
 
-        // TODO special traits like serde and bytemuck etc
         write!(w, "#[derive(Clone, Copy")?;
         if self.nearly_eq_ord {
             write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
         }
         if self.wgsl || self.glsl {
             write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
+        }
+        if self.serde {
+            write!(w, ", serde::Serialize, serde::Deserialize")?;
         }
         writeln!(w, ")]")?;
         writeln!(w, "pub union {ucc} {{")?;
@@ -1048,13 +1040,15 @@ impl AstEmitter for Rust {
         writeln!(w, "\n    elements: [f32; {total_len}],")?;
         writeln!(w, "}}")?;
 
-        // TODO special traits like serde and bytemuck etc
         write!(w, "#[derive(Clone, Copy")?;
         if self.nearly_eq_ord {
             write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
         }
         if self.wgsl || self.glsl {
             write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
+        }
+        if self.serde {
+            write!(w, ", serde::Serialize, serde::Deserialize")?;
         }
         writeln!(w, ")]")?;
         writeln!(w, "pub struct {ucc}Groups {{")?;
@@ -1393,6 +1387,9 @@ impl std::hash::Hash for {ucc} {{
         writeln!(w, ";\n}}")?;
 
         // TODO fancy infix
+
+
+
 
 
         Ok(())
