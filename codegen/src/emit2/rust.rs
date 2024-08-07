@@ -28,8 +28,8 @@ pub struct Rust {
     pub wgsl: bool,
     pub glsl: bool,
     pub sql: bool,
-    pub approx_eq: bool,
-    pub ord: bool,
+    pub eq_ord_hash: bool,
+    pub nearly_eq_ord: bool,
     pub serde: bool,
 }
 
@@ -80,8 +80,7 @@ impl Rust {
             additional_authors.push('"');
         }
 
-        write!(&mut file, r#"
-[package]
+        write!(&mut file, r#"[package]
 name = "{algebra_name}"
 version = "{major}.{minor}.{patch}{pre}"
 authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>", "Alexander Meißner <AlexanderMeissner@gmx.net>"{additional_authors}]
@@ -103,12 +102,13 @@ postgres = []
             writeln!(&mut file , r#"naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
 naga = "0.19.2"
 anyhow = "1.0.86"
-bytemuck = "1.16.0""#)?;
+bytemuck = {{ version = "1.16.3", features = ["derive"] }}
+encase = "0.9.0""#)?;
         }
-        if self.approx_eq {
-            writeln!(&mut file , r#"approx_eq = "0.1.8""#)?;
+        if self.nearly_eq_ord {
+            writeln!(&mut file , r#"nearly = "0.4.0""#)?;
         }
-        if self.ord {
+        if self.eq_ord_hash {
             writeln!(&mut file , r#"float-ord = "0.3.2""#)?;
         }
         if self.sql {
@@ -204,7 +204,7 @@ postgres-types = "0.2.7""#)?;
                     .open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
-                self.emit_multi_vector(&mut file, multi_vec, doc)?;
+                self.declare_multi_vector(&mut file, multi_vec, doc)?;
                 // TODO what if this file is empty? ...nahhh. not after Add, Sub, etc.
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
@@ -286,7 +286,7 @@ postgres-types = "0.2.7""#)?;
                     .open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
-                self.emit_trait_def(&mut file, td)?;
+                self.declare_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
                 Ok(())
@@ -334,7 +334,7 @@ postgres-types = "0.2.7""#)?;
                     match ucc.as_str() {
                         "Into" => self.write_trait_from(&mut file, i),
                         "TryInto" => self.write_trait_try_from(&mut file, i),
-                        _ => self.emit_trait_impl(&mut file, i),
+                        _ => self.declare_trait_impl(&mut file, i),
                     }?
                 }
                 self.format_file(&file_path)?;
@@ -1004,7 +1004,7 @@ impl TryFrom<{other}> for {owner} {{
 impl AstEmitter for Rust {
     fn file_extension() -> &'static str { "rs" }
 
-    fn emit_multi_vector<W: Write, const AntiScalar: BasisElement>(
+    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
         &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>,
     ) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
@@ -1017,7 +1017,14 @@ impl AstEmitter for Rust {
         self.emit_comment(w, true, docs)?;
 
         // TODO special traits like serde and bytemuck etc
-        writeln!(w, "#[derive(Clone, Copy)]")?;
+        write!(w, "#[derive(Clone, Copy")?;
+        if self.nearly_eq_ord {
+            write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
+        }
+        if self.wgsl || self.glsl {
+            write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
+        }
+        writeln!(w, ")]")?;
         writeln!(w, "pub union {ucc} {{")?;
         writeln!(w, "    groups: {ucc}Groups,")?;
         write!(w, "    /// ")?;
@@ -1042,7 +1049,14 @@ impl AstEmitter for Rust {
         writeln!(w, "}}")?;
 
         // TODO special traits like serde and bytemuck etc
-        writeln!(w, "#[derive(Clone, Copy)]")?;
+        write!(w, "#[derive(Clone, Copy")?;
+        if self.nearly_eq_ord {
+            write!(w, ", nearly::NearlyEq, nearly::NearlyOrd")?;
+        }
+        if self.wgsl || self.glsl {
+            write!(w, ", bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType")?;
+        }
+        writeln!(w, ")]")?;
         writeln!(w, "pub struct {ucc}Groups {{")?;
         for (g, group) in multi_vec.groups().into_iter().enumerate() {
             write!(w, "    /// ")?;
@@ -1221,15 +1235,78 @@ impl AstEmitter for Rust {
         }
         writeln!(w, "        .finish()\n}}\n}}")?;
 
-//         if self.approx_eq {
-//             writeln!(w, r#"
-// impl {ucc} {{
-//     pub fn clamp_zeros(self, margin:
-// }}"#)?;
-//         }
-
         let els = multi_vec.elements();
         let els_len = els.len();
+
+        writeln!(w, r#"
+impl {ucc} {{
+    pub const LEN: usize = {els_len};
+}}"#)?;
+        if self.nearly_eq_ord {
+            writeln!(w, r#"
+impl {ucc} {{
+    pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {{
+        for i in 0..Self::LEN {{
+            let f = self[i];
+            if nearly::nearly!(0.0 == f, tol = tolerance) {{
+                self[i] = 0.0;
+            }}
+        }}
+        self
+    }}
+}}"#)?;
+        }
+        if self.eq_ord_hash {
+            writeln!(w, r#"
+impl PartialOrd for {ucc} {{
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {{
+        for i in 0..Self::LEN {{
+            let a = float_ord::FloatOrd(self[i]);
+            let b = float_ord::FloatOrd(other[i]);
+            match a.cmp(&b) {{
+                std::cmp::Ordering::Equal => continue,
+                result => return Some(result),
+            }}
+        }}
+        Some(std::cmp::Ordering::Equal)
+    }}
+}}
+impl Ord for {ucc} {{
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {{
+        for i in 0..Self::LEN {{
+            let a = float_ord::FloatOrd(self[i]);
+            let b = float_ord::FloatOrd(other[i]);
+            match a.cmp(&b) {{
+                std::cmp::Ordering::Equal => continue,
+                result => return result,
+            }}
+        }}
+        std::cmp::Ordering::Equal
+    }}
+}}
+impl PartialEq for {ucc} {{
+    fn eq(&self, other: &Self) -> bool {{
+        for i in 0..Self::LEN {{
+            let a = float_ord::FloatOrd(self[i]);
+            let b = float_ord::FloatOrd(other[i]);
+            if a != b {{
+                return false
+            }}
+        }}
+        true
+    }}
+}}
+impl Eq for {ucc} {{}}
+impl std::hash::Hash for {ucc} {{
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {{
+        for i in 0..Self::LEN {{
+            self[i].to_bits().hash(state);
+        }}
+    }}
+}}
+"#)?;
+        }
+
         for (i, el) in els.clone().into_iter().enumerate() {
             writeln!(w, "impl std::ops::Index<crate::elements::{el}> for {ucc} {{")?;
             writeln!(w, "    type Output = f32;")?;
@@ -1278,7 +1355,7 @@ impl AstEmitter for Rust {
         Ok(())
     }
 
-    fn emit_trait_def<W: Write>(
+    fn declare_trait_def<W: Write>(
         &self, w: &mut W, def: Arc<RawTraitDefinition>
     ) -> anyhow::Result<()> {
         let ucc = def.names.trait_key.as_upper_camel();
@@ -1321,7 +1398,7 @@ impl AstEmitter for Rust {
         Ok(())
     }
 
-    fn emit_trait_impl<W: Write>(
+    fn declare_trait_impl<W: Write>(
         &self, w: &mut W, impls: Arc<RawTraitImplementation>
     ) -> anyhow::Result<()> {
         let def = &impls.definition;

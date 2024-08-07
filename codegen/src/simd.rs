@@ -189,43 +189,43 @@ impl std::ops::IndexMut<usize> for Simd32x2 {
     }
 }
 
-impl std::convert::From<Simd32x4> for [f32; 4] {
+impl From<Simd32x4> for [f32; 4] {
     fn from(simd: Simd32x4) -> Self {
         unsafe { simd.f32x4 }
     }
 }
 
-impl std::convert::From<Simd32x3> for [f32; 3] {
+impl From<Simd32x3> for [f32; 3] {
     fn from(simd: Simd32x3) -> Self {
         unsafe { simd.f32x3 }
     }
 }
 
-impl std::convert::From<Simd32x2> for [f32; 2] {
+impl From<Simd32x2> for [f32; 2] {
     fn from(simd: Simd32x2) -> Self {
         unsafe { simd.f32x2 }
     }
 }
 
-impl std::convert::From<[f32; 4]> for Simd32x4 {
+impl From<[f32; 4]> for Simd32x4 {
     fn from(f32x4: [f32; 4]) -> Self {
         Self { f32x4 }
     }
 }
 
-impl std::convert::From<[f32; 3]> for Simd32x3 {
+impl From<[f32; 3]> for Simd32x3 {
     fn from(f32x3: [f32; 3]) -> Self {
         Self { f32x3 }
     }
 }
 
-impl std::convert::From<[f32; 2]> for Simd32x2 {
+impl From<[f32; 2]> for Simd32x2 {
     fn from(f32x2: [f32; 2]) -> Self {
         Self { f32x2 }
     }
 }
 
-impl std::convert::From<f32> for Simd32x4 {
+impl From<f32> for Simd32x4 {
     fn from(value: f32) -> Self {
         Self {
             f32x4: [value, value, value, value],
@@ -233,13 +233,13 @@ impl std::convert::From<f32> for Simd32x4 {
     }
 }
 
-impl std::convert::From<f32> for Simd32x3 {
+impl From<f32> for Simd32x3 {
     fn from(value: f32) -> Self {
         Self { f32x3: [value, value, value] }
     }
 }
 
-impl std::convert::From<f32> for Simd32x2 {
+impl From<f32> for Simd32x2 {
     fn from(value: f32) -> Self {
         Self { f32x2: [value, value] }
     }
@@ -462,3 +462,4 @@ impl std::ops::Div<Simd32x2> for Simd32x2 {
         )
     }
 }
+

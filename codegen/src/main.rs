@@ -26,7 +26,6 @@ pub mod algebra2;
 mod utility;
 pub mod emit2;
 mod simd;
-
 mod build_scripts2 {
     pub mod common_traits;
     pub mod cga3d;

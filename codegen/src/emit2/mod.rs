@@ -55,18 +55,18 @@ fn sort_trait_impls(
 
 pub trait AstEmitter: Copy + Send + Sync + 'static {
     fn file_extension() -> &'static str;
-    fn emit_multi_vector<W: Write, const AntiScalar: BasisElement>(
+    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
         &self,
         w: &mut W,
         multi_vec: &'static MultiVec<AntiScalar>,
         docs: Option<String>,
     ) -> anyhow::Result<()>;
-    fn emit_trait_def<W: Write>(
+    fn declare_trait_def<W: Write>(
         &self,
         w: &mut W,
         def: Arc<RawTraitDefinition>,
     ) -> anyhow::Result<()>;
-    fn emit_trait_impl<W: Write>(
+    fn declare_trait_impl<W: Write>(
         &self,
         w: &mut W,
         impls: Arc<RawTraitImplementation>,

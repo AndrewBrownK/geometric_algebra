@@ -77,8 +77,8 @@ pub fn cga3d_script() {
         wgsl: true,
         glsl: true,
         sql: false,
-        approx_eq: true,
-        ord: true,
+        eq_ord_hash: true,
+        nearly_eq_ord: true,
         serde: true,
     };
 
