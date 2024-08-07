@@ -25,6 +25,7 @@ pub mod ast2;
 pub mod algebra2;
 mod utility;
 pub mod emit2;
+mod simd;
 
 mod build_scripts2 {
     pub mod common_traits;
@@ -40,6 +41,8 @@ mod build_scripts {
     pub mod cga3d_min;
     pub mod rga3d;
 }
+
+const SIMD_SRC: &'static str = include_str!("simd.rs");
 
 // TODO documentation on this stuff
 #[cfg(all(feature = "wedge-is-join", feature = "wedge-is-meet"))]

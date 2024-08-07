@@ -17,6 +17,7 @@ use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExp
 use crate::ast2::RawVariableDeclaration;
 use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, sort_trait_impls};
+use crate::SIMD_SRC;
 use crate::utility::CollectResults;
 
 #[derive(Copy, Clone)]
@@ -29,6 +30,7 @@ pub struct Rust {
     pub sql: bool,
     pub approx_eq: bool,
     pub ord: bool,
+    pub serde: bool,
 }
 
 // TODO generate ApproxEq implementations
@@ -98,28 +100,24 @@ postgres = []
 [dependencies]
 "#)?;
         if self.wgsl || self.glsl {
-            writeln!(&mut file , r#"
-naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
+            writeln!(&mut file , r#"naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
 naga = "0.19.2"
 anyhow = "1.0.86"
-bytemuck = "1.16.0"
-            "#)?;
+bytemuck = "1.16.0""#)?;
         }
         if self.approx_eq {
-            writeln!(&mut file , r#"
-approx-eq = "1.8.0"
-            "#)?;
+            writeln!(&mut file , r#"approx_eq = "0.1.8""#)?;
         }
         if self.ord {
-            writeln!(&mut file , r#"
-float-ord = "0.3.2"
-            "#)?;
+            writeln!(&mut file , r#"float-ord = "0.3.2""#)?;
         }
         if self.sql {
-            writeln!(&mut file , r#"
-pgx = "0.7.4"
-postgres-types = "0.2.7"
-            "#)?;
+            // TODO pgx seems to be a picky builder, so will need close inspection.
+            writeln!(&mut file , r#"pgx = "0.7.4"
+postgres-types = "0.2.7""#)?;
+        }
+        if self.serde {
+            // TODO
         }
 
         Ok(())
@@ -205,6 +203,7 @@ postgres-types = "0.2.7"
                     .truncate(true)
                     .open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
+                writeln!(&mut file, "use crate::simd::*;")?;
                 self.emit_multi_vector(&mut file, multi_vec, doc)?;
                 // TODO what if this file is empty? ...nahhh. not after Add, Sub, etc.
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
@@ -286,6 +285,7 @@ postgres-types = "0.2.7"
                     .truncate(true)
                     .open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
+                writeln!(&mut file, "use crate::simd::*;")?;
                 self.emit_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
@@ -399,8 +399,9 @@ postgres-types = "0.2.7"
             Ok(())
         });
 
+        let src_folder2 = src_folder.clone();
         join_set.spawn(async move {
-            let file_path = src_folder.join(Path::new("lib.rs"));
+            let file_path = src_folder2.join(Path::new("lib.rs"));
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
@@ -408,6 +409,28 @@ postgres-types = "0.2.7"
                 .open(&file_path)?;
             writeln!(&mut file, "pub mod data;")?;
             writeln!(&mut file, "pub mod traits;")?;
+            writeln!(&mut file, "pub mod simd;")?;
+            writeln!(&mut file, "#[allow(non_camel_case_types)]")?;
+            writeln!(&mut file, "pub mod elements {{")?;
+            let mut els = multi_vecs.full_multi_vector().elements();
+            els.sort();
+            for el in els {
+                writeln!(&mut file, "    pub struct {el};")?;
+            }
+            writeln!(&mut file, "}}")?;
+            self.format_file(&file_path)?;
+            Ok(())
+        });
+
+        let src_folder2 = src_folder.clone();
+        join_set.spawn(async move {
+            let file_path = src_folder2.join(Path::new("simd.rs"));
+            let mut file = fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(&file_path)?;
+            write!(&mut file, "{SIMD_SRC}")?;
             self.format_file(&file_path)?;
             Ok(())
         });
@@ -481,7 +504,11 @@ postgres-types = "0.2.7"
                 }
             }
             FloatExpr::Literal(l) => {
-                write!(w, "{l}")?;
+                if l.fract() == 0.0 {
+                    write!(w, "{l:.1}")?;
+                } else {
+                    write!(w, "{l}")?;
+                }
             }
             FloatExpr::AccessVec2(v, i) => {
                 self.write_vec2(w, v.as_ref())?;
@@ -497,11 +524,13 @@ postgres-types = "0.2.7"
             }
             FloatExpr::AccessMultiVecGroup(mv, i) => {
                 self.write_multi_vec(w, mv)?;
-                write!(w, ".group{i}()")?;
+                let el = mv.mv_class.elements()[*i as usize];
+                write!(w, "[{el}]")?;
             }
             FloatExpr::AccessMultiVecFlat(mv, i) => {
                 self.write_multi_vec(w, mv)?;
-                write!(w, "[{i}]")?;
+                let el = mv.mv_class.elements()[*i as usize];
+                write!(w, "[{el}]")?;
             }
             FloatExpr::TraitInvoke11ToFloat(t, arg) => {
                 self.write_multi_vec(w, arg)?;
@@ -887,8 +916,11 @@ postgres-types = "0.2.7"
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
 writeln!(w, r#"
-impl std::convert::From<{other}> for {owner} {{
+impl From<{other}> for {owner} {{
     fn from({lsc}: {other}) -> Self {{"#)?;
+        if impls.statistics.basis_element_struct_access {
+            writeln!(w, "        use crate::elements::*;")?;
+        }
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -923,10 +955,12 @@ impl std::convert::From<{other}> for {owner} {{
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
         write!(w, r#"
-impl std::convert::TryFrom<{other}> for {owner} {{
+impl TryFrom<{other}> for {owner} {{
     type Error = String;
-    fn try_from({lsc}: {other}) -> Self {{
-    "#)?;
+    fn try_from({lsc}: {other}) -> Result<Self, Self::Error> {{"#)?;
+        if impls.statistics.basis_element_struct_access {
+            writeln!(w, "        use crate::elements::*;")?;
+        }
         let mut ret = impls.return_expr.clone();
         let old_var = Arc::new(RawVariableDeclaration {
             comment: None,
@@ -939,24 +973,24 @@ impl std::convert::TryFrom<{other}> for {owner} {{
             expr: None,
         });
         ret.substitute_variable(old_var, new_var);
-        writeln!(w, "        let mut e = String::new();")?;
+        writeln!(w, "        let mut error_string = String::new();")?;
         write!(w, "        let mut fail = false;")?;
         for (i, el) in misfit_elements {
             write!(w, r#"
         let el = {lsc}[{i}];
         if el != 0.0 {{
             fail = true;
-            e.push_str("{el}: ");
-            e.push_str(el.to_string().as_str());
-            e.push_str(", ");
+            error_string.push_str("{el}: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
         }}"#)?;
         }
         write!(w, r#"
         if fail {{
-            let mut e2 = "Elements from {other} do not fit into {owner} {{ ".to_string();
-            e2.push_str(e.as_str());
-            e2.push('}}');
-            return Err(e2);
+            let mut error = "Elements from {other} do not fit into {owner} {{ ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}}');
+            return Err(error);
         }}
         return Ok("#)?;
         self.write_expression(w, &ret)?;
@@ -1054,7 +1088,7 @@ impl AstEmitter for Rust {
                 count += 1;
             }
         }
-        writeln!(w, "] }};")?;
+        writeln!(w, "] }}")?;
         writeln!(w, "}}")?;
         writeln!(w, "pub const fn from_groups(")?;
         for (i, g) in multi_vec.groups().into_iter().enumerate() {
@@ -1133,7 +1167,7 @@ impl AstEmitter for Rust {
         writeln!(w, "}}\n}}")?;
 
 
-        writeln!(w, "impl std::convert::From<{ucc}> for [f32; {element_count}] {{")?;
+        writeln!(w, "impl From<{ucc}> for [f32; {element_count}] {{")?;
         writeln!(w, "fn from(vector: {ucc}) -> Self {{")?;
         write!(w, "    unsafe {{\n        [")?;
         let mut i = 0;
@@ -1154,7 +1188,7 @@ impl AstEmitter for Rust {
         writeln!(w, "] }}\n    }}\n}}")?;
 
 
-        writeln!(w, "impl std::convert::From<[f32; {element_count}]> for {ucc} {{")?;
+        writeln!(w, "impl From<[f32; {element_count}]> for {ucc} {{")?;
         writeln!(w, "    fn from(array: [f32; {element_count}]) -> Self {{")?;
         write!(w, "        Self {{ elements: [")?;
         let mut i = 0;
@@ -1187,7 +1221,59 @@ impl AstEmitter for Rust {
         }
         writeln!(w, "        .finish()\n}}\n}}")?;
 
+//         if self.approx_eq {
+//             writeln!(w, r#"
+// impl {ucc} {{
+//     pub fn clamp_zeros(self, margin:
+// }}"#)?;
+//         }
 
+        let els = multi_vec.elements();
+        let els_len = els.len();
+        for (i, el) in els.clone().into_iter().enumerate() {
+            writeln!(w, "impl std::ops::Index<crate::elements::{el}> for {ucc} {{")?;
+            writeln!(w, "    type Output = f32;")?;
+            writeln!(w, "    fn index(&self, _: crate::elements::{el}) -> &Self::Output {{")?;
+            writeln!(w, "       &self[{i}]")?;
+            writeln!(w, "    }}\n}}")?;
+        }
+        for (i, el) in els.into_iter().enumerate() {
+            writeln!(w, "impl std::ops::IndexMut<crate::elements::{el}> for {ucc} {{")?;
+            writeln!(w, "    fn index_mut(&self, _: crate::elements::{el}) -> &mut Self::Output {{")?;
+            writeln!(w, "       &mut self[{i}]")?;
+            writeln!(w, "    }}\n}}")?;
+        }
+        // for len in 1..(els_len+1) {
+        //     write!(w, "impl<")?;
+        //     for i in 0..len {
+        //         write!(w, "I{i}, ")?;
+        //     }
+        //     write!(w, "> std::ops::Index<(")?;
+        //     for i in 0..len {
+        //         write!(w, "I{i}, ")?;
+        //     }
+        //     writeln!(w, ")> for {ucc} where Self: std::ops::Index<I0, Output=f32>")?;
+        //     for i in 1..len {
+        //         write!(w, " + std::ops::Index<I{i}, Output=f32>")?;
+        //     }
+        //     writeln!(w, " {{")?;
+        //     writeln!(w, "    type Output = [f32; {len}];")?;
+        //     write!(w, "    fn index(&self, (")?;
+        //     for i in 0..len {
+        //         write!(w, "i{i}, ")?;
+        //     }
+        //     write!(w, "): (")?;
+        //     for i in 0..len {
+        //         write!(w, "I{i}, ")?;
+        //     }
+        //     writeln!(w, ")) -> &Self::Output {{")?;
+        //     write!(w, "       [")?;
+        //     for i in 0..len {
+        //         write!(w, "self[i{i}], ")?;
+        //     }
+        //     writeln!(w, "]")?;
+        //     writeln!(w, "    }}\n}}")?;
+        // }
 
         Ok(())
     }
@@ -1294,6 +1380,9 @@ impl AstEmitter for Rust {
             }
         }
         writeln!(w, " {{")?;
+        if impls.statistics.basis_element_struct_access {
+            writeln!(w, "        use crate::elements::*;")?;
+        }
         for line in impls.lines.iter() {
             match line {
                 CommentOrVariableDeclaration::Comment(c) => {

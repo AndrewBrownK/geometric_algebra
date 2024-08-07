@@ -2470,8 +2470,16 @@ impl TrackOperations for FloatExpr {
             FloatExpr::AccessVec2(v, _) => v.count_operations(lookup),
             FloatExpr::AccessVec3(v, _) => v.count_operations(lookup),
             FloatExpr::AccessVec4(v, _) => v.count_operations(lookup),
-            FloatExpr::AccessMultiVecGroup(m, _) => m.count_operations(lookup),
-            FloatExpr::AccessMultiVecFlat(m, _) => m.count_operations(lookup),
+            FloatExpr::AccessMultiVecGroup(m, _) => {
+                let mut result = m.count_operations(lookup);
+                result.basis_element_struct_access = true;
+                result
+            },
+            FloatExpr::AccessMultiVecFlat(m, _) => {
+                let mut result = m.count_operations(lookup);
+                result.basis_element_struct_access = true;
+                result
+            },
             FloatExpr::TraitInvoke11ToFloat(t, m) => {
                 m.count_operations(lookup) + lookup.trait_11_ops(t, &m.mv_class)
             }

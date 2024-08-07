@@ -68,6 +68,7 @@ pub struct VectoredOperationsTracker {
     pub simd2: OperationsTracker,
     pub simd3: OperationsTracker,
     pub simd4: OperationsTracker,
+    pub basis_element_struct_access: bool,
 }
 impl VectoredOperationsTracker {
     pub fn zero() -> Self {
@@ -76,6 +77,7 @@ impl VectoredOperationsTracker {
             simd2: OperationsTracker::zero(),
             simd3: OperationsTracker::zero(),
             simd4: OperationsTracker::zero(),
+            basis_element_struct_access: false,
         }
     }
 
@@ -97,6 +99,7 @@ impl Add<VectoredOperationsTracker> for VectoredOperationsTracker {
             simd2: self.simd2 + rhs.simd2,
             simd3: self.simd3 + rhs.simd3,
             simd4: self.simd4 + rhs.simd4,
+            basis_element_struct_access: self.basis_element_struct_access || rhs.basis_element_struct_access,
         }
     }
 }
@@ -106,6 +109,7 @@ impl AddAssign<VectoredOperationsTracker> for VectoredOperationsTracker {
         self.simd2 += rhs.simd2;
         self.simd3 += rhs.simd3;
         self.simd4 += rhs.simd4;
+        self.basis_element_struct_access |= rhs.basis_element_struct_access;
     }
 }
 

@@ -1,8 +1,8 @@
 #![allow(non_upper_case_globals)]
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
-
+use semver::Version;
 use crate::{ga, multi_vecs, operators, register_all, variants};
 use crate::algebra2::basis::elements::e12345;
 use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
@@ -69,21 +69,31 @@ pub fn cga3d_script() {
         Not => Dual;
     }
 
-    let file_path = PathBuf::from("../cga3d_new/src/");
+    let file_path = PathBuf::from("../cga3d_new/");
     let rust = Rust {
         prefer_fancy_infix: false,
         point_based: true,
         censor_grades: false,
         wgsl: true,
         glsl: true,
-        sql: true,
+        sql: false,
         approx_eq: true,
         ord: true,
+        serde: true,
     };
 
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let e = rt.block_on(async move {
-        rust.write_src(file_path, repo, Arc::new(traits)).await
+        let version = Version::new(1, 0, 0);
+        rust.write_crate(
+            file_path.clone(),
+            "cga3d_new",
+            version,
+            "Latest generated test case",
+            "https://github.com/AndrewBrownK/projective_ga/",
+            &[],
+        ).await?;
+        rust.write_src(file_path.join(Path::new("src")), repo, Arc::new(traits)).await
     });
     if let Err(e) = e {
         panic!("Errors: {e:?}");

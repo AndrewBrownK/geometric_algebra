@@ -6,6 +6,7 @@ members = [
     "rga3d",
     "cga3d",
     "cga3d_min",
+    "cga3d_new",
     "examples/compile_to_spirv",
     "examples/hello_circle_wgsl",
     "examples/hello_circle_rust",
