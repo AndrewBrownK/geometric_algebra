@@ -54,7 +54,7 @@ pub fn cga3d_script() {
         Plane_BulkExpansion_Plane
         |
         Zero One AntiOne Unit
-        Grade AntiGrade
+        Grade AntiGrade Into TryInto
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
     };
@@ -74,11 +74,16 @@ pub fn cga3d_script() {
         prefer_fancy_infix: false,
         point_based: true,
         censor_grades: false,
+        wgsl: true,
+        glsl: true,
+        sql: true,
+        approx_eq: true,
+        ord: true,
     };
 
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let e = rt.block_on(async move {
-        rust.write_src(file_path, "cga3d_new", repo, Arc::new(traits)).await
+        rust.write_src(file_path, repo, Arc::new(traits)).await
     });
     if let Err(e) = e {
         panic!("Errors: {e:?}");

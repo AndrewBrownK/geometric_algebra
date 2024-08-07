@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap, HashMap, HashSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs;
 use std::io::Write;
 use std::ops::Deref;
@@ -14,6 +14,7 @@ use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_re
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::ast2::RawVariableDeclaration;
 use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, sort_trait_impls};
 use crate::utility::CollectResults;
@@ -23,13 +24,26 @@ pub struct Rust {
     pub prefer_fancy_infix: bool,
     pub point_based: bool,
     pub censor_grades: bool,
+    pub wgsl: bool,
+    pub glsl: bool,
+    pub sql: bool,
+    pub approx_eq: bool,
+    pub ord: bool,
 }
 
+// TODO generate ApproxEq implementations
+//  https://docs.rs/float-cmp/latest/float_cmp/#implementing-these-traits
 
+// TODO implement Ord and Eq using FloatOrd
+//  https://docs.rs/float-ord/latest/float_ord/
 
+// TODO "clamp_zeros" function that accepts an F32Margin from float_cmp
+
+// TODO f64 support??? maybe???
 
 impl Rust {
     pub async fn write_crate<P: AsRef<Path>>(
+        &self,
         crate_folder: P,
         algebra_name: &str,
         version: semver::Version,
@@ -82,11 +96,31 @@ glsl = []
 postgres = []
 
 [dependencies]
+"#)?;
+        if self.wgsl || self.glsl {
+            writeln!(&mut file , r#"
 naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
 naga = "0.19.2"
 anyhow = "1.0.86"
 bytemuck = "1.16.0"
-"#)?;
+            "#)?;
+        }
+        if self.approx_eq {
+            writeln!(&mut file , r#"
+approx-eq = "1.8.0"
+            "#)?;
+        }
+        if self.ord {
+            writeln!(&mut file , r#"
+float-ord = "0.3.2"
+            "#)?;
+        }
+        if self.sql {
+            writeln!(&mut file , r#"
+pgx = "0.7.4"
+postgres-types = "0.2.7"
+            "#)?;
+        }
 
         Ok(())
     }
@@ -264,10 +298,15 @@ bytemuck = "1.16.0"
         for i in impls {
             let k = i.definition.names.trait_key;
             let (folder, name) = match k.as_upper_camel().as_str() {
-                "From" | "Add" | "Sub" | "Mul" | "Div"
+                "Add" | "Sub" | "Mul" | "Div"
                 | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor"
                 | "Neg" | "Not" => {
                     let ExpressionType::Class(mv) = i.owner else { continue };
+                    let n = TraitKey::new(mv.name()).as_lower_snake();
+                    ("data", n)
+                }
+                "Into" | "TryInto" => {
+                    let Some(ExpressionType::Class(mv)) = i.other_type_params.get(0) else { continue };
                     let n = TraitKey::new(mv.name()).as_lower_snake();
                     ("data", n)
                 }
@@ -291,7 +330,12 @@ bytemuck = "1.16.0"
                     .truncate(true)
                     .open(&file_path)?;
                 for i in impls {
-                    self.emit_trait_impl(&mut file, i)?;
+                    let ucc = i.definition.names.trait_key.as_upper_camel();
+                    match ucc.as_str() {
+                        "Into" => self.write_trait_from(&mut file, i),
+                        "TryInto" => self.write_trait_try_from(&mut file, i),
+                        _ => self.emit_trait_impl(&mut file, i),
+                    }?
                 }
                 self.format_file(&file_path)?;
                 Ok(())
@@ -827,6 +871,96 @@ bytemuck = "1.16.0"
                 write!(w, ")")?;
             }
         }
+        Ok(())
+    }
+
+    fn write_trait_from<W: Write>(
+        &self, w: &mut W, impls: Arc<RawTraitImplementation>
+    ) -> anyhow::Result<()> {
+        let ExpressionType::Class(other) = impls.owner else {
+            bail!("Owner of Into (Other of From) impl is not a MultiVector")
+        };
+        let Some(ExpressionType::Class(owner)) = impls.other_type_params.get(0) else {
+            bail!("Other of Into (Owner of From) impl is not a MultiVector")
+        };
+        let other = other.name();
+        let owner = owner.name();
+        let lsc = TraitKey::new(other).as_lower_snake();
+writeln!(w, r#"
+impl std::convert::From<{other}> for {owner} {{
+    fn from({lsc}: {other}) -> Self {{"#)?;
+        let mut ret = impls.return_expr.clone();
+        let old_var = Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: ("self".to_string(), 0),
+            expr: None,
+        });
+        let new_var = Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: (lsc, 0),
+            expr: None,
+        });
+        ret.substitute_variable(old_var, new_var);
+        writeln!(w, "        return ")?;
+        self.write_expression(w, &ret)?;
+        writeln!(w, "    }}\n}}")?;
+        Ok(())
+    }
+
+    fn write_trait_try_from<W: Write>(
+        &self, w: &mut W, impls: Arc<RawTraitImplementation>
+    ) -> anyhow::Result<()> {
+        let ExpressionType::Class(other) = impls.owner else {
+            bail!("Owner of Into (Other of From) impl is not a MultiVector")
+        };
+        let Some(ExpressionType::Class(owner)) = impls.other_type_params.get(0) else {
+            bail!("Other of Into (Owner of From) impl is not a MultiVector")
+        };
+        let destination_elements: BTreeSet<_> = owner.elements().into_iter().collect();
+        let misfit_elements: Vec<_> = other.elements().into_iter().enumerate()
+            .filter(|(_, el)| !destination_elements.contains(el)).collect();
+        let other = other.name();
+        let owner = owner.name();
+        let lsc = TraitKey::new(other).as_lower_snake();
+        write!(w, r#"
+impl std::convert::TryFrom<{other}> for {owner} {{
+    type Error = String;
+    fn try_from({lsc}: {other}) -> Self {{
+    "#)?;
+        let mut ret = impls.return_expr.clone();
+        let old_var = Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: ("self".to_string(), 0),
+            expr: None,
+        });
+        let new_var = Arc::new(RawVariableDeclaration {
+            comment: None,
+            name: (lsc.clone(), 0),
+            expr: None,
+        });
+        ret.substitute_variable(old_var, new_var);
+        writeln!(w, "        let mut e = String::new();")?;
+        write!(w, "        let mut fail = false;")?;
+        for (i, el) in misfit_elements {
+            write!(w, r#"
+        let el = {lsc}[{i}];
+        if el != 0.0 {{
+            fail = true;
+            e.push_str("{el}: ");
+            e.push_str(el.to_string().as_str());
+            e.push_str(", ");
+        }}"#)?;
+        }
+        write!(w, r#"
+        if fail {{
+            let mut e2 = "Elements from {other} do not fit into {owner} {{ ".to_string();
+            e2.push_str(e.as_str());
+            e2.push('}}');
+            return Err(e2);
+        }}
+        return Ok("#)?;
+        self.write_expression(w, &ret)?;
+        writeln!(w, ")\n    }}\n}}")?;
         Ok(())
     }
 }

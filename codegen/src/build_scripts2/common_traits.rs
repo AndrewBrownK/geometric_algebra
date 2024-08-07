@@ -2,7 +2,7 @@
 
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::ast2::impls::{Elaborated, InlineOnly};
-use crate::ast2::traits::{NameTrait, TraitDef_1Class_1Param, TraitImpl_10, TraitImpl_11};
+use crate::ast2::traits::{NameTrait, TraitDef_1Class_1Param, TraitImpl_10, TraitImpl_11, TraitImpl_21};
 use crate::build_scripts2::common_traits::impls::*;
 
 pub static Zero: Elaborated<ZeroImpl> = ZeroImpl
@@ -65,6 +65,15 @@ pub static WeightExpansion: Elaborated<WeightExpansionImpl> = WeightExpansionImp
     .new_trait_named("WeightExpansion")
     .blurb("TODO");
 
+pub static Into: Elaborated<IntoImpl> = IntoImpl
+    .new_trait_named("Into")
+    .blurb("TODO");
+
+pub static TryInto: Elaborated<TryIntoImpl> = TryIntoImpl
+    .new_trait_named("TryInto")
+    .blurb("TODO");
+
+
 // NOTE: If you find yourself wanting to generate grade selection traits, you are
 // probably generating extremely wasteful implementations that perform a lot more
 // floating point calculations than necessary. That is why these trait definitions
@@ -96,16 +105,18 @@ pub const fn select_anti_grades(anti_grades: AntiGrades) -> InlineOnly<SelectAnt
 
 
 mod impls {
+    use std::collections::{BTreeMap, BTreeSet};
+
     use async_trait::async_trait;
 
     use crate::algebra2::basis::{BasisElement, BasisSignature};
     use crate::algebra2::basis::grades::{AntiGrades, Grades};
     use crate::algebra2::multivector::DynamicMultiVector;
     use crate::ast2::datatype::{Integer, MultiVector};
-    use crate::ast2::expressions::{FloatExpr, IntExpr};
-    use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitDef_1Class_0Param, TraitDef_2Class_1Param, TraitImpl_10, TraitImpl_11, TraitImpl_22, TraitImplBuilder};
+    use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
+    use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{Dual, AntiWedge, AntiDual, Wedge};
+    use crate::build_scripts2::common_traits::{AntiDual, AntiWedge, Dual, Wedge};
 
     #[derive(Clone, Copy)]
     pub struct ZeroImpl;
@@ -481,4 +492,74 @@ mod impls {
         }
     }
 
+
+    // Into is treated kind of special, because we actually want to implement From,
+    // but the TraitImpl_21 pattern assumes the first argument is the owner.
+    // So in the code generation we have a special exception to treat Into as From instead.
+    #[derive(Clone, Copy)]
+    pub struct IntoImpl;
+    #[async_trait]
+    impl TraitImpl_21 for IntoImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: MultiVector
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            if slf.strong_expression_type() == other {
+                return None
+            }
+            let other_elements: BTreeSet<_> = other.elements().into_iter().collect();
+            let mut these_elements: BTreeMap<_, _> = BTreeMap::new();
+            for (f, el) in slf.elements_flat() {
+                if !other_elements.contains(&el) {
+                    return None
+                }
+                these_elements.insert(el, f);
+            }
+            let result = other.construct(|el| {
+                these_elements.remove(&el).unwrap_or(FloatExpr::Literal(0.0))
+            });
+            b.return_expr(result)
+        }
+    }
+
+    // TryInto is treated kind of special, because we actually want to implement TryFrom,
+    // but the TraitImpl_21 pattern assumes the first argument is the owner.
+    // So in the code generation we have a special exception to treat TrInto as TryFrom instead.
+    #[derive(Clone, Copy)]
+    pub struct TryIntoImpl;
+    #[async_trait]
+    impl TraitImpl_21 for TryIntoImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: MultiVector
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut missing_some = false;
+            let mut overlapping_some = false;
+            let other_elements: BTreeSet<_> = other.elements().into_iter().collect();
+            let mut these_elements: BTreeMap<_, _> = BTreeMap::new();
+            for (f, el) in slf.elements_flat() {
+                if other_elements.contains(&el) {
+                    overlapping_some = true;
+                } else {
+                    missing_some = true;
+                }
+                these_elements.insert(el, f);
+            }
+            if !missing_some || !overlapping_some {
+                return None;
+            }
+            let result = other.construct(|el| {
+                these_elements.remove(&el).unwrap_or(FloatExpr::Literal(0.0))
+            });
+            b.return_expr(result)
+        }
+    }
 }

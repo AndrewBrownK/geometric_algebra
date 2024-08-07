@@ -690,6 +690,14 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             if !filter_vecs_in.filter_sig_set(sigs) {
                 continue;
             }
+            // TODO compact-ify groups. e.g. see the following....
+            /*
+            pub union AntiDipoleOnOrigin {
+                groups: AntiDipoleOnOriginGroups,
+                /// e423, e431, e412, 0, e321, 0, 0, 0
+                elements: [f32; 8],
+            }
+             */
             let old_name = mv.name;
             let new_name = format!("{prefix}{old_name}{suffix}");
             let mut did_filter_out_some = false;
