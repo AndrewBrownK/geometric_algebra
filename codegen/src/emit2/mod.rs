@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{BTreeSet, HashSet};
 use std::io::Write;
 use std::path::Path;
 use std::sync::Arc;
@@ -7,7 +7,7 @@ use anyhow::bail;
 
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
-use crate::ast2::traits::{RawTraitDefinition, RawTraitImplementation, TraitKey};
+use crate::ast2::traits::{BinaryOps, RawTraitDefinition, RawTraitImplementation, TraitKey};
 use crate::utility::CollectResults;
 
 pub mod rust;
@@ -65,11 +65,13 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         &self,
         w: &mut W,
         def: Arc<RawTraitDefinition>,
+        fancy_infix: Option<BinaryOps>,
     ) -> anyhow::Result<()>;
     fn declare_trait_impl<W: Write>(
         &self,
         w: &mut W,
         impls: Arc<RawTraitImplementation>,
+        already_granted_infix: &mut BTreeSet<&'static str>
     ) -> anyhow::Result<()>;
     fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, is_documentation: bool, s: S) -> anyhow::Result<()>;
 

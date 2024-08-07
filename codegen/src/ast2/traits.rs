@@ -818,6 +818,35 @@ pub enum BinaryOps {
     BitOr,
     BitXor,
 }
+impl BinaryOps {
+    pub fn rust_trait_name(self) -> &'static str {
+        match self {
+            BinaryOps::Add => "Add",
+            BinaryOps::Sub => "Sub",
+            BinaryOps::Mul => "Mul",
+            BinaryOps::Div => "Div",
+            BinaryOps::Shl => "Shl",
+            BinaryOps::Shr => "Shr",
+            BinaryOps::BitAnd => "BitAnd",
+            BinaryOps::BitOr => "BitOr",
+            BinaryOps::BitXor => "BitXor",
+        }
+    }
+
+    pub fn rust_trait_method(self) -> &'static str {
+        match self {
+            BinaryOps::Add => "add",
+            BinaryOps::Sub => "sub",
+            BinaryOps::Mul => "mul",
+            BinaryOps::Div => "div",
+            BinaryOps::Shl => "shl",
+            BinaryOps::Shr => "shr",
+            BinaryOps::BitAnd => "bit_and",
+            BinaryOps::BitOr => "bit_or",
+            BinaryOps::BitXor => "bit_xor",
+        }
+    }
+}
 #[repr(u32)]
 #[derive(PartialEq, Eq, Clone, Copy, Debug, PartialOrd, Ord, Hash)]
 pub enum ExperimentalOps {
@@ -882,7 +911,7 @@ pub struct TraitImplRegistry {
     traits22: AsyncMap<(TraitKey, MultiVector, MultiVector), Option<Arc<RawTraitImplementation>>>,
 
     has_set_operators: Arc<Mutex<BTreeSet<Ops>>>,
-    infix_trick: Arc<Mutex<Option<BinaryOps>>>,
+    pub infix_trick: Arc<Mutex<Option<BinaryOps>>>,
 }
 
 

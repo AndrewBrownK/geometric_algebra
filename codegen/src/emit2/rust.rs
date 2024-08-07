@@ -15,9 +15,8 @@ use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 use crate::ast2::RawVariableDeclaration;
-use crate::ast2::traits::{CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitTypeConsensus};
+use crate::ast2::traits::{BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, sort_trait_impls};
-use crate::SIMD_SRC;
 use crate::utility::CollectResults;
 
 #[derive(Copy, Clone)]
@@ -168,6 +167,7 @@ postgres-types = "0.2.7""#)?;
         let mut defs = impls.get_defs().await;
         defs.sort_by(|a, b| a.names.trait_key.cmp(&b.names.trait_key));
         let defs = defs;
+        let fancy_infix = *impls.infix_trick.lock();
         let impls = impls.get_impls().await;
         let mut mvs = multi_vecs.declarations();
         mvs.sort_by(|a, b| a.name.cmp(&b.name));
@@ -267,6 +267,10 @@ postgres-types = "0.2.7""#)?;
                 .and_modify(|v| v.push(td.clone()))
                 .or_insert(vec![td.clone()]);
             let folder_traits = folder_traits.clone();
+            match n.as_str() {
+                "Into" | "TryInto" => continue,
+                _ => {}
+            }
             join_set.spawn(async move {
                 let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
                 let mut file = fs::OpenOptions::new()
@@ -276,7 +280,7 @@ postgres-types = "0.2.7""#)?;
                     .open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
-                self.declare_trait_def(&mut file, td)?;
+                self.declare_trait_def(&mut file, td, fancy_infix)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
                 Ok(())
@@ -319,12 +323,15 @@ postgres-types = "0.2.7""#)?;
                     .create(true)
                     .truncate(true)
                     .open(&file_path)?;
+                // writeln!(&mut file, "use crate::data::*;")?;
+                // writeln!(&mut file, "use crate::simd::*;")?;
+                let mut already_granted_infix = BTreeSet::new();
                 for i in impls {
                     let ucc = i.definition.names.trait_key.as_upper_camel();
                     match ucc.as_str() {
                         "Into" => self.write_trait_from(&mut file, i),
                         "TryInto" => self.write_trait_try_from(&mut file, i),
-                        _ => self.declare_trait_impl(&mut file, i),
+                        _ => self.declare_trait_impl(&mut file, i, &mut already_granted_infix),
                     }?
                 }
                 self.format_file(&file_path)?;
@@ -373,7 +380,23 @@ postgres-types = "0.2.7""#)?;
                     let n = t.names.trait_key;
                     let lsc = n.as_lower_snake();
                     let n = n.as_upper_camel();
+                    match n.as_str() {
+                        "Into" | "TryInto" => continue,
+                        _ => {}
+                    }
                     writeln!(&mut file, "pub use crate::traits::{lsc}::{n};")?;
+                    if fancy_infix.is_some() {
+                        match t.arity {
+                            TraitArity::Zero => {}
+                            TraitArity::One => {
+                                writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
+                            },
+                            TraitArity::Two => {
+                                writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
+                                writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc}_partial;")?;
+                            },
+                        }
+                    }
                 }
                 writeln!(&mut file, "}}")?;
             }
@@ -382,8 +405,24 @@ postgres-types = "0.2.7""#)?;
                 let k = td.names.trait_key;
                 let n = k.as_upper_camel();
                 let lsc = k.as_lower_snake();
+                match n.as_str() {
+                    "Into" | "TryInto" => continue,
+                    _ => {}
+                }
                 writeln!(&mut file, "mod {lsc};")?;
                 writeln!(&mut file, "pub use {lsc}::{n};")?;
+                if fancy_infix.is_some() {
+                    match td.arity {
+                        TraitArity::Zero => {}
+                        TraitArity::One => {
+                            writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
+                        },
+                        TraitArity::Two => {
+                            writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
+                            writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc}_partial;")?;
+                        },
+                    }
+                }
             }
             self.format_file(&file_path)?;
             Ok(())
@@ -1350,7 +1389,8 @@ impl std::hash::Hash for {ucc} {{
     }
 
     fn declare_trait_def<W: Write>(
-        &self, w: &mut W, def: Arc<RawTraitDefinition>
+        &self, w: &mut W, def: Arc<RawTraitDefinition>,
+        fancy_infix: Option<BinaryOps>
     ) -> anyhow::Result<()> {
         let ucc = def.names.trait_key.as_upper_camel();
         let lsc = def.names.trait_key.as_lower_snake();
@@ -1386,17 +1426,79 @@ impl std::hash::Hash for {ucc} {{
         }
         writeln!(w, ";\n}}")?;
 
-        // TODO fancy infix
+        let op = *def.op.lock();
+        if let Some(op) = op {
+            // TODO
+        }
 
-
-
+        if let Some(op) = fancy_infix {
+            if let TraitArity::Two = def.arity {
+                writeln!(w, "trait Infix{ucc} {{}}")?;
+            }
+            writeln!(w, "#[allow(non_camel_case_types)]")?;
+            writeln!(w, "pub struct {lsc};")?;
+            if let TraitArity::Two = def.arity {
+                writeln!(w, "#[allow(non_camel_case_types)]")?;
+                writeln!(w, "pub struct {lsc}_partial<A>(A);")?;
+            }
+            let operator_name = op.rust_trait_name();
+            let operator_method = op.rust_trait_method();
+            if let TraitArity::Two = def.arity {
+                writeln!(w, "impl<A: Infix{ucc}> std::ops::{operator_name}<{lsc}> for A {{")?;
+                writeln!(w, "    type Output = {lsc}_partial<A>;")?;
+                writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
+                writeln!(w, "        {lsc}_partial(self)")?;
+                writeln!(w, "    }}\n}}")?;
+                writeln!(w, "impl<A: {ucc}<B>, B> std::ops::{operator_name}<B> for {lsc}_partial<A> {{")?;
+                write!(w, "    type Output = ")?;
+                match *output_ty {
+                    TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
+                    TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+                    TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}<B>>::Output")?,
+                }
+                writeln!(w, ";")?;
+                writeln!(w, "    fn {operator_method}(self, rhs: B) -> Self::Output {{")?;
+                writeln!(w, "        self.0.{lsc}(rhs)")?;
+                writeln!(w, "    }}\n}}")?;
+            }
+            if let TraitArity::One = def.arity {
+                writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<{lsc}> for A {{")?;
+                write!(w, "    type Output = ")?;
+                match *output_ty {
+                    TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
+                    TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+                    TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}>::Output")?,
+                }
+                writeln!(w, ";")?;
+                writeln!(w, "    fn {operator_method}(self, _rhs: {lsc}) -> Self::Output {{")?;
+                writeln!(w, "        self.{lsc}()")?;
+                writeln!(w, "    }}\n}}")?;
+                writeln!(w, "impl<A: {ucc}> std::ops::{operator_name}<A> for {lsc} {{")?;
+                write!(w, "    type Output = ")?;
+                match *output_ty {
+                    TraitTypeConsensus::AlwaysSelf => write!(w, "A")?,
+                    TraitTypeConsensus::AllAgree(et, _) => self.write_type(w, et)?,
+                    TraitTypeConsensus::NoVotes | TraitTypeConsensus::Disagreement => write!(w, "<A as {ucc}>::Output")?,
+                }
+                writeln!(w, ";")?;
+                writeln!(w, "    fn {operator_method}(self, rhs: A) -> Self::Output {{")?;
+                writeln!(w, "        rhs.{lsc}()")?;
+                writeln!(w, "    }}\n}}")?;
+                if let TraitTypeConsensus::AlwaysSelf = *output_ty {
+                    writeln!(w, "impl<A: {ucc}> {operator_name}Assign<A> for {lsc} {{")?;
+                    writeln!(w, "    fn {operator_method}_assign(&mut self, rhs: {lsc}) {{")?;
+                    writeln!(w, "        *self = *self.{lsc}()")?;
+                    writeln!(w, "    }}\n}}")?;
+                }
+            }
+        }
 
 
         Ok(())
     }
 
     fn declare_trait_impl<W: Write>(
-        &self, w: &mut W, impls: Arc<RawTraitImplementation>
+        &self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>
     ) -> anyhow::Result<()> {
         let def = &impls.definition;
         let ucc = def.names.trait_key.as_upper_camel();
@@ -1418,6 +1520,16 @@ impl std::hash::Hash for {ucc} {{
             }
             var_param = Some(v_param);
         }
+        if let TraitArity::Two = def.arity {
+            if let TraitParam::Class(mv) = &owner_ty {
+                let n = mv.name();
+                if !already_granted_infix.contains(n) {
+                    already_granted_infix.insert(n);
+                    writeln!(w, "impl Infix{ucc} for {n} {{}}")?;
+                }
+            }
+        }
+
         // todo alias documentation
         write!(w, "impl {ucc}")?;
         if let (TraitArity::Two, Some(var_param)) = (def.arity, var_param) {
