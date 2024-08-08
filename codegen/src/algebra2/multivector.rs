@@ -47,6 +47,25 @@ pub enum BasisElementGroup {
     G3(BasisElement, BasisElement, BasisElement),
     G4(BasisElement, BasisElement, BasisElement, BasisElement),
 }
+impl Display for BasisElementGroup {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BasisElementGroup::G1(a) => {
+                write!(f, "{a}")?;
+            }
+            BasisElementGroup::G2(a, b) => {
+                write!(f, "[{a}, {b}]")?;
+            }
+            BasisElementGroup::G3(a, b, c) => {
+                write!(f, "[{a}, {b}, {c}]")?;
+            }
+            BasisElementGroup::G4(a, b, c, d) => {
+                write!(f, "[{a}, {b}, {c}, {d}]")?;
+            }
+        }
+        Ok(())
+    }
+}
 impl PartialOrd for BasisElementGroup {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.into_vec().partial_cmp(&other.into_vec())
@@ -1193,6 +1212,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
 
 
 
+#[derive(Debug)]
 pub struct DynamicMultiVector {
     vals: BTreeMap<BasisElement, FloatExpr>,
 }
@@ -1297,7 +1317,20 @@ impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
     }
 }
 
-
+impl Display for DynamicMultiVector {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut els: Vec<_> = self.vals.iter().collect();
+        els.sort_by_key(|(el, _)| el.clone());
+        write!(f, "DynamicMultiVector(")?;
+        for (i, (el, e)) in els.into_iter().enumerate() {
+            if i > 0 {
+                write!(f, ", ")?;
+            }
+            write!(f, "{el}({e})")?;
+        }
+        write!(f, ")")
+    }
+}
 
 
 //

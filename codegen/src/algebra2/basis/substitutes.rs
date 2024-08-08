@@ -160,15 +160,17 @@ impl Substitutions {
 
         // Verify that substitution elements are orthogonal
         let substitutions_to_underlying_vec: Vec<_> = substitutions_to_underlying.clone().into_iter().collect();
-        for i in 0..(substitutions_to_underlying.len() - 1) {
-            for j in (i + 1)..substitutions_to_underlying_vec.len() {
-                let (a, a_underlying) = &substitutions_to_underlying_vec[i];
-                let (b, b_underlying) = &substitutions_to_underlying_vec[j];
-                if a == &b.negate() {
-                    continue;
+        if !substitutions_to_underlying.is_empty() {
+            for i in 0..(substitutions_to_underlying.len() - 1) {
+                for j in (i + 1)..substitutions_to_underlying_vec.len() {
+                    let (a, a_underlying) = &substitutions_to_underlying_vec[i];
+                    let (b, b_underlying) = &substitutions_to_underlying_vec[j];
+                    if a == &b.negate() {
+                        continue;
+                    }
+                    let dot = a_underlying.clone().superficial_dot_product(b_underlying.clone());
+                    assert_eq!(dot, 0.0, "Basis substitutions must be orthogonal, violated by {a} and {b}")
                 }
-                let dot = a_underlying.clone().superficial_dot_product(b_underlying.clone());
-                assert_eq!(dot, 0.0, "Basis substitutions must be orthogonal, violated by {a} and {b}")
             }
         }
 

@@ -20,22 +20,81 @@ use crate::emit2::{AstEmitter, sort_trait_impls};
 use crate::SIMD_SRC;
 use crate::utility::CollectResults;
 
+/// Generate a Rust project.
 #[derive(Copy, Clone)]
 pub struct Rust {
-    pub prefer_fancy_infix: bool,
+    /// Required to distinguish meet, join, and k-reflection modules.
+    /// True means that grade 1 vectors are points.
+    /// False means that grade 1 vectors are hyper-planes.
     pub point_based: bool,
-    pub censor_grades: bool,
+
+    // Major features
+
+    /// Generate rust-to-wgsl integration.
+    /// TODO this should depend on WGSL language generation
+    /// Dependencies added: naga, naga_oil, anyhow, bytemuck, encase
     pub wgsl: bool,
+
+    /// Generate rust-to-glsl integration.
+    /// TODO this should depend on GLSL language generation
+    /// Dependencies added: naga, naga_oil, anyhow, bytemuck, encase
     pub glsl: bool,
+
+    /// Generate rust-to-sql integration.
+    /// TODO this should depend on SQL language generation
+    /// Dependencies added: pgx, postgres-types
     pub sql: bool,
+
+    /// Generate Eq, Ord, and Hash implementations for the MultiVector types.
+    /// Dependencies added: float-ord
     pub eq_ord_hash: bool,
+
+    /// Generate "NearEq" and "NearOrd" implementations for the MultiVector types.
+    /// Dependencies added: nearly
     pub nearly_eq_ord: bool,
+
+    /// Generate "Serialize" and "Deserialize" implementations for the MultiVector types.
+    /// Dependencies added: serde
     pub serde: bool,
+
+    // Small aesthetic features
+    pub prefer_fancy_infix: bool,
+    pub censor_grades: bool,
+
+    // Internal/private stuff
+
+    fancy_infix: Option<BinaryOps>,
 }
 
-// TODO f64 support??? maybe???
-
 impl Rust {
+    pub fn new(point_based: bool) -> Self {
+        Rust {
+            point_based,
+
+            wgsl: false,
+            glsl: false,
+            sql: false,
+            eq_ord_hash: false,
+            nearly_eq_ord: false,
+            serde: false,
+
+            prefer_fancy_infix: false,
+            censor_grades: false,
+
+            fancy_infix: None,
+        }
+    }
+    pub fn all_features(mut self) -> Self {
+        self.wgsl = true;
+        self.glsl = true;
+        self.sql = true;
+        self.eq_ord_hash = true;
+        self.nearly_eq_ord = true;
+        self.serde = true;
+        self
+    }
+
+
     pub async fn write_crate<P: AsRef<Path>>(
         &self,
         crate_folder: P,
@@ -116,7 +175,7 @@ postgres-types = "0.2.7""#)?;
     }
 
     pub async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
-        self,
+        mut self,
         src_folder: P,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
@@ -166,6 +225,7 @@ postgres-types = "0.2.7""#)?;
         defs.sort_by(|a, b| a.names.trait_key.cmp(&b.names.trait_key));
         let defs = defs;
         let fancy_infix = *impls.infix_trick.lock();
+        self.fancy_infix = fancy_infix;
         let impls = impls.get_impls().await;
         let mut mvs = multi_vecs.declarations();
         mvs.sort_by(|a, b| a.name.cmp(&b.name));
@@ -232,7 +292,6 @@ postgres-types = "0.2.7""#)?;
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
-                // TODO what if this file is empty? ...nahhh. not after Add, Sub, etc.
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
                 Ok(())
@@ -317,16 +376,20 @@ postgres-types = "0.2.7""#)?;
                     .create(true)
                     .truncate(true)
                     .open(&file_path)?;
+                // TODO remove these imports when they are unused
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
-                self.declare_trait_def(&mut file, td, fancy_infix)?;
+                self.declare_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
                 Ok(())
             });
         }
 
-        let mut impl_files: HashMap<String, Vec<Arc<RawTraitImplementation>>> = HashMap::new();
+        let mut impl_files: HashMap<
+            String,
+            (Vec<Arc<RawTraitImplementation>>, Vec<TraitKey>)
+        > = HashMap::new();
 
         for i in impls {
             let k = i.definition.names.trait_key;
@@ -347,16 +410,18 @@ postgres-types = "0.2.7""#)?;
             };
             let i2 = i.clone();
             impl_files.entry(format!("{folder}/impls/{name}.rs"))
-                .and_modify(move |v| v.push(i2))
-                .or_insert(vec![i]);
+                .and_modify(move |(v, _)| v.push(i2))
+                .or_insert_with(|| {
+                    let mut t_deps: Vec<_> = i.definition.dependencies.lock().iter().cloned().collect();
+                    t_deps.sort();
+                    (vec![i], t_deps)
+                });
         }
 
-        for (file_path, mut impls) in impl_files {
+        for (file_path, (mut impls, deps)) in impl_files {
             let src_folder = src_folder.clone();
             let tx2 = tx.clone();
             join_set.spawn(async move {
-                // TODO actually you should / need to pull in the dependencies and imports
-                sort_trait_impls(&mut impls, HashSet::new())?;
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
                 tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new()
@@ -364,6 +429,18 @@ postgres-types = "0.2.7""#)?;
                     .create(true)
                     .truncate(true)
                     .open(&file_path)?;
+                let mut deps_set = HashSet::new();
+                for dep in deps {
+                    deps_set.insert(dep);
+                    if self.prefer_fancy_infix {
+                        let lsc = dep.as_lower_snake();
+                        writeln!(&mut file,  "use crate::traits::{lsc};")?;
+                    } else {
+                        let ucc = dep.as_upper_camel();
+                        writeln!(&mut file,  "use crate::traits::{ucc};")?;
+                    }
+                }
+                sort_trait_impls(&mut impls, deps_set)?;
                 // writeln!(&mut file, "use crate::data::*;")?;
                 // writeln!(&mut file, "use crate::simd::*;")?;
                 let mut already_granted_infix = BTreeSet::new();
@@ -613,9 +690,17 @@ postgres-types = "0.2.7""#)?;
                 write!(w, "[{el}]")?;
             }
             FloatExpr::TraitInvoke11ToFloat(t, arg) => {
-                self.write_multi_vec(w, arg)?;
                 let method = t.as_lower_snake();
-                write!(w, ".{method}()")?;
+                if let Some(infix) = &self.fancy_infix {
+                    let op = infix.rust_operator();
+                    write!(w, "(")?;
+                    self.write_multi_vec(w, arg)?;
+                    write!(w, " {op}{method}")?;
+                    write!(w, ")")?;
+                } else {
+                    self.write_multi_vec(w, arg)?;
+                    write!(w, ".{method}()")?;
+                }
             }
             FloatExpr::Product(v) => {
                 if v.is_empty() {
@@ -873,10 +958,6 @@ postgres-types = "0.2.7""#)?;
             }
             Vec4Expr::Product(v) => {
                 if v.is_empty() {
-                    // TODO these sorts of cases should really be handled by making Vec4Expr::Product
-                    //  (and other similar Expr types obviously) have an additional element
-                    //  that is not inside the Vec, so that it can never be empty. Heck... maybe
-                    //  even 2 elements. But we'll see.
                     bail!("Attempted to write an empty product that should have been simplified");
                 }
                 if v.len() > 1 {
@@ -961,9 +1042,17 @@ postgres-types = "0.2.7""#)?;
                 write!(w, ")")?;
             }
             MultiVectorVia::TraitInvoke11ToClass(t, arg) => {
-                self.write_multi_vec(w, arg)?;
                 let method = t.as_lower_snake();
-                write!(w, ".{method}()")?;
+                if let Some(infix) = &self.fancy_infix {
+                    let op = infix.rust_operator();
+                    write!(w, "(")?;
+                    self.write_multi_vec(w, arg)?;
+                    write!(w, " {op}{method}")?;
+                    write!(w, ")")?;
+                } else {
+                    self.write_multi_vec(w, arg)?;
+                    write!(w, ".{method}()")?;
+                }
             }
             MultiVectorVia::TraitInvoke21ToClass(t, arg, mv) => {
                 self.write_multi_vec(w, arg)?;
@@ -972,12 +1061,22 @@ postgres-types = "0.2.7""#)?;
                 write!(w, ".{method}::<{b}>()")?;
             }
             MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
-                // TODO fancy infix
-                self.write_multi_vec(w, a)?;
                 let method = t.as_lower_snake();
-                write!(w, ".{method}(")?;
-                self.write_multi_vec(w, b)?;
-                write!(w, ")")?;
+                if let Some(infix) = &self.fancy_infix {
+                    let op = infix.rust_operator();
+                    write!(w, "(")?;
+                    self.write_multi_vec(w, a)?;
+                    write!(w, " {op}")?;
+                    write!(w, "{method}")?;
+                    write!(w, "{op} ")?;
+                    self.write_multi_vec(w, b)?;
+                    write!(w, ")")?;
+                } else {
+                    self.write_multi_vec(w, a)?;
+                    write!(w, ".{method}(")?;
+                    self.write_multi_vec(w, b)?;
+                    write!(w, ")")?;
+                }
             }
         }
         Ok(())
@@ -1440,8 +1539,7 @@ impl std::hash::Hash for {ucc} {{
     }
 
     fn declare_trait_def<W: Write>(
-        &self, w: &mut W, def: Arc<RawTraitDefinition>,
-        fancy_infix: Option<BinaryOps>
+        &self, w: &mut W, def: Arc<RawTraitDefinition>
     ) -> anyhow::Result<()> {
         let ucc = def.names.trait_key.as_upper_camel();
         let lsc = def.names.trait_key.as_lower_snake();
@@ -1482,7 +1580,7 @@ impl std::hash::Hash for {ucc} {{
             // TODO
         }
 
-        if let Some(op) = fancy_infix {
+        if let Some(op) = &self.fancy_infix {
             if let TraitArity::Two = def.arity {
                 writeln!(w, "pub trait Infix{ucc} {{}}")?;
             }

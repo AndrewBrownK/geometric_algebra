@@ -622,6 +622,12 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         let var_name = trait_key.as_lower_snake();
         trait_impl.finish_inline(b, var_name)
     }
+
+    // TODO "strong_inline" function that expands all expressions, even when it would result
+    //  in redundant calculations. It will inline and expand every variable invocation to its
+    //  declaration, unless/until it is a feat variable with no declaration expression.
+    //  This is useful for playground activity where defining a mathematical set of varaibles
+    //  and fully expanding the mathematical interactions.
 }
 
 
@@ -844,6 +850,20 @@ impl BinaryOps {
             BinaryOps::BitAnd => "bit_and",
             BinaryOps::BitOr => "bit_or",
             BinaryOps::BitXor => "bit_xor",
+        }
+    }
+
+    pub fn rust_operator(self) -> &'static str {
+        match self {
+            BinaryOps::Add => "+",
+            BinaryOps::Sub => "-",
+            BinaryOps::Mul => "*",
+            BinaryOps::Div => "/",
+            BinaryOps::Shl => "<<",
+            BinaryOps::Shr => ">>",
+            BinaryOps::BitAnd => "&",
+            BinaryOps::BitOr => "|",
+            BinaryOps::BitXor => "^",
         }
     }
 }
@@ -1381,6 +1401,44 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         variables: Arc<Mutex<HashMap<(String, usize), Arc<RawVariableDeclaration>>>>,
         cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
     ) -> Self {
+        TraitImplBuilder {
+            ga,
+            mvs,
+            registry,
+            trait_def,
+            inline_dependencies,
+            specialized: false,
+            cycle_detector,
+            multivector_dependencies: Default::default(),
+            traits10_dependencies: Default::default(),
+            traits11_dependencies: Default::default(),
+            traits21_dependencies: Default::default(),
+            traits22_dependencies: Default::default(),
+            wanted_multi_vecs: Default::default(),
+            variables,
+            lines: Mutex::new(vec![]),
+            return_comment: None,
+            return_expr: None,
+            return_type: HasNotReturned,
+        }
+    }
+    pub(crate) fn new_sandbox(
+        ga: Arc<GeometricAlgebra<AntiScalar>>,
+        mvs: Arc<MultiVecRepository<AntiScalar>>,
+    ) -> Self {
+        let trait_def = Arc::new(RawTraitDefinition {
+            documentation: "Sandbox".to_string(),
+            names: TraitNames::just("Sandbox"),
+            owner: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
+            arity: TraitArity::Zero,
+            output: Arc::new(RwLock::new(TraitTypeConsensus::NoVotes)),
+            op: Arc::new(Default::default()),
+            dependencies: Arc::new(Default::default()),
+        });
+        let inline_dependencies = true;
+        let variables = Arc::new(Mutex::new(HashMap::new()));
+        let cycle_detector = im::HashSet::new();
+        let registry = TraitImplRegistry::new();
         TraitImplBuilder {
             ga,
             mvs,

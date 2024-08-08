@@ -25,11 +25,14 @@ pub mod ast2;
 pub mod algebra2;
 mod utility;
 pub mod emit2;
-// TODO eventually migrate to Portable SIMD once it is stabilized https://github.com/rust-lang/rust/issues/86656
+// TODO eventually migrate to Portable SIMD once it is stabilized
+//  https://github.com/rust-lang/rust/issues/86656
+//  That would also be the appropriate time to consider f64 support. Not eager until then.
 mod simd;
 mod build_scripts2 {
     pub mod common_traits;
     pub mod cga3d;
+    pub mod pga3d;
     pub mod rga3d;
     pub mod uwu;
 }

@@ -65,7 +65,6 @@ pub trait AstEmitter: Copy + Send + Sync + 'static {
         &self,
         w: &mut W,
         def: Arc<RawTraitDefinition>,
-        fancy_infix: Option<BinaryOps>,
     ) -> anyhow::Result<()>;
     fn declare_trait_impl<W: Write>(
         &self,

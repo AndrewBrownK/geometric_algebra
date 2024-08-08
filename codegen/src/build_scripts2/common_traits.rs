@@ -276,11 +276,6 @@ mod impls {
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
             let mut dyn_mv = DynamicMultiVector::zero();
-            for (a, a_group) in slf.groups() {
-                for (b, b_group) in other.groups() {
-
-                }
-            }
             for (a, a_el) in slf.elements_by_groups() {
                 for (b, b_el) in other.elements_by_groups() {
                     let a = a.clone();
@@ -377,6 +372,53 @@ mod impls {
     }
 
     #[derive(Clone, Copy)]
+    pub struct ScalarProductImpl;
+    #[async_trait]
+    impl TraitImpl_22 for ScalarProductImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let ga = &b.ga;
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements_by_groups() {
+                for (b, b_el) in other.elements_by_groups() {
+                    let sop = ga.scalar_product(a_el, b_el);
+                    for p in sop.sum {
+                        let a = a.clone();
+                        let b = b.clone();
+                        let c = FloatExpr::Literal(p.coefficient);
+                        dyn_mv += (a * b * c, p.element);
+                    }
+                }
+            }
+            let mv = dyn_mv.construct(&b)?;
+            b.return_expr(mv)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AntiScalarProductImpl;
+    #[async_trait]
+    impl TraitImpl_22 for AntiScalarProductImpl {
+        type Output = MultiVector;
+
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            // TODO
+            None
+        }
+    }
+
+    #[derive(Clone, Copy)]
     pub struct SelectGradesImpl(pub Grades);
     #[async_trait]
     impl TraitImpl_11 for SelectGradesImpl {
@@ -428,12 +470,13 @@ mod impls {
 
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            let dual = Dual.inline(&b, other).await?;
-            let wedge = Wedge.inline(&b, slf, dual).await?;
+            // TODO inline again after getting Rust emission import fixed
+            let dual = Dual.invoke(&mut b, other).await?;
+            let wedge = Wedge.invoke(&mut  b, slf, dual).await?;
             b.return_expr(wedge)
         }
     }
@@ -446,12 +489,13 @@ mod impls {
 
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            let anti_dual = AntiDual.inline(&b, other).await?;
-            let wedge = Wedge.inline(&b, slf, anti_dual).await?;
+            // TODO inline again after getting Rust emission import fixed
+            let anti_dual = AntiDual.invoke(&mut b, other).await?;
+            let wedge = Wedge.invoke(&mut b, slf, anti_dual).await?;
             b.return_expr(wedge)
         }
     }
@@ -464,12 +508,13 @@ mod impls {
 
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            let dual = Dual.inline(&b, other).await?;
-            let anti_wedge = AntiWedge.inline(&b, slf, dual).await?;
+            // TODO inline again after getting Rust emission import fixed
+            let dual = Dual.invoke(&mut b, other).await?;
+            let anti_wedge = AntiWedge.invoke(&mut b, slf, dual).await?;
             b.return_expr(anti_wedge)
         }
     }
@@ -482,12 +527,13 @@ mod impls {
 
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            let anti_dual = AntiDual.inline(&b, other).await?;
-            let anti_wedge = AntiWedge.inline(&b, slf, anti_dual).await?;
+            // TODO inline again after getting Rust emission import fixed
+            let anti_dual = AntiDual.invoke(&mut b, other).await?;
+            let anti_wedge = AntiWedge.invoke(&mut b, slf, anti_dual).await?;
             b.return_expr(anti_wedge)
         }
     }

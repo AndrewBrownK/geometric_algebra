@@ -642,6 +642,9 @@ impl BasisElement {
 
     pub const fn reverse(&self) -> Self {
         let gr = self.grade();
+        if gr == 0 {
+            return *self;
+        }
         let exp = gr * (gr - 1) / 2;
         let mut copy = *self;
         copy.coefficient = i8::pow(-1i8, exp) * copy.coefficient;
@@ -1097,6 +1100,9 @@ pub mod elements {
     pub const e3215: BasisElement = const_parse("e3215");
 
 
+    // biVector.net pga
+    pub const e021: BasisElement = const_parse("e021");
+    pub const e032: BasisElement = const_parse("e032");
 
 
 
