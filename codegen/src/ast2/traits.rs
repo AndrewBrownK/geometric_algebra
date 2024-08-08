@@ -219,6 +219,14 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         let var_name = trait_key.as_lower_snake();
         trait_impl.finish_inline(b, var_name)
     }
+
+    async fn deep_inline<const AntiScalar: BasisElement>(
+        &self,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        todo!()
+    }
 }
 
 #[async_trait]
@@ -344,6 +352,14 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         let trait_impl = self.general_implementation(builder, owner).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.finish_inline(b, var_name)
+    }
+
+    async fn deep_inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
+        &self,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: Expr
+    ) -> Option<Variable<Self::Output>> {
+        todo!()
     }
 }
 
@@ -478,6 +494,16 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         let trait_impl = self.general_implementation(builder, owner, other).await?;
         let var_name = trait_key.as_lower_snake();
         trait_impl.finish_inline(b, var_name)
+    }
+
+
+    async fn deep_inline<const AntiScalar: BasisElement, Expr: Expression<MultiVector>>(
+        &self,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: Expr,
+        other: MultiVector
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        todo!()
     }
 }
 
@@ -628,6 +654,16 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
     //  declaration, unless/until it is a feat variable with no declaration expression.
     //  This is useful for playground activity where defining a mathematical set of varaibles
     //  and fully expanding the mathematical interactions.
+
+
+    async fn deep_inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
+        &self,
+        b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
+        owner: Expr1,
+        other: Expr2
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        todo!()
+    }
 }
 
 
