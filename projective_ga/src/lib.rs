@@ -1,4 +1,3 @@
-#![cfg_attr(all(any(target_arch = "arm", target_arch = "aarch64"), target_feature = "neon"), feature(stdsimd))]
 
 pub mod simd;
 

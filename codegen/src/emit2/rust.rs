@@ -1,8 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs;
-use std::io::Write;
+use std::io::{BufRead, BufReader, Read, Write};
 use std::ops::Deref;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
 
@@ -17,6 +17,7 @@ use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExp
 use crate::ast2::RawVariableDeclaration;
 use crate::ast2::traits::{BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
 use crate::emit2::{AstEmitter, sort_trait_impls};
+use crate::SIMD_SRC;
 use crate::utility::CollectResults;
 
 #[derive(Copy, Clone)]
@@ -152,9 +153,6 @@ postgres-types = "0.2.7""#)?;
         so we will re-export in a more convenient module.
          */
 
-        // TODO create a text file of all created files, so they can be safely deleted in subsequent rounds
-        //  and we don't leave junk files around if for example we give a generated variant a tailored name
-
         let src_folder = src_folder.as_ref().to_path_buf();
         let folder_data = src_folder.join(Path::new("data"));
         let folder_data_impls = src_folder.join(Path::new("data/impls"));
@@ -174,8 +172,45 @@ postgres-types = "0.2.7""#)?;
         let mvs = mvs;
         let mv_docs = multi_vecs.documentation();
 
+        let file_path = src_folder.join(Path::new("generated-files.txt"));
+        if let Ok(file) = fs::OpenOptions::new().read(true).open(&file_path) {
+            let mut reader = BufReader::new(file);
+            for line in reader.lines() {
+                let line = line?;
+                let line = line.trim();
+                if line.is_empty() {
+                    continue
+                }
+                let path = Path::new(line);
+                fs::remove_file(path)?;
+            }
+        }
 
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
+        let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
+        join_set.spawn(async move {
+            let mut file = fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(&file_path)?;
+            let mut paths = vec![];
+            while let Some(p) = rx.recv().await {
+                use std::fmt::Write;
+                let mut path = String::new();
+                write!(&mut path, ".")?;
+                for p in p.iter() {
+                    let p = p.to_string_lossy();
+                    write!(&mut path, "/{p}")?;
+                }
+                paths.push(path);
+            }
+            paths.sort();
+            for p in paths {
+                writeln!(&mut file, "{p}")?;
+            }
+            Ok(())
+        });
 
         let mut data_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for multi_vec in mvs.iter() {
@@ -185,8 +220,10 @@ postgres-types = "0.2.7""#)?;
             let lsc = TraitKey::new(n).as_lower_snake();
             let folder_data = folder_data.clone();
             let doc = mv_docs.get(&n.to_string()).cloned();
+            let tx2 = tx.clone();
             join_set.spawn(async move {
                 let file_path = folder_data.join(Path::new(&lsc)).with_extension("rs");
+                tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
@@ -271,8 +308,10 @@ postgres-types = "0.2.7""#)?;
                 "Into" | "TryInto" => continue,
                 _ => {}
             }
+            let tx2 = tx.clone();
             join_set.spawn(async move {
                 let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
+                tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
@@ -314,10 +353,12 @@ postgres-types = "0.2.7""#)?;
 
         for (file_path, mut impls) in impl_files {
             let src_folder = src_folder.clone();
+            let tx2 = tx.clone();
             join_set.spawn(async move {
                 // TODO actually you should / need to pull in the dependencies and imports
                 sort_trait_impls(&mut impls, HashSet::new())?;
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
+                tx2.send(file_path.clone())?;
                 let mut file = fs::OpenOptions::new()
                     .write(true)
                     .create(true)
@@ -340,8 +381,10 @@ postgres-types = "0.2.7""#)?;
         }
 
         let src_folder2 = src_folder.clone();
+        let tx2 = tx.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("data.rs"));
+            tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
@@ -367,8 +410,10 @@ postgres-types = "0.2.7""#)?;
         });
 
         let src_folder2 = src_folder.clone();
+        let tx2 = tx.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("traits.rs"));
+            tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
@@ -429,8 +474,10 @@ postgres-types = "0.2.7""#)?;
         });
 
         let src_folder2 = src_folder.clone();
+        let tx2 = tx.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("lib.rs"));
+            tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
@@ -452,18 +499,22 @@ postgres-types = "0.2.7""#)?;
         });
 
         let src_folder2 = src_folder.clone();
+        let tx2 = tx.clone();
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("simd.rs"));
+            tx2.send(file_path.clone())?;
             let mut file = fs::OpenOptions::new()
                 .write(true)
                 .create(true)
                 .truncate(true)
                 .open(&file_path)?;
-            write!(&mut file, "{SIMD_SRC}")?;
+            let src = SIMD_SRC;
+            write!(&mut file, "{src}")?;
             self.format_file(&file_path)?;
             Ok(())
         });
 
+        drop(tx);
         join_set.collect_results().await
     }
 
@@ -1433,7 +1484,7 @@ impl std::hash::Hash for {ucc} {{
 
         if let Some(op) = fancy_infix {
             if let TraitArity::Two = def.arity {
-                writeln!(w, "trait Infix{ucc} {{}}")?;
+                writeln!(w, "pub trait Infix{ucc} {{}}")?;
             }
             writeln!(w, "#[allow(non_camel_case_types)]")?;
             writeln!(w, "pub struct {lsc};")?;

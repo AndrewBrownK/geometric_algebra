@@ -25,6 +25,7 @@ pub mod ast2;
 pub mod algebra2;
 mod utility;
 pub mod emit2;
+// TODO eventually migrate to Portable SIMD once it is stabilized https://github.com/rust-lang/rust/issues/86656
 mod simd;
 mod build_scripts2 {
     pub mod common_traits;
