@@ -171,6 +171,13 @@ pub enum FloatExpr {
     // Note that this does cause panics and/or Errors if this Vec is provoked
     // when empty, so it is an important part of the simplification methods
     // to ensure no empty Vecs escape.
+    // TODO:
+    //  type IsNegative = bool;
+    //  type IsReciprocal = bool;
+    //  Product(Vec<(IsReciprocal, FloatExpr)>)
+    //  Sum(Vec<(IsNegative, FloatExpr)>)
+    //  then get rid of Subtract and Divide
+    //  and do this for Vec2Expr, Vec3Expr, and Vec4Expr as well
     Product(Vec<FloatExpr>),
     Sum(Vec<FloatExpr>),
     Divide(Vec<FloatExpr>),
