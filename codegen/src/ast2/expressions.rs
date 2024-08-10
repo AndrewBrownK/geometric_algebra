@@ -42,6 +42,7 @@ pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
     }
 
     fn of_expr(expr: &AnyExpression) -> Option<Self>;
+    fn select_expr(expr: AnyExpression) -> Option<Self::Expr>;
 }
 impl TraitResultType for Integer {
     type Expr = IntExpr;
@@ -60,6 +61,16 @@ impl TraitResultType for Integer {
         match expr {
             AnyExpression::Int(_) => Some(Self),
             _ => None,
+        }
+    }
+
+    fn select_expr(expr: AnyExpression) -> Option<Self::Expr> {
+        match expr {
+            AnyExpression::Int(mut e) => {
+                // e.simplify();
+                Some(e)
+            },
+            _ => None
         }
     }
 }
@@ -81,6 +92,16 @@ impl TraitResultType for Float {
         match expr {
             AnyExpression::Float(_) => Some(Self),
             _ => None,
+        }
+    }
+
+    fn select_expr(expr: AnyExpression) -> Option<Self::Expr> {
+        match expr {
+            AnyExpression::Float(mut e) => {
+                e.simplify();
+                Some(e)
+            },
+            _ => None
         }
     }
 }
@@ -143,6 +164,16 @@ impl TraitResultType for MultiVector {
         match expr {
             AnyExpression::Class(mv_expr) => Some(mv_expr.mv_class.clone()),
             _ => None,
+        }
+    }
+
+    fn select_expr(expr: AnyExpression) -> Option<Self::Expr> {
+        match expr {
+            AnyExpression::Class(mut e) => {
+                e.simplify();
+                Some(e)
+            },
+            _ => None
         }
     }
 }
@@ -284,6 +315,17 @@ impl AnyExpression {
             AnyExpression::Vec3(v3) => v3.substitute_variable(old.clone(), new.clone()),
             AnyExpression::Vec4(v4) => v4.substitute_variable(old.clone(), new.clone()),
             AnyExpression::Class(c) => c.substitute_variable(old.clone(), new.clone()),
+        }
+    }
+
+    pub(crate) fn deep_inline_variables(&mut self) {
+        match self {
+            AnyExpression::Int(e) => e.deep_inline_variables(),
+            AnyExpression::Float(e) => e.deep_inline_variables(),
+            AnyExpression::Vec2(e) => e.deep_inline_variables(),
+            AnyExpression::Vec3(e) => e.deep_inline_variables(),
+            AnyExpression::Vec4(e) => e.deep_inline_variables(),
+            AnyExpression::Class(e) => e.deep_inline_variables(),
         }
     }
 }
@@ -1261,6 +1303,7 @@ impl Display for FloatExpr {
                 let (grp, el) = &gs[*i as usize];
                 match (grp, el) {
                     (MultiVectorGroupExpr::JustFloat(v), BasisElementGroup::G1(el)) => {
+                        // TODO infininte loop here, after doing deep_inline_variables
                         write!(f, "{el}({v})")?;
                     }
                     _ => unreachable!("Should not be able to access FloatExpr as MultiVecGroup \
@@ -1509,6 +1552,186 @@ impl Display for MultiVectorExpr {
         Ok(())
     }
 }
+
+
+
+
+impl IntExpr {
+    fn deep_inline_variables(&mut self) {
+        match &self {
+            IntExpr::Variable(v) => {
+                let Some(AnyExpression::Int(e)) = &v.decl.expr else { return };
+                let mut e = e.clone();
+                e.deep_inline_variables();
+                *self = e;
+            }
+            IntExpr::Literal(_) => {}
+            IntExpr::TraitInvoke10ToInt(_, _) => {}
+        }
+    }
+}
+
+impl FloatExpr {
+    fn deep_inline_variables(&mut self) {
+        match self {
+            FloatExpr::Variable(v) => {
+                let Some(AnyExpression::Float(e)) = &v.decl.expr else { return };
+                let mut e = e.clone();
+                e.deep_inline_variables();
+                *self = e;
+            }
+            FloatExpr::Literal(_) => {}
+            FloatExpr::AccessVec2(v, _) => v.deep_inline_variables(),
+            FloatExpr::AccessVec3(v, _) => v.deep_inline_variables(),
+            FloatExpr::AccessVec4(v, _) => v.deep_inline_variables(),
+            FloatExpr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
+            FloatExpr::AccessMultiVecFlat(mv, _) => mv.deep_inline_variables(),
+            FloatExpr::TraitInvoke11ToFloat(_, _) => {}
+            FloatExpr::Product(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            FloatExpr::Sum(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            FloatExpr::Divide(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            FloatExpr::Pow(a, b) => {
+                a.deep_inline_variables();
+                b.deep_inline_variables();
+            }
+        }
+    }
+}
+impl Vec2Expr {
+    fn deep_inline_variables(&mut self) {
+        match self {
+            Vec2Expr::Variable(v) => {
+                let Some(AnyExpression::Vec2(e)) = &v.decl.expr else { return };
+                let mut e = e.clone();
+                e.deep_inline_variables();
+                *self = e;
+            }
+            Vec2Expr::Gather1(e) => e.deep_inline_variables(),
+            Vec2Expr::Gather2(e0, e1) => {
+                e0.deep_inline_variables();
+                e1.deep_inline_variables();
+            }
+            Vec2Expr::SwizzleVec2(v, _, _) => v.deep_inline_variables(),
+            Vec2Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
+            Vec2Expr::Product(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            Vec2Expr::Sum(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+        }
+    }
+}
+impl Vec3Expr {
+    fn deep_inline_variables(&mut self) {
+        match self {
+            Vec3Expr::Variable(v) => {
+                let Some(AnyExpression::Vec3(e)) = &v.decl.expr else { return };
+                let mut e = e.clone();
+                e.deep_inline_variables();
+                *self = e;
+            }
+            Vec3Expr::Gather1(e) => e.deep_inline_variables(),
+            Vec3Expr::Gather3(e0, e1, e2) => {
+                e0.deep_inline_variables();
+                e1.deep_inline_variables();
+                e2.deep_inline_variables();
+            }
+            Vec3Expr::SwizzleVec3(v, _, _, _) => v.deep_inline_variables(),
+            Vec3Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
+            Vec3Expr::Product(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            Vec3Expr::Sum(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+        }
+    }
+}
+impl Vec4Expr {
+    fn deep_inline_variables(&mut self) {
+        match self {
+            Vec4Expr::Variable(v) => {
+                let Some(AnyExpression::Vec4(e)) = &v.decl.expr else { return };
+                let mut e = e.clone();
+                e.deep_inline_variables();
+                *self = e;
+            }
+            Vec4Expr::Gather1(e) => e.deep_inline_variables(),
+            Vec4Expr::Gather4(e0, e1, e2, e3) => {
+                e0.deep_inline_variables();
+                e1.deep_inline_variables();
+                e2.deep_inline_variables();
+                e3.deep_inline_variables();
+            }
+            Vec4Expr::SwizzleVec4(v, _, _, _, _) => v.deep_inline_variables(),
+            Vec4Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
+            Vec4Expr::Product(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            Vec4Expr::Sum(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+        }
+    }
+}
+impl MultiVectorGroupExpr {
+    fn deep_inline_variables(&mut self) {
+        match self {
+            MultiVectorGroupExpr::JustFloat(v) => v.deep_inline_variables(),
+            MultiVectorGroupExpr::Vec2(v) => v.deep_inline_variables(),
+            MultiVectorGroupExpr::Vec3(v) => v.deep_inline_variables(),
+            MultiVectorGroupExpr::Vec4(v) => v.deep_inline_variables(),
+        }
+    }
+}
+impl MultiVectorExpr {
+    fn deep_inline_variables(&mut self) {
+        match self.expr.as_mut() {
+            MultiVectorVia::Variable(v) => {
+                let Some(AnyExpression::Class(e)) = &v.decl.expr else { return };
+                let mut e = e.clone();
+                e.deep_inline_variables();
+                *self = e;
+            }
+            MultiVectorVia::Construct(v) => {
+                for e in v.iter_mut() {
+                    e.deep_inline_variables();
+                }
+            }
+            MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
+            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
+        }
+    }
+}
+
+
+
 
 
 

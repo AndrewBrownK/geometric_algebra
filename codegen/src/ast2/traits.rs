@@ -649,20 +649,34 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         trait_impl.finish_inline(b, var_name)
     }
 
-    // TODO "strong_inline" function that expands all expressions, even when it would result
-    //  in redundant calculations. It will inline and expand every variable invocation to its
-    //  declaration, unless/until it is a feat variable with no declaration expression.
-    //  This is useful for playground activity where defining a mathematical set of varaibles
-    //  and fully expanding the mathematical interactions.
-
-
     async fn deep_inline<const AntiScalar: BasisElement, Expr1: Expression<MultiVector>, Expr2: Expression<MultiVector>>(
         &self,
         b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr1,
         other: Expr2
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        todo!()
+        // The correct/best way to do this is to use regular inline, and then substitute
+        //  the variable declarations independently. This is because we support trait definitions
+        //  using either invoke or inline, and so we don't know which we're going to get, but
+        //  in any case a trait definition might define variables on its own, without necessarily
+        //  doing so from an inlined invocation. So if it does that, then you have to replace
+        //  variable declarations anyway. Regular inlining works by appending inner builders to
+        //  an outer builder with finish_inline, so I think we can use a middle builder. The
+        //  outer builder is whatever called deep_inline. The middle builder will do the variable
+        //  inlining on the return value, and accumulate inner inlining. The inner builders do
+        //  the regular inlinings which inline all the way down and use variables.
+
+        let trait_key = self.trait_names().trait_key;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let variables = Arc::new(Mutex::new(HashMap::new()));
+        let mut builder = TraitImplBuilder::new(
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone()
+        );
+        let owner = builder.coerce_variable("self", owner);
+        let other = builder.coerce_variable("other", other);
+        let trait_impl = self.general_implementation(builder, owner, other).await?;
+        trait_impl.finish_deep_inline()
     }
 }
 
@@ -1458,6 +1472,8 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             return_type: HasNotReturned,
         }
     }
+
+    // TODO put a wrapper type on this maybe... or rename it to be independent of trait building.
     pub(crate) fn new_sandbox(
         ga: Arc<GeometricAlgebra<AntiScalar>>,
         mvs: Arc<MultiVecRepository<AntiScalar>>,
@@ -1967,7 +1983,7 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
     }
 }
 
-impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, ExprType> {
+impl<const AntiScalar: BasisElement, ExprType: TraitResultType> TraitImplBuilder<AntiScalar, ExprType> {
     fn finish_inline<V: Into<String>>(self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>, var_name: V) -> Option<Variable<ExprType>> {
         let mut outer_lines = b.lines.lock();
         let inner_lines = self.lines.into_inner();
@@ -1979,6 +1995,12 @@ impl<const AntiScalar: BasisElement, ExprType> TraitImplBuilder<AntiScalar, Expr
         // under normal circumstances like some combination of classes that doesn't produce a result
         let var = b.comment_variable_impl(self.return_comment, var_name, self.return_type, self.return_expr?);
         Some(var)
+    }
+
+    fn finish_deep_inline(self) -> Option<<ExprType as TraitResultType>::Expr> {
+        let mut r = self.return_expr?;
+        r.deep_inline_variables();
+        ExprType::select_expr(r)
     }
 }
 

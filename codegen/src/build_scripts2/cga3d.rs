@@ -70,7 +70,8 @@ pub fn cga3d_script() {
     }
 
     let file_path = PathBuf::from("../cga3d_new/");
-    let rust = Rust::new(true).all_features();
+    let mut rust = Rust::new(true).all_features();
+    rust.sql = false;
 
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let e = rt.block_on(async move {

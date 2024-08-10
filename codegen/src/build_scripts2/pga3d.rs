@@ -5,8 +5,9 @@ use crate::algebra2::basis::elements::e0123;
 use crate::algebra2::multivector::DynamicMultiVector;
 use crate::ast2::datatype::{Float, MultiVector};
 use crate::ast2::expressions::FloatExpr;
-use crate::ast2::traits::TraitImplBuilder;
+use crate::ast2::traits::{TraitDef_2Class_2Param, TraitImplBuilder};
 use crate::ast2::Variable;
+use crate::build_scripts2::common_traits::GeometricProduct;
 
 fn float_var(n: &str) -> Variable<Float> {
     Variable::quick_var(n, Float)
@@ -167,32 +168,8 @@ fn anti_product_argument() {
         let r_wedge_dot_a_wedge_dot_r = r_wedge_dot_a_wedge_dot_r.construct(&builder)?;
         println!("R ⟑ A ⟑ ~R = {r_wedge_dot_a_wedge_dot_r}");
 
-        let mut r_wedge_dot_b = DynamicMultiVector::zero();
-        for (a, a_el) in rotor.elements_flat() {
-            for (b, b_el) in b.elements_flat() {
-                let sop = rga3d.product(a_el, b_el);
-                for p in sop.sum {
-                    let a = a.clone();
-                    let b = b.clone();
-                    let c = FloatExpr::Literal(p.coefficient);
-                    r_wedge_dot_b += (a * b * c, p.element);
-                }
-            }
-        }
-        let r_wedge_dot_b = r_wedge_dot_b.construct(&builder)?;
-        let mut r_wedge_dot_b_wedge_dot_r = DynamicMultiVector::zero();
-        for (a, a_el) in r_wedge_dot_b.elements_flat() {
-            for (b, b_el) in r_reverse.elements_flat() {
-                let sop = rga3d.product(a_el, b_el);
-                for p in sop.sum {
-                    let a = a.clone();
-                    let b = b.clone();
-                    let c = FloatExpr::Literal(p.coefficient);
-                    r_wedge_dot_b_wedge_dot_r += (a * b * c, p.element);
-                }
-            }
-        }
-        let r_wedge_dot_b_wedge_dot_r = r_wedge_dot_b_wedge_dot_r.construct(&builder)?;
+        let r_wedge_dot_b = GeometricProduct.deep_inline(&builder, rotor, b).await?;
+        let mut r_wedge_dot_b_wedge_dot_r = GeometricProduct.deep_inline(&builder, r_wedge_dot_b, r_reverse).await?;
         println!("R ⟑ B ⟑ ~R = {r_wedge_dot_b_wedge_dot_r}");
 
 
