@@ -9,6 +9,7 @@ use crate::ast2::{RawVariableDeclaration, RawVariableInvocation, Variable};
 use crate::ast2::datatype::{ExpressionType, Float, Integer, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::operations_tracker::{TrackOperations, TraitOperationsLookup, VectoredOperationsTracker};
 use crate::ast2::traits::TraitKey;
+use crate::utility::slice_retain_mut;
 
 pub trait TraitResultType: Clone + Debug + Sized + Send + Sync + 'static {
     type Expr: Expression<Self>;
@@ -210,7 +211,7 @@ pub enum FloatExpr {
     //  then get rid of Subtract and Divide
     //  and do this for Vec2Expr, Vec3Expr, and Vec4Expr as well
     Product(Vec<FloatExpr>),
-    Sum(Vec<FloatExpr>),
+    Sum(Vec<(FloatExpr, f32)>, f32),
     Divide(Vec<FloatExpr>),
     Pow(Box<FloatExpr>, Box<FloatExpr>),
     // /* Use Pow instead of Sqrt */ Sqrt(Box<FloatExpr>),
@@ -229,7 +230,7 @@ pub enum Vec2Expr {
     // when empty, so it is an important part of the simplification methods
     // to ensure no empty Vecs escape.
     Product(Vec<Vec2Expr>),
-    Sum(Vec<Vec2Expr>),
+    Sum(Vec<(Vec2Expr, f32)>, [f32; 2]),
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec3Expr {
@@ -244,7 +245,7 @@ pub enum Vec3Expr {
     // when empty, so it is an important part of the simplification methods
     // to ensure no empty Vecs escape.
     Product(Vec<Vec3Expr>),
-    Sum(Vec<Vec3Expr>),
+    Sum(Vec<(Vec3Expr, f32)>, [f32; 3]),
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum Vec4Expr {
@@ -259,7 +260,7 @@ pub enum Vec4Expr {
     // when empty, so it is an important part of the simplification methods
     // to ensure no empty Vecs escape.
     Product(Vec<Vec4Expr>),
-    Sum(Vec<Vec4Expr>),
+    Sum(Vec<(Vec4Expr, f32)>, [f32; 4]),
 }
 #[derive(PartialEq, Clone, Debug)]
 pub enum MultiVectorGroupExpr {
@@ -468,8 +469,8 @@ impl Expression<Float> for FloatExpr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
-            FloatExpr::Sum(v) => {
-                for v in v.iter_mut() {
+            FloatExpr::Sum(v, _last_addend) => {
+                for (v, _factor) in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
@@ -542,8 +543,8 @@ impl Expression<Vec2> for Vec2Expr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
-            Vec2Expr::Sum(v) => {
-                for v in v.iter_mut() {
+            Vec2Expr::Sum(v, _last_addend) => {
+                for (v, _factor) in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
@@ -610,8 +611,8 @@ impl Expression<Vec3> for Vec3Expr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
-            Vec3Expr::Sum(v) => {
-                for v in v.iter_mut() {
+            Vec3Expr::Sum(v, _last_addend) => {
+                for (v, _factor) in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
@@ -679,8 +680,8 @@ impl Expression<Vec4> for Vec4Expr {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
-            Vec4Expr::Sum(v) => {
-                for v in v.iter_mut() {
+            Vec4Expr::Sum(v, _last_addend) => {
+                for (v, _factor) in v.iter_mut() {
                     v.substitute_variable(old.clone(), new.clone());
                 }
             }
@@ -1315,7 +1316,7 @@ impl Display for FloatExpr {
                 let (float, el) = &gs[*i as usize];
                 write!(f, "{el}({float})")?;
             }
-            FloatExpr::TraitInvoke11ToFloat(_, _) => {}
+            FloatExpr::TraitInvoke11ToFloat(_, _) => todo!(),
             FloatExpr::Product(v) => {
                 write!(f, "(")?;
                 for (i, factor) in v.iter().enumerate() {
@@ -1326,13 +1327,34 @@ impl Display for FloatExpr {
                 }
                 write!(f, ")")?;
             }
-            FloatExpr::Sum(v) => {
+            FloatExpr::Sum(v, last_addend) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => write!(f, "{addend}")?,
+                        (-1.0, false) => write!(f, "-{addend}")?,
+                        (f, false) => write!(f, "{f}*{addend}")?,
+
+                        (1.0, true) => write!(f, " + {addend}")?,
+                        (-1.0, true) => write!(f, " - {addend}")?,
+                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(f, " - {f}*{addend}")?
+                        },
                     }
-                    write!(f, "{factor}")?;
+                }
+                match (*last_addend, !v.is_empty()) {
+                    (f, _) if f == 0.0 => {}
+                    (f, false) => write!(f, "{f}")?,
+                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
+                    (f, true) if f < 0.0 => {
+                        let f = -f;
+                        write!(f, " - {f}")
+                    }
+                    _ => {}
                 }
                 write!(f, ")")?;
             }
@@ -1383,13 +1405,34 @@ impl Display for Vec2Expr {
                 }
                 write!(f, ")")?;
             }
-            Vec2Expr::Sum(v) => {
+            Vec2Expr::Sum(v, last_addend) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => write!(f, "{addend}")?,
+                        (-1.0, false) => write!(f, "-{addend}")?,
+                        (f, false) => write!(f, "{f}*{addend}")?,
+
+                        (1.0, true) => write!(f, " + {addend}")?,
+                        (-1.0, true) => write!(f, " - {addend}")?,
+                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(f, " - {f}*{addend}")?
+                        },
                     }
-                    write!(f, "{factor}")?;
+                }
+                match (*last_addend, !v.is_empty()) {
+                    (f, _) if f == 0.0 => {}
+                    (f, false) => write!(f, "{f}")?,
+                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
+                    (f, true) if f < 0.0 => {
+                        let f = -f;
+                        write!(f, " - {f}")
+                    }
+                    _ => {}
                 }
                 write!(f, ")")?;
             }
@@ -1438,13 +1481,34 @@ impl Display for Vec3Expr {
                 }
                 write!(f, ")")?;
             }
-            Vec3Expr::Sum(v) => {
+            Vec3Expr::Sum(v, last_addend) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => write!(f, "{addend}")?,
+                        (-1.0, false) => write!(f, "-{addend}")?,
+                        (f, false) => write!(f, "{f}*{addend}")?,
+
+                        (1.0, true) => write!(f, " + {addend}")?,
+                        (-1.0, true) => write!(f, " - {addend}")?,
+                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(f, " - {f}*{addend}")?
+                        },
                     }
-                    write!(f, "{factor}")?;
+                }
+                match (*last_addend, !v.is_empty()) {
+                    (f, _) if f == 0.0 => {}
+                    (f, false) => write!(f, "{f}")?,
+                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
+                    (f, true) if f < 0.0 => {
+                        let f = -f;
+                        write!(f, " - {f}")
+                    }
+                    _ => {}
                 }
                 write!(f, ")")?;
             }
@@ -1493,13 +1557,34 @@ impl Display for Vec4Expr {
                 }
                 write!(f, ")")?;
             }
-            Vec4Expr::Sum(v) => {
+            Vec4Expr::Sum(v, last_addend) => {
                 write!(f, "(")?;
-                for (i, factor) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => write!(f, "{addend}")?,
+                        (-1.0, false) => write!(f, "-{addend}")?,
+                        (f, false) => write!(f, "{f}*{addend}")?,
+
+                        (1.0, true) => write!(f, " + {addend}")?,
+                        (-1.0, true) => write!(f, " - {addend}")?,
+                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(f, " - {f}*{addend}")?
+                        },
                     }
-                    write!(f, "{factor}")?;
+                }
+                match (*last_addend, !v.is_empty()) {
+                    (f, _) if f == 0.0 => {}
+                    (f, false) => write!(f, "{f}")?,
+                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
+                    (f, true) if f < 0.0 => {
+                        let f = -f;
+                        write!(f, " - {f}")
+                    }
+                    _ => {}
                 }
                 write!(f, ")")?;
             }
@@ -1592,7 +1677,7 @@ impl FloatExpr {
                     e.deep_inline_variables();
                 }
             }
-            FloatExpr::Sum(v) => {
+            FloatExpr::Sum(v, _) => {
                 for e in v.iter_mut() {
                     e.deep_inline_variables();
                 }
@@ -1630,7 +1715,7 @@ impl Vec2Expr {
                     e.deep_inline_variables();
                 }
             }
-            Vec2Expr::Sum(v) => {
+            Vec2Expr::Sum(v, _) => {
                 for e in v.iter_mut() {
                     e.deep_inline_variables();
                 }
@@ -1660,7 +1745,7 @@ impl Vec3Expr {
                     e.deep_inline_variables();
                 }
             }
-            Vec3Expr::Sum(v) => {
+            Vec3Expr::Sum(v, _) => {
                 for e in v.iter_mut() {
                     e.deep_inline_variables();
                 }
@@ -1691,7 +1776,7 @@ impl Vec4Expr {
                     e.deep_inline_variables();
                 }
             }
-            Vec4Expr::Sum(v) => {
+            Vec4Expr::Sum(v, _) => {
                 for e in v.iter_mut() {
                     e.deep_inline_variables();
                 }
@@ -1964,55 +2049,94 @@ impl FloatExpr {
                     panic!("Problem")
                 }
             }
-            FloatExpr::Sum(sum) => {
+            FloatExpr::Sum(sum, last_addend) => {
                 if sum.is_empty() {
                     panic!("Problem")
                 }
-                for s in  sum.iter_mut() {
-                    s.simplify();
+                for (addend, _factor) in  sum.iter_mut() {
+                    addend.simplify();
                 }
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+                if sum.len() == 1 && *last_addend == 0.0 {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        *self = FloatExpr::Product(vec![addend, FloatExpr::Literal(factor)]);
+                    }
                 }
-                let mut coalesce = 0.0;
-                let mut contained_zero = false;
                 let mut flatten = vec![];
-                sum.retain_mut(|it| {
-                    if let FloatExpr::Literal(f) = it {
-                        contained_zero = *f == 0.0;
-                        coalesce += *f;
+                sum.retain_mut(|(addend, factor)| match addend {
+                    FloatExpr::Literal(f) => {
+                        *last_addend += *f * *factor;
                         false
-                    } else if let FloatExpr::Sum(ref mut s) = it {
+                    }
+                    FloatExpr::Sum(s, another_addend) => {
                         flatten.append(s);
+                        *last_addend += *another_addend;
                         false
-                    } else {
+                    }
+                    FloatExpr::Product(p) => {
+                        p.retain(|f| match f {
+                            FloatExpr::Literal(f) => {
+                                *factor *= f;
+                                false
+                            }
+                            _ => true,
+                        });
+                        if p.is_empty() {
+                            // It's tempting to say return false, but it's the safer bet to panic.
+                            // Product simplification should always merge literals, and if the only
+                            // thing in the product is one (merged) literal, then it should replace
+                            // the product with just that one element. So there should never be a
+                            // case (outside FloatExpr::Product simplification) where we remove all
+                            // FloatExpr::Literal from a FloatExpr::Product and find no other
+                            // product factors remaining. So if we ever hit this branch/panic,
+                            // we need and want to know, so that we can fix simplification.
+                            panic!("Problem")
+                        }
+                        if p.len() == 1 {
+                            *addend = p.remove(1);
+                        }
                         true
                     }
+                    _ => true,
                 });
-                flatten.retain(|it| {
-                    if let FloatExpr::Literal(f) = it {
-                        contained_zero = *f == 0.0;
-                        coalesce += f;
+                flatten.retain(|(addend, factor)| match addend {
+                    FloatExpr::Literal(f) => {
+                        *last_addend += *f * *factor;
                         false
-                    } else {
-                        true
                     }
+                    _ => true,
                 });
-                if coalesce != 0.0 {
-                    sum.push(FloatExpr::Literal(coalesce));
-                }
                 sum.append(&mut flatten);
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+
+                let mut partition = 1;
+                while partition <= sum.len() {
+                    let (front, back) = sum.split_at_mut(partition);
+                    let (front_expr, front_factor) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_factor)| {
+                        if front_expr == back_expr {
+                            *front_factor += *back_factor;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    sum.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if sum.is_empty() && contained_zero {
-                    *self = FloatExpr::Literal(0.0);
-                    return
+                sum.retain(|(_, f)| *f != 0.0);
+
+                if sum.len() == 1 && *last_addend == 0.0 {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        *self = FloatExpr::Product(vec![addend, FloatExpr::Literal(factor)]);
+                    }
                 }
                 if sum.is_empty() {
-                    panic!("Problem")
+                    *self = FloatExpr::Literal(*last_addend);
                 }
             }
             FloatExpr::Divide(_) => {}
@@ -2207,78 +2331,121 @@ impl Vec2Expr {
                     panic!("Problem")
                 }
             }
-            Vec2Expr::Sum(ref mut sum) => {
+            Vec2Expr::Sum(ref mut sum, last_addend) => {
                 if sum.is_empty() {
                     panic!("Problem")
                 }
-                for s in sum.iter_mut() {
-                    s.simplify();
+                for (addend, _factor) in sum.iter_mut() {
+                    addend.simplify();
                 }
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+                if sum.len() == 1 && *last_addend == [0.0; 2] {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        *self = Vec2Expr::Product(vec![addend, Vec2Expr::Gather1(FloatExpr::Literal(factor))]);
+                    }
                 }
-                let mut coalesce = [0.0, 0.0];
-                let mut contained_zero = false;
                 let mut flatten = vec![];
-                sum.retain_mut(|it| {
-                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_zero |= *f == 0.0;
-                        coalesce[0] += *f;
-                        coalesce[1] += *f;
+                sum.retain_mut(|(addend, factor)| match addend {
+                    Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
                         false
-                    } else if let Vec2Expr::Gather2(
-                        FloatExpr::Literal(f0),
-                        FloatExpr::Literal(f1)) = it {
-                        contained_zero |= *f0 == 0.0 && *f1 == 0.0;
-                        coalesce[0] += *f0;
-                        coalesce[1] += *f1;
+                    }
+                    Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) => {
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
                         false
-                    } else if let Vec2Expr::Sum(ref mut p) = it {
-                        flatten.append(p);
+                    }
+                    Vec2Expr::Sum(s, another_addend) => {
+                        flatten.append(s);
+                        last_addend[0] += another_addend[0];
+                        last_addend[1] += another_addend[1];
                         false
-                    } else {
+                    }
+                    Vec2Expr::Product(p) => {
+                        let mut contains_gather_lits = false;
+                        p.retain(|f| match f {
+                            Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
+                                *factor *= f;
+                                false
+                            }
+                            Vec2Expr::Gather2(FloatExpr::Literal(_f0), FloatExpr::Literal(_f1)) => {
+                                contains_gather_lits = true;
+                                // If it was one factor we could easily pull out, then we'd
+                                // be in the above Gather1 case, not this case.
+                                true
+                            }
+                            _ => true
+                        });
+                        if p.is_empty() && !contains_gather_lits {
+                            // TODO not 100% sure about panicking here yet, but we'll see
+                            // Read explanation in analogous spot in FloatExpr::simplify
+                            panic!("Problem")
+                        }
+                        if p.len() == 1 {
+                            *addend = p.remove(1);
+                        }
                         true
                     }
+                    _ => true,
                 });
-                flatten.retain(|it| {
-                    if let Vec2Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_zero |= *f == 0.0;
-                        coalesce[0] += *f;
-                        coalesce[1] += *f;
+                flatten.retain(|(addend, factor)| match addend {
+                    Vec2Expr::Gather1(FloatExpr::Literal(f)) => {
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
                         false
-                    } else if let Vec2Expr::Gather2(
-                        FloatExpr::Literal(f0),
-                        FloatExpr::Literal(f1)) = it {
-                        contained_zero |= *f0 == 0.0 && *f1 == 0.0;
-                        coalesce[0] += *f0;
-                        coalesce[1] += *f1;
-                        false
-                    } else {
-                        true
                     }
+                    Vec2Expr::Gather2(FloatExpr::Literal(f0), FloatExpr::Literal(f1)) => {
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
+                        false
+                    }
+                    _ => true,
                 });
-                if coalesce != [0.0, 0.0] {
-                    if coalesce[0] == coalesce[1] {
-                        sum.push(Vec2Expr::Gather1(FloatExpr::Literal(coalesce[0])))
-                    } else {
-                        sum.push(Vec2Expr::Gather2(
-                            FloatExpr::Literal(coalesce[0]),
-                            FloatExpr::Literal(coalesce[1]),
-                        ))
-                    }
-                }
                 sum.append(&mut flatten);
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+
+                let mut partition = 1;
+                while partition <= sum.len() {
+                    let (front, back) = sum.split_at_mut(partition);
+                    let (front_expr, front_factor) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_factor)| {
+                        if front_expr == back_expr {
+                            *front_factor += *back_factor;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    sum.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if sum.is_empty() && contained_zero {
-                    *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
-                    return
+                sum.retain(|(_, f)| *f != 0.0);
+
+                if sum.len() == 1 && *last_addend == [0.0; 2] {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        let f0 = FloatExpr::Literal(last_addend[0]);
+                        let f1 = FloatExpr::Literal(last_addend[1]);
+                        let gather = if f0 == f1 {
+                            Vec2Expr::Gather1(f0)
+                        } else {
+                            Vec2Expr::Gather2(f0, f1)
+                        };
+                        *self = Vec2Expr::Product(vec![addend, gather]);
+                    }
                 }
                 if sum.is_empty() {
-                    panic!("Problem")
+                    let f0 = FloatExpr::Literal(last_addend[0]);
+                    let f1 = FloatExpr::Literal(last_addend[1]);
+                    *self = if f0 == f1 {
+                        Vec2Expr::Gather1(f0)
+                    } else {
+                        Vec2Expr::Gather2(f0, f1)
+                    };
                 }
             }
             Vec2Expr::SwizzleVec2(_, _, _) => {
@@ -2455,85 +2622,128 @@ impl Vec3Expr {
                     panic!("Problem")
                 }
             }
-            Vec3Expr::Sum(ref mut sum) => {
+            Vec3Expr::Sum(ref mut sum, last_addend) => {
                 if sum.is_empty() {
                     panic!("Problem")
                 }
-                for s in sum.iter_mut() {
-                    s.simplify();
+                for (addend, _factor) in sum.iter_mut() {
+                    addend.simplify();
                 }
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+                if sum.len() == 1 && *last_addend == [0.0; 3] {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        *self = Vec3Expr::Product(vec![addend, Vec3Expr::Gather1(FloatExpr::Literal(factor))])
+                    }
                 }
-                let mut coalesce = [0.0, 0.0, 0.0];
-                let mut contained_zero = false;
                 let mut flatten = vec![];
-                sum.retain_mut(|it| {
-                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_zero |= *f == 0.0;
-                        coalesce[0] += *f;
-                        coalesce[1] += *f;
-                        coalesce[2] += *f;
+                sum.retain_mut(|(addend, factor)| match addend {
+                    Vec3Expr::Gather1(FloatExpr::Literal(f)) => {
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
+                        last_addend[2] += *f * *factor;
                         false
-                    } else if let Vec3Expr::Gather3(
-                        FloatExpr::Literal(f0),
-                        FloatExpr::Literal(f1),
-                        FloatExpr::Literal(f2)) = it {
-                        contained_zero |= *f0 == 0.0 && *f1 == 0.0 && *f2 == 0.0;
-                        coalesce[0] += *f0;
-                        coalesce[1] += *f1;
-                        coalesce[2] += *f2;
+                    }
+                    Vec3Expr::Gather3(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2)) => {
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
+                        last_addend[2] += *f2 * *factor;
                         false
-                    } else if let Vec3Expr::Sum(ref mut p) = it {
-                        flatten.append(p);
+                    }
+                    Vec3Expr::Sum(s, another_addend) => {
+                        flatten.append(s);
+                        last_addend[0] += another_addend[0];
+                        last_addend[1] += another_addend[1];
+                        last_addend[2] += another_addend[2];
                         false
-                    } else {
+                    }
+                    Vec3Expr::Product(p) => {
+                        let mut contains_gather_lits = false;
+                        p.retain(|f| match f {
+                            Vec3Expr::Gather1(FloatExpr::Literal(f)) => {
+                                *factor *= f;
+                                false
+                            }
+                            Vec3Expr::Gather3(FloatExpr::Literal(_f0), FloatExpr::Literal(_f1), FloatExpr::Literal(_f2)) => {
+                                contains_gather_lits = true;
+                                // If it was one factor we could easily pull out, then we'd
+                                // be in the above Gather1 case, not this case.
+                                true
+                            }
+                            _ => true
+                        });
+                        if p.is_empty() && !contains_gather_lits {
+                            // TODO not 100% sure about panicking here yet, but we'll see
+                            // Read explanation in analogous spot in FloatExpr::simplify
+                            panic!("Problem")
+                        }
+                        if p.len() == 1 {
+                            *addend = p.remove(1);
+                        }
                         true
                     }
+                    _ => true,
                 });
-                flatten.retain(|it| {
-                    if let Vec3Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_zero |= *f == 0.0;
-                        coalesce[0] += *f;
-                        coalesce[1] += *f;
-                        coalesce[2] += *f;
+                flatten.retain(|(addend, factor)| match addend {
+                    Vec3Expr::Gather1(FloatExpr::Literal(f)) => {
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
+                        last_addend[2] += *f * *factor;
                         false
-                    } else if let Vec3Expr::Gather3(
-                        FloatExpr::Literal(f0),
-                        FloatExpr::Literal(f1),
-                        FloatExpr::Literal(f2)) = it {
-                        contained_zero |= *f0 == 0.0 && *f1 == 0.0 && *f2 == 0.0;
-                        coalesce[0] += *f0;
-                        coalesce[1] += *f1;
-                        coalesce[2] += *f2;
-                        false
-                    } else {
-                        true
                     }
+                    Vec3Expr::Gather3(FloatExpr::Literal(f0), FloatExpr::Literal(f1), FloatExpr::Literal(f2)) => {
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
+                        last_addend[2] += *f2 * *factor;
+                        false
+                    }
+                    _ => true,
                 });
-                if coalesce != [0.0, 0.0, 0.0] {
-                    if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] {
-                        sum.push(Vec3Expr::Gather1(FloatExpr::Literal(coalesce[0])))
-                    } else {
-                        sum.push(Vec3Expr::Gather3(
-                            FloatExpr::Literal(coalesce[0]),
-                            FloatExpr::Literal(coalesce[1]),
-                            FloatExpr::Literal(coalesce[2]),
-                        ))
-                    }
-                }
                 sum.append(&mut flatten);
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+
+                let mut partition = 1;
+                while partition <= sum.len() {
+                    let (front, back) = sum.split_at_mut(partition);
+                    let (front_expr, front_factor) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_factor)| {
+                        if front_expr == back_expr {
+                            *front_factor += *back_factor;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    sum.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if sum.is_empty() && contained_zero {
-                    *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
-                    return
+                sum.retain(|(_, f)| *f != 0.0);
+
+                if sum.len() == 1 && *last_addend == [0.0; 3] {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        let f0 = FloatExpr::Literal(last_addend[0]);
+                        let f1 = FloatExpr::Literal(last_addend[1]);
+                        let f2 = FloatExpr::Literal(last_addend[2]);
+                        let gather = if f0 == f1 && f1 == f2 {
+                            Vec3Expr::Gather1(f0)
+                        } else {
+                            Vec3Expr::Gather3(f0, f1, f2)
+                        };
+                        *self = Vec3Expr::Product(vec![addend, gather]);
+                    }
                 }
                 if sum.is_empty() {
-                    panic!("Problem")
+                    let f0 = FloatExpr::Literal(last_addend[0]);
+                    let f1 = FloatExpr::Literal(last_addend[1]);
+                    let f2 = FloatExpr::Literal(last_addend[2]);
+                    *self = if f0 == f1 && f1 == f2 {
+                        Vec3Expr::Gather1(f0)
+                    } else {
+                        Vec3Expr::Gather3(f0, f1, f2)
+                    };
                 }
             }
             Vec3Expr::SwizzleVec3(_, _, _, _) => {
@@ -2722,92 +2932,141 @@ impl Vec4Expr {
                     panic!("Problem")
                 }
             }
-            Vec4Expr::Sum(sum) => {
+            Vec4Expr::Sum(sum, last_addend) => {
                 if sum.is_empty() {
                     panic!("Problem")
                 }
-                for s in sum.iter_mut() {
-                    s.simplify();
+                for (addend, _factor) in sum.iter_mut() {
+                    addend.simplify();
                 }
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+                if sum.len() == 1 && *last_addend == [0.0; 4] {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        *self = Vec4Expr::Product(vec![addend, Vec4Expr::Gather1(FloatExpr::Literal(factor))])
+                    }
                 }
-                let mut coalesce = [0.0, 0.0, 0.0, 0.0];
-                let mut contained_zero = false;
                 let mut flatten = vec![];
-                sum.retain_mut(|it| {
-                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_zero |= *f == 0.0;
-                        coalesce[0] += *f;
-                        coalesce[1] += *f;
-                        coalesce[2] += *f;
-                        coalesce[3] += *f;
+                sum.retain_mut(|(addend, factor)| match addend {
+                    Vec4Expr::Gather1(FloatExpr::Literal(f)) => {
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
+                        last_addend[2] += *f * *factor;
+                        last_addend[3] += *f * *factor;
                         false
-                    } else if let Vec4Expr::Gather4(
-                        FloatExpr::Literal(f0),
-                        FloatExpr::Literal(f1),
-                        FloatExpr::Literal(f2),
-                        FloatExpr::Literal(f3)) = it {
-                        contained_zero |= *f0 == 0.0 && *f1 == 0.0 && *f2 == 0.0 && *f3 == 0.0;
-                        coalesce[0] += *f0;
-                        coalesce[1] += *f1;
-                        coalesce[2] += *f2;
-                        coalesce[3] += *f3;
+                    }
+                    Vec4Expr::Gather4(
+                        FloatExpr::Literal(f0), FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2), FloatExpr::Literal(f3)) => {
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
+                        last_addend[2] += *f2 * *factor;
+                        last_addend[3] += *f3 * *factor;
                         false
-                    } else if let Vec4Expr::Sum(ref mut p) = it {
-                        flatten.append(p);
+                    }
+                    Vec4Expr::Sum(s, another_addend) => {
+                        flatten.append(s);
+                        last_addend[0] += another_addend[0];
+                        last_addend[1] += another_addend[1];
+                        last_addend[2] += another_addend[2];
+                        last_addend[3] += another_addend[3];
                         false
-                    } else {
+                    }
+                    Vec4Expr::Product(p) => {
+                        let mut contains_gather_lits = false;
+                        p.retain(|f| match f {
+                            Vec4Expr::Gather1(FloatExpr::Literal(f)) => {
+                                *factor *= f;
+                                false
+                            }
+                            Vec4Expr::Gather4(
+                                FloatExpr::Literal(_f0), FloatExpr::Literal(_f1),
+                                FloatExpr::Literal(_f2), FloatExpr::Literal(_f3)) => {
+                                contains_gather_lits = true;
+                                // If it was one factor we could easily pull out, then we'd
+                                // be in the above Gather1 case, not this case.
+                                true
+                            }
+                            _ => true
+                        });
+                        if p.is_empty() && !contains_gather_lits {
+                            // TODO not 100% sure about panicking here yet, but we'll see
+                            // Read explanation in analogous spot in FloatExpr::simplify
+                            panic!("Problem")
+                        }
+                        if p.len() == 1 {
+                            *addend = p.remove(1);
+                        }
                         true
                     }
+                    _ => true,
                 });
-                flatten.retain(|it| {
-                    if let Vec4Expr::Gather1(FloatExpr::Literal(f)) = it {
-                        contained_zero |= *f == 0.0;
-                        coalesce[0] += *f;
-                        coalesce[1] += *f;
-                        coalesce[2] += *f;
-                        coalesce[3] += *f;
+                flatten.retain(|(addend, factor)| match addend {
+                    Vec4Expr::Gather1(FloatExpr::Literal(f)) => {
+                        last_addend[0] += *f * *factor;
+                        last_addend[1] += *f * *factor;
+                        last_addend[2] += *f * *factor;
+                        last_addend[3] += *f * *factor;
                         false
-                    } else if let Vec4Expr::Gather4(
-                        FloatExpr::Literal(f0),
-                        FloatExpr::Literal(f1),
-                        FloatExpr::Literal(f2),
-                        FloatExpr::Literal(f3)) = it {
-                        contained_zero |= *f0 == 0.0 && *f1 == 0.0 && *f2 == 0.0 && *f3 == 0.0;
-                        coalesce[0] += *f0;
-                        coalesce[1] += *f1;
-                        coalesce[2] += *f2;
-                        coalesce[3] += *f3;
-                        false
-                    } else {
-                        true
                     }
+                    Vec4Expr::Gather4(
+                        FloatExpr::Literal(f0), FloatExpr::Literal(f1),
+                        FloatExpr::Literal(f2), FloatExpr::Literal(f3)) => {
+                        last_addend[0] += *f0 * *factor;
+                        last_addend[1] += *f1 * *factor;
+                        last_addend[2] += *f2 * *factor;
+                        last_addend[3] += *f3 * *factor;
+                        false
+                    }
+                    _ => true,
                 });
-                if coalesce != [0.0, 0.0, 0.0, 0.0] {
-                    if coalesce[0] == coalesce[1] && coalesce[1] == coalesce[2] && coalesce[2] == coalesce[3] {
-                        sum.push(Vec4Expr::Gather1(FloatExpr::Literal(coalesce[0])))
-                    } else {
-                        sum.push(Vec4Expr::Gather4(
-                            FloatExpr::Literal(coalesce[0]),
-                            FloatExpr::Literal(coalesce[1]),
-                            FloatExpr::Literal(coalesce[2]),
-                            FloatExpr::Literal(coalesce[3]),
-                        ))
-                    }
-                }
                 sum.append(&mut flatten);
-                if sum.len() == 1 {
-                    *self = sum.remove(0);
-                    return
+
+                let mut partition = 1;
+                while partition <= sum.len() {
+                    let (front, back) = sum.split_at_mut(partition);
+                    let (front_expr, front_factor) = &mut front[partition - 1];
+                    let kept_length = slice_retain_mut(back, |(back_expr, back_factor)| {
+                        if front_expr == back_expr {
+                            *front_factor += *back_factor;
+                            false
+                        } else {
+                            true
+                        }
+                    });
+                    sum.truncate(partition + kept_length);
+                    partition += 1;
                 }
-                if sum.is_empty() && contained_zero {
-                    *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
-                    return
+                sum.retain(|(_, f)| *f != 0.0);
+
+                if sum.len() == 1 && *last_addend == [0.0; 4] {
+                    let (addend, factor) = sum.remove(0);
+                    return if factor == 1.0 {
+                        *self = addend;
+                    } else {
+                        let f0 = FloatExpr::Literal(last_addend[0]);
+                        let f1 = FloatExpr::Literal(last_addend[1]);
+                        let f2 = FloatExpr::Literal(last_addend[2]);
+                        let f3 = FloatExpr::Literal(last_addend[3]);
+                        let gather = if f0 == f1 && f1 == f2 && f2 == f3 {
+                            Vec4Expr::Gather1(f0)
+                        } else {
+                            Vec4Expr::Gather4(f0, f1, f2, f3)
+                        };
+                        *self = Vec4Expr::Product(vec![addend, gather]);
+                    }
                 }
                 if sum.is_empty() {
-                    panic!("Problem")
+                    let f0 = FloatExpr::Literal(last_addend[0]);
+                    let f1 = FloatExpr::Literal(last_addend[1]);
+                    let f2 = FloatExpr::Literal(last_addend[2]);
+                    let f3 = FloatExpr::Literal(last_addend[3]);
+                    *self = if f0 == f1 && f1 == f2 && f2 == f3 {
+                        Vec4Expr::Gather1(f0)
+                    } else {
+                        Vec4Expr::Gather4(f0, f1, f2, f3)
+                    };
                 }
             }
             Vec4Expr::SwizzleVec4(_, _, _, _, _) => {
@@ -2903,7 +3162,7 @@ impl<FE: Into<FloatExpr>> Add<FE> for FloatExpr {
 
     fn add(self, rhs: FE) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = FloatExpr::Sum(vec![self, rhs]);
+        let mut s = FloatExpr::Sum(vec![(self, 1.0), (rhs, 1.0)], 0.0);
         s.simplify();
         s
     }
@@ -2913,7 +3172,7 @@ impl<FE: Into<FloatExpr>> AddAssign<FE> for FloatExpr {
         let rhs = rhs.into();
         let mut x = FloatExpr::Literal(0.0);
         mem::swap(&mut x, self);
-        *self = FloatExpr::Sum(vec![x, rhs]);
+        *self = FloatExpr::Sum(vec![(x, 1.0), (rhs, 1.0)], 0.0);
         self.simplify();
     }
 }
@@ -2965,7 +3224,7 @@ impl<V: Into<Vec2Expr>> Add<V> for Vec2Expr {
 
     fn add(self, rhs: V) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = Vec2Expr::Sum(vec![self, rhs]);
+        let mut s = Vec2Expr::Sum(vec![(self, 1.0), (rhs, 1.0)], [0.0; 2]);
         s.simplify();
         s
     }
@@ -2975,7 +3234,7 @@ impl<V: Into<Vec2Expr>> AddAssign<V> for Vec2Expr {
         let rhs = rhs.into();
         let mut x = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
-        *self = Vec2Expr::Sum(vec![x, rhs]);
+        *self = Vec2Expr::Sum(vec![(x, 1.0), (rhs, 1.0)], [0.0; 2]);
         self.simplify();
     }
 }
@@ -3027,7 +3286,7 @@ impl<V: Into<Vec3Expr>> Add<V> for Vec3Expr {
 
     fn add(self, rhs: V) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = Vec3Expr::Sum(vec![self, rhs]);
+        let mut s = Vec3Expr::Sum(vec![(self, 1.0), (rhs, 1.0)], [0.0; 3]);
         s.simplify();
         s
     }
@@ -3037,7 +3296,7 @@ impl<V: Into<Vec3Expr>> AddAssign<V> for Vec3Expr {
         let rhs = rhs.into();
         let mut x = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
-        *self = Vec3Expr::Sum(vec![x, rhs]);
+        *self = Vec3Expr::Sum(vec![(x, 1.0), (rhs, 1.0)], [0.0; 3]);
         self.simplify();
     }
 }
@@ -3089,7 +3348,7 @@ impl<V: Into<Vec4Expr>> Add<V> for Vec4Expr {
 
     fn add(self, rhs: V) -> Self::Output {
         let rhs = rhs.into();
-        let mut s = Vec4Expr::Sum(vec![self, rhs]);
+        let mut s = Vec4Expr::Sum(vec![(self, 1.0), (rhs, 1.0)], [0.0; 4]);
         s.simplify();
         s
     }
@@ -3099,7 +3358,7 @@ impl<V: Into<Vec4Expr>> AddAssign<V> for Vec4Expr {
         let rhs = rhs.into();
         let mut x = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
         mem::swap(&mut x, self);
-        *self = Vec4Expr::Sum(vec![x, rhs]);
+        *self = Vec4Expr::Sum(vec![(x, 1.0), (rhs, 1.0)], [0.0; 4]);
         self.simplify();
     }
 }
@@ -3201,13 +3460,19 @@ impl TrackOperations for FloatExpr {
                 }
                 result
             }
-            FloatExpr::Sum(v) => {
+            FloatExpr::Sum(v, lits) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (f, factor) in v.iter() {
+                    if *factor != 1.0 && *factor != -1.0 {
+                        result.floats.mul += 1;
+                    }
                     result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.floats.add_sub += v.len() - 1;
+                }
+                if *lits != 0.0 {
+                    result.floats.add_sub += 1;
                 }
                 result
             }
@@ -3244,13 +3509,19 @@ impl TrackOperations for Vec2Expr {
                 }
                 result
             }
-            Vec2Expr::Sum(v) => {
+            Vec2Expr::Sum(v, lits) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (f, factor) in v.iter() {
+                    if *factor != 1.0 && *factor != -1.0 {
+                        result.simd2.mul += 1;
+                    }
                     result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd2.add_sub += v.len() - 1;
+                }
+                if *lits != [0.0; 2] {
+                    result.simd2.add_sub += 1;
                 }
                 result
             }
@@ -3275,13 +3546,19 @@ impl TrackOperations for Vec3Expr {
                 }
                 result
             }
-            Vec3Expr::Sum(v) => {
+            Vec3Expr::Sum(v, lits) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (f, factor) in v.iter() {
+                    if *factor != 1.0 && *factor != -1.0 {
+                        result.simd3.mul += 1;
+                    }
                     result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd3.add_sub += v.len() - 1;
+                }
+                if *lits != [0.0; 3] {
+                    result.simd3.add_sub += 1;
                 }
                 result
             }
@@ -3306,13 +3583,19 @@ impl TrackOperations for Vec4Expr {
                 }
                 result
             }
-            Vec4Expr::Sum(v) => {
+            Vec4Expr::Sum(v, lits) => {
                 let mut result = VectoredOperationsTracker::zero();
-                for f in v.iter() {
+                for (f, factor) in v.iter() {
+                    if *factor != 1.0 && *factor != -1.0 {
+                        result.simd4.mul += 1;
+                    }
                     result += f.count_operations(lookup);
                 }
                 if v.len() > 1 {
                     result.simd4.add_sub += v.len() - 1;
+                }
+                if *lits != [0.0; 4] {
+                    result.simd4.add_sub += 1;
                 }
                 result
             }

@@ -361,30 +361,17 @@ impl CollectResults for JoinSet<anyhow::Result<()>> {
 }
 
 
-
-
-
-// pub trait TypeFlags<const F: usize> {}
-// pub trait SetFlags<const Idx: u32, const F: usize>: TypeFlags<F> {
-//     type Output: TypeFlags<{F | (1usize << Idx)}>;
-// }
-// pub trait UnSetFlags<const Idx: u32, const F: usize>: TypeFlags<F> {
-//     type Output: TypeFlags<{F & !(1usize << Idx)}>;
-// }
-//
-//
-//
-// impl<Thing, const Idx: u32> UnSetFlags<Idx, {usize::MAX}> for (Thing, {usize::MAX})
-// where Thing: TypeFlags<{usize::MAX}> {
-//     type Output = ();
-// }
-// impl<Thing, const Idx: u32> SetFlags<Idx, {0usize}> for Thing
-// where Thing: TypeFlags<{0usize}> {
-//     type Output = ();
-// }
-//
-// impl<const F: usize, Thing> UnSetFlags<{0u32}, F> for Thing
-// where Thing: TypeFlags<F> + TypeFlags<{(1usize << 0u32) | F}> {}
-//
-// impl<Thing, const Idx: usize, const F: usize> SetFlags<Idx, F> for Thing
-// where Thing: TypeFlags<F> + TypeFlags<{(!(1usize << Idx)) & F}> {}
+/// retain_mut for slices. Returns the final length
+pub fn slice_retain_mut<T, F>(slice: &mut [T], mut f: F) -> usize
+where
+    F: FnMut(&mut T) -> bool,
+{
+    let mut i = 0;
+    for j in 0..slice.len() {
+        if f(&mut slice[j]) {
+            slice.swap(i, j);
+            i += 1;
+        }
+    }
+    return i;
+}
