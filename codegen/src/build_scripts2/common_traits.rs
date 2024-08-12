@@ -554,7 +554,7 @@ mod impls {
             slf: Variable<MultiVector>,
             other: MultiVector
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            if slf.strong_expression_type() == other {
+            if slf.expression_type() == other {
                 return None
             }
             let other_elements: BTreeSet<_> = other.elements().into_iter().collect();

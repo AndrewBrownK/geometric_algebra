@@ -184,7 +184,7 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
-            AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
+            AnyExpression::Class(mv) => { Some(mv.expression_type()) }
             _ => None,
         };
         let invocation_expression = <Self::Output as TraitResultType>::expr_10(trait_key.clone(), owner, mv_result);
@@ -272,7 +272,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         b: &mut TraitImplBuilder<AntiScalar, HasNotReturned>, owner: Expr
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
-        let owner_class = owner.strong_expression_type();
+        let owner_class = owner.expression_type();
         let owner_param = owner;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), None);
         if b.cycle_detector.contains(&cycle_detector_key) {
@@ -325,7 +325,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
-            AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
+            AnyExpression::Class(mv) => { Some(mv.expression_type()) }
             _ => None,
         };
         let owner_param = extract_multivector_expr(owner_param);
@@ -339,7 +339,7 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         owner: Expr
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
-        let impl_key = (trait_key.clone(), owner.strong_expression_type());
+        let impl_key = (trait_key.clone(), owner.expression_type());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
         if let Some(Some(raw_impl)) = b.registry.traits11.get(&impl_key).await {
@@ -419,7 +419,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         other: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
-        let owner_class = owner.strong_expression_type();
+        let owner_class = owner.expression_type();
         let owner_param = owner;
         let other_class = other;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), Some(other_class.clone()));
@@ -474,7 +474,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
-            AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
+            AnyExpression::Class(mv) => { Some(mv.expression_type()) }
             _ => None,
         };
         let owner_param = extract_multivector_expr(owner_param);
@@ -490,7 +490,7 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         other: MultiVector
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
-        let impl_key = (trait_key.clone(), owner.strong_expression_type(), other.clone());
+        let impl_key = (trait_key.clone(), owner.expression_type(), other.clone());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
         if let Some(Some(raw_impl)) = b.registry.traits21.get(&impl_key).await {
@@ -572,9 +572,9 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         other: Expr2
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
         let trait_key = self.trait_names().trait_key;
-        let owner_class = owner.strong_expression_type();
+        let owner_class = owner.expression_type();
         let owner_param = owner;
-        let other_class = other.strong_expression_type();
+        let other_class = other.expression_type();
         let other_param = other;
         let cycle_detector_key = (trait_key.clone(), owner_class.clone(), Some(other_class.clone()));
         if b.cycle_detector.contains(&cycle_detector_key) {
@@ -634,7 +634,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
             // We already had the dependency. No problem.
         }
         let mv_result = match &the_impl.return_expr {
-            AnyExpression::Class(mv) => { Some(mv.strong_expression_type()) }
+            AnyExpression::Class(mv) => { Some(mv.expression_type()) }
             _ => None,
         };
         let owner_param = extract_multivector_expr(owner_param);
@@ -651,7 +651,7 @@ pub trait TraitDef_2Class_2Param: TraitImpl_22 + ProvideTraitNames {
         other: Expr2
     ) -> Option<Variable<Self::Output>> {
         let trait_key = self.trait_names().trait_key;
-        let impl_key = (trait_key.clone(), owner.strong_expression_type(), other.strong_expression_type());
+        let impl_key = (trait_key.clone(), owner.expression_type(), other.expression_type());
 
         // Double Option/None: First is no impl attempted yet, Second is impl determined absent
         if let Some(Some(raw_impl)) = b.registry.traits22.get(&impl_key).await {
@@ -1568,7 +1568,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         var_name: V,
         expr: Expr
     ) -> Variable<ExprType> {
-        self.comment_variable_impl(None::<String>, var_name, expr.strong_expression_type(), expr.into_any_expression())
+        self.comment_variable_impl(None::<String>, var_name, expr.expression_type(), expr.into_any_expression())
     }
 
     pub fn comment_variable<
@@ -1582,7 +1582,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
         var_name: V,
         expr: Expr
     ) -> Variable<ExprType> {
-        self.comment_variable_impl(Some(comment), var_name, expr.strong_expression_type(), expr.into_any_expression())
+        self.comment_variable_impl(Some(comment), var_name, expr.expression_type(), expr.into_any_expression())
     }
 
     fn comment_variable_impl<
@@ -1644,7 +1644,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
     fn comment_return_impl<C: Into<String>, ExprType, Expr: Expression<ExprType>>(
         self, comment: Option<C>, expr: Expr
     ) -> Option<TraitImplBuilder<AntiScalar, ExprType>> {
-        let return_type = expr.strong_expression_type();
+        let return_type = expr.expression_type();
         return Some(TraitImplBuilder {
             ga: self.ga.clone(),
             mvs: self.mvs.clone(),
