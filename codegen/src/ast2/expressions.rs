@@ -1828,6 +1828,10 @@ impl MultiVectorExpr {
 const DEBUG_PRINT_SIMPLIFY: bool = false;
 
 
+// TODO in places where *self = component.clone(), see if you can change
+//  it to not clone by performing a mem::swap on a local dummy value
+
+
 // TODO simplification todo list
 //  - impl Wedge<AntiFlectorOnOrigin> for AntiPlane
 //    might be interesting to extend Simd32x3 to Simd32x4
@@ -1998,9 +2002,6 @@ impl FloatExpr {
             }
             FloatExpr::TraitInvoke11ToFloat(_, _) => {}
             FloatExpr::Product(product) => {
-                // TODO product of (Sum + Literals) should distribute the literals
-                //  into the Sum
-
                 if product.is_empty() {
                     panic!("Problem")
                 }
@@ -2046,6 +2047,30 @@ impl FloatExpr {
                 if product.len() == 1 {
                     *self = product.remove(0);
                     return
+                }
+                if product.len() == 2 {
+                    let (a, b) = product.split_at_mut(1);
+                    let a = &mut a[0];
+                    let b = &mut b[0];
+                    match (a, b) {
+                        (FloatExpr::Sum(v, ad), FloatExpr::Literal(l)) => {
+                            *ad = *ad * *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = FloatExpr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (FloatExpr::Literal(l), FloatExpr::Sum(v, ad)) => {
+                            *ad = *ad * *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = FloatExpr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (_, _) => {}
+                    }
                 }
                 if product.is_empty() && contained_one {
                     *self = FloatExpr::Literal(1.0);
@@ -2327,6 +2352,32 @@ impl Vec2Expr {
                 if product.len() == 1 {
                     *self = product.remove(0);
                     return
+                }
+                if product.len() == 2 {
+                    let (a, b) = product.split_at_mut(1);
+                    let a = &mut a[0];
+                    let b = &mut b[0];
+                    match (a, b) {
+                        (Vec2Expr::Sum(v, ad), Vec2Expr::Gather1(FloatExpr::Literal(l))) => {
+                            ad[0] *= *l;
+                            ad[1] *= *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = Vec2Expr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (Vec2Expr::Gather1(FloatExpr::Literal(l)), Vec2Expr::Sum(v, ad)) => {
+                            ad[0] *= *l;
+                            ad[1] *= *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = Vec2Expr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (_, _) => {}
+                    }
                 }
                 if product.is_empty() && contained_one {
                     *self = Vec2Expr::Gather1(FloatExpr::Literal(1.0));
@@ -2619,6 +2670,34 @@ impl Vec3Expr {
                 if product.len() == 1 {
                     *self = product.remove(0);
                     return
+                }
+                if product.len() == 2 {
+                    let (a, b) = product.split_at_mut(1);
+                    let a = &mut a[0];
+                    let b = &mut b[0];
+                    match (a, b) {
+                        (Vec3Expr::Sum(v, ad), Vec3Expr::Gather1(FloatExpr::Literal(l))) => {
+                            ad[0] *= *l;
+                            ad[1] *= *l;
+                            ad[2] *= *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = Vec3Expr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (Vec3Expr::Gather1(FloatExpr::Literal(l)), Vec3Expr::Sum(v, ad)) => {
+                            ad[0] *= *l;
+                            ad[1] *= *l;
+                            ad[2] *= *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = Vec3Expr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (_, _) => {}
+                    }
                 }
                 if product.is_empty() && contained_one {
                     *self = Vec3Expr::Gather1(FloatExpr::Literal(1.0));
@@ -2930,6 +3009,36 @@ impl Vec4Expr {
                 if product.len() == 1 {
                     *self = product.remove(0);
                     return
+                }
+                if product.len() == 2 {
+                    let (a, b) = product.split_at_mut(1);
+                    let a = &mut a[0];
+                    let b = &mut b[0];
+                    match (a, b) {
+                        (Vec4Expr::Sum(v, ad), Vec4Expr::Gather1(FloatExpr::Literal(l))) => {
+                            ad[0] *= *l;
+                            ad[1] *= *l;
+                            ad[2] *= *l;
+                            ad[3] *= *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = Vec4Expr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (Vec4Expr::Gather1(FloatExpr::Literal(l)), Vec4Expr::Sum(v, ad)) => {
+                            ad[0] *= *l;
+                            ad[1] *= *l;
+                            ad[2] *= *l;
+                            ad[3] *= *l;
+                            for (_, f) in v.iter_mut() {
+                                *f = *f * *l;
+                            }
+                            *self  = Vec4Expr::Sum(v.clone(), ad.clone());
+                            return
+                        }
+                        (_, _) => {}
+                    }
                 }
                 if product.is_empty() && contained_one {
                     *self = Vec4Expr::Gather1(FloatExpr::Literal(1.0));
