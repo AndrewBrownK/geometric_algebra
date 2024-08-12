@@ -7,7 +7,7 @@ use anyhow::bail;
 
 use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::MultiVec;
-use crate::ast2::traits::{BinaryOps, RawTraitDefinition, RawTraitImplementation, TraitKey};
+use crate::ast2::traits::{BinaryOps, RawTraitDefinition, RawTraitImplementation, TraitKey, TraitParam};
 use crate::utility::CollectResults;
 
 pub mod rust;
@@ -17,6 +17,21 @@ fn sort_trait_impls(
     trait_implementations: &mut Vec<Arc<RawTraitImplementation>>,
     mut already_ordered: HashSet<TraitKey>,
 ) -> anyhow::Result<()> {
+    // Start with a sort by name, so we get stable outputs
+    trait_implementations.sort_by(|a, b| {
+        let a_key = a.definition.names.trait_key;
+        let b_key = b.definition.names.trait_key;
+        let key_cmp = a_key.cmp(&b_key);
+        let std::cmp::Ordering::Equal = key_cmp else { return key_cmp };
+
+        let owner_cmp = a.owner.cmp(&b.owner);
+        let std::cmp::Ordering::Equal = owner_cmp else { return owner_cmp };
+
+        let a_other = a.other_type_params.get(0);
+        let b_other = b.other_type_params.get(0);
+        a_other.cmp(&b_other)
+    });
+
     // Ok now lets properly order the implementations that
     // are actually declared here.
     let mut needs_ordering: Vec<_> = trait_implementations.clone();

@@ -1,18 +1,19 @@
+use std::cmp::Ordering;
 use std::fmt::{Display, Formatter};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
 
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Integer;
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Float;
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Vec2;
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Vec3;
-#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Vec4;
 
 const DUMMY_ANTI_SCALAR: BasisElement = BasisElement::const_from(BasisSignature::from_bits_retain(u16::MAX))
@@ -50,6 +51,23 @@ pub struct MultiVector {
     anti_scalar: BasisElement,
     multi_vec: &'static MultiVec<DUMMY_ANTI_SCALAR>
 }
+impl PartialOrd for MultiVector {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(&other))
+    }
+}
+impl Ord for MultiVector {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.anti_scalar.cmp(&other.anti_scalar).then_with(|| {
+            self.multi_vec.name.cmp(&other.multi_vec.name).then_with(|| {
+                self.multi_vec.grades.cmp(&other.multi_vec.grades).then_with(|| {
+                    self.multi_vec.elements().cmp(&other.multi_vec.elements())
+                })
+            })
+        })
+    }
+}
+
 impl PartialEq for MultiVector {
     fn eq(&self, other: &Self) -> bool {
         self.anti_scalar == other.anti_scalar && std::ptr::eq(self.multi_vec, other.multi_vec)
@@ -65,7 +83,7 @@ impl Display for MultiVector {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Ord, PartialOrd)]
 pub enum ExpressionType {
     Int(Integer),
     Float(Float),
