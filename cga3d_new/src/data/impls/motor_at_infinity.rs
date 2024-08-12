@@ -395,6 +395,29 @@ impl TryFrom<CircleOrthogonalOrigin> for MotorAtInfinity {
     }
 }
 
+impl TryFrom<DualNum> for MotorAtInfinity {
+    type Error = String;
+    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = dual_num[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from DualNum do not fit into MotorAtInfinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ Simd32x4::from([0.0, 0.0, 0.0, dual_num[e5]])));
+    }
+}
+
 impl TryFrom<Line> for MotorAtInfinity {
     type Error = String;
     fn try_from(line: Line) -> Result<Self, Self::Error> {

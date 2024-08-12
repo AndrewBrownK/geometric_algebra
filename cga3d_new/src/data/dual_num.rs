@@ -5,20 +5,18 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union DualNum {
     groups: DualNumGroups,
-    /// scalar, e12345, 0, 0
+    /// e5, e12345, 0, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct DualNumGroups {
-    /// scalar, e12345
+    /// e5, e12345
     g0: Simd32x2,
 }
 impl DualNum {
     #[allow(clippy::too_many_arguments)]
-    pub const fn from_elements(scalar: f32, e12345: f32) -> Self {
-        Self {
-            elements: [scalar, e12345, 0.0, 0.0],
-        }
+    pub const fn from_elements(e5: f32, e12345: f32) -> Self {
+        Self { elements: [e5, e12345, 0.0, 0.0] }
     }
     pub const fn from_groups(g0: Simd32x2) -> Self {
         Self { groups: DualNumGroups { g0 } }
@@ -58,7 +56,7 @@ impl From<[f32; 2]> for DualNum {
 }
 impl std::fmt::Debug for DualNum {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("DualNum").field("scalar", &self[0]).field("e12345", &self[1]).finish()
+        formatter.debug_struct("DualNum").field("e5", &self[0]).field("e12345", &self[1]).finish()
     }
 }
 
@@ -125,9 +123,9 @@ impl std::hash::Hash for DualNum {
     }
 }
 
-impl std::ops::Index<crate::elements::scalar> for DualNum {
+impl std::ops::Index<crate::elements::e5> for DualNum {
     type Output = f32;
-    fn index(&self, _: crate::elements::scalar) -> &Self::Output {
+    fn index(&self, _: crate::elements::e5) -> &Self::Output {
         &self[0]
     }
 }
@@ -137,8 +135,8 @@ impl std::ops::Index<crate::elements::e12345> for DualNum {
         &self[1]
     }
 }
-impl std::ops::IndexMut<crate::elements::scalar> for DualNum {
-    fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e5> for DualNum {
+    fn index_mut(&self, _: crate::elements::e5) -> &mut Self::Output {
         &mut self[0]
     }
 }

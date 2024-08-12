@@ -15,6 +15,29 @@ impl From<Horizon> for FlectorAtInfinity {
     }
 }
 
+impl TryFrom<AntiDualNum> for FlectorAtInfinity {
+    type Error = String;
+    fn try_from(anti_dual_num: AntiDualNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = anti_dual_num[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from AntiDualNum do not fit into FlectorAtInfinity { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e3215]])));
+    }
+}
+
 impl TryFrom<AntiLine> for FlectorAtInfinity {
     type Error = String;
     fn try_from(anti_line: AntiLine) -> Result<Self, Self::Error> {

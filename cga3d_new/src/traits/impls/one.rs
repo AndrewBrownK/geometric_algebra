@@ -1,3 +1,13 @@
+impl One for AntiDualNum {
+    fn one() -> Self {
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, 1.0]));
+    }
+}
+impl One for AntiDualNumOnOrigin {
+    fn one() -> Self {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ 1.0);
+    }
+}
 impl One for AntiMotor {
     fn one() -> Self {
         return AntiMotor::from_groups(
@@ -11,11 +21,6 @@ impl One for AntiMotor {
 impl One for AntiMotorOnOrigin {
     fn one() -> Self {
         return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([0.0, 0.0, 0.0, 1.0]));
-    }
-}
-impl One for DualNum {
-    fn one() -> Self {
-        return DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([1.0, 0.0]));
     }
 }
 impl One for MultiVector {
@@ -44,10 +49,5 @@ impl One for MultiVector {
             // e3215
             0.0,
         );
-    }
-}
-impl One for Scalar {
-    fn one() -> Self {
-        return Scalar::from_groups(/* scalar */ 1.0);
     }
 }

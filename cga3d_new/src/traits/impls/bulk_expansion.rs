@@ -9,6 +9,16 @@ impl BulkExpansion<AntiDipoleOnOrigin> for AntiCircleOnOrigin {
         return self;
     }
 }
+impl BulkExpansion<AntiDualNum> for AntiCircleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiCircleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
+        return self;
+    }
+}
 impl BulkExpansion<AntiFlatOrigin> for AntiCircleOnOrigin {
     fn bulk_expansion(self, other: AntiFlatOrigin) -> Self {
         return self;
@@ -56,11 +66,6 @@ impl BulkExpansion<AntiPlane> for AntiCircleOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiCircleOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiCircleOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -131,6 +136,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiCircleOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiCircleOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiCircleOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -249,11 +259,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiCircleOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiCircleOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiCircleOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -277,6 +282,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiDipoleOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiDipoleOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiDipoleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiDipoleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -327,11 +342,6 @@ impl BulkExpansion<AntiPlane> for AntiDipoleOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiDipoleOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiDipoleOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -402,6 +412,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiDipoleOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiDipoleOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiDipoleOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -520,11 +535,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiDipoleOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiDipoleOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiDipoleOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -540,6 +550,558 @@ impl BulkExpansion<SphereOnOrigin> for AntiDipoleOnOrigin {
         return self;
     }
 }
+impl InfixBulkExpansion for AntiDualNum {}
+impl BulkExpansion<AntiCircleOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDipoleOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlatOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiFlatOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlatPoint> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiFlatPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlector> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiFlector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlectorOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiFlectorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiLine> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiLine) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiLineOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiLineOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiMotor> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiMotor) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiMotorOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiMotorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiPlane> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiPlane) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiPlaneOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiSphereOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: AntiSphereOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Circle> for AntiDualNum {
+    fn bulk_expansion(self, other: Circle) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAligningOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: CircleAligningOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAtInfinity> for AntiDualNum {
+    fn bulk_expansion(self, other: CircleAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: CircleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: CircleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleOrthogonalOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: CircleOrthogonalOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Dipole> for AntiDualNum {
+    fn bulk_expansion(self, other: Dipole) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAligningOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: DipoleAligningOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAtInfinity> for AntiDualNum {
+    fn bulk_expansion(self, other: DipoleAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: DipoleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: DipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleOrthogonalOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: DipoleOrthogonalOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNum> for AntiDualNum {
+    fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: FlatOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatPoint> for AntiDualNum {
+    fn bulk_expansion(self, other: FlatPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatPointAtInfinity> for AntiDualNum {
+    fn bulk_expansion(self, other: FlatPointAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Flector> for AntiDualNum {
+    fn bulk_expansion(self, other: Flector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlectorAtInfinity> for AntiDualNum {
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlectorOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: FlectorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Horizon> for AntiDualNum {
+    fn bulk_expansion(self, other: Horizon) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Infinity> for AntiDualNum {
+    fn bulk_expansion(self, other: Infinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Line> for AntiDualNum {
+    fn bulk_expansion(self, other: Line) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<LineAtInfinity> for AntiDualNum {
+    fn bulk_expansion(self, other: LineAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<LineOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: LineOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Motor> for AntiDualNum {
+    fn bulk_expansion(self, other: Motor) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MotorAtInfinity> for AntiDualNum {
+    fn bulk_expansion(self, other: MotorAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MotorOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: MotorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MultiVector> for AntiDualNum {
+    fn bulk_expansion(self, other: MultiVector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullCircleAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: NullCircleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullDipoleAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: NullDipoleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullSphereAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: NullSphereAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Origin> for AntiDualNum {
+    fn bulk_expansion(self, other: Origin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Plane> for AntiDualNum {
+    fn bulk_expansion(self, other: Plane) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<PlaneOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: PlaneOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<RoundPoint> for AntiDualNum {
+    fn bulk_expansion(self, other: RoundPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<RoundPointAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: RoundPointAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Sphere> for AntiDualNum {
+    fn bulk_expansion(self, other: Sphere) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<SphereAtOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: SphereAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<SphereOnOrigin> for AntiDualNum {
+    fn bulk_expansion(self, other: SphereOnOrigin) -> Self {
+        return self;
+    }
+}
+impl InfixBulkExpansion for AntiDualNumOnOrigin {}
+impl BulkExpansion<AntiCircleOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDipoleOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlatOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlatOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlatPoint> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlatPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlector> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlectorOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlectorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiLine> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiLine) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiLineOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiLineOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiMotor> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiMotor) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiMotorOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiMotorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiPlane> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiPlane) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiPlaneOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiSphereOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiSphereOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Circle> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Circle) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAligningOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleAligningOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAtInfinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleOrthogonalOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleOrthogonalOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Dipole> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Dipole) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAligningOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleAligningOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAtInfinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleOrthogonalOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleOrthogonalOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNum> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: FlatOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatPoint> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: FlatPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatPointAtInfinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: FlatPointAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Flector> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Flector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlectorAtInfinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlectorOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: FlectorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Horizon> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Horizon) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Infinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Infinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Line> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Line) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<LineAtInfinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: LineAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<LineOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: LineOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Motor> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Motor) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MotorAtInfinity> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: MotorAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MotorOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: MotorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MultiVector> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: MultiVector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullCircleAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: NullCircleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullDipoleAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: NullDipoleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullSphereAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: NullSphereAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Origin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Origin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Plane> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Plane) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<PlaneOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: PlaneOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<RoundPoint> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: RoundPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<RoundPointAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: RoundPointAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Sphere> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: Sphere) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<SphereAtOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: SphereAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<SphereOnOrigin> for AntiDualNumOnOrigin {
+    fn bulk_expansion(self, other: SphereOnOrigin) -> Self {
+        return self;
+    }
+}
 impl InfixBulkExpansion for AntiFlatOrigin {}
 impl BulkExpansion<AntiCircleOnOrigin> for AntiFlatOrigin {
     fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
@@ -548,6 +1110,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiFlatOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiFlatOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiFlatOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiFlatOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -598,11 +1170,6 @@ impl BulkExpansion<AntiPlane> for AntiFlatOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiFlatOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiFlatOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -673,6 +1240,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiFlatOrigin {
 }
 impl BulkExpansion<DualNum> for AntiFlatOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiFlatOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -791,11 +1363,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiFlatOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiFlatOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiFlatOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -819,6 +1386,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiFlatPoint {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiFlatPoint {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiFlatPoint {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiFlatPoint {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -869,11 +1446,6 @@ impl BulkExpansion<AntiPlane> for AntiFlatPoint {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiFlatPoint {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiFlatPoint {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -944,6 +1516,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiFlatPoint {
 }
 impl BulkExpansion<DualNum> for AntiFlatPoint {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiFlatPoint {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1062,11 +1639,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiFlatPoint {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiFlatPoint {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiFlatPoint {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -1090,6 +1662,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiFlector {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiFlector {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiFlector {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiFlector {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1140,11 +1722,6 @@ impl BulkExpansion<AntiPlane> for AntiFlector {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiFlector {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiFlector {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -1215,6 +1792,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiFlector {
 }
 impl BulkExpansion<DualNum> for AntiFlector {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiFlector {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1333,11 +1915,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiFlector {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiFlector {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiFlector {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -1361,6 +1938,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiFlectorOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiFlectorOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiFlectorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiFlectorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1411,11 +1998,6 @@ impl BulkExpansion<AntiPlane> for AntiFlectorOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiFlectorOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiFlectorOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -1486,6 +2068,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiFlectorOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiFlectorOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiFlectorOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1604,11 +2191,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiFlectorOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiFlectorOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiFlectorOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -1632,6 +2214,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiLine {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiLine {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiLine {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiLine {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1682,11 +2274,6 @@ impl BulkExpansion<AntiPlane> for AntiLine {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiLine {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiLine {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -1757,6 +2344,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiLine {
 }
 impl BulkExpansion<DualNum> for AntiLine {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiLine {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1875,11 +2467,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiLine {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiLine {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiLine {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -1903,6 +2490,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiLineOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiLineOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiLineOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiLineOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -1953,11 +2550,6 @@ impl BulkExpansion<AntiPlane> for AntiLineOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiLineOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiLineOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -2028,6 +2620,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiLineOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiLineOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiLineOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2146,11 +2743,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiLineOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiLineOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiLineOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -2174,6 +2766,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiMotor {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiMotor {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiMotor {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiMotor {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2224,11 +2826,6 @@ impl BulkExpansion<AntiPlane> for AntiMotor {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiMotor {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiMotor {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -2299,6 +2896,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiMotor {
 }
 impl BulkExpansion<DualNum> for AntiMotor {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiMotor {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2417,11 +3019,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiMotor {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiMotor {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiMotor {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -2445,6 +3042,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiMotorOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiMotorOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiMotorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiMotorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2495,11 +3102,6 @@ impl BulkExpansion<AntiPlane> for AntiMotorOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiMotorOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiMotorOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -2570,6 +3172,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiMotorOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiMotorOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiMotorOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2688,11 +3295,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiMotorOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiMotorOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiMotorOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -2716,6 +3318,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiPlane {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiPlane {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiPlane {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiPlane {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2766,11 +3378,6 @@ impl BulkExpansion<AntiPlane> for AntiPlane {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiPlane {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiPlane {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -2841,6 +3448,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiPlane {
 }
 impl BulkExpansion<DualNum> for AntiPlane {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiPlane {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -2959,11 +3571,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiPlane {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiPlane {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiPlane {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -2987,6 +3594,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiPlaneOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiPlaneOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiPlaneOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiPlaneOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -3037,11 +3654,6 @@ impl BulkExpansion<AntiPlane> for AntiPlaneOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiPlaneOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiPlaneOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -3112,6 +3724,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiPlaneOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiPlaneOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiPlaneOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -3230,11 +3847,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiPlaneOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiPlaneOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiPlaneOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -3250,277 +3862,6 @@ impl BulkExpansion<SphereOnOrigin> for AntiPlaneOnOrigin {
         return self;
     }
 }
-impl InfixBulkExpansion for AntiScalar {}
-impl BulkExpansion<AntiCircleOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiDipoleOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlatOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiFlatOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlatPoint> for AntiScalar {
-    fn bulk_expansion(self, other: AntiFlatPoint) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlector> for AntiScalar {
-    fn bulk_expansion(self, other: AntiFlector) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlectorOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiFlectorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiLine> for AntiScalar {
-    fn bulk_expansion(self, other: AntiLine) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiLineOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiLineOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiMotor> for AntiScalar {
-    fn bulk_expansion(self, other: AntiMotor) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiMotorOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiMotorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiPlane> for AntiScalar {
-    fn bulk_expansion(self, other: AntiPlane) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiPlaneOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiScalar {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiSphereOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: AntiSphereOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Circle> for AntiScalar {
-    fn bulk_expansion(self, other: Circle) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleAligningOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: CircleAligningOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleAtInfinity> for AntiScalar {
-    fn bulk_expansion(self, other: CircleAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: CircleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: CircleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleOrthogonalOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: CircleOrthogonalOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Dipole> for AntiScalar {
-    fn bulk_expansion(self, other: Dipole) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleAligningOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: DipoleAligningOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleAtInfinity> for AntiScalar {
-    fn bulk_expansion(self, other: DipoleAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: DipoleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: DipoleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleOrthogonalOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: DipoleOrthogonalOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DualNum> for AntiScalar {
-    fn bulk_expansion(self, other: DualNum) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlatOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: FlatOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlatPoint> for AntiScalar {
-    fn bulk_expansion(self, other: FlatPoint) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlatPointAtInfinity> for AntiScalar {
-    fn bulk_expansion(self, other: FlatPointAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Flector> for AntiScalar {
-    fn bulk_expansion(self, other: Flector) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlectorAtInfinity> for AntiScalar {
-    fn bulk_expansion(self, other: FlectorAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlectorOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: FlectorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Horizon> for AntiScalar {
-    fn bulk_expansion(self, other: Horizon) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Infinity> for AntiScalar {
-    fn bulk_expansion(self, other: Infinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Line> for AntiScalar {
-    fn bulk_expansion(self, other: Line) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<LineAtInfinity> for AntiScalar {
-    fn bulk_expansion(self, other: LineAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<LineOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: LineOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Motor> for AntiScalar {
-    fn bulk_expansion(self, other: Motor) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<MotorAtInfinity> for AntiScalar {
-    fn bulk_expansion(self, other: MotorAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<MotorOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: MotorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<MultiVector> for AntiScalar {
-    fn bulk_expansion(self, other: MultiVector) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<NullCircleAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: NullCircleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<NullDipoleAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: NullDipoleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<NullSphereAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: NullSphereAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Origin> for AntiScalar {
-    fn bulk_expansion(self, other: Origin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Plane> for AntiScalar {
-    fn bulk_expansion(self, other: Plane) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<PlaneOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: PlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<RoundPoint> for AntiScalar {
-    fn bulk_expansion(self, other: RoundPoint) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<RoundPointAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: RoundPointAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Scalar> for AntiScalar {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Sphere> for AntiScalar {
-    fn bulk_expansion(self, other: Sphere) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<SphereAtOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: SphereAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<SphereOnOrigin> for AntiScalar {
-    fn bulk_expansion(self, other: SphereOnOrigin) -> Self {
-        return self;
-    }
-}
 impl InfixBulkExpansion for AntiSphereOnOrigin {}
 impl BulkExpansion<AntiCircleOnOrigin> for AntiSphereOnOrigin {
     fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
@@ -3529,6 +3870,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for AntiSphereOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for AntiSphereOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for AntiSphereOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for AntiSphereOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -3579,11 +3930,6 @@ impl BulkExpansion<AntiPlane> for AntiSphereOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for AntiSphereOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for AntiSphereOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -3654,6 +4000,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for AntiSphereOnOrigin {
 }
 impl BulkExpansion<DualNum> for AntiSphereOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for AntiSphereOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -3772,11 +4123,6 @@ impl BulkExpansion<RoundPointAtOrigin> for AntiSphereOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for AntiSphereOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for AntiSphereOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -3800,6 +4146,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Circle {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Circle {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Circle {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Circle {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -3850,11 +4206,6 @@ impl BulkExpansion<AntiPlane> for Circle {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Circle {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Circle {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -3925,6 +4276,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Circle {
 }
 impl BulkExpansion<DualNum> for Circle {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Circle {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4043,11 +4399,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Circle {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Circle {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Circle {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -4071,6 +4422,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for CircleAligningOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for CircleAligningOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for CircleAligningOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for CircleAligningOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4121,11 +4482,6 @@ impl BulkExpansion<AntiPlane> for CircleAligningOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for CircleAligningOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for CircleAligningOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -4196,6 +4552,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for CircleAligningOrigin {
 }
 impl BulkExpansion<DualNum> for CircleAligningOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for CircleAligningOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4314,11 +4675,6 @@ impl BulkExpansion<RoundPointAtOrigin> for CircleAligningOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for CircleAligningOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for CircleAligningOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -4342,6 +4698,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for CircleAtInfinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for CircleAtInfinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for CircleAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for CircleAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4392,11 +4758,6 @@ impl BulkExpansion<AntiPlane> for CircleAtInfinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for CircleAtInfinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for CircleAtInfinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -4467,6 +4828,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for CircleAtInfinity {
 }
 impl BulkExpansion<DualNum> for CircleAtInfinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for CircleAtInfinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4585,11 +4951,6 @@ impl BulkExpansion<RoundPointAtOrigin> for CircleAtInfinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for CircleAtInfinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for CircleAtInfinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -4613,6 +4974,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for CircleAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for CircleAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for CircleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for CircleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4663,11 +5034,6 @@ impl BulkExpansion<AntiPlane> for CircleAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for CircleAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for CircleAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -4738,6 +5104,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for CircleAtOrigin {
 }
 impl BulkExpansion<DualNum> for CircleAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for CircleAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4856,11 +5227,6 @@ impl BulkExpansion<RoundPointAtOrigin> for CircleAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for CircleAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for CircleAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -4884,6 +5250,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for CircleOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for CircleOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for CircleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for CircleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -4934,11 +5310,6 @@ impl BulkExpansion<AntiPlane> for CircleOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for CircleOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for CircleOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -5009,6 +5380,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for CircleOnOrigin {
 }
 impl BulkExpansion<DualNum> for CircleOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for CircleOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5127,11 +5503,6 @@ impl BulkExpansion<RoundPointAtOrigin> for CircleOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for CircleOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for CircleOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -5155,6 +5526,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for CircleOrthogonalOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for CircleOrthogonalOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for CircleOrthogonalOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for CircleOrthogonalOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5205,11 +5586,6 @@ impl BulkExpansion<AntiPlane> for CircleOrthogonalOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for CircleOrthogonalOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for CircleOrthogonalOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -5280,6 +5656,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for CircleOrthogonalOrigin {
 }
 impl BulkExpansion<DualNum> for CircleOrthogonalOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for CircleOrthogonalOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5398,11 +5779,6 @@ impl BulkExpansion<RoundPointAtOrigin> for CircleOrthogonalOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for CircleOrthogonalOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for CircleOrthogonalOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -5426,6 +5802,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Dipole {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Dipole {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Dipole {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Dipole {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5476,11 +5862,6 @@ impl BulkExpansion<AntiPlane> for Dipole {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Dipole {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Dipole {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -5551,6 +5932,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Dipole {
 }
 impl BulkExpansion<DualNum> for Dipole {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Dipole {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5669,11 +6055,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Dipole {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Dipole {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Dipole {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -5697,6 +6078,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for DipoleAligningOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for DipoleAligningOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DipoleAligningOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DipoleAligningOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5747,11 +6138,6 @@ impl BulkExpansion<AntiPlane> for DipoleAligningOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for DipoleAligningOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for DipoleAligningOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -5822,6 +6208,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for DipoleAligningOrigin {
 }
 impl BulkExpansion<DualNum> for DipoleAligningOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DipoleAligningOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -5940,11 +6331,6 @@ impl BulkExpansion<RoundPointAtOrigin> for DipoleAligningOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for DipoleAligningOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for DipoleAligningOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -5968,6 +6354,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for DipoleAtInfinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for DipoleAtInfinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DipoleAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DipoleAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6018,11 +6414,6 @@ impl BulkExpansion<AntiPlane> for DipoleAtInfinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for DipoleAtInfinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for DipoleAtInfinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -6093,6 +6484,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for DipoleAtInfinity {
 }
 impl BulkExpansion<DualNum> for DipoleAtInfinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DipoleAtInfinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6211,11 +6607,6 @@ impl BulkExpansion<RoundPointAtOrigin> for DipoleAtInfinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for DipoleAtInfinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for DipoleAtInfinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -6239,6 +6630,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for DipoleAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for DipoleAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DipoleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DipoleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6289,11 +6690,6 @@ impl BulkExpansion<AntiPlane> for DipoleAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for DipoleAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for DipoleAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -6364,6 +6760,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for DipoleAtOrigin {
 }
 impl BulkExpansion<DualNum> for DipoleAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DipoleAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6482,11 +6883,6 @@ impl BulkExpansion<RoundPointAtOrigin> for DipoleAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for DipoleAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for DipoleAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -6510,6 +6906,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for DipoleOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for DipoleOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DipoleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DipoleOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6560,11 +6966,6 @@ impl BulkExpansion<AntiPlane> for DipoleOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for DipoleOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for DipoleOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -6635,6 +7036,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for DipoleOnOrigin {
 }
 impl BulkExpansion<DualNum> for DipoleOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DipoleOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6753,11 +7159,6 @@ impl BulkExpansion<RoundPointAtOrigin> for DipoleOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for DipoleOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for DipoleOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -6781,6 +7182,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for DipoleOrthogonalOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for DipoleOrthogonalOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DipoleOrthogonalOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DipoleOrthogonalOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -6831,11 +7242,6 @@ impl BulkExpansion<AntiPlane> for DipoleOrthogonalOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for DipoleOrthogonalOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for DipoleOrthogonalOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -6906,6 +7312,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for DipoleOrthogonalOrigin {
 }
 impl BulkExpansion<DualNum> for DipoleOrthogonalOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DipoleOrthogonalOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7024,11 +7435,6 @@ impl BulkExpansion<RoundPointAtOrigin> for DipoleOrthogonalOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for DipoleOrthogonalOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for DipoleOrthogonalOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -7052,6 +7458,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for DualNum {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for DualNum {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DualNum {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DualNum {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7102,11 +7518,6 @@ impl BulkExpansion<AntiPlane> for DualNum {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for DualNum {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for DualNum {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -7177,6 +7588,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for DualNum {
 }
 impl BulkExpansion<DualNum> for DualNum {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DualNum {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7295,11 +7711,6 @@ impl BulkExpansion<RoundPointAtOrigin> for DualNum {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for DualNum {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for DualNum {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -7315,6 +7726,282 @@ impl BulkExpansion<SphereOnOrigin> for DualNum {
         return self;
     }
 }
+impl InfixBulkExpansion for DualNumOnOrigin {}
+impl BulkExpansion<AntiCircleOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDipoleOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlatOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlatOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlatPoint> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlatPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlector> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiFlectorOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiFlectorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiLine> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiLine) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiLineOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiLineOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiMotor> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiMotor) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiMotorOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiMotorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiPlane> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiPlane) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiPlaneOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiSphereOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: AntiSphereOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Circle> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Circle) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAligningOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleAligningOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAtInfinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<CircleOrthogonalOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: CircleOrthogonalOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Dipole> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Dipole) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAligningOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleAligningOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAtInfinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DipoleOrthogonalOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DipoleOrthogonalOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNum> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: FlatOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatPoint> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: FlatPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlatPointAtInfinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: FlatPointAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Flector> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Flector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlectorAtInfinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: FlectorAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<FlectorOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: FlectorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Horizon> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Horizon) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Infinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Infinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Line> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Line) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<LineAtInfinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: LineAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<LineOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: LineOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Motor> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Motor) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MotorAtInfinity> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: MotorAtInfinity) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MotorOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: MotorOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<MultiVector> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: MultiVector) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullCircleAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: NullCircleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullDipoleAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: NullDipoleAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<NullSphereAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: NullSphereAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Origin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Origin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Plane> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Plane) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<PlaneOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: PlaneOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<RoundPoint> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: RoundPoint) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<RoundPointAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: RoundPointAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<Sphere> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: Sphere) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<SphereAtOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: SphereAtOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<SphereOnOrigin> for DualNumOnOrigin {
+    fn bulk_expansion(self, other: SphereOnOrigin) -> Self {
+        return self;
+    }
+}
 impl InfixBulkExpansion for FlatOrigin {}
 impl BulkExpansion<AntiCircleOnOrigin> for FlatOrigin {
     fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
@@ -7323,6 +8010,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for FlatOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for FlatOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for FlatOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for FlatOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7373,11 +8070,6 @@ impl BulkExpansion<AntiPlane> for FlatOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for FlatOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for FlatOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -7448,6 +8140,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for FlatOrigin {
 }
 impl BulkExpansion<DualNum> for FlatOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for FlatOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7566,11 +8263,6 @@ impl BulkExpansion<RoundPointAtOrigin> for FlatOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for FlatOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for FlatOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -7594,6 +8286,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for FlatPoint {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for FlatPoint {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for FlatPoint {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for FlatPoint {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7644,11 +8346,6 @@ impl BulkExpansion<AntiPlane> for FlatPoint {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for FlatPoint {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for FlatPoint {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -7719,6 +8416,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for FlatPoint {
 }
 impl BulkExpansion<DualNum> for FlatPoint {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for FlatPoint {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7837,11 +8539,6 @@ impl BulkExpansion<RoundPointAtOrigin> for FlatPoint {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for FlatPoint {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for FlatPoint {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -7865,6 +8562,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for FlatPointAtInfinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for FlatPointAtInfinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for FlatPointAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for FlatPointAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -7915,11 +8622,6 @@ impl BulkExpansion<AntiPlane> for FlatPointAtInfinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for FlatPointAtInfinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for FlatPointAtInfinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -7990,6 +8692,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for FlatPointAtInfinity {
 }
 impl BulkExpansion<DualNum> for FlatPointAtInfinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for FlatPointAtInfinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8108,11 +8815,6 @@ impl BulkExpansion<RoundPointAtOrigin> for FlatPointAtInfinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for FlatPointAtInfinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for FlatPointAtInfinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -8136,6 +8838,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Flector {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Flector {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Flector {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Flector {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8186,11 +8898,6 @@ impl BulkExpansion<AntiPlane> for Flector {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Flector {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Flector {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -8261,6 +8968,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Flector {
 }
 impl BulkExpansion<DualNum> for Flector {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Flector {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8379,11 +9091,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Flector {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Flector {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Flector {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -8407,6 +9114,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for FlectorAtInfinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for FlectorAtInfinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for FlectorAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for FlectorAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8457,11 +9174,6 @@ impl BulkExpansion<AntiPlane> for FlectorAtInfinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for FlectorAtInfinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for FlectorAtInfinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -8532,6 +9244,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for FlectorAtInfinity {
 }
 impl BulkExpansion<DualNum> for FlectorAtInfinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for FlectorAtInfinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8650,11 +9367,6 @@ impl BulkExpansion<RoundPointAtOrigin> for FlectorAtInfinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for FlectorAtInfinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for FlectorAtInfinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -8678,6 +9390,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for FlectorOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for FlectorOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for FlectorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for FlectorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8728,11 +9450,6 @@ impl BulkExpansion<AntiPlane> for FlectorOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for FlectorOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for FlectorOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -8803,6 +9520,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for FlectorOnOrigin {
 }
 impl BulkExpansion<DualNum> for FlectorOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for FlectorOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8921,11 +9643,6 @@ impl BulkExpansion<RoundPointAtOrigin> for FlectorOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for FlectorOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for FlectorOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -8949,6 +9666,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Horizon {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Horizon {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Horizon {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Horizon {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -8999,11 +9726,6 @@ impl BulkExpansion<AntiPlane> for Horizon {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Horizon {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Horizon {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -9074,6 +9796,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Horizon {
 }
 impl BulkExpansion<DualNum> for Horizon {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Horizon {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -9192,11 +9919,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Horizon {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Horizon {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Horizon {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -9220,6 +9942,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Infinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Infinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Infinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Infinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -9270,11 +10002,6 @@ impl BulkExpansion<AntiPlane> for Infinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Infinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Infinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -9345,6 +10072,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Infinity {
 }
 impl BulkExpansion<DualNum> for Infinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Infinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -9463,11 +10195,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Infinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Infinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Infinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -9491,6 +10218,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Line {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Line {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Line {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Line {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -9541,11 +10278,6 @@ impl BulkExpansion<AntiPlane> for Line {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Line {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Line {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -9616,6 +10348,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Line {
 }
 impl BulkExpansion<DualNum> for Line {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Line {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -9734,11 +10471,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Line {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Line {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Line {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -9762,6 +10494,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for LineAtInfinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for LineAtInfinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for LineAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for LineAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -9812,11 +10554,6 @@ impl BulkExpansion<AntiPlane> for LineAtInfinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for LineAtInfinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for LineAtInfinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -9887,6 +10624,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for LineAtInfinity {
 }
 impl BulkExpansion<DualNum> for LineAtInfinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for LineAtInfinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10005,11 +10747,6 @@ impl BulkExpansion<RoundPointAtOrigin> for LineAtInfinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for LineAtInfinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for LineAtInfinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -10033,6 +10770,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for LineOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for LineOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for LineOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for LineOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10083,11 +10830,6 @@ impl BulkExpansion<AntiPlane> for LineOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for LineOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for LineOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -10158,6 +10900,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for LineOnOrigin {
 }
 impl BulkExpansion<DualNum> for LineOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for LineOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10276,11 +11023,6 @@ impl BulkExpansion<RoundPointAtOrigin> for LineOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for LineOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for LineOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -10304,6 +11046,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Motor {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Motor {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Motor {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Motor {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10354,11 +11106,6 @@ impl BulkExpansion<AntiPlane> for Motor {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Motor {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Motor {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -10429,6 +11176,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Motor {
 }
 impl BulkExpansion<DualNum> for Motor {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Motor {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10547,11 +11299,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Motor {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Motor {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Motor {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -10575,6 +11322,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for MotorAtInfinity {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for MotorAtInfinity {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for MotorAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for MotorAtInfinity {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10625,11 +11382,6 @@ impl BulkExpansion<AntiPlane> for MotorAtInfinity {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for MotorAtInfinity {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for MotorAtInfinity {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -10700,6 +11452,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for MotorAtInfinity {
 }
 impl BulkExpansion<DualNum> for MotorAtInfinity {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for MotorAtInfinity {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10818,11 +11575,6 @@ impl BulkExpansion<RoundPointAtOrigin> for MotorAtInfinity {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for MotorAtInfinity {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for MotorAtInfinity {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -10846,6 +11598,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for MotorOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for MotorOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for MotorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for MotorOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -10896,11 +11658,6 @@ impl BulkExpansion<AntiPlane> for MotorOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for MotorOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for MotorOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -10971,6 +11728,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for MotorOnOrigin {
 }
 impl BulkExpansion<DualNum> for MotorOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for MotorOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11089,11 +11851,6 @@ impl BulkExpansion<RoundPointAtOrigin> for MotorOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for MotorOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for MotorOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -11117,6 +11874,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for MultiVector {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for MultiVector {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for MultiVector {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for MultiVector {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11167,11 +11934,6 @@ impl BulkExpansion<AntiPlane> for MultiVector {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for MultiVector {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for MultiVector {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -11242,6 +12004,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for MultiVector {
 }
 impl BulkExpansion<DualNum> for MultiVector {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for MultiVector {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11360,11 +12127,6 @@ impl BulkExpansion<RoundPointAtOrigin> for MultiVector {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for MultiVector {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for MultiVector {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -11388,6 +12150,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for NullCircleAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for NullCircleAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for NullCircleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for NullCircleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11438,11 +12210,6 @@ impl BulkExpansion<AntiPlane> for NullCircleAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for NullCircleAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for NullCircleAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -11513,6 +12280,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for NullCircleAtOrigin {
 }
 impl BulkExpansion<DualNum> for NullCircleAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for NullCircleAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11631,11 +12403,6 @@ impl BulkExpansion<RoundPointAtOrigin> for NullCircleAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for NullCircleAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for NullCircleAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -11659,6 +12426,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for NullDipoleAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for NullDipoleAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for NullDipoleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for NullDipoleAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11709,11 +12486,6 @@ impl BulkExpansion<AntiPlane> for NullDipoleAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for NullDipoleAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for NullDipoleAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -11784,6 +12556,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for NullDipoleAtOrigin {
 }
 impl BulkExpansion<DualNum> for NullDipoleAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for NullDipoleAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11902,11 +12679,6 @@ impl BulkExpansion<RoundPointAtOrigin> for NullDipoleAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for NullDipoleAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for NullDipoleAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -11930,6 +12702,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for NullSphereAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for NullSphereAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for NullSphereAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for NullSphereAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -11980,11 +12762,6 @@ impl BulkExpansion<AntiPlane> for NullSphereAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for NullSphereAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for NullSphereAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -12055,6 +12832,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for NullSphereAtOrigin {
 }
 impl BulkExpansion<DualNum> for NullSphereAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for NullSphereAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12173,11 +12955,6 @@ impl BulkExpansion<RoundPointAtOrigin> for NullSphereAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for NullSphereAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for NullSphereAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -12201,6 +12978,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Origin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Origin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Origin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Origin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12251,11 +13038,6 @@ impl BulkExpansion<AntiPlane> for Origin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Origin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Origin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -12326,6 +13108,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Origin {
 }
 impl BulkExpansion<DualNum> for Origin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Origin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12444,11 +13231,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Origin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Origin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Origin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -12472,6 +13254,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Plane {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Plane {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Plane {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Plane {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12522,11 +13314,6 @@ impl BulkExpansion<AntiPlane> for Plane {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Plane {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Plane {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -12597,6 +13384,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Plane {
 }
 impl BulkExpansion<DualNum> for Plane {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Plane {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12715,11 +13507,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Plane {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Plane {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Plane {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -12743,6 +13530,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for PlaneOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for PlaneOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for PlaneOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for PlaneOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12793,11 +13590,6 @@ impl BulkExpansion<AntiPlane> for PlaneOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for PlaneOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for PlaneOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -12868,6 +13660,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for PlaneOnOrigin {
 }
 impl BulkExpansion<DualNum> for PlaneOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for PlaneOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -12986,11 +13783,6 @@ impl BulkExpansion<RoundPointAtOrigin> for PlaneOnOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for PlaneOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for PlaneOnOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -13014,6 +13806,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for RoundPoint {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for RoundPoint {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for RoundPoint {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for RoundPoint {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -13064,11 +13866,6 @@ impl BulkExpansion<AntiPlane> for RoundPoint {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for RoundPoint {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for RoundPoint {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -13139,6 +13936,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for RoundPoint {
 }
 impl BulkExpansion<DualNum> for RoundPoint {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for RoundPoint {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -13257,11 +14059,6 @@ impl BulkExpansion<RoundPointAtOrigin> for RoundPoint {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for RoundPoint {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for RoundPoint {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -13285,6 +14082,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for RoundPointAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for RoundPointAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for RoundPointAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for RoundPointAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -13335,11 +14142,6 @@ impl BulkExpansion<AntiPlane> for RoundPointAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for RoundPointAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for RoundPointAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -13410,6 +14212,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for RoundPointAtOrigin {
 }
 impl BulkExpansion<DualNum> for RoundPointAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for RoundPointAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -13528,11 +14335,6 @@ impl BulkExpansion<RoundPointAtOrigin> for RoundPointAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for RoundPointAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for RoundPointAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -13548,277 +14350,6 @@ impl BulkExpansion<SphereOnOrigin> for RoundPointAtOrigin {
         return self;
     }
 }
-impl InfixBulkExpansion for Scalar {}
-impl BulkExpansion<AntiCircleOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiDipoleOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlatOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiFlatOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlatPoint> for Scalar {
-    fn bulk_expansion(self, other: AntiFlatPoint) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlector> for Scalar {
-    fn bulk_expansion(self, other: AntiFlector) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiFlectorOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiFlectorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiLine> for Scalar {
-    fn bulk_expansion(self, other: AntiLine) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiLineOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiLineOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiMotor> for Scalar {
-    fn bulk_expansion(self, other: AntiMotor) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiMotorOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiMotorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiPlane> for Scalar {
-    fn bulk_expansion(self, other: AntiPlane) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiPlaneOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Scalar {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiSphereOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: AntiSphereOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Circle> for Scalar {
-    fn bulk_expansion(self, other: Circle) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleAligningOrigin> for Scalar {
-    fn bulk_expansion(self, other: CircleAligningOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleAtInfinity> for Scalar {
-    fn bulk_expansion(self, other: CircleAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: CircleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: CircleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<CircleOrthogonalOrigin> for Scalar {
-    fn bulk_expansion(self, other: CircleOrthogonalOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Dipole> for Scalar {
-    fn bulk_expansion(self, other: Dipole) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleAligningOrigin> for Scalar {
-    fn bulk_expansion(self, other: DipoleAligningOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleAtInfinity> for Scalar {
-    fn bulk_expansion(self, other: DipoleAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: DipoleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: DipoleOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DipoleOrthogonalOrigin> for Scalar {
-    fn bulk_expansion(self, other: DipoleOrthogonalOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<DualNum> for Scalar {
-    fn bulk_expansion(self, other: DualNum) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlatOrigin> for Scalar {
-    fn bulk_expansion(self, other: FlatOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlatPoint> for Scalar {
-    fn bulk_expansion(self, other: FlatPoint) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlatPointAtInfinity> for Scalar {
-    fn bulk_expansion(self, other: FlatPointAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Flector> for Scalar {
-    fn bulk_expansion(self, other: Flector) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlectorAtInfinity> for Scalar {
-    fn bulk_expansion(self, other: FlectorAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<FlectorOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: FlectorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Horizon> for Scalar {
-    fn bulk_expansion(self, other: Horizon) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Infinity> for Scalar {
-    fn bulk_expansion(self, other: Infinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Line> for Scalar {
-    fn bulk_expansion(self, other: Line) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<LineAtInfinity> for Scalar {
-    fn bulk_expansion(self, other: LineAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<LineOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: LineOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Motor> for Scalar {
-    fn bulk_expansion(self, other: Motor) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<MotorAtInfinity> for Scalar {
-    fn bulk_expansion(self, other: MotorAtInfinity) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<MotorOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: MotorOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<MultiVector> for Scalar {
-    fn bulk_expansion(self, other: MultiVector) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<NullCircleAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: NullCircleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<NullDipoleAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: NullDipoleAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<NullSphereAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: NullSphereAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Origin> for Scalar {
-    fn bulk_expansion(self, other: Origin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Plane> for Scalar {
-    fn bulk_expansion(self, other: Plane) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<PlaneOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: PlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<RoundPoint> for Scalar {
-    fn bulk_expansion(self, other: RoundPoint) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<RoundPointAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: RoundPointAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Scalar> for Scalar {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Sphere> for Scalar {
-    fn bulk_expansion(self, other: Sphere) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<SphereAtOrigin> for Scalar {
-    fn bulk_expansion(self, other: SphereAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<SphereOnOrigin> for Scalar {
-    fn bulk_expansion(self, other: SphereOnOrigin) -> Self {
-        return self;
-    }
-}
 impl InfixBulkExpansion for Sphere {}
 impl BulkExpansion<AntiCircleOnOrigin> for Sphere {
     fn bulk_expansion(self, other: AntiCircleOnOrigin) -> Self {
@@ -13827,6 +14358,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for Sphere {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for Sphere {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for Sphere {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for Sphere {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -13877,11 +14418,6 @@ impl BulkExpansion<AntiPlane> for Sphere {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for Sphere {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for Sphere {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -13952,6 +14488,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for Sphere {
 }
 impl BulkExpansion<DualNum> for Sphere {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for Sphere {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -14070,11 +14611,6 @@ impl BulkExpansion<RoundPointAtOrigin> for Sphere {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for Sphere {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for Sphere {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -14098,6 +14634,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for SphereAtOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for SphereAtOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for SphereAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for SphereAtOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -14148,11 +14694,6 @@ impl BulkExpansion<AntiPlane> for SphereAtOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for SphereAtOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for SphereAtOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -14223,6 +14764,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for SphereAtOrigin {
 }
 impl BulkExpansion<DualNum> for SphereAtOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for SphereAtOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -14341,11 +14887,6 @@ impl BulkExpansion<RoundPointAtOrigin> for SphereAtOrigin {
         return self;
     }
 }
-impl BulkExpansion<Scalar> for SphereAtOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
-        return self;
-    }
-}
 impl BulkExpansion<Sphere> for SphereAtOrigin {
     fn bulk_expansion(self, other: Sphere) -> Self {
         return self;
@@ -14369,6 +14910,16 @@ impl BulkExpansion<AntiCircleOnOrigin> for SphereOnOrigin {
 }
 impl BulkExpansion<AntiDipoleOnOrigin> for SphereOnOrigin {
     fn bulk_expansion(self, other: AntiDipoleOnOrigin) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNum> for SphereOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<AntiDualNumOnOrigin> for SphereOnOrigin {
+    fn bulk_expansion(self, other: AntiDualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -14419,11 +14970,6 @@ impl BulkExpansion<AntiPlane> for SphereOnOrigin {
 }
 impl BulkExpansion<AntiPlaneOnOrigin> for SphereOnOrigin {
     fn bulk_expansion(self, other: AntiPlaneOnOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<AntiScalar> for SphereOnOrigin {
-    fn bulk_expansion(self, other: AntiScalar) -> Self {
         return self;
     }
 }
@@ -14494,6 +15040,11 @@ impl BulkExpansion<DipoleOrthogonalOrigin> for SphereOnOrigin {
 }
 impl BulkExpansion<DualNum> for SphereOnOrigin {
     fn bulk_expansion(self, other: DualNum) -> Self {
+        return self;
+    }
+}
+impl BulkExpansion<DualNumOnOrigin> for SphereOnOrigin {
+    fn bulk_expansion(self, other: DualNumOnOrigin) -> Self {
         return self;
     }
 }
@@ -14609,11 +15160,6 @@ impl BulkExpansion<RoundPoint> for SphereOnOrigin {
 }
 impl BulkExpansion<RoundPointAtOrigin> for SphereOnOrigin {
     fn bulk_expansion(self, other: RoundPointAtOrigin) -> Self {
-        return self;
-    }
-}
-impl BulkExpansion<Scalar> for SphereOnOrigin {
-    fn bulk_expansion(self, other: Scalar) -> Self {
         return self;
     }
 }

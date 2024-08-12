@@ -19,6 +19,7 @@ multi_vecs! { e12345;
     Infinity   as e5;
     FlatOrigin as e45;
     Horizon    as e3215;
+    DualNum    as e5, e12345;
 
     // Uniform Grade Flat Objects
     FlatPoint  as e15, e25, e35, e45;

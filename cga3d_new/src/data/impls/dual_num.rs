@@ -1,116 +1,116 @@
-impl From<AntiScalar> for DualNum {
-    fn from(anti_scalar: AntiScalar) -> Self {
+impl From<DualNumOnOrigin> for DualNum {
+    fn from(dual_num_on_origin: DualNumOnOrigin) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([0.0, anti_scalar[e12345]]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, dual_num_on_origin[e12345]]));
     }
 }
 
-impl From<Scalar> for DualNum {
-    fn from(scalar: Scalar) -> Self {
+impl From<Infinity> for DualNum {
+    fn from(infinity: Infinity) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([scalar[scalar], 0.0]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([infinity[e5], 0.0]));
     }
 }
 
-impl TryFrom<AntiMotor> for DualNum {
+impl TryFrom<AntiFlector> for DualNum {
     type Error = String;
-    fn try_from(anti_motor: AntiMotor) -> Result<Self, Self::Error> {
+    fn try_from(anti_flector: AntiFlector) -> Result<Self, Self::Error> {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = anti_motor[0];
+        let el = anti_flector[0];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e23: ");
+            error_string.push_str("e235: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor[1];
+        let el = anti_flector[1];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e31: ");
+            error_string.push_str("e315: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor[2];
+        let el = anti_flector[2];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e12: ");
+            error_string.push_str("e125: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor[4];
+        let el = anti_flector[3];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e15: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor[5];
+        let el = anti_flector[4];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e25: ");
+            error_string.push_str("e1: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor[6];
+        let el = anti_flector[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e35: ");
+            error_string.push_str("e2: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor[7];
+        let el = anti_flector[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e3215: ");
+            error_string.push_str("e3: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from AntiMotor do not fit into DualNum { ".to_string();
+            let mut error = "Elements from AntiFlector do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([anti_motor[scalar], 0.0])));
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([anti_flector[e5], 0.0])));
     }
 }
 
-impl TryFrom<AntiMotorOnOrigin> for DualNum {
+impl TryFrom<AntiPlane> for DualNum {
     type Error = String;
-    fn try_from(anti_motor_on_origin: AntiMotorOnOrigin) -> Result<Self, Self::Error> {
+    fn try_from(anti_plane: AntiPlane) -> Result<Self, Self::Error> {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
-        let el = anti_motor_on_origin[0];
+        let el = anti_plane[0];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e23: ");
+            error_string.push_str("e1: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor_on_origin[1];
+        let el = anti_plane[1];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e31: ");
+            error_string.push_str("e2: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = anti_motor_on_origin[2];
+        let el = anti_plane[2];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e12: ");
+            error_string.push_str("e3: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from AntiMotorOnOrigin do not fit into DualNum { ".to_string();
+            let mut error = "Elements from AntiPlane do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([anti_motor_on_origin[scalar], 0.0])));
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([anti_plane[e5], 0.0])));
     }
 }
 
@@ -162,20 +162,50 @@ impl TryFrom<Motor> for DualNum {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = motor[7];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e5: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
         if fail {
             let mut error = "Elements from Motor do not fit into DualNum { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([0.0, motor[e12345]])));
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([motor[e5], motor[e12345]])));
+    }
+}
+
+impl TryFrom<MotorAtInfinity> for DualNum {
+    type Error = String;
+    fn try_from(motor_at_infinity: MotorAtInfinity) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = motor_at_infinity[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e235: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = motor_at_infinity[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e315: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = motor_at_infinity[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e125: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from MotorAtInfinity do not fit into DualNum { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([motor_at_infinity[e5], 0.0])));
     }
 }
 
@@ -212,7 +242,7 @@ impl TryFrom<MotorOnOrigin> for DualNum {
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([0.0, motor_on_origin[e12345]])));
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, motor_on_origin[e12345]])));
     }
 }
 
@@ -222,6 +252,13 @@ impl TryFrom<MultiVector> for DualNum {
         use crate::elements::*;
         let mut error_string = String::new();
         let mut fail = false;
+        let el = multi_vector[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("scalar: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
         let el = multi_vector[2];
         if el != 0.0 {
             fail = true;
@@ -247,13 +284,6 @@ impl TryFrom<MultiVector> for DualNum {
         if el != 0.0 {
             fail = true;
             error_string.push_str("e4: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[6];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -438,6 +468,73 @@ impl TryFrom<MultiVector> for DualNum {
             error.push('}');
             return Err(error);
         }
-        return Ok(DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([multi_vector[scalar], multi_vector[e12345]])));
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([multi_vector[e5], multi_vector[e12345]])));
+    }
+}
+
+impl TryFrom<RoundPoint> for DualNum {
+    type Error = String;
+    fn try_from(round_point: RoundPoint) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = round_point[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e1: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = round_point[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e2: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = round_point[2];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e3: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = round_point[3];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from RoundPoint do not fit into DualNum { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([round_point[e5], 0.0])));
+    }
+}
+
+impl TryFrom<RoundPointAtOrigin> for DualNum {
+    type Error = String;
+    fn try_from(round_point_at_origin: RoundPointAtOrigin) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = round_point_at_origin[0];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e4: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from RoundPointAtOrigin do not fit into DualNum { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([round_point_at_origin[e5], 0.0])));
     }
 }

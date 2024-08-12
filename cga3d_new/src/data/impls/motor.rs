@@ -1,9 +1,21 @@
-impl From<AntiScalar> for Motor {
-    fn from(anti_scalar: AntiScalar) -> Self {
+impl From<DualNum> for Motor {
+    fn from(dual_num: DualNum) -> Self {
         use crate::elements::*;
         return Motor::from_groups(
             // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, anti_scalar[e12345]]),
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e12345]]),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e5]]),
+        );
+    }
+}
+
+impl From<DualNumOnOrigin> for Motor {
+    fn from(dual_num_on_origin: DualNumOnOrigin) -> Self {
+        use crate::elements::*;
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, dual_num_on_origin[e12345]]),
             // e235, e315, e125, e5
             Simd32x4::from(0.0),
         );
@@ -449,34 +461,6 @@ impl TryFrom<CircleOrthogonalOrigin> for Motor {
             Simd32x4::from(0.0),
             // e235, e315, e125, e5
             Simd32x4::from([circle_orthogonal_origin[e235], circle_orthogonal_origin[e315], circle_orthogonal_origin[e125], 0.0]),
-        ));
-    }
-}
-
-impl TryFrom<DualNum> for Motor {
-    type Error = String;
-    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = dual_num[0];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("scalar: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from DualNum do not fit into Motor { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from(0.0),
         ));
     }
 }

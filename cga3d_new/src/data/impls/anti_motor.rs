@@ -1,3 +1,27 @@
+impl From<AntiDualNum> for AntiMotor {
+    fn from(anti_dual_num: AntiDualNum) -> Self {
+        use crate::elements::*;
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[scalar]]),
+            // e15, e25, e35, e3215
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num[e3215]]),
+        );
+    }
+}
+
+impl From<AntiDualNumOnOrigin> for AntiMotor {
+    fn from(anti_dual_num_on_origin: AntiDualNumOnOrigin) -> Self {
+        use crate::elements::*;
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num_on_origin[scalar]]),
+            // e15, e25, e35, e3215
+            Simd32x4::from(0.0),
+        );
+    }
+}
+
 impl From<AntiLine> for AntiMotor {
     fn from(anti_line: AntiLine) -> Self {
         use crate::elements::*;
@@ -66,18 +90,6 @@ impl From<Horizon> for AntiMotor {
             Simd32x4::from(0.0),
             // e15, e25, e35, e3215
             Simd32x4::from([0.0, 0.0, 0.0, horizon[e3215]]),
-        );
-    }
-}
-
-impl From<Scalar> for AntiMotor {
-    fn from(scalar: Scalar) -> Self {
-        use crate::elements::*;
-        return AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, scalar[scalar]]),
-            // e15, e25, e35, e3215
-            Simd32x4::from(0.0),
         );
     }
 }
@@ -330,34 +342,6 @@ impl TryFrom<DipoleOrthogonalOrigin> for AntiMotor {
             Simd32x4::from([dipole_orthogonal_origin[e23], dipole_orthogonal_origin[e31], dipole_orthogonal_origin[e12], 0.0]),
             // e15, e25, e35, e3215
             Simd32x4::from([dipole_orthogonal_origin[e15], dipole_orthogonal_origin[e25], dipole_orthogonal_origin[e35], 0.0]),
-        ));
-    }
-}
-
-impl TryFrom<DualNum> for AntiMotor {
-    type Error = String;
-    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
-        use crate::elements::*;
-        let mut error_string = String::new();
-        let mut fail = false;
-        let el = dual_num[1];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e12345: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        if fail {
-            let mut error = "Elements from DualNum do not fit into AntiMotor { ".to_string();
-            error.push_str(error_string.as_str());
-            error.push('}');
-            return Err(error);
-        }
-        return Ok(AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num[scalar]]),
-            // e15, e25, e35, e3215
-            Simd32x4::from(0.0),
         ));
     }
 }

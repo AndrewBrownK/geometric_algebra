@@ -104,7 +104,7 @@ pub mod meet_3 {
     pub use crate::data::round_point_at_origin::RoundPointAtOrigin;
 }
 pub mod reflection_0 {
-    pub use crate::data::anti_scalar::AntiScalar;
+    pub use crate::data::dual_num_on_origin::DualNumOnOrigin;
 }
 pub mod reflection_1 {
     pub use crate::data::horizon::Horizon;
@@ -155,6 +155,7 @@ pub mod reflection_4 {
     pub use crate::data::anti_plane::AntiPlane;
     pub use crate::data::anti_plane_on_origin::AntiPlaneOnOrigin;
     pub use crate::data::anti_sphere_on_origin::AntiSphereOnOrigin;
+    pub use crate::data::dual_num::DualNum;
     pub use crate::data::infinity::Infinity;
     pub use crate::data::motor::Motor;
     pub use crate::data::motor_at_infinity::MotorAtInfinity;
@@ -163,12 +164,13 @@ pub mod reflection_4 {
     pub use crate::data::round_point_at_origin::RoundPointAtOrigin;
 }
 pub mod reflection_5 {
+    pub use crate::data::anti_dual_num::AntiDualNum;
+    pub use crate::data::anti_dual_num_on_origin::AntiDualNumOnOrigin;
     pub use crate::data::anti_motor::AntiMotor;
     pub use crate::data::anti_motor_on_origin::AntiMotorOnOrigin;
-    pub use crate::data::scalar::Scalar;
 }
 pub mod vector_0 {
-    pub use crate::data::scalar::Scalar;
+    pub use crate::data::anti_dual_num_on_origin::AntiDualNumOnOrigin;
 }
 pub mod vector_1 {
     pub use crate::data::anti_plane::AntiPlane;
@@ -219,9 +221,10 @@ pub mod vector_4 {
     pub use crate::data::sphere_on_origin::SphereOnOrigin;
 }
 pub mod vector_5 {
-    pub use crate::data::anti_scalar::AntiScalar;
+    pub use crate::data::dual_num_on_origin::DualNumOnOrigin;
 }
 pub mod vector_mixed {
+    pub use crate::data::anti_dual_num::AntiDualNum;
     pub use crate::data::anti_flector::AntiFlector;
     pub use crate::data::anti_flector_on_origin::AntiFlectorOnOrigin;
     pub use crate::data::anti_motor::AntiMotor;
@@ -239,6 +242,10 @@ mod anti_circle_on_origin;
 pub use anti_circle_on_origin::AntiCircleOnOrigin;
 mod anti_dipole_on_origin;
 pub use anti_dipole_on_origin::AntiDipoleOnOrigin;
+mod anti_dual_num;
+pub use anti_dual_num::AntiDualNum;
+mod anti_dual_num_on_origin;
+pub use anti_dual_num_on_origin::AntiDualNumOnOrigin;
 mod anti_flat_origin;
 pub use anti_flat_origin::AntiFlatOrigin;
 mod anti_flat_point;
@@ -259,8 +266,6 @@ mod anti_plane;
 pub use anti_plane::AntiPlane;
 mod anti_plane_on_origin;
 pub use anti_plane_on_origin::AntiPlaneOnOrigin;
-mod anti_scalar;
-pub use anti_scalar::AntiScalar;
 mod anti_sphere_on_origin;
 pub use anti_sphere_on_origin::AntiSphereOnOrigin;
 mod circle;
@@ -289,6 +294,8 @@ mod dipole_orthogonal_origin;
 pub use dipole_orthogonal_origin::DipoleOrthogonalOrigin;
 mod dual_num;
 pub use dual_num::DualNum;
+mod dual_num_on_origin;
+pub use dual_num_on_origin::DualNumOnOrigin;
 mod flat_origin;
 pub use flat_origin::FlatOrigin;
 mod flat_point;
@@ -335,8 +342,6 @@ mod round_point;
 pub use round_point::RoundPoint;
 mod round_point_at_origin;
 pub use round_point_at_origin::RoundPointAtOrigin;
-mod scalar;
-pub use scalar::Scalar;
 mod sphere;
 pub use sphere::Sphere;
 mod sphere_at_origin;

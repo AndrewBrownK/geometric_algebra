@@ -1,17 +1,23 @@
 impl InfixAntiWedge for AntiCircleOnOrigin {}
+impl AntiWedge<AntiDualNum> for AntiCircleOnOrigin {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group0()[0])));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -23,22 +29,10 @@ impl AntiWedge<AntiMotor> for AntiCircleOnOrigin {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group1()[3])));
     }
 }
-impl AntiWedge<AntiScalar> for AntiCircleOnOrigin {
-    type Output = AntiCircleOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiCircleOnOrigin::from_groups(
-            // e41, e42, e43
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e23, e31, e12
-            (self.group1() * Simd32x3::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group1()[2])
                 - (self.group1()[1] * other.group1()[1])
@@ -50,9 +44,9 @@ impl AntiWedge<Circle> for AntiCircleOnOrigin {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group1()[2])
                 - (self.group1()[1] * other.group1()[1])
@@ -64,9 +58,9 @@ impl AntiWedge<CircleAligningOrigin> for AntiCircleOnOrigin {
     }
 }
 impl AntiWedge<CircleAtInfinity> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[3])
                 - (self.group1()[1] * other.group0()[2])
@@ -78,27 +72,27 @@ impl AntiWedge<CircleAtInfinity> for AntiCircleOnOrigin {
     }
 }
 impl AntiWedge<CircleAtOrigin> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group1()[2]) - (self.group1()[0] * other.group1()[0]) - (self.group1()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -112,6 +106,18 @@ impl AntiWedge<DualNum> for AntiCircleOnOrigin {
             (self.group0() * Simd32x3::from(other.group0()[1])),
             // e23, e31, e12
             (self.group1() * Simd32x3::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiCircleOnOrigin {
+    type Output = AntiCircleOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiCircleOnOrigin::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -151,9 +157,9 @@ impl AntiWedge<Horizon> for AntiCircleOnOrigin {
     }
 }
 impl AntiWedge<Line> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -165,18 +171,18 @@ impl AntiWedge<Line> for AntiCircleOnOrigin {
     }
 }
 impl AntiWedge<LineAtInfinity> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -225,9 +231,9 @@ impl AntiWedge<Motor> for AntiCircleOnOrigin {
     }
 }
 impl AntiWedge<MotorAtInfinity> for AntiCircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -369,6 +375,15 @@ impl AntiWedge<SphereOnOrigin> for AntiCircleOnOrigin {
     }
 }
 impl InfixAntiWedge for AntiDipoleOnOrigin {}
+impl AntiWedge<AntiDualNum> for AntiDipoleOnOrigin {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+        );
+    }
+}
 impl AntiWedge<AntiFlatPoint> for AntiDipoleOnOrigin {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
@@ -390,9 +405,9 @@ impl AntiWedge<AntiFlector> for AntiDipoleOnOrigin {
     }
 }
 impl AntiWedge<AntiLine> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -407,13 +422,6 @@ impl AntiWedge<AntiMotor> for AntiDipoleOnOrigin {
             (self.group0()[2] * other.group1()[3]),
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for AntiDipoleOnOrigin {
-    type Output = AntiDipoleOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Circle> for AntiDipoleOnOrigin {
@@ -479,51 +487,51 @@ impl AntiWedge<CircleOrthogonalOrigin> for AntiDipoleOnOrigin {
     }
 }
 impl AntiWedge<Dipole> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group2()[3]) - (self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group1()[3]) - (self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group1()[3]) - (self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
@@ -535,26 +543,33 @@ impl AntiWedge<DualNum> for AntiDipoleOnOrigin {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiDipoleOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (self.group0() * Simd32x4::from(other[e12345])));
+    }
+}
 impl AntiWedge<FlatOrigin> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for AntiDipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -866,14 +881,350 @@ impl AntiWedge<SphereOnOrigin> for AntiDipoleOnOrigin {
         );
     }
 }
-impl InfixAntiWedge for AntiFlatOrigin {}
-impl AntiWedge<AntiScalar> for AntiFlatOrigin {
-    type Output = AntiFlatOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlatOrigin::from_groups(/* e321 */ (self[e321] * other[e12345]));
+impl InfixAntiWedge for AntiDualNum {}
+impl AntiWedge<AntiCircleOnOrigin> for AntiDualNum {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[0]) * other.group0() * Simd32x3::from(-1.0)));
     }
 }
+impl AntiWedge<AntiDipoleOnOrigin> for AntiDualNum {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+        );
+    }
+}
+impl AntiWedge<AntiSphereOnOrigin> for AntiDualNum {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
+    }
+}
+impl AntiWedge<Circle> for AntiDualNum {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: Circle) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+            // e15, e25, e35
+            (Simd32x3::from(self.group0()[0]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<CircleAligningOrigin> for AntiDualNum {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self.group0()[0]) * other.group0()),
+            // e15, e25, e35
+            (Simd32x3::from(self.group0()[0]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<CircleAtInfinity> for AntiDualNum {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(
+            // e15, e25, e35
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[1], other.group0()[2], other.group0()[3]])),
+        );
+    }
+}
+impl AntiWedge<CircleAtOrigin> for AntiDualNum {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (Simd32x3::from(self.group0()[0]) * other.group0()));
+    }
+}
+impl AntiWedge<CircleOnOrigin> for AntiDualNum {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self.group0()[0]) * other.group0()),
+            // e15, e25, e35
+            (Simd32x3::from(self.group0()[0]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<CircleOrthogonalOrigin> for AntiDualNum {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]])),
+        );
+    }
+}
+impl AntiWedge<Dipole> for AntiDualNum {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: Dipole) -> Self::Output {
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group2()[3]]) * Simd32x4::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<DipoleAligningOrigin> for AntiDualNum {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[3]]) * Simd32x4::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<DipoleAtInfinity> for AntiDualNum {
+    type Output = Infinity;
+    fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
+        return Infinity::from_groups(/* e5 */ (self.group0()[0] * other.group1()[3] * -1.0));
+    }
+}
+impl AntiWedge<DipoleAtOrigin> for AntiDualNum {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[0]) * other.group0() * Simd32x3::from(-1.0)));
+    }
+}
+impl AntiWedge<DipoleOnOrigin> for AntiDualNum {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from(-1.0)));
+    }
+}
+impl AntiWedge<DipoleOrthogonalOrigin> for AntiDualNum {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[0]) * other.group0() * Simd32x3::from(-1.0)));
+    }
+}
+impl AntiWedge<DualNum> for AntiDualNum {
+    type Output = AntiDualNum;
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        return AntiDualNum::from_groups(/* e3215, scalar */ (self.group0() * Simd32x2::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiDualNum {
+    type Output = AntiDualNum;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNum::from_groups(/* e3215, scalar */ (self.group0() * Simd32x2::from(other[e12345])));
+    }
+}
+impl AntiWedge<FlatOrigin> for AntiDualNum {
+    type Output = Infinity;
+    fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ (self.group0()[0] * other[e45] * -1.0));
+    }
+}
+impl AntiWedge<FlatPoint> for AntiDualNum {
+    type Output = Infinity;
+    fn anti_wedge(self, other: FlatPoint) -> Self::Output {
+        return Infinity::from_groups(/* e5 */ (self.group0()[0] * other.group0()[3] * -1.0));
+    }
+}
+impl AntiWedge<Flector> for AntiDualNum {
+    type Output = MotorAtInfinity;
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        return MotorAtInfinity::from_groups(
+            // e235, e315, e125, e5
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group1()[0], other.group1()[1], other.group1()[2], other.group0()[3]]) * Simd32x4::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<FlectorOnOrigin> for AntiDualNum {
+    type Output = MotorAtInfinity;
+    fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
+        return MotorAtInfinity::from_groups(
+            // e235, e315, e125, e5
+            (Simd32x4::from(self.group0()[0]) * swizzle!(other.group0(), 1, 2, 3, 0) * Simd32x4::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<Line> for AntiDualNum {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (Simd32x3::from(self.group0()[0]) * other.group0()));
+    }
+}
+impl AntiWedge<LineOnOrigin> for AntiDualNum {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (Simd32x3::from(self.group0()[0]) * other.group0()));
+    }
+}
+impl AntiWedge<Motor> for AntiDualNum {
+    type Output = AntiMotor;
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group0()[3])]),
+            // e15, e25, e35, e3215
+            (Simd32x4::from(self.group0()[0]) * other.group0()),
+        );
+    }
+}
+impl AntiWedge<MotorOnOrigin> for AntiDualNum {
+    type Output = AntiMotor;
+    fn anti_wedge(self, other: MotorOnOrigin) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group0()[3])]),
+            // e15, e25, e35, e3215
+            (Simd32x4::from(self.group0()[0]) * other.group0()),
+        );
+    }
+}
+impl AntiWedge<MultiVector> for AntiDualNum {
+    type Output = MultiVector;
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([((self.group0()[0] * other.group1()[3]) + (self.group0()[1] * other.group0()[1])), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group0()[0] * other.group3()[0] * -1.0),
+                (self.group0()[0] * other.group3()[1] * -1.0),
+                (self.group0()[0] * other.group3()[2] * -1.0),
+                0.0,
+            ]),
+            // e5
+            (self.group0()[0] * other.group3()[3] * -1.0),
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group6()[1], other.group6()[2], other.group6()[3]])),
+            // e23, e31, e12
+            (Simd32x3::from(self.group0()[0]) * other.group7()),
+            // e321, e415, e425, e435
+            Simd32x4::from([(self.group0()[0] * other.group9()[3] * -1.0), 0.0, 0.0, 0.0]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group9()[0], other.group9()[1], other.group9()[2]]) * Simd32x3::from(-1.0)),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from(0.0),
+            // e3215
+            (self.group0()[0] * other.group0()[1]),
+        );
+    }
+}
+impl AntiWedge<NullCircleAtOrigin> for AntiDualNum {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (Simd32x3::from(self.group0()[0]) * other.group0()));
+    }
+}
+impl AntiWedge<NullDipoleAtOrigin> for AntiDualNum {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[0]) * other.group0() * Simd32x3::from(-1.0)));
+    }
+}
+impl AntiWedge<NullSphereAtOrigin> for AntiDualNum {
+    type Output = AntiFlatOrigin;
+    fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlatOrigin::from_groups(/* e321 */ (self.group0()[0] * other[e1234] * -1.0));
+    }
+}
+impl AntiWedge<Origin> for AntiDualNum {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other[e4]));
+    }
+}
+impl AntiWedge<Plane> for AntiDualNum {
+    type Output = LineAtInfinity;
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        return LineAtInfinity::from_groups(
+            // e235, e315, e125
+            (Simd32x3::from(self.group0()[0]) * Simd32x3::from([other.group0()[0], other.group0()[1], other.group0()[2]]) * Simd32x3::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<PlaneOnOrigin> for AntiDualNum {
+    type Output = LineAtInfinity;
+    fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ (Simd32x3::from(self.group0()[0]) * other.group0() * Simd32x3::from(-1.0)));
+    }
+}
+impl AntiWedge<RoundPoint> for AntiDualNum {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: RoundPoint) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group1()[0]));
+    }
+}
+impl AntiWedge<RoundPointAtOrigin> for AntiDualNum {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[0]));
+    }
+}
+impl AntiWedge<Sphere> for AntiDualNum {
+    type Output = AntiFlatPoint;
+    fn anti_wedge(self, other: Sphere) -> Self::Output {
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(self.group0()[0]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]]) * Simd32x4::from(-1.0)),
+        );
+    }
+}
+impl AntiWedge<SphereAtOrigin> for AntiDualNum {
+    type Output = AntiFlatOrigin;
+    fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
+        return AntiFlatOrigin::from_groups(/* e321 */ (self.group0()[0] * other.group0()[0] * -1.0));
+    }
+}
+impl AntiWedge<SphereOnOrigin> for AntiDualNum {
+    type Output = AntiFlatPoint;
+    fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(self.group0()[0]) * other.group0() * Simd32x4::from(-1.0)));
+    }
+}
+impl InfixAntiWedge for AntiDualNumOnOrigin {}
+impl AntiWedge<DualNum> for AntiDualNumOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[scalar] * other.group0()[1]));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiDualNumOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[scalar] * other[e12345]));
+    }
+}
+impl AntiWedge<Motor> for AntiDualNumOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[scalar] * other.group0()[3]));
+    }
+}
+impl AntiWedge<MotorOnOrigin> for AntiDualNumOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: MotorOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[scalar] * other.group0()[3]));
+    }
+}
+impl AntiWedge<MultiVector> for AntiDualNumOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[scalar] * other.group0()[1]));
+    }
+}
+impl InfixAntiWedge for AntiFlatOrigin {}
 impl AntiWedge<Circle> for AntiFlatOrigin {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
@@ -906,31 +1257,31 @@ impl AntiWedge<CircleOnOrigin> for AntiFlatOrigin {
     }
 }
 impl AntiWedge<Dipole> for AntiFlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other.group2()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e321] * other.group2()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for AntiFlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other.group1()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e321] * other.group1()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleAtInfinity> for AntiFlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other.group1()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e321] * other.group1()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleOnOrigin> for AntiFlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e321] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<DualNum> for AntiFlatOrigin {
@@ -940,18 +1291,25 @@ impl AntiWedge<DualNum> for AntiFlatOrigin {
         return AntiFlatOrigin::from_groups(/* e321 */ (self[e321] * other.group0()[1]));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiFlatOrigin {
+    type Output = AntiFlatOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlatOrigin::from_groups(/* e321 */ (self[e321] * other[e12345]));
+    }
+}
 impl AntiWedge<FlatOrigin> for AntiFlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e321] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for AntiFlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e321] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e321] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<Flector> for AntiFlatOrigin {
@@ -1068,9 +1426,9 @@ impl AntiWedge<SphereOnOrigin> for AntiFlatOrigin {
 }
 impl InfixAntiWedge for AntiFlatPoint {}
 impl AntiWedge<AntiCircleOnOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -1084,13 +1442,6 @@ impl AntiWedge<AntiDipoleOnOrigin> for AntiFlatPoint {
             (self.group0()[2] * other.group0()[0]),
             (self.group0()[0] * other.group0()[1]),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for AntiFlatPoint {
-    type Output = AntiFlatPoint;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Circle> for AntiFlatPoint {
@@ -1157,51 +1508,51 @@ impl AntiWedge<CircleOrthogonalOrigin> for AntiFlatPoint {
     }
 }
 impl AntiWedge<Dipole> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group2()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group1()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group1()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group1()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleAtOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -1213,17 +1564,24 @@ impl AntiWedge<DualNum> for AntiFlatPoint {
         return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiFlatPoint {
+    type Output = AntiFlatPoint;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(other[e12345])));
+    }
+}
 impl AntiWedge<FlatOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<Flector> for AntiFlatPoint {
@@ -1363,9 +1721,9 @@ impl AntiWedge<NullCircleAtOrigin> for AntiFlatPoint {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for AntiFlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -1438,9 +1796,9 @@ impl AntiWedge<SphereOnOrigin> for AntiFlatPoint {
 }
 impl InfixAntiWedge for AntiFlector {}
 impl AntiWedge<AntiCircleOnOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -1454,18 +1812,6 @@ impl AntiWedge<AntiDipoleOnOrigin> for AntiFlector {
             (self.group0()[2] * other.group0()[0]),
             (self.group0()[0] * other.group0()[1]),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for AntiFlector {
-    type Output = AntiFlector;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlector::from_groups(
-            // e235, e315, e125, e321
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e1, e2, e3, e5
-            (self.group1() * Simd32x4::from(other[e12345])),
-        );
     }
 }
 impl AntiWedge<Circle> for AntiFlector {
@@ -1532,51 +1878,51 @@ impl AntiWedge<CircleOrthogonalOrigin> for AntiFlector {
     }
 }
 impl AntiWedge<Dipole> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group2()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group1()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group1()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group1()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleAtOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -1593,17 +1939,29 @@ impl AntiWedge<DualNum> for AntiFlector {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiFlector {
+    type Output = AntiFlector;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e1, e2, e3, e5
+            (self.group1() * Simd32x4::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<Flector> for AntiFlector {
@@ -1750,9 +2108,9 @@ impl AntiWedge<NullCircleAtOrigin> for AntiFlector {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for AntiFlector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -1862,13 +2220,6 @@ impl AntiWedge<SphereOnOrigin> for AntiFlector {
     }
 }
 impl InfixAntiWedge for AntiFlectorOnOrigin {}
-impl AntiWedge<AntiScalar> for AntiFlectorOnOrigin {
-    type Output = AntiFlectorOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for AntiFlectorOnOrigin {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
@@ -1897,27 +2248,27 @@ impl AntiWedge<CircleOnOrigin> for AntiFlectorOnOrigin {
     }
 }
 impl AntiWedge<Dipole> for AntiFlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group2()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group2()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for AntiFlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleAtInfinity> for AntiFlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3] * -1.0));
     }
 }
 impl AntiWedge<DipoleOnOrigin> for AntiFlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<DualNum> for AntiFlectorOnOrigin {
@@ -1926,17 +2277,24 @@ impl AntiWedge<DualNum> for AntiFlectorOnOrigin {
         return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() * Simd32x4::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiFlectorOnOrigin {
+    type Output = AntiFlectorOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (self.group0() * Simd32x4::from(other[e12345])));
+    }
+}
 impl AntiWedge<FlatOrigin> for AntiFlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for AntiFlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<Flector> for AntiFlectorOnOrigin {
@@ -2078,30 +2436,18 @@ impl AntiWedge<SphereOnOrigin> for AntiFlectorOnOrigin {
 }
 impl InfixAntiWedge for AntiLine {}
 impl AntiWedge<AntiDipoleOnOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for AntiLine {
-    type Output = AntiLine;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiLine::from_groups(
-            // e23, e31, e12
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e15, e25, e35
-            (self.group1() * Simd32x3::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -2113,9 +2459,9 @@ impl AntiWedge<Circle> for AntiLine {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -2127,27 +2473,27 @@ impl AntiWedge<CircleAligningOrigin> for AntiLine {
     }
 }
 impl AntiWedge<CircleAtInfinity> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[3]) - (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[2])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -2159,9 +2505,9 @@ impl AntiWedge<CircleOnOrigin> for AntiLine {
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -2175,6 +2521,18 @@ impl AntiWedge<DualNum> for AntiLine {
             (self.group0() * Simd32x3::from(other.group0()[1])),
             // e15, e25, e35
             (self.group1() * Simd32x3::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiLine {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -2201,18 +2559,18 @@ impl AntiWedge<FlectorOnOrigin> for AntiLine {
     }
 }
 impl AntiWedge<Line> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -2303,9 +2661,9 @@ impl AntiWedge<MultiVector> for AntiLine {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for AntiLine {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -2369,44 +2727,37 @@ impl AntiWedge<SphereOnOrigin> for AntiLine {
     }
 }
 impl InfixAntiWedge for AntiLineOnOrigin {}
-impl AntiWedge<AntiScalar> for AntiLineOnOrigin {
-    type Output = AntiLineOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for AntiLineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAligningOrigin> for AntiLineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtInfinity> for AntiLineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[3]) - (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[2])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for AntiLineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -2416,6 +2767,13 @@ impl AntiWedge<DualNum> for AntiLineOnOrigin {
     type Output = AntiLineOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiLineOnOrigin {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for AntiLineOnOrigin {
@@ -2437,18 +2795,18 @@ impl AntiWedge<FlectorOnOrigin> for AntiLineOnOrigin {
     }
 }
 impl AntiWedge<Line> for AntiLineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for AntiLineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -2561,22 +2919,10 @@ impl AntiWedge<AntiDipoleOnOrigin> for AntiMotor {
         ]));
     }
 }
-impl AntiWedge<AntiScalar> for AntiMotor {
-    type Output = AntiMotor;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e15, e25, e35, e3215
-            (self.group1() * Simd32x4::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for AntiMotor {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[3]));
     }
 }
 impl AntiWedge<Circle> for AntiMotor {
@@ -2750,6 +3096,18 @@ impl AntiWedge<DualNum> for AntiMotor {
             (self.group0() * Simd32x4::from(other.group0()[1])),
             // e15, e25, e35, e3215
             (self.group1() * Simd32x4::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiMotor {
+    type Output = AntiMotor;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e15, e25, e35, e3215
+            (self.group1() * Simd32x4::from(other[e12345])),
         );
     }
 }
@@ -2942,10 +3300,10 @@ impl AntiWedge<NullSphereAtOrigin> for AntiMotor {
     }
 }
 impl AntiWedge<Origin> for AntiMotor {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for AntiMotor {
@@ -2991,15 +3349,15 @@ impl AntiWedge<PlaneOnOrigin> for AntiMotor {
     }
 }
 impl AntiWedge<RoundPoint> for AntiMotor {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group1()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group1()[0]));
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for AntiMotor {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0]));
     }
 }
 impl AntiWedge<Sphere> for AntiMotor {
@@ -3044,44 +3402,37 @@ impl AntiWedge<SphereOnOrigin> for AntiMotor {
     }
 }
 impl InfixAntiWedge for AntiMotorOnOrigin {}
-impl AntiWedge<AntiScalar> for AntiMotorOnOrigin {
-    type Output = AntiMotorOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for AntiMotorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAligningOrigin> for AntiMotorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtInfinity> for AntiMotorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[3]) - (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[2])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for AntiMotorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -3091,6 +3442,13 @@ impl AntiWedge<DualNum> for AntiMotorOnOrigin {
     type Output = AntiMotorOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ (self.group0() * Simd32x4::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for AntiMotorOnOrigin {
+    type Output = AntiMotorOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for AntiMotorOnOrigin {
@@ -3114,18 +3472,18 @@ impl AntiWedge<FlectorOnOrigin> for AntiMotorOnOrigin {
     }
 }
 impl AntiWedge<Line> for AntiMotorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for AntiMotorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -3216,32 +3574,32 @@ impl AntiWedge<SphereOnOrigin> for AntiMotorOnOrigin {
     }
 }
 impl InfixAntiWedge for AntiPlane {}
-impl AntiWedge<AntiScalar> for AntiPlane {
-    type Output = AntiPlane;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<DualNum> for AntiPlane {
     type Output = AntiPlane;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (self.group0() * Simd32x4::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiPlane {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (self.group0() * Simd32x4::from(other[e12345])));
+    }
+}
 impl AntiWedge<Flector> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Flector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group1()[2]) + (self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<FlectorOnOrigin> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[3]) + (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[2])),
         );
@@ -3297,81 +3655,81 @@ impl AntiWedge<MultiVector> for AntiPlane {
     }
 }
 impl AntiWedge<NullSphereAtOrigin> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e1234]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e1234]));
     }
 }
 impl AntiWedge<Plane> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<PlaneOnOrigin> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<Sphere> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group1()[0]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<SphereAtOrigin> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
     }
 }
 impl AntiWedge<SphereOnOrigin> for AntiPlane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl InfixAntiWedge for AntiPlaneOnOrigin {}
-impl AntiWedge<AntiScalar> for AntiPlaneOnOrigin {
-    type Output = AntiPlaneOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other[e12345])));
-    }
-}
 impl AntiWedge<DualNum> for AntiPlaneOnOrigin {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiPlaneOnOrigin {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other[e12345])));
+    }
+}
 impl AntiWedge<Flector> for AntiPlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Flector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group1()[2]) + (self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<FlectorOnOrigin> for AntiPlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[3]) + (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[2])),
         );
@@ -3427,563 +3785,52 @@ impl AntiWedge<MultiVector> for AntiPlaneOnOrigin {
     }
 }
 impl AntiWedge<Plane> for AntiPlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<PlaneOnOrigin> for AntiPlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<Sphere> for AntiPlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<SphereOnOrigin> for AntiPlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
-impl InfixAntiWedge for AntiScalar {}
-impl AntiWedge<AntiCircleOnOrigin> for AntiScalar {
-    type Output = AntiCircleOnOrigin;
-    fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiCircleOnOrigin::from_groups(
-            // e41, e42, e43
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e23, e31, e12
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<AntiDipoleOnOrigin> for AntiScalar {
-    type Output = AntiDipoleOnOrigin;
-    fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiFlatOrigin> for AntiScalar {
-    type Output = AntiFlatOrigin;
-    fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlatOrigin::from_groups(/* e321 */ (self[e12345] * other[e321]));
-    }
-}
-impl AntiWedge<AntiFlatPoint> for AntiScalar {
-    type Output = AntiFlatPoint;
-    fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiFlector> for AntiScalar {
-    type Output = AntiFlector;
-    fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlector::from_groups(
-            // e235, e315, e125, e321
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e1, e2, e3, e5
-            (Simd32x4::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<AntiFlectorOnOrigin> for AntiScalar {
-    type Output = AntiFlectorOnOrigin;
-    fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiLine> for AntiScalar {
-    type Output = AntiLine;
-    fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        use crate::elements::*;
-        return AntiLine::from_groups(
-            // e23, e31, e12
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e15, e25, e35
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<AntiLineOnOrigin> for AntiScalar {
-    type Output = AntiLineOnOrigin;
-    fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiMotor> for AntiScalar {
-    type Output = AntiMotor;
-    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
-        use crate::elements::*;
-        return AntiMotor::from_groups(
-            // e23, e31, e12, scalar
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e15, e25, e35, e3215
-            (Simd32x4::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<AntiMotorOnOrigin> for AntiScalar {
-    type Output = AntiMotorOnOrigin;
-    fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiPlane> for AntiScalar {
-    type Output = AntiPlane;
-    fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        use crate::elements::*;
-        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiPlaneOnOrigin> for AntiScalar {
-    type Output = AntiPlaneOnOrigin;
-    fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiScalar> for AntiScalar {
-    type Output = AntiScalar;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiScalar::from_groups(/* e12345 */ (self[e12345] * other[e12345]));
-    }
-}
-impl AntiWedge<AntiSphereOnOrigin> for AntiScalar {
-    type Output = AntiSphereOnOrigin;
-    fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<Circle> for AntiScalar {
-    type Output = Circle;
-    fn anti_wedge(self, other: Circle) -> Self::Output {
-        use crate::elements::*;
-        return Circle::from_groups(
-            // e423, e431, e412, e321
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e415, e425, e435
-            (Simd32x3::from(self[e12345]) * other.group1()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group2()),
-        );
-    }
-}
-impl AntiWedge<CircleAligningOrigin> for AntiScalar {
-    type Output = CircleAligningOrigin;
-    fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return CircleAligningOrigin::from_groups(
-            // e423, e431, e412
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e415, e425, e435
-            (Simd32x3::from(self[e12345]) * other.group1()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group2()),
-        );
-    }
-}
-impl AntiWedge<CircleAtInfinity> for AntiScalar {
-    type Output = CircleAtInfinity;
-    fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return CircleAtInfinity::from_groups(
-            // e321, e415, e425, e435
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<CircleAtOrigin> for AntiScalar {
-    type Output = CircleAtOrigin;
-    fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return CircleAtOrigin::from_groups(
-            // e423, e431, e412
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<CircleOnOrigin> for AntiScalar {
-    type Output = CircleOnOrigin;
-    fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return CircleOnOrigin::from_groups(
-            // e423, e431, e412
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e415, e425, e435
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<CircleOrthogonalOrigin> for AntiScalar {
-    type Output = CircleOrthogonalOrigin;
-    fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return CircleOrthogonalOrigin::from_groups(
-            // e423, e431, e412, e321
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<Dipole> for AntiScalar {
-    type Output = Dipole;
-    fn anti_wedge(self, other: Dipole) -> Self::Output {
-        use crate::elements::*;
-        return Dipole::from_groups(
-            // e41, e42, e43
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e23, e31, e12
-            (Simd32x3::from(self[e12345]) * other.group1()),
-            // e15, e25, e35, e45
-            (Simd32x4::from(self[e12345]) * other.group2()),
-        );
-    }
-}
-impl AntiWedge<DipoleAligningOrigin> for AntiScalar {
-    type Output = DipoleAligningOrigin;
-    fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e15, e25, e35, e45
-            (Simd32x4::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<DipoleAtInfinity> for AntiScalar {
-    type Output = DipoleAtInfinity;
-    fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAtInfinity::from_groups(
-            // e23, e31, e12
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e15, e25, e35, e45
-            (Simd32x4::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<DipoleAtOrigin> for AntiScalar {
-    type Output = DipoleAtOrigin;
-    fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAtOrigin::from_groups(
-            // e41, e42, e43
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e15, e25, e35
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<DipoleOnOrigin> for AntiScalar {
-    type Output = DipoleOnOrigin;
-    fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<DipoleOrthogonalOrigin> for AntiScalar {
-    type Output = DipoleOrthogonalOrigin;
-    fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        use crate::elements::*;
-        return DipoleOrthogonalOrigin::from_groups(
-            // e41, e42, e43
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e23, e31, e12
-            (Simd32x3::from(self[e12345]) * other.group1()),
-            // e15, e25, e35
-            (Simd32x3::from(self[e12345]) * other.group2()),
-        );
-    }
-}
-impl AntiWedge<DualNum> for AntiScalar {
-    type Output = DualNum;
-    fn anti_wedge(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e12345 */ (Simd32x2::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<FlatOrigin> for AntiScalar {
-    type Output = FlatOrigin;
-    fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
-        use crate::elements::*;
-        return FlatOrigin::from_groups(/* e45 */ (self[e12345] * other[e45]));
-    }
-}
-impl AntiWedge<FlatPoint> for AntiScalar {
-    type Output = FlatPoint;
-    fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        use crate::elements::*;
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<FlatPointAtInfinity> for AntiScalar {
-    type Output = FlatPointAtInfinity;
-    fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<Flector> for AntiScalar {
-    type Output = Flector;
-    fn anti_wedge(self, other: Flector) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(
-            // e15, e25, e35, e45
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e4235, e4315, e4125, e3215
-            (Simd32x4::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<FlectorAtInfinity> for AntiScalar {
-    type Output = FlectorAtInfinity;
-    fn anti_wedge(self, other: FlectorAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<FlectorOnOrigin> for AntiScalar {
-    type Output = FlectorOnOrigin;
-    fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<Horizon> for AntiScalar {
-    type Output = Horizon;
-    fn anti_wedge(self, other: Horizon) -> Self::Output {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e3215 */ (self[e12345] * other[e3215]));
-    }
-}
-impl AntiWedge<Infinity> for AntiScalar {
-    type Output = Infinity;
-    fn anti_wedge(self, other: Infinity) -> Self::Output {
-        use crate::elements::*;
-        return Infinity::from_groups(/* e5 */ (self[e12345] * other[e5]));
-    }
-}
-impl AntiWedge<Line> for AntiScalar {
-    type Output = Line;
-    fn anti_wedge(self, other: Line) -> Self::Output {
-        use crate::elements::*;
-        return Line::from_groups(
-            // e415, e425, e435
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<LineAtInfinity> for AntiScalar {
-    type Output = LineAtInfinity;
-    fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<LineOnOrigin> for AntiScalar {
-    type Output = LineOnOrigin;
-    fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<Motor> for AntiScalar {
-    type Output = Motor;
-    fn anti_wedge(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            (Simd32x4::from(self[e12345]) * other.group0()),
-            // e235, e315, e125, e5
-            (Simd32x4::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<MotorAtInfinity> for AntiScalar {
-    type Output = MotorAtInfinity;
-    fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        use crate::elements::*;
-        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<MotorOnOrigin> for AntiScalar {
-    type Output = MotorOnOrigin;
-    fn anti_wedge(self, other: MotorOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<MultiVector> for AntiScalar {
-    type Output = MultiVector;
-    fn anti_wedge(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            (Simd32x2::from(self[e12345]) * other.group0()),
-            // e1, e2, e3, e4
-            (Simd32x4::from(self[e12345]) * other.group1()),
-            // e5
-            (self[e12345] * other[e1]),
-            // e41, e42, e43, e45
-            (Simd32x4::from(self[e12345]) * other.group3()),
-            // e15, e25, e35
-            (Simd32x3::from(self[e12345]) * other.group4()),
-            // e23, e31, e12
-            (Simd32x3::from(self[e12345]) * other.group5()),
-            // e321, e415, e425, e435
-            (Simd32x4::from(self[e12345]) * other.group6()),
-            // e423, e431, e412
-            (Simd32x3::from(self[e12345]) * other.group7()),
-            // e235, e315, e125
-            (Simd32x3::from(self[e12345]) * other.group8()),
-            // e4235, e4315, e4125, e1234
-            (Simd32x4::from(self[e12345]) * other.group9()),
-            // e3215
-            (self[e12345] * other[e45]),
-        );
-    }
-}
-impl AntiWedge<NullCircleAtOrigin> for AntiScalar {
-    type Output = NullCircleAtOrigin;
-    fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<NullDipoleAtOrigin> for AntiScalar {
-    type Output = NullDipoleAtOrigin;
-    fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<NullSphereAtOrigin> for AntiScalar {
-    type Output = NullSphereAtOrigin;
-    fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return NullSphereAtOrigin::from_groups(/* e1234 */ (self[e12345] * other[e1234]));
-    }
-}
-impl AntiWedge<Origin> for AntiScalar {
-    type Output = Origin;
-    fn anti_wedge(self, other: Origin) -> Self::Output {
-        use crate::elements::*;
-        return Origin::from_groups(/* e4 */ (self[e12345] * other[e4]));
-    }
-}
-impl AntiWedge<Plane> for AntiScalar {
-    type Output = Plane;
-    fn anti_wedge(self, other: Plane) -> Self::Output {
-        use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<PlaneOnOrigin> for AntiScalar {
-    type Output = PlaneOnOrigin;
-    fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (Simd32x3::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<RoundPoint> for AntiScalar {
-    type Output = RoundPoint;
-    fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        use crate::elements::*;
-        return RoundPoint::from_groups(
-            // e1, e2, e3
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e4, e5
-            (Simd32x2::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<RoundPointAtOrigin> for AntiScalar {
-    type Output = RoundPointAtOrigin;
-    fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return RoundPointAtOrigin::from_groups(/* e4, e5 */ (Simd32x2::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<Scalar> for AntiScalar {
-    type Output = Scalar;
-    fn anti_wedge(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e12345] * other[scalar]));
-    }
-}
-impl AntiWedge<Sphere> for AntiScalar {
-    type Output = Sphere;
-    fn anti_wedge(self, other: Sphere) -> Self::Output {
-        use crate::elements::*;
-        return Sphere::from_groups(
-            // e4235, e4315, e4125
-            (Simd32x3::from(self[e12345]) * other.group0()),
-            // e1234, e3215
-            (Simd32x2::from(self[e12345]) * other.group1()),
-        );
-    }
-}
-impl AntiWedge<SphereAtOrigin> for AntiScalar {
-    type Output = SphereAtOrigin;
-    fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
-        use crate::elements::*;
-        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (Simd32x2::from(self[e12345]) * other.group0()));
-    }
-}
-impl AntiWedge<SphereOnOrigin> for AntiScalar {
-    type Output = SphereOnOrigin;
-    fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (Simd32x4::from(self[e12345]) * other.group0()));
-    }
-}
 impl InfixAntiWedge for AntiSphereOnOrigin {}
-impl AntiWedge<AntiMotor> for AntiSphereOnOrigin {
-    type Output = Scalar;
-    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group1()[3]));
+impl AntiWedge<AntiDualNum> for AntiSphereOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
     }
 }
-impl AntiWedge<AntiScalar> for AntiSphereOnOrigin {
-    type Output = AntiSphereOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(other[e12345])));
+impl AntiWedge<AntiMotor> for AntiSphereOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group1()[3]));
     }
 }
 impl AntiWedge<DualNum> for AntiSphereOnOrigin {
@@ -3992,35 +3839,42 @@ impl AntiWedge<DualNum> for AntiSphereOnOrigin {
         return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for AntiSphereOnOrigin {
+    type Output = AntiSphereOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ (self.group0() * Simd32x4::from(other[e12345])));
+    }
+}
 impl AntiWedge<Flector> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Flector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group1()[3]) + (self.group0()[2] * other.group1()[2]) + (self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<FlectorAtInfinity> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3]));
     }
 }
 impl AntiWedge<FlectorOnOrigin> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[3]) + (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[2])),
         );
     }
 }
 impl AntiWedge<Horizon> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e3215]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e3215]));
     }
 }
 impl AntiWedge<Motor> for AntiSphereOnOrigin {
@@ -4069,42 +3923,42 @@ impl AntiWedge<MultiVector> for AntiSphereOnOrigin {
     }
 }
 impl AntiWedge<Plane> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<PlaneOnOrigin> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<Sphere> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group1()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<SphereAtOrigin> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[1]));
     }
 }
 impl AntiWedge<SphereOnOrigin> for AntiSphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
@@ -4112,9 +3966,9 @@ impl AntiWedge<SphereOnOrigin> for AntiSphereOnOrigin {
 }
 impl InfixAntiWedge for Circle {}
 impl AntiWedge<AntiCircleOnOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -4134,6 +3988,17 @@ impl AntiWedge<AntiDipoleOnOrigin> for Circle {
             ((self.group1()[2] * other.group0()[3]) + (self.group2()[0] * other.group0()[1])),
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         ]));
+    }
+}
+impl AntiWedge<AntiDualNum> for Circle {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(other.group0()[0])),
+        );
     }
 }
 impl AntiWedge<AntiFlatOrigin> for Circle {
@@ -4172,9 +4037,9 @@ impl AntiWedge<AntiFlectorOnOrigin> for Circle {
     }
 }
 impl AntiWedge<AntiLine> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -4186,9 +4051,9 @@ impl AntiWedge<AntiLine> for Circle {
     }
 }
 impl AntiWedge<AntiLineOnOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -4221,25 +4086,11 @@ impl AntiWedge<AntiMotor> for Circle {
     }
 }
 impl AntiWedge<AntiMotorOnOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
-        );
-    }
-}
-impl AntiWedge<AntiScalar> for Circle {
-    type Output = Circle;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Circle::from_groups(
-            // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e415, e425, e435
-            (self.group1() * Simd32x3::from(other[e12345])),
-            // e235, e315, e125
-            (self.group2() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -4346,9 +4197,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for Circle {
     }
 }
 impl AntiWedge<Dipole> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -4364,9 +4215,9 @@ impl AntiWedge<Dipole> for Circle {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -4379,9 +4230,9 @@ impl AntiWedge<DipoleAligningOrigin> for Circle {
     }
 }
 impl AntiWedge<DipoleAtInfinity> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -4394,9 +4245,9 @@ impl AntiWedge<DipoleAtInfinity> for Circle {
     }
 }
 impl AntiWedge<DipoleAtOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -4408,18 +4259,18 @@ impl AntiWedge<DipoleAtOrigin> for Circle {
     }
 }
 impl AntiWedge<DipoleOnOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[1] * other.group0()[1]) - (self.group0()[3] * other.group0()[3]) - (self.group2()[0] * other.group0()[0])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -4446,26 +4297,40 @@ impl AntiWedge<DualNum> for Circle {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for Circle {
+    type Output = Circle;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Circle::from_groups(
+            // e423, e431, e412, e321
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(other[e12345])),
+            // e235, e315, e125
+            (self.group2() * Simd32x3::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -4782,9 +4647,9 @@ impl AntiWedge<NullCircleAtOrigin> for Circle {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for Circle {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
@@ -4895,9 +4760,9 @@ impl AntiWedge<SphereOnOrigin> for Circle {
 }
 impl InfixAntiWedge for CircleAligningOrigin {}
 impl AntiWedge<AntiCircleOnOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -4917,6 +4782,17 @@ impl AntiWedge<AntiDipoleOnOrigin> for CircleAligningOrigin {
             ((self.group1()[2] * other.group0()[3]) + (self.group2()[0] * other.group0()[1])),
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         ]));
+    }
+}
+impl AntiWedge<AntiDualNum> for CircleAligningOrigin {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (self.group0() * Simd32x3::from(other.group0()[0])),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(other.group0()[0])),
+        );
     }
 }
 impl AntiWedge<AntiFlatOrigin> for CircleAligningOrigin {
@@ -4955,9 +4831,9 @@ impl AntiWedge<AntiFlectorOnOrigin> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<AntiLine> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -4969,9 +4845,9 @@ impl AntiWedge<AntiLine> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<AntiLineOnOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -5004,25 +4880,11 @@ impl AntiWedge<AntiMotor> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<AntiMotorOnOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
-        );
-    }
-}
-impl AntiWedge<AntiScalar> for CircleAligningOrigin {
-    type Output = CircleAligningOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return CircleAligningOrigin::from_groups(
-            // e423, e431, e412
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e415, e425, e435
-            (self.group1() * Simd32x3::from(other[e12345])),
-            // e235, e315, e125
-            (self.group2() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -5123,9 +4985,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<Dipole> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -5140,9 +5002,9 @@ impl AntiWedge<Dipole> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -5154,9 +5016,9 @@ impl AntiWedge<DipoleAligningOrigin> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<DipoleAtInfinity> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -5168,9 +5030,9 @@ impl AntiWedge<DipoleAtInfinity> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<DipoleAtOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -5182,18 +5044,18 @@ impl AntiWedge<DipoleAtOrigin> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<DipoleOnOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -5220,19 +5082,33 @@ impl AntiWedge<DualNum> for CircleAligningOrigin {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for CircleAligningOrigin {
+    type Output = CircleAligningOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleAligningOrigin::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(other[e12345])),
+            // e235, e315, e125
+            (self.group2() * Simd32x3::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatPoint> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -5535,9 +5411,9 @@ impl AntiWedge<NullCircleAtOrigin> for CircleAligningOrigin {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for CircleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
@@ -5640,9 +5516,9 @@ impl AntiWedge<SphereOnOrigin> for CircleAligningOrigin {
 }
 impl InfixAntiWedge for CircleAtInfinity {}
 impl AntiWedge<AntiCircleOnOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -5662,6 +5538,15 @@ impl AntiWedge<AntiDipoleOnOrigin> for CircleAtInfinity {
             ((self.group0()[3] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
             (-(self.group0()[3] * other.group0()[2]) - (self.group0()[1] * other.group0()[0]) - (self.group0()[2] * other.group0()[1])),
         ]));
+    }
+}
+impl AntiWedge<AntiDualNum> for CircleAtInfinity {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(
+            // e15, e25, e35
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[1], self.group0()[2], self.group0()[3]])),
+        );
     }
 }
 impl AntiWedge<AntiFlatOrigin> for CircleAtInfinity {
@@ -5706,18 +5591,18 @@ impl AntiWedge<AntiFlectorOnOrigin> for CircleAtInfinity {
     }
 }
 impl AntiWedge<AntiLine> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[2]) - (self.group0()[1] * other.group0()[0]) - (self.group0()[2] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiLineOnOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[2]) - (self.group0()[1] * other.group0()[0]) - (self.group0()[2] * other.group0()[1])),
         );
@@ -5745,23 +5630,11 @@ impl AntiWedge<AntiMotor> for CircleAtInfinity {
     }
 }
 impl AntiWedge<AntiMotorOnOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[2]) - (self.group0()[1] * other.group0()[0]) - (self.group0()[2] * other.group0()[1])),
-        );
-    }
-}
-impl AntiWedge<AntiScalar> for CircleAtInfinity {
-    type Output = CircleAtInfinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return CircleAtInfinity::from_groups(
-            // e321, e415, e425, e435
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e235, e315, e125
-            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -5859,9 +5732,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for CircleAtInfinity {
     }
 }
 impl AntiWedge<Dipole> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -5874,45 +5747,45 @@ impl AntiWedge<Dipole> for CircleAtInfinity {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[1] * other.group0()[1]) - (self.group0()[0] * other.group1()[3]) - (self.group1()[0] * other.group0()[0])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[2]) - (self.group0()[2] * other.group0()[1]) - (self.group0()[0] * other.group1()[3]) - (self.group0()[1] * other.group0()[0])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[1] * other.group0()[1]) - (self.group0()[0] * other.group0()[3]) - (self.group1()[0] * other.group0()[0])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -5934,17 +5807,29 @@ impl AntiWedge<DualNum> for CircleAtInfinity {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for CircleAtInfinity {
+    type Output = CircleAtInfinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleAtInfinity::from_groups(
+            // e321, e415, e425, e435
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e235, e315, e125
+            (self.group1() * Simd32x3::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<Flector> for CircleAtInfinity {
@@ -6221,9 +6106,9 @@ impl AntiWedge<NullCircleAtOrigin> for CircleAtInfinity {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for CircleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -6326,9 +6211,9 @@ impl AntiWedge<SphereOnOrigin> for CircleAtInfinity {
 }
 impl InfixAntiWedge for CircleAtOrigin {}
 impl AntiWedge<AntiCircleOnOrigin> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -6341,6 +6226,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for CircleAtOrigin {
             // e1, e2, e3
             (swizzle!(self.group1(), 1, 2, 0) * Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]])),
         );
+    }
+}
+impl AntiWedge<AntiDualNum> for CircleAtOrigin {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatPoint> for CircleAtOrigin {
@@ -6362,9 +6253,9 @@ impl AntiWedge<AntiFlector> for CircleAtOrigin {
     }
 }
 impl AntiWedge<AntiLine> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -6379,18 +6270,6 @@ impl AntiWedge<AntiMotor> for CircleAtOrigin {
             (self.group0()[2] * other.group1()[3]),
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for CircleAtOrigin {
-    type Output = CircleAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return CircleAtOrigin::from_groups(
-            // e423, e431, e412
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e235, e315, e125
-            (self.group1() * Simd32x3::from(other[e12345])),
-        );
     }
 }
 impl AntiWedge<Circle> for CircleAtOrigin {
@@ -6466,9 +6345,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for CircleAtOrigin {
     }
 }
 impl AntiWedge<Dipole> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -6480,9 +6359,9 @@ impl AntiWedge<Dipole> for CircleAtOrigin {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -6494,18 +6373,18 @@ impl AntiWedge<DipoleAligningOrigin> for CircleAtOrigin {
     }
 }
 impl AntiWedge<DipoleAtInfinity> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -6517,18 +6396,18 @@ impl AntiWedge<DipoleAtOrigin> for CircleAtOrigin {
     }
 }
 impl AntiWedge<DipoleOnOrigin> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -6550,19 +6429,31 @@ impl AntiWedge<DualNum> for CircleAtOrigin {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for CircleAtOrigin {
+    type Output = CircleAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleAtOrigin::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e235, e315, e125
+            (self.group1() * Simd32x3::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatPoint> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -6796,9 +6687,9 @@ impl AntiWedge<NullCircleAtOrigin> for CircleAtOrigin {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for CircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -6872,9 +6763,9 @@ impl AntiWedge<SphereOnOrigin> for CircleAtOrigin {
 }
 impl InfixAntiWedge for CircleOnOrigin {}
 impl AntiWedge<AntiCircleOnOrigin> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group1()[2]) - (self.group1()[0] * other.group1()[0]) - (self.group1()[1] * other.group1()[1])),
         );
@@ -6889,6 +6780,17 @@ impl AntiWedge<AntiDipoleOnOrigin> for CircleOnOrigin {
             (self.group1()[2] * other.group0()[3]),
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         ]));
+    }
+}
+impl AntiWedge<AntiDualNum> for CircleOnOrigin {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (self.group0() * Simd32x3::from(other.group0()[0])),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(other.group0()[0])),
+        );
     }
 }
 impl AntiWedge<AntiFlatOrigin> for CircleOnOrigin {
@@ -6927,9 +6829,9 @@ impl AntiWedge<AntiFlectorOnOrigin> for CircleOnOrigin {
     }
 }
 impl AntiWedge<AntiLine> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -6941,9 +6843,9 @@ impl AntiWedge<AntiLine> for CircleOnOrigin {
     }
 }
 impl AntiWedge<AntiLineOnOrigin> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -6976,23 +6878,11 @@ impl AntiWedge<AntiMotor> for CircleOnOrigin {
     }
 }
 impl AntiWedge<AntiMotorOnOrigin> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
-        );
-    }
-}
-impl AntiWedge<AntiScalar> for CircleOnOrigin {
-    type Output = CircleOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return CircleOnOrigin::from_groups(
-            // e423, e431, e412
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e415, e425, e435
-            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -7085,9 +6975,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for CircleOnOrigin {
     }
 }
 impl AntiWedge<Dipole> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group1()[2])
                 - (self.group1()[1] * other.group1()[1])
@@ -7099,18 +6989,18 @@ impl AntiWedge<Dipole> for CircleOnOrigin {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -7122,18 +7012,18 @@ impl AntiWedge<DipoleAtInfinity> for CircleOnOrigin {
     }
 }
 impl AntiWedge<DipoleAtOrigin> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group1()[2])
                 - (self.group1()[1] * other.group1()[1])
@@ -7155,19 +7045,31 @@ impl AntiWedge<DualNum> for CircleOnOrigin {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for CircleOnOrigin {
+    type Output = CircleOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleOnOrigin::from_groups(
+            // e423, e431, e412
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e415, e425, e435
+            (self.group1() * Simd32x3::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatPoint> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for CircleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -7524,9 +7426,9 @@ impl AntiWedge<SphereOnOrigin> for CircleOnOrigin {
 }
 impl InfixAntiWedge for CircleOrthogonalOrigin {}
 impl AntiWedge<AntiCircleOnOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -7538,6 +7440,15 @@ impl AntiWedge<AntiDipoleOnOrigin> for CircleOrthogonalOrigin {
         return AntiPlaneOnOrigin::from_groups(
             // e1, e2, e3
             (swizzle!(self.group1(), 1, 2, 0) * Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]])),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum> for CircleOrthogonalOrigin {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
         );
     }
 }
@@ -7562,9 +7473,9 @@ impl AntiWedge<AntiFlector> for CircleOrthogonalOrigin {
     }
 }
 impl AntiWedge<AntiLine> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -7579,18 +7490,6 @@ impl AntiWedge<AntiMotor> for CircleOrthogonalOrigin {
             (self.group0()[2] * other.group1()[3]),
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for CircleOrthogonalOrigin {
-    type Output = CircleOrthogonalOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return CircleOrthogonalOrigin::from_groups(
-            // e423, e431, e412, e321
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e235, e315, e125
-            (self.group1() * Simd32x3::from(other[e12345])),
-        );
     }
 }
 impl AntiWedge<Circle> for CircleOrthogonalOrigin {
@@ -7671,9 +7570,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for CircleOrthogonalOrigin {
     }
 }
 impl AntiWedge<Dipole> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -7686,9 +7585,9 @@ impl AntiWedge<Dipole> for CircleOrthogonalOrigin {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -7701,18 +7600,18 @@ impl AntiWedge<DipoleAligningOrigin> for CircleOrthogonalOrigin {
     }
 }
 impl AntiWedge<DipoleAtInfinity> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group1()[3]) - (self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -7724,18 +7623,18 @@ impl AntiWedge<DipoleAtOrigin> for CircleOrthogonalOrigin {
     }
 }
 impl AntiWedge<DipoleOnOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[1] * other.group0()[1]) - (self.group0()[3] * other.group0()[3]) - (self.group1()[0] * other.group0()[0])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -7757,26 +7656,38 @@ impl AntiWedge<DualNum> for CircleOrthogonalOrigin {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for CircleOrthogonalOrigin {
+    type Output = CircleOrthogonalOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e321
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e235, e315, e125
+            (self.group1() * Simd32x3::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e45] * -1.0));
     }
 }
 impl AntiWedge<FlatPoint> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -8051,9 +7962,9 @@ impl AntiWedge<NullCircleAtOrigin> for CircleOrthogonalOrigin {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for CircleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -8135,43 +8046,52 @@ impl AntiWedge<SphereOnOrigin> for CircleOrthogonalOrigin {
 }
 impl InfixAntiWedge for Dipole {}
 impl AntiWedge<AntiDipoleOnOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[3] * other.group0()[3]) - (self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
     }
 }
+impl AntiWedge<AntiDualNum> for Dipole {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group2()[3]])),
+        );
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group2()[3] * other[e321] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group2()[3] * other[e321] * -1.0));
     }
 }
 impl AntiWedge<AntiFlatPoint> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlectorOnOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group2()[3] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group2()[3] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<AntiMotor> for Dipole {
@@ -8183,24 +8103,10 @@ impl AntiWedge<AntiMotor> for Dipole {
         );
     }
 }
-impl AntiWedge<AntiScalar> for Dipole {
-    type Output = Dipole;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Dipole::from_groups(
-            // e41, e42, e43
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e23, e31, e12
-            (self.group1() * Simd32x3::from(other[e12345])),
-            // e15, e25, e35, e45
-            (self.group2() * Simd32x4::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[3] * other.group0()[3])
                 - (self.group2()[2] * other.group0()[2])
@@ -8216,9 +8122,9 @@ impl AntiWedge<Circle> for Dipole {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -8233,9 +8139,9 @@ impl AntiWedge<CircleAligningOrigin> for Dipole {
     }
 }
 impl AntiWedge<CircleAtInfinity> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[3] * other.group0()[0])
                 - (self.group1()[2] * other.group0()[3])
@@ -8248,9 +8154,9 @@ impl AntiWedge<CircleAtInfinity> for Dipole {
     }
 }
 impl AntiWedge<CircleAtOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -8262,9 +8168,9 @@ impl AntiWedge<CircleAtOrigin> for Dipole {
     }
 }
 impl AntiWedge<CircleOnOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -8276,9 +8182,9 @@ impl AntiWedge<CircleOnOrigin> for Dipole {
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[3] * other.group0()[3])
                 - (self.group2()[2] * other.group0()[2])
@@ -8300,6 +8206,20 @@ impl AntiWedge<DualNum> for Dipole {
             (self.group1() * Simd32x3::from(other.group0()[1])),
             // e15, e25, e35, e45
             (self.group2() * Simd32x4::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Dipole {
+    type Output = Dipole;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Dipole::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(other[e12345])),
+            // e15, e25, e35, e45
+            (self.group2() * Simd32x4::from(other[e12345])),
         );
     }
 }
@@ -8351,9 +8271,9 @@ impl AntiWedge<Horizon> for Dipole {
     }
 }
 impl AntiWedge<Line> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -8365,18 +8285,18 @@ impl AntiWedge<Line> for Dipole {
     }
 }
 impl AntiWedge<LineAtInfinity> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -8420,9 +8340,9 @@ impl AntiWedge<Motor> for Dipole {
     }
 }
 impl AntiWedge<MotorAtInfinity> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -8511,9 +8431,9 @@ impl AntiWedge<MultiVector> for Dipole {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for Dipole {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
@@ -8601,43 +8521,52 @@ impl AntiWedge<SphereOnOrigin> for Dipole {
 }
 impl InfixAntiWedge for DipoleAligningOrigin {}
 impl AntiWedge<AntiDipoleOnOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3]) - (self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
+impl AntiWedge<AntiDualNum> for DipoleAligningOrigin {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlane::from_groups(
+            // e1, e2, e3, e5
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[3]])),
+        );
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other[e321] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other[e321] * -1.0));
     }
 }
 impl AntiWedge<AntiFlatPoint> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlectorOnOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<AntiMotor> for DipoleAligningOrigin {
@@ -8649,22 +8578,10 @@ impl AntiWedge<AntiMotor> for DipoleAligningOrigin {
         );
     }
 }
-impl AntiWedge<AntiScalar> for DipoleAligningOrigin {
-    type Output = DipoleAligningOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAligningOrigin::from_groups(
-            // e41, e42, e43
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e15, e25, e35, e45
-            (self.group1() * Simd32x4::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3])
                 - (self.group1()[2] * other.group0()[2])
@@ -8677,9 +8594,9 @@ impl AntiWedge<Circle> for DipoleAligningOrigin {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -8691,18 +8608,18 @@ impl AntiWedge<CircleAligningOrigin> for DipoleAligningOrigin {
     }
 }
 impl AntiWedge<CircleAtInfinity> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[0]) - (self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -8714,18 +8631,18 @@ impl AntiWedge<CircleAtOrigin> for DipoleAligningOrigin {
     }
 }
 impl AntiWedge<CircleOnOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3])
                 - (self.group1()[2] * other.group0()[2])
@@ -8745,6 +8662,18 @@ impl AntiWedge<DualNum> for DipoleAligningOrigin {
             (self.group0() * Simd32x3::from(other.group0()[1])),
             // e15, e25, e35, e45
             (self.group1() * Simd32x4::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DipoleAligningOrigin {
+    type Output = DipoleAligningOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleAligningOrigin::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e15, e25, e35, e45
+            (self.group1() * Simd32x4::from(other[e12345])),
         );
     }
 }
@@ -8791,18 +8720,18 @@ impl AntiWedge<Horizon> for DipoleAligningOrigin {
     }
 }
 impl AntiWedge<Line> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<LineAtInfinity> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -8841,9 +8770,9 @@ impl AntiWedge<Motor> for DipoleAligningOrigin {
     }
 }
 impl AntiWedge<MotorAtInfinity> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -8908,9 +8837,9 @@ impl AntiWedge<MultiVector> for DipoleAligningOrigin {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for DipoleAligningOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -8993,37 +8922,43 @@ impl AntiWedge<SphereOnOrigin> for DipoleAligningOrigin {
 }
 impl InfixAntiWedge for DipoleAtInfinity {}
 impl AntiWedge<AntiDipoleOnOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3]) - (self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
+impl AntiWedge<AntiDualNum> for DipoleAtInfinity {
+    type Output = Infinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return Infinity::from_groups(/* e5 */ (self.group1()[3] * other.group0()[0]));
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other[e321] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other[e321] * -1.0));
     }
 }
 impl AntiWedge<AntiFlatPoint> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<AntiFlector> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<AntiFlectorOnOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<AntiMotor> for DipoleAtInfinity {
@@ -9032,22 +8967,10 @@ impl AntiWedge<AntiMotor> for DipoleAtInfinity {
         return Infinity::from_groups(/* e5 */ (self.group1()[3] * other.group1()[3]));
     }
 }
-impl AntiWedge<AntiScalar> for DipoleAtInfinity {
-    type Output = DipoleAtInfinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAtInfinity::from_groups(
-            // e23, e31, e12
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e15, e25, e35, e45
-            (self.group1() * Simd32x4::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3])
                 - (self.group1()[2] * other.group0()[2])
@@ -9060,9 +8983,9 @@ impl AntiWedge<Circle> for DipoleAtInfinity {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -9074,27 +8997,27 @@ impl AntiWedge<CircleAligningOrigin> for DipoleAtInfinity {
     }
 }
 impl AntiWedge<CircleAtInfinity> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[0]) - (self.group0()[2] * other.group0()[3]) - (self.group0()[0] * other.group0()[1]) - (self.group0()[1] * other.group0()[2])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -9106,9 +9029,9 @@ impl AntiWedge<CircleOnOrigin> for DipoleAtInfinity {
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[3] * other.group0()[3]) - (self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -9122,6 +9045,18 @@ impl AntiWedge<DualNum> for DipoleAtInfinity {
             (self.group0() * Simd32x3::from(other.group0()[1])),
             // e15, e25, e35, e45
             (self.group1() * Simd32x4::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DipoleAtInfinity {
+    type Output = DipoleAtInfinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleAtInfinity::from_groups(
+            // e23, e31, e12
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e15, e25, e35, e45
+            (self.group1() * Simd32x4::from(other[e12345])),
         );
     }
 }
@@ -9161,18 +9096,18 @@ impl AntiWedge<Horizon> for DipoleAtInfinity {
     }
 }
 impl AntiWedge<Line> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -9284,9 +9219,9 @@ impl AntiWedge<MultiVector> for DipoleAtInfinity {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for DipoleAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -9362,27 +9297,33 @@ impl AntiWedge<SphereOnOrigin> for DipoleAtInfinity {
 }
 impl InfixAntiWedge for DipoleAtOrigin {}
 impl AntiWedge<AntiDipoleOnOrigin> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
+impl AntiWedge<AntiDualNum> for DipoleAtOrigin {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group0()[0])));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -9394,22 +9335,10 @@ impl AntiWedge<AntiMotor> for DipoleAtOrigin {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group1()[3])));
     }
 }
-impl AntiWedge<AntiScalar> for DipoleAtOrigin {
-    type Output = DipoleAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return DipoleAtOrigin::from_groups(
-            // e41, e42, e43
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e15, e25, e35
-            (self.group1() * Simd32x3::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -9421,9 +9350,9 @@ impl AntiWedge<Circle> for DipoleAtOrigin {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -9435,18 +9364,18 @@ impl AntiWedge<CircleAligningOrigin> for DipoleAtOrigin {
     }
 }
 impl AntiWedge<CircleAtInfinity> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -9458,18 +9387,18 @@ impl AntiWedge<CircleAtOrigin> for DipoleAtOrigin {
     }
 }
 impl AntiWedge<CircleOnOrigin> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -9488,6 +9417,18 @@ impl AntiWedge<DualNum> for DipoleAtOrigin {
             (self.group0() * Simd32x3::from(other.group0()[1])),
             // e15, e25, e35
             (self.group1() * Simd32x3::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DipoleAtOrigin {
+    type Output = DipoleAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleAtOrigin::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e15, e25, e35
+            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -9528,18 +9469,18 @@ impl AntiWedge<Horizon> for DipoleAtOrigin {
     }
 }
 impl AntiWedge<Line> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<LineAtInfinity> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -9583,9 +9524,9 @@ impl AntiWedge<Motor> for DipoleAtOrigin {
     }
 }
 impl AntiWedge<MotorAtInfinity> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -9651,9 +9592,9 @@ impl AntiWedge<MultiVector> for DipoleAtOrigin {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for DipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -9725,40 +9666,46 @@ impl AntiWedge<SphereOnOrigin> for DipoleAtOrigin {
 }
 impl InfixAntiWedge for DipoleOnOrigin {}
 impl AntiWedge<AntiDipoleOnOrigin> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+    }
+}
+impl AntiWedge<AntiDualNum> for DipoleOnOrigin {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (self.group0() * Simd32x4::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e321] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e321] * -1.0));
     }
 }
 impl AntiWedge<AntiFlatPoint> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlectorOnOrigin> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<AntiMotor> for DipoleOnOrigin {
@@ -9767,53 +9714,46 @@ impl AntiWedge<AntiMotor> for DipoleOnOrigin {
         return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (self.group0() * Simd32x4::from(other.group1()[3])));
     }
 }
-impl AntiWedge<AntiScalar> for DipoleOnOrigin {
-    type Output = DipoleOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
     }
 }
 impl AntiWedge<CircleAligningOrigin> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtInfinity> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[0]) - (self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -9823,6 +9763,13 @@ impl AntiWedge<DualNum> for DipoleOnOrigin {
     type Output = DipoleOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DipoleOnOrigin {
+    type Output = DipoleOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for DipoleOnOrigin {
@@ -9862,18 +9809,18 @@ impl AntiWedge<Horizon> for DipoleOnOrigin {
     }
 }
 impl AntiWedge<Line> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<LineAtInfinity> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -9912,9 +9859,9 @@ impl AntiWedge<Motor> for DipoleOnOrigin {
     }
 }
 impl AntiWedge<MotorAtInfinity> for DipoleOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -10039,27 +9986,33 @@ impl AntiWedge<SphereOnOrigin> for DipoleOnOrigin {
 }
 impl InfixAntiWedge for DipoleOrthogonalOrigin {}
 impl AntiWedge<AntiDipoleOnOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
     }
 }
+impl AntiWedge<AntiDualNum> for DipoleOrthogonalOrigin {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group0()[0])));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -10071,24 +10024,10 @@ impl AntiWedge<AntiMotor> for DipoleOrthogonalOrigin {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group1()[3])));
     }
 }
-impl AntiWedge<AntiScalar> for DipoleOrthogonalOrigin {
-    type Output = DipoleOrthogonalOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return DipoleOrthogonalOrigin::from_groups(
-            // e41, e42, e43
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e23, e31, e12
-            (self.group1() * Simd32x3::from(other[e12345])),
-            // e15, e25, e35
-            (self.group2() * Simd32x3::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<Circle> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -10103,9 +10042,9 @@ impl AntiWedge<Circle> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<CircleAligningOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -10120,9 +10059,9 @@ impl AntiWedge<CircleAligningOrigin> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<CircleAtInfinity> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[3])
                 - (self.group1()[1] * other.group0()[2])
@@ -10134,9 +10073,9 @@ impl AntiWedge<CircleAtInfinity> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<CircleAtOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -10148,9 +10087,9 @@ impl AntiWedge<CircleAtOrigin> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<CircleOnOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -10162,9 +10101,9 @@ impl AntiWedge<CircleOnOrigin> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2])
                 - (self.group2()[1] * other.group0()[1])
@@ -10185,6 +10124,20 @@ impl AntiWedge<DualNum> for DipoleOrthogonalOrigin {
             (self.group1() * Simd32x3::from(other.group0()[1])),
             // e15, e25, e35
             (self.group2() * Simd32x3::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DipoleOrthogonalOrigin {
+    type Output = DipoleOrthogonalOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e23, e31, e12
+            (self.group1() * Simd32x3::from(other[e12345])),
+            // e15, e25, e35
+            (self.group2() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -10230,9 +10183,9 @@ impl AntiWedge<Horizon> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<Line> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -10244,18 +10197,18 @@ impl AntiWedge<Line> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<LineAtInfinity> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<LineOnOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -10304,9 +10257,9 @@ impl AntiWedge<Motor> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<MotorAtInfinity> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -10401,9 +10354,9 @@ impl AntiWedge<MultiVector> for DipoleOrthogonalOrigin {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for DipoleOrthogonalOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group2()[2] * other.group0()[2]) - (self.group2()[0] * other.group0()[0]) - (self.group2()[1] * other.group0()[1])),
         );
@@ -10496,6 +10449,19 @@ impl AntiWedge<AntiDipoleOnOrigin> for DualNum {
         return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(self.group0()[1]) * other.group0()));
     }
 }
+impl AntiWedge<AntiDualNum> for DualNum {
+    type Output = AntiDualNum;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiDualNum::from_groups(/* e3215, scalar */ (Simd32x2::from(self.group0()[1]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiDualNumOnOrigin> for DualNum {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[1] * other[scalar]));
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for DualNum {
     type Output = AntiFlatOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
@@ -10570,13 +10536,6 @@ impl AntiWedge<AntiPlaneOnOrigin> for DualNum {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[1]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiScalar> for DualNum {
-    type Output = DualNum;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return DualNum::from_groups(/* scalar, e12345 */ (self.group0() * Simd32x2::from(other[e12345])));
     }
 }
 impl AntiWedge<AntiSphereOnOrigin> for DualNum {
@@ -10723,10 +10682,17 @@ impl AntiWedge<DipoleOrthogonalOrigin> for DualNum {
 impl AntiWedge<DualNum> for DualNum {
     type Output = DualNum;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return DualNum::from_groups(/* scalar, e12345 */ Simd32x2::from([
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([
             ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
             (self.group0()[1] * other.group0()[1]),
         ]));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DualNum {
+    type Output = DualNum;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DualNum::from_groups(/* e5, e12345 */ (self.group0() * Simd32x2::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatOrigin> for DualNum {
@@ -10809,36 +10775,18 @@ impl AntiWedge<LineOnOrigin> for DualNum {
     }
 }
 impl AntiWedge<Motor> for DualNum {
-    type Output = MultiVector;
+    type Output = Motor;
     fn anti_wedge(self, other: Motor) -> Self::Output {
-        return MultiVector::from_groups(
-            // scalar, e12345
-            (self.group0() * Simd32x2::from(other.group0()[3])),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            (self.group0()[1] * other.group1()[3]),
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e321, e415, e425, e435
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e235, e315, e125, e5
             Simd32x4::from([
-                0.0,
-                (self.group0()[1] * other.group0()[0]),
-                (self.group0()[1] * other.group0()[1]),
-                (self.group0()[1] * other.group0()[2]),
+                (self.group0()[1] * other.group1()[0]),
+                (self.group0()[1] * other.group1()[1]),
+                (self.group0()[1] * other.group1()[2]),
+                ((self.group0()[0] * other.group0()[3]) + (self.group0()[1] * other.group1()[3])),
             ]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            (Simd32x3::from(self.group0()[1]) * Simd32x3::from([other.group1()[0], other.group1()[1], other.group1()[2]])),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
         );
     }
 }
@@ -10849,36 +10797,13 @@ impl AntiWedge<MotorAtInfinity> for DualNum {
     }
 }
 impl AntiWedge<MotorOnOrigin> for DualNum {
-    type Output = MultiVector;
+    type Output = Motor;
     fn anti_wedge(self, other: MotorOnOrigin) -> Self::Output {
-        return MultiVector::from_groups(
-            // scalar, e12345
-            (self.group0() * Simd32x2::from(other.group0()[3])),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e321, e415, e425, e435
-            Simd32x4::from([
-                0.0,
-                (self.group0()[1] * other.group0()[0]),
-                (self.group0()[1] * other.group0()[1]),
-                (self.group0()[1] * other.group0()[2]),
-            ]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[3])]),
         );
     }
 }
@@ -10889,13 +10814,13 @@ impl AntiWedge<MultiVector> for DualNum {
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([
-                ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                ((self.group0()[0] * other.group9()[3]) + (self.group0()[1] * other.group0()[0])),
                 (self.group0()[1] * other.group0()[1]),
             ]),
             // e1, e2, e3, e4
             (Simd32x4::from(self.group0()[1]) * other.group1()),
             // e5
-            (self.group0()[1] * other[e1]),
+            ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other[e1])),
             // e41, e42, e43, e45
             (Simd32x4::from(self.group0()[1]) * other.group3()),
             // e15, e25, e35
@@ -10928,10 +10853,33 @@ impl AntiWedge<NullDipoleAtOrigin> for DualNum {
     }
 }
 impl AntiWedge<NullSphereAtOrigin> for DualNum {
-    type Output = NullSphereAtOrigin;
+    type Output = MultiVector;
     fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return NullSphereAtOrigin::from_groups(/* e1234 */ (self.group0()[1] * other[e1234]));
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] * other[e1234]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other[e1234])]),
+            // e3215
+            0.0,
+        );
     }
 }
 impl AntiWedge<Origin> for DualNum {
@@ -10970,70 +10918,651 @@ impl AntiWedge<RoundPointAtOrigin> for DualNum {
         return RoundPointAtOrigin::from_groups(/* e4, e5 */ (Simd32x2::from(self.group0()[1]) * other.group0()));
     }
 }
-impl AntiWedge<Scalar> for DualNum {
-    type Output = Scalar;
-    fn anti_wedge(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[1] * other[scalar]));
-    }
-}
 impl AntiWedge<Sphere> for DualNum {
-    type Output = Sphere;
+    type Output = MultiVector;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
-        return Sphere::from_groups(
-            // e4235, e4315, e4125
-            (Simd32x3::from(self.group0()[1]) * other.group0()),
-            // e1234, e3215
-            (Simd32x2::from(self.group0()[1]) * other.group1()),
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] * other.group1()[0]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            (Simd32x4::from(self.group0()[1]) * Simd32x4::from([other.group0()[0], other.group0()[1], other.group0()[2], other.group1()[0]])),
+            // e3215
+            (self.group0()[1] * other.group1()[1]),
         );
     }
 }
 impl AntiWedge<SphereAtOrigin> for DualNum {
-    type Output = SphereAtOrigin;
+    type Output = MultiVector;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
-        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (Simd32x2::from(self.group0()[1]) * other.group0()));
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] * other.group0()[0]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[1] * other.group0()[0])]),
+            // e3215
+            (self.group0()[1] * other.group0()[1]),
+        );
     }
 }
 impl AntiWedge<SphereOnOrigin> for DualNum {
+    type Output = MultiVector;
+    fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] * other.group0()[3]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            (Simd32x4::from(self.group0()[1]) * other.group0()),
+            // e3215
+            0.0,
+        );
+    }
+}
+impl InfixAntiWedge for DualNumOnOrigin {}
+impl AntiWedge<AntiCircleOnOrigin> for DualNumOnOrigin {
+    type Output = AntiCircleOnOrigin;
+    fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiCircleOnOrigin::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e23, e31, e12
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiDipoleOnOrigin> for DualNumOnOrigin {
+    type Output = AntiDipoleOnOrigin;
+    fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiDualNum> for DualNumOnOrigin {
+    type Output = AntiDualNum;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNum::from_groups(/* e3215, scalar */ (Simd32x2::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiDualNumOnOrigin> for DualNumOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e12345] * other[scalar]));
+    }
+}
+impl AntiWedge<AntiFlatOrigin> for DualNumOnOrigin {
+    type Output = AntiFlatOrigin;
+    fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlatOrigin::from_groups(/* e321 */ (self[e12345] * other[e321]));
+    }
+}
+impl AntiWedge<AntiFlatPoint> for DualNumOnOrigin {
+    type Output = AntiFlatPoint;
+    fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiFlector> for DualNumOnOrigin {
+    type Output = AntiFlector;
+    fn anti_wedge(self, other: AntiFlector) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlector::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e1, e2, e3, e5
+            (Simd32x4::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiFlectorOnOrigin> for DualNumOnOrigin {
+    type Output = AntiFlectorOnOrigin;
+    fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiLine> for DualNumOnOrigin {
+    type Output = AntiLine;
+    fn anti_wedge(self, other: AntiLine) -> Self::Output {
+        use crate::elements::*;
+        return AntiLine::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e15, e25, e35
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiLineOnOrigin> for DualNumOnOrigin {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiMotor> for DualNumOnOrigin {
+    type Output = AntiMotor;
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+        use crate::elements::*;
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e15, e25, e35, e3215
+            (Simd32x4::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<AntiMotorOnOrigin> for DualNumOnOrigin {
+    type Output = AntiMotorOnOrigin;
+    fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiPlane> for DualNumOnOrigin {
+    type Output = AntiPlane;
+    fn anti_wedge(self, other: AntiPlane) -> Self::Output {
+        use crate::elements::*;
+        return AntiPlane::from_groups(/* e1, e2, e3, e5 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiPlaneOnOrigin> for DualNumOnOrigin {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<AntiSphereOnOrigin> for DualNumOnOrigin {
+    type Output = AntiSphereOnOrigin;
+    fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<Circle> for DualNumOnOrigin {
+    type Output = Circle;
+    fn anti_wedge(self, other: Circle) -> Self::Output {
+        use crate::elements::*;
+        return Circle::from_groups(
+            // e423, e431, e412, e321
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e415, e425, e435
+            (Simd32x3::from(self[e12345]) * other.group1()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<CircleAligningOrigin> for DualNumOnOrigin {
+    type Output = CircleAligningOrigin;
+    fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleAligningOrigin::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e415, e425, e435
+            (Simd32x3::from(self[e12345]) * other.group1()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<CircleAtInfinity> for DualNumOnOrigin {
+    type Output = CircleAtInfinity;
+    fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return CircleAtInfinity::from_groups(
+            // e321, e415, e425, e435
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<CircleAtOrigin> for DualNumOnOrigin {
+    type Output = CircleAtOrigin;
+    fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleAtOrigin::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<CircleOnOrigin> for DualNumOnOrigin {
+    type Output = CircleOnOrigin;
+    fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleOnOrigin::from_groups(
+            // e423, e431, e412
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e415, e425, e435
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<CircleOrthogonalOrigin> for DualNumOnOrigin {
+    type Output = CircleOrthogonalOrigin;
+    fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        return CircleOrthogonalOrigin::from_groups(
+            // e423, e431, e412, e321
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<Dipole> for DualNumOnOrigin {
+    type Output = Dipole;
+    fn anti_wedge(self, other: Dipole) -> Self::Output {
+        use crate::elements::*;
+        return Dipole::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e23, e31, e12
+            (Simd32x3::from(self[e12345]) * other.group1()),
+            // e15, e25, e35, e45
+            (Simd32x4::from(self[e12345]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<DipoleAligningOrigin> for DualNumOnOrigin {
+    type Output = DipoleAligningOrigin;
+    fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleAligningOrigin::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e15, e25, e35, e45
+            (Simd32x4::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<DipoleAtInfinity> for DualNumOnOrigin {
+    type Output = DipoleAtInfinity;
+    fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return DipoleAtInfinity::from_groups(
+            // e23, e31, e12
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e15, e25, e35, e45
+            (Simd32x4::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<DipoleAtOrigin> for DualNumOnOrigin {
+    type Output = DipoleAtOrigin;
+    fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleAtOrigin::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e15, e25, e35
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<DipoleOnOrigin> for DualNumOnOrigin {
+    type Output = DipoleOnOrigin;
+    fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<DipoleOrthogonalOrigin> for DualNumOnOrigin {
+    type Output = DipoleOrthogonalOrigin;
+    fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DipoleOrthogonalOrigin::from_groups(
+            // e41, e42, e43
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e23, e31, e12
+            (Simd32x3::from(self[e12345]) * other.group1()),
+            // e15, e25, e35
+            (Simd32x3::from(self[e12345]) * other.group2()),
+        );
+    }
+}
+impl AntiWedge<DualNum> for DualNumOnOrigin {
+    type Output = DualNum;
+    fn anti_wedge(self, other: DualNum) -> Self::Output {
+        use crate::elements::*;
+        return DualNum::from_groups(/* e5, e12345 */ (Simd32x2::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for DualNumOnOrigin {
+    type Output = DualNumOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return DualNumOnOrigin::from_groups(/* e12345 */ (self[e12345] * other[e12345]));
+    }
+}
+impl AntiWedge<FlatOrigin> for DualNumOnOrigin {
+    type Output = FlatOrigin;
+    fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlatOrigin::from_groups(/* e45 */ (self[e12345] * other[e45]));
+    }
+}
+impl AntiWedge<FlatPoint> for DualNumOnOrigin {
+    type Output = FlatPoint;
+    fn anti_wedge(self, other: FlatPoint) -> Self::Output {
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<FlatPointAtInfinity> for DualNumOnOrigin {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<Flector> for DualNumOnOrigin {
+    type Output = Flector;
+    fn anti_wedge(self, other: Flector) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(
+            // e15, e25, e35, e45
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e4235, e4315, e4125, e3215
+            (Simd32x4::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<FlectorAtInfinity> for DualNumOnOrigin {
+    type Output = FlectorAtInfinity;
+    fn anti_wedge(self, other: FlectorAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<FlectorOnOrigin> for DualNumOnOrigin {
+    type Output = FlectorOnOrigin;
+    fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<Horizon> for DualNumOnOrigin {
+    type Output = Horizon;
+    fn anti_wedge(self, other: Horizon) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e3215 */ (self[e12345] * other[e3215]));
+    }
+}
+impl AntiWedge<Infinity> for DualNumOnOrigin {
+    type Output = Infinity;
+    fn anti_wedge(self, other: Infinity) -> Self::Output {
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ (self[e12345] * other[e5]));
+    }
+}
+impl AntiWedge<Line> for DualNumOnOrigin {
+    type Output = Line;
+    fn anti_wedge(self, other: Line) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(
+            // e415, e425, e435
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<LineAtInfinity> for DualNumOnOrigin {
+    type Output = LineAtInfinity;
+    fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<LineOnOrigin> for DualNumOnOrigin {
+    type Output = LineOnOrigin;
+    fn anti_wedge(self, other: LineOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<Motor> for DualNumOnOrigin {
+    type Output = Motor;
+    fn anti_wedge(self, other: Motor) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            (Simd32x4::from(self[e12345]) * other.group0()),
+            // e235, e315, e125, e5
+            (Simd32x4::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<MotorAtInfinity> for DualNumOnOrigin {
+    type Output = MotorAtInfinity;
+    fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
+        use crate::elements::*;
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<MotorOnOrigin> for DualNumOnOrigin {
+    type Output = MotorOnOrigin;
+    fn anti_wedge(self, other: MotorOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<MultiVector> for DualNumOnOrigin {
+    type Output = MultiVector;
+    fn anti_wedge(self, other: MultiVector) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            (Simd32x2::from(self[e12345]) * other.group0()),
+            // e1, e2, e3, e4
+            (Simd32x4::from(self[e12345]) * other.group1()),
+            // e5
+            (self[e12345] * other[e1]),
+            // e41, e42, e43, e45
+            (Simd32x4::from(self[e12345]) * other.group3()),
+            // e15, e25, e35
+            (Simd32x3::from(self[e12345]) * other.group4()),
+            // e23, e31, e12
+            (Simd32x3::from(self[e12345]) * other.group5()),
+            // e321, e415, e425, e435
+            (Simd32x4::from(self[e12345]) * other.group6()),
+            // e423, e431, e412
+            (Simd32x3::from(self[e12345]) * other.group7()),
+            // e235, e315, e125
+            (Simd32x3::from(self[e12345]) * other.group8()),
+            // e4235, e4315, e4125, e1234
+            (Simd32x4::from(self[e12345]) * other.group9()),
+            // e3215
+            (self[e12345] * other[e45]),
+        );
+    }
+}
+impl AntiWedge<NullCircleAtOrigin> for DualNumOnOrigin {
+    type Output = NullCircleAtOrigin;
+    fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<NullDipoleAtOrigin> for DualNumOnOrigin {
+    type Output = NullDipoleAtOrigin;
+    fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<NullSphereAtOrigin> for DualNumOnOrigin {
+    type Output = NullSphereAtOrigin;
+    fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return NullSphereAtOrigin::from_groups(/* e1234 */ (self[e12345] * other[e1234]));
+    }
+}
+impl AntiWedge<Origin> for DualNumOnOrigin {
+    type Output = Origin;
+    fn anti_wedge(self, other: Origin) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */ (self[e12345] * other[e4]));
+    }
+}
+impl AntiWedge<Plane> for DualNumOnOrigin {
+    type Output = Plane;
+    fn anti_wedge(self, other: Plane) -> Self::Output {
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (Simd32x4::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<PlaneOnOrigin> for DualNumOnOrigin {
+    type Output = PlaneOnOrigin;
+    fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (Simd32x3::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<RoundPoint> for DualNumOnOrigin {
+    type Output = RoundPoint;
+    fn anti_wedge(self, other: RoundPoint) -> Self::Output {
+        use crate::elements::*;
+        return RoundPoint::from_groups(
+            // e1, e2, e3
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e4, e5
+            (Simd32x2::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<RoundPointAtOrigin> for DualNumOnOrigin {
+    type Output = RoundPointAtOrigin;
+    fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ (Simd32x2::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<Sphere> for DualNumOnOrigin {
+    type Output = Sphere;
+    fn anti_wedge(self, other: Sphere) -> Self::Output {
+        use crate::elements::*;
+        return Sphere::from_groups(
+            // e4235, e4315, e4125
+            (Simd32x3::from(self[e12345]) * other.group0()),
+            // e1234, e3215
+            (Simd32x2::from(self[e12345]) * other.group1()),
+        );
+    }
+}
+impl AntiWedge<SphereAtOrigin> for DualNumOnOrigin {
+    type Output = SphereAtOrigin;
+    fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
+        use crate::elements::*;
+        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (Simd32x2::from(self[e12345]) * other.group0()));
+    }
+}
+impl AntiWedge<SphereOnOrigin> for DualNumOnOrigin {
     type Output = SphereOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (Simd32x4::from(self.group0()[1]) * other.group0()));
+        use crate::elements::*;
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (Simd32x4::from(self[e12345]) * other.group0()));
     }
 }
 impl InfixAntiWedge for FlatOrigin {}
 impl AntiWedge<AntiDipoleOnOrigin> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
+    }
+}
+impl AntiWedge<AntiDualNum> for FlatOrigin {
+    type Output = Infinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ (self[e45] * other.group0()[0]));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other[e321] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other[e321] * -1.0));
     }
 }
 impl AntiWedge<AntiFlatPoint> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<AntiFlector> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<AntiFlectorOnOrigin> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<AntiMotor> for FlatOrigin {
@@ -11043,32 +11572,25 @@ impl AntiWedge<AntiMotor> for FlatOrigin {
         return Infinity::from_groups(/* e5 */ (self[e45] * other.group1()[3]));
     }
 }
-impl AntiWedge<AntiScalar> for FlatOrigin {
-    type Output = FlatOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return FlatOrigin::from_groups(/* e45 */ (self[e45] * other[e12345]));
-    }
-}
 impl AntiWedge<Circle> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<CircleAtInfinity> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for FlatOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e45] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<DualNum> for FlatOrigin {
@@ -11076,6 +11598,13 @@ impl AntiWedge<DualNum> for FlatOrigin {
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return FlatOrigin::from_groups(/* e45 */ (self[e45] * other.group0()[1]));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for FlatOrigin {
+    type Output = FlatOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlatOrigin::from_groups(/* e45 */ (self[e45] * other[e12345]));
     }
 }
 impl AntiWedge<Flector> for FlatOrigin {
@@ -11180,37 +11709,43 @@ impl AntiWedge<SphereOnOrigin> for FlatOrigin {
 }
 impl InfixAntiWedge for FlatPoint {}
 impl AntiWedge<AntiDipoleOnOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
+impl AntiWedge<AntiDualNum> for FlatPoint {
+    type Output = Infinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return Infinity::from_groups(/* e5 */ (self.group0()[3] * other.group0()[0]));
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e321] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e321] * -1.0));
     }
 }
 impl AntiWedge<AntiFlatPoint> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<AntiFlector> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3] * -1.0));
     }
 }
 impl AntiWedge<AntiFlectorOnOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<AntiMotor> for FlatPoint {
@@ -11219,59 +11754,52 @@ impl AntiWedge<AntiMotor> for FlatPoint {
         return Infinity::from_groups(/* e5 */ (self.group0()[3] * other.group1()[3]));
     }
 }
-impl AntiWedge<AntiScalar> for FlatPoint {
-    type Output = FlatPoint;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleAligningOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtInfinity> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0] * -1.0));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0] * -1.0));
     }
 }
 impl AntiWedge<CircleAtOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[3] * other.group0()[3]) - (self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -11281,6 +11809,13 @@ impl AntiWedge<DualNum> for FlatPoint {
     type Output = FlatPoint;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for FlatPoint {
+    type Output = FlatPoint;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlatPoint::from_groups(/* e15, e25, e35, e45 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for FlatPoint {
@@ -11363,9 +11898,9 @@ impl AntiWedge<MultiVector> for FlatPoint {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for FlatPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -11437,61 +11972,54 @@ impl AntiWedge<SphereOnOrigin> for FlatPoint {
 }
 impl InfixAntiWedge for FlatPointAtInfinity {}
 impl AntiWedge<AntiDipoleOnOrigin> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiDipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for FlatPointAtInfinity {
-    type Output = FlatPointAtInfinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() * Simd32x3::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleAligningOrigin> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOnOrigin> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -11501,6 +12029,13 @@ impl AntiWedge<DualNum> for FlatPointAtInfinity {
     type Output = FlatPointAtInfinity;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() * Simd32x3::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for FlatPointAtInfinity {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for FlatPointAtInfinity {
@@ -11571,9 +12106,9 @@ impl AntiWedge<MultiVector> for FlatPointAtInfinity {
     }
 }
 impl AntiWedge<NullCircleAtOrigin> for FlatPointAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullCircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -11682,6 +12217,15 @@ impl AntiWedge<AntiDipoleOnOrigin> for Flector {
             Simd32x4::from(0.0),
             // e3215
             0.0,
+        );
+    }
+}
+impl AntiWedge<AntiDualNum> for Flector {
+    type Output = MotorAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return MotorAtInfinity::from_groups(
+            // e235, e315, e125, e5
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group1()[0], self.group1()[1], self.group1()[2], self.group0()[3]])),
         );
     }
 }
@@ -11795,39 +12339,27 @@ impl AntiWedge<AntiMotorOnOrigin> for Flector {
     }
 }
 impl AntiWedge<AntiPlane> for Flector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[2] * other.group0()[2]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiPlaneOnOrigin> for Flector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[2] * other.group0()[2]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for Flector {
-    type Output = Flector;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Flector::from_groups(
-            // e15, e25, e35, e45
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e4235, e4315, e4125, e3215
-            (self.group1() * Simd32x4::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for Flector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[3] * other.group0()[3]) + (self.group1()[2] * other.group0()[2]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1])),
         );
@@ -12159,6 +12691,18 @@ impl AntiWedge<DualNum> for Flector {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for Flector {
+    type Output = Flector;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Flector::from_groups(
+            // e15, e25, e35, e45
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e4235, e4315, e4125, e3215
+            (self.group1() * Simd32x4::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<FlatOrigin> for Flector {
     type Output = Infinity;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
@@ -12448,10 +12992,10 @@ impl AntiWedge<NullSphereAtOrigin> for Flector {
     }
 }
 impl AntiWedge<Origin> for Flector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for Flector {
@@ -12497,18 +13041,18 @@ impl AntiWedge<PlaneOnOrigin> for Flector {
     }
 }
 impl AntiWedge<RoundPoint> for Flector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[3] * other.group1()[0]) + (self.group1()[2] * other.group0()[2]) + (self.group1()[0] * other.group0()[0]) + (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for Flector {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[3] * other.group0()[0]));
     }
 }
 impl AntiWedge<Sphere> for Flector {
@@ -12617,17 +13161,10 @@ impl AntiWedge<AntiDipoleOnOrigin> for FlectorAtInfinity {
         ]));
     }
 }
-impl AntiWedge<AntiScalar> for FlectorAtInfinity {
-    type Output = FlectorAtInfinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for FlectorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[3]));
     }
 }
 impl AntiWedge<Circle> for FlectorAtInfinity {
@@ -12772,6 +13309,13 @@ impl AntiWedge<DualNum> for FlectorAtInfinity {
         return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ (self.group0() * Simd32x4::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for FlectorAtInfinity {
+    type Output = FlectorAtInfinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ (self.group0() * Simd32x4::from(other[e12345])));
+    }
+}
 impl AntiWedge<FlatOrigin> for FlectorAtInfinity {
     type Output = Infinity;
     fn anti_wedge(self, other: FlatOrigin) -> Self::Output {
@@ -12901,10 +13445,10 @@ impl AntiWedge<NullSphereAtOrigin> for FlectorAtInfinity {
     }
 }
 impl AntiWedge<Origin> for FlectorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for FlectorAtInfinity {
@@ -12930,15 +13474,15 @@ impl AntiWedge<PlaneOnOrigin> for FlectorAtInfinity {
     }
 }
 impl AntiWedge<RoundPoint> for FlectorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group1()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group1()[0]));
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for FlectorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
     }
 }
 impl AntiWedge<Sphere> for FlectorAtInfinity {
@@ -13026,6 +13570,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for FlectorOnOrigin {
             // e3215
             0.0,
         );
+    }
+}
+impl AntiWedge<AntiDualNum> for FlectorOnOrigin {
+    type Output = MotorAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ (swizzle!(self.group0(), 1, 2, 3, 0) * Simd32x4::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for FlectorOnOrigin {
@@ -13133,34 +13683,27 @@ impl AntiWedge<AntiMotorOnOrigin> for FlectorOnOrigin {
     }
 }
 impl AntiWedge<AntiPlane> for FlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[2]) + (self.group0()[1] * other.group0()[0]) + (self.group0()[2] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiPlaneOnOrigin> for FlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[2]) + (self.group0()[1] * other.group0()[0]) + (self.group0()[2] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for FlectorOnOrigin {
-    type Output = FlectorOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for FlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[2]) + (self.group0()[1] * other.group0()[0]) + (self.group0()[2] * other.group0()[1])),
         );
@@ -13376,6 +13919,13 @@ impl AntiWedge<DualNum> for FlectorOnOrigin {
     type Output = FlectorOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for FlectorOnOrigin {
+    type Output = FlectorOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatPoint> for FlectorOnOrigin {
@@ -13619,9 +14169,9 @@ impl AntiWedge<PlaneOnOrigin> for FlectorOnOrigin {
     }
 }
 impl AntiWedge<RoundPoint> for FlectorOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[2]) + (self.group0()[1] * other.group0()[0]) + (self.group0()[2] * other.group0()[1])),
         );
@@ -13742,18 +14292,11 @@ impl AntiWedge<AntiDipoleOnOrigin> for Horizon {
         );
     }
 }
-impl AntiWedge<AntiScalar> for Horizon {
-    type Output = Horizon;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Horizon::from_groups(/* e3215 */ (self[e3215] * other[e12345]));
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for Horizon {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e3215] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e3215] * other.group0()[3]));
     }
 }
 impl AntiWedge<Circle> for Horizon {
@@ -13872,6 +14415,13 @@ impl AntiWedge<DualNum> for Horizon {
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ (self[e3215] * other.group0()[1]));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Horizon {
+    type Output = Horizon;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Horizon::from_groups(/* e3215 */ (self[e3215] * other[e12345]));
     }
 }
 impl AntiWedge<FlatOrigin> for Horizon {
@@ -13993,10 +14543,10 @@ impl AntiWedge<NullSphereAtOrigin> for Horizon {
     }
 }
 impl AntiWedge<Origin> for Horizon {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e3215] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e3215] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for Horizon {
@@ -14017,17 +14567,17 @@ impl AntiWedge<PlaneOnOrigin> for Horizon {
     }
 }
 impl AntiWedge<RoundPoint> for Horizon {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e3215] * other.group1()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e3215] * other.group1()[0]));
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for Horizon {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e3215] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e3215] * other.group0()[0]));
     }
 }
 impl AntiWedge<Sphere> for Horizon {
@@ -14055,18 +14605,18 @@ impl AntiWedge<SphereOnOrigin> for Horizon {
     }
 }
 impl InfixAntiWedge for Infinity {}
-impl AntiWedge<AntiScalar> for Infinity {
-    type Output = Infinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Infinity::from_groups(/* e5 */ (self[e5] * other[e12345]));
-    }
-}
 impl AntiWedge<DualNum> for Infinity {
     type Output = Infinity;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
         return Infinity::from_groups(/* e5 */ (self[e5] * other.group0()[1]));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Infinity {
+    type Output = Infinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Infinity::from_groups(/* e5 */ (self[e5] * other[e12345]));
     }
 }
 impl AntiWedge<Motor> for Infinity {
@@ -14114,38 +14664,38 @@ impl AntiWedge<MultiVector> for Infinity {
     }
 }
 impl AntiWedge<NullSphereAtOrigin> for Infinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e5] * other[e1234]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e5] * other[e1234]));
     }
 }
 impl AntiWedge<Sphere> for Infinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e5] * other.group1()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e5] * other.group1()[0]));
     }
 }
 impl AntiWedge<SphereAtOrigin> for Infinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e5] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e5] * other.group0()[0]));
     }
 }
 impl AntiWedge<SphereOnOrigin> for Infinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e5] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e5] * other.group0()[3]));
     }
 }
 impl InfixAntiWedge for Line {}
 impl AntiWedge<AntiCircleOnOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -14165,6 +14715,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for Line {
             ((self.group0()[2] * other.group0()[3]) + (self.group1()[0] * other.group0()[1])),
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         ]));
+    }
+}
+impl AntiWedge<AntiDualNum> for Line {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() * Simd32x3::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for Line {
@@ -14203,18 +14759,18 @@ impl AntiWedge<AntiFlectorOnOrigin> for Line {
     }
 }
 impl AntiWedge<AntiLine> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiLineOnOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -14242,23 +14798,11 @@ impl AntiWedge<AntiMotor> for Line {
     }
 }
 impl AntiWedge<AntiMotorOnOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
-        );
-    }
-}
-impl AntiWedge<AntiScalar> for Line {
-    type Output = Line;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Line::from_groups(
-            // e415, e425, e435
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e235, e315, e125
-            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -14353,9 +14897,9 @@ impl AntiWedge<CircleOrthogonalOrigin> for Line {
     }
 }
 impl AntiWedge<Dipole> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -14367,45 +14911,45 @@ impl AntiWedge<Dipole> for Line {
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2])
                 - (self.group1()[1] * other.group0()[1])
@@ -14424,6 +14968,18 @@ impl AntiWedge<DualNum> for Line {
             (self.group0() * Simd32x3::from(other.group0()[1])),
             // e235, e315, e125
             (self.group1() * Simd32x3::from(other.group0()[1])),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Line {
+    type Output = Line;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Line::from_groups(
+            // e415, e425, e435
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e235, e315, e125
+            (self.group1() * Simd32x3::from(other[e12345])),
         );
     }
 }
@@ -14620,9 +15176,9 @@ impl AntiWedge<NullCircleAtOrigin> for Line {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for Line {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group1()[2] * other.group0()[2]) - (self.group1()[0] * other.group0()[0]) - (self.group1()[1] * other.group0()[1])),
         );
@@ -14713,9 +15269,9 @@ impl AntiWedge<SphereOnOrigin> for Line {
 }
 impl InfixAntiWedge for LineAtInfinity {}
 impl AntiWedge<AntiCircleOnOrigin> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -14728,13 +15284,6 @@ impl AntiWedge<AntiDipoleOnOrigin> for LineAtInfinity {
             // e1, e2, e3
             (swizzle!(self.group0(), 1, 2, 0) * Simd32x3::from([other.group0()[2], other.group0()[0], other.group0()[1]])),
         );
-    }
-}
-impl AntiWedge<AntiScalar> for LineAtInfinity {
-    type Output = LineAtInfinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Circle> for LineAtInfinity {
@@ -14795,45 +15344,45 @@ impl AntiWedge<CircleOrthogonalOrigin> for LineAtInfinity {
     }
 }
 impl AntiWedge<Dipole> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -14843,6 +15392,13 @@ impl AntiWedge<DualNum> for LineAtInfinity {
     type Output = LineAtInfinity;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() * Simd32x3::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for LineAtInfinity {
+    type Output = LineAtInfinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for LineAtInfinity {
@@ -14947,9 +15503,9 @@ impl AntiWedge<NullCircleAtOrigin> for LineAtInfinity {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for LineAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -15007,9 +15563,9 @@ impl AntiWedge<SphereOnOrigin> for LineAtInfinity {
 }
 impl InfixAntiWedge for LineOnOrigin {}
 impl AntiWedge<AntiCircleOnOrigin> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -15024,6 +15580,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for LineOnOrigin {
             (self.group0()[2] * other.group0()[3]),
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         ]));
+    }
+}
+impl AntiWedge<AntiDualNum> for LineOnOrigin {
+    type Output = FlatPointAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return FlatPointAtInfinity::from_groups(/* e15, e25, e35 */ (self.group0() * Simd32x3::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for LineOnOrigin {
@@ -15062,18 +15624,18 @@ impl AntiWedge<AntiFlectorOnOrigin> for LineOnOrigin {
     }
 }
 impl AntiWedge<AntiLine> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiLineOnOrigin> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLineOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -15101,19 +15663,12 @@ impl AntiWedge<AntiMotor> for LineOnOrigin {
     }
 }
 impl AntiWedge<AntiMotorOnOrigin> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiMotorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
-    }
-}
-impl AntiWedge<AntiScalar> for LineOnOrigin {
-    type Output = LineOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return LineOnOrigin::from_groups(/* e415, e425, e435 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Circle> for LineOnOrigin {
@@ -15185,27 +15740,27 @@ impl AntiWedge<CircleOrthogonalOrigin> for LineOnOrigin {
     }
 }
 impl AntiWedge<Dipole> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for LineOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -15215,6 +15770,13 @@ impl AntiWedge<DualNum> for LineOnOrigin {
     type Output = LineOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return LineOnOrigin::from_groups(/* e415, e425, e435 */ (self.group0() * Simd32x3::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for LineOnOrigin {
+    type Output = LineOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return LineOnOrigin::from_groups(/* e415, e425, e435 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for LineOnOrigin {
@@ -15503,6 +16065,24 @@ impl AntiWedge<AntiDipoleOnOrigin> for Motor {
         );
     }
 }
+impl AntiWedge<AntiDualNum> for Motor {
+    type Output = AntiMotor;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] * other.group0()[1])]),
+            // e15, e25, e35, e3215
+            (self.group0() * Simd32x4::from(other.group0()[0])),
+        );
+    }
+}
+impl AntiWedge<AntiDualNumOnOrigin> for Motor {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[scalar]));
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for Motor {
     type Output = AntiFlectorOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
@@ -15617,18 +16197,6 @@ impl AntiWedge<AntiPlaneOnOrigin> for Motor {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[3]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiScalar> for Motor {
-    type Output = Motor;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            (self.group0() * Simd32x4::from(other[e12345])),
-            // e235, e315, e125, e5
-            (self.group1() * Simd32x4::from(other[e12345])),
-        );
     }
 }
 impl AntiWedge<AntiSphereOnOrigin> for Motor {
@@ -16079,36 +16647,30 @@ impl AntiWedge<DipoleOrthogonalOrigin> for Motor {
     }
 }
 impl AntiWedge<DualNum> for Motor {
-    type Output = MultiVector;
+    type Output = Motor;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return MultiVector::from_groups(
-            // scalar, e12345
-            (Simd32x2::from(self.group0()[3]) * other.group0()),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            (self.group1()[3] * other.group0()[1]),
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e321, e415, e425, e435
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            (self.group0() * Simd32x4::from(other.group0()[1])),
+            // e235, e315, e125, e5
             Simd32x4::from([
-                0.0,
-                (self.group0()[0] * other.group0()[1]),
-                (self.group0()[1] * other.group0()[1]),
-                (self.group0()[2] * other.group0()[1]),
+                (self.group1()[0] * other.group0()[1]),
+                (self.group1()[1] * other.group0()[1]),
+                (self.group1()[2] * other.group0()[1]),
+                ((self.group0()[3] * other.group0()[0]) + (self.group1()[3] * other.group0()[1])),
             ]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            (Simd32x3::from(other.group0()[1]) * Simd32x3::from([self.group1()[0], self.group1()[1], self.group1()[2]])),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Motor {
+    type Output = Motor;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            (self.group0() * Simd32x4::from(other[e12345])),
+            // e235, e315, e125, e5
+            (self.group1() * Simd32x4::from(other[e12345])),
         );
     }
 }
@@ -16496,13 +17058,6 @@ impl AntiWedge<RoundPointAtOrigin> for Motor {
         return RoundPointAtOrigin::from_groups(/* e4, e5 */ (Simd32x2::from(self.group0()[3]) * other.group0()));
     }
 }
-impl AntiWedge<Scalar> for Motor {
-    type Output = Scalar;
-    fn anti_wedge(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[scalar]));
-    }
-}
 impl AntiWedge<Sphere> for Motor {
     type Output = MultiVector;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
@@ -16608,9 +17163,9 @@ impl AntiWedge<SphereOnOrigin> for Motor {
 }
 impl InfixAntiWedge for MotorAtInfinity {}
 impl AntiWedge<AntiCircleOnOrigin> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiCircleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -16624,13 +17179,6 @@ impl AntiWedge<AntiDipoleOnOrigin> for MotorAtInfinity {
             (self.group0()[2] * other.group0()[0]),
             (self.group0()[0] * other.group0()[1]),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for MotorAtInfinity {
-    type Output = MotorAtInfinity;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Circle> for MotorAtInfinity {
@@ -16695,45 +17243,45 @@ impl AntiWedge<CircleOrthogonalOrigin> for MotorAtInfinity {
     }
 }
 impl AntiWedge<Dipole> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOnOrigin> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -16743,6 +17291,13 @@ impl AntiWedge<DualNum> for MotorAtInfinity {
     type Output = MotorAtInfinity;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for MotorAtInfinity {
+    type Output = MotorAtInfinity;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return MotorAtInfinity::from_groups(/* e235, e315, e125, e5 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for MotorAtInfinity {
@@ -16839,9 +17394,9 @@ impl AntiWedge<NullCircleAtOrigin> for MotorAtInfinity {
     }
 }
 impl AntiWedge<NullDipoleAtOrigin> for MotorAtInfinity {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullDipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -16983,6 +17538,24 @@ impl AntiWedge<AntiDipoleOnOrigin> for MotorOnOrigin {
         );
     }
 }
+impl AntiWedge<AntiDualNum> for MotorOnOrigin {
+    type Output = AntiMotor;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiMotor::from_groups(
+            // e23, e31, e12, scalar
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] * other.group0()[1])]),
+            // e15, e25, e35, e3215
+            (self.group0() * Simd32x4::from(other.group0()[0])),
+        );
+    }
+}
+impl AntiWedge<AntiDualNumOnOrigin> for MotorOnOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[scalar]));
+    }
+}
 impl AntiWedge<AntiFlatOrigin> for MotorOnOrigin {
     type Output = AntiFlectorOnOrigin;
     fn anti_wedge(self, other: AntiFlatOrigin) -> Self::Output {
@@ -17097,13 +17670,6 @@ impl AntiWedge<AntiPlaneOnOrigin> for MotorOnOrigin {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (Simd32x3::from(self.group0()[3]) * other.group0()));
-    }
-}
-impl AntiWedge<AntiScalar> for MotorOnOrigin {
-    type Output = MotorOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<AntiSphereOnOrigin> for MotorOnOrigin {
@@ -17456,37 +18022,21 @@ impl AntiWedge<DipoleOrthogonalOrigin> for MotorOnOrigin {
     }
 }
 impl AntiWedge<DualNum> for MotorOnOrigin {
-    type Output = MultiVector;
+    type Output = Motor;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return MultiVector::from_groups(
-            // scalar, e12345
-            (Simd32x2::from(self.group0()[3]) * other.group0()),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e321, e415, e425, e435
-            Simd32x4::from([
-                0.0,
-                (self.group0()[0] * other.group0()[1]),
-                (self.group0()[1] * other.group0()[1]),
-                (self.group0()[2] * other.group0()[1]),
-            ]),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            (self.group0() * Simd32x4::from(other.group0()[1])),
+            // e235, e315, e125, e5
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[3] * other.group0()[0])]),
         );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for MotorOnOrigin {
+    type Output = MotorOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatOrigin> for MotorOnOrigin {
@@ -17792,13 +18342,6 @@ impl AntiWedge<RoundPointAtOrigin> for MotorOnOrigin {
         return RoundPointAtOrigin::from_groups(/* e4, e5 */ (Simd32x2::from(self.group0()[3]) * other.group0()));
     }
 }
-impl AntiWedge<Scalar> for MotorOnOrigin {
-    type Output = Scalar;
-    fn anti_wedge(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[scalar]));
-    }
-}
 impl AntiWedge<Sphere> for MotorOnOrigin {
     type Output = MultiVector;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
@@ -17993,6 +18536,47 @@ impl AntiWedge<AntiDipoleOnOrigin> for MultiVector {
             // e3215
             0.0,
         );
+    }
+}
+impl AntiWedge<AntiDualNum> for MultiVector {
+    type Output = MultiVector;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([((self.group0()[1] * other.group0()[1]) + (self.group1()[3] * other.group0()[0])), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from([
+                (self.group3()[0] * other.group0()[0]),
+                (self.group3()[1] * other.group0()[0]),
+                (self.group3()[2] * other.group0()[0]),
+                0.0,
+            ]),
+            // e5
+            (self.group3()[3] * other.group0()[0]),
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group6()[1], self.group6()[2], self.group6()[3]])),
+            // e23, e31, e12
+            (self.group7() * Simd32x3::from(other.group0()[0])),
+            // e321, e415, e425, e435
+            Simd32x4::from([(self.group9()[3] * other.group0()[0]), 0.0, 0.0, 0.0]),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group9()[0], self.group9()[1], self.group9()[2]])),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from(0.0),
+            // e3215
+            (self.group0()[1] * other.group0()[0]),
+        );
+    }
+}
+impl AntiWedge<AntiDualNumOnOrigin> for MultiVector {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[1] * other[scalar]));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for MultiVector {
@@ -18360,36 +18944,6 @@ impl AntiWedge<AntiPlaneOnOrigin> for MultiVector {
             Simd32x4::from(0.0),
             // e3215
             0.0,
-        );
-    }
-}
-impl AntiWedge<AntiScalar> for MultiVector {
-    type Output = MultiVector;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            (self.group0() * Simd32x2::from(other[e12345])),
-            // e1, e2, e3, e4
-            (self.group1() * Simd32x4::from(other[e12345])),
-            // e5
-            (self[e1] * other[e12345]),
-            // e41, e42, e43, e45
-            (self.group3() * Simd32x4::from(other[e12345])),
-            // e15, e25, e35
-            (self.group4() * Simd32x3::from(other[e12345])),
-            // e23, e31, e12
-            (self.group5() * Simd32x3::from(other[e12345])),
-            // e321, e415, e425, e435
-            (self.group6() * Simd32x4::from(other[e12345])),
-            // e423, e431, e412
-            (self.group7() * Simd32x3::from(other[e12345])),
-            // e235, e315, e125
-            (self.group8() * Simd32x3::from(other[e12345])),
-            // e4235, e4315, e4125, e1234
-            (self.group9() * Simd32x4::from(other[e12345])),
-            // e3215
-            (self[e45] * other[e12345]),
         );
     }
 }
@@ -19047,13 +19601,13 @@ impl AntiWedge<DualNum> for MultiVector {
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([
-                ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])),
+                ((self.group0()[0] * other.group0()[1]) + (self.group9()[3] * other.group0()[0])),
                 (self.group0()[1] * other.group0()[1]),
             ]),
             // e1, e2, e3, e4
             (self.group1() * Simd32x4::from(other.group0()[1])),
             // e5
-            (self[e1] * other.group0()[1]),
+            ((self.group0()[1] * other.group0()[0]) + (self[e1] * other.group0()[1])),
             // e41, e42, e43, e45
             (self.group3() * Simd32x4::from(other.group0()[1])),
             // e15, e25, e35
@@ -19070,6 +19624,36 @@ impl AntiWedge<DualNum> for MultiVector {
             (self.group9() * Simd32x4::from(other.group0()[1])),
             // e3215
             (self[e45] * other.group0()[1]),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for MultiVector {
+    type Output = MultiVector;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            (self.group0() * Simd32x2::from(other[e12345])),
+            // e1, e2, e3, e4
+            (self.group1() * Simd32x4::from(other[e12345])),
+            // e5
+            (self[e1] * other[e12345]),
+            // e41, e42, e43, e45
+            (self.group3() * Simd32x4::from(other[e12345])),
+            // e15, e25, e35
+            (self.group4() * Simd32x3::from(other[e12345])),
+            // e23, e31, e12
+            (self.group5() * Simd32x3::from(other[e12345])),
+            // e321, e415, e425, e435
+            (self.group6() * Simd32x4::from(other[e12345])),
+            // e423, e431, e412
+            (self.group7() * Simd32x3::from(other[e12345])),
+            // e235, e315, e125
+            (self.group8() * Simd32x3::from(other[e12345])),
+            // e4235, e4315, e4125, e1234
+            (self.group9() * Simd32x4::from(other[e12345])),
+            // e3215
+            (self[e45] * other[e12345]),
         );
     }
 }
@@ -20060,13 +20644,6 @@ impl AntiWedge<RoundPointAtOrigin> for MultiVector {
         );
     }
 }
-impl AntiWedge<Scalar> for MultiVector {
-    type Output = Scalar;
-    fn anti_wedge(self, other: Scalar) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[1] * other[scalar]));
-    }
-}
 impl AntiWedge<Sphere> for MultiVector {
     type Output = MultiVector;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
@@ -20212,6 +20789,12 @@ impl AntiWedge<SphereOnOrigin> for MultiVector {
     }
 }
 impl InfixAntiWedge for NullCircleAtOrigin {}
+impl AntiWedge<AntiDualNum> for NullCircleAtOrigin {
+    type Output = AntiLineOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiLineOnOrigin::from_groups(/* e23, e31, e12 */ (self.group0() * Simd32x3::from(other.group0()[0])));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for NullCircleAtOrigin {
     type Output = AntiPlaneOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
@@ -20231,9 +20814,9 @@ impl AntiWedge<AntiFlector> for NullCircleAtOrigin {
     }
 }
 impl AntiWedge<AntiLine> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiLine) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -20248,13 +20831,6 @@ impl AntiWedge<AntiMotor> for NullCircleAtOrigin {
             (self.group0()[2] * other.group1()[3]),
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         ]));
-    }
-}
-impl AntiWedge<AntiScalar> for NullCircleAtOrigin {
-    type Output = NullCircleAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Circle> for NullCircleAtOrigin {
@@ -20312,45 +20888,45 @@ impl AntiWedge<CircleOrthogonalOrigin> for NullCircleAtOrigin {
     }
 }
 impl AntiWedge<Dipole> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Dipole) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAligningOrigin> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtInfinity> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleAtOrigin> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<DipoleOrthogonalOrigin> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: DipoleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
@@ -20362,19 +20938,26 @@ impl AntiWedge<DualNum> for NullCircleAtOrigin {
         return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() * Simd32x3::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for NullCircleAtOrigin {
+    type Output = NullCircleAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() * Simd32x3::from(other[e12345])));
+    }
+}
 impl AntiWedge<FlatPoint> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<FlatPointAtInfinity> for NullCircleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlatPointAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -20634,19 +21217,25 @@ impl AntiWedge<SphereOnOrigin> for NullCircleAtOrigin {
     }
 }
 impl InfixAntiWedge for NullDipoleAtOrigin {}
+impl AntiWedge<AntiDualNum> for NullDipoleAtOrigin {
+    type Output = AntiPlaneOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group0()[0])));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiFlector> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiFlector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -20658,53 +21247,46 @@ impl AntiWedge<AntiMotor> for NullDipoleAtOrigin {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(other.group1()[3])));
     }
 }
-impl AntiWedge<AntiScalar> for NullDipoleAtOrigin {
-    type Output = NullDipoleAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() * Simd32x3::from(other[e12345])));
-    }
-}
 impl AntiWedge<Circle> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Circle) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
     }
 }
 impl AntiWedge<CircleAligningOrigin> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAligningOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group2()[2]) - (self.group0()[0] * other.group2()[0]) - (self.group0()[1] * other.group2()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtInfinity> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleAtOrigin> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleAtOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<CircleOrthogonalOrigin> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: CircleOrthogonalOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
@@ -20714,6 +21296,13 @@ impl AntiWedge<DualNum> for NullDipoleAtOrigin {
     type Output = NullDipoleAtOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() * Simd32x3::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for NullDipoleAtOrigin {
+    type Output = NullDipoleAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return NullDipoleAtOrigin::from_groups(/* e41, e42, e43 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<Flector> for NullDipoleAtOrigin {
@@ -20750,18 +21339,18 @@ impl AntiWedge<Horizon> for NullDipoleAtOrigin {
     }
 }
 impl AntiWedge<Line> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Line) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group1()[2]) - (self.group0()[0] * other.group1()[0]) - (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<LineAtInfinity> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: LineAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -20805,9 +21394,9 @@ impl AntiWedge<Motor> for NullDipoleAtOrigin {
     }
 }
 impl AntiWedge<MotorAtInfinity> for NullDipoleAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: MotorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             (-(self.group0()[2] * other.group0()[2]) - (self.group0()[0] * other.group0()[0]) - (self.group0()[1] * other.group0()[1])),
         );
@@ -20909,6 +21498,13 @@ impl AntiWedge<SphereOnOrigin> for NullDipoleAtOrigin {
     }
 }
 impl InfixAntiWedge for NullSphereAtOrigin {}
+impl AntiWedge<AntiDualNum> for NullSphereAtOrigin {
+    type Output = AntiFlatOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        use crate::elements::*;
+        return AntiFlatOrigin::from_groups(/* e321 */ (self[e1234] * other.group0()[0]));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for NullSphereAtOrigin {
     type Output = AntiLineOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
@@ -20944,17 +21540,10 @@ impl AntiWedge<AntiMotor> for NullSphereAtOrigin {
     }
 }
 impl AntiWedge<AntiPlane> for NullSphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other.group0()[3]));
-    }
-}
-impl AntiWedge<AntiScalar> for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return NullSphereAtOrigin::from_groups(/* e1234 */ (self[e1234] * other[e12345]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e1234] * other.group0()[3]));
     }
 }
 impl AntiWedge<Circle> for NullSphereAtOrigin {
@@ -21057,10 +21646,40 @@ impl AntiWedge<DipoleOrthogonalOrigin> for NullSphereAtOrigin {
     }
 }
 impl AntiWedge<DualNum> for NullSphereAtOrigin {
-    type Output = NullSphereAtOrigin;
+    type Output = MultiVector;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         use crate::elements::*;
-        return NullSphereAtOrigin::from_groups(/* e1234 */ (self[e1234] * other.group0()[1]));
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self[e1234] * other.group0()[0]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self[e1234] * other.group0()[1])]),
+            // e3215
+            0.0,
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for NullSphereAtOrigin {
+    type Output = NullSphereAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return NullSphereAtOrigin::from_groups(/* e1234 */ (self[e1234] * other[e12345]));
     }
 }
 impl AntiWedge<FlatOrigin> for NullSphereAtOrigin {
@@ -21159,10 +21778,10 @@ impl AntiWedge<Horizon> for NullSphereAtOrigin {
     }
 }
 impl AntiWedge<Infinity> for NullSphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other[e5]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e1234] * other[e5]));
     }
 }
 impl AntiWedge<Line> for NullSphereAtOrigin {
@@ -21303,17 +21922,17 @@ impl AntiWedge<PlaneOnOrigin> for NullSphereAtOrigin {
     }
 }
 impl AntiWedge<RoundPoint> for NullSphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other.group1()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e1234] * other.group1()[1]));
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for NullSphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e1234] * other.group0()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e1234] * other.group0()[1]));
     }
 }
 impl AntiWedge<Sphere> for NullSphereAtOrigin {
@@ -21344,18 +21963,18 @@ impl AntiWedge<SphereOnOrigin> for NullSphereAtOrigin {
     }
 }
 impl InfixAntiWedge for Origin {}
-impl AntiWedge<AntiMotor> for Origin {
-    type Output = Scalar;
-    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+impl AntiWedge<AntiDualNum> for Origin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group1()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group0()[0]));
     }
 }
-impl AntiWedge<AntiScalar> for Origin {
-    type Output = Origin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
+impl AntiWedge<AntiMotor> for Origin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
         use crate::elements::*;
-        return Origin::from_groups(/* e4 */ (self[e4] * other[e12345]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group1()[3]));
     }
 }
 impl AntiWedge<DualNum> for Origin {
@@ -21365,25 +21984,32 @@ impl AntiWedge<DualNum> for Origin {
         return Origin::from_groups(/* e4 */ (self[e4] * other.group0()[1]));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for Origin {
+    type Output = Origin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Origin::from_groups(/* e4 */ (self[e4] * other[e12345]));
+    }
+}
 impl AntiWedge<Flector> for Origin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Flector) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group1()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group1()[3]));
     }
 }
 impl AntiWedge<FlectorAtInfinity> for Origin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorAtInfinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group0()[3]));
     }
 }
 impl AntiWedge<Horizon> for Origin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other[e3215]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other[e3215]));
     }
 }
 impl AntiWedge<Motor> for Origin {
@@ -21431,24 +22057,24 @@ impl AntiWedge<MultiVector> for Origin {
     }
 }
 impl AntiWedge<Plane> for Origin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Plane) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group0()[3]));
     }
 }
 impl AntiWedge<Sphere> for Origin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group1()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group1()[1]));
     }
 }
 impl AntiWedge<SphereAtOrigin> for Origin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[e4] * other.group0()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self[e4] * other.group0()[1]));
     }
 }
 impl InfixAntiWedge for Plane {}
@@ -21472,6 +22098,15 @@ impl AntiWedge<AntiDipoleOnOrigin> for Plane {
             // e23, e31, e12
             (Simd32x3::from([(self.group0()[3] * other.group0()[0]), (self.group0()[1] * other.group0()[3]), (self.group0()[3] * other.group0()[2])])
                 * Simd32x3::from([1.0, -1.0, 1.0])),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum> for Plane {
+    type Output = LineAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return LineAtInfinity::from_groups(
+            // e235, e315, e125
+            (Simd32x3::from(other.group0()[0]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]])),
         );
     }
 }
@@ -21580,34 +22215,27 @@ impl AntiWedge<AntiMotorOnOrigin> for Plane {
     }
 }
 impl AntiWedge<AntiPlane> for Plane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiPlaneOnOrigin> for Plane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for Plane {
-    type Output = Plane;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for Plane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
@@ -21802,6 +22430,13 @@ impl AntiWedge<DualNum> for Plane {
     type Output = Plane;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Plane {
+    type Output = Plane;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return Plane::from_groups(/* e4235, e4315, e4125, e3215 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatOrigin> for Plane {
@@ -22043,10 +22678,10 @@ impl AntiWedge<NullSphereAtOrigin> for Plane {
     }
 }
 impl AntiWedge<Origin> for Plane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for Plane {
@@ -22073,18 +22708,18 @@ impl AntiWedge<PlaneOnOrigin> for Plane {
     }
 }
 impl AntiWedge<RoundPoint> for Plane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group1()[0]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for Plane {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[0]));
     }
 }
 impl AntiWedge<Sphere> for Plane {
@@ -22146,6 +22781,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for PlaneOnOrigin {
             // e23, e31, e12
             (self.group0() * Simd32x3::from(other.group0()[3]) * Simd32x3::from(-1.0)),
         );
+    }
+}
+impl AntiWedge<AntiDualNum> for PlaneOnOrigin {
+    type Output = LineAtInfinity;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() * Simd32x3::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for PlaneOnOrigin {
@@ -22246,34 +22887,27 @@ impl AntiWedge<AntiMotorOnOrigin> for PlaneOnOrigin {
     }
 }
 impl AntiWedge<AntiPlane> for PlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiPlaneOnOrigin> for PlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for PlaneOnOrigin {
-    type Output = PlaneOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() * Simd32x3::from(other[e12345])));
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for PlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
@@ -22434,6 +23068,13 @@ impl AntiWedge<DualNum> for PlaneOnOrigin {
     type Output = PlaneOnOrigin;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
         return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() * Simd32x3::from(other.group0()[1])));
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for PlaneOnOrigin {
+    type Output = PlaneOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return PlaneOnOrigin::from_groups(/* e4235, e4315, e4125 */ (self.group0() * Simd32x3::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatPoint> for PlaneOnOrigin {
@@ -22665,9 +23306,9 @@ impl AntiWedge<PlaneOnOrigin> for PlaneOnOrigin {
     }
 }
 impl AntiWedge<RoundPoint> for PlaneOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
@@ -22709,22 +23350,16 @@ impl AntiWedge<SphereOnOrigin> for PlaneOnOrigin {
     }
 }
 impl InfixAntiWedge for RoundPoint {}
-impl AntiWedge<AntiMotor> for RoundPoint {
-    type Output = Scalar;
-    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[0] * other.group1()[3]));
+impl AntiWedge<AntiDualNum> for RoundPoint {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[0] * other.group0()[0]));
     }
 }
-impl AntiWedge<AntiScalar> for RoundPoint {
-    type Output = RoundPoint;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return RoundPoint::from_groups(
-            // e1, e2, e3
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e4, e5
-            (self.group1() * Simd32x2::from(other[e12345])),
-        );
+impl AntiWedge<AntiMotor> for RoundPoint {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[0] * other.group1()[3]));
     }
 }
 impl AntiWedge<DualNum> for RoundPoint {
@@ -22738,35 +23373,47 @@ impl AntiWedge<DualNum> for RoundPoint {
         );
     }
 }
+impl AntiWedge<DualNumOnOrigin> for RoundPoint {
+    type Output = RoundPoint;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return RoundPoint::from_groups(
+            // e1, e2, e3
+            (self.group0() * Simd32x3::from(other[e12345])),
+            // e4, e5
+            (self.group1() * Simd32x2::from(other[e12345])),
+        );
+    }
+}
 impl AntiWedge<Flector> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Flector) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[0] * other.group1()[3]) + (self.group0()[2] * other.group1()[2]) + (self.group0()[0] * other.group1()[0]) + (self.group0()[1] * other.group1()[1])),
         );
     }
 }
 impl AntiWedge<FlectorAtInfinity> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group1()[0] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[0] * other.group0()[3]));
     }
 }
 impl AntiWedge<FlectorOnOrigin> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[3]) + (self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[2])),
         );
     }
 }
 impl AntiWedge<Horizon> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[0] * other[e3215]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[0] * other[e3215]));
     }
 }
 impl AntiWedge<Motor> for RoundPoint {
@@ -22829,34 +23476,34 @@ impl AntiWedge<MultiVector> for RoundPoint {
     }
 }
 impl AntiWedge<NullSphereAtOrigin> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[1] * other[e1234]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[1] * other[e1234]));
     }
 }
 impl AntiWedge<Plane> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[0] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<PlaneOnOrigin> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: PlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<Sphere> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[1] * other.group1()[0])
                 + (self.group1()[0] * other.group1()[1])
@@ -22867,32 +23514,31 @@ impl AntiWedge<Sphere> for RoundPoint {
     }
 }
 impl AntiWedge<SphereAtOrigin> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])));
     }
 }
 impl AntiWedge<SphereOnOrigin> for RoundPoint {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[1] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl InfixAntiWedge for RoundPointAtOrigin {}
-impl AntiWedge<AntiMotor> for RoundPointAtOrigin {
-    type Output = Scalar;
-    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3]));
+impl AntiWedge<AntiDualNum> for RoundPointAtOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[0]));
     }
 }
-impl AntiWedge<AntiScalar> for RoundPointAtOrigin {
-    type Output = RoundPointAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() * Simd32x2::from(other[e12345])));
+impl AntiWedge<AntiMotor> for RoundPointAtOrigin {
+    type Output = AntiDualNumOnOrigin;
+    fn anti_wedge(self, other: AntiMotor) -> Self::Output {
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3]));
     }
 }
 impl AntiWedge<DualNum> for RoundPointAtOrigin {
@@ -22901,23 +23547,30 @@ impl AntiWedge<DualNum> for RoundPointAtOrigin {
         return RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() * Simd32x2::from(other.group0()[1])));
     }
 }
+impl AntiWedge<DualNumOnOrigin> for RoundPointAtOrigin {
+    type Output = RoundPointAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return RoundPointAtOrigin::from_groups(/* e4, e5 */ (self.group0() * Simd32x2::from(other[e12345])));
+    }
+}
 impl AntiWedge<Flector> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Flector) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group1()[3]));
     }
 }
 impl AntiWedge<FlectorAtInfinity> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: FlectorAtInfinity) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
     }
 }
 impl AntiWedge<Horizon> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Horizon) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other[e3215]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other[e3215]));
     }
 }
 impl AntiWedge<Motor> for RoundPointAtOrigin {
@@ -22963,70 +23616,34 @@ impl AntiWedge<MultiVector> for RoundPointAtOrigin {
     }
 }
 impl AntiWedge<NullSphereAtOrigin> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: NullSphereAtOrigin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[1] * other[e1234]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[1] * other[e1234]));
     }
 }
 impl AntiWedge<Plane> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Plane) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
     }
 }
 impl AntiWedge<Sphere> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Sphere) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])));
     }
 }
 impl AntiWedge<SphereAtOrigin> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])));
     }
 }
 impl AntiWedge<SphereOnOrigin> for RoundPointAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: SphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[1] * other.group0()[3]));
-    }
-}
-impl InfixAntiWedge for Scalar {}
-impl AntiWedge<AntiScalar> for Scalar {
-    type Output = Scalar;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other[e12345]));
-    }
-}
-impl AntiWedge<DualNum> for Scalar {
-    type Output = Scalar;
-    fn anti_wedge(self, other: DualNum) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[1]));
-    }
-}
-impl AntiWedge<Motor> for Scalar {
-    type Output = Scalar;
-    fn anti_wedge(self, other: Motor) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[3]));
-    }
-}
-impl AntiWedge<MotorOnOrigin> for Scalar {
-    type Output = Scalar;
-    fn anti_wedge(self, other: MotorOnOrigin) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[3]));
-    }
-}
-impl AntiWedge<MultiVector> for Scalar {
-    type Output = Scalar;
-    fn anti_wedge(self, other: MultiVector) -> Self::Output {
-        use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self[scalar] * other.group0()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[1] * other.group0()[3]));
     }
 }
 impl InfixAntiWedge for Sphere {}
@@ -23050,6 +23667,15 @@ impl AntiWedge<AntiDipoleOnOrigin> for Sphere {
             // e23, e31, e12
             (Simd32x3::from([(self.group1()[1] * other.group0()[0]), (self.group0()[1] * other.group0()[3]), (self.group1()[1] * other.group0()[2])])
                 * Simd32x3::from([1.0, -1.0, 1.0])),
+        );
+    }
+}
+impl AntiWedge<AntiDualNum> for Sphere {
+    type Output = AntiFlatPoint;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiFlatPoint::from_groups(
+            // e235, e315, e125, e321
+            (Simd32x4::from(other.group0()[0]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]])),
         );
     }
 }
@@ -23147,39 +23773,27 @@ impl AntiWedge<AntiMotorOnOrigin> for Sphere {
     }
 }
 impl AntiWedge<AntiPlane> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[0] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiPlaneOnOrigin> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for Sphere {
-    type Output = Sphere;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return Sphere::from_groups(
-            // e4235, e4315, e4125
-            (self.group0() * Simd32x3::from(other[e12345])),
-            // e1234, e3215
-            (self.group1() * Simd32x2::from(other[e12345])),
-        );
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[1] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
@@ -23388,13 +24002,43 @@ impl AntiWedge<DipoleOrthogonalOrigin> for Sphere {
     }
 }
 impl AntiWedge<DualNum> for Sphere {
-    type Output = Sphere;
+    type Output = MultiVector;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group1()[0] * other.group0()[0]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            (Simd32x4::from(other.group0()[1]) * Simd32x4::from([self.group0()[0], self.group0()[1], self.group0()[2], self.group1()[0]])),
+            // e3215
+            (self.group1()[1] * other.group0()[1]),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for Sphere {
+    type Output = Sphere;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
         return Sphere::from_groups(
             // e4235, e4315, e4125
-            (self.group0() * Simd32x3::from(other.group0()[1])),
+            (self.group0() * Simd32x3::from(other[e12345])),
             // e1234, e3215
-            (self.group1() * Simd32x2::from(other.group0()[1])),
+            (self.group1() * Simd32x2::from(other[e12345])),
         );
     }
 }
@@ -23526,10 +24170,10 @@ impl AntiWedge<Horizon> for Sphere {
     }
 }
 impl AntiWedge<Infinity> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[0] * other[e5]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[0] * other[e5]));
     }
 }
 impl AntiWedge<Line> for Sphere {
@@ -23749,10 +24393,10 @@ impl AntiWedge<NullSphereAtOrigin> for Sphere {
     }
 }
 impl AntiWedge<Origin> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group1()[1] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group1()[1] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for Sphere {
@@ -23783,9 +24427,9 @@ impl AntiWedge<PlaneOnOrigin> for Sphere {
     }
 }
 impl AntiWedge<RoundPoint> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group1()[1] * other.group1()[0])
                 + (self.group1()[0] * other.group1()[1])
@@ -23796,9 +24440,9 @@ impl AntiWedge<RoundPoint> for Sphere {
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for Sphere {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ ((self.group1()[0] * other.group0()[1]) + (self.group1()[1] * other.group0()[0])));
     }
 }
 impl AntiWedge<Sphere> for Sphere {
@@ -23862,6 +24506,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for SphereAtOrigin {
         );
     }
 }
+impl AntiWedge<AntiDualNum> for SphereAtOrigin {
+    type Output = AntiFlatOrigin;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiFlatOrigin::from_groups(/* e321 */ (self.group0()[0] * other.group0()[0]));
+    }
+}
 impl AntiWedge<AntiFlatPoint> for SphereAtOrigin {
     type Output = AntiLineOnOrigin;
     fn anti_wedge(self, other: AntiFlatPoint) -> Self::Output {
@@ -23893,22 +24543,15 @@ impl AntiWedge<AntiMotor> for SphereAtOrigin {
     }
 }
 impl AntiWedge<AntiPlane> for SphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
-    }
-}
-impl AntiWedge<AntiScalar> for SphereAtOrigin {
-    type Output = SphereAtOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (self.group0() * Simd32x2::from(other[e12345])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other.group0()[3]));
     }
 }
 impl AntiWedge<AntiSphereOnOrigin> for SphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[1] * other.group0()[3]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[1] * other.group0()[3]));
     }
 }
 impl AntiWedge<Circle> for SphereAtOrigin {
@@ -24038,9 +24681,39 @@ impl AntiWedge<DipoleOrthogonalOrigin> for SphereAtOrigin {
     }
 }
 impl AntiWedge<DualNum> for SphereAtOrigin {
-    type Output = SphereAtOrigin;
+    type Output = MultiVector;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (self.group0() * Simd32x2::from(other.group0()[1])));
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[0] * other.group0()[0]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, (self.group0()[0] * other.group0()[1])]),
+            // e3215
+            (self.group0()[1] * other.group0()[1]),
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for SphereAtOrigin {
+    type Output = SphereAtOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return SphereAtOrigin::from_groups(/* e1234, e3215 */ (self.group0() * Simd32x2::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatOrigin> for SphereAtOrigin {
@@ -24139,10 +24812,10 @@ impl AntiWedge<Horizon> for SphereAtOrigin {
     }
 }
 impl AntiWedge<Infinity> for SphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[0] * other[e5]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[0] * other[e5]));
     }
 }
 impl AntiWedge<Line> for SphereAtOrigin {
@@ -24304,10 +24977,10 @@ impl AntiWedge<NullSphereAtOrigin> for SphereAtOrigin {
     }
 }
 impl AntiWedge<Origin> for SphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Origin) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[1] * other[e4]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[1] * other[e4]));
     }
 }
 impl AntiWedge<Plane> for SphereAtOrigin {
@@ -24333,15 +25006,15 @@ impl AntiWedge<PlaneOnOrigin> for SphereAtOrigin {
     }
 }
 impl AntiWedge<RoundPoint> for SphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ ((self.group0()[0] * other.group1()[1]) + (self.group0()[1] * other.group1()[0])));
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for SphereAtOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ ((self.group0()[0] * other.group0()[1]) + (self.group0()[1] * other.group0()[0])));
     }
 }
 impl AntiWedge<Sphere> for SphereAtOrigin {
@@ -24398,6 +25071,12 @@ impl AntiWedge<AntiDipoleOnOrigin> for SphereOnOrigin {
             // e23, e31, e12
             (Simd32x3::from(other.group0()[3]) * Simd32x3::from([self.group0()[0], self.group0()[1], self.group0()[2]]) * Simd32x3::from(-1.0)),
         );
+    }
+}
+impl AntiWedge<AntiDualNum> for SphereOnOrigin {
+    type Output = AntiFlatPoint;
+    fn anti_wedge(self, other: AntiDualNum) -> Self::Output {
+        return AntiFlatPoint::from_groups(/* e235, e315, e125, e321 */ (self.group0() * Simd32x4::from(other.group0()[0])));
     }
 }
 impl AntiWedge<AntiFlatOrigin> for SphereOnOrigin {
@@ -24501,34 +25180,27 @@ impl AntiWedge<AntiMotorOnOrigin> for SphereOnOrigin {
     }
 }
 impl AntiWedge<AntiPlane> for SphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlane) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group0()[3]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<AntiPlaneOnOrigin> for SphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiPlaneOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
-impl AntiWedge<AntiScalar> for SphereOnOrigin {
-    type Output = SphereOnOrigin;
-    fn anti_wedge(self, other: AntiScalar) -> Self::Output {
-        use crate::elements::*;
-        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() * Simd32x4::from(other[e12345])));
-    }
-}
 impl AntiWedge<AntiSphereOnOrigin> for SphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: AntiSphereOnOrigin) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
@@ -24710,9 +25382,39 @@ impl AntiWedge<DipoleOrthogonalOrigin> for SphereOnOrigin {
     }
 }
 impl AntiWedge<DualNum> for SphereOnOrigin {
-    type Output = SphereOnOrigin;
+    type Output = MultiVector;
     fn anti_wedge(self, other: DualNum) -> Self::Output {
-        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() * Simd32x4::from(other.group0()[1])));
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([(self.group0()[3] * other.group0()[0]), 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            (self.group0() * Simd32x4::from(other.group0()[1])),
+            // e3215
+            0.0,
+        );
+    }
+}
+impl AntiWedge<DualNumOnOrigin> for SphereOnOrigin {
+    type Output = SphereOnOrigin;
+    fn anti_wedge(self, other: DualNumOnOrigin) -> Self::Output {
+        use crate::elements::*;
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ (self.group0() * Simd32x4::from(other[e12345])));
     }
 }
 impl AntiWedge<FlatOrigin> for SphereOnOrigin {
@@ -24834,10 +25536,10 @@ impl AntiWedge<Horizon> for SphereOnOrigin {
     }
 }
 impl AntiWedge<Infinity> for SphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: Infinity) -> Self::Output {
         use crate::elements::*;
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other[e5]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other[e5]));
     }
 }
 impl AntiWedge<Line> for SphereOnOrigin {
@@ -25059,18 +25761,18 @@ impl AntiWedge<PlaneOnOrigin> for SphereOnOrigin {
     }
 }
 impl AntiWedge<RoundPoint> for SphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPoint) -> Self::Output {
-        return Scalar::from_groups(
+        return AntiDualNumOnOrigin::from_groups(
             // scalar
             ((self.group0()[3] * other.group1()[1]) + (self.group0()[2] * other.group0()[2]) + (self.group0()[0] * other.group0()[0]) + (self.group0()[1] * other.group0()[1])),
         );
     }
 }
 impl AntiWedge<RoundPointAtOrigin> for SphereOnOrigin {
-    type Output = Scalar;
+    type Output = AntiDualNumOnOrigin;
     fn anti_wedge(self, other: RoundPointAtOrigin) -> Self::Output {
-        return Scalar::from_groups(/* scalar */ (self.group0()[3] * other.group0()[1]));
+        return AntiDualNumOnOrigin::from_groups(/* scalar */ (self.group0()[3] * other.group0()[1]));
     }
 }
 impl AntiWedge<Sphere> for SphereOnOrigin {

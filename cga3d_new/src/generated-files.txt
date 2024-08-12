@@ -1,6 +1,8 @@
 ./../cga3d_new/src/data.rs
 ./../cga3d_new/src/data/anti_circle_on_origin.rs
 ./../cga3d_new/src/data/anti_dipole_on_origin.rs
+./../cga3d_new/src/data/anti_dual_num.rs
+./../cga3d_new/src/data/anti_dual_num_on_origin.rs
 ./../cga3d_new/src/data/anti_flat_origin.rs
 ./../cga3d_new/src/data/anti_flat_point.rs
 ./../cga3d_new/src/data/anti_flector.rs
@@ -11,7 +13,6 @@
 ./../cga3d_new/src/data/anti_motor_on_origin.rs
 ./../cga3d_new/src/data/anti_plane.rs
 ./../cga3d_new/src/data/anti_plane_on_origin.rs
-./../cga3d_new/src/data/anti_scalar.rs
 ./../cga3d_new/src/data/anti_sphere_on_origin.rs
 ./../cga3d_new/src/data/circle.rs
 ./../cga3d_new/src/data/circle_aligning_origin.rs
@@ -26,6 +27,7 @@
 ./../cga3d_new/src/data/dipole_on_origin.rs
 ./../cga3d_new/src/data/dipole_orthogonal_origin.rs
 ./../cga3d_new/src/data/dual_num.rs
+./../cga3d_new/src/data/dual_num_on_origin.rs
 ./../cga3d_new/src/data/flat_origin.rs
 ./../cga3d_new/src/data/flat_point.rs
 ./../cga3d_new/src/data/flat_point_at_infinity.rs
@@ -35,6 +37,8 @@
 ./../cga3d_new/src/data/horizon.rs
 ./../cga3d_new/src/data/impls/anti_circle_on_origin.rs
 ./../cga3d_new/src/data/impls/anti_dipole_on_origin.rs
+./../cga3d_new/src/data/impls/anti_dual_num.rs
+./../cga3d_new/src/data/impls/anti_dual_num_on_origin.rs
 ./../cga3d_new/src/data/impls/anti_flat_origin.rs
 ./../cga3d_new/src/data/impls/anti_flat_point.rs
 ./../cga3d_new/src/data/impls/anti_flector.rs
@@ -45,7 +49,6 @@
 ./../cga3d_new/src/data/impls/anti_motor_on_origin.rs
 ./../cga3d_new/src/data/impls/anti_plane.rs
 ./../cga3d_new/src/data/impls/anti_plane_on_origin.rs
-./../cga3d_new/src/data/impls/anti_scalar.rs
 ./../cga3d_new/src/data/impls/anti_sphere_on_origin.rs
 ./../cga3d_new/src/data/impls/circle.rs
 ./../cga3d_new/src/data/impls/circle_aligning_origin.rs
@@ -60,6 +63,7 @@
 ./../cga3d_new/src/data/impls/dipole_on_origin.rs
 ./../cga3d_new/src/data/impls/dipole_orthogonal_origin.rs
 ./../cga3d_new/src/data/impls/dual_num.rs
+./../cga3d_new/src/data/impls/dual_num_on_origin.rs
 ./../cga3d_new/src/data/impls/flat_origin.rs
 ./../cga3d_new/src/data/impls/flat_point.rs
 ./../cga3d_new/src/data/impls/flat_point_at_infinity.rs
@@ -83,7 +87,6 @@
 ./../cga3d_new/src/data/impls/plane_on_origin.rs
 ./../cga3d_new/src/data/impls/round_point.rs
 ./../cga3d_new/src/data/impls/round_point_at_origin.rs
-./../cga3d_new/src/data/impls/scalar.rs
 ./../cga3d_new/src/data/impls/sphere.rs
 ./../cga3d_new/src/data/impls/sphere_at_origin.rs
 ./../cga3d_new/src/data/impls/sphere_on_origin.rs
@@ -103,7 +106,6 @@
 ./../cga3d_new/src/data/plane_on_origin.rs
 ./../cga3d_new/src/data/round_point.rs
 ./../cga3d_new/src/data/round_point_at_origin.rs
-./../cga3d_new/src/data/scalar.rs
 ./../cga3d_new/src/data/sphere.rs
 ./../cga3d_new/src/data/sphere_at_origin.rs
 ./../cga3d_new/src/data/sphere_on_origin.rs

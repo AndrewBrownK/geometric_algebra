@@ -1006,12 +1006,21 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         let mut has_fell_back = false;
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("Scalar", [scalar]));
         mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new("AntiScalar", [AntiScalar]));
-        // TODO fix DualNum, should be e5 and AntiScalar for CGA
-        mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new_by_groups("DualNum", {
-            let mut cv = ConstVec::new();
-            cv.push(BasisElementGroup::G2(scalar, AntiScalar));
-            cv
-        }));
+
+        // DualNum is kind of an enigma.
+        // Very easy to imagine it should generally be scalar + AntiScalar.
+        // But Eric recommends e5 + e12345 for CGA.
+        // On the one hand this makes sense, because it multiplies by e5 to move from RGA to CGA.
+        // But on the other hand this doesn't feel very general, or give any insight to other GAs.
+        // For example, if we add more witt pairs or projective (to 0) dimensions.
+        // So for now, we will not create DualNum as a fallback, and let each GA specify
+        // its own DualNum instead.
+
+        // mvr.fallback(&mut has_fell_back, MultiVec::<AntiScalar>::new_by_groups("DualNum", {
+        //     let mut cv = ConstVec::new();
+        //     cv.push(BasisElementGroup::G2(scalar, AntiScalar));
+        //     cv
+        // }));
 
         // 1..AntiScalar.grade() skips scalar and anti_scalar (since we already added them)
         for gr in 1..AntiScalar.grade() {

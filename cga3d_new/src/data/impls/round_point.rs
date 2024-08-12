@@ -137,6 +137,34 @@ impl TryFrom<AntiFlectorOnOrigin> for RoundPoint {
     }
 }
 
+impl TryFrom<DualNum> for RoundPoint {
+    type Error = String;
+    fn try_from(dual_num: DualNum) -> Result<Self, Self::Error> {
+        use crate::elements::*;
+        let mut error_string = String::new();
+        let mut fail = false;
+        let el = dual_num[1];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e12345: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        if fail {
+            let mut error = "Elements from DualNum do not fit into RoundPoint { ".to_string();
+            error.push_str(error_string.as_str());
+            error.push('}');
+            return Err(error);
+        }
+        return Ok(RoundPoint::from_groups(
+            // e1, e2, e3
+            Simd32x3::from(0.0),
+            // e4, e5
+            Simd32x2::from([0.0, dual_num[e5]]),
+        ));
+    }
+}
+
 impl TryFrom<Motor> for RoundPoint {
     type Error = String;
     fn try_from(motor: Motor) -> Result<Self, Self::Error> {

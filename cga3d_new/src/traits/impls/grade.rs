@@ -8,6 +8,11 @@ impl Grade for AntiDipoleOnOrigin {
         return 3;
     }
 }
+impl Grade for AntiDualNumOnOrigin {
+    fn grade() -> usize {
+        return 0;
+    }
+}
 impl Grade for AntiFlatOrigin {
     fn grade() -> usize {
         return 3;
@@ -36,11 +41,6 @@ impl Grade for AntiPlane {
 impl Grade for AntiPlaneOnOrigin {
     fn grade() -> usize {
         return 1;
-    }
-}
-impl Grade for AntiScalar {
-    fn grade() -> usize {
-        return 5;
     }
 }
 impl Grade for AntiSphereOnOrigin {
@@ -106,6 +106,11 @@ impl Grade for DipoleOnOrigin {
 impl Grade for DipoleOrthogonalOrigin {
     fn grade() -> usize {
         return 2;
+    }
+}
+impl Grade for DualNumOnOrigin {
+    fn grade() -> usize {
+        return 5;
     }
 }
 impl Grade for FlatOrigin {
@@ -186,11 +191,6 @@ impl Grade for RoundPoint {
 impl Grade for RoundPointAtOrigin {
     fn grade() -> usize {
         return 1;
-    }
-}
-impl Grade for Scalar {
-    fn grade() -> usize {
-        return 0;
     }
 }
 impl Grade for Sphere {
