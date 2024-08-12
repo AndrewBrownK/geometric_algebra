@@ -1660,12 +1660,13 @@ impl IntExpr {
 }
 
 impl FloatExpr {
-    fn deep_inline_variables(&mut self) {
+    pub(crate) fn deep_inline_variables(&mut self) {
         match self {
             FloatExpr::Variable(v) => {
                 let Some(AnyExpression::Float(e)) = &v.decl.expr else { return };
                 let mut e = e.clone();
                 e.deep_inline_variables();
+                e.simplify();
                 *self = e;
             }
             FloatExpr::Literal(_) => {}
@@ -1704,6 +1705,7 @@ impl Vec2Expr {
                 let Some(AnyExpression::Vec2(e)) = &v.decl.expr else { return };
                 let mut e = e.clone();
                 e.deep_inline_variables();
+                e.simplify();
                 *self = e;
             }
             Vec2Expr::Gather1(e) => e.deep_inline_variables(),
@@ -1733,6 +1735,7 @@ impl Vec3Expr {
                 let Some(AnyExpression::Vec3(e)) = &v.decl.expr else { return };
                 let mut e = e.clone();
                 e.deep_inline_variables();
+                e.simplify();
                 *self = e;
             }
             Vec3Expr::Gather1(e) => e.deep_inline_variables(),
@@ -1763,6 +1766,7 @@ impl Vec4Expr {
                 let Some(AnyExpression::Vec4(e)) = &v.decl.expr else { return };
                 let mut e = e.clone();
                 e.deep_inline_variables();
+                e.simplify();
                 *self = e;
             }
             Vec4Expr::Gather1(e) => e.deep_inline_variables(),
@@ -1804,6 +1808,7 @@ impl MultiVectorExpr {
                 let Some(AnyExpression::Class(e)) = &v.decl.expr else { return };
                 let mut e = e.clone();
                 e.deep_inline_variables();
+                e.simplify();
                 *self = e;
             }
             MultiVectorVia::Construct(v) => {
@@ -3199,6 +3204,41 @@ impl MultiVectorGroupExpr {
                 if let FloatExpr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = f {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
                         *self = v[*idx as usize].clone();
+                        return
+                    }
+                }
+                if let FloatExpr::AccessMultiVecFlat(MultiVectorExpr { expr, mv_class: _ }, idx) = f {
+                    if let MultiVectorVia::Construct(v) = expr.as_mut() {
+                        let mut target = *idx;
+                        for ge in v.iter_mut() {
+                            match (target, ge) {
+                                (0, MultiVectorGroupExpr::JustFloat(fe)) => {
+                                    *self = MultiVectorGroupExpr::JustFloat(fe.clone());
+                                    return
+                                }
+                                (_, MultiVectorGroupExpr::JustFloat(_)) => {
+                                    target -= 1;
+                                }
+                                (_, MultiVectorGroupExpr::Vec2(_)) => {
+                                    if target < 2 {
+                                        return
+                                    }
+                                    target -= 2;
+                                }
+                                (_, MultiVectorGroupExpr::Vec3(_)) => {
+                                    if target < 3 {
+                                        return
+                                    }
+                                    target -= 3;
+                                }
+                                (_, MultiVectorGroupExpr::Vec4(_)) => {
+                                    if target < 4 {
+                                        return
+                                    }
+                                    target -= 4;
+                                }
+                            }
+                        }
                     }
                 }
             }

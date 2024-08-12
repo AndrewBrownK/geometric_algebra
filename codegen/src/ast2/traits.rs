@@ -1450,6 +1450,7 @@ pub struct TraitImplBuilder<const AntiScalar: BasisElement, ReturnType> {
     registry: TraitImplRegistry,
     pub(crate) trait_def: Arc<RawTraitDefinition>,
     inline_dependencies: bool,
+    pub(crate) is_deep_inlining: bool,
     specialized: bool,
 
     cycle_detector: im::HashSet<(TraitKey, MultiVector, Option<MultiVector>)>,
@@ -1483,6 +1484,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             registry,
             trait_def,
             inline_dependencies,
+            is_deep_inlining: false,
             specialized: false,
             cycle_detector,
             multivector_dependencies: Default::default(),
@@ -1523,6 +1525,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             registry,
             trait_def,
             inline_dependencies,
+            is_deep_inlining: true,
             specialized: false,
             cycle_detector,
             multivector_dependencies: Default::default(),
@@ -1662,6 +1665,7 @@ impl<const AntiScalar: BasisElement> TraitImplBuilder<AntiScalar, HasNotReturned
             return_expr: Some(expr.into_any_expression()),
             return_type,
             specialized: self.specialized,
+            is_deep_inlining: self.is_deep_inlining,
         })
     }
 

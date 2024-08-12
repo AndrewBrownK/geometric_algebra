@@ -24,6 +24,8 @@ multi_vecs! { e0123;
     TriVector as e021 | e013 | e032 | e123;
     Rotor as e01 | e02 | e03 | e23 | e31 | e12 | e0123;
 
+    HalfRotorSandwich as e0 | e1 | e2 | e021 | e013 | e032 | e123;
+
     DualNum as scalar | e0123;
     MultiVector as scalar | e0 | e1 | e2 | e3 | e01 | e02 | e03 | e12 | e31 | e23 | e021 | e013 | e032 | e123 | e0123;
 }
@@ -42,24 +44,13 @@ fn anti_product_argument() {
     let rotor = MultiVector::from(&Rotor);
 
     let a = base.construct(|el| {
-        if el == e0 { float_var_expr("a0") }
-        else if el == e1 { float_var_expr("a1") }
-        else if el == e2 { float_var_expr("a2") }
-        else if el == e3 { float_var_expr("a3") }
-        else { FloatExpr::Literal(0.0) }
+        if el == e0 { float_var_expr("a0") } else if el == e1 { float_var_expr("a1") } else if el == e2 { float_var_expr("a2") } else if el == e3 { float_var_expr("a3") } else { FloatExpr::Literal(0.0) }
     });
     let b = base.construct(|el| {
-        if el == e0 { float_var_expr("b0") }
-        else if el == e1 { float_var_expr("b1") }
-        else if el == e2 { float_var_expr("b2") }
-        else if el == e3 { float_var_expr("b3") }
-        else { FloatExpr::Literal(0.0) }
+        if el == e0 { float_var_expr("b0") } else if el == e1 { float_var_expr("b1") } else if el == e2 { float_var_expr("b2") } else if el == e3 { float_var_expr("b3") } else { FloatExpr::Literal(0.0) }
     });
     let rotor = rotor.construct(|el| {
-        if el == e01 { FloatExpr::Literal(1.0) }
-        else if el == e12 { FloatExpr::Literal(1.0) }
-        else if el == e0123 { FloatExpr::Literal(1.0) }
-        else { FloatExpr::Literal(0.0) }
+        if el == e01 { FloatExpr::Literal(1.0) } else if el == e12 { FloatExpr::Literal(1.0) } else if el == e0123 { FloatExpr::Literal(1.0) } else { FloatExpr::Literal(0.0) }
     });
 
     println!("A = {a}");
@@ -174,19 +165,7 @@ fn anti_product_argument() {
         let mut r_wedge_dot_b_wedge_dot_r = GeometricProduct.deep_inline(&builder, r_wedge_dot_b, r_reverse).await?;
         println!("R ⟑ B ⟑ ~R = {r_wedge_dot_b_wedge_dot_r}");
 
-        // TODO simplification problem with the above:
-        //  It seems doing a product using mv.elements_flat() simplifies better (or more correctly) than
-        //  doing the product using mv.elements_by_groups() as seen in GeometricProductImpl.
-        /*
-R ⟑ A = MultiVector( scalar(0), e0(a1), e1(a2), e2((a1 * -1)), e3(0), e01(0), e02(0), e03(0), e12(0), e31(0), e23(0), e021((-a3 - a2 - a0)), e013((a3 - a2)), e032((a1 * -1)), e123(a3), e0123(0) )
-R ⟑ A ⟑ ~R = Base( e0((2*a3 + 2*a2 + a0)), e1((a1 * -1)), e2((a2 * -1)), e3(a3) )
-R ⟑ B = MultiVector( scalar(0), e0(b1), e1(b2), e2((b1 * -1)), e3(0), e01(0), e02(0), e03(0), e12(0), e31(0), e23(0), e021((-b3 - b0 - b2)), e013((-b2 + b3)), e032((b1 * -1)), e123(b3), e0123(0) )
-R ⟑ B ⟑ ~R = MultiVector( scalar(0), e0((2*b3 + 2*b2 + b0)), e1((b1 * -1)), e2((b2 * -1)), e3(b3), e01(0), e02(0), e03(0), e12(0), e31(0), e23(0), e021(0), e013(0), e032((-2*b3 + 2*b2)), e123(0), e0123(0) )
-         */
-
-
         Some(())
     });
     result.expect("Entire script must complete")
 }
-

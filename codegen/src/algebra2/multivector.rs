@@ -1305,22 +1305,37 @@ impl DynamicMultiVector {
         let mut vals = BTreeMap::new();
         let mut keys = BTreeSet::new();
         for (mut el, mut f) in self.vals.into_iter() {
-            f.simplify();
             if el.coefficient() == 0 {
                 continue
             }
+
+            // Some calculations are less efficient without variables.
+            // But some expressions can't be simplified down to 0 without variable inlining.
+            // So we explore what happens with deep inlining,
+            // even if we stick to using variables in the end.
+            let mut orig_f = f.clone();
+            f.deep_inline_variables();
+            f.simplify();
+
             match f {
                 FloatExpr::Literal(0.0) => continue,
-                FloatExpr::Product(v) if v.is_empty() => continue,
-                FloatExpr::Sum(v, a) if v.is_empty() && a == 0.0 => continue,
+                FloatExpr::Product(v) if v.is_empty() => panic!("Problem"),
+                FloatExpr::Sum(v, _a) if v.is_empty() => panic!("Problem"),
                 _ => {}
             }
             let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
             if fix_f == 0.0 {
                 continue;
             }
-            f = f * fix_f;
+            if b.is_deep_inlining {
+                f = f * fix_f;
+            } else {
+                orig_f.simplify();
+                f = orig_f * fix_f;
+            }
             el = fix_el;
+
+            // println!("Constructing with non-zero element: {el}({f:?})");
             keys.insert(el.signature());
             vals.insert(el, f);
         }
@@ -1330,7 +1345,11 @@ impl DynamicMultiVector {
         }
         let mv = MultiVector::from(mv);
         b.multivector_dependencies.lock().insert(mv);
-        Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
+        let result = mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0)));
+        if !vals.is_empty() {
+            panic!("vals should be empty");
+        }
+        Some(result)
     }
 
 
@@ -1342,22 +1361,37 @@ impl DynamicMultiVector {
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
         for (mut el, mut f) in self.vals.into_iter() {
-            f.simplify();
             if el.coefficient() == 0 {
                 continue
             }
+
+            // Some calculations are less efficient without variables.
+            // But some expressions can't be simplified down to 0 without variable inlining.
+            // So we explore what happens with deep inlining,
+            // even if we stick to using variables in the end.
+            let mut orig_f = f.clone();
+            f.deep_inline_variables();
+            f.simplify();
+
             match f {
                 FloatExpr::Literal(0.0) => continue,
-                FloatExpr::Product(v) if v.is_empty() => continue,
-                FloatExpr::Sum(v, a) if v.is_empty() && a == 0.0 => continue,
+                FloatExpr::Product(v) if v.is_empty() => panic!("Problem"),
+                FloatExpr::Sum(v, _a) if v.is_empty() => panic!("Problem"),
                 _ => {}
             }
             let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
             if fix_f == 0.0 {
                 continue;
             }
-            f = f * fix_f;
+            if b.is_deep_inlining {
+                f = f * fix_f;
+            } else {
+                orig_f.simplify();
+                f = orig_f * fix_f;
+            }
             el = fix_el;
+
+            // println!("Constructing with non-zero element: {el}({f:?})");
             vals.insert(el, f);
         }
         let keys = vals.keys().map(|el| el.signature()).collect();
@@ -1368,7 +1402,11 @@ impl DynamicMultiVector {
         };
         let mv = MultiVector::from(mv);
         b.multivector_dependencies.lock().insert(mv);
-        Some(mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0))))
+        let result = mv.construct(|el| vals.remove(&el).unwrap_or(FloatExpr::Literal(0.0)));
+        if !vals.is_empty() {
+            panic!("vals should be empty");
+        }
+        Some(result)
     }
 }
 impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
