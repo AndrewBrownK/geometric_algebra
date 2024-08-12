@@ -22,6 +22,6 @@ bytemuck = { version = "1.16.3", features = ["derive"] }
 encase = "0.9.0"
 nearly = "0.4.0"
 float-ord = "0.3.2"
-pgx = "0.7.4"
-postgres-types = "0.2.7"
+#pgx = "0.7.4"
+#postgres-types = "0.2.7"
 serde = { version = "1.0.204", features = ["derive"] }
