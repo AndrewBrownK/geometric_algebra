@@ -153,6 +153,7 @@ fn anti_product_argument() {
             }
         }
         let r_wedge_dot_a = r_wedge_dot_a.construct(&builder)?;
+        println!("R ⟑ A = {r_wedge_dot_a}");
         let mut r_wedge_dot_a_wedge_dot_r = DynamicMultiVector::zero();
         for (a, a_el) in r_wedge_dot_a.elements_flat() {
             for (b, b_el) in r_reverse.elements_flat() {
@@ -169,8 +170,19 @@ fn anti_product_argument() {
         println!("R ⟑ A ⟑ ~R = {r_wedge_dot_a_wedge_dot_r}");
 
         let r_wedge_dot_b = GeometricProduct.deep_inline(&builder, rotor, b).await?;
+        println!("R ⟑ B = {r_wedge_dot_b}");
         let mut r_wedge_dot_b_wedge_dot_r = GeometricProduct.deep_inline(&builder, r_wedge_dot_b, r_reverse).await?;
         println!("R ⟑ B ⟑ ~R = {r_wedge_dot_b_wedge_dot_r}");
+
+        // TODO simplification problem with the above:
+        //  It seems doing a product using mv.elements_flat() simplifies better (or more correctly) than
+        //  doing the product using mv.elements_by_groups() as seen in GeometricProductImpl.
+        /*
+R ⟑ A = MultiVector( scalar(0), e0(a1), e1(a2), e2((a1 * -1)), e3(0), e01(0), e02(0), e03(0), e12(0), e31(0), e23(0), e021((-a3 - a2 - a0)), e013((a3 - a2)), e032((a1 * -1)), e123(a3), e0123(0) )
+R ⟑ A ⟑ ~R = Base( e0((2*a3 + 2*a2 + a0)), e1((a1 * -1)), e2((a2 * -1)), e3(a3) )
+R ⟑ B = MultiVector( scalar(0), e0(b1), e1(b2), e2((b1 * -1)), e3(0), e01(0), e02(0), e03(0), e12(0), e31(0), e23(0), e021((-b3 - b0 - b2)), e013((-b2 + b3)), e032((b1 * -1)), e123(b3), e0123(0) )
+R ⟑ B ⟑ ~R = MultiVector( scalar(0), e0((2*b3 + 2*b2 + b0)), e1((b1 * -1)), e2((b2 * -1)), e3(b3), e01(0), e02(0), e03(0), e12(0), e31(0), e23(0), e021(0), e013(0), e032((-2*b3 + 2*b2)), e123(0), e0123(0) )
+         */
 
 
         Some(())

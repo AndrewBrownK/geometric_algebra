@@ -225,7 +225,15 @@ pub trait TraitDef_1Class_0Param: TraitImpl_10 + ProvideTraitNames {
         b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        todo!()
+        let trait_key = self.trait_names().trait_key;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let variables = Arc::new(Mutex::new(HashMap::new()));
+        let builder = TraitImplBuilder::new(
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone()
+        );
+        let trait_impl = self.general_implementation(builder, owner).await?;
+        trait_impl.finish_deep_inline()
     }
 }
 
@@ -358,8 +366,17 @@ pub trait TraitDef_1Class_1Param: TraitImpl_11 + ProvideTraitNames {
         &self,
         b: &TraitImplBuilder<AntiScalar, HasNotReturned>,
         owner: Expr
-    ) -> Option<Variable<Self::Output>> {
-        todo!()
+    ) -> Option<<Self::Output as TraitResultType>::Expr> {
+        let trait_key = self.trait_names().trait_key;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let variables = Arc::new(Mutex::new(HashMap::new()));
+        let mut builder = TraitImplBuilder::new(
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone()
+        );
+        let owner = builder.coerce_variable("self", owner);
+        let trait_impl = self.general_implementation(builder, owner).await?;
+        trait_impl.finish_deep_inline()
     }
 }
 
@@ -503,7 +520,16 @@ pub trait TraitDef_2Class_1Param: TraitImpl_21 + ProvideTraitNames {
         owner: Expr,
         other: MultiVector
     ) -> Option<<Self::Output as TraitResultType>::Expr> {
-        todo!()
+        let trait_key = self.trait_names().trait_key;
+        let slf = self.clone();
+        let the_def = b.registry.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { slf.def() }).await;
+        let variables = Arc::new(Mutex::new(HashMap::new()));
+        let mut builder = TraitImplBuilder::new(
+            b.ga.clone(), b.mvs.clone(), the_def, b.registry.clone(), true, variables.clone(), b.cycle_detector.clone()
+        );
+        let owner = builder.coerce_variable("self", owner);
+        let trait_impl = self.general_implementation(builder, owner, other).await?;
+        trait_impl.finish_deep_inline()
     }
 }
 
