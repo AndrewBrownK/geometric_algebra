@@ -1,7 +1,7 @@
 impl From<AntiFlatOrigin> for AntiFlectorOnOrigin {
     fn from(anti_flat_origin: AntiFlatOrigin) -> Self {
         use crate::elements::*;
-        return AntiFlectorOnOrigin::from_groups(/* e321 */ anti_flat_origin[e321], /* e1, e2, e3 */ Simd32x3::from(0.0));
+        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([anti_flat_origin[e321], 0.0, 0.0, 0.0]));
     }
 }
 
@@ -9,10 +9,8 @@ impl From<AntiPlaneOnOrigin> for AntiFlectorOnOrigin {
     fn from(anti_plane_on_origin: AntiPlaneOnOrigin) -> Self {
         use crate::elements::*;
         return AntiFlectorOnOrigin::from_groups(
-            // e321
-            0.0,
-            // e1, e2, e3
-            Simd32x3::from([anti_plane_on_origin[e1], anti_plane_on_origin[e2], anti_plane_on_origin[e3]]),
+            // e321, e1, e2, e3
+            Simd32x4::from([0.0, anti_plane_on_origin[e1], anti_plane_on_origin[e2], anti_plane_on_origin[e3]]),
         );
     }
 }
@@ -50,7 +48,10 @@ impl TryFrom<AntiDipoleOnOrigin> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(/* e321 */ anti_dipole_on_origin[e321], /* e1, e2, e3 */ Simd32x3::from(0.0)));
+        return Ok(AntiFlectorOnOrigin::from_groups(
+            // e321, e1, e2, e3
+            Simd32x4::from([anti_dipole_on_origin[e321], 0.0, 0.0, 0.0]),
+        ));
     }
 }
 
@@ -87,7 +88,7 @@ impl TryFrom<AntiFlatPoint> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(/* e321 */ anti_flat_point[e321], /* e1, e2, e3 */ Simd32x3::from(0.0)));
+        return Ok(AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([anti_flat_point[e321], 0.0, 0.0, 0.0])));
     }
 }
 
@@ -131,12 +132,9 @@ impl TryFrom<AntiFlector> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(
-            // e321
-            anti_flector[e321],
-            // e1, e2, e3
-            Simd32x3::from([anti_flector[e1], anti_flector[e2], anti_flector[e3]]),
-        ));
+        return Ok(AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
+            anti_flector[e321], anti_flector[e1], anti_flector[e2], anti_flector[e3],
+        ])));
     }
 }
 
@@ -160,10 +158,8 @@ impl TryFrom<AntiPlane> for AntiFlectorOnOrigin {
             return Err(error);
         }
         return Ok(AntiFlectorOnOrigin::from_groups(
-            // e321
-            0.0,
-            // e1, e2, e3
-            Simd32x3::from([anti_plane[e1], anti_plane[e2], anti_plane[e3]]),
+            // e321, e1, e2, e3
+            Simd32x4::from([0.0, anti_plane[e1], anti_plane[e2], anti_plane[e3]]),
         ));
     }
 }
@@ -187,12 +183,12 @@ impl TryFrom<AntiSphereOnOrigin> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(
-            // e321
+        return Ok(AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
             0.0,
-            // e1, e2, e3
-            Simd32x3::from([anti_sphere_on_origin[e1], anti_sphere_on_origin[e2], anti_sphere_on_origin[e3]]),
-        ));
+            anti_sphere_on_origin[e1],
+            anti_sphere_on_origin[e2],
+            anti_sphere_on_origin[e3],
+        ])));
     }
 }
 
@@ -271,7 +267,7 @@ impl TryFrom<Circle> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(/* e321 */ circle[e321], /* e1, e2, e3 */ Simd32x3::from(0.0)));
+        return Ok(AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([circle[e321], 0.0, 0.0, 0.0])));
     }
 }
 
@@ -329,7 +325,7 @@ impl TryFrom<CircleAtInfinity> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(/* e321 */ circle_at_infinity[e321], /* e1, e2, e3 */ Simd32x3::from(0.0)));
+        return Ok(AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([circle_at_infinity[e321], 0.0, 0.0, 0.0])));
     }
 }
 
@@ -388,10 +384,8 @@ impl TryFrom<CircleOrthogonalOrigin> for AntiFlectorOnOrigin {
             return Err(error);
         }
         return Ok(AntiFlectorOnOrigin::from_groups(
-            // e321
-            circle_orthogonal_origin[e321],
-            // e1, e2, e3
-            Simd32x3::from(0.0),
+            // e321, e1, e2, e3
+            Simd32x4::from([circle_orthogonal_origin[e321], 0.0, 0.0, 0.0]),
         ));
     }
 }
@@ -419,35 +413,35 @@ impl TryFrom<MultiVector> for AntiFlectorOnOrigin {
         let el = multi_vector[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e5: ");
+            error_string.push_str("e4: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[7];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e15: ");
+            error_string.push_str("e41: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[8];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e25: ");
+            error_string.push_str("e42: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[9];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e35: ");
+            error_string.push_str("e43: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -461,21 +455,21 @@ impl TryFrom<MultiVector> for AntiFlectorOnOrigin {
         let el = multi_vector[11];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e41: ");
+            error_string.push_str("e15: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[12];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e42: ");
+            error_string.push_str("e25: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[13];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e43: ");
+            error_string.push_str("e35: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -500,45 +494,45 @@ impl TryFrom<MultiVector> for AntiFlectorOnOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[17];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e423: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
         let el = multi_vector[18];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e431: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[19];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e412: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[21];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[22];
+        let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[23];
+        let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e435: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[21];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e423: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[22];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e431: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[23];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e412: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -587,14 +581,14 @@ impl TryFrom<MultiVector> for AntiFlectorOnOrigin {
         let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e3215: ");
+            error_string.push_str("e1234: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[31];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e1234: ");
+            error_string.push_str("e3215: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -604,12 +598,9 @@ impl TryFrom<MultiVector> for AntiFlectorOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiFlectorOnOrigin::from_groups(
-            // e321
-            multi_vector[e321],
-            // e1, e2, e3
-            Simd32x3::from([multi_vector[e1], multi_vector[e2], multi_vector[e3]]),
-        ));
+        return Ok(AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from([
+            multi_vector[e321], multi_vector[e1], multi_vector[e2], multi_vector[e3],
+        ])));
     }
 }
 
@@ -640,10 +631,8 @@ impl TryFrom<RoundPoint> for AntiFlectorOnOrigin {
             return Err(error);
         }
         return Ok(AntiFlectorOnOrigin::from_groups(
-            // e321
-            0.0,
-            // e1, e2, e3
-            Simd32x3::from([round_point[e1], round_point[e2], round_point[e3]]),
+            // e321, e1, e2, e3
+            Simd32x4::from([0.0, round_point[e1], round_point[e2], round_point[e3]]),
         ));
     }
 }

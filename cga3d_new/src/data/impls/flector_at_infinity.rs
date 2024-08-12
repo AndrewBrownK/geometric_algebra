@@ -2,10 +2,8 @@ impl From<FlatPointAtInfinity> for FlectorAtInfinity {
     fn from(flat_point_at_infinity: FlatPointAtInfinity) -> Self {
         use crate::elements::*;
         return FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([flat_point_at_infinity[e15], flat_point_at_infinity[e25], flat_point_at_infinity[e35]]),
-            // e3215
-            0.0,
+            // e15, e25, e35, e3215
+            Simd32x4::from([flat_point_at_infinity[e15], flat_point_at_infinity[e25], flat_point_at_infinity[e35], 0.0]),
         );
     }
 }
@@ -13,7 +11,7 @@ impl From<FlatPointAtInfinity> for FlectorAtInfinity {
 impl From<Horizon> for FlectorAtInfinity {
     fn from(horizon: Horizon) -> Self {
         use crate::elements::*;
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from(0.0), /* e3215 */ horizon[e3215]);
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, horizon[e3215]]));
     }
 }
 
@@ -51,10 +49,8 @@ impl TryFrom<AntiLine> for FlectorAtInfinity {
             return Err(error);
         }
         return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([anti_line[e15], anti_line[e25], anti_line[e35]]),
-            // e3215
-            0.0,
+            // e15, e25, e35, e3215
+            Simd32x4::from([anti_line[e15], anti_line[e25], anti_line[e35], 0.0]),
         ));
     }
 }
@@ -100,10 +96,8 @@ impl TryFrom<AntiMotor> for FlectorAtInfinity {
             return Err(error);
         }
         return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([anti_motor[e15], anti_motor[e25], anti_motor[e35]]),
-            // e3215
-            anti_motor[e3215],
+            // e15, e25, e35, e3215
+            Simd32x4::from([anti_motor[e15], anti_motor[e25], anti_motor[e35], anti_motor[e3215]]),
         ));
     }
 }
@@ -170,10 +164,8 @@ impl TryFrom<Dipole> for FlectorAtInfinity {
             return Err(error);
         }
         return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([dipole[e15], dipole[e25], dipole[e35]]),
-            // e3215
-            0.0,
+            // e15, e25, e35, e3215
+            Simd32x4::from([dipole[e15], dipole[e25], dipole[e35], 0.0]),
         ));
     }
 }
@@ -218,12 +210,12 @@ impl TryFrom<DipoleAligningOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([dipole_aligning_origin[e15], dipole_aligning_origin[e25], dipole_aligning_origin[e35]]),
-            // e3215
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
+            dipole_aligning_origin[e15],
+            dipole_aligning_origin[e25],
+            dipole_aligning_origin[e35],
             0.0,
-        ));
+        ])));
     }
 }
 
@@ -267,12 +259,12 @@ impl TryFrom<DipoleAtInfinity> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([dipole_at_infinity[e15], dipole_at_infinity[e25], dipole_at_infinity[e35]]),
-            // e3215
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
+            dipole_at_infinity[e15],
+            dipole_at_infinity[e25],
+            dipole_at_infinity[e35],
             0.0,
-        ));
+        ])));
     }
 }
 
@@ -309,12 +301,12 @@ impl TryFrom<DipoleAtOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([dipole_at_origin[e15], dipole_at_origin[e25], dipole_at_origin[e35]]),
-            // e3215
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
+            dipole_at_origin[e15],
+            dipole_at_origin[e25],
+            dipole_at_origin[e35],
             0.0,
-        ));
+        ])));
     }
 }
 
@@ -372,12 +364,12 @@ impl TryFrom<DipoleOrthogonalOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([dipole_orthogonal_origin[e15], dipole_orthogonal_origin[e25], dipole_orthogonal_origin[e35]]),
-            // e3215
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
+            dipole_orthogonal_origin[e15],
+            dipole_orthogonal_origin[e25],
+            dipole_orthogonal_origin[e35],
             0.0,
-        ));
+        ])));
     }
 }
 
@@ -401,10 +393,8 @@ impl TryFrom<FlatPoint> for FlectorAtInfinity {
             return Err(error);
         }
         return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([flat_point[e15], flat_point[e25], flat_point[e35]]),
-            // e3215
-            0.0,
+            // e15, e25, e35, e3215
+            Simd32x4::from([flat_point[e15], flat_point[e25], flat_point[e35], 0.0]),
         ));
     }
 }
@@ -450,10 +440,8 @@ impl TryFrom<Flector> for FlectorAtInfinity {
             return Err(error);
         }
         return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([flector[e15], flector[e25], flector[e35]]),
-            // e3215
-            flector[e3215],
+            // e15, e25, e35, e3215
+            Simd32x4::from([flector[e15], flector[e25], flector[e35], flector[e3215]]),
         ));
     }
 }
@@ -502,14 +490,35 @@ impl TryFrom<MultiVector> for FlectorAtInfinity {
         let el = multi_vector[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e5: ");
+            error_string.push_str("e4: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -517,27 +526,6 @@ impl TryFrom<MultiVector> for FlectorAtInfinity {
         if el != 0.0 {
             fail = true;
             error_string.push_str("e45: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[11];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e41: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[12];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e42: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[13];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e43: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -565,49 +553,49 @@ impl TryFrom<MultiVector> for FlectorAtInfinity {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e423: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e431: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e412: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[21];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e423: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[22];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e431: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[23];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e412: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -653,7 +641,7 @@ impl TryFrom<MultiVector> for FlectorAtInfinity {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[31];
+        let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e1234: ");
@@ -666,12 +654,9 @@ impl TryFrom<MultiVector> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(
-            // e15, e25, e35
-            Simd32x3::from([multi_vector[e15], multi_vector[e25], multi_vector[e35]]),
-            // e3215
-            multi_vector[e3215],
-        ));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([
+            multi_vector[e15], multi_vector[e25], multi_vector[e35], multi_vector[e3215],
+        ])));
     }
 }
 
@@ -708,7 +693,7 @@ impl TryFrom<Plane> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from(0.0), /* e3215 */ plane[e3215]));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, plane[e3215]])));
     }
 }
 
@@ -752,7 +737,7 @@ impl TryFrom<Sphere> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from(0.0), /* e3215 */ sphere[e3215]));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, sphere[e3215]])));
     }
 }
 
@@ -775,6 +760,6 @@ impl TryFrom<SphereAtOrigin> for FlectorAtInfinity {
             error.push('}');
             return Err(error);
         }
-        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from(0.0), /* e3215 */ sphere_at_origin[e3215]));
+        return Ok(FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from([0.0, 0.0, 0.0, sphere_at_origin[e3215]])));
     }
 }

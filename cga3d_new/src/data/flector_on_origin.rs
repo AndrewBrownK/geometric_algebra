@@ -6,46 +6,36 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union FlectorOnOrigin {
     groups: FlectorOnOriginGroups,
-    /// e45, 0, 0, 0, e4235, e4315, e4125, 0
-    elements: [f32; 8],
+    /// e45, e4235, e4315, e4125
+    elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct FlectorOnOriginGroups {
-    /// e45
-    g0: f32,
-    /// e4235, e4315, e4125
-    g1: Simd32x3,
+    /// e45, e4235, e4315, e4125
+    g0: Simd32x4,
 }
 impl FlectorOnOrigin {
     #[allow(clippy::too_many_arguments)]
     pub const fn from_elements(e45: f32, e4235: f32, e4315: f32, e4125: f32) -> Self {
         Self {
-            elements: [e45, 0.0, 0.0, 0.0, e4235, e4315, e4125, 0.0],
+            elements: [e45, e4235, e4315, e4125],
         }
     }
-    pub const fn from_groups(g0: f32, g1: Simd32x3) -> Self {
+    pub const fn from_groups(g0: Simd32x4) -> Self {
         Self {
-            groups: FlectorOnOriginGroups { g0, g1 },
+            groups: FlectorOnOriginGroups { g0 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> f32 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut f32 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
-    #[inline(always)]
-    pub fn group1(&self) -> Simd32x3 {
-        unsafe { self.groups.g1 }
-    }
-    #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut Simd32x3 {
-        unsafe { &mut self.groups.g1 }
-    }
 }
-const FLECTOR_ON_ORIGIN_INDEX_REMAP: [usize; 4] = [0, 4, 5, 6];
+const FLECTOR_ON_ORIGIN_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
 impl std::ops::Index<usize> for FlectorOnOrigin {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -59,13 +49,13 @@ impl std::ops::IndexMut<usize> for FlectorOnOrigin {
 }
 impl From<FlectorOnOrigin> for [f32; 4] {
     fn from(vector: FlectorOnOrigin) -> Self {
-        unsafe { [vector.elements[0], vector.elements[4], vector.elements[5], vector.elements[6]] }
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
     }
 }
 impl From<[f32; 4]> for FlectorOnOrigin {
     fn from(array: [f32; 4]) -> Self {
         Self {
-            elements: [array[0], 0.0, 0.0, 0.0, array[1], array[2], array[3], 0.0],
+            elements: [array[0], array[1], array[2], array[3]],
         }
     }
 }

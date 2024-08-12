@@ -5,32 +5,32 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union MultiVector {
     groups: MultiVectorGroups,
-    /// scalar, e12345, 0, 0, e1, e2, e3, e5, e4, 0, 0, 0, e15, e25, e35, e45, e41, e42, e43, 0, e23, e31, e12, 0, e423, e431, e412, e321, e415, e425, e435, 0, e235, e315, e125, 0, e4235, e4315, e4125, e3215, e1234, 0, 0, 0
+    /// scalar, e12345, 0, 0, e1, e2, e3, e4, e5, 0, 0, 0, e41, e42, e43, e45, e15, e25, e35, 0, e23, e31, e12, 0, e321, e415, e425, e435, e423, e431, e412, 0, e235, e315, e125, 0, e4235, e4315, e4125, e1234, e3215, 0, 0, 0
     elements: [f32; 44],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct MultiVectorGroups {
     /// scalar, e12345
     g0: Simd32x2,
-    /// e1, e2, e3, e5
+    /// e1, e2, e3, e4
     g1: Simd32x4,
-    /// e4
+    /// e5
     g2: f32,
-    /// e15, e25, e35, e45
+    /// e41, e42, e43, e45
     g3: Simd32x4,
-    /// e41, e42, e43
+    /// e15, e25, e35
     g4: Simd32x3,
     /// e23, e31, e12
     g5: Simd32x3,
-    /// e423, e431, e412, e321
+    /// e321, e415, e425, e435
     g6: Simd32x4,
-    /// e415, e425, e435
+    /// e423, e431, e412
     g7: Simd32x3,
     /// e235, e315, e125
     g8: Simd32x3,
-    /// e4235, e4315, e4125, e3215
+    /// e4235, e4315, e4125, e1234
     g9: Simd32x4,
-    /// e1234
+    /// e3215
     g10: f32,
 }
 impl MultiVector {
@@ -41,38 +41,38 @@ impl MultiVector {
         e1: f32,
         e2: f32,
         e3: f32,
-        e5: f32,
         e4: f32,
-        e15: f32,
-        e25: f32,
-        e35: f32,
-        e45: f32,
+        e5: f32,
         e41: f32,
         e42: f32,
         e43: f32,
+        e45: f32,
+        e15: f32,
+        e25: f32,
+        e35: f32,
         e23: f32,
         e31: f32,
         e12: f32,
-        e423: f32,
-        e431: f32,
-        e412: f32,
         e321: f32,
         e415: f32,
         e425: f32,
         e435: f32,
+        e423: f32,
+        e431: f32,
+        e412: f32,
         e235: f32,
         e315: f32,
         e125: f32,
         e4235: f32,
         e4315: f32,
         e4125: f32,
-        e3215: f32,
         e1234: f32,
+        e3215: f32,
     ) -> Self {
         Self {
             elements: [
-                scalar, e12345, 0.0, 0.0, e1, e2, e3, e5, e4, 0.0, 0.0, 0.0, e15, e25, e35, e45, e41, e42, e43, 0.0, e23, e31, e12, 0.0, e423, e431, e412, e321, e415, e425, e435,
-                0.0, e235, e315, e125, 0.0, e4235, e4315, e4125, e3215, e1234, 0.0, 0.0, 0.0,
+                scalar, e12345, 0.0, 0.0, e1, e2, e3, e4, e5, 0.0, 0.0, 0.0, e41, e42, e43, e45, e15, e25, e35, 0.0, e23, e31, e12, 0.0, e321, e415, e425, e435, e423, e431, e412,
+                0.0, e235, e315, e125, 0.0, e4235, e4315, e4125, e1234, e3215, 0.0, 0.0, 0.0,
             ],
         }
     }
@@ -239,33 +239,33 @@ impl std::fmt::Debug for MultiVector {
             .field("e1", &self[2])
             .field("e2", &self[3])
             .field("e3", &self[4])
-            .field("e5", &self[5])
-            .field("e4", &self[6])
-            .field("e15", &self[7])
-            .field("e25", &self[8])
-            .field("e35", &self[9])
+            .field("e4", &self[5])
+            .field("e5", &self[6])
+            .field("e41", &self[7])
+            .field("e42", &self[8])
+            .field("e43", &self[9])
             .field("e45", &self[10])
-            .field("e41", &self[11])
-            .field("e42", &self[12])
-            .field("e43", &self[13])
+            .field("e15", &self[11])
+            .field("e25", &self[12])
+            .field("e35", &self[13])
             .field("e23", &self[14])
             .field("e31", &self[15])
             .field("e12", &self[16])
-            .field("e423", &self[17])
-            .field("e431", &self[18])
-            .field("e412", &self[19])
-            .field("e321", &self[20])
-            .field("e415", &self[21])
-            .field("e425", &self[22])
-            .field("e435", &self[23])
+            .field("e321", &self[17])
+            .field("e415", &self[18])
+            .field("e425", &self[19])
+            .field("e435", &self[20])
+            .field("e423", &self[21])
+            .field("e431", &self[22])
+            .field("e412", &self[23])
             .field("e235", &self[24])
             .field("e315", &self[25])
             .field("e125", &self[26])
             .field("e4235", &self[27])
             .field("e4315", &self[28])
             .field("e4125", &self[29])
-            .field("e3215", &self[30])
-            .field("e1234", &self[31])
+            .field("e1234", &self[30])
+            .field("e3215", &self[31])
             .finish()
     }
 }
@@ -363,33 +363,33 @@ impl std::ops::Index<crate::elements::e3> for MultiVector {
         &self[4]
     }
 }
-impl std::ops::Index<crate::elements::e5> for MultiVector {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e5) -> &Self::Output {
-        &self[5]
-    }
-}
 impl std::ops::Index<crate::elements::e4> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e4) -> &Self::Output {
+        &self[5]
+    }
+}
+impl std::ops::Index<crate::elements::e5> for MultiVector {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e5) -> &Self::Output {
         &self[6]
     }
 }
-impl std::ops::Index<crate::elements::e15> for MultiVector {
+impl std::ops::Index<crate::elements::e41> for MultiVector {
     type Output = f32;
-    fn index(&self, _: crate::elements::e15) -> &Self::Output {
+    fn index(&self, _: crate::elements::e41) -> &Self::Output {
         &self[7]
     }
 }
-impl std::ops::Index<crate::elements::e25> for MultiVector {
+impl std::ops::Index<crate::elements::e42> for MultiVector {
     type Output = f32;
-    fn index(&self, _: crate::elements::e25) -> &Self::Output {
+    fn index(&self, _: crate::elements::e42) -> &Self::Output {
         &self[8]
     }
 }
-impl std::ops::Index<crate::elements::e35> for MultiVector {
+impl std::ops::Index<crate::elements::e43> for MultiVector {
     type Output = f32;
-    fn index(&self, _: crate::elements::e35) -> &Self::Output {
+    fn index(&self, _: crate::elements::e43) -> &Self::Output {
         &self[9]
     }
 }
@@ -399,21 +399,21 @@ impl std::ops::Index<crate::elements::e45> for MultiVector {
         &self[10]
     }
 }
-impl std::ops::Index<crate::elements::e41> for MultiVector {
+impl std::ops::Index<crate::elements::e15> for MultiVector {
     type Output = f32;
-    fn index(&self, _: crate::elements::e41) -> &Self::Output {
+    fn index(&self, _: crate::elements::e15) -> &Self::Output {
         &self[11]
     }
 }
-impl std::ops::Index<crate::elements::e42> for MultiVector {
+impl std::ops::Index<crate::elements::e25> for MultiVector {
     type Output = f32;
-    fn index(&self, _: crate::elements::e42) -> &Self::Output {
+    fn index(&self, _: crate::elements::e25) -> &Self::Output {
         &self[12]
     }
 }
-impl std::ops::Index<crate::elements::e43> for MultiVector {
+impl std::ops::Index<crate::elements::e35> for MultiVector {
     type Output = f32;
-    fn index(&self, _: crate::elements::e43) -> &Self::Output {
+    fn index(&self, _: crate::elements::e35) -> &Self::Output {
         &self[13]
     }
 }
@@ -435,45 +435,45 @@ impl std::ops::Index<crate::elements::e12> for MultiVector {
         &self[16]
     }
 }
-impl std::ops::Index<crate::elements::e423> for MultiVector {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e423) -> &Self::Output {
-        &self[17]
-    }
-}
-impl std::ops::Index<crate::elements::e431> for MultiVector {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e431) -> &Self::Output {
-        &self[18]
-    }
-}
-impl std::ops::Index<crate::elements::e412> for MultiVector {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e412) -> &Self::Output {
-        &self[19]
-    }
-}
 impl std::ops::Index<crate::elements::e321> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e321) -> &Self::Output {
-        &self[20]
+        &self[17]
     }
 }
 impl std::ops::Index<crate::elements::e415> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e415) -> &Self::Output {
-        &self[21]
+        &self[18]
     }
 }
 impl std::ops::Index<crate::elements::e425> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e425) -> &Self::Output {
-        &self[22]
+        &self[19]
     }
 }
 impl std::ops::Index<crate::elements::e435> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e435) -> &Self::Output {
+        &self[20]
+    }
+}
+impl std::ops::Index<crate::elements::e423> for MultiVector {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e423) -> &Self::Output {
+        &self[21]
+    }
+}
+impl std::ops::Index<crate::elements::e431> for MultiVector {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e431) -> &Self::Output {
+        &self[22]
+    }
+}
+impl std::ops::Index<crate::elements::e412> for MultiVector {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e412) -> &Self::Output {
         &self[23]
     }
 }
@@ -513,15 +513,15 @@ impl std::ops::Index<crate::elements::e4125> for MultiVector {
         &self[29]
     }
 }
-impl std::ops::Index<crate::elements::e3215> for MultiVector {
-    type Output = f32;
-    fn index(&self, _: crate::elements::e3215) -> &Self::Output {
-        &self[30]
-    }
-}
 impl std::ops::Index<crate::elements::e1234> for MultiVector {
     type Output = f32;
     fn index(&self, _: crate::elements::e1234) -> &Self::Output {
+        &self[30]
+    }
+}
+impl std::ops::Index<crate::elements::e3215> for MultiVector {
+    type Output = f32;
+    fn index(&self, _: crate::elements::e3215) -> &Self::Output {
         &self[31]
     }
 }
@@ -550,28 +550,28 @@ impl std::ops::IndexMut<crate::elements::e3> for MultiVector {
         &mut self[4]
     }
 }
-impl std::ops::IndexMut<crate::elements::e5> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e5) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e4> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
         &mut self[5]
     }
 }
-impl std::ops::IndexMut<crate::elements::e4> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e4) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e5> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e5) -> &mut Self::Output {
         &mut self[6]
     }
 }
-impl std::ops::IndexMut<crate::elements::e15> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e15) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e41> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
         &mut self[7]
     }
 }
-impl std::ops::IndexMut<crate::elements::e25> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e25) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e42> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
         &mut self[8]
     }
 }
-impl std::ops::IndexMut<crate::elements::e35> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e35) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e43> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
         &mut self[9]
     }
 }
@@ -580,18 +580,18 @@ impl std::ops::IndexMut<crate::elements::e45> for MultiVector {
         &mut self[10]
     }
 }
-impl std::ops::IndexMut<crate::elements::e41> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e41) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e15> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e15) -> &mut Self::Output {
         &mut self[11]
     }
 }
-impl std::ops::IndexMut<crate::elements::e42> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e42) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e25> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e25) -> &mut Self::Output {
         &mut self[12]
     }
 }
-impl std::ops::IndexMut<crate::elements::e43> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e43) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e35> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e35) -> &mut Self::Output {
         &mut self[13]
     }
 }
@@ -610,38 +610,38 @@ impl std::ops::IndexMut<crate::elements::e12> for MultiVector {
         &mut self[16]
     }
 }
-impl std::ops::IndexMut<crate::elements::e423> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
-        &mut self[17]
-    }
-}
-impl std::ops::IndexMut<crate::elements::e431> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
-        &mut self[18]
-    }
-}
-impl std::ops::IndexMut<crate::elements::e412> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
-        &mut self[19]
-    }
-}
 impl std::ops::IndexMut<crate::elements::e321> for MultiVector {
     fn index_mut(&self, _: crate::elements::e321) -> &mut Self::Output {
-        &mut self[20]
+        &mut self[17]
     }
 }
 impl std::ops::IndexMut<crate::elements::e415> for MultiVector {
     fn index_mut(&self, _: crate::elements::e415) -> &mut Self::Output {
-        &mut self[21]
+        &mut self[18]
     }
 }
 impl std::ops::IndexMut<crate::elements::e425> for MultiVector {
     fn index_mut(&self, _: crate::elements::e425) -> &mut Self::Output {
-        &mut self[22]
+        &mut self[19]
     }
 }
 impl std::ops::IndexMut<crate::elements::e435> for MultiVector {
     fn index_mut(&self, _: crate::elements::e435) -> &mut Self::Output {
+        &mut self[20]
+    }
+}
+impl std::ops::IndexMut<crate::elements::e423> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e423) -> &mut Self::Output {
+        &mut self[21]
+    }
+}
+impl std::ops::IndexMut<crate::elements::e431> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e431) -> &mut Self::Output {
+        &mut self[22]
+    }
+}
+impl std::ops::IndexMut<crate::elements::e412> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e412) -> &mut Self::Output {
         &mut self[23]
     }
 }
@@ -675,13 +675,13 @@ impl std::ops::IndexMut<crate::elements::e4125> for MultiVector {
         &mut self[29]
     }
 }
-impl std::ops::IndexMut<crate::elements::e3215> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e1234> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
         &mut self[30]
     }
 }
-impl std::ops::IndexMut<crate::elements::e1234> for MultiVector {
-    fn index_mut(&self, _: crate::elements::e1234) -> &mut Self::Output {
+impl std::ops::IndexMut<crate::elements::e3215> for MultiVector {
+    fn index_mut(&self, _: crate::elements::e3215) -> &mut Self::Output {
         &mut self[31]
     }
 }

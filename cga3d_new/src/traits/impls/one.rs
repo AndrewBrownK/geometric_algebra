@@ -23,25 +23,25 @@ impl One for MultiVector {
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from([1.0, 0.0]),
-            // e1, e2, e3, e5
+            // e1, e2, e3, e4
             Simd32x4::from(0.0),
-            // e4
+            // e5
             0.0,
-            // e15, e25, e35, e45
+            // e41, e42, e43, e45
             Simd32x4::from(0.0),
-            // e41, e42, e43
+            // e15, e25, e35
             Simd32x3::from(0.0),
             // e23, e31, e12
             Simd32x3::from(0.0),
-            // e423, e431, e412, e321
+            // e321, e415, e425, e435
             Simd32x4::from(0.0),
-            // e415, e425, e435
+            // e423, e431, e412
             Simd32x3::from(0.0),
             // e235, e315, e125
             Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e3215
+            // e4235, e4315, e4125, e1234
             Simd32x4::from(0.0),
-            // e1234
+            // e3215
             0.0,
         );
     }

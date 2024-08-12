@@ -431,35 +431,35 @@ impl TryFrom<MultiVector> for CircleAligningOrigin {
         let el = multi_vector[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e5: ");
+            error_string.push_str("e4: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[7];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e15: ");
+            error_string.push_str("e41: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[8];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e25: ");
+            error_string.push_str("e42: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[9];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e35: ");
+            error_string.push_str("e43: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -473,21 +473,21 @@ impl TryFrom<MultiVector> for CircleAligningOrigin {
         let el = multi_vector[11];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e41: ");
+            error_string.push_str("e15: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[12];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e42: ");
+            error_string.push_str("e25: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[13];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e43: ");
+            error_string.push_str("e35: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -512,7 +512,7 @@ impl TryFrom<MultiVector> for CircleAligningOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[20];
+        let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e321: ");
@@ -543,14 +543,14 @@ impl TryFrom<MultiVector> for CircleAligningOrigin {
         let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e3215: ");
+            error_string.push_str("e1234: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[31];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e1234: ");
+            error_string.push_str("e3215: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }

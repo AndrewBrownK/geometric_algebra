@@ -709,20 +709,16 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             if !filter_vecs_in.filter_sig_set(sigs) {
                 continue;
             }
-            // TODO compact-ify groups. e.g. see the following....
-            /*
-            pub union AntiDipoleOnOrigin {
-                groups: AntiDipoleOnOriginGroups,
-                /// e423, e431, e412, 0, e321, 0, 0, 0
-                elements: [f32; 8],
-            }
-             */
             let old_name = mv.name;
             let new_name = format!("{prefix}{old_name}{suffix}");
             let mut did_filter_out_some = false;
-            let mut new_groups = ConstVec::new();
+            let mut new_groups = ConstVec::<BasisElementGroup, QTY_GROUPS>::new();
             let mut new_grades = Grades::none;
             let mut new_sigs = BTreeSet::new();
+            let mut vacant_slots = 0;
+            let mut vacant_1 = BTreeSet::new();
+            let mut vacant_2 = BTreeSet::new();
+            let mut vacant_3 = BTreeSet::new();
             for mvg in mv.element_groups.clone().into_iter() {
                 let mut cv = ConstVec::new();
                 for el in mvg.into_vec() {
@@ -734,7 +730,69 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                         did_filter_out_some = true;
                     }
                 }
-                if cv.len() > 0 {
+                let len = cv.len();
+                let vacant_len = 4 - len;
+                vacant_slots += vacant_len;
+                let mut did_backfill = false;
+                match (vacant_slots >= 4, vacant_len) {
+                    (false, 1) => { vacant_1.insert(new_groups.len()); }
+                    (false, 2) => { vacant_2.insert(new_groups.len()); }
+                    (false, 3) => { vacant_3.insert(new_groups.len()); }
+                    (true, 1) => {
+                        if let Some(group_to_fill_in_idx) = vacant_3.pop_first() {
+                            let group_to_fill_in = &mut new_groups[group_to_fill_in_idx];
+                            group_to_fill_in.push(cv[0]);
+                            group_to_fill_in.push(cv[1]);
+                            group_to_fill_in.push(cv[2]);
+                            vacant_slots -= vacant_len;
+                            did_backfill = true;
+                        } else {
+                            vacant_1.insert(new_groups.len());
+                        }
+                    }
+                    (true, 2) => {
+                        if let Some(group_to_fill_in) = vacant_2.pop_first() {
+                            let group_to_fill_in = &mut new_groups[group_to_fill_in];
+                            group_to_fill_in.push(cv[0]);
+                            group_to_fill_in.push(cv[1]);
+                            vacant_slots -= vacant_len;
+                            did_backfill = true;
+                        } else if let Some(group_to_fill_in_idx) = vacant_3.pop_first() {
+                            let group_to_fill_in = &mut new_groups[group_to_fill_in_idx];
+                            group_to_fill_in.push(cv[0]);
+                            group_to_fill_in.push(cv[1]);
+                            vacant_slots -= vacant_len;
+                            did_backfill = true;
+                            vacant_1.insert(group_to_fill_in_idx);
+                        } else {
+                            vacant_2.insert(new_groups.len());
+                        }
+                    }
+                    (true, 3) => {
+                        if let Some(group_to_fill_in) = vacant_1.pop_first() {
+                            let group_to_fill_in = &mut new_groups[group_to_fill_in];
+                            group_to_fill_in.push(cv[0]);
+                            vacant_slots -= vacant_len;
+                            did_backfill = true;
+                        } else if let Some(group_to_fill_in_idx) = vacant_2.pop_first() {
+                            let group_to_fill_in = &mut new_groups[group_to_fill_in_idx];
+                            group_to_fill_in.push(cv[0]);
+                            vacant_slots -= vacant_len;
+                            did_backfill = true;
+                            vacant_1.insert(group_to_fill_in_idx);
+                        } else if let Some(group_to_fill_in_idx) = vacant_3.pop_first() {
+                            let group_to_fill_in = &mut new_groups[group_to_fill_in_idx];
+                            group_to_fill_in.push(cv[0]);
+                            vacant_slots -= vacant_len;
+                            did_backfill = true;
+                            vacant_2.insert(group_to_fill_in_idx);
+                        } else {
+                            vacant_3.insert(new_groups.len());
+                        }
+                    }
+                    _ => {}
+                }
+                if len > 0 && !did_backfill {
                     new_groups.push(BasisElementGroup::from_vec(cv));
                 }
             }

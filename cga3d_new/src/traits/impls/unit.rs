@@ -5,7 +5,7 @@ impl Unit for AntiCircleOnOrigin {
 }
 impl Unit for AntiDipoleOnOrigin {
     fn unit() -> Self {
-        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412 */ Simd32x3::from(1.0), /* e321 */ 1.0);
+        return AntiDipoleOnOrigin::from_groups(/* e423, e431, e412, e321 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for AntiFlatOrigin {
@@ -25,7 +25,7 @@ impl Unit for AntiFlector {
 }
 impl Unit for AntiFlectorOnOrigin {
     fn unit() -> Self {
-        return AntiFlectorOnOrigin::from_groups(/* e321 */ 1.0, /* e1, e2, e3 */ Simd32x3::from(1.0));
+        return AntiFlectorOnOrigin::from_groups(/* e321, e1, e2, e3 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for AntiLine {
@@ -65,7 +65,7 @@ impl Unit for AntiScalar {
 }
 impl Unit for AntiSphereOnOrigin {
     fn unit() -> Self {
-        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(1.0), /* e4 */ 1.0);
+        return AntiSphereOnOrigin::from_groups(/* e1, e2, e3, e4 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for Circle {
@@ -94,7 +94,7 @@ impl Unit for CircleAligningOrigin {
 }
 impl Unit for CircleAtInfinity {
     fn unit() -> Self {
-        return CircleAtInfinity::from_groups(/* e321 */ 1.0, /* e415, e425, e435 */ Simd32x3::from(1.0), /* e235, e315, e125 */ Simd32x3::from(1.0));
+        return CircleAtInfinity::from_groups(/* e321, e415, e425, e435 */ Simd32x4::from(1.0), /* e235, e315, e125 */ Simd32x3::from(1.0));
     }
 }
 impl Unit for CircleAtOrigin {
@@ -141,7 +141,7 @@ impl Unit for DipoleAtOrigin {
 }
 impl Unit for DipoleOnOrigin {
     fn unit() -> Self {
-        return DipoleOnOrigin::from_groups(/* e41, e42, e43 */ Simd32x3::from(1.0), /* e45 */ 1.0);
+        return DipoleOnOrigin::from_groups(/* e41, e42, e43, e45 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for DipoleOrthogonalOrigin {
@@ -183,12 +183,12 @@ impl Unit for Flector {
 }
 impl Unit for FlectorAtInfinity {
     fn unit() -> Self {
-        return FlectorAtInfinity::from_groups(/* e15, e25, e35 */ Simd32x3::from(1.0), /* e3215 */ 1.0);
+        return FlectorAtInfinity::from_groups(/* e15, e25, e35, e3215 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for FlectorOnOrigin {
     fn unit() -> Self {
-        return FlectorOnOrigin::from_groups(/* e45 */ 1.0, /* e4235, e4315, e4125 */ Simd32x3::from(1.0));
+        return FlectorOnOrigin::from_groups(/* e45, e4235, e4315, e4125 */ Simd32x4::from(1.0));
     }
 }
 impl Unit for Horizon {
@@ -236,25 +236,25 @@ impl Unit for MultiVector {
         return MultiVector::from_groups(
             // scalar, e12345
             Simd32x2::from(1.0),
-            // e1, e2, e3, e5
+            // e1, e2, e3, e4
             Simd32x4::from(1.0),
-            // e4
+            // e5
             1.0,
-            // e15, e25, e35, e45
+            // e41, e42, e43, e45
             Simd32x4::from(1.0),
-            // e41, e42, e43
+            // e15, e25, e35
             Simd32x3::from(1.0),
             // e23, e31, e12
             Simd32x3::from(1.0),
-            // e423, e431, e412, e321
+            // e321, e415, e425, e435
             Simd32x4::from(1.0),
-            // e415, e425, e435
+            // e423, e431, e412
             Simd32x3::from(1.0),
             // e235, e315, e125
             Simd32x3::from(1.0),
-            // e4235, e4315, e4125, e3215
+            // e4235, e4315, e4125, e1234
             Simd32x4::from(1.0),
-            // e1234
+            // e3215
             1.0,
         );
     }
@@ -316,6 +316,6 @@ impl Unit for SphereAtOrigin {
 }
 impl Unit for SphereOnOrigin {
     fn unit() -> Self {
-        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(1.0), /* e1234 */ 1.0);
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from(1.0));
     }
 }

@@ -476,14 +476,35 @@ impl TryFrom<MultiVector> for AntiMotor {
         let el = multi_vector[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e5: ");
+            error_string.push_str("e4: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[7];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e41: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[8];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e42: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[9];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e43: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -494,73 +515,52 @@ impl TryFrom<MultiVector> for AntiMotor {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[11];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e41: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[12];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e42: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[13];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e43: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
         let el = multi_vector[17];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e423: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[18];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e431: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[19];
-        if el != 0.0 {
-            fail = true;
-            error_string.push_str("e412: ");
-            error_string.push_str(el.to_string().as_str());
-            error_string.push_str(", ");
-        }
-        let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[21];
+        let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[22];
+        let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[23];
+        let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e435: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[21];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e423: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[22];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e431: ");
+            error_string.push_str(el.to_string().as_str());
+            error_string.push_str(", ");
+        }
+        let el = multi_vector[23];
+        if el != 0.0 {
+            fail = true;
+            error_string.push_str("e412: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -606,7 +606,7 @@ impl TryFrom<MultiVector> for AntiMotor {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[31];
+        let el = multi_vector[30];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e1234: ");

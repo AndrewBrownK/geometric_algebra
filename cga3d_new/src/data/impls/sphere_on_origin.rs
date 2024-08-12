@@ -1,7 +1,7 @@
 impl From<NullSphereAtOrigin> for SphereOnOrigin {
     fn from(null_sphere_at_origin: NullSphereAtOrigin) -> Self {
         use crate::elements::*;
-        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125 */ Simd32x3::from(0.0), /* e1234 */ null_sphere_at_origin[e1234]);
+        return SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([0.0, 0.0, 0.0, null_sphere_at_origin[e1234]]));
     }
 }
 
@@ -9,10 +9,8 @@ impl From<PlaneOnOrigin> for SphereOnOrigin {
     fn from(plane_on_origin: PlaneOnOrigin) -> Self {
         use crate::elements::*;
         return SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125]]),
-            // e1234
-            0.0,
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([plane_on_origin[e4235], plane_on_origin[e4315], plane_on_origin[e4125], 0.0]),
         );
     }
 }
@@ -65,10 +63,8 @@ impl TryFrom<Flector> for SphereOnOrigin {
             return Err(error);
         }
         return Ok(SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([flector[e4235], flector[e4315], flector[e4125]]),
-            // e1234
-            0.0,
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([flector[e4235], flector[e4315], flector[e4125], 0.0]),
         ));
     }
 }
@@ -92,12 +88,12 @@ impl TryFrom<FlectorOnOrigin> for SphereOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([flector_on_origin[e4235], flector_on_origin[e4315], flector_on_origin[e4125]]),
-            // e1234
+        return Ok(SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
+            flector_on_origin[e4235],
+            flector_on_origin[e4315],
+            flector_on_origin[e4125],
             0.0,
-        ));
+        ])));
     }
 }
 
@@ -145,35 +141,35 @@ impl TryFrom<MultiVector> for SphereOnOrigin {
         let el = multi_vector[5];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e5: ");
+            error_string.push_str("e4: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[6];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e4: ");
+            error_string.push_str("e5: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[7];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e15: ");
+            error_string.push_str("e41: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[8];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e25: ");
+            error_string.push_str("e42: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[9];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e35: ");
+            error_string.push_str("e43: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -187,21 +183,21 @@ impl TryFrom<MultiVector> for SphereOnOrigin {
         let el = multi_vector[11];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e41: ");
+            error_string.push_str("e15: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[12];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e42: ");
+            error_string.push_str("e25: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[13];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e43: ");
+            error_string.push_str("e35: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -229,49 +225,49 @@ impl TryFrom<MultiVector> for SphereOnOrigin {
         let el = multi_vector[17];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e423: ");
+            error_string.push_str("e321: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[18];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e431: ");
+            error_string.push_str("e415: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[19];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e412: ");
+            error_string.push_str("e425: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[20];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e321: ");
+            error_string.push_str("e435: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[21];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e415: ");
+            error_string.push_str("e423: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[22];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e425: ");
+            error_string.push_str("e431: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
         let el = multi_vector[23];
         if el != 0.0 {
             fail = true;
-            error_string.push_str("e435: ");
+            error_string.push_str("e412: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
@@ -296,7 +292,7 @@ impl TryFrom<MultiVector> for SphereOnOrigin {
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
         }
-        let el = multi_vector[30];
+        let el = multi_vector[31];
         if el != 0.0 {
             fail = true;
             error_string.push_str("e3215: ");
@@ -309,12 +305,9 @@ impl TryFrom<MultiVector> for SphereOnOrigin {
             error.push('}');
             return Err(error);
         }
-        return Ok(SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([multi_vector[e4235], multi_vector[e4315], multi_vector[e4125]]),
-            // e1234
-            multi_vector[e1234],
-        ));
+        return Ok(SphereOnOrigin::from_groups(/* e4235, e4315, e4125, e1234 */ Simd32x4::from([
+            multi_vector[e4235], multi_vector[e4315], multi_vector[e4125], multi_vector[e1234],
+        ])));
     }
 }
 
@@ -338,10 +331,8 @@ impl TryFrom<Plane> for SphereOnOrigin {
             return Err(error);
         }
         return Ok(SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([plane[e4235], plane[e4315], plane[e4125]]),
-            // e1234
-            0.0,
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([plane[e4235], plane[e4315], plane[e4125], 0.0]),
         ));
     }
 }
@@ -366,10 +357,8 @@ impl TryFrom<Sphere> for SphereOnOrigin {
             return Err(error);
         }
         return Ok(SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from([sphere[e4235], sphere[e4315], sphere[e4125]]),
-            // e1234
-            sphere[e1234],
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([sphere[e4235], sphere[e4315], sphere[e4125], sphere[e1234]]),
         ));
     }
 }
@@ -394,10 +383,8 @@ impl TryFrom<SphereAtOrigin> for SphereOnOrigin {
             return Err(error);
         }
         return Ok(SphereOnOrigin::from_groups(
-            // e4235, e4315, e4125
-            Simd32x3::from(0.0),
-            // e1234
-            sphere_at_origin[e1234],
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from([0.0, 0.0, 0.0, sphere_at_origin[e1234]]),
         ));
     }
 }

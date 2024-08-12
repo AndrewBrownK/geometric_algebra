@@ -6,46 +6,36 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union SphereOnOrigin {
     groups: SphereOnOriginGroups,
-    /// e4235, e4315, e4125, 0, e1234, 0, 0, 0
-    elements: [f32; 8],
+    /// e4235, e4315, e4125, e1234
+    elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct SphereOnOriginGroups {
-    /// e4235, e4315, e4125
-    g0: Simd32x3,
-    /// e1234
-    g1: f32,
+    /// e4235, e4315, e4125, e1234
+    g0: Simd32x4,
 }
 impl SphereOnOrigin {
     #[allow(clippy::too_many_arguments)]
     pub const fn from_elements(e4235: f32, e4315: f32, e4125: f32, e1234: f32) -> Self {
         Self {
-            elements: [e4235, e4315, e4125, 0.0, e1234, 0.0, 0.0, 0.0],
+            elements: [e4235, e4315, e4125, e1234],
         }
     }
-    pub const fn from_groups(g0: Simd32x3, g1: f32) -> Self {
+    pub const fn from_groups(g0: Simd32x4) -> Self {
         Self {
-            groups: SphereOnOriginGroups { g0, g1 },
+            groups: SphereOnOriginGroups { g0 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> Simd32x3 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
-    #[inline(always)]
-    pub fn group1(&self) -> f32 {
-        unsafe { self.groups.g1 }
-    }
-    #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut f32 {
-        unsafe { &mut self.groups.g1 }
-    }
 }
-const SPHERE_ON_ORIGIN_INDEX_REMAP: [usize; 4] = [0, 1, 2, 4];
+const SPHERE_ON_ORIGIN_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
 impl std::ops::Index<usize> for SphereOnOrigin {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -59,13 +49,13 @@ impl std::ops::IndexMut<usize> for SphereOnOrigin {
 }
 impl From<SphereOnOrigin> for [f32; 4] {
     fn from(vector: SphereOnOrigin) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4]] }
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
     }
 }
 impl From<[f32; 4]> for SphereOnOrigin {
     fn from(array: [f32; 4]) -> Self {
         Self {
-            elements: [array[0], array[1], array[2], 0.0, array[1], 0.0, 0.0, 0.0],
+            elements: [array[0], array[1], array[2], array[3]],
         }
     }
 }

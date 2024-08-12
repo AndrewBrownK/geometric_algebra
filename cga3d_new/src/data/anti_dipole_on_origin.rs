@@ -11,46 +11,36 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union AntiDipoleOnOrigin {
     groups: AntiDipoleOnOriginGroups,
-    /// e423, e431, e412, 0, e321, 0, 0, 0
-    elements: [f32; 8],
+    /// e423, e431, e412, e321
+    elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct AntiDipoleOnOriginGroups {
-    /// e423, e431, e412
-    g0: Simd32x3,
-    /// e321
-    g1: f32,
+    /// e423, e431, e412, e321
+    g0: Simd32x4,
 }
 impl AntiDipoleOnOrigin {
     #[allow(clippy::too_many_arguments)]
     pub const fn from_elements(e423: f32, e431: f32, e412: f32, e321: f32) -> Self {
         Self {
-            elements: [e423, e431, e412, 0.0, e321, 0.0, 0.0, 0.0],
+            elements: [e423, e431, e412, e321],
         }
     }
-    pub const fn from_groups(g0: Simd32x3, g1: f32) -> Self {
+    pub const fn from_groups(g0: Simd32x4) -> Self {
         Self {
-            groups: AntiDipoleOnOriginGroups { g0, g1 },
+            groups: AntiDipoleOnOriginGroups { g0 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> Simd32x3 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut Simd32x3 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
-    #[inline(always)]
-    pub fn group1(&self) -> f32 {
-        unsafe { self.groups.g1 }
-    }
-    #[inline(always)]
-    pub fn group1_mut(&mut self) -> &mut f32 {
-        unsafe { &mut self.groups.g1 }
-    }
 }
-const ANTI_DIPOLE_ON_ORIGIN_INDEX_REMAP: [usize; 4] = [0, 1, 2, 4];
+const ANTI_DIPOLE_ON_ORIGIN_INDEX_REMAP: [usize; 4] = [0, 1, 2, 3];
 impl std::ops::Index<usize> for AntiDipoleOnOrigin {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -64,13 +54,13 @@ impl std::ops::IndexMut<usize> for AntiDipoleOnOrigin {
 }
 impl From<AntiDipoleOnOrigin> for [f32; 4] {
     fn from(vector: AntiDipoleOnOrigin) -> Self {
-        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[4]] }
+        unsafe { [vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3]] }
     }
 }
 impl From<[f32; 4]> for AntiDipoleOnOrigin {
     fn from(array: [f32; 4]) -> Self {
         Self {
-            elements: [array[0], array[1], array[2], 0.0, array[1], 0.0, 0.0, 0.0],
+            elements: [array[0], array[1], array[2], array[3]],
         }
     }
 }

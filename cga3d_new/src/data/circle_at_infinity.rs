@@ -6,36 +6,34 @@ use crate::simd::*;
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub union CircleAtInfinity {
     groups: CircleAtInfinityGroups,
-    /// e321, 0, 0, 0, e415, e425, e435, 0, e235, e315, e125, 0
-    elements: [f32; 12],
+    /// e321, e415, e425, e435, e235, e315, e125, 0
+    elements: [f32; 8],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
 pub struct CircleAtInfinityGroups {
-    /// e321
-    g0: f32,
-    /// e415, e425, e435
-    g1: Simd32x3,
+    /// e321, e415, e425, e435
+    g0: Simd32x4,
     /// e235, e315, e125
-    g2: Simd32x3,
+    g1: Simd32x3,
 }
 impl CircleAtInfinity {
     #[allow(clippy::too_many_arguments)]
     pub const fn from_elements(e321: f32, e415: f32, e425: f32, e435: f32, e235: f32, e315: f32, e125: f32) -> Self {
         Self {
-            elements: [e321, 0.0, 0.0, 0.0, e415, e425, e435, 0.0, e235, e315, e125, 0.0],
+            elements: [e321, e415, e425, e435, e235, e315, e125, 0.0],
         }
     }
-    pub const fn from_groups(g0: f32, g1: Simd32x3, g2: Simd32x3) -> Self {
+    pub const fn from_groups(g0: Simd32x4, g1: Simd32x3) -> Self {
         Self {
-            groups: CircleAtInfinityGroups { g0, g1, g2 },
+            groups: CircleAtInfinityGroups { g0, g1 },
         }
     }
     #[inline(always)]
-    pub fn group0(&self) -> f32 {
+    pub fn group0(&self) -> Simd32x4 {
         unsafe { self.groups.g0 }
     }
     #[inline(always)]
-    pub fn group0_mut(&mut self) -> &mut f32 {
+    pub fn group0_mut(&mut self) -> &mut Simd32x4 {
         unsafe { &mut self.groups.g0 }
     }
     #[inline(always)]
@@ -46,16 +44,8 @@ impl CircleAtInfinity {
     pub fn group1_mut(&mut self) -> &mut Simd32x3 {
         unsafe { &mut self.groups.g1 }
     }
-    #[inline(always)]
-    pub fn group2(&self) -> Simd32x3 {
-        unsafe { self.groups.g2 }
-    }
-    #[inline(always)]
-    pub fn group2_mut(&mut self) -> &mut Simd32x3 {
-        unsafe { &mut self.groups.g2 }
-    }
 }
-const CIRCLE_AT_INFINITY_INDEX_REMAP: [usize; 7] = [0, 4, 5, 6, 8, 9, 10];
+const CIRCLE_AT_INFINITY_INDEX_REMAP: [usize; 7] = [0, 1, 2, 3, 4, 5, 6];
 impl std::ops::Index<usize> for CircleAtInfinity {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
@@ -71,7 +61,7 @@ impl From<CircleAtInfinity> for [f32; 7] {
     fn from(vector: CircleAtInfinity) -> Self {
         unsafe {
             [
-                vector.elements[0], vector.elements[4], vector.elements[5], vector.elements[6], vector.elements[8], vector.elements[9], vector.elements[10],
+                vector.elements[0], vector.elements[1], vector.elements[2], vector.elements[3], vector.elements[4], vector.elements[5], vector.elements[6],
             ]
         }
     }
@@ -79,7 +69,7 @@ impl From<CircleAtInfinity> for [f32; 7] {
 impl From<[f32; 7]> for CircleAtInfinity {
     fn from(array: [f32; 7]) -> Self {
         Self {
-            elements: [array[0], 0.0, 0.0, 0.0, array[1], array[2], array[3], 0.0, array[2], array[3], array[4], 0.0],
+            elements: [array[0], array[1], array[2], array[3], array[1], array[2], array[3], 0.0],
         }
     }
 }

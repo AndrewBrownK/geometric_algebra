@@ -7,11 +7,6 @@ publish = false
 
 [features]
 default = []
-# TODO most of these features are planned, not yet implemented
-wedge-is-join = []
-wedge-is-meet = []
-prefer-blanket-impls = []
-specialize-on-blankets = ["prefer-blanket-impls"]
 large-basis-elements = []
 very-large-basis-elements = ["large-basis-elements"]
 
