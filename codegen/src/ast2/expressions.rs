@@ -67,8 +67,7 @@ impl TraitResultType for Integer {
 
     fn select_expr(expr: AnyExpression) -> Option<Self::Expr> {
         match expr {
-            AnyExpression::Int(mut e) => {
-                // e.simplify();
+            AnyExpression::Int(e) => {
                 Some(e)
             },
             _ => None
@@ -1331,28 +1330,29 @@ impl Display for FloatExpr {
                 write!(f, "(")?;
                 for (i, (addend, factor)) in v.iter().enumerate() {
                     match (*factor, i > 0) {
-                        (f, _) if f == 0.0 => continue,
+                        (fl, _) if fl == 0.0 => continue,
 
                         (1.0, false) => write!(f, "{addend}")?,
                         (-1.0, false) => write!(f, "-{addend}")?,
-                        (f, false) => write!(f, "{f}*{addend}")?,
+                        (fl, false) => write!(f, "{fl}*{addend}")?,
 
                         (1.0, true) => write!(f, " + {addend}")?,
                         (-1.0, true) => write!(f, " - {addend}")?,
-                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
-                        (f, true) if f < 0.0 => {
-                            let f = -f;
-                            write!(f, " - {f}*{addend}")?
+                        (fl, true) if fl > 0.0 => write!(f, " + {fl}*{addend}")?,
+                        (fl, true) if fl < 0.0 => {
+                            let fl = -fl;
+                            write!(f, " - {fl}*{addend}")?
                         },
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                 }
                 match (*last_addend, !v.is_empty()) {
-                    (f, _) if f == 0.0 => {}
-                    (f, false) => write!(f, "{f}")?,
-                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
-                    (f, true) if f < 0.0 => {
-                        let f = -f;
-                        write!(f, " - {f}")
+                    (fl, _) if fl == 0.0 => {}
+                    (fl, false) => write!(f, "{fl}")?,
+                    (fl, true) if fl > 0.0 => write!(f, " + {fl}")?,
+                    (fl, true) if fl < 0.0 => {
+                        let fl = -fl;
+                        write!(f, " - {fl}")?;
                     }
                     _ => {}
                 }
@@ -1409,29 +1409,29 @@ impl Display for Vec2Expr {
                 write!(f, "(")?;
                 for (i, (addend, factor)) in v.iter().enumerate() {
                     match (*factor, i > 0) {
-                        (f, _) if f == 0.0 => continue,
+                        (fl, _) if fl == 0.0 => continue,
 
                         (1.0, false) => write!(f, "{addend}")?,
                         (-1.0, false) => write!(f, "-{addend}")?,
-                        (f, false) => write!(f, "{f}*{addend}")?,
+                        (fl, false) => write!(f, "{fl}*{addend}")?,
 
                         (1.0, true) => write!(f, " + {addend}")?,
                         (-1.0, true) => write!(f, " - {addend}")?,
-                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
-                        (f, true) if f < 0.0 => {
-                            let f = -f;
-                            write!(f, " - {f}*{addend}")?
+                        (fl, true) if fl > 0.0 => write!(f, " + {fl}*{addend}")?,
+                        (fl, true) if fl < 0.0 => {
+                            let fl = -fl;
+                            write!(f, " - {fl}*{addend}")?
                         },
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                 }
                 match (*last_addend, !v.is_empty()) {
-                    (f, _) if f == 0.0 => {}
-                    (f, false) => write!(f, "{f}")?,
-                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
-                    (f, true) if f < 0.0 => {
-                        let f = -f;
-                        write!(f, " - {f}")
-                    }
+                    (a, _) if a == [0.0; 2] => {}
+                    (a, false) => {
+                        let a0 = a[0];
+                        let a1 = a[1];
+                        write!(f, "[{a0}, {a1}]")?;
+                    },
                     _ => {}
                 }
                 write!(f, ")")?;
@@ -1489,25 +1489,26 @@ impl Display for Vec3Expr {
 
                         (1.0, false) => write!(f, "{addend}")?,
                         (-1.0, false) => write!(f, "-{addend}")?,
-                        (f, false) => write!(f, "{f}*{addend}")?,
+                        (fl, false) => write!(f, "{fl}*{addend}")?,
 
                         (1.0, true) => write!(f, " + {addend}")?,
                         (-1.0, true) => write!(f, " - {addend}")?,
-                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
-                        (f, true) if f < 0.0 => {
-                            let f = -f;
-                            write!(f, " - {f}*{addend}")?
+                        (fl, true) if fl > 0.0 => write!(f, " + {fl}*{addend}")?,
+                        (fl, true) if fl < 0.0 => {
+                            let fl = -fl;
+                            write!(f, " - {fl}*{addend}")?
                         },
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                 }
                 match (*last_addend, !v.is_empty()) {
-                    (f, _) if f == 0.0 => {}
-                    (f, false) => write!(f, "{f}")?,
-                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
-                    (f, true) if f < 0.0 => {
-                        let f = -f;
-                        write!(f, " - {f}")
-                    }
+                    (a, _) if a == [0.0; 3] => {}
+                    (a, false) => {
+                        let a0 = a[0];
+                        let a1 = a[1];
+                        let a2 = a[2];
+                        write!(f, "[{a0}, {a1}, {a2}]")?;
+                    },
                     _ => {}
                 }
                 write!(f, ")")?;
@@ -1561,29 +1562,31 @@ impl Display for Vec4Expr {
                 write!(f, "(")?;
                 for (i, (addend, factor)) in v.iter().enumerate() {
                     match (*factor, i > 0) {
-                        (f, _) if f == 0.0 => continue,
+                        (fl, _) if fl == 0.0 => continue,
 
                         (1.0, false) => write!(f, "{addend}")?,
                         (-1.0, false) => write!(f, "-{addend}")?,
-                        (f, false) => write!(f, "{f}*{addend}")?,
+                        (fl, false) => write!(f, "{fl}*{addend}")?,
 
                         (1.0, true) => write!(f, " + {addend}")?,
                         (-1.0, true) => write!(f, " - {addend}")?,
-                        (f, true) if f > 0.0 => write!(f, " + {f}*{addend}")?,
-                        (f, true) if f < 0.0 => {
-                            let f = -f;
-                            write!(f, " - {f}*{addend}")?
+                        (fl, true) if fl > 0.0 => write!(f, " + {fl}*{addend}")?,
+                        (fl, true) if fl < 0.0 => {
+                            let fl = -fl;
+                            write!(f, " - {fl}*{addend}")?
                         },
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                 }
                 match (*last_addend, !v.is_empty()) {
-                    (f, _) if f == 0.0 => {}
-                    (f, false) => write!(f, "{f}")?,
-                    (f, true) if f > 0.0 => write!(f, " + {f}")?,
-                    (f, true) if f < 0.0 => {
-                        let f = -f;
-                        write!(f, " - {f}")
-                    }
+                    (a, _) if a == [0.0; 4] => {}
+                    (a, false) => {
+                        let a0 = a[0];
+                        let a1 = a[1];
+                        let a2 = a[2];
+                        let a3 = a[3];
+                        write!(f, "[{a0}, {a1}, {a2}, {a3}]")?;
+                    },
                     _ => {}
                 }
                 write!(f, ")")?;
@@ -1678,7 +1681,7 @@ impl FloatExpr {
                 }
             }
             FloatExpr::Sum(v, _) => {
-                for e in v.iter_mut() {
+                for (e, _) in v.iter_mut() {
                     e.deep_inline_variables();
                 }
             }
@@ -1716,7 +1719,7 @@ impl Vec2Expr {
                 }
             }
             Vec2Expr::Sum(v, _) => {
-                for e in v.iter_mut() {
+                for (e, _) in v.iter_mut() {
                     e.deep_inline_variables();
                 }
             }
@@ -1746,7 +1749,7 @@ impl Vec3Expr {
                 }
             }
             Vec3Expr::Sum(v, _) => {
-                for e in v.iter_mut() {
+                for (e, _) in v.iter_mut() {
                     e.deep_inline_variables();
                 }
             }
@@ -1777,7 +1780,7 @@ impl Vec4Expr {
                 }
             }
             Vec4Expr::Sum(v, _) => {
-                for e in v.iter_mut() {
+                for (e, _) in v.iter_mut() {
                     e.deep_inline_variables();
                 }
             }
@@ -1995,6 +1998,9 @@ impl FloatExpr {
             }
             FloatExpr::TraitInvoke11ToFloat(_, _) => {}
             FloatExpr::Product(product) => {
+                // TODO product of (Sum + Literals) should distribute the literals
+                //  into the Sum
+
                 if product.is_empty() {
                     panic!("Problem")
                 }
@@ -2095,7 +2101,7 @@ impl FloatExpr {
                             panic!("Problem")
                         }
                         if p.len() == 1 {
-                            *addend = p.remove(1);
+                            *addend = p.remove(0);
                         }
                         true
                     }
@@ -2198,11 +2204,9 @@ impl Vec2Expr {
                     (
                         AccessVec2(box ref mut v2_a, 0),
                         AccessVec2(box ref mut v2_b, 1),
-                    ) => {
-                        if v2_a == v2_b {
-                            *self = v2_a.clone();
-                            return;
-                        }
+                    ) if v2_a == v2_b => {
+                        *self = v2_a.clone();
+                        return;
                     }
                     (
                         Product(ref mut float_product_0),
@@ -2215,11 +2219,12 @@ impl Vec2Expr {
                         }
                     }
                     (
-                        Sum(ref mut float_sum_0),
-                        Sum(ref mut float_sum_1),
+                        Sum(ref mut float_sum_0, lits_0),
+                        Sum(ref mut float_sum_1, lits_1),
                     ) => {
+                        let lits = [*lits_0, *lits_1];
                         if let Some(transposed) = transpose_vec2_sum(
-                            float_sum_0, float_sum_1,
+                            float_sum_0, float_sum_1, lits
                         ) {
                             *self = transposed;
                         }
@@ -2385,7 +2390,7 @@ impl Vec2Expr {
                             panic!("Problem")
                         }
                         if p.len() == 1 {
-                            *addend = p.remove(1);
+                            *addend = p.remove(0);
                         }
                         true
                     }
@@ -2497,12 +2502,13 @@ impl Vec3Expr {
                         }
                     }
                     (
-                        Sum(ref mut float_sum_0),
-                        Sum(ref mut float_sum_1),
-                        Sum(ref mut float_sum_2),
+                        Sum(ref mut float_sum_0, lits_0),
+                        Sum(ref mut float_sum_1, lits_1),
+                        Sum(ref mut float_sum_2, lits_2),
                     ) => {
+                        let lits = [*lits_0, *lits_1, *lits_2];
                         if let Some(transposed) = transpose_vec3_sum(
-                            float_sum_0, float_sum_1, float_sum_2
+                            float_sum_0, float_sum_1, float_sum_2, lits
                         ) {
                             *self = transposed;
                         }
@@ -2679,7 +2685,7 @@ impl Vec3Expr {
                             panic!("Problem")
                         }
                         if p.len() == 1 {
-                            *addend = p.remove(1);
+                            *addend = p.remove(0);
                         }
                         true
                     }
@@ -2798,13 +2804,14 @@ impl Vec4Expr {
                         }
                     }
                     (
-                        Sum(ref mut float_sum_0),
-                        Sum(ref mut float_sum_1),
-                        Sum(ref mut float_sum_2),
-                        Sum(ref mut float_sum_3),
+                        Sum(ref mut float_sum_0, lits_0),
+                        Sum(ref mut float_sum_1, lits_1),
+                        Sum(ref mut float_sum_2, lits_2),
+                        Sum(ref mut float_sum_3, lits_3),
                     ) => {
+                        let lits = [*lits_0, *lits_1, *lits_2, *lits_3];
                         if let Some(transposed) = transpose_vec4_sum(
-                            float_sum_0, float_sum_1, float_sum_2, float_sum_3
+                            float_sum_0, float_sum_1, float_sum_2, float_sum_3, lits
                         ) {
                             *self = transposed;
                         }
@@ -2996,7 +3003,7 @@ impl Vec4Expr {
                             panic!("Problem")
                         }
                         if p.len() == 1 {
-                            *addend = p.remove(1);
+                            *addend = p.remove(0);
                         }
                         true
                     }
@@ -3742,10 +3749,11 @@ fn vec2_product_extract(
             true
         }
         (
-            Sum(v0),
-            Sum(v1),
+            Sum(v0, a0),
+            Sum(v1, a1),
         ) => {
-            let Some(transposed) = transpose_vec2_sum(v0, v1) else { return false };
+            let a = [*a0, *a1];
+            let Some(transposed) = transpose_vec2_sum(v0, v1, a) else { return false };
             vec2_product.push(transposed);
             true
         }
@@ -3754,37 +3762,27 @@ fn vec2_product_extract(
 }
 
 fn transpose_vec2_sum(
-    float_sum_0: &mut Vec<FloatExpr>,
-    float_sum_1: &mut Vec<FloatExpr>,
+    float_sum_0: &mut Vec<(FloatExpr, f32)>,
+    float_sum_1: &mut Vec<(FloatExpr, f32)>,
+    mut coalesce_sum_literal: [f32; 2],
 ) -> Option<Vec2Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec2Expr::Sum
     let mut vec2_sum = vec![];
-    let mut coalesce_sum_literal = [0.0, 0.0];
-    float_sum_0.retain_mut(|it0| {
+    float_sum_0.retain_mut(|(e0, f0)| {
         let mut pulling_out_addend = false;
-        float_sum_1.retain_mut(|it1| {
+        float_sum_1.retain_mut(|(e1, f1)| {
             if pulling_out_addend {
                 return true
             }
             pulling_out_addend = vec2_sum_extract(
                 &mut vec2_sum, &mut coalesce_sum_literal,
-                it0, it1
+                e0, f0, e1, f1
             );
             !pulling_out_addend
         });
         !pulling_out_addend
     });
-    if coalesce_sum_literal != [0.0, 0.0] {
-        if coalesce_sum_literal[0] == coalesce_sum_literal[1] {
-            vec2_sum.push(Vec2Expr::Gather1(Literal(coalesce_sum_literal[0])));
-        } else {
-            vec2_sum.push(Vec2Expr::Gather2(
-                Literal(coalesce_sum_literal[0]),
-                Literal(coalesce_sum_literal[1]),
-            ));
-        }
-    }
 
     if vec2_sum.is_empty() {
         return None;
@@ -3794,18 +3792,18 @@ fn transpose_vec2_sum(
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_0.clone())
+        Sum(float_sum_0.clone(), 0.0)
     };
     let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_1.clone())
+        Sum(float_sum_1.clone(), 0.0)
     };
     if keep_remaining {
-        vec2_sum.push(Vec2Expr::Gather2(p0, p1));
+        vec2_sum.push((Vec2Expr::Gather2(p0, p1), 1.0));
     }
-    let mut result = Vec2Expr::Sum(vec2_sum);
+    let mut result = Vec2Expr::Sum(vec2_sum, coalesce_sum_literal);
 
     // Since this was a non-trivial transposition of structures,
     // run simplification again on the result.
@@ -3814,55 +3812,57 @@ fn transpose_vec2_sum(
 }
 
 fn vec2_sum_extract(
-    vec2_sum: &mut Vec<Vec2Expr>,
+    vec2_sum: &mut Vec<(Vec2Expr, f32)>,
     coalesce_sum_literals: &mut [f32; 2],
-    f0: &mut FloatExpr,
-    f1: &mut FloatExpr,
+    e0: &mut FloatExpr, f0: &mut f32,
+    e1: &mut FloatExpr, f1: &mut f32,
 ) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
-    if let Literal(f) = f0 {
+    if let Literal(f) = e0 {
         if *f != 0.0 {
-            coalesce_sum_literals[0] += *f;
+            coalesce_sum_literals[0] += *f * *f0;
             *f = 0.0;
+            *f0 = 0.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f1 {
+    if let Literal(f) = e1 {
         if *f != 0.0 {
-            coalesce_sum_literals[1] += *f;
+            coalesce_sum_literals[1] += *f * *f1;
             *f = 0.0;
+            *f1 = 0.0;
             pulled_out_literal = true;
         }
     }
     if pulled_out_literal {
         return false
     }
-    if f0 == f1 {
-        vec2_sum.push(Vec2Expr::Gather1(f0.clone()));
+    if e0 == e1 && f0 == f1 {
+        vec2_sum.push((Vec2Expr::Gather1(e0.clone()), *f0));
         return true
     }
-    return match (f0, f1) {
+    return match (e0, e1) {
         (
             AccessVec2(box v0, 0),
             AccessVec2(box v1, 1),
-        ) if v0 == v1 => {
-            vec2_sum.push(v0.clone());
+        ) if v0 == v1 && f0 == f1 => {
+            vec2_sum.push((v0.clone(), *f0));
             true
         }
         (
             AccessVec2(box v0, i0),
             AccessVec2(box v1, i1),
-        ) if v0 == v1 => {
-            vec2_sum.push(Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1));
+        ) if v0 == v1 && f0 == f1 => {
+            vec2_sum.push((Vec2Expr::SwizzleVec2(Box::new(v0.clone()), *i0, *i1), *f0));
             true
         }
         (
             Product(v0),
             Product(v1),
-        ) => {
+        ) if f0 == f1 => {
             let Some(transposed) = transpose_vec2_product(v0, v1) else { return false };
-            vec2_sum.push(transposed);
+            vec2_sum.push((transposed, *f0));
             true
         }
         _ => false
@@ -3999,9 +3999,9 @@ fn vec3_product_extract(
             true
         }
         (
-            Sum(v0),
-            Sum(v1),
-            Sum(v2),
+            Sum(v0, a0),
+            Sum(v1, a1),
+            Sum(v2, a2),
         ) => {
             // Is this actually a correct/desired transposition that doesn't
             //  change the meaning of the math? It's hard to keep track of.
@@ -4018,7 +4018,8 @@ fn vec3_product_extract(
             // mutated. If it returns something, then it serves as a total replacement, cloning
             // anything necessary. It performs its own "leftover" Gather3 on anything that doesn't
             // transpose, but the `transposed` variable itself will be a Vec3Expr::Sum.
-            let Some(transposed) = transpose_vec3_sum(v0, v1, v2) else { return false };
+            let a = [*a0, *a1, *a2];
+            let Some(transposed) = transpose_vec3_sum(v0, v1, v2, a) else { return false };
             vec3_product.push(transposed);
             true
         }
@@ -4027,27 +4028,27 @@ fn vec3_product_extract(
 }
 
 fn transpose_vec3_sum(
-    float_sum_0: &mut Vec<FloatExpr>,
-    float_sum_1: &mut Vec<FloatExpr>,
-    float_sum_2: &mut Vec<FloatExpr>,
+    float_sum_0: &mut Vec<(FloatExpr, f32)>,
+    float_sum_1: &mut Vec<(FloatExpr, f32)>,
+    float_sum_2: &mut Vec<(FloatExpr, f32)>,
+    mut coalesce_sum_literal: [f32; 3],
 ) -> Option<Vec3Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec3Expr::Sum
     let mut vec3_sum = vec![];
-    let mut coalesce_sum_literal = [0.0, 0.0, 0.0];
-    float_sum_0.retain_mut(|it0| {
+    float_sum_0.retain_mut(|(e0, f0)| {
         let mut pulling_out_addend = false;
-        float_sum_1.retain_mut(|it1| {
+        float_sum_1.retain_mut(|(e1, f1)| {
             if pulling_out_addend {
                 return true
             }
-            float_sum_2.retain_mut(|it2| {
+            float_sum_2.retain_mut(|(e2, f2)| {
                 if pulling_out_addend {
                     return true
                 }
                 pulling_out_addend = vec3_sum_extract(
                     &mut vec3_sum, &mut coalesce_sum_literal,
-                    it0, it1, it2
+                    e0, f0, e1, f1, e2, f2
                 );
                 !pulling_out_addend
             });
@@ -4055,18 +4056,6 @@ fn transpose_vec3_sum(
         });
         !pulling_out_addend
     });
-    if coalesce_sum_literal != [0.0, 0.0, 0.0] {
-        if coalesce_sum_literal[0] == coalesce_sum_literal[1]
-            && coalesce_sum_literal[1] == coalesce_sum_literal[2] {
-            vec3_sum.push(Vec3Expr::Gather1(Literal(coalesce_sum_literal[0])));
-        } else {
-            vec3_sum.push(Vec3Expr::Gather3(
-                Literal(coalesce_sum_literal[0]),
-                Literal(coalesce_sum_literal[1]),
-                Literal(coalesce_sum_literal[2]),
-            ));
-        }
-    }
 
     if vec3_sum.is_empty() {
         return None;
@@ -4076,24 +4065,24 @@ fn transpose_vec3_sum(
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_0.clone())
+        Sum(float_sum_0.clone(), 0.0)
     };
     let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_1.clone())
+        Sum(float_sum_1.clone(), 0.0)
     };
     let p2 = if float_sum_2.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_2.clone())
+        Sum(float_sum_2.clone(), 0.0)
     };
     if keep_remaining {
-        vec3_sum.push(Vec3Expr::Gather3(p0, p1, p2));
+        vec3_sum.push((Vec3Expr::Gather3(p0, p1, p2), 1.0));
     }
-    let mut result = Vec3Expr::Sum(vec3_sum);
+    let mut result = Vec3Expr::Sum(vec3_sum, coalesce_sum_literal);
 
     // Since this was a non-trivial transposition of structures,
     // run simplification again on the result.
@@ -4102,66 +4091,69 @@ fn transpose_vec3_sum(
 }
 
 fn vec3_sum_extract(
-    vec3_sum: &mut Vec<Vec3Expr>,
+    vec3_sum: &mut Vec<(Vec3Expr, f32)>,
     coalesce_sum_literals: &mut [f32; 3],
-    f0: &mut FloatExpr,
-    f1: &mut FloatExpr,
-    f2: &mut FloatExpr,
+    e0: &mut FloatExpr, f0: &mut f32,
+    e1: &mut FloatExpr, f1: &mut f32,
+    e2: &mut FloatExpr, f2: &mut f32,
 ) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
-    if let Literal(f) = f0 {
+    if let Literal(f) = e0 {
         if *f != 0.0 {
-            coalesce_sum_literals[0] += *f;
+            coalesce_sum_literals[0] += *f * *f0;
             *f = 0.0;
+            *f0 = 0.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f1 {
+    if let Literal(f) = e1 {
         if *f != 0.0 {
-            coalesce_sum_literals[1] += *f;
+            coalesce_sum_literals[1] += *f * *f1;
             *f = 0.0;
+            *f1 = 0.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f2 {
+    if let Literal(f) = e2 {
         if *f != 0.0 {
-            coalesce_sum_literals[2] += *f;
+            coalesce_sum_literals[2] += *f * *f2;
             *f = 0.0;
+            *f2 = 0.0;
             pulled_out_literal = true;
         }
     }
     if pulled_out_literal {
         return false
     }
-    if f0 == f1 && f1 == f2 {
-        vec3_sum.push(Vec3Expr::Gather1(f0.clone()));
+    if e0 == e1 && e1 == e2 && f0 == f1 && f1 == f2 {
+        vec3_sum.push((Vec3Expr::Gather1(e0.clone()), *f0));
         return true
     }
-    return match (f0, f1, f2) {
+    return match (e0, e1, e2) {
         (
             AccessVec3(box v0, 0),
             AccessVec3(box v1, 1),
             AccessVec3(box v2, 2),
-        ) if v0 == v1 && v1 == v2 => {
-            vec3_sum.push(v0.clone());
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+            vec3_sum.push((v0.clone(), *f0));
             true
         }
         (
             AccessVec3(box v0, i0),
             AccessVec3(box v1, i1),
             AccessVec3(box v2, i2),
-        ) if v0 == v1 && v1 == v2 => {
-            vec3_sum.push(Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2));
+        ) if v0 == v1 && v1 == v2 && f0 == f1 && f1 == f2 => {
+            vec3_sum.push((Vec3Expr::SwizzleVec3(Box::new(v0.clone()), *i0, *i1, *i2), *f0));
             true
         }
         (
             Product(v0),
             Product(v1),
             Product(v2),
-        ) => {
+        ) if f0 == f1 && f1 == f2 => {
             let Some(transposed) = transpose_vec3_product(v0, v1, v2) else { return false };
-            vec3_sum.push(transposed);
+            vec3_sum.push((transposed, *f0));
             true
         }
         _ => false
@@ -4323,12 +4315,13 @@ fn vec4_product_extract(
             true
         }
         (
-            Sum(v0),
-            Sum(v1),
-            Sum(v2),
-            Sum(v3),
+            Sum(v0, a0),
+            Sum(v1, a1),
+            Sum(v2, a2),
+            Sum(v3, a3),
         ) => {
-            let Some(transposed) = transpose_vec4_sum(v0, v1, v2, v3) else { return false };
+            let a = [*a0, *a1, *a2, *a3];
+            let Some(transposed) = transpose_vec4_sum(v0, v1, v2, v3, a) else { return false };
             vec4_product.push(transposed);
             true
         }
@@ -4337,32 +4330,32 @@ fn vec4_product_extract(
 }
 
 fn transpose_vec4_sum(
-    float_sum_0: &mut Vec<FloatExpr>,
-    float_sum_1: &mut Vec<FloatExpr>,
-    float_sum_2: &mut Vec<FloatExpr>,
-    float_sum_3: &mut Vec<FloatExpr>,
+    float_sum_0: &mut Vec<(FloatExpr, f32)>,
+    float_sum_1: &mut Vec<(FloatExpr, f32)>,
+    float_sum_2: &mut Vec<(FloatExpr, f32)>,
+    float_sum_3: &mut Vec<(FloatExpr, f32)>,
+    mut coalesce_sum_literal: [f32; 4],
 ) -> Option<Vec4Expr> {
     use crate::ast2::expressions::FloatExpr::*;
     // See if we can pull out a Vec4Expr::Sum
     let mut vec4_sum = vec![];
-    let mut coalesce_sum_literal = [0.0, 0.0, 0.0, 0.0];
-    float_sum_0.retain_mut(|it0| {
+    float_sum_0.retain_mut(|(e0, f0)| {
         let mut pulling_out_addend = false;
-        float_sum_1.retain_mut(|it1| {
+        float_sum_1.retain_mut(|(e1, f1)| {
             if pulling_out_addend {
                 return true
             }
-            float_sum_2.retain_mut(|it2| {
+            float_sum_2.retain_mut(|(e2, f2)| {
                 if pulling_out_addend {
                     return true
                 }
-                float_sum_3.retain_mut(|it3| {
+                float_sum_3.retain_mut(|(e3, f3)| {
                     if pulling_out_addend {
                         return true
                     }
                     pulling_out_addend = vec4_sum_extract(
                         &mut vec4_sum, &mut coalesce_sum_literal,
-                        it0, it1, it2, it3
+                        e0, f0, e1, f1, e2, f2, e3, f3
                     );
                     !pulling_out_addend
                 });
@@ -4372,20 +4365,6 @@ fn transpose_vec4_sum(
         });
         !pulling_out_addend
     });
-    if coalesce_sum_literal != [0.0, 0.0, 0.0, 0.0] {
-        if coalesce_sum_literal[0] == coalesce_sum_literal[1]
-            && coalesce_sum_literal[1] == coalesce_sum_literal[2]
-            && coalesce_sum_literal[2] == coalesce_sum_literal[3] {
-            vec4_sum.push(Vec4Expr::Gather1(Literal(coalesce_sum_literal[0])));
-        } else {
-            vec4_sum.push(Vec4Expr::Gather4(
-                Literal(coalesce_sum_literal[0]),
-                Literal(coalesce_sum_literal[1]),
-                Literal(coalesce_sum_literal[2]),
-                Literal(coalesce_sum_literal[3]),
-            ));
-        }
-    }
 
     if vec4_sum.is_empty() {
         return None;
@@ -4395,30 +4374,30 @@ fn transpose_vec4_sum(
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_0.clone())
+        Sum(float_sum_0.clone(), 0.0)
     };
     let p1 = if float_sum_1.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_1.clone())
+        Sum(float_sum_1.clone(), 0.0)
     };
     let p2 = if float_sum_2.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_2.clone())
+        Sum(float_sum_2.clone(), 0.0)
     };
     let p3 = if float_sum_3.is_empty() {
         Literal(0.0)
     } else {
         keep_remaining = true;
-        Sum(float_sum_3.clone())
+        Sum(float_sum_3.clone(), 0.0)
     };
     if keep_remaining {
-        vec4_sum.push(Vec4Expr::Gather4(p0, p1, p2, p3));
+        vec4_sum.push((Vec4Expr::Gather4(p0, p1, p2, p3), 1.0));
     }
-    let mut result = Vec4Expr::Sum(vec4_sum);
+    let mut result = Vec4Expr::Sum(vec4_sum, coalesce_sum_literal);
 
     // Since this was a non-trivial transposition of structures,
     // run simplification again on the result.
@@ -4427,58 +4406,62 @@ fn transpose_vec4_sum(
 }
 
 fn vec4_sum_extract(
-    vec4_sum: &mut Vec<Vec4Expr>,
+    vec4_sum: &mut Vec<(Vec4Expr, f32)>,
     coalesce_sum_literals: &mut [f32; 4],
-    f0: &mut FloatExpr,
-    f1: &mut FloatExpr,
-    f2: &mut FloatExpr,
-    f3: &mut FloatExpr,
+    e0: &mut FloatExpr, f0: &mut f32,
+    e1: &mut FloatExpr, f1: &mut f32,
+    e2: &mut FloatExpr, f2: &mut f32,
+    e3: &mut FloatExpr, f3: &mut f32,
 ) -> bool {
     use crate::ast2::expressions::FloatExpr::*;
     let mut pulled_out_literal = false;
-    if let Literal(f) = f0 {
+    if let Literal(f) = e0 {
         if *f != 0.0 {
-            coalesce_sum_literals[0] += *f;
+            coalesce_sum_literals[0] += *f * *f0;
             *f = 0.0;
+            *f0 = 0.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f1 {
+    if let Literal(f) = e1 {
         if *f != 0.0 {
-            coalesce_sum_literals[1] += *f;
+            coalesce_sum_literals[1] += *f * *f1;
             *f = 0.0;
+            *f1 = 0.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f2 {
+    if let Literal(f) = e2 {
         if *f != 0.0 {
-            coalesce_sum_literals[2] += *f;
+            coalesce_sum_literals[2] += *f * *f2;
             *f = 0.0;
+            *f2 = 0.0;
             pulled_out_literal = true;
         }
     }
-    if let Literal(f) = f3 {
+    if let Literal(f) = e3 {
         if *f != 0.0 {
-            coalesce_sum_literals[3] += *f;
+            coalesce_sum_literals[3] += *f * *f3;
             *f = 0.0;
+            *f3 = 0.0;
             pulled_out_literal = true;
         }
     }
     if pulled_out_literal {
         return false
     }
-    if f0 == f1 && f1 == f2 && f2 == f3 {
-        vec4_sum.push(Vec4Expr::Gather1(f0.clone()));
+    if e0 == e1 && e1 == e2 && e2 == e3 && f0 == f1 && f1 == f2 && f2 == f3 {
+        vec4_sum.push((Vec4Expr::Gather1(e0.clone()), *f0));
         return true
     }
-    return match (f0, f1, f2, f3) {
+    return match (e0, e1, e2, e3) {
         (
             AccessVec4(box v0, 0),
             AccessVec4(box v1, 1),
             AccessVec4(box v2, 2),
             AccessVec4(box v3, 3),
-        ) if v0 == v1 && v1 == v2 && v2 == v3 => {
-            vec4_sum.push(v0.clone());
+        ) if v0 == v1 && v1 == v2 && v2 == v3  && f0 == f1 && f1 == f2 && f2 == f3 => {
+            vec4_sum.push((v0.clone(), *f0));
             true
         }
         (
@@ -4486,8 +4469,8 @@ fn vec4_sum_extract(
             AccessVec4(box v1, i1),
             AccessVec4(box v2, i2),
             AccessVec4(box v3, i3),
-        ) if v0 == v1 && v1 == v2 && v2 == v3 => {
-            vec4_sum.push(Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3));
+        ) if v0 == v1 && v1 == v2 && v2 == v3 && f0 == f1 && f1 == f2 && f2 == f3 => {
+            vec4_sum.push((Vec4Expr::SwizzleVec4(Box::new(v0.clone()), *i0, *i1, *i2, *i3), *f0));
             true
         }
         (
@@ -4495,9 +4478,9 @@ fn vec4_sum_extract(
             Product(v1),
             Product(v2),
             Product(v3),
-        ) => {
+        ) if f0 == f1 && f1 == f2 && f2 == f3 => {
             let Some(transposed) = transpose_vec4_product(v0, v1, v2, v3) else { return false };
-            vec4_sum.push(transposed);
+            vec4_sum.push((transposed, *f0));
             true
         }
         _ => false

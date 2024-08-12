@@ -1245,7 +1245,7 @@ impl DynamicMultiVector {
             match f {
                 FloatExpr::Literal(0.0) => continue,
                 FloatExpr::Product(v) if v.is_empty() => continue,
-                FloatExpr::Sum(v) if v.is_empty() => continue,
+                FloatExpr::Sum(v, a) if v.is_empty() && a == 0.0 => continue,
                 _ => {}
             }
             let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
@@ -1282,7 +1282,7 @@ impl DynamicMultiVector {
             match f {
                 FloatExpr::Literal(0.0) => continue,
                 FloatExpr::Product(v) if v.is_empty() => continue,
-                FloatExpr::Sum(v) if v.is_empty() => continue,
+                FloatExpr::Sum(v, a) if v.is_empty() && a == 0.0 => continue,
                 _ => {}
             }
             let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);

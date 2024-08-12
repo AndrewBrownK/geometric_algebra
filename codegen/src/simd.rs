@@ -363,6 +363,30 @@ impl std::ops::Sub<Simd32x2> for Simd32x2 {
     }
 }
 
+impl std::ops::Neg for Simd32x4 {
+    type Output = Simd32x4;
+
+    fn neg(self) -> Self {
+        Self::from(0.0) - self
+    }
+}
+
+impl std::ops::Neg for Simd32x3 {
+    type Output = Simd32x3;
+
+    fn neg(self) -> Self {
+        Self::from(0.0) - self
+    }
+}
+
+impl std::ops::Neg for Simd32x2 {
+    type Output = Simd32x2;
+
+    fn neg(self) -> Self {
+        Self::from(0.0) - self
+    }
+}
+
 impl std::ops::Mul<Simd32x4> for Simd32x4 {
     type Output = Simd32x4;
 

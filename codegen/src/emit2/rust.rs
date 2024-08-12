@@ -721,22 +721,50 @@ postgres-types = "0.2.7""#)?;
                     write!(w, ")")?;
                 }
             }
-            FloatExpr::Sum(v) => {
-                if v.is_empty() {
+            FloatExpr::Sum(v, last_addend) => {
+                let has_last_addend = *last_addend != 0.0;
+                if v.is_empty() && !has_last_addend {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_addend {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => {}
+                        (-1.0, false) => write!(w, "-")?,
+                        (f, false) => write!(w, "{f}*")?,
+
+                        (1.0, true) => write!(w, " + ")?,
+                        (-1.0, true) => write!(w, " - ")?,
+                        (f, true) if f > 0.0 => write!(w, " + {f}*")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(w, " - {f}*")?;
+                        }
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_float(w, e)?;
+                    self.write_float(w, addend)?;
                 }
-                if v.len() > 1 {
+                match (*last_addend, len > 1) {
+                    (fl, _) if fl == 0.0 => {}
+                    (fl, false) => write!(w, "{fl}")?,
+                    (fl, true) if fl > 0.0 => write!(w, " + {fl}")?,
+                    (fl, true) if fl < 0.0 => {
+                        let fl = -fl;
+                        write!(w, " - {fl}")?;
+                    }
+                    _ => {}
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
@@ -819,22 +847,47 @@ postgres-types = "0.2.7""#)?;
                     write!(w, ")")?;
                 }
             }
-            Vec2Expr::Sum(v) => {
-                if v.is_empty() {
+            Vec2Expr::Sum(v, last_addend) => {
+                let has_last_addend = *last_addend != [0.0; 2];
+                if v.is_empty() && !has_last_addend {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_addend {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => {}
+                        (-1.0, false) => write!(w, "-")?,
+                        (f, false) => write!(w, "Simd32x2::from({f})*")?,
+
+                        (1.0, true) => write!(w, " + ")?,
+                        (-1.0, true) => write!(w, " - ")?,
+                        (f, true) if f > 0.0 => write!(w, " + Simd32x2::from({f})*")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(w, " - Simd32x2::from({f})*")?;
+                        }
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec2(w, e)?;
+                    self.write_vec2(w, addend)?;
                 }
-                if v.len() > 1 {
+                let a0 = last_addend[0];
+                let a1 = last_addend[1];
+                match (*last_addend, len > 1) {
+                    (f, _) if f == [0.0; 2] => {}
+                    (_, false) => write!(w, "Simd32x2::from([{a0}, {a1}])")?,
+                    (_, true) => write!(w, " + Simd32x2::from([{a0}, {a1}])")?,
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
@@ -896,22 +949,48 @@ postgres-types = "0.2.7""#)?;
                     write!(w, ")")?;
                 }
             }
-            Vec3Expr::Sum(v) => {
-                if v.is_empty() {
+            Vec3Expr::Sum(v, last_addend) => {
+                let has_last_addend = *last_addend != [0.0; 3];
+                if v.is_empty() && !has_last_addend {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_addend {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => {}
+                        (-1.0, false) => write!(w, "-")?,
+                        (f, false) => write!(w, "Simd32x3::from({f})*")?,
+
+                        (1.0, true) => write!(w, " + ")?,
+                        (-1.0, true) => write!(w, " - ")?,
+                        (f, true) if f > 0.0 => write!(w, " + Simd32x3::from({f})*")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(w, " - Simd32x3::from({f})*")?;
+                        }
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec3(w, e)?;
+                    self.write_vec3(w, addend)?;
                 }
-                if v.len() > 1 {
+                let a0 = last_addend[0];
+                let a1 = last_addend[1];
+                let a2 = last_addend[2];
+                match (*last_addend, len > 1) {
+                    (f, _) if f == [0.0; 3] => {}
+                    (_, false) => write!(w, "Simd32x3::from([{a0}, {a1}, {a2}])")?,
+                    (_, true) => write!(w, " + Simd32x3::from([{a0}, {a1}, {a2}])")?,
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
@@ -975,22 +1054,49 @@ postgres-types = "0.2.7""#)?;
                     write!(w, ")")?;
                 }
             }
-            Vec4Expr::Sum(v) => {
-                if v.is_empty() {
+            Vec4Expr::Sum(v, last_addend) => {
+                let has_last_addend = *last_addend != [0.0; 4];
+                if v.is_empty() && !has_last_addend {
                     bail!("Attempted to write an empty sum that should have been simplified");
                 }
-                if v.len() > 1 {
+                let mut len = v.len();
+                if has_last_addend {
+                    len += 1;
+                }
+                if len > 1 {
                     write!(w, "(")?;
                 }
-                for (i, e) in v.iter().enumerate() {
-                    if i > 0 {
-                        write!(w, " + ")?;
+                for (i, (addend, factor)) in v.iter().enumerate() {
+                    match (*factor, i > 0) {
+                        (f, _) if f == 0.0 => continue,
+
+                        (1.0, false) => {}
+                        (-1.0, false) => write!(w, "-")?,
+                        (f, false) => write!(w, "Simd32x4::from({f})*")?,
+
+                        (1.0, true) => write!(w, " + ")?,
+                        (-1.0, true) => write!(w, " - ")?,
+                        (f, true) if f > 0.0 => write!(w, " + Simd32x4::from({f})*")?,
+                        (f, true) if f < 0.0 => {
+                            let f = -f;
+                            write!(w, " - Simd32x4::from({f})*")?;
+                        }
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
-                    self.write_vec4(w, e)?;
+                    self.write_vec4(w, addend)?;
                 }
-                if v.len() > 1 {
+                let a0 = last_addend[0];
+                let a1 = last_addend[1];
+                let a2 = last_addend[2];
+                let a3 = last_addend[3];
+                match (*last_addend, len > 1) {
+                    (f, _) if f == [0.0; 4] => {}
+                    (_, false) => write!(w, "Simd32x4::from([{a0}, {a1}, {a2}, {a3}])")?,
+                    (_, true) => write!(w, " + Simd32x4::from([{a0}, {a1}, {a2}, {a3}])")?,
+                }
+                if len > 1 {
                     write!(w, ")")?;
                 }
             }
