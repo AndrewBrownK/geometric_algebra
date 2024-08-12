@@ -1,4 +1,4 @@
-impl TryFrom<AntiDualNum> for AntiDualNumOnOrigin {
+impl TryFrom<AntiDualNum> for Scalar {
     type Error = String;
     fn try_from(anti_dual_num: AntiDualNum) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -12,16 +12,16 @@ impl TryFrom<AntiDualNum> for AntiDualNumOnOrigin {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from AntiDualNum do not fit into AntiDualNumOnOrigin { ".to_string();
+            let mut error = "Elements from AntiDualNum do not fit into Scalar { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDualNumOnOrigin::from_groups(/* scalar */ anti_dual_num[scalar]));
+        return Ok(Scalar::from_groups(/* scalar */ anti_dual_num[scalar]));
     }
 }
 
-impl TryFrom<AntiMotor> for AntiDualNumOnOrigin {
+impl TryFrom<AntiMotor> for Scalar {
     type Error = String;
     fn try_from(anti_motor: AntiMotor) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -77,16 +77,16 @@ impl TryFrom<AntiMotor> for AntiDualNumOnOrigin {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from AntiMotor do not fit into AntiDualNumOnOrigin { ".to_string();
+            let mut error = "Elements from AntiMotor do not fit into Scalar { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDualNumOnOrigin::from_groups(/* scalar */ anti_motor[scalar]));
+        return Ok(Scalar::from_groups(/* scalar */ anti_motor[scalar]));
     }
 }
 
-impl TryFrom<AntiMotorOnOrigin> for AntiDualNumOnOrigin {
+impl TryFrom<AntiMotorOnOrigin> for Scalar {
     type Error = String;
     fn try_from(anti_motor_on_origin: AntiMotorOnOrigin) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -114,16 +114,16 @@ impl TryFrom<AntiMotorOnOrigin> for AntiDualNumOnOrigin {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from AntiMotorOnOrigin do not fit into AntiDualNumOnOrigin { ".to_string();
+            let mut error = "Elements from AntiMotorOnOrigin do not fit into Scalar { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDualNumOnOrigin::from_groups(/* scalar */ anti_motor_on_origin[scalar]));
+        return Ok(Scalar::from_groups(/* scalar */ anti_motor_on_origin[scalar]));
     }
 }
 
-impl TryFrom<MultiVector> for AntiDualNumOnOrigin {
+impl TryFrom<MultiVector> for Scalar {
     type Error = String;
     fn try_from(multi_vector: MultiVector) -> Result<Self, Self::Error> {
         use crate::elements::*;
@@ -347,11 +347,11 @@ impl TryFrom<MultiVector> for AntiDualNumOnOrigin {
             error_string.push_str(", ");
         }
         if fail {
-            let mut error = "Elements from MultiVector do not fit into AntiDualNumOnOrigin { ".to_string();
+            let mut error = "Elements from MultiVector do not fit into Scalar { ".to_string();
             error.push_str(error_string.as_str());
             error.push('}');
             return Err(error);
         }
-        return Ok(AntiDualNumOnOrigin::from_groups(/* scalar */ multi_vector[scalar]));
+        return Ok(Scalar::from_groups(/* scalar */ multi_vector[scalar]));
     }
 }

@@ -1,7 +1,7 @@
-impl From<DualNumOnOrigin> for MotorOnOrigin {
-    fn from(dual_num_on_origin: DualNumOnOrigin) -> Self {
+impl From<AntiScalar> for MotorOnOrigin {
+    fn from(anti_scalar: AntiScalar) -> Self {
         use crate::elements::*;
-        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([0.0, 0.0, 0.0, dual_num_on_origin[e12345]]));
+        return MotorOnOrigin::from_groups(/* e415, e425, e435, e12345 */ Simd32x4::from([0.0, 0.0, 0.0, anti_scalar[e12345]]));
     }
 }
 

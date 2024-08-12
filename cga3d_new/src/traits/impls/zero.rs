@@ -13,11 +13,6 @@ impl Zero for AntiDualNum {
         return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from(0.0));
     }
 }
-impl Zero for AntiDualNumOnOrigin {
-    fn zero() -> Self {
-        return AntiDualNumOnOrigin::from_groups(/* scalar */ 0.0);
-    }
-}
 impl Zero for AntiFlatOrigin {
     fn zero() -> Self {
         return AntiFlatOrigin::from_groups(/* e321 */ 0.0);
@@ -66,6 +61,11 @@ impl Zero for AntiPlane {
 impl Zero for AntiPlaneOnOrigin {
     fn zero() -> Self {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ Simd32x3::from(0.0));
+    }
+}
+impl Zero for AntiScalar {
+    fn zero() -> Self {
+        return AntiScalar::from_groups(/* e12345 */ 0.0);
     }
 }
 impl Zero for AntiSphereOnOrigin {
@@ -164,11 +164,6 @@ impl Zero for DipoleOrthogonalOrigin {
 impl Zero for DualNum {
     fn zero() -> Self {
         return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from(0.0));
-    }
-}
-impl Zero for DualNumOnOrigin {
-    fn zero() -> Self {
-        return DualNumOnOrigin::from_groups(/* e12345 */ 0.0);
     }
 }
 impl Zero for FlatOrigin {
@@ -307,6 +302,11 @@ impl Zero for RoundPoint {
 impl Zero for RoundPointAtOrigin {
     fn zero() -> Self {
         return RoundPointAtOrigin::from_groups(/* e4, e5 */ Simd32x2::from(0.0));
+    }
+}
+impl Zero for Scalar {
+    fn zero() -> Self {
+        return Scalar::from_groups(/* scalar */ 0.0);
     }
 }
 impl Zero for Sphere {

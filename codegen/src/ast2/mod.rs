@@ -4,7 +4,6 @@ use std::sync::Arc;
 use crate::ast2::expressions::AnyExpression;
 
 pub mod datatype;
-mod playground;
 pub mod traits;
 pub mod expressions;
 pub mod impls;

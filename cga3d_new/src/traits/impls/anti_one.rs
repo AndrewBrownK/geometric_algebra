@@ -1,11 +1,11 @@
+impl AntiOne for AntiScalar {
+    fn anti_one() -> Self {
+        return AntiScalar::from_groups(/* e12345 */ 1.0);
+    }
+}
 impl AntiOne for DualNum {
     fn anti_one() -> Self {
         return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, 1.0]));
-    }
-}
-impl AntiOne for DualNumOnOrigin {
-    fn anti_one() -> Self {
-        return DualNumOnOrigin::from_groups(/* e12345 */ 1.0);
     }
 }
 impl AntiOne for Motor {

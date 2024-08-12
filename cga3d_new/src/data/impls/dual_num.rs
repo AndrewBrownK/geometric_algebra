@@ -1,7 +1,7 @@
-impl From<DualNumOnOrigin> for DualNum {
-    fn from(dual_num_on_origin: DualNumOnOrigin) -> Self {
+impl From<AntiScalar> for DualNum {
+    fn from(anti_scalar: AntiScalar) -> Self {
         use crate::elements::*;
-        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, dual_num_on_origin[e12345]]));
+        return DualNum::from_groups(/* e5, e12345 */ Simd32x2::from([0.0, anti_scalar[e12345]]));
     }
 }
 

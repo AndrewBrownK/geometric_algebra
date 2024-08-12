@@ -1,25 +1,19 @@
 use crate::data::*;
 use crate::simd::*;
 
-/// AntiDualNumOnOrigin.
-/// This variant of MultiVector is the Dual to DualNumOnOrigin. It is common for
-/// objects of this type to not intersect the null cone, which also prevents them from
-/// projecting onto the horosphere in the usual manner. When this happens, this
-/// object has behavioral and operative similarity to a MultiVector,
-/// but an imaginary radius, and a spacial presence in the shape of a
-/// DualNumOnOrigin with a real radius.
+/// Scalar
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub union AntiDualNumOnOrigin {
-    groups: AntiDualNumOnOriginGroups,
+pub union Scalar {
+    groups: ScalarGroups,
     /// scalar, 0, 0, 0
     elements: [f32; 4],
 }
 #[derive(Clone, Copy, nearly::NearlyEq, nearly::NearlyOrd, bytemuck::Pod, bytemuck::Zeroable, encase::ShaderType, serde::Serialize, serde::Deserialize)]
-pub struct AntiDualNumOnOriginGroups {
+pub struct ScalarGroups {
     /// scalar
     g0: f32,
 }
-impl AntiDualNumOnOrigin {
+impl Scalar {
     #[allow(clippy::too_many_arguments)]
     pub const fn from_elements(scalar: f32) -> Self {
         Self {
@@ -27,9 +21,7 @@ impl AntiDualNumOnOrigin {
         }
     }
     pub const fn from_groups(g0: f32) -> Self {
-        Self {
-            groups: AntiDualNumOnOriginGroups { g0 },
-        }
+        Self { groups: ScalarGroups { g0 } }
     }
     #[inline(always)]
     pub fn group0(&self) -> f32 {
@@ -40,41 +32,41 @@ impl AntiDualNumOnOrigin {
         unsafe { &mut self.groups.g0 }
     }
 }
-const ANTI_DUAL_NUM_ON_ORIGIN_INDEX_REMAP: [usize; 1] = [0];
-impl std::ops::Index<usize> for AntiDualNumOnOrigin {
+const SCALAR_INDEX_REMAP: [usize; 1] = [0];
+impl std::ops::Index<usize> for Scalar {
     type Output = f32;
     fn index(&self, index: usize) -> &Self::Output {
-        unsafe { &self.elements[ANTI_DUAL_NUM_ON_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &self.elements[SCALAR_INDEX_REMAP[index]] }
     }
 }
-impl std::ops::IndexMut<usize> for AntiDualNumOnOrigin {
+impl std::ops::IndexMut<usize> for Scalar {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        unsafe { &mut self.elements[ANTI_DUAL_NUM_ON_ORIGIN_INDEX_REMAP[index]] }
+        unsafe { &mut self.elements[SCALAR_INDEX_REMAP[index]] }
     }
 }
-impl From<AntiDualNumOnOrigin> for [f32; 1] {
-    fn from(vector: AntiDualNumOnOrigin) -> Self {
+impl From<Scalar> for [f32; 1] {
+    fn from(vector: Scalar) -> Self {
         unsafe { [vector.elements[0]] }
     }
 }
-impl From<[f32; 1]> for AntiDualNumOnOrigin {
+impl From<[f32; 1]> for Scalar {
     fn from(array: [f32; 1]) -> Self {
         Self {
             elements: [array[0], 0.0, 0.0, 0.0],
         }
     }
 }
-impl std::fmt::Debug for AntiDualNumOnOrigin {
+impl std::fmt::Debug for Scalar {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        formatter.debug_struct("AntiDualNumOnOrigin").field("scalar", &self[0]).finish()
+        formatter.debug_struct("Scalar").field("scalar", &self[0]).finish()
     }
 }
 
-impl AntiDualNumOnOrigin {
+impl Scalar {
     pub const LEN: usize = 1;
 }
 
-impl AntiDualNumOnOrigin {
+impl Scalar {
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {
         for i in 0..Self::LEN {
             let f = self[i];
@@ -86,7 +78,7 @@ impl AntiDualNumOnOrigin {
     }
 }
 
-impl PartialOrd for AntiDualNumOnOrigin {
+impl PartialOrd for Scalar {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -99,7 +91,7 @@ impl PartialOrd for AntiDualNumOnOrigin {
         Some(std::cmp::Ordering::Equal)
     }
 }
-impl Ord for AntiDualNumOnOrigin {
+impl Ord for Scalar {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -112,7 +104,7 @@ impl Ord for AntiDualNumOnOrigin {
         std::cmp::Ordering::Equal
     }
 }
-impl PartialEq for AntiDualNumOnOrigin {
+impl PartialEq for Scalar {
     fn eq(&self, other: &Self) -> bool {
         for i in 0..Self::LEN {
             let a = float_ord::FloatOrd(self[i]);
@@ -124,8 +116,8 @@ impl PartialEq for AntiDualNumOnOrigin {
         true
     }
 }
-impl Eq for AntiDualNumOnOrigin {}
-impl std::hash::Hash for AntiDualNumOnOrigin {
+impl Eq for Scalar {}
+impl std::hash::Hash for Scalar {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         for i in 0..Self::LEN {
             self[i].to_bits().hash(state);
@@ -133,15 +125,15 @@ impl std::hash::Hash for AntiDualNumOnOrigin {
     }
 }
 
-impl std::ops::Index<crate::elements::scalar> for AntiDualNumOnOrigin {
+impl std::ops::Index<crate::elements::scalar> for Scalar {
     type Output = f32;
     fn index(&self, _: crate::elements::scalar) -> &Self::Output {
         &self[0]
     }
 }
-impl std::ops::IndexMut<crate::elements::scalar> for AntiDualNumOnOrigin {
+impl std::ops::IndexMut<crate::elements::scalar> for Scalar {
     fn index_mut(&self, _: crate::elements::scalar) -> &mut Self::Output {
         &mut self[0]
     }
 }
-include!("./impls/anti_dual_num_on_origin.rs");
+include!("./impls/scalar.rs");

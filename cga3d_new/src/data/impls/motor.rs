@@ -1,3 +1,15 @@
+impl From<AntiScalar> for Motor {
+    fn from(anti_scalar: AntiScalar) -> Self {
+        use crate::elements::*;
+        return Motor::from_groups(
+            // e415, e425, e435, e12345
+            Simd32x4::from([0.0, 0.0, 0.0, anti_scalar[e12345]]),
+            // e235, e315, e125, e5
+            Simd32x4::from(0.0),
+        );
+    }
+}
+
 impl From<DualNum> for Motor {
     fn from(dual_num: DualNum) -> Self {
         use crate::elements::*;
@@ -6,18 +18,6 @@ impl From<DualNum> for Motor {
             Simd32x4::from([0.0, 0.0, 0.0, dual_num[e12345]]),
             // e235, e315, e125, e5
             Simd32x4::from([0.0, 0.0, 0.0, dual_num[e5]]),
-        );
-    }
-}
-
-impl From<DualNumOnOrigin> for Motor {
-    fn from(dual_num_on_origin: DualNumOnOrigin) -> Self {
-        use crate::elements::*;
-        return Motor::from_groups(
-            // e415, e425, e435, e12345
-            Simd32x4::from([0.0, 0.0, 0.0, dual_num_on_origin[e12345]]),
-            // e235, e315, e125, e5
-            Simd32x4::from(0.0),
         );
     }
 }

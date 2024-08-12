@@ -15,6 +15,8 @@ use crate::emit2::rust::Rust;
 multi_vecs! { e12345;
 
     // Special Objects
+    Scalar     as scalar;
+    AntiScalar as e12345;
     Origin     as e4;
     Infinity   as e5;
     FlatOrigin as e45;

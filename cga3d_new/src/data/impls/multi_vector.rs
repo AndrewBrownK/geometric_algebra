@@ -88,36 +88,6 @@ impl From<AntiDualNum> for MultiVector {
     }
 }
 
-impl From<AntiDualNumOnOrigin> for MultiVector {
-    fn from(anti_dual_num_on_origin: AntiDualNumOnOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([anti_dual_num_on_origin[scalar], 0.0]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e321, e415, e425, e435
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
 impl From<AntiFlatOrigin> for MultiVector {
     fn from(anti_flat_origin: AntiFlatOrigin) -> Self {
         use crate::elements::*;
@@ -396,6 +366,36 @@ impl From<AntiPlaneOnOrigin> for MultiVector {
             Simd32x2::from(0.0),
             // e1, e2, e3, e4
             Simd32x4::from([anti_plane_on_origin[e1], anti_plane_on_origin[e2], anti_plane_on_origin[e3], 0.0]),
+            // e5
+            0.0,
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<AntiScalar> for MultiVector {
+    fn from(anti_scalar: AntiScalar) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([0.0, anti_scalar[e12345]]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
             // e5
             0.0,
             // e41, e42, e43, e45
@@ -818,36 +818,6 @@ impl From<DualNum> for MultiVector {
             Simd32x4::from(0.0),
             // e5
             dual_num[e5],
-            // e41, e42, e43, e45
-            Simd32x4::from(0.0),
-            // e15, e25, e35
-            Simd32x3::from(0.0),
-            // e23, e31, e12
-            Simd32x3::from(0.0),
-            // e321, e415, e425, e435
-            Simd32x4::from(0.0),
-            // e423, e431, e412
-            Simd32x3::from(0.0),
-            // e235, e315, e125
-            Simd32x3::from(0.0),
-            // e4235, e4315, e4125, e1234
-            Simd32x4::from(0.0),
-            // e3215
-            0.0,
-        );
-    }
-}
-
-impl From<DualNumOnOrigin> for MultiVector {
-    fn from(dual_num_on_origin: DualNumOnOrigin) -> Self {
-        use crate::elements::*;
-        return MultiVector::from_groups(
-            // scalar, e12345
-            Simd32x2::from([0.0, dual_num_on_origin[e12345]]),
-            // e1, e2, e3, e4
-            Simd32x4::from(0.0),
-            // e5
-            0.0,
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35
@@ -1508,6 +1478,36 @@ impl From<RoundPointAtOrigin> for MultiVector {
             Simd32x4::from([0.0, 0.0, 0.0, round_point_at_origin[e4]]),
             // e5
             round_point_at_origin[e5],
+            // e41, e42, e43, e45
+            Simd32x4::from(0.0),
+            // e15, e25, e35
+            Simd32x3::from(0.0),
+            // e23, e31, e12
+            Simd32x3::from(0.0),
+            // e321, e415, e425, e435
+            Simd32x4::from(0.0),
+            // e423, e431, e412
+            Simd32x3::from(0.0),
+            // e235, e315, e125
+            Simd32x3::from(0.0),
+            // e4235, e4315, e4125, e1234
+            Simd32x4::from(0.0),
+            // e3215
+            0.0,
+        );
+    }
+}
+
+impl From<Scalar> for MultiVector {
+    fn from(scalar: Scalar) -> Self {
+        use crate::elements::*;
+        return MultiVector::from_groups(
+            // scalar, e12345
+            Simd32x2::from([scalar[scalar], 0.0]),
+            // e1, e2, e3, e4
+            Simd32x4::from(0.0),
+            // e5
+            0.0,
             // e41, e42, e43, e45
             Simd32x4::from(0.0),
             // e15, e25, e35

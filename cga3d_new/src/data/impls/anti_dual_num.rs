@@ -1,14 +1,14 @@
-impl From<AntiDualNumOnOrigin> for AntiDualNum {
-    fn from(anti_dual_num_on_origin: AntiDualNumOnOrigin) -> Self {
-        use crate::elements::*;
-        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, anti_dual_num_on_origin[scalar]]));
-    }
-}
-
 impl From<Horizon> for AntiDualNum {
     fn from(horizon: Horizon) -> Self {
         use crate::elements::*;
         return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([horizon[e3215], 0.0]));
+    }
+}
+
+impl From<Scalar> for AntiDualNum {
+    fn from(scalar: Scalar) -> Self {
+        use crate::elements::*;
+        return AntiDualNum::from_groups(/* e3215, scalar */ Simd32x2::from([0.0, scalar[scalar]]));
     }
 }
 

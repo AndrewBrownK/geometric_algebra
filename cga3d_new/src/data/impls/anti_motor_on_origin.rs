@@ -1,10 +1,3 @@
-impl From<AntiDualNumOnOrigin> for AntiMotorOnOrigin {
-    fn from(anti_dual_num_on_origin: AntiDualNumOnOrigin) -> Self {
-        use crate::elements::*;
-        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([0.0, 0.0, 0.0, anti_dual_num_on_origin[scalar]]));
-    }
-}
-
 impl From<AntiLineOnOrigin> for AntiMotorOnOrigin {
     fn from(anti_line_on_origin: AntiLineOnOrigin) -> Self {
         use crate::elements::*;
@@ -12,6 +5,13 @@ impl From<AntiLineOnOrigin> for AntiMotorOnOrigin {
             // e23, e31, e12, scalar
             Simd32x4::from([anti_line_on_origin[e23], anti_line_on_origin[e31], anti_line_on_origin[e12], 0.0]),
         );
+    }
+}
+
+impl From<Scalar> for AntiMotorOnOrigin {
+    fn from(scalar: Scalar) -> Self {
+        use crate::elements::*;
+        return AntiMotorOnOrigin::from_groups(/* e23, e31, e12, scalar */ Simd32x4::from([0.0, 0.0, 0.0, scalar[scalar]]));
     }
 }
 

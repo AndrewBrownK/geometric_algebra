@@ -8,11 +8,6 @@ impl AntiGrade for AntiDipoleOnOrigin {
         return 2;
     }
 }
-impl AntiGrade for AntiDualNumOnOrigin {
-    fn anti_grade() -> usize {
-        return 5;
-    }
-}
 impl AntiGrade for AntiFlatOrigin {
     fn anti_grade() -> usize {
         return 2;
@@ -41,6 +36,11 @@ impl AntiGrade for AntiPlane {
 impl AntiGrade for AntiPlaneOnOrigin {
     fn anti_grade() -> usize {
         return 4;
+    }
+}
+impl AntiGrade for AntiScalar {
+    fn anti_grade() -> usize {
+        return 0;
     }
 }
 impl AntiGrade for AntiSphereOnOrigin {
@@ -106,11 +106,6 @@ impl AntiGrade for DipoleOnOrigin {
 impl AntiGrade for DipoleOrthogonalOrigin {
     fn anti_grade() -> usize {
         return 3;
-    }
-}
-impl AntiGrade for DualNumOnOrigin {
-    fn anti_grade() -> usize {
-        return 0;
     }
 }
 impl AntiGrade for FlatOrigin {
@@ -191,6 +186,11 @@ impl AntiGrade for RoundPoint {
 impl AntiGrade for RoundPointAtOrigin {
     fn anti_grade() -> usize {
         return 4;
+    }
+}
+impl AntiGrade for Scalar {
+    fn anti_grade() -> usize {
+        return 5;
     }
 }
 impl AntiGrade for Sphere {
