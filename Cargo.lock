@@ -354,18 +354,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cga3d_min"
-version = "0.3.0"
-dependencies = [
- "anyhow",
- "bytemuck",
- "naga",
- "naga_oil",
- "projective_ga",
-]
-
-[[package]]
-name = "cga3d_new"
+name = "cga3d_max"
 version = "1.0.0"
 dependencies = [
  "anyhow",
@@ -376,6 +365,17 @@ dependencies = [
  "naga_oil",
  "nearly",
  "serde",
+]
+
+[[package]]
+name = "cga3d_min"
+version = "0.3.0"
+dependencies = [
+ "anyhow",
+ "bytemuck",
+ "naga",
+ "naga_oil",
+ "projective_ga",
 ]
 
 [[package]]

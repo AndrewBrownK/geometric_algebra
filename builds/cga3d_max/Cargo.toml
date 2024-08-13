@@ -1,5 +1,5 @@
 [package]
-name = "cga3d_new"
+name = "cga3d_max"
 version = "1.0.0"
 authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>", "Alexander Meißner <AlexanderMeissner@gmx.net>"]
 description = "Latest generated test case"

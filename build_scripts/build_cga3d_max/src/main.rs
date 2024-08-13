@@ -81,7 +81,7 @@ pub fn main() {
     let pwd_d = pwd.display();
     println!("here is pwd: {pwd_d}");
 
-    let file_path = PathBuf::from("builds/cga3d_new/");
+    let file_path = PathBuf::from("builds/cga3d_max/");
     let mut rust = Rust::new(true).all_features();
     rust.sql = false;
 
