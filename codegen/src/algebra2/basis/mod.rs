@@ -1,22 +1,22 @@
+use crate::algebra::basis_element;
+use crate::algebra2::basis::generators::GeneratorElement;
+use crate::algebra2::basis::grades::{AntiGrades, Grades};
+use crate::generator_squares;
+use crate::utility::ConstOption;
+use const_panic::PanicFmt;
+use generators::GeneratorSquares;
+use rand::Rng;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
+use std::marker::ConstParamTy;
 use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Neg, Sub};
-use rand::Rng;
-use generators::GeneratorSquares;
-use crate::algebra2::basis::generators::GeneratorElement;
-use crate::algebra2::basis::grades::{AntiGrades, Grades};
-use crate::algebra::basis_element;
-use crate::generator_squares;
-use std::marker::{ConstParamTy};
-use const_panic::PanicFmt;
-use crate::utility::ConstOption;
 
-pub mod generators;
-pub mod substitutes;
 pub mod arithmetic;
-pub mod grades;
 pub mod filter;
+pub mod generators;
+pub mod grades;
+pub mod substitutes;
 
 // Would love to use bitflags::bitflags!, but cannot because
 // we need to implement ConstParamTy
@@ -46,13 +46,11 @@ impl BasisSignature {
     pub const eF: BasisSignature = BasisSignature(0x8000);
 }
 
-
 impl Default for BasisSignature {
     fn default() -> Self {
         BasisSignature::scalar
     }
 }
-
 
 impl PartialOrd for BasisSignature {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -90,7 +88,6 @@ impl Display for BasisSignature {
 }
 
 impl BasisSignature {
-
     // Strange return type is because of const evaluation compatibility
     const fn into_grade_1_signatures_const(self) -> (usize, [Option<BasisSignature>; 16]) {
         let mut result = [None; 16];
@@ -143,20 +140,20 @@ impl BasisSignature {
         let aco = a.count_ones();
         let bco = b.count_ones();
         if aco < bco {
-            return Ordering::Less
+            return Ordering::Less;
         }
         if aco > bco {
-            return Ordering::Greater
+            return Ordering::Greater;
         }
         let ra = a.reverse_bits();
         let rb = b.reverse_bits();
         if rb < ra {
-            return Ordering::Less
+            return Ordering::Less;
         }
         if rb > ra {
-            return Ordering::Greater
+            return Ordering::Greater;
         }
-        return Ordering::Equal
+        return Ordering::Equal;
     }
 
     pub const fn contains(&self, other: BasisSignature) -> bool {
@@ -231,25 +228,27 @@ impl PanicFmt for BasisSignature {
 }
 impl BasisSignature {
     pub const fn to_panicvals(self, _: const_panic::FmtArg) -> [const_panic::PanicVal<'static>; BasisSignature::PV_COUNT] {
-        let mut result = {[
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-        ]};
+        let mut result = {
+            [
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+            ]
+        };
         if self.0 == 0 {
             result[0] = const_panic::PanicVal::write_str("scalar");
             return result;
@@ -306,38 +305,36 @@ impl PanicFmt for BasisElement {
 }
 impl BasisElement {
     pub const fn to_panicvals(self, fmt: const_panic::FmtArg) -> [const_panic::PanicVal<'static>; BasisElement::PV_COUNT] {
-        let mut result = {[
-            const_panic::PanicVal::write_str("BasisElement("),
-
-            // 1: Sign
-            const_panic::PanicVal::write_str(""),
-
-            // 2-18: BasisSignature
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-
-            // 19-21: display name
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-            const_panic::PanicVal::write_str(""),
-
-            const_panic::PanicVal::write_str(")"),
-        ]};
+        let mut result = {
+            [
+                const_panic::PanicVal::write_str("BasisElement("),
+                // 1: Sign
+                const_panic::PanicVal::write_str(""),
+                // 2-18: BasisSignature
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                // 19-21: display name
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(""),
+                const_panic::PanicVal::write_str(")"),
+            ]
+        };
         let sign = self.coefficient;
         if sign == 0 {
             result[1] = const_panic::PanicVal::write_str("0");
@@ -369,14 +366,12 @@ impl BasisElement {
     }
 }
 
-
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PanicFmt)]
 pub struct BasisElementDisplayName {
     display_name: &'static str,
     negate_display: bool,
 }
 impl ConstParamTy for BasisElementDisplayName {}
-
 
 impl PartialOrd for BasisElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -454,10 +449,10 @@ impl BasisElement {
         let ac = self.coefficient;
         let bc = other.coefficient;
         if ac < bc {
-            return Ordering::Less
+            return Ordering::Less;
         }
         if ac > bc {
-            return Ordering::Greater
+            return Ordering::Greater;
         }
         Ordering::Equal
     }
@@ -552,7 +547,7 @@ impl BasisElement {
 
                     // display_name.negate_display = !display_name.negate_display;
                     result.coefficient *= -1;
-                    continue
+                    continue;
                 }
                 (false, b'0') => {
                     result.coefficient = 0;
@@ -566,7 +561,7 @@ impl BasisElement {
                         Some(result)
                     } else {
                         None
-                    }
+                    };
                 }
                 (false, b'1') => {
                     result.signature = BasisSignature::empty();
@@ -575,11 +570,11 @@ impl BasisElement {
                         Some(result)
                     } else {
                         None
-                    }
+                    };
                 }
                 (false, b'e') => {
                     reached_elements = true;
-                    continue
+                    continue;
                 }
                 (true, b'0') => 0x0,
                 (true, b'1') => 0x1,
@@ -597,7 +592,7 @@ impl BasisElement {
                 (true, b'D') => 0xD,
                 (true, b'E') => 0xE,
                 (true, b'F') => 0xF,
-                _ => return None
+                _ => return None,
             };
             let sig_addition = BasisSignature::from_bits_retain(1u16 << next_basis);
             let sig_existing = result.signature;
@@ -659,8 +654,10 @@ impl BasisElement {
 
     pub const fn right_complement(&self, anti_scalar: BasisElement) -> BasisElement {
         if !anti_scalar.signature.contains(self.signature) {
-            panic!("Cannot take the right complement of a BasisElement with respect to an \
-                AntiScalar that does not contain it.")
+            panic!(
+                "Cannot take the right complement of a BasisElement with respect to an \
+                AntiScalar that does not contain it."
+            )
         }
         if self.coefficient == 0 {
             return BasisElement::zero();
@@ -693,11 +690,11 @@ impl BasisElement {
         // Okay we should double-check the sign.
         let test = self.wedge(answer);
         if test.coefficient == anti_scalar.coefficient {
-            return answer
+            return answer;
         }
         if test.coefficient == -anti_scalar.coefficient {
             answer.coefficient = -1 * answer.coefficient;
-            return answer
+            return answer;
         }
 
         // This basically shouldn't happen unless the i8 coefficient somehow gets corrupted
@@ -722,11 +719,11 @@ impl BasisElement {
         // Okay we should double-check the sign.
         let test = rc.wedge(*self);
         if test.coefficient == anti_scalar.coefficient {
-            return rc
+            return rc;
         }
         if test.coefficient == -anti_scalar.coefficient {
             rc.coefficient = -1 * rc.coefficient;
-            return rc
+            return rc;
         }
 
         // This basically shouldn't happen unless the i8 coefficient somehow gets corrupted
@@ -737,10 +734,7 @@ impl BasisElement {
     }
 
     /// Wedge product
-    pub const fn wedge(
-        &self,
-        other: BasisElement,
-    ) -> BasisElement {
+    pub const fn wedge(&self, other: BasisElement) -> BasisElement {
         // Implementation may look a bit strange because it is const compatible
 
         let (a_len, a) = self.signature.into_grade_1_signatures_const();
@@ -756,13 +750,13 @@ impl BasisElement {
                 result_elements[r_idx] = b[b_idx];
                 r_idx += 1;
                 b_idx += 1;
-                continue
+                continue;
             }
             if b_idx >= b_len {
                 result_elements[r_idx] = a[a_idx];
                 r_idx += 1;
                 a_idx += 1;
-                continue
+                continue;
             }
             let a_ = a[a_idx].unwrap();
             let b_ = b[b_idx].unwrap();
@@ -804,11 +798,7 @@ impl BasisElement {
     }
 
     /// AntiWedge product
-    pub const fn anti_wedge(
-        &self,
-        other: BasisElement,
-        anti_scalar: BasisElement,
-    ) -> BasisElement {
+    pub const fn anti_wedge(&self, other: BasisElement, anti_scalar: BasisElement) -> BasisElement {
         let s = self.right_complement(anti_scalar);
         let o = other.right_complement(anti_scalar);
         let w = s.wedge(o);
@@ -828,11 +818,10 @@ impl BasisElement {
     }
 }
 
-
 #[derive(Clone, Debug)]
 pub struct BasisElementNames {
     zero: Option<BasisElementDisplayName>,
-    elements: HashMap<BasisSignature, BasisElementDisplayName>
+    elements: HashMap<BasisSignature, BasisElementDisplayName>,
 }
 impl BasisElementNames {
     pub fn new() -> Self {
@@ -844,15 +833,17 @@ impl BasisElementNames {
 
     pub fn contaminate(a: &mut BasisElement, b: &mut BasisElement) {
         if a.signature != b.signature {
-            return
+            return;
         }
         match (a.display_name, b.display_name) {
             (ConstOption::None, ConstOption::None) => {}
-            (ConstOption::Some(an), ConstOption::None) => { b.display_name = ConstOption::Some(an.clone()) }
-            (ConstOption::None, ConstOption::Some(bn)) => { a.display_name = ConstOption::Some(bn.clone()) }
-            (ConstOption::Some(an), ConstOption::Some(bn)) => if an != bn {
-                panic!("Conflicting display names found for {a:?} and {b:?}")
-            },
+            (ConstOption::Some(an), ConstOption::None) => b.display_name = ConstOption::Some(an.clone()),
+            (ConstOption::None, ConstOption::Some(bn)) => a.display_name = ConstOption::Some(bn.clone()),
+            (ConstOption::Some(an), ConstOption::Some(bn)) => {
+                if an != bn {
+                    panic!("Conflicting display names found for {a:?} and {b:?}")
+                }
+            }
         }
     }
 
@@ -872,29 +863,20 @@ impl BasisElementNames {
         a != b
     }
 
-
     /// Give a name to a BasisElement, if one exists.
     pub fn provide_name(&self, mut el: BasisElement) -> BasisElement {
-        let existing = if el.coefficient == 0 {
-            self.zero
-        } else {
-            self.elements.get(&el.signature).cloned()
-        };
+        let existing = if el.coefficient == 0 { self.zero } else { self.elements.get(&el.signature).cloned() };
         if let Some(dn) = existing {
             el.display_name = ConstOption::Some(dn);
         }
-        return el
+        return el;
     }
 
     /// Give a name and sign to a BasisElement, if the direction of your BasisElement is not of
     /// critical relied upon yet. In other words, this will give the positive direction of any
     /// BasisElement, according to the name's preference as an odd or even permutation.
     pub fn provide_name_and_sign(&self, mut el: BasisElement) -> BasisElement {
-        let existing = if el.coefficient == 0 {
-            self.zero
-        } else {
-            self.elements.get(&el.signature).cloned()
-        };
+        let existing = if el.coefficient == 0 { self.zero } else { self.elements.get(&el.signature).cloned() };
         el.coefficient = 1;
         if let Some(dn) = existing {
             el.display_name = ConstOption::Some(dn);
@@ -902,18 +884,14 @@ impl BasisElementNames {
                 el.coefficient = -1;
             }
         }
-        return el
+        return el;
     }
 
     /// Add a name on a BasisElement (if it exists) to the BasisElementNames.
     pub fn accept_name(&mut self, el: BasisElement) -> anyhow::Result<()> {
         let ConstOption::Some(el_dn) = el.display_name else { return Ok(()) };
         let sig = el.signature;
-        let existing = if el.coefficient == 0 {
-            self.zero
-        } else {
-            self.elements.get(&sig).cloned()
-        };
+        let existing = if el.coefficient == 0 { self.zero } else { self.elements.get(&sig).cloned() };
         if let Some(dn) = existing {
             if el_dn != dn {
                 anyhow::bail!("BasisElementNames cannot accept name {el_dn:?} because it already has {dn:?} for the same signature {sig:?}")
@@ -924,9 +902,6 @@ impl BasisElementNames {
         Ok(())
     }
 }
-
-
-
 
 #[test]
 fn new_basis_elements_wedge() {
@@ -971,7 +946,7 @@ fn new_basis_elements_wedge() {
 
         // So we do this check to make sure we are comparing apples to apples
         if old_product.coefficient != 0 && old_product.index.count_ones() != (a.count_ones() + b.count_ones()) {
-            continue
+            continue;
         }
         i += 1;
 
@@ -1064,7 +1039,6 @@ fn test_metric() {
     assert_eq!(-e12345, cga.apply_metric(e12345));
 }
 
-
 #[allow(non_upper_case_globals, dead_code)]
 pub mod elements {
     use crate::algebra2::basis::*;
@@ -1099,12 +1073,9 @@ pub mod elements {
     pub const e4125: BasisElement = const_parse("e4125");
     pub const e3215: BasisElement = const_parse("e3215");
 
-
     // biVector.net pga
     pub const e021: BasisElement = const_parse("e021");
     pub const e032: BasisElement = const_parse("e032");
-
-
 
     // There is room for people to be weird and make these
     // generators square to unconventional values, but that
@@ -1117,9 +1088,7 @@ pub mod elements {
     pub const eP: BasisElement = eE.with_name("eP", false);
     pub const eM: BasisElement = eF.with_name("eM", false);
 
-
     // And so for that matter... Let's provide some wedges for the common dimensions.
-
 
     // e_inf wedges
 
@@ -1142,7 +1111,6 @@ pub mod elements {
 
     pub const e0123I: BasisElement = const_parse("e0123D").with_name("e0123I", false);
 
-
     // e_plus
 
     pub const e0P: BasisElement = const_parse("e0E").with_name("e0P", false);
@@ -1164,7 +1132,6 @@ pub mod elements {
 
     pub const e0123P: BasisElement = const_parse("e0123E").with_name("e0123P", false);
 
-
     // e_minus
 
     pub const e0M: BasisElement = const_parse("e0F").with_name("e0M", false);
@@ -1185,7 +1152,6 @@ pub mod elements {
     pub const e012M: BasisElement = const_parse("e012F").with_name("e012M", false);
 
     pub const e0123M: BasisElement = const_parse("e0123F").with_name("e0123M", false);
-
 
     // e_plus and e_minus
 
@@ -1233,24 +1199,20 @@ pub mod elements {
         ];
         for (custom_element, correct_name, display_is_negated, ordered_element) in cases {
             assert_eq!(
-                custom_element.signature(), ordered_element.signature(),
+                custom_element.signature(),
+                ordered_element.signature(),
                 "Custom BasisElement {custom_element:?} does not match signature of {ordered_element:?}"
             );
             assert_eq!(
-                custom_element.coefficient(), ordered_element.coefficient(),
+                custom_element.coefficient(),
+                ordered_element.coefficient(),
                 "Custom BasisElement {custom_element:?} does not match coefficient of {ordered_element:?}"
             );
             let dn = custom_element.display_name.expect("Parsed BasisElements should have custom names");
-            assert_eq!(
-                dn.negate_display, display_is_negated,
-                "Custom BasisElement {custom_element:?} has incorrect display negation"
-            );
+            assert_eq!(dn.negate_display, display_is_negated, "Custom BasisElement {custom_element:?} has incorrect display negation");
             let mut n = String::new();
             write!(n, "{custom_element}").expect("BasisElements must implement Display without fail");
-            assert_eq!(
-                n.as_str(), correct_name,
-                "Custom BasisElement {custom_element:?} does not display to \"{correct_name}\""
-            );
+            assert_eq!(n.as_str(), correct_name, "Custom BasisElement {custom_element:?} does not display to \"{correct_name}\"");
 
             // Negated display
             let mut custom_element = custom_element;
@@ -1258,10 +1220,7 @@ pub mod elements {
             let correct_name = format!("-{correct_name}");
             let mut n = String::new();
             write!(n, "{custom_element}").expect("BasisElements must implement Display without fail");
-            assert_eq!(
-                n, correct_name,
-                "Custom BasisElement {custom_element:?} does not display to \"{correct_name}\""
-            );
+            assert_eq!(n, correct_name, "Custom BasisElement {custom_element:?} does not display to \"{correct_name}\"");
         }
     }
 }

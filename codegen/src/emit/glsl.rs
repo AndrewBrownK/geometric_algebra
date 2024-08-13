@@ -1,9 +1,9 @@
 use crate::ast::GatherData;
+use crate::emit::lower_camel_case;
 use crate::{
     ast::{AstNode, DataType, Expression, ExpressionContent},
-    emit::{emit_indentation},
+    emit::emit_indentation,
 };
-use crate::emit::lower_camel_case;
 
 const COMPONENT: &[&str] = &["x", "y", "z", "w"];
 
@@ -156,7 +156,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 }
             }
             _ => unreachable!(),
-        }
+        },
         ExpressionContent::SquareRoot(inner_expression) => {
             collector.write_all(b"sqrt(")?;
             emit_expression(collector, inner_expression)?;
@@ -193,7 +193,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                         ExpressionContent::Divide(_, _) => true,
                         _ => false,
                     };
-                },
+                }
                 ExpressionContent::Divide(l, r) => {
                     group_lhs = match &l.content {
                         ExpressionContent::Add(_, _) => true,
@@ -208,7 +208,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                         ExpressionContent::Divide(_, _) => true,
                         _ => false,
                     };
-                },
+                }
                 _ => {}
             }
             if let ExpressionContent::LogicAnd(_, _) = expression.content {
@@ -352,7 +352,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     lower_camel_case(collector, class.class_name.as_str())?;
                     collector.write_all(b"_")?;
                     lower_camel_case(collector, result.name)?;
-                },
+                }
                 1 if result.name == "Into" => {
                     lower_camel_case(collector, &parameters[0].multi_vector_class().class_name)?;
                     collector.write_all(b"_")?;
@@ -364,12 +364,12 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     lower_camel_case(collector, &parameters[0].multi_vector_class().class_name)?;
                     collector.write_all(b"_")?;
                     lower_camel_case(collector, result.name)?;
-                },
+                }
                 2 if !matches!(parameters[1].data_type, DataType::MultiVector(_)) => {
                     lower_camel_case(collector, &parameters[0].multi_vector_class().class_name)?;
                     collector.write_all(b"_")?;
                     lower_camel_case(collector, result.name)?;
-                },
+                }
                 2 => {
                     lower_camel_case(collector, &parameters[0].multi_vector_class().class_name)?;
                     collector.write_all(b"_")?;

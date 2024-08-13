@@ -1,11 +1,11 @@
 #![allow(non_upper_case_globals)]
 
-use std::marker::{ConstParamTy};
+use std::marker::ConstParamTy;
 
-use std::cmp::{PartialEq};
-use std::hash::{Hash};
-use std::ops::{BitOr, BitAnd, Not, BitOrAssign};
 use crate::algebra2::basis::{BasisElement, BasisSignature};
+use std::cmp::PartialEq;
+use std::hash::Hash;
+use std::ops::{BitAnd, BitOr, BitOrAssign, Not};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Grades(u32);
@@ -74,7 +74,6 @@ pub const grade14: Grades = Grades(0x4000);
 pub const grade15: Grades = Grades(0x8000);
 pub const grade16: Grades = Grades(0x10000);
 
-
 pub fn plane_based_k_reflections() -> [Grades; 17] {
     [
         grade0,
@@ -111,7 +110,6 @@ pub fn point_based_k_reflections<const AntiScalar: BasisElement>() -> [Grades; 1
     result
 }
 
-
 impl BitOr for Grades {
     type Output = Self;
 
@@ -139,17 +137,13 @@ impl Not for Grades {
     }
 }
 
-
 // Implement `ConstParamTy` for `Grades`
 impl ConstParamTy for Grades {}
-
 
 #[macro_export]
 macro_rules! grade_constraint {
     ($g:ty, $h:ty) => {
-        [(); <
-            $crate::algebra2::basis::grades::AddGradesImpl as $crate::algebra2::basis::grades::AddGradesTrait<$g, $h>
-        >::OUTPUT.into_bits() as usize]
+        [(); <$crate::algebra2::basis::grades::AddGradesImpl as $crate::algebra2::basis::grades::AddGradesTrait<$g, $h>>::OUTPUT.into_bits() as usize]
     };
 }
 

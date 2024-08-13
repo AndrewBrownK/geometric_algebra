@@ -11,7 +11,6 @@ pub use std::arch::x86_64::*;
 
 // TODO add cargo feature driven support for f64 (and maybe f16, if that is a thing?)
 
-
 #[derive(Clone, Copy)]
 #[repr(C)]
 pub union Simd32x4 {

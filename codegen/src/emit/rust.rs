@@ -175,7 +175,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                 }
             }
             _ => unreachable!(),
-        }
+        },
         ExpressionContent::SquareRoot(inner_expression) => {
             emit_expression(collector, inner_expression)?;
             collector.write_all(b".sqrt()")?;
@@ -211,7 +211,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                         ExpressionContent::Divide(_, _) => true,
                         _ => false,
                     };
-                },
+                }
                 ExpressionContent::Divide(l, r) => {
                     group_lhs = match &l.content {
                         ExpressionContent::Add(_, _) => true,
@@ -226,7 +226,7 @@ fn emit_expression<W: std::io::Write>(collector: &mut W, expression: &Expression
                         ExpressionContent::Divide(_, _) => true,
                         _ => false,
                     };
-                },
+                }
                 _ => {}
             }
             if group_lhs {
@@ -334,7 +334,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 while let Some(line) = docs_iter.next() {
                     if line.is_empty() {
                         match docs_iter.peek() {
-                            None => {},
+                            None => {}
                             Some(next_line) => {
                                 if !next_line.is_empty() {
                                     collector.write_all(b"///\n")?;
@@ -418,28 +418,29 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             collector.write_all(b"}\n\n")?;
             emit_indentation(collector, indentation)?;
 
-
-
-
             collector.write_fmt(format_args!("impl {} {{\n", class.class_name))?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"#[allow(clippy::too_many_arguments)]\n")?;
             emit_indentation(collector, indentation + 1)?;
             collector.write_all(b"pub const fn new(")?;
 
-            let elements = class.flat_basis().into_iter().map(|mut it| {
-                assert_ne!(it.coefficient, 0);
-                let negative = it.coefficient == -1;
-                it.coefficient = 1;
-                let mut n = it.to_string();
-                if n == "1" {
-                    n = "scalar".to_string();
-                }
-                if negative {
-                    n = format!("neg_{n}");
-                }
-                n
-            }).collect::<Vec<_>>();
+            let elements = class
+                .flat_basis()
+                .into_iter()
+                .map(|mut it| {
+                    assert_ne!(it.coefficient, 0);
+                    let negative = it.coefficient == -1;
+                    it.coefficient = 1;
+                    let mut n = it.to_string();
+                    if n == "1" {
+                        n = "scalar".to_string();
+                    }
+                    if negative {
+                        n = format!("neg_{n}");
+                    }
+                    n
+                })
+                .collect::<Vec<_>>();
             for i in 0..element_count {
                 if i > 0 {
                     collector.write_all(b", ")?;
@@ -447,7 +448,6 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 let element = &elements[i];
                 collector.write_fmt(format_args!("{}: f32", element))?;
             }
-
 
             collector.write_all(b") -> Self {\n")?;
             emit_indentation(collector, indentation + 2)?;
@@ -648,7 +648,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
             emit_indentation(collector, indentation)?;
             collector.write_all(b"}\n")?;
         }
-        AstNode::TraitImplementation { result, class,  parameters, body } => {
+        AstNode::TraitImplementation { result, class, parameters, body } => {
             let result_type_name = get_data_type(&result.data_type);
             match parameters.len() {
                 0 => collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?,
@@ -657,16 +657,10 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                 }
                 1 => collector.write_fmt(format_args!("impl {} for {}", result.name, class.class_name))?,
                 2 => {
-                    collector.write_fmt(format_args!(
-                        "impl {}<",
-                        result.name,
-                    ))?;
+                    collector.write_fmt(format_args!("impl {}<", result.name,))?;
                     emit_data_type(collector, &parameters[1].data_type)?;
-                    collector.write_fmt(format_args!(
-                        "> for {}",
-                        class.class_name,
-                    ))?;
-                },
+                    collector.write_fmt(format_args!("> for {}", class.class_name,))?;
+                }
                 _ => unreachable!(),
             }
             collector.write_all(b" {\n")?;
@@ -686,7 +680,7 @@ pub fn emit_code<W: std::io::Write>(collector: &mut W, ast_node: &AstNode, inden
                     } else {
                         emit_data_type(collector, &result.data_type)?;
                     }
-                },
+                }
                 1 => {
                     collector.write_fmt(format_args!("({}) -> ", parameters[0].name))?;
                     emit_data_type(collector, &result.data_type)?;

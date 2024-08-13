@@ -6,7 +6,7 @@ fn main() -> anyhow::Result<()> {
         vec![
             ("res/shader.vs.spv", "vs_main", naga::ShaderStage::Vertex),
             ("res/shader.fs.spv", "fs_main", naga::ShaderStage::Fragment),
-        ]
+        ],
     )?;
     Ok(())
 }

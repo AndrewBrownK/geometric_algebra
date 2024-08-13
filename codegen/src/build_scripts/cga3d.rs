@@ -10,9 +10,8 @@ pub fn script() -> std::io::Result<()> {
     script_custom(true, CGA3D_CRATE_PREFIX)
 }
 
-//noinspection DuplicatedCode
+// noinspection DuplicatedCode
 fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> {
-
     //  Remember this heuristic, substituting dual objects as applicable:
     //  -
     //  "A dipole with imaginary radius behaves exactly like a circle with a real radius.
@@ -24,7 +23,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Scalar:1",
         "AntiScalar:e12345",
         "DualNum:1,e12345",
-
         // Grade 1 is Certified
         "RoundPoint:e1,e2,e3|e4,e5",
         "Origin:e4",
@@ -33,7 +31,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "AntiSphereOnOrigin:e1,e2,e3,e4",
         "AntiPlane:e1,e2,e3,e5", // AntiPlane = AntiSphereOnInfinity
         "AntiPlaneAtOrigin:e1,e2,e3",
-
         // Grade 2 is Certified
         "Dipole:e41,e42,e43|e23,e31,e12|e15,e25,e35,e45",
         "DipoleAtOrigin:e41,e42,e43|e15,e25,e35",
@@ -47,7 +44,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "FlatPoint:e15,e25,e35,e45",
         "FlatPointAtOrigin:e45",
         "FlatPointAtInfinity:e15,e25,e35",
-
         // Grade 3 is Certified
         "Circle:e423,e431,e412|e415,e425,e435|e235,e315,e125,e321",
         "CircleAtOrigin:e423,e431,e412|e235,e315,e125",
@@ -61,7 +57,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Line:e415,e425,e435|e235,e315,e125",
         "LineAtOrigin:e415,e425,e435",
         "LineAtInfinity:e235,e315,e125",
-
         // Grade 4 is Certified
         "Sphere:e4235,e4315,e4125|e1234,e3215",
         "NullSphereAtOrigin:e1234",
@@ -70,7 +65,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "SphereOnOrigin:e4235,e4315,e4125,e1234",
         "Plane:e4235,e4315,e4125,e3215",
         "PlaneAtOrigin:e4235,e4315,e4125",
-
         // Operator Objects
         "Motor:e415,e425,e435,e12345|e235,e315,e125",
         "Rotor:e415,e425,e435,e12345",
@@ -78,14 +72,12 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         "Flector:e15,e25,e35,e45|e4235,e4315,e4125,e3215",
         "Transflector:e15,e25,e35|e4235,e4315,e4125,e3215",
         "FlectorAtInfinity:e15,e25,e35,e3215",
-
         // TODO actually you can't be sure this is a true dilator, and not any other conformal
         //  transformation. Because this is the AntiWedgeDot(Sphere, Sphere), and you don't
         //  yet know if they are concentric. So if you want a distinct Dilator type, you can only
         //  do so at the Origin using consecutive SphereAtOrigin.
         // TODO do I prefer Dilator condensed, or separated by grade?
         "Dilator:e12345|e423,e431,e412|e415,e425,e435|e235,e315,e125,e321",
-
         // TODO better names (and condensing) for these compositions
         // TODO instead of writing these out manually, generate them dynamically
         //  after we get the new AST and algebra definitions running.
@@ -102,8 +94,6 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
         // "DipoleFlatPointThing:1,e12345|e1,e2,e3|e4,e5|\
         //     e423,e431,e412|e415,e425,e435|e235,e315,e125,e321|e4235,e4315,e4125",
 
-
-
         // TODO I could condense a couple of the vec2s
         //  although it is helpful during development to have grades separated
         "MultiVector:\
@@ -116,46 +106,34 @@ fn script_custom(actually_emit: bool, path_prefix: &str) -> std::io::Result<()> 
 
     // TODO add more of these if/where applicable to CGA
     let sandwich_outputs: BTreeMap<(&str, &str), &str> = [
-
         ("Translator", "Origin", "Point"),
         ("Translator", "LineAtOrigin", "Line"),
         ("Translator", "PlaneAtOrigin", "Plane"),
         ("Translator", "Rotor", "Motor"),
-
         ("Motor", "Origin", "Point"),
         ("Motor", "LineAtOrigin", "Line"),
         ("Motor", "PlaneAtOrigin", "Plane"),
         ("Motor", "Rotor", "Motor"),
-
         ("Flector", "Origin", "Point"),
         ("Flector", "LineAtOrigin", "Line"),
         ("Flector", "PlaneAtOrigin", "Plane"),
         ("Flector", "Rotor", "Motor"),
-
         ("FlectorAtInfinity", "Origin", "Point"),
         ("FlectorAtInfinity", "LineAtOrigin", "Line"),
         ("FlectorAtInfinity", "PlaneAtOrigin", "Plane"),
         ("FlectorAtInfinity", "Rotor", "Motor"),
-
-    ].into_iter().map(|it| ((it.0, it.1), it.2)).collect();
+    ]
+    .into_iter()
+    .map(|it| ((it.0, it.1), it.2))
+    .collect();
 
     // Arbitrary personal preference for dialect
     let dialect = Dialect::default().also_wedge_dot().wedge().dot().also_meet_and_join();
 
-    cga_script(
-        path_prefix,
-        CGA3D,
-        dialect,
-        3,
-        actually_emit,
-        &mv_iter,
-        sandwich_outputs,
-    )?;
-
+    cga_script(path_prefix, CGA3D, dialect, 3, actually_emit, &mv_iter, sandwich_outputs)?;
 
     Ok(())
 }
-
 
 #[cfg(test)]
 mod test {
@@ -171,19 +149,13 @@ mod test {
 
     #[test]
     fn glsl_validation() {
-        let file_path = Path::new("../")
-            .join(Path::new(CGA3D_CRATE_PREFIX))
-            .join(Path::new("src/shaders/")
-                .join(CGA3D));
+        let file_path = Path::new("../").join(Path::new(CGA3D_CRATE_PREFIX)).join(Path::new("src/shaders/").join(CGA3D));
         validate_glsl(CGA3D, file_path);
     }
 
     #[test]
     fn wgsl_validation() {
-        let file_path = Path::new("../")
-            .join(Path::new(CGA3D_CRATE_PREFIX))
-            .join(Path::new("src/shaders/")
-                .join(CGA3D));
+        let file_path = Path::new("../").join(Path::new(CGA3D_CRATE_PREFIX)).join(Path::new("src/shaders/").join(CGA3D));
         validate_wgsl(CGA3D, file_path);
     }
 }

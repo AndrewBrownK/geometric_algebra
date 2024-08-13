@@ -1,24 +1,27 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs;
-use std::io::{BufRead, BufReader, Read, Write};
+use std::io::{BufRead, BufReader, ErrorKind, Read, Write};
 use std::ops::Deref;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
 
 use anyhow::{bail, Error};
+use indicatif::ProgressFinish;
 use tokio::task::JoinSet;
 
-use crate::algebra2::basis::BasisElement;
 use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
+use crate::algebra2::basis::BasisElement;
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use crate::ast2::traits::{
+    progress_style, BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus,
+};
 use crate::ast2::RawVariableDeclaration;
-use crate::ast2::traits::{BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus};
-use crate::emit2::{AstEmitter, sort_trait_impls};
-use crate::SIMD_SRC;
+use crate::emit2::{sort_trait_impls, AstEmitter};
 use crate::utility::CollectResults;
+use crate::SIMD_SRC;
 
 /// Generate a Rust project.
 #[derive(Copy, Clone)]
@@ -29,7 +32,6 @@ pub struct Rust {
     pub point_based: bool,
 
     // Major features
-
     /// Generate rust-to-wgsl integration.
     /// TODO this should depend on WGSL language generation
     /// Dependencies added: naga, naga_oil, anyhow, bytemuck, encase
@@ -62,7 +64,6 @@ pub struct Rust {
     pub censor_grades: bool,
 
     // Internal/private stuff
-
     fancy_infix: Option<BinaryOps>,
 }
 
@@ -94,7 +95,6 @@ impl Rust {
         self
     }
 
-
     pub async fn write_crate<P: AsRef<Path>>(
         &self,
         crate_folder: P,
@@ -107,11 +107,7 @@ impl Rust {
         let crate_folder = crate_folder.as_ref().to_path_buf();
         fs::create_dir_all(&crate_folder)?;
         let file_path = crate_folder.join(Path::new("Cargo.toml"));
-        let mut file = fs::OpenOptions::new()
-            .write(true)
-            .create(true)
-            .truncate(true)
-            .open(&file_path)?;
+        let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
         let major = version.major;
         let minor = version.minor;
         let patch = version.patch;
@@ -131,7 +127,9 @@ impl Rust {
             additional_authors.push('"');
         }
 
-        write!(&mut file, r#"[package]
+        write!(
+            &mut file,
+            r#"[package]
 name = "{algebra_name}"
 version = "{major}.{minor}.{patch}{pre}"
 authors = ["Andrew Brown <Andrew.Brown.UNL@gmail.com>", "Alexander Meißner <AlexanderMeissner@gmx.net>"{additional_authors}]
@@ -148,24 +146,31 @@ glsl = []
 postgres = []
 
 [dependencies]
-"#)?;
+"#
+        )?;
         if self.wgsl || self.glsl {
-            writeln!(&mut file , r#"naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
+            writeln!(
+                &mut file,
+                r#"naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
 naga = "0.19.2"
 anyhow = "1.0.86"
 bytemuck = {{ version = "1.16.3", features = ["derive"] }}
-encase = "0.9.0""#)?;
+encase = "0.9.0""#
+            )?;
         }
         if self.nearly_eq_ord {
-            writeln!(&mut file , r#"nearly = "0.4.0""#)?;
+            writeln!(&mut file, r#"nearly = "0.4.0""#)?;
         }
         if self.eq_ord_hash {
-            writeln!(&mut file , r#"float-ord = "0.3.2""#)?;
+            writeln!(&mut file, r#"float-ord = "0.3.2""#)?;
         }
         if self.sql {
             // TODO pgx seems to be a picky builder, so will need close inspection.
-            writeln!(&mut file , r#"pgx = "0.7.4"
-postgres-types = "0.2.7""#)?;
+            writeln!(
+                &mut file,
+                r#"pgx = "0.7.4"
+postgres-types = "0.2.7""#
+            )?;
         }
         if self.serde {
             writeln!(&mut file, r#"serde = {{ version = "1.0.204", features = ["derive"] }}"#)?;
@@ -180,37 +185,31 @@ postgres-types = "0.2.7""#)?;
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
+        // Copilot Advice:
+        //
+        // Using the include! macro to pull in multiple large files into a single unifying file can impact
+        // compile times, but it won't be due to the effort of concatenation. The include! macro essentially
+        // inserts the content of the included files directly into the source file at the point of the macro
+        // call, so the compiler treats it as if the code were written directly in the file
+        // https://doc.rust-lang.org/std/macro.include.html.
+        //
+        // However, the overall compile time can be affected by the size and complexity of the generated
+        // code. When you include many large files, the compiler has to process a significant amount of
+        // code in a single compilation unit, which can slow down the compilation process. On the other hand,
+        // using separate modules can help distribute the compilation workload, potentially allowing for
+        // better parallelism and incremental compilation benefits
+        // https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
+        //
+        // In summary, while the include! macro itself doesn't add significant overhead, the way you
+        // structure your code can impact compile times. If you find that compile times are becoming an
+        // issue, you might want to consider organizing your code into separate modules to take advantage
+        // of Rust's incremental compilation and parallel processing capabilities
+        // https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
 
-
-        /*
-        Copilot Advice:
-
-        Using the include! macro to pull in multiple large files into a single unifying file can impact
-        compile times, but it won't be due to the effort of concatenation. The include! macro essentially
-        inserts the content of the included files directly into the source file at the point of the macro
-        call, so the compiler treats it as if the code were written directly in the file
-        https://doc.rust-lang.org/std/macro.include.html.
-
-        However, the overall compile time can be affected by the size and complexity of the generated
-        code. When you include many large files, the compiler has to process a significant amount of
-        code in a single compilation unit, which can slow down the compilation process. On the other hand,
-        using separate modules can help distribute the compilation workload, potentially allowing for
-        better parallelism and incremental compilation benefits
-        https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
-
-        In summary, while the include! macro itself doesn't add significant overhead, the way you
-        structure your code can impact compile times. If you find that compile times are becoming an
-        issue, you might want to consider organizing your code into separate modules to take advantage
-        of Rust's incremental compilation and parallel processing capabilities
-        https://corrode.dev/blog/tips-for-faster-rust-compile-times/.
-        */
-
-        /*
-        So because of the above advice, we will give each MultiVec its own module after all.
-
-        It just gets a little tedious to fully qualify my_trait_name::MyTraitName and my_vector::MyVector,
-        so we will re-export in a more convenient module.
-         */
+        // So because of the above advice, we will give each MultiVec its own module after all.
+        //
+        // It just gets a little tedious to fully qualify my_trait_name::MyTraitName and my_vector::MyVector,
+        // so we will re-export in a more convenient module.
 
         let src_folder = src_folder.as_ref().to_path_buf();
         let folder_data = src_folder.join(Path::new("data"));
@@ -239,21 +238,22 @@ postgres-types = "0.2.7""#)?;
                 let line = line?;
                 let line = line.trim();
                 if line.is_empty() {
-                    continue
+                    continue;
                 }
                 let path = Path::new(line);
-                fs::remove_file(path)?;
+                match fs::remove_file(path) {
+                    Ok(_) => {}
+                    Err(e) if e.kind() == ErrorKind::NotFound => {}
+                    e => e?,
+                };
             }
         }
 
+        let multi_progress = Arc::new(indicatif::MultiProgress::new());
         let mut join_set: JoinSet<anyhow::Result<()>> = JoinSet::new();
         let (tx, mut rx) = tokio::sync::mpsc::unbounded_channel::<PathBuf>();
         join_set.spawn(async move {
-            let mut file = fs::OpenOptions::new()
-                .write(true)
-                .create(true)
-                .truncate(true)
-                .open(&file_path)?;
+            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let mut paths = vec![];
             while let Some(p) = rx.recv().await {
                 use std::fmt::Write;
@@ -272,6 +272,11 @@ postgres-types = "0.2.7""#)?;
             Ok(())
         });
 
+        let qty_mvs = mvs.len() as u64;
+        let data_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_mvs).with_finish(ProgressFinish::AndLeave)));
+        data_pb.set_style(progress_style());
+        data_pb.set_message("Rust - Data Definitions");
+
         let mut data_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for multi_vec in mvs.iter() {
             let multi_vec = *multi_vec;
@@ -281,41 +286,30 @@ postgres-types = "0.2.7""#)?;
             let folder_data = folder_data.clone();
             let doc = mv_docs.get(&n.to_string()).cloned();
             let tx2 = tx.clone();
+
+            let pb2 = data_pb.clone();
             join_set.spawn(async move {
                 let file_path = folder_data.join(Path::new(&lsc)).with_extension("rs");
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .truncate(true)
-                    .open(&file_path)?;
+                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
+                pb2.inc(1);
                 Ok(())
             });
 
             if let Some(gr) = mv.grade() {
                 if !self.censor_grades && gr == 1 {
-                    data_mods.entry("base".to_string())
-                        .and_modify(|v| v.push(multi_vec))
-                        .or_insert(vec![multi_vec]);
+                    data_mods.entry("base".to_string()).and_modify(|v| v.push(multi_vec)).or_insert(vec![multi_vec]);
                 }
                 let as_gr = AntiScalar.grade();
                 if gr > 0 && gr < as_gr {
-                    let (m, j) = if self.point_based {
-                        ((as_gr - 1) - gr, gr - 1)
-                    } else {
-                        (gr - 1, (as_gr - 1) - gr)
-                    };
-                    data_mods.entry(format!("join_{j}"))
-                        .and_modify(|v| v.push(multi_vec))
-                        .or_insert(vec![multi_vec]);
-                    data_mods.entry(format!("meet_{m}"))
-                        .and_modify(|v| v.push(multi_vec))
-                        .or_insert(vec![multi_vec]);
+                    let (m, j) = if self.point_based { ((as_gr - 1) - gr, gr - 1) } else { (gr - 1, (as_gr - 1) - gr) };
+                    data_mods.entry(format!("join_{j}")).and_modify(|v| v.push(multi_vec)).or_insert(vec![multi_vec]);
+                    data_mods.entry(format!("meet_{m}")).and_modify(|v| v.push(multi_vec)).or_insert(vec![multi_vec]);
                 }
             }
 
@@ -332,71 +326,68 @@ postgres-types = "0.2.7""#)?;
                 } else {
                     "vector_mixed".to_string()
                 };
-                data_mods.entry(vec_name.to_string())
-                    .and_modify(|v| v.push(multi_vec))
-                    .or_insert(vec![multi_vec]);
+                data_mods.entry(vec_name.to_string()).and_modify(|v| v.push(multi_vec)).or_insert(vec![multi_vec]);
             }
             let k_reflection = if self.point_based {
                 point_based_k_reflections::<AntiScalar>()
             } else {
                 plane_based_k_reflections()
-            }.into_iter()
-                .enumerate()
-                .find(|(i, it)| it.contains(gr))
-                .map(|(i, _)| i);
+            }
+            .into_iter()
+            .enumerate()
+            .find(|(i, it)| it.contains(gr))
+            .map(|(i, _)| i);
             if let Some(i) = k_reflection {
-                data_mods.entry(format!("reflection_{i}"))
-                    .and_modify(|v| v.push(multi_vec))
-                    .or_insert(vec![multi_vec]);
+                data_mods.entry(format!("reflection_{i}")).and_modify(|v| v.push(multi_vec)).or_insert(vec![multi_vec]);
             }
         }
 
+        let qty_defs = defs.len() as u64;
+        let trait_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_defs).with_finish(ProgressFinish::AndLeave)));
+        trait_pb.set_style(progress_style());
+        trait_pb.set_message("Rust - Trait Definitions");
 
-        let mut trait_mods: BTreeMap<String, Vec<_>>  = BTreeMap::new();
+        let mut trait_mods: BTreeMap<String, Vec<_>> = BTreeMap::new();
         for td in defs.iter() {
             let td = td.clone();
             let k = td.names.trait_key;
             let n = k.as_upper_camel();
             let lsc = k.as_lower_snake();
             let arity = td.arity.as_str().to_string();
-            trait_mods.entry(arity)
-                .and_modify(|v| v.push(td.clone()))
-                .or_insert(vec![td.clone()]);
+            trait_mods.entry(arity).and_modify(|v| v.push(td.clone())).or_insert(vec![td.clone()]);
             let folder_traits = folder_traits.clone();
             match n.as_str() {
                 "Into" | "TryInto" => continue,
                 _ => {}
             }
             let tx2 = tx.clone();
+            let pb2 = trait_pb.clone();
             join_set.spawn(async move {
                 let file_path = folder_traits.join(Path::new(lsc.as_str())).with_extension("rs");
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .truncate(true)
-                    .open(&file_path)?;
+                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 // TODO remove these imports when they are unused
                 writeln!(&mut file, "use crate::data::*;")?;
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
                 self.format_file(&file_path)?;
+                pb2.inc(1);
                 Ok(())
             });
         }
 
-        let mut impl_files: HashMap<
-            String,
-            (Vec<Arc<RawTraitImplementation>>, Vec<TraitKey>)
-        > = HashMap::new();
+        let mut impl_files: HashMap<String, (Vec<Arc<RawTraitImplementation>>, Vec<TraitKey>)> = HashMap::new();
+
+        let qty_impls = impls.len() as u64;
+        let pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls)));
+        pb.set_style(progress_style());
+        pb.set_message("Rust - Distributing Trait Implementations");
 
         for i in impls {
             let k = i.definition.names.trait_key;
             let (folder, name) = match k.as_upper_camel().as_str() {
-                "Add" | "Sub" | "Mul" | "Div"
-                | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor"
-                | "Neg" | "Not" => {
+                "Add" | "Sub" | "Mul" | "Div" | "Shl" | "Shr" | "BitAnd" | "BitOr" | "BitXor" | "Neg" | "Not" => {
                     let ExpressionType::Class(mv) = i.owner else { continue };
                     let n = TraitKey::new(mv.name()).as_lower_snake();
                     ("data", n)
@@ -409,38 +400,45 @@ postgres-types = "0.2.7""#)?;
                 _ => ("traits", k.as_lower_snake()),
             };
             let i2 = i.clone();
-            impl_files.entry(format!("{folder}/impls/{name}.rs"))
-                .and_modify(move |(v, _)| v.push(i2))
-                .or_insert_with(|| {
-                    let mut t_deps: Vec<_> = i.definition.dependencies.lock().iter().cloned().collect();
-                    t_deps.sort();
-                    (vec![i], t_deps)
-                });
+            impl_files.entry(format!("{folder}/impls/{name}.rs")).and_modify(move |(v, _)| v.push(i2)).or_insert_with(|| {
+                let mut t_deps: Vec<_> = i.definition.dependencies.lock().iter().cloned().collect();
+                t_deps.sort();
+                (vec![i], t_deps)
+            });
+            pb.inc(1);
         }
+        pb.finish();
 
         for (file_path, (mut impls, deps)) in impl_files {
             let src_folder = src_folder.clone();
             let tx2 = tx.clone();
+            let multi_progress = multi_progress.clone();
             join_set.spawn(async move {
                 let file_path = src_folder.join(Path::new(file_path.as_str())).with_extension("rs");
+
+                let qty_impls = impls.len() as u64;
+                let qty_deps = deps.len() as u64;
+                let pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls + qty_deps + 2)));
+                pb.set_style(progress_style());
+                let fpd = file_path.display();
+                pb.set_message(format!("Rust - {fpd}"));
+
                 tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new()
-                    .write(true)
-                    .create(true)
-                    .truncate(true)
-                    .open(&file_path)?;
+                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut deps_set = HashSet::new();
                 for dep in deps {
                     deps_set.insert(dep);
                     if self.prefer_fancy_infix {
                         let lsc = dep.as_lower_snake();
-                        writeln!(&mut file,  "use crate::traits::{lsc};")?;
+                        writeln!(&mut file, "use crate::traits::{lsc};")?;
                     } else {
                         let ucc = dep.as_upper_camel();
-                        writeln!(&mut file,  "use crate::traits::{ucc};")?;
+                        writeln!(&mut file, "use crate::traits::{ucc};")?;
                     }
+                    pb.inc(1);
                 }
                 sort_trait_impls(&mut impls, deps_set)?;
+                pb.inc(1);
                 // writeln!(&mut file, "use crate::data::*;")?;
                 // writeln!(&mut file, "use crate::simd::*;")?;
                 let mut already_granted_infix = BTreeSet::new();
@@ -450,9 +448,12 @@ postgres-types = "0.2.7""#)?;
                         "Into" => self.write_trait_from(&mut file, i),
                         "TryInto" => self.write_trait_try_from(&mut file, i),
                         _ => self.declare_trait_impl(&mut file, i, &mut already_granted_infix),
-                    }?
+                    }?;
+                    pb.inc(1);
                 }
                 self.format_file(&file_path)?;
+                pb.inc(1);
+                pb.finish();
                 Ok(())
             });
         }
@@ -462,11 +463,7 @@ postgres-types = "0.2.7""#)?;
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("data.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new()
-                .write(true)
-                .create(true)
-                .truncate(true)
-                .open(&file_path)?;
+            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             for (the_mod, mvs) in data_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for mv in mvs {
@@ -491,11 +488,7 @@ postgres-types = "0.2.7""#)?;
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("traits.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new()
-                .write(true)
-                .create(true)
-                .truncate(true)
-                .open(&file_path)?;
+            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             for (the_mod, ts) in trait_mods {
                 writeln!(&mut file, "pub mod {the_mod} {{")?;
                 for t in ts {
@@ -512,11 +505,11 @@ postgres-types = "0.2.7""#)?;
                             TraitArity::Zero => {}
                             TraitArity::One => {
                                 writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
-                            },
+                            }
                             TraitArity::Two => {
                                 writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
                                 writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc}_partial;")?;
-                            },
+                            }
                         }
                     }
                 }
@@ -538,11 +531,11 @@ postgres-types = "0.2.7""#)?;
                         TraitArity::Zero => {}
                         TraitArity::One => {
                             writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
-                        },
+                        }
                         TraitArity::Two => {
                             writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc};")?;
                             writeln!(&mut file, "pub use crate::traits::{lsc}::{lsc}_partial;")?;
-                        },
+                        }
                     }
                 }
             }
@@ -555,11 +548,7 @@ postgres-types = "0.2.7""#)?;
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("lib.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new()
-                .write(true)
-                .create(true)
-                .truncate(true)
-                .open(&file_path)?;
+            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             writeln!(&mut file, "pub mod data;")?;
             writeln!(&mut file, "pub mod traits;")?;
             writeln!(&mut file, "pub mod simd;")?;
@@ -580,11 +569,7 @@ postgres-types = "0.2.7""#)?;
         join_set.spawn(async move {
             let file_path = src_folder2.join(Path::new("simd.rs"));
             tx2.send(file_path.clone())?;
-            let mut file = fs::OpenOptions::new()
-                .write(true)
-                .create(true)
-                .truncate(true)
-                .open(&file_path)?;
+            let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let src = SIMD_SRC;
             write!(&mut file, "{src}")?;
             self.format_file(&file_path)?;
@@ -594,8 +579,6 @@ postgres-types = "0.2.7""#)?;
         drop(tx);
         join_set.collect_results().await
     }
-
-
 
     fn write_type<W: Write>(&self, w: &mut W, data_type: ExpressionType) -> anyhow::Result<()> {
         match data_type {
@@ -752,7 +735,7 @@ postgres-types = "0.2.7""#)?;
                             let f = -f;
                             write!(w, " - {f}*")?;
                         }
-                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
@@ -878,7 +861,7 @@ postgres-types = "0.2.7""#)?;
                             let f = -f;
                             write!(w, " - Simd32x2::from({f})*")?;
                         }
-                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
@@ -980,7 +963,7 @@ postgres-types = "0.2.7""#)?;
                             let f = -f;
                             write!(w, " - Simd32x3::from({f})*")?;
                         }
-                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
@@ -1085,7 +1068,7 @@ postgres-types = "0.2.7""#)?;
                             let f = -f;
                             write!(w, " - Simd32x4::from({f})*")?;
                         }
-                        _ => unreachable!("This match is complete across if conditions (unless NaN?)")
+                        _ => unreachable!("This match is complete across if conditions (unless NaN?)"),
                     }
                     // This recursion is unlikely to cause a stack overflow,
                     // because expression simplification flattens out associative operations.
@@ -1200,9 +1183,7 @@ postgres-types = "0.2.7""#)?;
         Ok(())
     }
 
-    fn write_trait_from<W: Write>(
-        &self, w: &mut W, impls: Arc<RawTraitImplementation>
-    ) -> anyhow::Result<()> {
+    fn write_trait_from<W: Write>(&self, w: &mut W, impls: Arc<RawTraitImplementation>) -> anyhow::Result<()> {
         let ExpressionType::Class(other) = impls.owner else {
             bail!("Owner of Into (Other of From) impl is not a MultiVector")
         };
@@ -1212,9 +1193,12 @@ postgres-types = "0.2.7""#)?;
         let other = other.name();
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
-writeln!(w, r#"
+        writeln!(
+            w,
+            r#"
 impl From<{other}> for {owner} {{
-    fn from({lsc}: {other}) -> Self {{"#)?;
+    fn from({lsc}: {other}) -> Self {{"#
+        )?;
         if impls.statistics.basis_element_struct_access {
             writeln!(w, "        use crate::elements::*;")?;
         }
@@ -1236,9 +1220,7 @@ impl From<{other}> for {owner} {{
         Ok(())
     }
 
-    fn write_trait_try_from<W: Write>(
-        &self, w: &mut W, impls: Arc<RawTraitImplementation>
-    ) -> anyhow::Result<()> {
+    fn write_trait_try_from<W: Write>(&self, w: &mut W, impls: Arc<RawTraitImplementation>) -> anyhow::Result<()> {
         let ExpressionType::Class(other) = impls.owner else {
             bail!("Owner of Into (Other of From) impl is not a MultiVector")
         };
@@ -1246,15 +1228,17 @@ impl From<{other}> for {owner} {{
             bail!("Other of Into (Owner of From) impl is not a MultiVector")
         };
         let destination_elements: BTreeSet<_> = owner.elements().into_iter().collect();
-        let misfit_elements: Vec<_> = other.elements().into_iter().enumerate()
-            .filter(|(_, el)| !destination_elements.contains(el)).collect();
+        let misfit_elements: Vec<_> = other.elements().into_iter().enumerate().filter(|(_, el)| !destination_elements.contains(el)).collect();
         let other = other.name();
         let owner = owner.name();
         let lsc = TraitKey::new(other).as_lower_snake();
-        write!(w, r#"
+        write!(
+            w,
+            r#"
 impl TryFrom<{other}> for {owner} {{
     type Error = String;
-    fn try_from({lsc}: {other}) -> Result<Self, Self::Error> {{"#)?;
+    fn try_from({lsc}: {other}) -> Result<Self, Self::Error> {{"#
+        )?;
         if impls.statistics.basis_element_struct_access {
             writeln!(w, "        use crate::elements::*;")?;
         }
@@ -1273,37 +1257,41 @@ impl TryFrom<{other}> for {owner} {{
         writeln!(w, "        let mut error_string = String::new();")?;
         write!(w, "        let mut fail = false;")?;
         for (i, el) in misfit_elements {
-            write!(w, r#"
+            write!(
+                w,
+                r#"
         let el = {lsc}[{i}];
         if el != 0.0 {{
             fail = true;
             error_string.push_str("{el}: ");
             error_string.push_str(el.to_string().as_str());
             error_string.push_str(", ");
-        }}"#)?;
+        }}"#
+            )?;
         }
-        write!(w, r#"
+        write!(
+            w,
+            r#"
         if fail {{
             let mut error = "Elements from {other} do not fit into {owner} {{ ".to_string();
             error.push_str(error_string.as_str());
             error.push('}}');
             return Err(error);
         }}
-        return Ok("#)?;
+        return Ok("#
+        )?;
         self.write_expression(w, &ret)?;
         writeln!(w, ")\n    }}\n}}")?;
         Ok(())
     }
 }
 
-
-
 impl AstEmitter for Rust {
-    fn file_extension() -> &'static str { "rs" }
+    fn file_extension() -> &'static str {
+        "rs"
+    }
 
-    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
-        &self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>,
-    ) -> anyhow::Result<()> {
+    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(&self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>) -> anyhow::Result<()> {
         let name = TraitKey::new(multi_vec.name);
         let ucc = name.as_upper_camel();
         let lcc = name.as_lower_camel();
@@ -1328,7 +1316,7 @@ impl AstEmitter for Rust {
         writeln!(w, "    groups: {ucc}Groups,")?;
         write!(w, "    /// ")?;
         let mut total_len = 0;
-        for (i, g) in  multi_vec.groups().into_iter().enumerate() {
+        for (i, g) in multi_vec.groups().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
             }
@@ -1446,10 +1434,6 @@ impl AstEmitter for Rust {
         }
         writeln!(w, "}}")?;
 
-
-
-
-
         let element_count = multi_vec.elements().len();
         write!(w, "const {ssc}_INDEX_REMAP: [usize; {element_count}] = [")?;
         let mut i = 0;
@@ -1469,7 +1453,6 @@ impl AstEmitter for Rust {
         }
         writeln!(w, "];")?;
 
-
         writeln!(w, "impl std::ops::Index<usize> for {ucc} {{")?;
         writeln!(w, "type Output = f32;")?;
         writeln!(w, "fn index(&self, index: usize) -> &Self::Output {{")?;
@@ -1480,7 +1463,6 @@ impl AstEmitter for Rust {
         writeln!(w, "fn index_mut(&mut self, index: usize) -> &mut Self::Output {{")?;
         writeln!(w, "    unsafe {{ &mut self.elements[{ssc}_INDEX_REMAP[index]] }}")?;
         writeln!(w, "}}\n}}")?;
-
 
         writeln!(w, "impl From<{ucc}> for [f32; {element_count}] {{")?;
         writeln!(w, "fn from(vector: {ucc}) -> Self {{")?;
@@ -1501,7 +1483,6 @@ impl AstEmitter for Rust {
             i += 4 - g.len();
         }
         writeln!(w, "] }}\n    }}\n}}")?;
-
 
         writeln!(w, "impl From<[f32; {element_count}]> for {ucc} {{")?;
         writeln!(w, "    fn from(array: [f32; {element_count}]) -> Self {{")?;
@@ -1527,7 +1508,6 @@ impl AstEmitter for Rust {
         }
         writeln!(w, "] }}\n    }}\n}}")?;
 
-
         writeln!(w, "impl std::fmt::Debug for {ucc} {{")?;
         writeln!(w, "fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {{")?;
         writeln!(w, "    formatter.debug_struct(\"{ucc}\")")?;
@@ -1539,12 +1519,17 @@ impl AstEmitter for Rust {
         let els = multi_vec.elements();
         let els_len = els.len();
 
-        writeln!(w, r#"
+        writeln!(
+            w,
+            r#"
 impl {ucc} {{
     pub const LEN: usize = {els_len};
-}}"#)?;
+}}"#
+        )?;
         if self.nearly_eq_ord {
-            writeln!(w, r#"
+            writeln!(
+                w,
+                r#"
 impl {ucc} {{
     pub fn clamp_zeros(mut self, tolerance: nearly::Tolerance<f32>) -> Self {{
         for i in 0..Self::LEN {{
@@ -1555,10 +1540,13 @@ impl {ucc} {{
         }}
         self
     }}
-}}"#)?;
+}}"#
+            )?;
         }
         if self.eq_ord_hash {
-            writeln!(w, r#"
+            writeln!(
+                w,
+                r#"
 impl PartialOrd for {ucc} {{
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {{
         for i in 0..Self::LEN {{
@@ -1605,7 +1593,8 @@ impl std::hash::Hash for {ucc} {{
         }}
     }}
 }}
-"#)?;
+"#
+            )?;
         }
 
         for (i, el) in els.clone().into_iter().enumerate() {
@@ -1656,9 +1645,7 @@ impl std::hash::Hash for {ucc} {{
         Ok(())
     }
 
-    fn declare_trait_def<W: Write>(
-        &self, w: &mut W, def: Arc<RawTraitDefinition>
-    ) -> anyhow::Result<()> {
+    fn declare_trait_def<W: Write>(&self, w: &mut W, def: Arc<RawTraitDefinition>) -> anyhow::Result<()> {
         let ucc = def.names.trait_key.as_upper_camel();
         let lsc = def.names.trait_key.as_lower_snake();
         self.emit_comment(w, true, &def.documentation)?;
@@ -1760,13 +1747,10 @@ impl std::hash::Hash for {ucc} {{
             }
         }
 
-
         Ok(())
     }
 
-    fn declare_trait_impl<W: Write>(
-        &self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>
-    ) -> anyhow::Result<()> {
+    fn declare_trait_impl<W: Write>(&self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>) -> anyhow::Result<()> {
         let def = &impls.definition;
         let ucc = def.names.trait_key.as_upper_camel();
         let lsc = def.names.trait_key.as_lower_snake();
@@ -1820,7 +1804,7 @@ impl std::hash::Hash for {ucc} {{
                 write!(w, "self, other: ")?;
                 self.write_type(w, *other_ty)?;
             }
-            _ => panic!("Arity 2 should always have other type")
+            _ => panic!("Arity 2 should always have other type"),
         }
         write!(w, ") -> ")?;
         match output_kind.deref() {
@@ -1869,20 +1853,15 @@ impl std::hash::Hash for {ucc} {{
         Ok(())
     }
 
-    fn emit_comment<W: Write, S: Into<String>>(
-        &self, w: &mut W, is_documentation: bool, s: S
-    ) -> anyhow::Result<()> {
+    fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, is_documentation: bool, s: S) -> anyhow::Result<()> {
         let slashy = if is_documentation { "/// " } else { "// " };
         let s = s.into();
         let comment = s.trim();
         if comment.is_empty() {
             writeln!(w, "\n{slashy}")?;
-            return Ok(())
+            return Ok(());
         }
-        let mut comment_iter = comment.split("\n")
-            .map(|it| it.trim())
-            .skip_while(|it| it.is_empty())
-            .peekable();
+        let mut comment_iter = comment.split("\n").map(|it| it.trim()).skip_while(|it| it.is_empty()).peekable();
         writeln!(w)?;
         while let Some(line) = comment_iter.next() {
             if line.is_empty() {
@@ -1903,7 +1882,7 @@ impl std::hash::Hash for {ucc} {{
         cmd.arg(p.as_ref().to_string_lossy().to_string());
         match cmd.spawn() {
             Ok(_) => Ok(()),
-            Err(e) => Err(Error::from(e))
+            Err(e) => Err(Error::from(e)),
         }
     }
 }

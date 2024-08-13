@@ -12,11 +12,7 @@ use crate::utility::CollectResults;
 
 pub mod rust;
 
-
-fn sort_trait_impls(
-    trait_implementations: &mut Vec<Arc<RawTraitImplementation>>,
-    mut already_ordered: HashSet<TraitKey>,
-) -> anyhow::Result<()> {
+fn sort_trait_impls(trait_implementations: &mut Vec<Arc<RawTraitImplementation>>, mut already_ordered: HashSet<TraitKey>) -> anyhow::Result<()> {
     // Start with a sort by name, so we get stable outputs
     trait_implementations.sort_by(|a, b| {
         let a_key = a.definition.names.trait_key;
@@ -43,7 +39,7 @@ fn sort_trait_impls(
             let k = it.definition.names.trait_key;
             if already_ordered.contains(&k) {
                 ordered_implementations.push(it.clone());
-                return false
+                return false;
             }
             if already_disqualified_this_pass.contains(&k) {
                 return true;
@@ -52,56 +48,31 @@ fn sort_trait_impls(
             if deps.iter().all(|dep| already_ordered.contains(dep)) {
                 already_ordered.insert(k);
                 ordered_implementations.push(it.clone());
-                return false
+                return false;
             }
             already_disqualified_this_pass.insert(k);
-            return true
+            return true;
         });
         let size_after = needs_ordering.len();
         if size_before == size_after {
-            bail!("There is a missing dependency of a trait implementation. It needs to be \
-                included/declared in this file, or else imported to this file.")
+            bail!(
+                "There is a missing dependency of a trait implementation. It needs to be \
+                included/declared in this file, or else imported to this file."
+            )
         }
     }
     *trait_implementations = ordered_implementations;
     Ok(())
 }
 
-
 pub trait AstEmitter: Copy + Send + Sync + 'static {
     fn file_extension() -> &'static str;
-    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(
-        &self,
-        w: &mut W,
-        multi_vec: &'static MultiVec<AntiScalar>,
-        docs: Option<String>,
-    ) -> anyhow::Result<()>;
-    fn declare_trait_def<W: Write>(
-        &self,
-        w: &mut W,
-        def: Arc<RawTraitDefinition>,
-    ) -> anyhow::Result<()>;
-    fn declare_trait_impl<W: Write>(
-        &self,
-        w: &mut W,
-        impls: Arc<RawTraitImplementation>,
-        already_granted_infix: &mut BTreeSet<&'static str>
-    ) -> anyhow::Result<()>;
+    fn declare_multi_vector<W: Write, const AntiScalar: BasisElement>(&self, w: &mut W, multi_vec: &'static MultiVec<AntiScalar>, docs: Option<String>) -> anyhow::Result<()>;
+    fn declare_trait_def<W: Write>(&self, w: &mut W, def: Arc<RawTraitDefinition>) -> anyhow::Result<()>;
+    fn declare_trait_impl<W: Write>(&self, w: &mut W, impls: Arc<RawTraitImplementation>, already_granted_infix: &mut BTreeSet<&'static str>) -> anyhow::Result<()>;
     fn emit_comment<W: Write, S: Into<String>>(&self, w: &mut W, is_documentation: bool, s: S) -> anyhow::Result<()>;
 
     fn format_file<P: AsRef<Path>>(&self, p: P) -> anyhow::Result<()>;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 //

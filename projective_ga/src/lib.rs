@@ -1,4 +1,3 @@
-
 pub mod simd;
 
 // TODO possibly make copies of these traits and put them in the dedicated crates instead of here

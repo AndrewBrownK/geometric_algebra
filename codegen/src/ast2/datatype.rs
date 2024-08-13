@@ -1,9 +1,9 @@
-use std::cmp::Ordering;
-use std::fmt::{Display, Formatter};
-use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::grades::{AntiGrades, Grades};
+use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::multivector::{BasisElementGroup, MultiVec};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
+use std::cmp::Ordering;
+use std::fmt::{Display, Formatter};
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Integer;
@@ -16,8 +16,7 @@ pub struct Vec3;
 #[derive(PartialEq, Eq, Hash, Copy, Clone, Debug, Ord, PartialOrd)]
 pub struct Vec4;
 
-const DUMMY_ANTI_SCALAR: BasisElement = BasisElement::const_from(BasisSignature::from_bits_retain(u16::MAX))
-    .with_name("DUMMY_ANTI_SCALAR_SHOULD_NOT_BE_EXPOSED", false);
+const DUMMY_ANTI_SCALAR: BasisElement = BasisElement::const_from(BasisSignature::from_bits_retain(u16::MAX)).with_name("DUMMY_ANTI_SCALAR_SHOULD_NOT_BE_EXPOSED", false);
 
 // Should we infect a generic AntiScalar parameter across the AST?
 //
@@ -49,7 +48,7 @@ const DUMMY_ANTI_SCALAR: BasisElement = BasisElement::const_from(BasisSignature:
 #[derive(Clone, Copy, Debug, Hash)]
 pub struct MultiVector {
     anti_scalar: BasisElement,
-    multi_vec: &'static MultiVec<DUMMY_ANTI_SCALAR>
+    multi_vec: &'static MultiVec<DUMMY_ANTI_SCALAR>,
 }
 impl PartialOrd for MultiVector {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
@@ -60,9 +59,10 @@ impl Ord for MultiVector {
     fn cmp(&self, other: &Self) -> Ordering {
         self.anti_scalar.cmp(&other.anti_scalar).then_with(|| {
             self.multi_vec.name.cmp(&other.multi_vec.name).then_with(|| {
-                self.multi_vec.grades.cmp(&other.multi_vec.grades).then_with(|| {
-                    self.multi_vec.elements().cmp(&other.multi_vec.elements())
-                })
+                self.multi_vec
+                    .grades
+                    .cmp(&other.multi_vec.grades)
+                    .then_with(|| self.multi_vec.elements().cmp(&other.multi_vec.elements()))
             })
         })
     }
@@ -114,7 +114,7 @@ impl MultiVector {
                 2 => MultiVectorGroupExpr::Vec2(Vec2Expr::Gather2(f(thing[0]), f(thing[1]))),
                 3 => MultiVectorGroupExpr::Vec3(Vec3Expr::Gather3(f(thing[0]), f(thing[1]), f(thing[2]))),
                 4 => MultiVectorGroupExpr::Vec4(Vec4Expr::Gather4(f(thing[0]), f(thing[1]), f(thing[2]), f(thing[3]))),
-                _ => unreachable!("BasisElementGroup has len 1-4")
+                _ => unreachable!("BasisElementGroup has len 1-4"),
             });
             i += 1;
         }
@@ -132,7 +132,11 @@ impl MultiVector {
             let elg = el.grade();
             match grade {
                 None => grade = Some(elg),
-                Some(gr) => if elg != gr { return None; },
+                Some(gr) => {
+                    if elg != gr {
+                        return None;
+                    }
+                }
             }
         }
         grade
@@ -199,7 +203,7 @@ impl<const AntiScalar: BasisElement> From<&'static MultiVec<AntiScalar>> for Mul
 impl<const AntiScalar: BasisElement> From<MultiVector> for Option<&'static MultiVec<AntiScalar>> {
     fn from(value: MultiVector) -> Self {
         if value.anti_scalar != AntiScalar {
-            return None
+            return None;
         }
         // SAFETY:
         // The original AntiScalar that this MultiVector was created with was stored in
@@ -213,8 +217,6 @@ impl<const AntiScalar: BasisElement> From<MultiVector> for Option<&'static Multi
         Some(mv)
     }
 }
-
-
 
 pub trait ClassesFromRegistry {
     fn include_class(&self, mvc: &MultiVector) -> bool;
@@ -231,8 +233,6 @@ impl ClassesFromRegistry for AnyClasses {
         true
     }
 }
-
-
 
 /// Good for manual implementations
 pub struct Specifically(pub MultiVector);

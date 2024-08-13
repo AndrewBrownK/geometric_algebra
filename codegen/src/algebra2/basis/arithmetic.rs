@@ -1,23 +1,22 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
+use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
+use crate::algebra2::basis::grades::{grade1, Grades};
+use crate::algebra2::basis::{BasisElement, BasisElementNames};
+use crate::grade_constraint;
 use im::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 use std::marker::PhantomData;
-use crate::algebra2::basis::{BasisElement, BasisElementNames};
-use crate::algebra2::basis::generators::{GeneratorElement, GeneratorSquares};
-use crate::algebra2::basis::grades::{grade1, Grades};
-use crate::grade_constraint;
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Product {
     pub(crate) coefficient: f32,
-    pub(crate) element: BasisElement
+    pub(crate) element: BasisElement,
 }
 
 #[derive(Clone, PartialEq)]
 pub struct Sum {
-    pub(crate) sum: Vec<Product>
+    pub(crate) sum: Vec<Product>,
 }
-
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct GradedProduct<const G: Grades>(PhantomData<Grades>, Product);
@@ -32,15 +31,14 @@ macro_rules! graded_sum {
     };
 }
 
-
-impl From<GeneratorElement> for GradedProduct<{grade1}> {
+impl From<GeneratorElement> for GradedProduct<{ grade1 }> {
     fn from(value: GeneratorElement) -> Self {
         GradedProduct(
             PhantomData,
             Product {
                 coefficient: 1.0,
                 element: value.element(),
-            }
+            },
         )
     }
 }
@@ -54,9 +52,6 @@ impl<const G: Grades> From<GradedSum<G>> for Sum {
         value.1
     }
 }
-
-
-
 
 impl Mul<f32> for Product {
     type Output = Product;
@@ -115,9 +110,6 @@ impl Sub<Product> for Product {
     }
 }
 
-
-
-
 impl<const G: Grades> Mul<f32> for GradedProduct<G> {
     type Output = GradedProduct<G>;
 
@@ -151,31 +143,26 @@ impl<const G: Grades> DivAssign<f32> for GradedProduct<G> {
         self.1.coefficient /= rhs;
     }
 }
-impl<const G: Grades, const H: Grades> Add<GradedProduct<G>> for GradedProduct<H> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Add<GradedProduct<G>> for GradedProduct<H>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn add(self, rhs: GradedProduct<G>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 + rhs.1
-        )
+        GradedSum(PhantomData, self.1 + rhs.1)
     }
 }
-impl<const G: Grades, const H: Grades> Sub<GradedProduct<G>> for GradedProduct<H> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Sub<GradedProduct<G>> for GradedProduct<H>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn sub(self, rhs: GradedProduct<G>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 - rhs.1
-        )
+        GradedSum(PhantomData, self.1 - rhs.1)
     }
 }
-
-
-
-
-
 
 impl Mul<f32> for Sum {
     type Output = Sum;
@@ -304,17 +291,11 @@ impl SubAssign<Sum> for Sum {
     }
 }
 
-
-
-
 impl<const G: Grades> Mul<f32> for GradedSum<G> {
     type Output = GradedSum<G>;
 
     fn mul(self, rhs: f32) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 * rhs
-        )
+        GradedSum(PhantomData, self.1 * rhs)
     }
 }
 impl<const G: Grades> Mul<GradedSum<G>> for f32 {
@@ -333,10 +314,7 @@ impl<const G: Grades> Div<f32> for GradedSum<G> {
     type Output = GradedSum<G>;
 
     fn div(self, rhs: f32) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 / rhs
-        )
+        GradedSum(PhantomData, self.1 / rhs)
     }
 }
 impl<const G: Grades> DivAssign<f32> for GradedSum<G> {
@@ -344,55 +322,55 @@ impl<const G: Grades> DivAssign<f32> for GradedSum<G> {
         self.1 /= rhs;
     }
 }
-impl<const G: Grades, const H: Grades> Add<GradedProduct<H>> for GradedSum<G> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Add<GradedProduct<H>> for GradedSum<G>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn add(self, rhs: GradedProduct<H>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 + rhs.1
-        )
+        GradedSum(PhantomData, self.1 + rhs.1)
     }
 }
-impl<const G: Grades, const H: Grades> Sub<GradedProduct<H>> for GradedSum<G> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Sub<GradedProduct<H>> for GradedSum<G>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn sub(self, rhs: GradedProduct<H>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 - rhs.1
-        )
+        GradedSum(PhantomData, self.1 - rhs.1)
     }
 }
-impl<const G: Grades, const H: Grades> Add<GradedSum<H>> for GradedProduct<G> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Add<GradedSum<H>> for GradedProduct<G>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn add(self, rhs: GradedSum<H>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            rhs.1 + self.1
-        )
+        GradedSum(PhantomData, rhs.1 + self.1)
     }
 }
-impl<const G: Grades, const H: Grades> Sub<GradedSum<H>> for GradedProduct<G> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Sub<GradedSum<H>> for GradedProduct<G>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn sub(self, rhs: GradedSum<H>) -> Self::Output {
         let s = Sum { sum: vec![self.1] };
-        GradedSum(
-            PhantomData,
-            s - rhs.1
-        )
+        GradedSum(PhantomData, s - rhs.1)
     }
 }
-impl<const G: Grades, const H: Grades> Add<GradedSum<H>> for GradedSum<G> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Add<GradedSum<H>> for GradedSum<G>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn add(self, rhs: GradedSum<H>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 + rhs.1
-        )
+        GradedSum(PhantomData, self.1 + rhs.1)
     }
 }
 impl<const G: Grades> AddAssign<GradedSum<G>> for GradedSum<G> {
@@ -400,14 +378,14 @@ impl<const G: Grades> AddAssign<GradedSum<G>> for GradedSum<G> {
         self.1 += rhs.1;
     }
 }
-impl<const G: Grades, const H: Grades> Sub<GradedSum<H>> for GradedSum<G> where grade_constraint!(G, H): Sized {
+impl<const G: Grades, const H: Grades> Sub<GradedSum<H>> for GradedSum<G>
+where
+    grade_constraint!(G, H): Sized,
+{
     type Output = graded_sum!(G, H);
 
     fn sub(self, rhs: GradedSum<H>) -> Self::Output {
-        GradedSum(
-            PhantomData,
-            self.1 - rhs.1
-        )
+        GradedSum(PhantomData, self.1 - rhs.1)
     }
 }
 impl<const G: Grades> SubAssign<GradedSum<G>> for GradedSum<G> {
@@ -415,8 +393,6 @@ impl<const G: Grades> SubAssign<GradedSum<G>> for GradedSum<G> {
         self.1 -= rhs.1;
     }
 }
-
-
 
 impl Debug for Product {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -494,17 +470,17 @@ impl Product {
 
     pub fn zero() -> Self {
         use crate::algebra2::basis::elements::*;
-        Product { coefficient: 0.0, element: scalar }
+        Product {
+            coefficient: 0.0,
+            element: scalar,
+        }
     }
 }
 
 impl Sum {
-
     pub fn sort_and_simplify(&mut self) {
         // println!("Sum::sort_and_simplify {self:?}");
-        self.sum.sort_by(|a, b| {
-            a.element.cmp(&b.element)
-        });
+        self.sum.sort_by(|a, b| a.element.cmp(&b.element));
         // println!("Sum::sort_and_simplify -> {self:?}");
         for p in self.sum.iter_mut() {
             if p.element.coefficient != 1 {
@@ -529,10 +505,10 @@ impl Sum {
                 j += 1;
             }
             if total == 0.0 {
-                self.sum.drain(i..(i+j+1));
+                self.sum.drain(i..(i + j + 1));
             } else {
                 a.coefficient = total;
-                self.sum.drain(i + 1..(i+j+1));
+                self.sum.drain(i + 1..(i + j + 1));
                 i += 1;
             }
         }
@@ -583,7 +559,7 @@ impl Sum {
                 if c.coefficient != 0 {
                     let coefficient = (c.coefficient() as f32) * a.coefficient * b.coefficient;
                     c.coefficient = 1;
-                    sum.push(Product { coefficient, element: c, });
+                    sum.push(Product { coefficient, element: c });
                 }
             }
         }
@@ -607,15 +583,9 @@ impl Sum {
         let mut b = other;
         a.sort_and_simplify();
         b.sort_and_simplify();
-        let a: HashMap<_, _> = a.sum.into_iter().map(|it| {
-            (it.element.signature, it.coefficient * it.element.coefficient() as f32)
-        }).collect();
-        let b: HashMap<_, _> = b.sum.into_iter().map(|it| {
-            (it.element.signature, it.coefficient * it.element.coefficient() as f32)
-        }).collect();
-        let c = a.intersection_with(b, |a, b| {
-            a * b
-        });
+        let a: HashMap<_, _> = a.sum.into_iter().map(|it| (it.element.signature, it.coefficient * it.element.coefficient() as f32)).collect();
+        let b: HashMap<_, _> = b.sum.into_iter().map(|it| (it.element.signature, it.coefficient * it.element.coefficient() as f32)).collect();
+        let c = a.intersection_with(b, |a, b| a * b);
         c.iter().map(|it| it.1).sum()
     }
 
@@ -623,6 +593,3 @@ impl Sum {
         Self { sum: vec![] }
     }
 }
-
-
-

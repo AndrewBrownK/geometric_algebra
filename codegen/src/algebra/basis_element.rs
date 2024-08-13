@@ -11,17 +11,14 @@ pub struct BasisElement {
 
 impl BasisElement {
     pub fn zero() -> Self {
-        Self {
-            coefficient: 0,
-            index: 0,
-        }
+        Self { coefficient: 0, index: 0 }
     }
 
     pub fn from_index(index: BasisElementIndex) -> Self {
         Self { coefficient: 1, index }
     }
 
-    pub fn component_bases(&self) -> impl Iterator<Item=usize> + '_ {
+    pub fn component_bases(&self) -> impl Iterator<Item = usize> + '_ {
         (0..std::mem::size_of::<BasisElementIndex>() * 8).filter(move |index| (self.index >> index) & 1 != 0)
     }
 
@@ -52,10 +49,7 @@ impl BasisElement {
             .fold(a.coefficient * b.coefficient * if commutations % 2 == 0 { 1 } else { -1 }, |acc, val| acc * val);
 
         if coefficient == 0 {
-            return BasisElement {
-                coefficient,
-                index: 0u16,
-            }
+            return BasisElement { coefficient, index: 0u16 };
         }
 
         // Return the new BasisElement with the calculated coefficient and index

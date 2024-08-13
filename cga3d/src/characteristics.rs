@@ -1,4 +1,3 @@
-//
 // AUTO-GENERATED - DO NOT MODIFY
 //
 // To contribute to this file, see the adjacent codegen package.

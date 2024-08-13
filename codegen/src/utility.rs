@@ -16,18 +16,14 @@ use tokio::task::JoinSet;
 
 pub enum AwaitOrClone<T: Clone> {
     InProgress(broadcast::Receiver<T>),
-    Done(T)
+    Done(T),
 }
 
 impl<T: Clone> Clone for AwaitOrClone<T> {
     fn clone(&self) -> Self {
         match self {
-            AwaitOrClone::InProgress(rec) => {
-                AwaitOrClone::InProgress(rec.resubscribe())
-            }
-            AwaitOrClone::Done(arc) => {
-                AwaitOrClone::Done(arc.clone())
-            }
+            AwaitOrClone::InProgress(rec) => AwaitOrClone::InProgress(rec.resubscribe()),
+            AwaitOrClone::Done(arc) => AwaitOrClone::Done(arc.clone()),
         }
     }
 }
@@ -36,38 +32,31 @@ impl<T: Clone> AwaitOrClone<T> {
     pub async fn await_clone(&self) -> Result<T, RecvError> {
         let mut rec = match self {
             AwaitOrClone::InProgress(rec) => (*rec).resubscribe(),
-            AwaitOrClone::Done(arc) => return Ok(arc.clone())
+            AwaitOrClone::Done(arc) => return Ok(arc.clone()),
         };
         rec.recv().await
     }
 }
-
-
 
 #[derive(Clone)]
 pub struct AsyncMap<K: Hash, V: Clone>(Arc<tokio::sync::RwLock<HashMap<K, AwaitOrClone<V>>>>);
 pub enum AsyncMapResult<V> {
     AlreadyDone(V),
     ItsOnTheWay(broadcast::Receiver<V>),
-    Oops(RecvError)
+    Oops(RecvError),
 }
 impl<V: Clone> AsyncMapResult<V> {
     pub async fn get_or_panic(self) -> V {
         match self {
             AsyncMapResult::AlreadyDone(v) => v,
-            AsyncMapResult::ItsOnTheWay(mut thingy) => {
-                thingy.recv().await.expect("AsyncMapResult recv error")
-            }
+            AsyncMapResult::ItsOnTheWay(mut thingy) => thingy.recv().await.expect("AsyncMapResult recv error"),
             AsyncMapResult::Oops(err) => panic!("AsyncMapResult oopsie: {err:?}"),
             // _ => panic!()
         }
     }
 }
 
-impl<
-    K: Eq + Hash + Clone + Send + Sync + 'static,
-    V: Clone + Send + Sync + 'static,
-> AsyncMap<K, V> {
+impl<K: Eq + Hash + Clone + Send + Sync + 'static, V: Clone + Send + Sync + 'static> AsyncMap<K, V> {
     pub fn new() -> Self {
         AsyncMap(Arc::new(tokio::sync::RwLock::new(HashMap::new())))
     }
@@ -78,11 +67,10 @@ impl<
         awaiter.await_clone().await.ok()
     }
 
-    pub async fn get_or_create_or_panic<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> V {
+    pub async fn get_or_create_or_panic<F: Future<Output = V> + Send + 'static>(&self, k: K, f: F) -> V {
         self.get_or_create(k, f).await.get_or_panic().await
     }
-    pub async fn get_or_create<F: Future<Output=V> + Send + 'static>(&self, k: K, f: F) -> AsyncMapResult<V> {
-
+    pub async fn get_or_create<F: Future<Output = V> + Send + 'static>(&self, k: K, f: F) -> AsyncMapResult<V> {
         let read = self.0.read().await;
         match read.get(&k) {
             Some(existing) => {
@@ -110,10 +98,11 @@ impl<
                         vac.insert(AwaitOrClone::InProgress(r.resubscribe()));
                         drop(write);
                         let self_ = self.clone();
-                        tokio::spawn( async move {
+                        tokio::spawn(async move {
                             let v = f.await;
                             let mut write = self_.0.write().await;
-                            write.entry(k.clone())
+                            write
+                                .entry(k.clone())
                                 .and_modify(|it| *it = AwaitOrClone::Done(v.clone()))
                                 .or_insert_with(|| AwaitOrClone::Done(v.clone()));
                             drop(write);
@@ -135,7 +124,6 @@ impl<
         result
     }
 }
-
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ConstVec<T, const N: usize>([Option<T>; N]);
@@ -166,7 +154,7 @@ impl<T: Copy + Debug, const N: usize> ConstVec<T, N> {
                     // T: Copy helps convince the compiler we are not running a destructor at
                     // compile time here
                     *i_mut = Some(t);
-                    return
+                    return;
                 }
                 Some(_) => {
                     // Continue to iterate until possibly overflow
@@ -184,9 +172,7 @@ impl<T: Copy + Debug, const N: usize> ConstVec<T, N> {
                 // Cannot format nicer error message in const evaluation
                 panic!("ConstVec get() index out of bounds")
             }
-            Some(stuff) => {
-                return stuff
-            }
+            Some(stuff) => return stuff,
         }
     }
 
@@ -195,9 +181,7 @@ impl<T: Copy + Debug, const N: usize> ConstVec<T, N> {
             None => {
                 panic!("ConstVec get_mut() index out of bounds")
             }
-            Some(stuff) => {
-                return stuff
-            }
+            Some(stuff) => return stuff,
         }
     }
 }
@@ -213,22 +197,20 @@ impl<T: Copy, const N: usize> IntoIterator for ConstVec<T, N> {
         v.into_iter()
     }
 }
-/*
 // TODO see if you can get the below item to work and remove the above item
-type ConstVecIterator<T> = FilterMap<std::vec::IntoIter<Option<T>>, fn(Option<T>) -> Option<T>>;
-impl<T: Copy, const N: usize> IntoIterator for ConstVec<T, N> {
-    type Item = T;
-    type IntoIter = ConstVecIterator<T>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        // This technique uses Copy to directly copy memory to the heap, instead of manually
-        // iterating to construct the Vec (and we want a Vec so that we don't have to worry about
-        // a type level size)
-        let result = self.0.into_vec().into_iter().filter_map(|it| it);
-        result
-    }
-}
- */
+// type ConstVecIterator<T> = FilterMap<std::vec::IntoIter<Option<T>>, fn(Option<T>) -> Option<T>>;
+// impl<T: Copy, const N: usize> IntoIterator for ConstVec<T, N> {
+// type Item = T;
+// type IntoIter = ConstVecIterator<T>;
+//
+// fn into_iter(self) -> Self::IntoIter {
+// This technique uses Copy to directly copy memory to the heap, instead of manually
+// iterating to construct the Vec (and we want a Vec so that we don't have to worry about
+// a type level size)
+// let result = self.0.into_vec().into_iter().filter_map(|it| it);
+// result
+// }
+// }
 impl<T: Copy + PartialOrd, const N: usize> PartialOrd for ConstVec<T, N> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         let mut i = 0;
@@ -284,8 +266,6 @@ impl<T: Copy + Debug, const N: usize> IndexMut<usize> for ConstVec<T, N> {
     }
 }
 
-
-
 /// Option does implement StructuralPartialEq, but
 /// Option does not implement ConstParamTy.
 /// So we should probably PR rust to make Option implement ContParamTy, but
@@ -293,14 +273,14 @@ impl<T: Copy + Debug, const N: usize> IndexMut<usize> for ConstVec<T, N> {
 #[derive(PartialEq, Eq, Debug, Clone, Copy, Hash)]
 pub enum ConstOption<T> {
     None,
-    Some(T)
+    Some(T),
 }
 impl<T: ConstParamTy> ConstParamTy for ConstOption<T> {}
 impl<T: Copy> ConstOption<T> {
     pub const fn from_option(opt: Option<T>) -> Self {
         match opt {
             None => ConstOption::None,
-            Some(t) => ConstOption::Some(t)
+            Some(t) => ConstOption::Some(t),
         }
     }
 
@@ -330,8 +310,6 @@ impl<T: Copy> ConstOption<T> {
     }
 }
 
-
-
 #[async_trait]
 pub trait CollectResults {
     async fn collect_results(self) -> anyhow::Result<()>;
@@ -351,15 +329,11 @@ impl CollectResults for JoinSet<anyhow::Result<()>> {
             Ok(())
         } else {
             // Combine all errors into a single error
-            let combined_error = errs.into_iter()
-                .map(|e| format!("{e:?}"))
-                .collect::<Vec<_>>()
-                .join(", ");
+            let combined_error = errs.into_iter().map(|e| format!("{e:?}")).collect::<Vec<_>>().join(", ");
             Err(anyhow!(combined_error))
-        }
+        };
     }
 }
-
 
 /// retain_mut for slices. Returns the final length
 pub fn slice_retain_mut<T, F>(slice: &mut [T], mut f: F) -> usize

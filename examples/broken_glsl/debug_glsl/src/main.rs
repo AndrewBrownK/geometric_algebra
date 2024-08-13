@@ -1,21 +1,19 @@
-use std::{fs, thread};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::Debug;
 use std::io::Read;
+use std::{fs, thread};
 
 use naga::ShaderStage;
 use naga_oil::compose::{NagaModuleDescriptor, ShaderType};
-use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
+use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use winit::application::ApplicationHandler;
 use winit::dpi::PhysicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-use winit::window::{
-    Window, WindowId,
-};
+use winit::window::{Window, WindowId};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let event_loop = EventLoop::new().unwrap();
@@ -35,7 +33,7 @@ impl App {
         App {
             window: None,
             handle_redraw: Box::new(|_, _, _| {}),
-            size: PhysicalSize { width: 1u32, height: 1u32 }
+            size: PhysicalSize { width: 1u32, height: 1u32 },
         }
     }
 }
@@ -51,7 +49,7 @@ impl ApplicationHandler for App {
             WindowEvent::RedrawRequested => {
                 self.handle_redraw.as_mut()(event_loop, id, event);
                 self.window.as_ref().unwrap().request_redraw()
-            },
+            }
             WindowEvent::Resized(new_size) => {
                 self.size = new_size;
             }
@@ -71,14 +69,11 @@ impl App {
     async fn initiate(&mut self, event_loop: &ActiveEventLoop) {
         let window = event_loop.create_window(Default::default()).unwrap();
         let instance = Instance::new(InstanceDescriptor::default());
-        let surface = unsafe {
-            instance.create_surface_unsafe(SurfaceTargetUnsafe::from_window(&window).unwrap()).unwrap()
-        };
+        let surface = unsafe { instance.create_surface_unsafe(SurfaceTargetUnsafe::from_window(&window).unwrap()).unwrap() };
         let adapter = instance.request_adapter(&Default::default()).await.unwrap();
         let (device, queue) = adapter.request_device(&Default::default(), None).await.unwrap();
         let window_size = window.inner_size();
         self.size = window_size.clone();
-
 
         let glsl_vert_shader = include_str!("shader.vert.glsl");
         // Load the shaders from disk
@@ -88,13 +83,8 @@ impl App {
                 shader: Cow::Owned(glsl_vert_shader.to_string()),
                 stage: ShaderStage::Vertex,
                 defines: Default::default(),
-            }
+            },
         });
-
-
-
-
-
 
         // TODO but also see if removing the library composition helps anyway,
         //  or if the pruning causes problems even without composition
@@ -123,10 +113,6 @@ impl App {
 
         // TODO this comment is a fence
 
-
-
-
-
         let frag_shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
             label: None,
             source: wgpu::ShaderSource::Naga(Cow::Owned(naga_module)),
@@ -154,12 +140,10 @@ impl App {
         let bg = device.create_bind_group(&BindGroupDescriptor {
             label: None,
             layout: &bg_layout,
-            entries: &[
-                wgpu::BindGroupEntry {
-                    binding: 0,
-                    resource: wgpu::BindingResource::Buffer(screen_ratio_buffer.as_entire_buffer_binding()),
-                },
-            ],
+            entries: &[wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::Buffer(screen_ratio_buffer.as_entire_buffer_binding()),
+            }],
         });
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -190,41 +174,31 @@ impl App {
             multiview: None,
         });
 
-        let config = surface
-            .get_default_config(&adapter, window_size.width, window_size.height)
-            .unwrap();
+        let config = surface.get_default_config(&adapter, window_size.width, window_size.height).unwrap();
         surface.configure(&device, &config);
 
         window.request_redraw();
         self.window = Some(window);
 
         self.handle_redraw = Box::new(move |event_loop, id, event| {
-            let frame = surface
-                .get_current_texture()
-                .expect("Failed to acquire next swap chain texture");
-            let view = frame
-                .texture
-                .create_view(&wgpu::TextureViewDescriptor::default());
-            let mut encoder =
-                device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                    label: None,
-                });
+            let frame = surface.get_current_texture().expect("Failed to acquire next swap chain texture");
+            let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
+            let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
             {
-                let mut rpass =
-                    encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                        label: None,
-                        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                            view: &view,
-                            resolve_target: None,
-                            ops: wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
-                                store: wgpu::StoreOp::Store,
-                            },
-                        })],
-                        depth_stencil_attachment: None,
-                        timestamp_writes: None,
-                        occlusion_query_set: None,
-                    });
+                let mut rpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: None,
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: &view,
+                        resolve_target: None,
+                        ops: wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                            store: wgpu::StoreOp::Store,
+                        },
+                    })],
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
+                });
                 rpass.set_pipeline(&render_pipeline);
                 rpass.set_bind_group(0, &bg, &[]);
 

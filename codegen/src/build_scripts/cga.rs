@@ -1,9 +1,9 @@
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use crate::algebra::{MultiVectorClassRegistry, read_multi_vector_from_str};
 use crate::algebra::conformal::ConformalGeometricAlgebra;
 use crate::algebra::dialect::Dialect;
+use crate::algebra::{read_multi_vector_from_str, MultiVectorClassRegistry};
 use crate::compile::CodeGenerator;
 use crate::emit::Emitter;
 use crate::shader_support::emit_shader_support;
@@ -15,10 +15,8 @@ pub fn cga_script(
     dimensions: usize,
     actually_emit: bool,
     multi_vector_classes: &[&str],
-    sandwich_outputs: BTreeMap<(&str, &str), &str>
+    sandwich_outputs: BTreeMap<(&str, &str), &str>,
 ) -> std::io::Result<()> {
-
-
     let cga_nd = ConformalGeometricAlgebra::new(name, dimensions, dialect);
 
     let mut registry = MultiVectorClassRegistry::default();
@@ -49,7 +47,6 @@ pub fn cga_script(
     //  violate the constraints somehow anyway. What then? Well from here you basically have two
     //  choices. You can decide if the carrier or flat part is more correct, and which type of
     //  (anti)projection you want to use to bring the wrong half in line with the correct half.
-
 
     let mut file_path = Path::new("src/").to_path_buf();
     if !path_prefix.is_empty() {
@@ -264,7 +261,6 @@ use crate::products::geometric::*;",
     // So we will not validate here, and just use tests instead.
     // validate_glsl(CGA3D, file_path.clone());
     // validate_wgsl(CGA3D, file_path);
-    
-    
+
     Ok(())
 }

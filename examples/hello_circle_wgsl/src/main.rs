@@ -3,19 +3,17 @@ use std::error::Error;
 use std::fmt::Debug;
 use std::fs;
 use std::io::Read;
-use std::sync::{Arc};
+use std::sync::Arc;
 
 use naga_oil::compose::NagaModuleDescriptor;
 use parking_lot::Mutex;
-use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
+use wgpu::{BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
 use winit::application::ApplicationHandler;
 use winit::dpi::PhysicalSize;
 use winit::event::WindowEvent;
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-use winit::window::{
-    Window, WindowId,
-};
+use winit::window::{Window, WindowId};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let event_loop = EventLoop::new().unwrap();
@@ -35,7 +33,7 @@ impl App {
         App {
             window: None,
             handle_redraw: Box::new(|_, _, _| {}),
-            size: Arc::new(Mutex::new(PhysicalSize { width: 1u32, height: 1u32 }))
+            size: Arc::new(Mutex::new(PhysicalSize { width: 1u32, height: 1u32 })),
         }
     }
 }
@@ -51,7 +49,7 @@ impl ApplicationHandler for App {
             WindowEvent::RedrawRequested => {
                 self.handle_redraw.as_mut()(event_loop, id, event);
                 self.window.as_ref().unwrap().request_redraw()
-            },
+            }
             WindowEvent::Resized(new_size) => {
                 let mut size = self.size.lock();
                 *size = new_size;
@@ -72,14 +70,11 @@ impl App {
     async fn initiate(&mut self, event_loop: &ActiveEventLoop) {
         let window = event_loop.create_window(Default::default()).unwrap();
         let instance = Instance::new(InstanceDescriptor::default());
-        let surface = unsafe {
-            instance.create_surface_unsafe(SurfaceTargetUnsafe::from_window(&window).unwrap()).unwrap()
-        };
+        let surface = unsafe { instance.create_surface_unsafe(SurfaceTargetUnsafe::from_window(&window).unwrap()).unwrap() };
         let adapter = instance.request_adapter(&Default::default()).await.unwrap();
         let (device, queue) = adapter.request_device(&Default::default(), None).await.unwrap();
         let window_size = window.inner_size();
         self.size = Arc::new(Mutex::new(window_size.clone()));
-
 
         let wgsl_entry_path = "examples/hello_circle_wgsl/src/shader.wgsl";
         let wgsl_entry = fs::read_to_string(wgsl_entry_path).unwrap();
@@ -90,8 +85,6 @@ impl App {
         };
 
         let naga_module = cga3d_min::shaders::wgsl_compose_with_entrypoints(naga_module_descriptor).unwrap();
-
-
 
         // Load the shaders from disk
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor {
@@ -121,12 +114,10 @@ impl App {
         let bg = device.create_bind_group(&BindGroupDescriptor {
             label: None,
             layout: &bg_layout,
-            entries: &[
-                wgpu::BindGroupEntry {
-                    binding: 0,
-                    resource: wgpu::BindingResource::Buffer(screen_ratio_buffer.as_entire_buffer_binding()),
-                },
-            ],
+            entries: &[wgpu::BindGroupEntry {
+                binding: 0,
+                resource: wgpu::BindingResource::Buffer(screen_ratio_buffer.as_entire_buffer_binding()),
+            }],
         });
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -157,9 +148,7 @@ impl App {
             multiview: None,
         });
 
-        let mut surface_configuration = surface
-            .get_default_config(&adapter, window_size.width, window_size.height)
-            .unwrap();
+        let mut surface_configuration = surface.get_default_config(&adapter, window_size.width, window_size.height).unwrap();
         surface.configure(&device, &surface_configuration);
 
         window.request_redraw();
@@ -168,48 +157,33 @@ impl App {
 
         self.handle_redraw = Box::new(move |event_loop, id, event| {
             let window_size = window_size.lock();
-            if window_size.width != surface_configuration.width
-                || window_size.height != surface_configuration.height {
-
+            if window_size.width != surface_configuration.width || window_size.height != surface_configuration.height {
                 surface_configuration.width = window_size.width;
                 surface_configuration.height = window_size.height;
                 surface.configure(&device, &surface_configuration);
 
-                queue.write_buffer(
-                    &screen_ratio_buffer,
-                    0,
-                    bytemuck::cast_slice(&[window_size.width as f32, window_size.height as f32])
-                )
+                queue.write_buffer(&screen_ratio_buffer, 0, bytemuck::cast_slice(&[window_size.width as f32, window_size.height as f32]))
             }
             drop(window_size);
 
-
-            let frame = surface
-                .get_current_texture()
-                .expect("Failed to acquire next swap chain texture");
-            let view = frame
-                .texture
-                .create_view(&wgpu::TextureViewDescriptor::default());
-            let mut encoder =
-                device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
-                    label: None,
-                });
+            let frame = surface.get_current_texture().expect("Failed to acquire next swap chain texture");
+            let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
+            let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
             {
-                let mut rpass =
-                    encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                        label: None,
-                        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                            view: &view,
-                            resolve_target: None,
-                            ops: wgpu::Operations {
-                                load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
-                                store: wgpu::StoreOp::Store,
-                            },
-                        })],
-                        depth_stencil_attachment: None,
-                        timestamp_writes: None,
-                        occlusion_query_set: None,
-                    });
+                let mut rpass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: None,
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: &view,
+                        resolve_target: None,
+                        ops: wgpu::Operations {
+                            load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                            store: wgpu::StoreOp::Store,
+                        },
+                    })],
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
+                });
                 rpass.set_pipeline(&render_pipeline);
                 rpass.set_bind_group(0, &bg, &[]);
 

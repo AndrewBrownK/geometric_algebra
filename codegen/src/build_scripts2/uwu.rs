@@ -1,14 +1,11 @@
-
-
-
 // Conformal uwu 3d
 
 use crate::ga;
 
 #[allow(non_upper_case_globals)]
 mod elements {
-    use crate::algebra2::basis::BasisElement;
     use crate::algebra2::basis::elements::*;
+    use crate::algebra2::basis::BasisElement;
 
     pub const sugar: BasisElement = e1.with_name("sugar", false);
     pub const spice: BasisElement = e2.with_name("spice", false);
@@ -35,9 +32,7 @@ mod generators {
     pub const desperate: GeneratorElement = e5;
 }
 
-
 pub fn uwu_script() {
-
     use generators::*;
 
     // let uwu = ga!(

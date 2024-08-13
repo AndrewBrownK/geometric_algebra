@@ -7,7 +7,7 @@ members = [
     "rga3d",
     "cga3d",
     "cga3d_min",
-    "builds/cga3d_new",
+    "builds/cga3d_max",
 
     "build_scripts/build_cga3d_max",
 

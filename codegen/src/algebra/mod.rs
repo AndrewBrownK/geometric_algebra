@@ -1,7 +1,7 @@
-use std::fmt::{Debug, Display, Formatter};
 use crate::algebra::dialect::Dialect;
 use crate::ast::{DataType, Parameter};
 use basis_element::{BasisElement, BasisElementIndex};
+use std::fmt::{Debug, Display, Formatter};
 
 pub mod basis_element;
 pub mod conformal;
@@ -185,9 +185,7 @@ impl Involution {
             let infinity = (1 as BasisElementIndex) << (dimensions - 1);
             result.push((
                 "ConformalConjugate",
-                involution.negated(|_, index| {
-                    (index & infinity) == infinity
-                }),
+                involution.negated(|_, index| (index & infinity) == infinity),
                 "\nConformal Conjugates\nSee chapter 4.5.4 of the book (page 204).",
             ));
         }
@@ -209,9 +207,11 @@ impl Display for ProductTerm {
         f.write_str(" * ")?;
         Display::fmt(&self.factor_b, f)?;
         f.write_str(" = ")?;
-        let mut first  = true;
+        let mut first = true;
         for p in &self.product {
-            if !first { f.write_str(" + ")?; }
+            if !first {
+                f.write_str(" + ")?;
+            }
             Display::fmt(p, f)?;
             first = false;
         }
@@ -261,7 +261,6 @@ impl Product {
     where
         F: Fn(usize, usize, usize, usize) -> bool,
     {
-
         Self {
             terms: self
                 .terms
@@ -300,21 +299,16 @@ impl Product {
         let anti_product = Self::anti_new(&basis, &basis, algebra);
         let max_grade = algebra.anti_scalar_element().grade();
 
-        let wedge_like: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
-            product_grade == factor_a_grade + factor_b_grade
-        };
+        let wedge_like: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| product_grade == factor_a_grade + factor_b_grade;
         let anti_wedge_like: fn(usize, usize, usize, usize) -> bool = move |max_grade, factor_a_grade, factor_b_grade, product_grade| {
             let anti_grade_a = max_grade - factor_a_grade;
             let anti_grade_b = max_grade - factor_b_grade;
             let anti_grade_product = max_grade - product_grade;
             anti_grade_product == anti_grade_a + anti_grade_b
         };
-        let scalar_result_only: fn(usize, usize, usize, usize) -> bool = |_, factor_a_grade, factor_b_grade, product_grade| {
-            product_grade == 0 && (factor_a_grade == factor_b_grade)
-        };
-        let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, _, _, product_grade| {
-            product_grade == max_grade
-        };
+        let scalar_result_only: fn(usize, usize, usize, usize) -> bool =
+            |_, factor_a_grade, factor_b_grade, product_grade| product_grade == 0 && (factor_a_grade == factor_b_grade);
+        let anti_scalar_result_only: fn(usize, usize, usize, usize) -> bool = |max_grade, _, _, product_grade| product_grade == max_grade;
 
         let dialect = algebra.dialect();
         let mut products = vec![];
@@ -410,7 +404,9 @@ impl Display for Product {
         f.write_str("Product(")?;
         let mut first = true;
         for term in &self.terms {
-            if !first { f.write_str(", ")?; }
+            if !first {
+                f.write_str(", ")?;
+            }
             Display::fmt(term, f)?;
             first = false;
         }
@@ -464,10 +460,10 @@ impl MultiVectorClassRegistry {
     pub fn get_at_least(&self, signature: &[BasisElementIndex]) -> Option<&MultiVectorClass> {
         let mut result_class = self.get_exact(&signature);
         if result_class.is_some() {
-            return result_class
+            return result_class;
         }
         if signature.is_empty() {
-            return None
+            return None;
         }
 
         let mut viable_classes: Vec<_> = self
@@ -480,7 +476,7 @@ impl MultiVectorClassRegistry {
             .collect();
         viable_classes.sort_by_key(|it| it.signature().len());
         result_class = viable_classes.first().map(|it| *it);
-        return result_class
+        return result_class;
     }
 }
 

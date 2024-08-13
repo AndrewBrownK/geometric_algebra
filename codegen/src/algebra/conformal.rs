@@ -49,7 +49,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         &self.dialect
     }
 
-    //noinspection DuplicatedCode
+    // noinspection DuplicatedCode
     fn parse(&self, mut name: &str) -> BasisElement {
         let mut result = BasisElement::from_index(0);
         if name.starts_with('-') {
@@ -95,7 +95,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
     }
 
     fn is_degenerate(&self) -> bool {
-        return false
+        return false;
     }
 
     fn has_multiple_complements(&self) -> bool {
@@ -169,7 +169,7 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
         // Then right complement again to get the anti-dual
         result = self.right_complement(&result);
 
-        return result
+        return result;
     }
 
     fn product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
@@ -248,7 +248,6 @@ impl GeometricAlgebraTrait for ConformalGeometricAlgebra {
 
         return result;
     }
-
 
     fn anti_product(&self, a: &BasisElement, b: &BasisElement) -> Vec<BasisElement> {
         // We need to reproduce this Cayley table.

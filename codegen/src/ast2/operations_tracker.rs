@@ -1,8 +1,8 @@
+use crate::ast2::datatype::MultiVector;
+use crate::ast2::traits::{RawTraitImplementation, TraitKey};
 use std::collections::HashMap;
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 use std::sync::Arc;
-use crate::ast2::datatype::MultiVector;
-use crate::ast2::traits::{RawTraitImplementation, TraitKey};
 
 #[derive(Clone, Copy)]
 pub struct OperationsTracker {
@@ -12,15 +12,9 @@ pub struct OperationsTracker {
     // TODO add more
 }
 
-
-
 impl OperationsTracker {
     pub fn zero() -> Self {
-        Self {
-            add_sub: 0,
-            mul: 0,
-            div: 0,
-        }
+        Self { add_sub: 0, mul: 0, div: 0 }
     }
 }
 
@@ -60,7 +54,6 @@ impl AddAssign<OperationsTracker> for OperationsTracker {
         self.div += rhs.div;
     }
 }
-
 
 #[derive(Clone, Copy)]
 pub struct VectoredOperationsTracker {
@@ -117,7 +110,6 @@ pub(crate) trait TrackOperations {
     fn count_operations(&self, lookup: &TraitOperationsLookup) -> VectoredOperationsTracker;
 }
 
-
 pub(crate) struct TraitOperationsLookup<'a> {
     pub(crate) traits10: &'a HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
     pub(crate) traits11: &'a HashMap<(TraitKey, MultiVector), Arc<RawTraitImplementation>>,
@@ -130,28 +122,36 @@ impl<'a> TraitOperationsLookup<'a> {
         if let Some(rti) = self.traits10.get(&(*k, *a)) {
             return rti.statistics;
         }
-        panic!("Attempted to look up the VectorOperationsTracker of a trait_10 that was not \
-            found as a dependency. This is probably a bug in forgetting to record a dependency.")
+        panic!(
+            "Attempted to look up the VectorOperationsTracker of a trait_10 that was not \
+            found as a dependency. This is probably a bug in forgetting to record a dependency."
+        )
     }
     pub fn trait_11_ops(&self, k: &TraitKey, a: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits11.get(&(*k, *a)) {
             return rti.statistics;
         }
-        panic!("Attempted to look up the VectorOperationsTracker of a trait_11 that was not \
-            found as a dependency. This is probably a bug in forgetting to record a dependency.")
+        panic!(
+            "Attempted to look up the VectorOperationsTracker of a trait_11 that was not \
+            found as a dependency. This is probably a bug in forgetting to record a dependency."
+        )
     }
     pub fn trait_21_ops(&self, k: &TraitKey, a: &MultiVector, b: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits21.get(&(*k, *a, *b)) {
             return rti.statistics;
         }
-        panic!("Attempted to look up the VectorOperationsTracker of a trait_21 that was not \
-            found as a dependency. This is probably a bug in forgetting to record a dependency.")
+        panic!(
+            "Attempted to look up the VectorOperationsTracker of a trait_21 that was not \
+            found as a dependency. This is probably a bug in forgetting to record a dependency."
+        )
     }
     pub fn trait_22_ops(&self, k: &TraitKey, a: &MultiVector, b: &MultiVector) -> VectoredOperationsTracker {
         if let Some(rti) = self.traits22.get(&(*k, *a, *b)) {
             return rti.statistics;
         }
-        panic!("Attempted to look up the VectorOperationsTracker of a trait_22 that was not \
-            found as a dependency. This is probably a bug in forgetting to record a dependency.")
+        panic!(
+            "Attempted to look up the VectorOperationsTracker of a trait_22 that was not \
+            found as a dependency. This is probably a bug in forgetting to record a dependency."
+        )
     }
 }

@@ -3,7 +3,6 @@
 #![feature(exit_status_error)]
 #![feature(associated_type_defaults)]
 #![feature(const_option)]
-
 // TODO evaluate if I actually need/use these
 #![feature(generic_const_exprs)]
 #![feature(adt_const_params)]
@@ -15,16 +14,16 @@
 #![feature(box_patterns)]
 
 mod algebra;
+pub mod algebra2;
 mod ast;
+pub mod ast2;
 mod compile;
 mod emit;
-mod impls;
-mod validate;
-mod shader_support;
-pub mod ast2;
-pub mod algebra2;
-pub mod utility;
 pub mod emit2;
+mod impls;
+mod shader_support;
+pub mod utility;
+mod validate;
 // TODO eventually migrate to Portable SIMD once it is stabilized
 //  https://github.com/rust-lang/rust/issues/86656
 //  That would also be the appropriate time to consider f64 support. Not eager until then.
@@ -38,14 +37,13 @@ pub mod build_scripts2 {
 
 mod build_scripts {
     pub mod cga;
-    pub mod rga;
     pub mod cga3d;
     pub mod cga3d_min;
+    pub mod rga;
     pub mod rga3d;
 }
 
 const SIMD_SRC: &'static str = include_str!("simd.rs");
-
 
 // fn main() {
 //     let result: std::io::Result<()> = try {

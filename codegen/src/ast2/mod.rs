@@ -4,10 +4,10 @@ use std::sync::Arc;
 use crate::ast2::expressions::AnyExpression;
 
 pub mod datatype;
-pub mod traits;
 pub mod expressions;
 pub mod impls;
 mod operations_tracker;
+pub mod traits;
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Variable<ExprType> {
@@ -30,12 +30,11 @@ impl<ExprType> Variable<ExprType> {
     }
 }
 
-
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct RawVariableDeclaration {
     pub(crate) comment: Option<Cow<'static, String>>,
     pub(crate) name: (String, usize),
-    pub(crate) expr: Option<AnyExpression>
+    pub(crate) expr: Option<AnyExpression>,
 }
 #[derive(Clone, Debug)]
 pub(crate) struct RawVariableInvocation {

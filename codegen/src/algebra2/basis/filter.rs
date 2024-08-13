@@ -3,7 +3,6 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitXor, Neg, Not};
 
 use crate::algebra2::basis::{BasisElement, BasisSignature};
 
-
 pub trait SigFilter: Copy {
     fn filter_sig(&self, sig: BasisSignature) -> bool;
     fn all_match(self) -> SignatureSetFilter<Self> {
@@ -17,7 +16,6 @@ pub trait SigSetFilter: Copy {
     fn filter_sig_set(&self, sigs: &BTreeSet<BasisSignature>) -> bool;
 }
 
-
 #[derive(Clone, Copy)]
 pub struct SignatureFilter {
     require: Option<BasisSignature>,
@@ -29,15 +27,12 @@ impl SigFilter for SignatureFilter {
             (Some(r), Some(f)) => sig.contains(r) && !sig.contains(f),
             (Some(r), None) => sig.contains(r),
             (None, Some(f)) => !sig.contains(f),
-            (None, None) => true
+            (None, None) => true,
         }
     }
 }
 pub fn allow_all_signatures() -> SignatureSetFilter<SignatureFilter> {
-    SignatureSetFilter(SignatureFilter {
-        require: None,
-        forbid: None,
-    }, AnyOrAll::Any)
+    SignatureSetFilter(SignatureFilter { require: None, forbid: None }, AnyOrAll::Any)
 }
 pub fn signatures_containing(signature_in_element: BasisElement) -> SignatureFilter {
     SignatureFilter {
@@ -61,8 +56,6 @@ impl Not for SignatureFilter {
         s
     }
 }
-
-
 
 #[derive(Clone, Copy)]
 pub struct FilterNot<A>(A);
@@ -143,7 +136,6 @@ impl<C: SigFilter> BitOr<C> for SignatureFilter {
     }
 }
 
-
 #[derive(Clone, Copy)]
 pub struct FilterXor<A, B>(A, B);
 impl<A: SigFilter, B: SigFilter> SigFilter for FilterXor<A, B> {
@@ -186,7 +178,6 @@ impl<C: SigFilter> BitXor<C> for SignatureFilter {
         FilterXor(self, rhs)
     }
 }
-
 
 #[derive(Clone, Copy)]
 pub struct FilterAnd<A, B>(A, B);
@@ -231,10 +222,6 @@ impl<C: SigFilter> BitAnd<C> for SignatureFilter {
     }
 }
 
-
-
-
-
 #[derive(Clone, Copy)]
 pub enum AnyOrAll {
     Any,
@@ -250,10 +237,6 @@ impl<F: SigFilter> SigSetFilter for SignatureSetFilter<F> {
         }
     }
 }
-
-
-
-
 
 #[derive(Clone, Copy)]
 pub struct SetFilterNot<A>(A);
@@ -341,7 +324,6 @@ impl<F: SigFilter, C: SigSetFilter> BitOr<C> for SignatureSetFilter<F> {
     }
 }
 
-
 #[derive(Clone, Copy)]
 pub struct SetFilterXor<A, B>(A, B);
 impl<A: SigSetFilter, B: SigSetFilter> SigSetFilter for SetFilterXor<A, B> {
@@ -385,7 +367,6 @@ impl<F: SigFilter, C: SigSetFilter> BitXor<C> for SignatureSetFilter<F> {
     }
 }
 
-
 #[derive(Clone, Copy)]
 pub struct SetFilterAnd<A, B>(A, B);
 impl<A: SigSetFilter, B: SigSetFilter> SigSetFilter for SetFilterAnd<A, B> {
@@ -428,17 +409,5 @@ impl<F: SigFilter, C: SigSetFilter> BitAnd<C> for SignatureSetFilter<F> {
         SetFilterAnd(self, rhs)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 //

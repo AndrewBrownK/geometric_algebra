@@ -1,6 +1,6 @@
-use cga3d_min::{FlatPoint, RoundPoint};
 use cga3d_min::norms::UnitizedRadiusNormSquared;
 use cga3d_min::products::exterior::{AntiWedge, Wedge};
+use cga3d_min::{FlatPoint, RoundPoint};
 
 fn main() {
     // Start by constructing a Circle.

@@ -8,10 +8,10 @@ use std::sync::Arc;
 use const_panic::concat_panic;
 use parking_lot::Mutex;
 
-use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::elements::*;
 use crate::algebra2::basis::filter::{SigFilter, SigSetFilter};
 use crate::algebra2::basis::grades::Grades;
+use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::GeometricAlgebra;
 use crate::ast2::datatype::{ExpressionType, Float, MultiVector, Vec2, Vec3, Vec4};
 use crate::ast2::expressions::{FloatExpr, MultiVectorExpr};
@@ -37,8 +37,6 @@ pub const QTY_GROUPS: usize = 21846;
 pub const QTY_GROUPS: usize = 1366;
 #[cfg(not(feature = "large-basis-elements"))]
 pub const QTY_GROUPS: usize = 86;
-
-
 
 #[derive(PartialEq, Eq, Clone, Copy, Hash, Debug)]
 pub enum BasisElementGroup {
@@ -99,7 +97,7 @@ impl Iterator for BasisElementGroupIter {
             1 => self.2[0],
             2 => self.2[1],
             3 => self.2[2],
-            _ => None
+            _ => None,
         };
         self.0 += 1;
         result
@@ -118,7 +116,7 @@ impl BasisElementGroup {
             BasisElementGroup::G1(a) => BasisElementGroup::G2(*a, el),
             BasisElementGroup::G2(a, b) => BasisElementGroup::G3(*a, *b, el),
             BasisElementGroup::G3(a, b, c) => BasisElementGroup::G4(*a, *b, *c, el),
-            _ => panic!("Please check can_push() before using push()")
+            _ => panic!("Please check can_push() before using push()"),
         }
     }
 
@@ -138,7 +136,7 @@ impl BasisElementGroup {
             3 => BasisElementGroup::G3(*v.get(0), *v.get(1), *v.get(2)),
             4 => BasisElementGroup::G4(*v.get(0), *v.get(1), *v.get(2), *v.get(3)),
             0 => panic!("Cannot create empty BasisElementGroup"),
-            _ => panic!("Unreachable: ConstVec has type level size")
+            _ => panic!("Unreachable: ConstVec has type level size"),
         }
     }
 
@@ -149,7 +147,7 @@ impl BasisElementGroup {
                 v.push(a);
                 v
             }
-            BasisElementGroup::G2(a, b) =>{
+            BasisElementGroup::G2(a, b) => {
                 let mut v = ConstVec::new();
                 v.push(a);
                 v.push(b);
@@ -246,8 +244,6 @@ impl<const AntiScalar: BasisElement> Display for MultiVec<AntiScalar> {
     }
 }
 
-
-
 impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     pub fn macro_expression(&self) -> String {
         use std::fmt::Write;
@@ -293,7 +289,7 @@ impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
         &self.element_groups
     }
 
-    pub fn new<E: IntoIterator<Item=BasisElement>>(name: &'static str, elements: E) -> Self {
+    pub fn new<E: IntoIterator<Item = BasisElement>>(name: &'static str, elements: E) -> Self {
         let mut elements = elements.into_iter().collect::<Vec<_>>();
         elements.sort();
         let mut active_grade = elements.get(0).map(|it| it.grade()).unwrap_or(0);
@@ -333,14 +329,14 @@ impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     }
 }
 
-
-
-impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
+impl<const AntiScalar: BasisElement> MultiVec<AntiScalar> {
     pub const fn new_by_groups(name: &'static str, element_groups: ConstVec<BasisElementGroup, QTY_GROUPS>) -> Self {
         if ((AntiScalar.grade() / 3) + 1) as usize > QTY_GROUPS {
-            panic!("If you want to create an 9-12 dimensional GA, then enable the \
+            panic!(
+                "If you want to create an 9-12 dimensional GA, then enable the \
             \"large-basis-elements\" feature. If you want to create a 13-16 dimensional GA, then \
-            enable the \"very-large-basis-elements\" feature.")
+            enable the \"very-large-basis-elements\" feature."
+            )
         }
 
         let mut used_signatures = ConstVec::<BasisElement, QTY_GROUPS>::new();
@@ -354,8 +350,14 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
                 let el = group_vec.get(j);
                 let el_sig = el.signature();
                 if !AntiScalar.signature().contains(el_sig) {
-                    concat_panic!("MultiVector belonging to AntiScalar(", AntiScalar, ") \
-                        is defined to include ", el, " which does not fit. ");
+                    concat_panic!(
+                        "MultiVector belonging to AntiScalar(",
+                        AntiScalar,
+                        ") \
+                        is defined to include ",
+                        el,
+                        " which does not fit. "
+                    );
                 }
                 let mut k = 0;
                 while k < used_signatures.len() {
@@ -364,10 +366,16 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
                     let u_sig_bits = u_sig.bits();
                     let el_sig_bits = el_sig.bits();
                     if u_sig_bits == el_sig_bits {
-                        concat_panic!("MultiVec named ", name, " already has ", el, ". Do not \
+                        concat_panic!(
+                            "MultiVec named ",
+                            name,
+                            " already has ",
+                            el,
+                            ". Do not \
                             define MultiVectors using redundant or duplicate BasisSignatures. \
                             Don't forget that reordered or sign flipped BasisElements can share \
-                            the same BasisSignature. ")
+                            the same BasisSignature. "
+                        )
                     }
                     k += 1;
                 }
@@ -377,11 +385,9 @@ impl <const AntiScalar: BasisElement> MultiVec<AntiScalar> {
             }
             i += 1;
         }
-        MultiVec { name, grades, element_groups, }
+        MultiVec { name, grades, element_groups }
     }
 }
-
-
 
 #[macro_export]
 macro_rules! multi_vec {
@@ -527,8 +533,6 @@ macro_rules! multi_vecs {
     };
 }
 
-
-
 #[const_trait]
 pub trait TupleToGroup {
     fn tuple_to_group(self) -> BasisElementGroup;
@@ -574,8 +578,7 @@ impl const TupleToGroup for [BasisElement; 1] {
     }
 }
 
-
-static Circle: MultiVec<{e12345}> = MultiVec::<e12345>::new_by_groups("Circle", {
+static Circle: MultiVec<{ e12345 }> = MultiVec::<e12345>::new_by_groups("Circle", {
     let mut cv = ConstVec::new();
     cv.push((e423, e431, e412, e321).tuple_to_group());
     cv.push((e415, e425, e435).tuple_to_group());
@@ -586,10 +589,10 @@ static Circle: MultiVec<{e12345}> = MultiVec::<e12345>::new_by_groups("Circle", 
 // Allocations are not allowed in static/const, but can't be bothered to make a compatible version
 // when specifying groups is fine instead.
 // static Dipole: MultiVec<{e12345}> = multi_vec!(Dipole<e12345> => e41, e42, e43, e23, e31, e12, e15, e25, e35, e45);
-static Circle2: MultiVec<{e12345}> = multi_vec!(Circle<e12345> => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
-static Circle3: MultiVec<{e12345}> = multi_vec!(Circle<e12345> => [e423, e431, e412, e321], [e415, e425, e435], [e235, e315, e125]);
+static Circle2: MultiVec<{ e12345 }> = multi_vec!(Circle<e12345> => (e423, e431, e412, e321), (e415, e425, e435), (e235, e315, e125));
+static Circle3: MultiVec<{ e12345 }> = multi_vec!(Circle<e12345> => [e423, e431, e412, e321], [e415, e425, e435], [e235, e315, e125]);
 
-static Dipole2: MultiVec<{e12345}> = multi_vec!(Dipole<e12345> as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45);
+static Dipole2: MultiVec<{ e12345 }> = multi_vec!(Dipole<e12345> as e41, e42, e43 | e23, e31, e12 | e15, e25, e35, e45);
 
 #[test]
 fn test_construction() {
@@ -606,8 +609,6 @@ fn test_construction() {
     println!("{dipole_again}");
 }
 
-
-
 pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
     ga: Arc<GeometricAlgebra<AntiScalar>>,
     anti_scalar_sig: BasisSignature,
@@ -617,10 +618,7 @@ pub struct DeclareMultiVecs<const AntiScalar: BasisElement> {
 }
 
 impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
-    pub fn declare<const N: usize>(
-        ga: Arc<GeometricAlgebra<AntiScalar>>,
-        multi_vecs: [&'static MultiVec<AntiScalar>; N],
-    ) -> Self {
+    pub fn declare<const N: usize>(ga: Arc<GeometricAlgebra<AntiScalar>>, multi_vecs: [&'static MultiVec<AntiScalar>; N]) -> Self {
         let mut unique_names = BTreeSet::new();
         for mv in multi_vecs.iter() {
             let n = mv.name;
@@ -667,13 +665,9 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
 
     fn sort_declarations(&mut self) {
         self.declared.sort_unstable_by(|(a_grade, a_sig, a_mv), (b_grade, b_sig, b_mv)| {
-            a_grade.cmp(b_grade).then_with(|| {
-                a_sig.len().cmp(&b_sig.len()).then_with(|| {
-                    a_sig.cmp(b_sig).then_with(|| {
-                        a_mv.name.cmp(b_mv.name)
-                    })
-                })
-            })
+            a_grade
+                .cmp(b_grade)
+                .then_with(|| a_sig.len().cmp(&b_sig.len()).then_with(|| a_sig.cmp(b_sig).then_with(|| a_mv.name.cmp(b_mv.name))))
         });
     }
 
@@ -692,14 +686,13 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
         MultiVecRepository::new(self)
     }
 
-    pub fn variants<
-        S1: Into<String>, S2: Into<String>,
-        F1: SigSetFilter,
-        F2: SigFilter,
-        F3: SigSetFilter,
-    >(
-        &mut self, prefix: S1, suffix: S2,
-        filter_vecs_in: F1, filter_elements: F2, filter_vecs_out: F3,
+    pub fn variants<S1: Into<String>, S2: Into<String>, F1: SigSetFilter, F2: SigFilter, F3: SigSetFilter>(
+        &mut self,
+        prefix: S1,
+        suffix: S2,
+        filter_vecs_in: F1,
+        filter_elements: F2,
+        filter_vecs_out: F3,
         documentation: Option<&'static str>,
     ) {
         let mut add_these = vec![];
@@ -722,7 +715,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
             for mvg in mv.element_groups.clone().into_iter() {
                 let mut cv = ConstVec::new();
                 for el in mvg.into_vec() {
-                    if filter_elements.filter_sig(el.signature())  {
+                    if filter_elements.filter_sig(el.signature()) {
                         new_grades |= el.grades();
                         new_sigs.insert(el.signature());
                         cv.push(el);
@@ -735,9 +728,15 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                 vacant_slots += vacant_len;
                 let mut did_backfill = false;
                 match (vacant_slots >= 4, vacant_len) {
-                    (false, 1) => { vacant_1.insert(new_groups.len()); }
-                    (false, 2) => { vacant_2.insert(new_groups.len()); }
-                    (false, 3) => { vacant_3.insert(new_groups.len()); }
+                    (false, 1) => {
+                        vacant_1.insert(new_groups.len());
+                    }
+                    (false, 2) => {
+                        vacant_2.insert(new_groups.len());
+                    }
+                    (false, 3) => {
+                        vacant_3.insert(new_groups.len());
+                    }
                     (true, 1) => {
                         if let Some(group_to_fill_in_idx) = vacant_3.pop_first() {
                             let group_to_fill_in = &mut new_groups[group_to_fill_in_idx];
@@ -804,25 +803,23 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
 
         let mut intro = false;
         for (new_grades, new_sigs, old_name, new_name, new_groups) in add_these.into_iter() {
-            let idx = self.declared.binary_search_by(|(gr, sig, mv)| {
-                gr.cmp(&new_grades).then_with(|| {
-                    sig.len().cmp(&new_sigs.len()).then_with(|| {
-                        sig.cmp(&new_sigs)
-                    })
-                })
-            });
+            let idx = self
+                .declared
+                .binary_search_by(|(gr, sig, mv)| gr.cmp(&new_grades).then_with(|| sig.len().cmp(&new_sigs.len()).then_with(|| sig.cmp(&new_sigs))));
             let idx = match idx {
                 Ok(_) => {
                     // already exists
-                    continue
+                    continue;
                 }
                 Err(idx) => idx,
             };
             if self.unique_names.contains(new_name.as_str()) {
                 // A panic might seem extreme, but the fact that this
                 // implies semantic ambiguity feels very important.
-                panic!("The generated variant {new_name} conflicts with an existing MultiVec of \
-                    the same name but different signature.");
+                panic!(
+                    "The generated variant {new_name} conflicts with an existing MultiVec of \
+                    the same name but different signature."
+                );
                 // eprintln!("The generated variant {new_name} conflicts with an existing MultiVec \
                 //     of the same name but different signature.");
                 // continue;
@@ -873,25 +870,23 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
 
         let mut intro = false;
         for (new_grades, new_sigs, old_name, new_name, new_groups) in add_these.into_iter() {
-            let idx = self.declared.binary_search_by(|(gr, sig, mv)| {
-                gr.cmp(&new_grades).then_with(|| {
-                    sig.len().cmp(&new_sigs.len()).then_with(|| {
-                        sig.cmp(&new_sigs)
-                    })
-                })
-            });
+            let idx = self
+                .declared
+                .binary_search_by(|(gr, sig, mv)| gr.cmp(&new_grades).then_with(|| sig.len().cmp(&new_sigs.len()).then_with(|| sig.cmp(&new_sigs))));
             let idx = match idx {
                 Ok(_) => {
                     // already exists
-                    continue
+                    continue;
                 }
                 Err(idx) => idx,
             };
             if self.unique_names.contains(new_name.as_str()) {
                 // A panic might seem extreme, but the fact that this
                 // implies semantic ambiguity feels very important.
-                panic!("The generated variant {new_name} conflicts with an existing MultiVec of \
-                    the same name but different signature.");
+                panic!(
+                    "The generated variant {new_name} conflicts with an existing MultiVec of \
+                    the same name but different signature."
+                );
                 // eprintln!("The generated variant {new_name} conflicts with an existing MultiVec \
                 //     of the same name but different signature.");
                 // continue;
@@ -914,7 +909,7 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
                     let Some((gr, sigs, mv)) = self.declared.get(idx) else { break };
                     if !gr.contains(new_grades) {
                         idx += 1;
-                        continue
+                        continue;
                     }
                     if sigs.is_superset(&new_sigs) {
                         closest_to = Some(mv.name);
@@ -946,7 +941,6 @@ impl<const AntiScalar: BasisElement> DeclareMultiVecs<AntiScalar> {
     }
 }
 
-
 pub struct MultiVecRepository<const AntiScalar: BasisElement> {
     declarations: DeclareMultiVecs<AntiScalar>,
     uniform_grade_groups: BTreeMap<Grades, BTreeSet<&'static BasisElementGroup>>,
@@ -955,9 +949,7 @@ pub struct MultiVecRepository<const AntiScalar: BasisElement> {
     strongly_wanted: Mutex<HashMap<BTreeSet<BasisSignature>, Vec<Arc<RawTraitDefinition>>>>,
 }
 
-
 impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
-
     pub fn ga(&self) -> Arc<GeometricAlgebra<AntiScalar>> {
         self.declarations.ga.clone()
     }
@@ -988,12 +980,18 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 }
                 let qty_grades = gr.into_bits().count_ones();
                 if qty_grades == 1 {
-                    mvr.uniform_grade_groups.entry(gr)
-                        .and_modify(|v| { v.insert(mvg); })
+                    mvr.uniform_grade_groups
+                        .entry(gr)
+                        .and_modify(|v| {
+                            v.insert(mvg);
+                        })
                         .or_insert(BTreeSet::from([mvg]));
                 } else {
-                    mvr.mixed_grade_groups.entry(gr)
-                        .and_modify(|v| { v.insert(mvg); })
+                    mvr.mixed_grade_groups
+                        .entry(gr)
+                        .and_modify(|v| {
+                            v.insert(mvg);
+                        })
                         .or_insert(BTreeSet::from([mvg]));
                 }
             }
@@ -1051,9 +1049,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         }
         // Full MultiVector
         {
-            let mut remaining_els = BTreeMap::from_iter(all_elements.iter().map(|it| {
-                (it.signature(), *it)
-            }));
+            let mut remaining_els = BTreeMap::from_iter(all_elements.iter().map(|it| (it.signature(), *it)));
             let mut cv = ConstVec::new();
             cv.push(BasisElementGroup::G2(scalar, AntiScalar));
             remaining_els.remove(&scalar.signature());
@@ -1067,7 +1063,9 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
     }
 
     fn use_preferred_groups(
-        &self, mut cv: ConstVec<BasisElementGroup, QTY_GROUPS>, mut remaining_els: BTreeMap<BasisSignature, BasisElement>
+        &self,
+        mut cv: ConstVec<BasisElementGroup, QTY_GROUPS>,
+        mut remaining_els: BTreeMap<BasisSignature, BasisElement>,
     ) -> ConstVec<BasisElementGroup, QTY_GROUPS> {
         let mut used_sigs = BTreeSet::new();
         let mut i = 0;
@@ -1078,9 +1076,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             }
             i += 1;
         }
-        let mut all_groups =
-            self.uniform_grade_groups.iter().map(|it| it.1)
-                .chain(self.mixed_grade_groups.iter().map(|it| it.1));
+        let mut all_groups = self.uniform_grade_groups.iter().map(|it| it.1).chain(self.mixed_grade_groups.iter().map(|it| it.1));
         for mvgs in all_groups {
             if remaining_els.is_empty() {
                 break;
@@ -1089,14 +1085,10 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             mvgs.sort_unstable_by(|a, b| {
                 let a = a.into_vec();
                 let b = b.into_vec();
-                b.len().cmp(&a.len()).then_with(|| {
-                    a.cmp(&b)
-                })
+                b.len().cmp(&a.len()).then_with(|| a.cmp(&b))
             });
             for mvg in mvgs.into_iter() {
-                let can_use = mvg.clone().into_iter().all(|el| {
-                    !used_sigs.contains(&el.signature())
-                });
+                let can_use = mvg.clone().into_iter().all(|el| !used_sigs.contains(&el.signature()));
                 if can_use {
                     for el in mvg.clone().into_iter() {
                         remaining_els.remove(&el.signature());
@@ -1119,7 +1111,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 1 => BasisElementGroup::G1(last_group[0]),
                 2 => BasisElementGroup::G2(last_group[0], last_group[1]),
                 3 => BasisElementGroup::G3(last_group[0], last_group[1], last_group[2]),
-                _ => unreachable!("last_group.len() cannot be <1 or >3 in this branch.")
+                _ => unreachable!("last_group.len() cannot be <1 or >3 in this branch."),
             });
         }
         cv
@@ -1141,11 +1133,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
             if sig.eq(&signature) {
                 return std::cmp::Ordering::Equal;
             }
-            sig.len().cmp(&signature.len()).then_with(|| {
-                sig.cmp(&signature).then_with(|| {
-                    mv.name.cmp(multi_vec.name)
-                })
-            })
+            sig.len().cmp(&signature.len()).then_with(|| sig.cmp(&signature).then_with(|| mv.name.cmp(multi_vec.name)))
         });
         let Err(insert_idx) = idx else { return };
         let multi_vec = Box::leak(Box::new(multi_vec));
@@ -1158,12 +1146,18 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 gr |= el.grades();
             }
             if gr.into_bits().count_ones() == 1 {
-                self.uniform_grade_groups.entry(gr)
-                    .and_modify(move |s| { s.insert(mvg); })
+                self.uniform_grade_groups
+                    .entry(gr)
+                    .and_modify(move |s| {
+                        s.insert(mvg);
+                    })
                     .or_insert(BTreeSet::from([mvg]));
             } else {
-                self.mixed_grade_groups.entry(gr)
-                    .and_modify(move |s| { s.insert(mvg); })
+                self.mixed_grade_groups
+                    .entry(gr)
+                    .and_modify(move |s| {
+                        s.insert(mvg);
+                    })
                     .or_insert(BTreeSet::from([mvg]));
             }
         }
@@ -1212,14 +1206,14 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
                 continue;
             }
             if !sig.is_superset(signature) {
-                continue
+                continue;
             }
             if sig.len() == signature.len() {
                 return (*mv, true);
             }
             if result.0.into_bits().count_ones() > gr.into_bits().count_ones() {
                 result = tuple;
-                continue
+                continue;
             }
             if result.1.len() > sig.len() {
                 result = tuple;
@@ -1233,18 +1227,16 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         for sig in signature.iter() {
             grades |= Grades::from_sig(*sig);
         }
-        let thing = self.declarations.declared.binary_search_by(|(gr, sig, mv)| {
-            gr.cmp(&grades).then_with(|| {
-                sig.len().cmp(&signature.len()).then_with(|| {
-                    sig.cmp(signature)
-                })
-            })
-        }).ok()?;
+        let thing = self
+            .declarations
+            .declared
+            .binary_search_by(|(gr, sig, mv)| gr.cmp(&grades).then_with(|| sig.len().cmp(&signature.len()).then_with(|| sig.cmp(signature))))
+            .ok()?;
         let mv = self.declarations.declared.get(thing)?.2;
         Some(mv)
     }
 
-    pub fn all_classes(&self) -> impl Iterator<Item=&'static MultiVec<AntiScalar>> {
+    pub fn all_classes(&self) -> impl Iterator<Item = &'static MultiVec<AntiScalar>> {
         let mut v = vec![];
         for mv in self.declarations.declared.iter() {
             v.push(mv.2);
@@ -1259,17 +1251,13 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
     pub(crate) fn note_wanted(&self, sig: BTreeSet<BasisSignature>, ti: Arc<RawTraitImplementation>) {
         let mut w = self.wanted.lock();
         let ti2 = ti.clone();
-        w.entry(sig)
-            .and_modify(move |v| v.push(ti2))
-            .or_insert(vec![ti]);
+        w.entry(sig).and_modify(move |v| v.push(ti2)).or_insert(vec![ti]);
     }
 
     pub(crate) fn note_strongly_wanted(&self, sig: BTreeSet<BasisSignature>, td: Arc<RawTraitDefinition>) {
         let mut w = self.strongly_wanted.lock();
         let td2 = td.clone();
-        w.entry(sig)
-            .and_modify(move |v| v.push(td2))
-            .or_insert(vec![td]);
+        w.entry(sig).and_modify(move |v| v.push(td2)).or_insert(vec![td]);
     }
 
     pub(crate) fn declarations(&self) -> Vec<&'static MultiVec<AntiScalar>> {
@@ -1280,8 +1268,6 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         &self.declarations.documentation
     }
 }
-
-
 
 #[derive(Debug)]
 pub struct DynamicMultiVector {
@@ -1301,7 +1287,7 @@ impl DynamicMultiVector {
         g
     }
 
-    //noinspection DuplicatedCode
+    // noinspection DuplicatedCode
     pub fn construct<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
@@ -1354,8 +1340,7 @@ impl DynamicMultiVector {
         Some(result)
     }
 
-
-    //noinspection DuplicatedCode
+    // noinspection DuplicatedCode
     pub fn construct_exact<const AntiScalar: BasisElement>(mut self, b: &TraitImplBuilder<AntiScalar, HasNotReturned>) -> Option<MultiVectorExpr> {
         if self.vals.is_empty() {
             return None;
@@ -1413,7 +1398,7 @@ impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
     fn add_assign(&mut self, rhs: (FE, BasisElement)) {
         let sign = rhs.1.coefficient() as f32;
         if sign == 0.0 {
-            return
+            return;
         }
         let signature = rhs.1.signature();
         let mut thing = self.vals.entry(signature).or_insert(FloatExpr::Literal(0.0));
@@ -1438,6 +1423,5 @@ impl Display for DynamicMultiVector {
         write!(f, ")")
     }
 }
-
 
 //

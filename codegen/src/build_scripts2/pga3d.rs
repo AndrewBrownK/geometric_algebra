@@ -1,6 +1,5 @@
 #![allow(non_upper_case_globals)]
 
-use crate::{ga, multi_vecs};
 use crate::algebra2::basis::elements::e0123;
 use crate::algebra2::multivector::DynamicMultiVector;
 use crate::ast2::datatype::{Float, MultiVector};
@@ -8,6 +7,7 @@ use crate::ast2::expressions::FloatExpr;
 use crate::ast2::traits::{TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder};
 use crate::ast2::Variable;
 use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, Dual, GeometricProduct, Reverse, Sandwich, ScalarProduct, Wedge};
+use crate::{ga, multi_vecs};
 
 fn float_var(n: &str) -> Variable<Float> {
     Variable::quick_var(n, Float)
@@ -16,18 +16,18 @@ fn float_var_expr(n: &str) -> FloatExpr {
     Variable::quick_var(n, Float).into()
 }
 
-/* R ⟑ C = MultiVector(
-    scalar((c12 * -1)),
-    e0(0), e1(0), e2(0), e3(0),
-    e01((-c23 + c02)),
-    e02((-c31 - c01 + c12)),
-    e03((-c12 - c31)),
-    e12(0),
-    e31((c23 * -1)),
-    e23(c31),
-    e021(0), e013(0), e032(0), e123(0),
-    e0123((c03 + c23))
-) */
+// R ⟑ C = MultiVector(
+// scalar((c12 * -1)),
+// e0(0), e1(0), e2(0), e3(0),
+// e01((-c23 + c02)),
+// e02((-c31 - c01 + c12)),
+// e03((-c12 - c31)),
+// e12(0),
+// e31((c23 * -1)),
+// e23(c31),
+// e021(0), e013(0), e032(0), e123(0),
+// e0123((c03 + c23))
+// )
 multi_vecs! { e0123;
 
     // Base might be either point or plane, depending on our interpretation
@@ -45,7 +45,7 @@ multi_vecs! { e0123;
 }
 
 #[test]
-//noinspection DuplicatedCode
+// noinspection DuplicatedCode
 fn anti_product_argument() {
     let rga3d = ga! { e0123;
         1 => e1, e2, e3;
@@ -84,9 +84,16 @@ fn anti_product_argument() {
         float_var_expr(n.as_str())
     });
     let rotor = rotor.construct(|el| {
-        if el == e01 { FloatExpr::Literal(1.0) } else if el == e12 { FloatExpr::Literal(1.0) } else if el == e0123 { FloatExpr::Literal(1.0) } else { FloatExpr::Literal(0.0) }
+        if el == e01 {
+            FloatExpr::Literal(1.0)
+        } else if el == e12 {
+            FloatExpr::Literal(1.0)
+        } else if el == e0123 {
+            FloatExpr::Literal(1.0)
+        } else {
+            FloatExpr::Literal(0.0)
+        }
     });
-
 
     let builder = TraitImplBuilder::new_sandbox(rga3d.clone(), repo);
     let rt = tokio::runtime::Runtime::new().expect("tokio works");

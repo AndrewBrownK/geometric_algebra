@@ -1,7 +1,7 @@
-use std::collections::BTreeMap;
 use crate::algebra::MultiVectorClass;
 use crate::ast::{AstNode, Expression, ExpressionContent, Parameter};
 use crate::result_of_trait;
+use std::collections::BTreeMap;
 
 pub struct TraitImpls<'a> {
     pub class_level: BTreeMap<(String, String), AstNode<'a>>,

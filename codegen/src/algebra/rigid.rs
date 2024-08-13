@@ -12,11 +12,7 @@ impl RigidGeometricAlgebra {
     pub fn new(name: &'static str, dimensions: usize, dialect: Dialect) -> Self {
         let mut generator_squares = vec![1; dimensions];
         generator_squares.push(0);
-        return RigidGeometricAlgebra {
-            generator_squares,
-            name,
-            dialect
-        }
+        return RigidGeometricAlgebra { generator_squares, name, dialect };
     }
     pub fn sorted_basis(&self) -> Vec<BasisElement> {
         let mut basis_elements = self.basis();
@@ -38,7 +34,7 @@ impl GeometricAlgebraTrait for RigidGeometricAlgebra {
         &self.dialect
     }
 
-    //noinspection DuplicatedCode
+    // noinspection DuplicatedCode
     fn parse(&self, mut name: &str) -> BasisElement {
         let mut result = BasisElement::from_index(0);
         if name.starts_with('-') {
@@ -63,7 +59,7 @@ impl GeometricAlgebraTrait for RigidGeometricAlgebra {
     }
 
     fn is_degenerate(&self) -> bool {
-        return true
+        return true;
     }
 
     fn has_multiple_complements(&self) -> bool {
@@ -93,10 +89,7 @@ impl GeometricAlgebraTrait for RigidGeometricAlgebra {
         let origin = (1 as BasisElementIndex) << self.represented_dimensions();
         let aligned_origin = a.index & origin == origin;
         if aligned_origin {
-            return BasisElement {
-                coefficient: 0,
-                index: 0,
-            }
+            return BasisElement { coefficient: 0, index: 0 };
         }
         return self.right_complement(a);
     }
@@ -106,10 +99,7 @@ impl GeometricAlgebraTrait for RigidGeometricAlgebra {
         let origin = (1 as BasisElementIndex) << self.represented_dimensions();
         let aligned_origin = a.index & origin == origin;
         if !aligned_origin {
-            return BasisElement {
-                coefficient: 0,
-                index: 0,
-            }
+            return BasisElement { coefficient: 0, index: 0 };
         }
         return self.right_complement(a);
     }

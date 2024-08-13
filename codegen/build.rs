@@ -1,7 +1,7 @@
 use std::env;
 use std::fs::File;
-use std::path::Path;
 use std::io::Write;
+use std::path::Path;
 
 fn main() {
     generate_multi_bases();
@@ -50,20 +50,20 @@ fn generate_multi_bases() {
         numbers.push(1u16 << 14);
         numbers.push(1u16 << 15);
     }
-    numbers.sort_by(|a, b| {
-        a.count_ones().cmp(&b.count_ones()).then_with(|| {
-            b.reverse_bits().cmp(&a.reverse_bits())
-        })
-    });
+    numbers.sort_by(|a, b| a.count_ones().cmp(&b.count_ones()).then_with(|| b.reverse_bits().cmp(&a.reverse_bits())));
 
-    write!(f, "const fn element(signature: BasisSignature) -> BasisElement {{
+    write!(
+        f,
+        "const fn element(signature: BasisSignature) -> BasisElement {{
     BasisElement {{
         coefficient: 1,
         signature,
         display_name: ConstOption::None,
     }}
 }}
-").unwrap();
+"
+    )
+    .unwrap();
 
     for num in numbers {
         let mut combined_basis = if num == 0 { "scalar".to_string() } else { "e".to_string() };
@@ -72,7 +72,6 @@ fn generate_multi_bases() {
                 combined_basis.push(char::from_digit(i, 16).unwrap().to_ascii_uppercase());
             }
         }
-
 
         let line = format!("pub const {combined_basis}: BasisElement = element(BasisSignature::from_bits_retain(0b{num:016b}));\n");
         f.write(line.as_bytes()).unwrap();

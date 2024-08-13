@@ -1,14 +1,14 @@
 use crate::characteristics::{AntiSqrt, Attitude, Carrier, Center, CoCarrier, Container, Sqrt};
 use crate::metrics::Distance;
+use crate::norms::{FlatWeightNormSquared, UnitizedRadiusNormSquared};
 use crate::products::dot::{AntiDot, Dot};
 use crate::products::exterior::{Join, Meet, Wedge};
+use crate::products::projections::ProjectOrthogonallyOnto;
+use crate::products::rejections::RejectOrthogonallyFrom;
 use crate::unitize::Unitize;
 use crate::{Circle, Dipole, FlatPoint, Horizon, Infinity, Line, Origin, RoundPoint};
 use projective_ga::Unit;
 use std::ops::Add;
-use crate::norms::{FlatWeightNormSquared, UnitizedRadiusNormSquared};
-use crate::products::projections::ProjectOrthogonallyOnto;
-use crate::products::rejections::RejectOrthogonallyFrom;
 
 fn unitizing_equals<A, B>(a: A, b: B, epsilon: f32) -> bool {
     todo!()
@@ -16,7 +16,7 @@ fn unitizing_equals<A, B>(a: A, b: B, epsilon: f32) -> bool {
 
 #[test]
 fn round_point_distances() {
-    //TODO speculation on distance formula for CGA
+    // TODO speculation on distance formula for CGA
     // Basically, if it is possible at all, then it looks something like this:
     // - take the meet of two objects
     // - interpret the radius of the meet according to some SphereAtOrigin that represents
@@ -170,24 +170,20 @@ fn distance_speculation() {
     // so.. maybe the distance has been encoded in the result of the meet this entire time?
 }
 
-
 const EPSILON: f32 = 0.0000001;
 const EPSILON_SQUARED: f32 = EPSILON * EPSILON;
 
 enum ClosestGeometryOnCircle {
     Circle(Circle),
     Dipole(Dipole),
-    FlatPoint(FlatPoint)
+    FlatPoint(FlatPoint),
 }
 
-fn closest_geometry_on_circle(
-    line: Line,
-    circle: Circle
-) -> ClosestGeometryOnCircle {
+fn closest_geometry_on_circle(line: Line, circle: Circle) -> ClosestGeometryOnCircle {
     let circle_co_carrier = circle.co_carrier();
     if unitizing_equals(circle_co_carrier, line, EPSILON) {
         // Line passes through Center of Circle, orthogonal to Circle
-        return ClosestGeometryOnCircle::Circle(circle)
+        return ClosestGeometryOnCircle::Circle(circle);
     }
 
     let dipole = line.meet(circle.container());
@@ -196,36 +192,25 @@ fn closest_geometry_on_circle(
     if unitizing_equals(dipole_center, circle_center, EPSILON) {
         // Line passes through Center of Circle, but at an angle
         let dipole = dipole.project_orthogonally_onto(circle);
-        return ClosestGeometryOnCircle::Dipole(dipole)
+        return ClosestGeometryOnCircle::Dipole(dipole);
     }
 
     let plane = circle.carrier();
     let line_parallel_carrier = line.project_orthogonally_onto(plane);
     let line_perpendicular_carrier = line.reject_orthogonally_from(plane);
 
-
-
-
-
-
     let round_point = line.meet(circle);
     let rp_rad_sq = round_point.unitized_radius_norm_squared();
     if rp_rad_sq.abs() < EPSILON_SQUARED {
         // Line intersects Circle
         let point = round_point.join(Infinity::unit());
-        return ClosestGeometryOnCircle::FlatPoint(point)
+        return ClosestGeometryOnCircle::FlatPoint(point);
     }
     if rp_rad_sq > EPSILON_SQUARED {
         // Line passes inside circle (off Center)
-
     }
     // Line passes outside circle
 
-
-
-
-
-    //
     // let dipole = line.meet(circle.container()).project_orthogonally_onto(circle);
     // let dp_rad_sq = dipole.unitized_radius_norm_squared();
     // let thing = round_point.project_orthogonally_onto(dipole);

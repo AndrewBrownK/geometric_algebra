@@ -1,12 +1,12 @@
 #![allow(non_upper_case_globals)]
 
-use std::cmp::Ordering;
-use std::ops::{Add, Mul, Sub};
-use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::algebra2::basis::arithmetic::{GradedProduct, GradedSum, Product};
 use crate::algebra2::basis::grades::{grade1, Grades};
 use crate::algebra2::basis::substitutes::Substitutions;
+use crate::algebra2::basis::{BasisElement, BasisSignature};
 use crate::utility::ConstOption;
+use std::cmp::Ordering;
+use std::ops::{Add, Mul, Sub};
 
 /// The foundational GeneratorSquares assumes a diagonal metric
 /// (with no generator substitutions).
@@ -35,7 +35,6 @@ macro_rules! generator_squares {
     };
 }
 
-
 impl GeneratorSquares {
     pub const fn anti_scalar(&self) -> BasisElement {
         let signature = self.active_bases;
@@ -54,7 +53,7 @@ impl GeneratorSquares {
         // and then it will loop around and try the lower bases again.
         for basis in GeneratorElement::array().into_iter().chain(GeneratorElement::array()) {
             if emptying_signature.is_empty() {
-                return Ok(basis)
+                return Ok(basis);
             }
             emptying_signature.remove(basis.signature());
         }
@@ -65,7 +64,7 @@ impl GeneratorSquares {
         Self {
             negative_anti_scalar: false,
             active_bases: BasisSignature::empty(),
-            raw_squares: [0i8; 16]
+            raw_squares: [0i8; 16],
         }
     }
 
@@ -79,7 +78,11 @@ impl GeneratorSquares {
             active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
-        Self { negative_anti_scalar: false, active_bases, raw_squares }
+        Self {
+            negative_anti_scalar: false,
+            active_bases,
+            raw_squares,
+        }
     }
 
     pub fn append<const N: usize>(self, generator_squares: [(GeneratorElement, i8); N]) -> anyhow::Result<Self> {
@@ -91,12 +94,16 @@ impl GeneratorSquares {
             }
             let sig = basis.signature();
             if active_bases.contains(sig) {
-                return Err(anyhow::format_err!("The PrimaryBasis {basis:?} is already taken on {self:?}"))
+                return Err(anyhow::format_err!("The PrimaryBasis {basis:?} is already taken on {self:?}"));
             }
             active_bases = active_bases.union(sig);
             raw_squares[(basis as u8) as usize] = square;
         }
-        Ok(Self { negative_anti_scalar: false, active_bases, raw_squares })
+        Ok(Self {
+            negative_anti_scalar: false,
+            active_bases,
+            raw_squares,
+        })
     }
 
     pub fn overwrite<const N: usize>(self, generator_squares: [(GeneratorElement, i8); N]) -> Self {
@@ -109,7 +116,11 @@ impl GeneratorSquares {
             active_bases = active_bases.union(basis.signature());
             raw_squares[(basis as u8) as usize] = square;
         }
-        Self { negative_anti_scalar: false, active_bases, raw_squares }
+        Self {
+            negative_anti_scalar: false,
+            active_bases,
+            raw_squares,
+        }
     }
 
     pub const fn square_generator(&self, basis: GeneratorElement) -> i8 {
@@ -119,48 +130,46 @@ impl GeneratorSquares {
     // OKAY SO while implementing scalar/dot product I can definitely see where the confusion
     // arises when different authors argue the dot product should be always grade zero, or always
     // grade difference.
-    /*
-    So suppose in vanilla GA we have e2 and e123 and we want to rediscover and/or generalize what
-    the dot product could mean between them.
-
-    The "Grade 0 Approach" seems to argue (as far as I can discern/infer) that the generalization
-    should be "In dot products between grade 1 vectors, each basis ONLY pairs up with itself (for
-    a non-zero result), and if you try to dot product  mismatched (orthogonal) basis elements,
-    then the result is zero. Therefore it is reasonable to say that since e2 and e123 are not
-    identical basis elements, their dot product should be zero. Therefore ultimately the dot
-    product is the scalar product."
-
-    The "Grade Difference Approach" seems (as far as I can discern/infer) to attempt the
-    generalization differently. The treatment seems to be:
-    e2 ● e123 = ?
-    e2 ● (e1 ∧ e2 ∧ e3) = ?
-    e2 ● -(e2 ∧ e1 ∧ e3) = ?
-    -(e2 ● (e2 ∧ e1 ∧ e3)) = ?
-    -((e2 ● e2) ∧ e1 ∧ e3) = ?     <- concern #1
-    -(1 ∧ e1 ∧ e3) = ?             <- concern #2
-    -e13 = ?
-    e2 ● e123 = -e13
-
-    And then from there (again, attempting to discover/generalize a dot product from scratch here),
-    it is noticed this result is inside the geometric product, and then the dot product is appointed
-    to be the "grade difference" selection of the geometric product.
-
-    Concern #1: Is the dot product really supposed to be associative with wedge product?
-
-    Concern #2: Why do we allow ourselves to collapse (e2 ● e2) = 1 without first encountering
-    interference with (e2 ● e1) = 0? Since we're trying to build upon/generalize the grade 1 dot
-    product to begin with.
-
-    Maybe the motivation is... "The dot product doesn't mean to only match identical elements,
-    it means to only exclude orthogonal elements"?
-     */
+    // So suppose in vanilla GA we have e2 and e123 and we want to rediscover and/or generalize what
+    // the dot product could mean between them.
+    //
+    // The "Grade 0 Approach" seems to argue (as far as I can discern/infer) that the generalization
+    // should be "In dot products between grade 1 vectors, each basis ONLY pairs up with itself (for
+    // a non-zero result), and if you try to dot product  mismatched (orthogonal) basis elements,
+    // then the result is zero. Therefore it is reasonable to say that since e2 and e123 are not
+    // identical basis elements, their dot product should be zero. Therefore ultimately the dot
+    // product is the scalar product."
+    //
+    // The "Grade Difference Approach" seems (as far as I can discern/infer) to attempt the
+    // generalization differently. The treatment seems to be:
+    // e2 ● e123 = ?
+    // e2 ● (e1 ∧ e2 ∧ e3) = ?
+    // e2 ● -(e2 ∧ e1 ∧ e3) = ?
+    // -(e2 ● (e2 ∧ e1 ∧ e3)) = ?
+    // -((e2 ● e2) ∧ e1 ∧ e3) = ?     <- concern #1
+    // -(1 ∧ e1 ∧ e3) = ?             <- concern #2
+    // -e13 = ?
+    // e2 ● e123 = -e13
+    //
+    // And then from there (again, attempting to discover/generalize a dot product from scratch here),
+    // it is noticed this result is inside the geometric product, and then the dot product is appointed
+    // to be the "grade difference" selection of the geometric product.
+    //
+    // Concern #1: Is the dot product really supposed to be associative with wedge product?
+    //
+    // Concern #2: Why do we allow ourselves to collapse (e2 ● e2) = 1 without first encountering
+    // interference with (e2 ● e1) = 0? Since we're trying to build upon/generalize the grade 1 dot
+    // product to begin with.
+    //
+    // Maybe the motivation is... "The dot product doesn't mean to only match identical elements,
+    // it means to only exclude orthogonal elements"?
 
     pub fn scalar_product(&self, a: BasisElement, b: BasisElement) -> Product {
         if a.coefficient == 0 || b.coefficient == 0 {
-            return Product::zero()
+            return Product::zero();
         }
         if a.signature != b.signature {
-            return Product::zero()
+            return Product::zero();
         }
 
         // a ⋅ b = ⟨ab̃⟩₀
@@ -223,7 +232,7 @@ impl GeneratorSquares {
             g_idx += 1;
         }
         if sign == 0 {
-            return BasisElement::zero()
+            return BasisElement::zero();
         }
         result.coefficient = sign;
         result
@@ -260,7 +269,6 @@ impl GeneratorSquares {
     /// If your BasisElements are substituting bases, you'll need to convert to
     /// the underlying bases before you can properly use this function.
     pub const fn geometric_product(&self, a: BasisElement, b: BasisElement) -> BasisElement {
-
         // Implementation may look a bit strange because it is const compatible
         let s = a;
         let o = b;
@@ -278,13 +286,13 @@ impl GeneratorSquares {
                 result_elements[r_idx] = b[b_idx];
                 r_idx += 1;
                 b_idx += 1;
-                continue
+                continue;
             }
             if b_idx >= b_len {
                 result_elements[r_idx] = a[a_idx];
                 r_idx += 1;
                 a_idx += 1;
-                continue
+                continue;
             }
             let a_ = a[a_idx].unwrap();
             let b_ = b[b_idx].unwrap();
@@ -306,7 +314,7 @@ impl GeneratorSquares {
                         g_idx += 1;
                     }
                     if sign == 0 {
-                        return BasisElement::zero()
+                        return BasisElement::zero();
                     }
                     // Must move b_ at least to the right of a_.
                     // Which negates the sign each step.
@@ -314,7 +322,7 @@ impl GeneratorSquares {
                     sign *= i8::pow(-1, swaps % 2);
                     a_idx += 1;
                     b_idx += 1;
-                },
+                }
                 Ordering::Greater => {
                     // Must move b_ all the way to left of a_.
                     // Which negates the sign each step.
@@ -356,7 +364,6 @@ impl GeneratorSquares {
         c.left_complement(anti_scalar)
     }
 }
-
 
 #[repr(u8)]
 #[allow(non_camel_case_types)]
@@ -409,14 +416,25 @@ pub const eI: GeneratorElement = GeneratorElement::eD;
 pub const eP: GeneratorElement = GeneratorElement::eE;
 pub const eM: GeneratorElement = GeneratorElement::eF;
 
-
 impl GeneratorElement {
     pub const fn array() -> [Self; 16] {
         [
-            GeneratorElement::e0, GeneratorElement::e1, GeneratorElement::e2, GeneratorElement::e3,
-            GeneratorElement::e4, GeneratorElement::e5, GeneratorElement::e6, GeneratorElement::e7,
-            GeneratorElement::e8, GeneratorElement::e9, GeneratorElement::eA, GeneratorElement::eB,
-            GeneratorElement::eC, GeneratorElement::eD, GeneratorElement::eE, GeneratorElement::eF,
+            GeneratorElement::e0,
+            GeneratorElement::e1,
+            GeneratorElement::e2,
+            GeneratorElement::e3,
+            GeneratorElement::e4,
+            GeneratorElement::e5,
+            GeneratorElement::e6,
+            GeneratorElement::e7,
+            GeneratorElement::e8,
+            GeneratorElement::e9,
+            GeneratorElement::eA,
+            GeneratorElement::eB,
+            GeneratorElement::eC,
+            GeneratorElement::eD,
+            GeneratorElement::eE,
+            GeneratorElement::eF,
         ]
     }
 
@@ -440,18 +458,17 @@ impl GeneratorElement {
         let a = *self as u8;
         let b = *other as u8;
         if a < b {
-            return Ordering::Less
+            return Ordering::Less;
         }
         if a > b {
-            return Ordering::Greater
+            return Ordering::Greater;
         }
         Ordering::Equal
     }
 }
 
-
 impl Mul<f32> for GeneratorElement {
-    type Output = GradedProduct<{grade1}>;
+    type Output = GradedProduct<{ grade1 }>;
 
     fn mul(self, rhs: f32) -> Self::Output {
         let mut gp = self.into();
@@ -460,7 +477,7 @@ impl Mul<f32> for GeneratorElement {
     }
 }
 impl Mul<GeneratorElement> for f32 {
-    type Output = GradedProduct<{grade1}>;
+    type Output = GradedProduct<{ grade1 }>;
 
     fn mul(self, rhs: GeneratorElement) -> Self::Output {
         let mut gp = rhs.into();
@@ -469,65 +486,63 @@ impl Mul<GeneratorElement> for f32 {
     }
 }
 impl Add<GeneratorElement> for GeneratorElement {
-    type Output = GradedSum<{grade1}>;
+    type Output = GradedSum<{ grade1 }>;
 
     fn add(self, rhs: GeneratorElement) -> Self::Output {
-        let a: GradedProduct<{grade1}> = self * 1.0f32;
-        let b: GradedProduct<{grade1}> = rhs * 1.0f32;
-        let c: GradedSum<{grade1}> = a + b;
+        let a: GradedProduct<{ grade1 }> = self * 1.0f32;
+        let b: GradedProduct<{ grade1 }> = rhs * 1.0f32;
+        let c: GradedSum<{ grade1 }> = a + b;
         c
     }
 }
-impl Add<GradedProduct<{grade1}>> for GeneratorElement {
-    type Output = GradedSum<{grade1}>;
+impl Add<GradedProduct<{ grade1 }>> for GeneratorElement {
+    type Output = GradedSum<{ grade1 }>;
 
-    fn add(self, rhs: GradedProduct<{grade1}>) -> Self::Output {
-        let a: GradedProduct<{grade1}> = self * 1.0f32;
-        let c: GradedSum<{grade1}> = a + rhs;
+    fn add(self, rhs: GradedProduct<{ grade1 }>) -> Self::Output {
+        let a: GradedProduct<{ grade1 }> = self * 1.0f32;
+        let c: GradedSum<{ grade1 }> = a + rhs;
         c
     }
 }
-impl Add<GeneratorElement> for GradedProduct<{grade1}> {
-    type Output = GradedSum<{grade1}>;
+impl Add<GeneratorElement> for GradedProduct<{ grade1 }> {
+    type Output = GradedSum<{ grade1 }>;
 
     fn add(self, rhs: GeneratorElement) -> Self::Output {
-        let a: GradedProduct<{grade1}> = rhs * 1.0f32;
-        let c: GradedSum<{grade1}> = self + a;
+        let a: GradedProduct<{ grade1 }> = rhs * 1.0f32;
+        let c: GradedSum<{ grade1 }> = self + a;
         c
     }
 }
 impl Sub<GeneratorElement> for GeneratorElement {
-    type Output = GradedSum<{grade1}>;
+    type Output = GradedSum<{ grade1 }>;
 
     fn sub(self, rhs: GeneratorElement) -> Self::Output {
-        let a: GradedProduct<{grade1}> = self * 1.0f32;
-        let b: GradedProduct<{grade1}> = rhs * -1.0f32;
-        let c: GradedSum<{grade1}> = a + b;
+        let a: GradedProduct<{ grade1 }> = self * 1.0f32;
+        let b: GradedProduct<{ grade1 }> = rhs * -1.0f32;
+        let c: GradedSum<{ grade1 }> = a + b;
         c
     }
 }
-impl Sub<GradedProduct<{grade1}>> for GeneratorElement {
-    type Output = GradedSum<{grade1}>;
+impl Sub<GradedProduct<{ grade1 }>> for GeneratorElement {
+    type Output = GradedSum<{ grade1 }>;
 
-    fn sub(self, rhs: GradedProduct<{grade1}>) -> Self::Output {
-        let a: GradedProduct<{grade1}> = self * 1.0f32;
-        let c: GradedSum<{grade1}> = a - rhs;
+    fn sub(self, rhs: GradedProduct<{ grade1 }>) -> Self::Output {
+        let a: GradedProduct<{ grade1 }> = self * 1.0f32;
+        let c: GradedSum<{ grade1 }> = a - rhs;
         c
     }
 }
-impl Sub<GeneratorElement> for GradedProduct<{grade1}> {
-    type Output = GradedSum<{grade1}>;
+impl Sub<GeneratorElement> for GradedProduct<{ grade1 }> {
+    type Output = GradedSum<{ grade1 }>;
 
     fn sub(self, rhs: GeneratorElement) -> Self::Output {
-        let a: GradedProduct<{grade1}> = 1.0f32 * rhs;
-        let c: GradedSum<{grade1}> = self - a;
+        let a: GradedProduct<{ grade1 }> = 1.0f32 * rhs;
+        let c: GradedSum<{ grade1 }> = self - a;
         c
     }
 }
 
-
-
-impl Add<Vec<(GeneratorElement, GradedSum<{grade1}>)>> for GeneratorSquares {
+impl Add<Vec<(GeneratorElement, GradedSum<{ grade1 }>)>> for GeneratorSquares {
     type Output = Substitutions;
 
     fn add(self, rhs: Vec<(GeneratorElement, GradedSum<{ grade1 }>)>) -> Self::Output {
@@ -535,11 +550,10 @@ impl Add<Vec<(GeneratorElement, GradedSum<{grade1}>)>> for GeneratorSquares {
     }
 }
 
-impl Add<GeneratorSquares> for Vec<(GeneratorElement, GradedSum<{grade1}>)> {
+impl Add<GeneratorSquares> for Vec<(GeneratorElement, GradedSum<{ grade1 }>)> {
     type Output = Substitutions;
 
     fn add(self, rhs: GeneratorSquares) -> Self::Output {
         Substitutions::new(rhs, self)
     }
 }
-

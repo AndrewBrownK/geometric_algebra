@@ -1,8 +1,8 @@
-use std::path::PathBuf;
+use naga::front::glsl::Error;
 use naga::valid::{Capabilities, ValidationFlags};
 use naga::ShaderStage;
-use naga::front::glsl::Error;
 use std::io::Read;
+use std::path::PathBuf;
 
 pub fn validate_glsl(algebra_name: &str, file_path: PathBuf) {
     // Prepare some of naga's clutter

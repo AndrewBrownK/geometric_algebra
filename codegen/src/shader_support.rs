@@ -1,17 +1,12 @@
-use std::path::{Path, PathBuf};
 use crate::emit::Emitter;
+use std::path::{Path, PathBuf};
 
-pub fn emit_shader_support(
-    emitter: &mut Emitter<std::fs::File>,
-    base_file_path: &PathBuf,
-    algebra_name: &str
-) -> std::io::Result<()> {
-
+pub fn emit_shader_support(emitter: &mut Emitter<std::fs::File>, base_file_path: &PathBuf, algebra_name: &str) -> std::io::Result<()> {
     let upper_snake_case_name = algebra_name.to_uppercase();
 
-
     emitter.new_rust_collector(&base_file_path.join(Path::new("shaders.rs")));
-    let rust_source = format!("
+    let rust_source = format!(
+        "
 
 use std::fs;
 use std::path::Path;
@@ -135,10 +130,9 @@ pub fn glsl_compose_with_entrypoints(naga_module_descriptor: naga_oil::compose::
 
 
 
-");
+"
+    );
     emitter.emit_rust_preamble(rust_source.as_str())?;
 
     Ok(())
 }
-
-

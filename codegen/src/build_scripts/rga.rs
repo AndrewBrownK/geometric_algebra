@@ -1,11 +1,11 @@
-use std::collections::BTreeMap;
-use std::path::Path;
 use crate::algebra::dialect::Dialect;
-use crate::algebra::{MultiVectorClassRegistry, read_multi_vector_from_str};
 use crate::algebra::rigid::RigidGeometricAlgebra;
+use crate::algebra::{read_multi_vector_from_str, MultiVectorClassRegistry};
 use crate::compile::CodeGenerator;
 use crate::emit::Emitter;
 use crate::shader_support::emit_shader_support;
+use std::collections::BTreeMap;
+use std::path::Path;
 
 pub fn rga_script(
     path_prefix: &str,
@@ -14,9 +14,8 @@ pub fn rga_script(
     dimensions: usize,
     actually_emit: bool,
     multi_vector_classes: &[&str],
-    sandwich_outputs: BTreeMap<(&str, &str), &str>
+    sandwich_outputs: BTreeMap<(&str, &str), &str>,
 ) -> std::io::Result<()> {
-
     let rga_nd = RigidGeometricAlgebra::new(name, dimensions, dialect);
 
     let mut registry = MultiVectorClassRegistry::default();
@@ -239,6 +238,6 @@ use crate::products::geometric::*;",
     // So we will not validate here, and just use tests instead.
     // validate_glsl(RGA3D, file_path.clone());
     // validate_wgsl(RGA3D, file_path);
-    
+
     Ok(())
 }

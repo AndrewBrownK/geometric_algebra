@@ -4,6 +4,4 @@ use crate::ga;
 pub fn rga3d_script() {
 
     // let rga3d = ga!(1 => e1, e2, e3; 0 => e4);
-
-
 }

@@ -72,8 +72,8 @@ impl Emitter<File> {
                 rust_collector: None,
                 glsl_collector: None,
                 wgsl_collector: None,
-                rust_files_so_far: vec![]
-            }
+                rust_files_so_far: vec![],
+            };
         }
         Self {
             actually_emit,
