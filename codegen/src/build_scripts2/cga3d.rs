@@ -60,7 +60,7 @@ pub fn cga3d_script() {
         Grade AntiGrade Into TryInto
         Dual AntiDual Reverse AntiReverse
         |
-        Wedge AntiWedge GeometricProduct GeometricAntiProduct
+        Wedge AntiWedge GeometricProduct GeometricAntiProduct Sandwich AntiSandwich
         // TODO do CGA expansion/contraction, not naive flat ones
         // BulkExpansion BulkContraction WeightExpansion WeightContraction
     };

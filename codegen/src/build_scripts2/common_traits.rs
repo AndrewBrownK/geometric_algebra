@@ -339,11 +339,13 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let ga = &b.ga;
             let mut dyn_mv = DynamicMultiVector::zero();
             for (a, a_el) in slf.elements_by_groups() {
                 for (b, b_el) in other.elements_by_groups() {
                     let a = a.clone();
-                    dyn_mv += (a * b, a_el.wedge(b_el));
+                    let (f, c) = ga.wedge(a_el, b_el);
+                    dyn_mv += (a * b * f, c);
                 }
             }
             let mv = dyn_mv.construct(&b)?;
@@ -363,11 +365,13 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let ga = &b.ga;
             let mut dyn_mv = DynamicMultiVector::zero();
             for (a, a_el) in slf.elements_by_groups() {
                 for (b, b_el) in other.elements_by_groups() {
                     let a = a.clone();
-                    dyn_mv += (a * b, a_el.anti_wedge(b_el, AntiScalar));
+                    let (f, c) = ga.anti_wedge(a_el, b_el);
+                    dyn_mv += (a * b * f, c);
                 }
             }
             let mv = dyn_mv.construct(&b)?;
@@ -395,7 +399,7 @@ mod impls {
                     for p in sop.sum {
                         let a = a.clone();
                         let b = b.clone();
-                        let c = FloatExpr::Literal(p.coefficient);
+                        let c = p.coefficient;
                         dyn_mv += (a * b * c, p.element);
                     }
                 }
@@ -425,7 +429,7 @@ mod impls {
                     for p in sop.sum {
                         let a = a.clone();
                         let b = b.clone();
-                        let c = FloatExpr::Literal(p.coefficient);
+                        let c = p.coefficient;
                         dyn_mv += (a * b * c, p.element);
                     }
                 }
@@ -491,7 +495,7 @@ mod impls {
                     for p in sop.sum {
                         let a = a.clone();
                         let b = b.clone();
-                        let c = FloatExpr::Literal(p.coefficient);
+                        let c = p.coefficient;
                         dyn_mv += (a * b * c, p.element);
                     }
                 }
@@ -521,7 +525,7 @@ mod impls {
                     for p in sop.sum {
                         let a = a.clone();
                         let b = b.clone();
-                        let c = FloatExpr::Literal(p.coefficient);
+                        let c = p.coefficient;
                         dyn_mv += (a * b * c, p.element);
                     }
                 }

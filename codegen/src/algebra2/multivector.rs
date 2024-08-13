@@ -1281,7 +1281,7 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
 
 #[derive(Debug)]
 pub struct DynamicMultiVector {
-    vals: BTreeMap<BasisElement, FloatExpr>,
+    vals: BTreeMap<BasisSignature, FloatExpr>,
 }
 impl DynamicMultiVector {
     pub fn zero() -> Self {
@@ -1291,6 +1291,7 @@ impl DynamicMultiVector {
     pub fn grades(&self) -> Grades {
         let mut g = Grades::none;
         for el in self.vals.keys() {
+            let el = BasisElement::from(*el);
             g |= el.grades();
         }
         g
@@ -1304,11 +1305,7 @@ impl DynamicMultiVector {
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
         let mut keys = BTreeSet::new();
-        for (mut el, mut f) in self.vals.into_iter() {
-            if el.coefficient() == 0 {
-                continue
-            }
-
+        for (el, mut f) in self.vals.into_iter() {
             // Some calculations are less efficient without variables.
             // But some expressions can't be simplified down to 0 without variable inlining.
             // So we explore what happens with deep inlining,
@@ -1323,6 +1320,8 @@ impl DynamicMultiVector {
                 FloatExpr::Sum(v, _a) if v.is_empty() => panic!("Problem"),
                 _ => {}
             }
+
+            let mut el = BasisElement::from(el);
             let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
             if fix_f == 0.0 {
                 continue;
@@ -1361,10 +1360,6 @@ impl DynamicMultiVector {
         let repo = b.mvs.clone();
         let mut vals = BTreeMap::new();
         for (mut el, mut f) in self.vals.into_iter() {
-            if el.coefficient() == 0 {
-                continue
-            }
-
             // Some calculations are less efficient without variables.
             // But some expressions can't be simplified down to 0 without variable inlining.
             // So we explore what happens with deep inlining,
@@ -1379,6 +1374,8 @@ impl DynamicMultiVector {
                 FloatExpr::Sum(v, _a) if v.is_empty() => panic!("Problem"),
                 _ => {}
             }
+
+            let mut el = BasisElement::from(el);
             let (fix_f, fix_el) = repo.ga().fix_name_and_sign(el);
             if fix_f == 0.0 {
                 continue;
@@ -1411,13 +1408,15 @@ impl DynamicMultiVector {
 }
 impl<FE: Into<FloatExpr>> AddAssign<(FE, BasisElement)> for DynamicMultiVector {
     fn add_assign(&mut self, rhs: (FE, BasisElement)) {
-        if rhs.1.coefficient() == 0 {
+        let sign = rhs.1.coefficient() as f32;
+        if sign == 0.0 {
             return
         }
-        let mut thing = self.vals.entry(rhs.1).or_insert(FloatExpr::Literal(0.0));
-        thing.add_assign(rhs.0.into());
+        let signature = rhs.1.signature();
+        let mut thing = self.vals.entry(signature).or_insert(FloatExpr::Literal(0.0));
+        *thing += rhs.0.into() * sign;
         if let FloatExpr::Literal(0.0) = thing {
-            self.vals.remove(&rhs.1);
+            self.vals.remove(&signature);
         }
     }
 }
