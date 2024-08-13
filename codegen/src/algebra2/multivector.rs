@@ -1312,7 +1312,6 @@ impl DynamicMultiVector {
             // even if we stick to using variables in the end.
             let mut orig_f = f.clone();
             f.deep_inline_variables();
-            f.simplify();
 
             match f {
                 FloatExpr::Literal(0.0) => continue,

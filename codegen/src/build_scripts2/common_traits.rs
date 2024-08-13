@@ -391,21 +391,30 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            let ga = &b.ga;
+            let builder = b;
+            let ga = &builder.ga;
+            let slf_n = slf.expr_type.name();
+            let oth_n = other.expr_type.name();
+            // println!("{slf_n} ⟑ {oth_n} = ...");
             let mut dyn_mv = DynamicMultiVector::zero();
             for (a, a_el) in slf.elements_by_groups() {
                 for (b, b_el) in other.elements_by_groups() {
                     let sop = ga.product(a_el, b_el);
                     for p in sop.sum {
-                        let a = a.clone();
-                        let b = b.clone();
-                        let c = p.coefficient;
-                        dyn_mv += (a * b * c, p.element);
+                        let el = p.element;
+                        let mut f = a.clone() * b.clone() * p.coefficient;
+                        if builder.is_deep_inlining {
+                            f.deep_inline_variables();
+                        }
+                        // println!("... {el} += {f}");
+                        dyn_mv += (f, el);
                     }
                 }
             }
-            let mv = dyn_mv.construct(&b)?;
-            b.return_expr(mv)
+            let mv = dyn_mv.construct(&builder)?;
+            let mv_n = mv.mv_class.name();
+            // println!("{slf_n} ⟑ {oth_n} = {mv_n}");
+            builder.return_expr(mv)
         }
     }
 

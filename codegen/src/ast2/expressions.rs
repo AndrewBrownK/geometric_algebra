@@ -319,14 +319,14 @@ impl AnyExpression {
     }
 
     pub(crate) fn deep_inline_variables(&mut self) {
-        match self {
+        let _ = match self {
             AnyExpression::Int(e) => e.deep_inline_variables(),
             AnyExpression::Float(e) => e.deep_inline_variables(),
             AnyExpression::Vec2(e) => e.deep_inline_variables(),
             AnyExpression::Vec3(e) => e.deep_inline_variables(),
             AnyExpression::Vec4(e) => e.deep_inline_variables(),
             AnyExpression::Class(e) => e.deep_inline_variables(),
-        }
+        };
     }
 }
 
@@ -1051,6 +1051,9 @@ impl Variable<MultiVector> {
                     ));
                 },
             }
+            for (f, _el) in v.iter_mut() {
+                f.simplify();
+            }
             v.into_iter()
         }).flatten()
     }
@@ -1139,6 +1142,9 @@ impl MultiVectorExpr {
                         d,
                     ));
                 },
+            }
+            for (f, _el) in v.iter_mut() {
+                f.simplify();
             }
             v.into_iter()
         }).flatten()
@@ -1245,15 +1251,32 @@ impl Display for FloatExpr {
             FloatExpr::AccessVec3(v, i) => todo!(),
             FloatExpr::AccessVec4(v, i) => todo!(),
             FloatExpr::AccessMultiVecGroup(mv, i) => {
-                let gs: Vec<_> = mv.groups().collect();
-                let (grp, el) = &gs[*i as usize];
-                match (grp, el) {
-                    (MultiVectorGroupExpr::JustFloat(v), BasisElementGroup::G1(el)) => {
-                        // TODO infininte loop here, after doing deep_inline_variables
-                        write!(f, "{el}({v})")?;
+                let BasisElementGroup::G1(be0) = mv.mv_class.groups()[*i as usize] else {
+                    unreachable!(
+                        "Should not be able to access FloatExpr as MultiVecGroup \
+                        unless the MultiVecGroup is just one Float")
+                };
+                match mv.expr.as_ref() {
+                    MultiVectorVia::Variable(v) => {
+                        let (n, i) = &v.decl.name;
+                        if *i == 0 {
+                            write!(f, "{n}[{be0}]")?;
+                        } else {
+                            let i = i + 1;
+                            write!(f, "{n}_{i}[{be0}]")?;
+                        }
                     }
-                    _ => unreachable!("Should not be able to access FloatExpr as MultiVecGroup \
-                    unless the MultiVecGroup is just one Float"),
+                    MultiVectorVia::Construct(gs) => {
+                        match &gs[*i as usize] {
+                            MultiVectorGroupExpr::JustFloat(v) => Display::fmt(v, f)?,
+                            _ => unreachable!(
+                                "Should not be able to access FloatExpr as MultiVecGroup \
+                                unless the MultiVecGroup is just one Float"),
+                        }
+                    }
+                    MultiVectorVia::TraitInvoke11ToClass(_, _) => todo!(),
+                    MultiVectorVia::TraitInvoke21ToClass(_, _, _) => todo!(),
+                    MultiVectorVia::TraitInvoke22ToClass(_, _, _) => todo!(),
                 }
             },
             FloatExpr::AccessMultiVecFlat(mv, i) => {
@@ -1330,15 +1353,32 @@ impl Display for Vec2Expr {
             }
             Vec2Expr::SwizzleVec2(_, _, _) => {}
             Vec2Expr::AccessMultiVecGroup(mv, i) => {
-                let gs: Vec<_> = mv.groups().collect();
-                let (grp, el) = &gs[*i as usize];
-                match (grp, el) {
-                    (MultiVectorGroupExpr::Vec2(v),
-                        BasisElementGroup::G2(el0, el1)) => {
-                        write!(f, "({el0}, {el1})({v})")?;
+                let BasisElementGroup::G2(be0, be1) = mv.mv_class.groups()[*i as usize] else {
+                    unreachable!(
+                        "Should not be able to access Vec2Expr as MultiVecGroup \
+                        unless the MultiVecGroup is Vec2")
+                };
+                match mv.expr.as_ref() {
+                    MultiVectorVia::Variable(v) => {
+                        let (n, i) = &v.decl.name;
+                        if *i == 0 {
+                            write!(f, "{n}[{be0}, {be1}]")?;
+                        } else {
+                            let i = i + 1;
+                            write!(f, "{n}_{i}[{be0}, {be1}]")?;
+                        }
                     }
-                    _ => unreachable!("Should not be able to access Vec2Expr as MultiVecGroup \
-                    unless the MultiVecGroup is Vec2"),
+                    MultiVectorVia::Construct(gs) => {
+                        match &gs[*i as usize] {
+                            MultiVectorGroupExpr::Vec2(v) => Display::fmt(v, f)?,
+                            _ => unreachable!(
+                                "Should not be able to access Vec2Expr as MultiVecGroup \
+                                unless the MultiVecGroup is Vec2"),
+                        }
+                    }
+                    MultiVectorVia::TraitInvoke11ToClass(_, _) => todo!(),
+                    MultiVectorVia::TraitInvoke21ToClass(_, _, _) => todo!(),
+                    MultiVectorVia::TraitInvoke22ToClass(_, _, _) => todo!(),
                 }
             },
             Vec2Expr::Product(v) => {
@@ -1406,15 +1446,32 @@ impl Display for Vec3Expr {
             }
             Vec3Expr::SwizzleVec3(_, _, _, _) => {}
             Vec3Expr::AccessMultiVecGroup(mv, i) => {
-                let gs: Vec<_> = mv.groups().collect();
-                let (grp, el) = &gs[*i as usize];
-                match (grp, el) {
-                    (MultiVectorGroupExpr::Vec3(v),
-                        BasisElementGroup::G3(el0, el1, el2)) => {
-                        write!(f, "({el0}, {el1}, {el2})({v})")?;
+                let BasisElementGroup::G3(be0, be1, be2) = mv.mv_class.groups()[*i as usize] else {
+                    unreachable!(
+                        "Should not be able to access Vec3Expr as MultiVecGroup \
+                        unless the MultiVecGroup is Vec3")
+                };
+                match mv.expr.as_ref() {
+                    MultiVectorVia::Variable(v) => {
+                        let (n, i) = &v.decl.name;
+                        if *i == 0 {
+                            write!(f, "{n}[{be0}, {be1}, {be2}]")?;
+                        } else {
+                            let i = i + 1;
+                            write!(f, "{n}_{i}[{be0}, {be1}, {be2}]")?;
+                        }
                     }
-                    _ => unreachable!("Should not be able to access Vec3Expr as MultiVecGroup \
-                    unless the MultiVecGroup is Vec3"),
+                    MultiVectorVia::Construct(gs) => {
+                        match &gs[*i as usize] {
+                            MultiVectorGroupExpr::Vec3(v) => Display::fmt(v, f)?,
+                            _ => unreachable!(
+                                "Should not be able to access Vec3Expr as MultiVecGroup \
+                                unless the MultiVecGroup is Vec3"),
+                        }
+                    }
+                    MultiVectorVia::TraitInvoke11ToClass(_, _) => todo!(),
+                    MultiVectorVia::TraitInvoke21ToClass(_, _, _) => todo!(),
+                    MultiVectorVia::TraitInvoke22ToClass(_, _, _) => todo!(),
                 }
             },
             Vec3Expr::Product(v) => {
@@ -1483,15 +1540,32 @@ impl Display for Vec4Expr {
             }
             Vec4Expr::SwizzleVec4(_, _, _, _, _) => {}
             Vec4Expr::AccessMultiVecGroup(mv, i) => {
-                let gs: Vec<_> = mv.groups().collect();
-                let (grp, el) = &gs[*i as usize];
-                match (grp, el) {
-                    (MultiVectorGroupExpr::Vec4(v),
-                        BasisElementGroup::G4(el0, el1, el2, el3)) => {
-                        write!(f, "({el0}, {el1}, {el2}, {el3})({v})")?;
+                let BasisElementGroup::G4(be0, be1, be2, be3) = mv.mv_class.groups()[*i as usize] else {
+                    unreachable!(
+                        "Should not be able to access Vec4Expr as MultiVecGroup \
+                        unless the MultiVecGroup is Vec4")
+                };
+                match mv.expr.as_ref() {
+                    MultiVectorVia::Variable(v) => {
+                        let (n, i) = &v.decl.name;
+                        if *i == 0 {
+                            write!(f, "{n}[{be0}, {be1}, {be2}, {be3}]")?;
+                        } else {
+                            let i = i + 1;
+                            write!(f, "{n}_{i}[{be0}, {be1}, {be2}, {be3}]")?;
+                        }
                     }
-                    _ => unreachable!("Should not be able to access Vec4Expr as MultiVecGroup \
-                    unless the MultiVecGroup is Vec4"),
+                    MultiVectorVia::Construct(gs) => {
+                        match &gs[*i as usize] {
+                            MultiVectorGroupExpr::Vec4(v) => Display::fmt(v, f)?,
+                            _ => unreachable!(
+                                "Should not be able to access Vec4Expr as MultiVecGroup \
+                                unless the MultiVecGroup is Vec4"),
+                        }
+                    }
+                    MultiVectorVia::TraitInvoke11ToClass(_, _) => todo!(),
+                    MultiVectorVia::TraitInvoke21ToClass(_, _, _) => todo!(),
+                    MultiVectorVia::TraitInvoke22ToClass(_, _, _) => todo!(),
                 }
             },
             Vec4Expr::Product(v) => {
@@ -1591,181 +1665,239 @@ impl Display for MultiVectorExpr {
 
 
 impl IntExpr {
-    fn deep_inline_variables(&mut self) {
-        match &self {
+    fn deep_inline_variables(&mut self) -> bool {
+        let result = match &self {
             IntExpr::Variable(v) => {
-                let Some(AnyExpression::Int(e)) = &v.decl.expr else { return };
+                let Some(AnyExpression::Int(e)) = &v.decl.expr else { return false };
                 let mut e = e.clone();
                 e.deep_inline_variables();
                 *self = e;
+                true
             }
-            IntExpr::Literal(_) => {}
-            IntExpr::TraitInvoke10ToInt(_, _) => {}
-        }
+            IntExpr::Literal(_) => false,
+            IntExpr::TraitInvoke10ToInt(_, _) => false,
+        };
+        // TODO
+        // if result {
+        //     self.simplify();
+        // }
+        result
     }
 }
 
 impl FloatExpr {
-    pub(crate) fn deep_inline_variables(&mut self) {
-        match self {
+    pub(crate) fn deep_inline_variables(&mut self) -> bool {
+        let result = match self {
             FloatExpr::Variable(v) => {
-                let Some(AnyExpression::Float(e)) = &v.decl.expr else { return };
+                let Some(AnyExpression::Float(e)) = &v.decl.expr else { return false };
                 let mut e = e.clone();
                 e.deep_inline_variables();
-                e.simplify();
                 *self = e;
+                true
             }
-            FloatExpr::Literal(_) => {}
+            FloatExpr::Literal(_) => false,
             FloatExpr::AccessVec2(v, _) => v.deep_inline_variables(),
             FloatExpr::AccessVec3(v, _) => v.deep_inline_variables(),
             FloatExpr::AccessVec4(v, _) => v.deep_inline_variables(),
             FloatExpr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             FloatExpr::AccessMultiVecFlat(mv, _) => mv.deep_inline_variables(),
-            FloatExpr::TraitInvoke11ToFloat(_, _) => {}
+            FloatExpr::TraitInvoke11ToFloat(_, _) => false,
             FloatExpr::Product(v) => {
+                let mut result = false;
                 for e in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
             FloatExpr::Sum(v, _) => {
+                let mut result = false;
                 for (e, _) in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
             FloatExpr::Divide(v) => {
+                let mut result = false;
                 for e in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
             FloatExpr::Pow(a, b) => {
-                a.deep_inline_variables();
-                b.deep_inline_variables();
+                let mut result = false;
+                result |= a.deep_inline_variables();
+                result |= b.deep_inline_variables();
+                result
             }
+        };
+        if result {
+            self.simplify_nuanced(true);
         }
+        result
     }
 }
 impl Vec2Expr {
-    fn deep_inline_variables(&mut self) {
-        match self {
+    fn deep_inline_variables(&mut self) -> bool {
+        let result = match self {
             Vec2Expr::Variable(v) => {
-                let Some(AnyExpression::Vec2(e)) = &v.decl.expr else { return };
+                let Some(AnyExpression::Vec2(e)) = &v.decl.expr else { return false };
                 let mut e = e.clone();
                 e.deep_inline_variables();
-                e.simplify();
                 *self = e;
+                true
             }
             Vec2Expr::Gather1(e) => e.deep_inline_variables(),
             Vec2Expr::Gather2(e0, e1) => {
-                e0.deep_inline_variables();
-                e1.deep_inline_variables();
+                let mut result = false;
+                result |= e0.deep_inline_variables();
+                result |= e1.deep_inline_variables();
+                result
             }
             Vec2Expr::SwizzleVec2(v, _, _) => v.deep_inline_variables(),
             Vec2Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             Vec2Expr::Product(v) => {
+                let mut result = false;
                 for e in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
             Vec2Expr::Sum(v, _) => {
+                let mut result = false;
                 for (e, _) in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
+        };
+        if result {
+            self.simplify();
         }
+        result
     }
 }
 impl Vec3Expr {
-    fn deep_inline_variables(&mut self) {
-        match self {
+    fn deep_inline_variables(&mut self) -> bool {
+        let result = match self {
             Vec3Expr::Variable(v) => {
-                let Some(AnyExpression::Vec3(e)) = &v.decl.expr else { return };
+                let Some(AnyExpression::Vec3(e)) = &v.decl.expr else { return false };
                 let mut e = e.clone();
                 e.deep_inline_variables();
-                e.simplify();
                 *self = e;
+                true
             }
             Vec3Expr::Gather1(e) => e.deep_inline_variables(),
             Vec3Expr::Gather3(e0, e1, e2) => {
-                e0.deep_inline_variables();
-                e1.deep_inline_variables();
-                e2.deep_inline_variables();
+                let mut result = false;
+                result |= e0.deep_inline_variables();
+                result |= e1.deep_inline_variables();
+                result |= e2.deep_inline_variables();
+                result
             }
             Vec3Expr::SwizzleVec3(v, _, _, _) => v.deep_inline_variables(),
             Vec3Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             Vec3Expr::Product(v) => {
+                let mut result = false;
                 for e in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
             Vec3Expr::Sum(v, _) => {
+                let mut result = false;
                 for (e, _) in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
+        };
+        if result {
+            self.simplify_nuanced(true);
         }
+        result
     }
 }
 impl Vec4Expr {
-    fn deep_inline_variables(&mut self) {
-        match self {
+    fn deep_inline_variables(&mut self) -> bool {
+        let result = match self {
             Vec4Expr::Variable(v) => {
-                let Some(AnyExpression::Vec4(e)) = &v.decl.expr else { return };
+                let Some(AnyExpression::Vec4(e)) = &v.decl.expr else { return false };
                 let mut e = e.clone();
                 e.deep_inline_variables();
-                e.simplify();
                 *self = e;
+                true
             }
             Vec4Expr::Gather1(e) => e.deep_inline_variables(),
             Vec4Expr::Gather4(e0, e1, e2, e3) => {
-                e0.deep_inline_variables();
-                e1.deep_inline_variables();
-                e2.deep_inline_variables();
-                e3.deep_inline_variables();
+                let mut result = false;
+                result |= e0.deep_inline_variables();
+                result |= e1.deep_inline_variables();
+                result |= e2.deep_inline_variables();
+                result |= e3.deep_inline_variables();
+                result
             }
             Vec4Expr::SwizzleVec4(v, _, _, _, _) => v.deep_inline_variables(),
             Vec4Expr::AccessMultiVecGroup(mv, _) => mv.deep_inline_variables(),
             Vec4Expr::Product(v) => {
+                let mut result = false;
                 for e in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
             Vec4Expr::Sum(v, _) => {
+                let mut result = false;
                 for (e, _) in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
+        };
+        if result {
+            self.simplify_nuanced(true);
         }
+        result
     }
 }
 impl MultiVectorGroupExpr {
-    fn deep_inline_variables(&mut self) {
-        match self {
+    fn deep_inline_variables(&mut self) -> bool {
+        let result = match self {
             MultiVectorGroupExpr::JustFloat(v) => v.deep_inline_variables(),
             MultiVectorGroupExpr::Vec2(v) => v.deep_inline_variables(),
             MultiVectorGroupExpr::Vec3(v) => v.deep_inline_variables(),
             MultiVectorGroupExpr::Vec4(v) => v.deep_inline_variables(),
+        };
+        if result {
+            self.simplify_nuanced(true);
         }
+        result
     }
 }
 impl MultiVectorExpr {
-    fn deep_inline_variables(&mut self) {
-        match self.expr.as_mut() {
+    fn deep_inline_variables(&mut self) -> bool {
+        let result = match self.expr.as_mut() {
             MultiVectorVia::Variable(v) => {
-                let Some(AnyExpression::Class(e)) = &v.decl.expr else { return };
+                let Some(AnyExpression::Class(e)) = &v.decl.expr else { return false };
                 let mut e = e.clone();
                 e.deep_inline_variables();
-                e.simplify();
                 *self = e;
+                true
             }
             MultiVectorVia::Construct(v) => {
+                let mut result = false;
                 for e in v.iter_mut() {
-                    e.deep_inline_variables();
+                    result |= e.deep_inline_variables();
                 }
+                result
             }
-            MultiVectorVia::TraitInvoke11ToClass(_, _) => {}
-            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => {}
-            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => {}
+            MultiVectorVia::TraitInvoke11ToClass(_, _) => false,
+            MultiVectorVia::TraitInvoke21ToClass(_, _, _) => false,
+            MultiVectorVia::TraitInvoke22ToClass(_, _, _) => false,
+        };
+        if result {
+            self.simplify_nuanced(true);
         }
+        result
     }
 }
 
@@ -1774,9 +1906,6 @@ impl MultiVectorExpr {
 
 
 
-
-// TODO convert all the validation to use asserts that only run at debug time
-const DEBUG_PRINT_SIMPLIFY: bool = false;
 
 
 // TODO in places where *self = component.clone(), see if you can change
@@ -1817,14 +1946,17 @@ const DEBUG_PRINT_SIMPLIFY: bool = false;
 */
 impl FloatExpr {
     pub(crate) fn simplify(&mut self) {
-        if DEBUG_PRINT_SIMPLIFY {
-            eprintln!("{self:?}");
-        }
+        self.simplify_nuanced(false);
+    }
+    fn simplify_nuanced(&mut self, insides_already_done: bool) {
+        // println!("Simplifying: {self}");
         match self {
             FloatExpr::Variable(_) => {}
             FloatExpr::Literal(_) => {}
             FloatExpr::AccessVec2(av2, idx) => {
-                av2.simplify();
+                if !insides_already_done {
+                    av2.simplify();
+                }
                 match av2.as_mut() {
                     Vec2Expr::Gather1(fe) => {
                         *self = fe.clone();
@@ -1836,7 +1968,9 @@ impl FloatExpr {
                 }
             }
             FloatExpr::AccessVec3(av3, idx) => {
-                av3.simplify();
+                if !insides_already_done {
+                    av3.simplify();
+                }
                 match av3.as_mut() {
                     Vec3Expr::Gather1(fe) => {
                         *self = fe.clone();
@@ -1848,7 +1982,9 @@ impl FloatExpr {
                 }
             }
             FloatExpr::AccessVec4(av4, idx) => {
-                av4.simplify();
+                if !insides_already_done {
+                    av4.simplify();
+                }
                 match av4.as_mut() {
                     Vec4Expr::Gather1(fe) => {
                         *self = fe.clone();
@@ -1860,7 +1996,9 @@ impl FloatExpr {
                 }
             }
             FloatExpr::AccessMultiVecGroup(mve, idx) => {
-                mve.simplify();
+                if !insides_already_done {
+                    mve.simplify();
+                }
                 let idx = *idx;
                 let mv = mve.mv_class;
                 if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
@@ -1880,7 +2018,9 @@ impl FloatExpr {
                 }
             }
             FloatExpr::AccessMultiVecFlat(mve, idx) => {
-                mve.simplify();
+                if !insides_already_done {
+                    mve.simplify();
+                }
                 if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
                     let mut scan_idx = 0;
                     let mut scan_group = 0;
@@ -1957,7 +2097,9 @@ impl FloatExpr {
                     panic!("Problem")
                 }
                 for p in  product.iter_mut() {
-                    p.simplify();
+                    if !insides_already_done {
+                        p.simplify();
+                    }
                     if let FloatExpr::Literal(0.0) = p {
                         *self = FloatExpr::Literal(0.0);
                         return
@@ -2036,7 +2178,9 @@ impl FloatExpr {
                     panic!("Problem")
                 }
                 for (addend, _factor) in  sum.iter_mut() {
-                    addend.simplify();
+                    if !insides_already_done {
+                        addend.simplify();
+                    }
                 }
                 if sum.len() == 1 && *last_addend == 0.0 {
                     let (addend, factor) = sum.remove(0);
@@ -2053,6 +2197,9 @@ impl FloatExpr {
                         false
                     }
                     FloatExpr::Sum(s, another_addend) => {
+                        for (_, f) in s.iter_mut() {
+                            *f = *f * *factor;
+                        }
                         flatten.append(s);
                         *last_addend += *another_addend;
                         false
@@ -2123,8 +2270,10 @@ impl FloatExpr {
             }
             FloatExpr::Divide(_) => {}
             FloatExpr::Pow(f1, f2) => {
-                f1.simplify();
-                f2.simplify();
+                if !insides_already_done {
+                    f1.simplify();
+                    f2.simplify();
+                }
                 match f2.as_mut() {
                     FloatExpr::Literal(0.0) => {
                         *self = FloatExpr::Literal(1.0);
@@ -2147,7 +2296,9 @@ impl FloatExpr {
                     }
                     FloatExpr::Pow(f3, f4) => {
                         let mut new_pow = FloatExpr::Product(vec![*f2.clone(), *f4.clone()]);
-                        new_pow.simplify();
+                        if !insides_already_done {
+                            new_pow.simplify();
+                        }
                         *self = FloatExpr::Pow(f3.clone(), Box::new(new_pow));
                         return
                     }
@@ -2159,19 +2310,23 @@ impl FloatExpr {
 }
 impl Vec2Expr {
     pub(crate) fn simplify(&mut self) {
-        if DEBUG_PRINT_SIMPLIFY {
-            eprintln!("{self:?}");
-        }
+        self.simplify_nuanced(false);
+    }
+    fn simplify_nuanced(&mut self, insides_already_done: bool) {
         match self {
             Vec2Expr::Variable(_) => {}
             Vec2Expr::Gather1(ref mut f) => {
-                f.simplify();
+                if !insides_already_done {
+                    f.simplify();
+                }
                 // Do I really want to do more here?
             }
             Vec2Expr::Gather2(ref mut f0, ref mut f1) => {
                 use crate::ast2::expressions::FloatExpr::*;
-                f0.simplify();
-                f1.simplify();
+                if !insides_already_done {
+                    f0.simplify();
+                    f1.simplify();
+                }
                 if f0 == f1 {
                     *self = Vec2Expr::Gather1(f0.clone());
                     return;
@@ -2209,7 +2364,9 @@ impl Vec2Expr {
                 }
             }
             Vec2Expr::AccessMultiVecGroup(ref mut mve, ref mut idx) => {
-                mve.simplify();
+                if !insides_already_done {
+                    mve.simplify();
+                }
                 let idx = *idx;
                 let mv = mve.mv_class;
                 if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
@@ -2233,7 +2390,9 @@ impl Vec2Expr {
                     panic!("Problem")
                 }
                 for p in product.iter_mut() {
-                    p.simplify();
+                    if !insides_already_done {
+                        p.simplify();
+                    }
                     if let Vec2Expr::Gather1(FloatExpr::Literal(0.0)) = p {
                         *self = Vec2Expr::Gather1(FloatExpr::Literal(0.0));
                         return;
@@ -2343,7 +2502,9 @@ impl Vec2Expr {
                     panic!("Problem")
                 }
                 for (addend, _factor) in sum.iter_mut() {
-                    addend.simplify();
+                    if !insides_already_done {
+                        addend.simplify();
+                    }
                 }
                 if sum.len() == 1 && *last_addend == [0.0; 2] {
                     let (addend, factor) = sum.remove(0);
@@ -2366,6 +2527,9 @@ impl Vec2Expr {
                         false
                     }
                     Vec2Expr::Sum(s, another_addend) => {
+                        for (_, f) in s.iter_mut() {
+                            *f = *f * *factor;
+                        }
                         flatten.append(s);
                         last_addend[0] += another_addend[0];
                         last_addend[1] += another_addend[1];
@@ -2463,20 +2627,24 @@ impl Vec2Expr {
 }
 impl Vec3Expr {
     pub(crate) fn simplify(&mut self) {
-        if DEBUG_PRINT_SIMPLIFY {
-            eprintln!("{self:?}");
-        }
+        self.simplify_nuanced(false);
+    }
+    fn simplify_nuanced(&mut self, insides_already_done: bool) {
         match self {
             Vec3Expr::Variable(_) => {}
             Vec3Expr::Gather1(ref mut f) => {
-                f.simplify();
+                if !insides_already_done {
+                    f.simplify();
+                }
                 // Do I really want to do more here?
             }
             Vec3Expr::Gather3(ref mut f0, ref mut f1, ref mut f2) => {
                 use crate::ast2::expressions::FloatExpr::*;
-                f0.simplify();
-                f1.simplify();
-                f2.simplify();
+                if !insides_already_done {
+                    f0.simplify();
+                    f1.simplify();
+                    f2.simplify();
+                }
                 if f0 == f1 && f0 == f2 {
                     *self = Vec3Expr::Gather1(f0.clone());
                     return;
@@ -2519,7 +2687,9 @@ impl Vec3Expr {
                 }
             }
             Vec3Expr::AccessMultiVecGroup(ref mut mve, ref mut idx) => {
-                mve.simplify();
+                if !insides_already_done {
+                    mve.simplify();
+                }
                 let idx = *idx;
                 let mv = mve.mv_class;
                 if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
@@ -2543,7 +2713,9 @@ impl Vec3Expr {
                     panic!("Problem")
                 }
                 for p in product.iter_mut() {
-                    p.simplify();
+                    if !insides_already_done {
+                        p.simplify();
+                    }
                     if let Vec3Expr::Gather1(FloatExpr::Literal(0.0)) = p {
                         *self = Vec3Expr::Gather1(FloatExpr::Literal(0.0));
                         return;
@@ -2663,7 +2835,9 @@ impl Vec3Expr {
                     panic!("Problem")
                 }
                 for (addend, _factor) in sum.iter_mut() {
-                    addend.simplify();
+                    if !insides_already_done {
+                        addend.simplify();
+                    }
                 }
                 if sum.len() == 1 && *last_addend == [0.0; 3] {
                     let (addend, factor) = sum.remove(0);
@@ -2688,6 +2862,9 @@ impl Vec3Expr {
                         false
                     }
                     Vec3Expr::Sum(s, another_addend) => {
+                        for (_, f) in s.iter_mut() {
+                            *f = *f * *factor;
+                        }
                         flatten.append(s);
                         last_addend[0] += another_addend[0];
                         last_addend[1] += another_addend[1];
@@ -2790,21 +2967,25 @@ impl Vec3Expr {
 }
 impl Vec4Expr {
     pub(crate) fn simplify(&mut self) {
-        if DEBUG_PRINT_SIMPLIFY {
-            eprintln!("{self:?}");
-        }
+        self.simplify_nuanced(false);
+    }
+    fn simplify_nuanced(&mut self, insides_already_done: bool) {
         match self {
             Vec4Expr::Variable(_) => {}
             Vec4Expr::Gather1(f) => {
-                f.simplify();
+                if !insides_already_done {
+                    f.simplify();
+                }
                 // Do I really want to do more here?
             }
             Vec4Expr::Gather4(f0, f1, f2, f3) => {
                 use crate::ast2::expressions::FloatExpr::*;
-                f0.simplify();
-                f1.simplify();
-                f2.simplify();
-                f3.simplify();
+                if !insides_already_done {
+                    f0.simplify();
+                    f1.simplify();
+                    f2.simplify();
+                    f3.simplify();
+                }
                 if f0 == f1 && f0 == f2 && f0 == f3 {
                     *self = Vec4Expr::Gather1(f0.clone());
                     return;
@@ -2850,7 +3031,9 @@ impl Vec4Expr {
                 }
             }
             Vec4Expr::AccessMultiVecGroup(mve, idx) => {
-                mve.simplify();
+                if !insides_already_done {
+                    mve.simplify();
+                }
                 let idx = *idx;
                 let mv = mve.mv_class;
                 if let MultiVectorVia::Construct(groups) = mve.expr.as_mut() {
@@ -2874,7 +3057,9 @@ impl Vec4Expr {
                     panic!("Problem")
                 }
                 for p in product.iter_mut() {
-                    p.simplify();
+                    if !insides_already_done {
+                        p.simplify();
+                    }
                     if let Vec4Expr::Gather1(FloatExpr::Literal(0.0)) = p {
                         *self = Vec4Expr::Gather1(FloatExpr::Literal(0.0));
                         return;
@@ -3004,7 +3189,9 @@ impl Vec4Expr {
                     panic!("Problem")
                 }
                 for (addend, _factor) in sum.iter_mut() {
-                    addend.simplify();
+                    if !insides_already_done {
+                        addend.simplify();
+                    }
                 }
                 if sum.len() == 1 && *last_addend == [0.0; 4] {
                     let (addend, factor) = sum.remove(0);
@@ -3033,6 +3220,9 @@ impl Vec4Expr {
                         false
                     }
                     Vec4Expr::Sum(s, another_addend) => {
+                        for (_, f) in s.iter_mut() {
+                            *f = *f * *factor;
+                        }
                         flatten.append(s);
                         last_addend[0] += another_addend[0];
                         last_addend[1] += another_addend[1];
@@ -3144,9 +3334,14 @@ impl Vec4Expr {
 }
 impl MultiVectorGroupExpr {
     pub(crate) fn simplify(&mut self) {
+        self.simplify_nuanced(false);
+    }
+    fn simplify_nuanced(&mut self, insides_already_done: bool) {
         match self {
             MultiVectorGroupExpr::JustFloat(f) => {
-                f.simplify();
+                if !insides_already_done {
+                    f.simplify();
+                }
                 if let FloatExpr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = f {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
                         *self = v[*idx as usize].clone();
@@ -3189,7 +3384,9 @@ impl MultiVectorGroupExpr {
                 }
             }
             MultiVectorGroupExpr::Vec2(v2) => {
-                v2.simplify();
+                if !insides_already_done {
+                    v2.simplify();
+                }
                 if let Vec2Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v2 {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
                         *self = v[*idx as usize].clone();
@@ -3197,7 +3394,9 @@ impl MultiVectorGroupExpr {
                 }
             }
             MultiVectorGroupExpr::Vec3(v3) => {
-                v3.simplify();
+                if !insides_already_done {
+                    v3.simplify();
+                }
                 if let Vec3Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v3 {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
                         *self = v[*idx as usize].clone();
@@ -3205,7 +3404,9 @@ impl MultiVectorGroupExpr {
                 }
             }
             MultiVectorGroupExpr::Vec4(v4) => {
-                v4.simplify();
+                if !insides_already_done {
+                    v4.simplify();
+                }
                 if let Vec4Expr::AccessMultiVecGroup(MultiVectorExpr { expr, mv_class: _ }, idx) = v4 {
                     if let MultiVectorVia::Construct(v) = expr.as_mut() {
                         *self = v[*idx as usize].clone();
@@ -3217,14 +3418,20 @@ impl MultiVectorGroupExpr {
 }
 impl MultiVectorExpr {
     pub(crate) fn simplify(&mut self) {
-        if DEBUG_PRINT_SIMPLIFY {
-            eprintln!("{self:?}");
-        }
+        self.simplify_nuanced(false);
+    }
+    fn simplify_nuanced(&mut self, insides_already_done: bool) {
+        // println!("Simplifying MultiVectorExpr...");
         match &mut *self.expr {
             MultiVectorVia::Variable(_) => {}
             MultiVectorVia::Construct(groups) => {
+                // let mut element_groups = self.mv_class.groups().into_iter();
                 for group in groups.iter_mut() {
-                    group.simplify();
+                    if !insides_already_done {
+                        // let elg = element_groups.next().expect("Zipping");
+                        // println!("Simplifying {elg}...");
+                        group.simplify();
+                    }
                 }
                 let result = groups.iter()
                     .enumerate()

@@ -112,14 +112,14 @@ fn anti_product_argument() {
         let a_wedge_b = Wedge.deep_inline(&builder, a.clone(), b.clone()).await?;
         println!("A ∧ B = {a_wedge_b}");
 
-        let a_anti_wedge_b = AntiWedge.deep_inline(&builder, a.clone(), b.clone()).await;
-        println!("A ∨ B = {a_anti_wedge_b:?}");
+        // let a_anti_wedge_b = AntiWedge.deep_inline(&builder, a.clone(), b.clone()).await;
+        // println!("A ∨ B = {a_anti_wedge_b:?}");
 
-        let a_dot_b = ScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
-        println!("A • B = {a_dot_b}");
+        // let a_dot_b = ScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
+        // println!("A • B = {a_dot_b}");
 
-        let a_anti_dot_b = AntiScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
-        println!("A ∘ B = {a_anti_dot_b}");
+        // let a_anti_dot_b = AntiScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
+        // println!("A ∘ B = {a_anti_dot_b}");
 
         let r_wd_a_wd_r = Sandwich.deep_inline(&builder, rotor.clone(), a.clone()).await?;
         println!("R ⟑ A ⟑ ~R = {r_wd_a_wd_r}");
@@ -129,13 +129,15 @@ fn anti_product_argument() {
 
         // Geometric tests
 
-        let r_wd_c = GeometricProduct.deep_inline(&builder, rotor.clone(), c.clone()).await?;
-        println!("R ⟑ C = {r_wd_c}");
-        let h_wd_r = GeometricProduct.deep_inline(&builder, h.clone(), r_reverse.clone()).await?;
-        println!("H ⟑ ~R = {h_wd_r}");
+        // let r_wd_c = GeometricProduct.deep_inline(&builder, rotor.clone(), c.clone()).await?;
+        // println!("R ⟑ C = {r_wd_c}");
+        // println!("Alright so the above is perfect");
 
-        let r_wd_awb_wd_r = GeometricProduct.deep_inline(&builder, rotor.clone(), a_wedge_b.clone()).await?;
-        println!("R ⟑ (A ∧ B) = {r_wd_awb_wd_r}");
+        // let h_wd_r = GeometricProduct.deep_inline(&builder, h.clone(), r_reverse.clone()).await?;
+        // println!("H ⟑ ~R = {h_wd_r}");
+
+        // let r_wd_awb_wd_r = GeometricProduct.deep_inline(&builder, rotor.clone(), a_wedge_b.clone()).await?;
+        // println!("R ⟑ (A ∧ B) = {r_wd_awb_wd_r}");
         let r_wd_awb_wd_r = Sandwich.deep_inline(&builder, rotor.clone(), a_wedge_b.clone()).await?;
         println!("R ⟑ (A ∧ B) ⟑ ~R = {r_wd_awb_wd_r}");
 
@@ -160,59 +162,256 @@ fn anti_product_argument() {
         //  So I need to check the second half of the sandwich now.
 
         // TODO but is below an accurate translation of the above? Seems not....
-        /* R ⟑ (A ∧ B) = MultiVector(
-            scalar(((a1 * b2) - (a2 * b1))),
-            e0(0), e1(0), e2(0), e3(0),
-            e01(((a2 * b3) - (a3 * b2) + (a0 * b2) - (a2 * b0))),
-            e02((-(a1 * b3) + (a3 * b1) + (a0 * b1) - (a1 * b0) + (a1 * b2) - (a2 * b1))),
-            e03(((a1 * b2) - (a2 * b1) - (a1 * b3) + (a3 * b1))),  // <-- TODO actually is this the wrong sign? It is....
+        /* R ⟑ (A ∧ B) = HalfRotorSandwich2(
+            scalar((-(a1 * b2) + (a2 * b1))),
+            e01(((a0 * b2) - (a2 * b0) + (a2 * b3) - (a3 * b2))),
+            e02((-(a1 * b3) + (a3 * b1) + (a1 * b2) - (a2 * b1) + (a0 * b1) - (a1 * b0))),
+            e03((-(a1 * b3) + (a3 * b1) + (a1 * b2) - (a2 * b1))), // <-- TODO actually is this the wrong sign? It is....
             e12(0),
-            e31(((a2 * b3) - (a3 * b2))),
+            e31((-(a2 * b3) + (a3 * b2))),
             e23((-(a1 * b3) + (a3 * b1))),
-            e021(0), e013(0), e032(0), e123(0),
-            e0123(((a0 * b3) - (a3 * b0) + (a2 * b3) - (a3 * b2)))
+            e0123(((a2 * b3) - (a3 * b2) + (a0 * b3) - (a3 * b0)))
         ) */
 
+        /*
+        TODO alright I think I see it... a -1 is not distributing....
+         self: all 1s
+         ...
+         other:
+         e31((-(a1 * b3) + (a3 * b1)))
+         e12(((a1 * b2) - (a2 * b1)))
+         ...
+         e03 += (-1 * self[e01] * other[e31])
+         e03 += (-1 * self[e0123] * other[e12])
+         ...
+         e03((-c31 - c12))
+         e03((-(a1 * b3) + (a3 * b1) + (a1 * b2) - (a2 * b1)))
+         */
 
-        // TODO examining the second half of the sandwich, we have this that
-        //  we need to verify term-for-term in the expression evaluator
-        /* H ⟑ ~R = HalfRotorSandwich2(
-            scalar(h12),                        // <-- TODO note this term is already canceling
-            e01((-h23 - h_scalar + h02)),
-            e02((-h31 - h01 + h12)),
-            e03((h0123 - h12 - h31)),
-            e12((h_scalar * -1)),
-            e31((h23 * -1)),
-            e23(h31),
-            e0123((-h23 + h_scalar - h03))       // <-- TODO note this term is NOT canceling
-                                                 // TODO circled back to e03 and noticed the wrong sign
-        ) */
-        /* R ⟑ (A ∧ B) ⟑ ~R = Rotor(
-            e01((-2*(a1 * b2) + 2*(a2 * b1) - (a0 * b1) + (a1 * b0))),
-            e02((-(a0 * b2) + (a2 * b0))),
-            e03((-(a0 * b3) + (a3 * b0) - 2*(a2 * b3) + 2*(a3 * b2))),
-            e23((-(a2 * b3) + (a3 * b2))),
-            e31(((a1 * b3) - (a3 * b1))),
-            e12((-(a1 * b2) + (a2 * b1))),
-            e0123((2*(a1 * b3) - 2*(a3 * b1)))
-        ) */
+        /*
+        ... e03 += (-1 * self[e01] * other[e31])
+Simplifying: ((-1 * self[e01] * other[e31]) * 1)
+Simplifying: (-1 * self[e01] * other[e31])
+Simplifying: -1
+Simplifying: self[e01]
+Simplifying: other[e31]
+Simplifying: 1
+Simplifying: (0 + (-1 * self[e01] * other[e31]))
+Simplifying: 0
+Simplifying: (-1 * self[e01] * other[e31])
+Simplifying: -1
+Simplifying: self[e01]
+Simplifying: other[e31]
+Simplifying: other[e12]
+Simplifying: (self[e01] * other[e12])
+Simplifying: self[e01]
+Simplifying: other[e12]
+Simplifying: ((self[e01] * other[e12]) * 1)
+Simplifying: (self[e01] * other[e12])
+Simplifying: self[e01]
+Simplifying: other[e12]
+Simplifying: 1
 
 
-
-
-
-
-
-
-        /* (R ⟑ A ⟑ ~R) ∧ (R ⟑ B ⟑ ~R) = BiVector(
-            e01((-((2*a3 + 2*a2 + a0) * b1) + ((2*b3 + 2*b2 + b0) * a1))),
-            e02((-((2*a3 + 2*a2 + a0) * b2) + ((2*b3 + 2*b2 + b0) * a2))),
-            e03((((2*a3 + 2*a2 + a0) * b3) - (a3 * (2*b3 + 2*b2 + b0)))),
-            e23((-(b3 * a2) + (a3 * b2))),
-            e31(((b3 * a1) - (a3 * b1))),
-            e12(((a1 * b2) - (a2 * b1)))
-        ) */
-
+... e03 += (-1 * self[e0123] * other[e12])
+Simplifying: ((-1 * self[e0123] * other[e12]) * 1)
+Simplifying: (-1 * self[e0123] * other[e12])
+Simplifying: -1
+Simplifying: self[e0123]
+Simplifying: other[e12]
+Simplifying: 1
+Simplifying: (((self[e01] * other[e31]) * -1) + (-1 * self[e0123] * other[e12]))
+Simplifying: ((self[e01] * other[e31]) * -1)
+Simplifying: (self[e01] * other[e31])
+Simplifying: self[e01]
+Simplifying: other[e31]
+Simplifying: -1
+Simplifying: (-1 * self[e0123] * other[e12])
+Simplifying: -1
+Simplifying: self[e0123]
+Simplifying: other[e12]
+Simplifying: 1
+Simplifying: c12
+Simplifying: (1 * c12)
+Simplifying: (c12 * -1)
+Simplifying: ((self[e12] * other[e12]) * -1)
+Simplifying: (self[e12] * other[e12])
+Simplifying: self[e12]
+Simplifying: other[e12]
+Simplifying: -1
+Simplifying: ((-1 * self[e12] * other[e12]) * 1)
+Simplifying: (-1 * self[e12] * other[e12])
+Simplifying: -1
+Simplifying: self[e12]
+Simplifying: other[e12]
+Simplifying: 1
+Simplifying: 1
+Simplifying: c02
+Simplifying: (1 * c02)
+Simplifying: 1
+Simplifying: c23
+Simplifying: (1 * c23)
+Simplifying: (c02 - c23)
+Simplifying: ((self[e12] * other[e02]) - (self[e0123] * other[e23]))
+Simplifying: (self[e12] * other[e02])
+Simplifying: self[e12]
+Simplifying: other[e02]
+Simplifying: (self[e0123] * other[e23])
+Simplifying: self[e0123]
+Simplifying: other[e23]
+Simplifying: (((self[e12] * other[e02]) - (self[e0123] * other[e23])) * 1)
+Simplifying: ((self[e12] * other[e02]) - (self[e0123] * other[e23]))
+Simplifying: (self[e12] * other[e02])
+Simplifying: self[e12]
+Simplifying: other[e02]
+Simplifying: (self[e0123] * other[e23])
+Simplifying: self[e0123]
+Simplifying: other[e23]
+Simplifying: 1
+Simplifying: 1
+Simplifying: c31
+Simplifying: (1 * c31)
+Simplifying: 1
+Simplifying: c12
+Simplifying: (1 * c12)
+Simplifying: 1
+Simplifying: c01
+Simplifying: (1 * c01)
+Simplifying: (-c31 + c12 - c01)
+Simplifying: (-(self[e0123] * other[e31]) + (self[e01] * other[e12]) - (self[e12] * other[e01]))
+Simplifying: (self[e0123] * other[e31])
+Simplifying: self[e0123]
+Simplifying: other[e31]
+Simplifying: (self[e01] * other[e12])
+Simplifying: self[e01]
+Simplifying: other[e12]
+Simplifying: (self[e12] * other[e01])
+Simplifying: self[e12]
+Simplifying: other[e01]
+Simplifying: ((-(self[e0123] * other[e31]) + (self[e01] * other[e12]) - (self[e12] * other[e01])) * 1)
+Simplifying: (-(self[e0123] * other[e31]) + (self[e01] * other[e12]) - (self[e12] * other[e01]))
+Simplifying: (self[e0123] * other[e31])
+Simplifying: self[e0123]
+Simplifying: other[e31]
+Simplifying: (self[e01] * other[e12])
+Simplifying: self[e01]
+Simplifying: other[e12]
+Simplifying: (self[e12] * other[e01])
+Simplifying: self[e12]
+Simplifying: other[e01]
+Simplifying: 1
+Simplifying: 1
+Simplifying: c31
+Simplifying: (1 * c31)
+Simplifying: 1
+Simplifying: c12
+Simplifying: (1 * c12)
+Simplifying: (-c31 - c12)
+Simplifying: (-(self[e01] * other[e31]) - (self[e0123] * other[e12]))
+Simplifying: (self[e01] * other[e31])
+Simplifying: self[e01]
+Simplifying: other[e31]
+Simplifying: (self[e0123] * other[e12])
+Simplifying: self[e0123]
+Simplifying: other[e12]
+Simplifying: ((-(self[e01] * other[e31]) - (self[e0123] * other[e12])) * 1)
+Simplifying: (-(self[e01] * other[e31]) - (self[e0123] * other[e12]))
+Simplifying: (self[e01] * other[e31])
+Simplifying: self[e01]
+Simplifying: other[e31]
+Simplifying: (self[e0123] * other[e12])
+Simplifying: self[e0123]
+Simplifying: other[e12]
+Simplifying: 1
+Simplifying: 1
+Simplifying: c23
+Simplifying: (1 * c23)
+Simplifying: (self[e12] * other[e23])
+Simplifying: self[e12]
+Simplifying: other[e23]
+Simplifying: ((self[e12] * other[e23]) * -1)
+Simplifying: (self[e12] * other[e23])
+Simplifying: self[e12]
+Simplifying: other[e23]
+Simplifying: -1
+Simplifying: 1
+Simplifying: c31
+Simplifying: (1 * c31)
+Simplifying: (self[e12] * other[e31])
+Simplifying: self[e12]
+Simplifying: other[e31]
+Simplifying: ((self[e12] * other[e31]) * 1)
+Simplifying: (self[e12] * other[e31])
+Simplifying: self[e12]
+Simplifying: other[e31]
+Simplifying: 1
+Simplifying: 1
+Simplifying: c23
+Simplifying: (1 * c23)
+Simplifying: 1
+Simplifying: c03
+Simplifying: (1 * c03)
+Simplifying: (c23 + c03)
+Simplifying: ((self[e01] * other[e23]) + (self[e12] * other[e03]))
+Simplifying: (self[e01] * other[e23])
+Simplifying: self[e01]
+Simplifying: other[e23]
+Simplifying: (self[e12] * other[e03])
+Simplifying: self[e12]
+Simplifying: other[e03]
+Simplifying: (((self[e01] * other[e23]) + (self[e12] * other[e03])) * 1)
+Simplifying: ((self[e01] * other[e23]) + (self[e12] * other[e03]))
+Simplifying: (self[e01] * other[e23])
+Simplifying: self[e01]
+Simplifying: other[e23]
+Simplifying: (self[e12] * other[e03])
+Simplifying: self[e12]
+Simplifying: other[e03]
+Simplifying: 1
+Simplifying: (-1 * self[e12] * other[e12])
+Simplifying: -1
+Simplifying: self[e12]
+Simplifying: other[e12]
+Simplifying: ((self[e12] * other[e02]) - (self[e0123] * other[e23]))
+Simplifying: (self[e12] * other[e02])
+Simplifying: self[e12]
+Simplifying: other[e02]
+Simplifying: (self[e0123] * other[e23])
+Simplifying: self[e0123]
+Simplifying: other[e23]
+Simplifying: (-(self[e0123] * other[e31]) + (self[e01] * other[e12]) - (self[e12] * other[e01]))
+Simplifying: (self[e0123] * other[e31])
+Simplifying: self[e0123]
+Simplifying: other[e31]
+Simplifying: (self[e01] * other[e12])
+Simplifying: self[e01]
+Simplifying: other[e12]
+Simplifying: (self[e12] * other[e01])
+Simplifying: self[e12]
+Simplifying: other[e01]
+Simplifying: (-(self[e01] * other[e31]) - (self[e0123] * other[e12]))
+Simplifying: (self[e01] * other[e31])
+Simplifying: self[e01]
+Simplifying: other[e31]
+Simplifying: (self[e0123] * other[e12])
+Simplifying: self[e0123]
+Simplifying: other[e12]
+Simplifying: 0
+Simplifying: (-1 * self[e12] * other[e23])
+Simplifying: -1
+Simplifying: self[e12]
+Simplifying: other[e23]
+Simplifying: (self[e12] * other[e31])
+Simplifying: self[e12]
+Simplifying: other[e31]
+Simplifying: ((self[e01] * other[e23]) + (self[e12] * other[e03]))
+Simplifying: (self[e01] * other[e23])
+Simplifying: self[e01]
+Simplifying: other[e23]
+Simplifying: (self[e12] * other[e03])
+Simplifying: self[e12]
+Simplifying: other[e03]
+         */
 
         Some(())
     });
