@@ -1252,6 +1252,10 @@ impl<const AntiScalar: BasisElement> MultiVecRepository<AntiScalar> {
         v.into_iter()
     }
 
+    pub fn qty_classes(&self) -> usize {
+        self.declarations.declared.len()
+    }
+
     pub(crate) fn note_wanted(&self, sig: BTreeSet<BasisSignature>, ti: Arc<RawTraitImplementation>) {
         let mut w = self.wanted.lock();
         let ti2 = ti.clone();

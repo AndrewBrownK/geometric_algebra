@@ -1126,6 +1126,13 @@ impl TraitImplRegistry {
     }
 }
 
+fn progress_style() -> indicatif::ProgressStyle {
+    indicatif::ProgressStyle::default_bar()
+        .template("{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos:>7}/{len:7} {msg}")
+        .expect("Template should be good or you gotta fix it")
+        .progress_chars("#>-")
+}
+
 
 #[async_trait]
 pub trait Register10: TraitDef_1Class_0Param {
@@ -1133,6 +1140,7 @@ pub trait Register10: TraitDef_1Class_0Param {
         self,
         tr: TraitImplRegistry,
         mvs: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     );
 }
 #[async_trait]
@@ -1141,10 +1149,17 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits10.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let qty = mv_repo.qty_classes() as u64;
+        let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
+        pb.set_style(progress_style());
+        let n = trait_key.as_upper_camel();
+        pb.set_message(n);
 
         let mut js = JoinSet::new();
         for mv_a in mv_repo.all_classes() {
@@ -1152,6 +1167,7 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
             let ga_2 = ga.clone();
             let mv_repo_2 = mv_repo.clone();
             let def_2 = def.clone();
+            let pb = pb.clone();
             js.spawn(async move {
                 let mv_a = MultiVector::from(mv_a);
                 let tir_3 = tir_2.clone();
@@ -1167,6 +1183,7 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
                         Some(result) => Some(result.into_trait10(mv_a)),
                     }
                 }).await;
+                pb.inc(1);
                 let Some(the_impl) = the_impl else { return };
                 let owner_type = ExpressionType::Class(mv_a.clone());
                 let return_type = the_impl.return_expr.expression_type();
@@ -1177,6 +1194,7 @@ impl<T: TraitDef_1Class_0Param> Register10 for T {
         while let Some(result) = js.join_next().await {
             let _: () = result.expect("async machinery should work");
         }
+        pb.finish();
     }
 }
 #[async_trait]
@@ -1185,6 +1203,7 @@ pub trait Register11: TraitDef_1Class_1Param {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     );
 }
 #[async_trait]
@@ -1193,10 +1212,17 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits11.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let qty = mv_repo.qty_classes() as u64;
+        let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
+        pb.set_style(progress_style());
+        let n = trait_key.as_upper_camel();
+        pb.set_message(n);
 
         let mut js = JoinSet::new();
         for mv_a in mv_repo.all_classes() {
@@ -1204,6 +1230,7 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
             let ga_2 = ga.clone();
             let mv_repo_2 = mv_repo.clone();
             let def_2 = def.clone();
+            let pb = pb.clone();
             js.spawn(async move {
                 let mv_a = MultiVector::from(mv_a);
                 let tir_3 = tir_2.clone();
@@ -1225,6 +1252,7 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
                         Some(result) => Some(result.into_trait11(mv_a)),
                     }
                 }).await;
+                pb.inc(1);
                 let Some(the_impl) = the_impl else { return };
                 let owner_type = ExpressionType::Class(mv_a.clone());
                 let return_type = the_impl.return_expr.expression_type();
@@ -1235,6 +1263,7 @@ impl<T: TraitDef_1Class_1Param> Register11 for T {
         while let Some(result) = js.join_next().await {
             let _: () = result.expect("async machinery should work");
         }
+        pb.finish();
     }
 }
 #[async_trait]
@@ -1243,6 +1272,7 @@ pub trait Register21: TraitDef_2Class_1Param {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     );
 }
 #[async_trait]
@@ -1251,10 +1281,19 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits21.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let mut qty = mv_repo.qty_classes() as u64;
+        let qty = qty * qty;
+        let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
+        pb.set_style(progress_style());
+        let n = trait_key.as_upper_camel();
+        pb.set_message(n);
+        pb.tick();
 
         let mut js = JoinSet::new();
         for mv_a in mv_repo.all_classes() {
@@ -1263,6 +1302,7 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
                 let ga_2 = ga.clone();
                 let mv_repo_2 = mv_repo.clone();
                 let def_2 = def.clone();
+                let pb = pb.clone();
                 js.spawn(async move {
                     let mv_a = MultiVector::from(mv_a);
                     let mv_b = MultiVector::from(mv_b);
@@ -1285,6 +1325,7 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
                             Some(result) => Some(result.into_trait21(mv_a, mv_b)),
                         }
                     }).await;
+                    pb.inc(1);
                     let Some(the_impl) = the_impl else { return };
                     let owner_type = ExpressionType::Class(mv_a.clone());
                     let return_type = the_impl.return_expr.expression_type();
@@ -1296,6 +1337,7 @@ impl<T: TraitDef_2Class_1Param> Register21 for T {
         while let Some(result) = js.join_next().await {
             let _: () = result.expect("async machinery should work");
         }
+        pb.finish();
     }
 }
 #[async_trait]
@@ -1304,6 +1346,7 @@ pub trait Register22: TraitDef_2Class_2Param {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     );
 }
 #[async_trait]
@@ -1312,10 +1355,18 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
         self,
         tir: TraitImplRegistry,
         mv_repo: Arc<MultiVecRepository<AntiScalar>>,
+        progress: Arc<indicatif::MultiProgress>,
     ) {
         let ga = mv_repo.ga();
         let trait_key = self.trait_names().trait_key;
         let def = tir.defs.traits22.get_or_create_or_panic(trait_key.clone(), async move { self.def() }).await;
+
+        let mut qty = mv_repo.qty_classes() as u64;
+        let qty = qty * qty;
+        let pb = Arc::new(progress.add(indicatif::ProgressBar::new(qty)));
+        pb.set_style(progress_style());
+        let n = trait_key.as_upper_camel();
+        pb.set_message(n);
 
         let mut js = JoinSet::new();
         for mv_a in mv_repo.all_classes() {
@@ -1324,6 +1375,7 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
                 let ga_2 = ga.clone();
                 let mv_repo_2 = mv_repo.clone();
                 let def_2 = def.clone();
+                let pb = pb.clone();
                 js.spawn(async move {
                     let mv_a = MultiVector::from(mv_a);
                     let mv_b = MultiVector::from(mv_b);
@@ -1352,6 +1404,7 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
                             Some(result) => Some(result.into_trait22(mv_a, mv_b)),
                         }
                     }).await;
+                    pb.inc(1);
                     let Some(the_impl) = the_impl else { return };
                     let owner_type = ExpressionType::Class(mv_a.clone());
                     let return_type = the_impl.return_expr.expression_type();
@@ -1363,6 +1416,7 @@ impl<T: TraitDef_2Class_2Param> Register22 for T {
         while let Some(result) = js.join_next().await {
             let _: () = result.expect("async machinery should work");
         }
+        pb.finish();
     }
 }
 
@@ -1374,13 +1428,17 @@ macro_rules! register_all {
             let tir = $crate::ast2::traits::TraitImplRegistry::new();
             use $crate::ast2::traits::{Register10, Register11, Register21, Register22};
             let rt = tokio::runtime::Runtime::new().expect("Tokio should work");
+
+            let multi_progress = Arc::new(indicatif::MultiProgress::new());
             let _: () = rt.block_on(async {
+
                 let mut js = tokio::task::JoinSet::new();
                 $(
                 let tir_c = tir.clone();
                 let mv_repo_c = $mv_repo.clone();
+                let mp = multi_progress.clone();
                 js.spawn(async move {
-                    $t.register(tir_c, mv_repo_c).await;
+                    $t.register(tir_c, mv_repo_c, mp).await;
                 });
                 )+
                 while let Some(_) = js.join_next().await {}
@@ -1390,8 +1448,9 @@ macro_rules! register_all {
                 $(
                 let tir_c = tir.clone();
                 let mv_repo_c = $mv_repo.clone();
+                let mp = multi_progress.clone();
                 js.spawn(async move {
-                    $t2.register(tir_c, mv_repo_c).await;
+                    $t2.register(tir_c, mv_repo_c, mp).await;
                 });
                 )+
                 while let Some(_) = js.join_next().await {}
