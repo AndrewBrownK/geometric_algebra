@@ -23,18 +23,17 @@ mod validate;
 mod shader_support;
 pub mod ast2;
 pub mod algebra2;
-mod utility;
+pub mod utility;
 pub mod emit2;
 // TODO eventually migrate to Portable SIMD once it is stabilized
 //  https://github.com/rust-lang/rust/issues/86656
 //  That would also be the appropriate time to consider f64 support. Not eager until then.
 mod simd;
-mod build_scripts2 {
+pub mod build_scripts2 {
     pub mod common_traits;
-    pub mod cga3d;
-    pub mod pga3d;
-    pub mod rga3d;
-    pub mod uwu;
+    mod pga3d;
+    mod rga3d;
+    mod uwu;
 }
 
 mod build_scripts {
@@ -47,22 +46,14 @@ mod build_scripts {
 
 const SIMD_SRC: &'static str = include_str!("simd.rs");
 
-// TODO documentation on this stuff
-#[cfg(all(feature = "wedge-is-join", feature = "wedge-is-meet"))]
-compile_error!(
-    "You must use crate features in your cargo.toml to choose if you want the wedge product \
-    to be a meet (wedge-is-meet) or join (wedge-is-join). See documentation for more \
-    information on this decision."
-);
 
-
-fn main() {
-    let result: std::io::Result<()> = try {
-        // TODO create 2d and 4d variants
-
-        build_scripts::rga3d::script()?;
-        build_scripts::cga3d::script()?;
-        build_scripts::cga3d_min::script()?;
-    };
-    result.expect("Must build successfully");
-}
+// fn main() {
+//     let result: std::io::Result<()> = try {
+//         // TODO create 2d and 4d variants
+//
+//         build_scripts::rga3d::script()?;
+//         build_scripts::cga3d::script()?;
+//         build_scripts::cga3d_min::script()?;
+//     };
+//     result.expect("Must build successfully");
+// }

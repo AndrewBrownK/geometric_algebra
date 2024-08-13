@@ -1,16 +1,19 @@
 #![allow(non_upper_case_globals)]
+#![feature(const_mut_refs)]
+#![feature(const_trait_impl)]
+#![feature(effects)]
 
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use semver::Version;
-use crate::{ga, multi_vecs, operators, register_all, variants};
-use crate::algebra2::basis::elements::e12345;
-use crate::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
-use crate::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
-use crate::ast2::datatype::MultiVector;
-use crate::ast2::impls::{Specialize_22, Specialized_22};
-use crate::build_scripts2::common_traits::BulkExpansion;
-use crate::emit2::rust::Rust;
+use codegen::{ga, multi_vecs, operators, register_all, variants};
+use codegen::algebra2::basis::elements::e12345;
+use codegen::algebra2::basis::filter::{allow_all_signatures, SigFilter, signatures_containing};
+use codegen::algebra2::multivector::{DeclareMultiVecs, MultiVecRepository};
+use codegen::ast2::datatype::MultiVector;
+use codegen::ast2::impls::{Specialize_22, Specialized_22};
+use codegen::build_scripts2::common_traits::BulkExpansion;
+use codegen::emit2::rust::Rust;
 
 multi_vecs! { e12345;
 
@@ -43,8 +46,7 @@ multi_vecs! { e12345;
 
 
 /// Lengyel styled CGA of 5 dimensions representing 3 dimensions
-#[test]
-pub fn cga3d_script() {
+pub fn main() {
     let cga3d = ga! { e12345;
         1 => e1, e2, e3, eP;
         -1 => eM;
@@ -108,7 +110,7 @@ fn base_documentation(mut declarations: DeclareMultiVecs<e12345>) -> DeclareMult
 }
 
 fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVecRepository<e12345>> {
-    use crate::algebra2::basis::elements::*;
+    use codegen::algebra2::basis::elements::*;
 
     let origin = signatures_containing(e4);
     let infinity = signatures_containing(e5);
@@ -158,7 +160,7 @@ fn generate_variants(mut declarations: DeclareMultiVecs<e12345>) -> Arc<MultiVec
 
 
 pub static Plane_BulkExpansion_Plane: Specialized_22<e12345, MultiVector>
-    = BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| Box::pin(async move {
-        // TODO actually implement
-        b.return_expr(slf)
-    }));
+= BulkExpansion.specialize(&Plane, &Plane, &|mut b, slf, other| Box::pin(async move {
+    // TODO actually implement
+    b.return_expr(slf)
+}));
