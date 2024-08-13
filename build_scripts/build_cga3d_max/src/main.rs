@@ -3,6 +3,7 @@
 #![feature(const_trait_impl)]
 #![feature(effects)]
 
+use std::env;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use semver::Version;
@@ -76,8 +77,11 @@ pub fn main() {
         unary
         Not => Dual;
     }
+    let pwd = env::current_dir().expect("has pwd");
+    let pwd_d = pwd.display();
+    println!("here is pwd: {pwd_d}");
 
-    let file_path = PathBuf::from("../cga3d_new/");
+    let file_path = PathBuf::from("builds/cga3d_new/");
     let mut rust = Rust::new(true).all_features();
     rust.sql = false;
 

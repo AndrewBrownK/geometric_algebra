@@ -3,11 +3,14 @@ resolver = "2"
 
 members = [
     "codegen",
+
     "rga3d",
     "cga3d",
     "cga3d_min",
-    "cga3d_new",
+    "builds/cga3d_new",
+
     "build_scripts/build_cga3d_max",
+
     "examples/compile_to_spirv",
     "examples/hello_circle_wgsl",
     "examples/hello_circle_rust",
