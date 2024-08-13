@@ -1,3 +1,4 @@
+use crate::traits::Reverse;
 impl Reverse for AntiCircleOnOrigin {
     fn reverse(self) -> Self {
         return AntiCircleOnOrigin::from_groups(

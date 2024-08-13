@@ -444,13 +444,14 @@ mod impls {
         type Output = MultiVector;
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            // TODO incorrect cycle detection if use all invoke
             let c = GeometricProduct.inline(&b, slf.clone(), other).await?;
-            let r = Reverse.inline(&b, slf).await?;
-            let result = GeometricProduct.inline(&b, c, r).await?;
+            let r = Reverse.invoke(&mut b, slf).await?;
+            let result = GeometricProduct.invoke(&mut b, c, r).await?;
             b.return_expr(result)
         }
     }
@@ -462,13 +463,14 @@ mod impls {
         type Output = MultiVector;
         async fn general_implementation<const AntiScalar: BasisElement>(
             self,
-            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            mut b: TraitImplBuilder<AntiScalar, HasNotReturned>,
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            // TODO incorrect cycle detection if use all invoke
             let c = GeometricAntiProduct.inline(&b, slf.clone(), other).await?;
-            let r = AntiReverse.inline(&b, slf).await?;
-            let result = GeometricAntiProduct.inline(&b, c, r).await?;
+            let r = AntiReverse.invoke(&mut b, slf).await?;
+            let result = GeometricAntiProduct.invoke(&mut b, c, r).await?;
             b.return_expr(result)
         }
     }

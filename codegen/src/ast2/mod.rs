@@ -37,7 +37,12 @@ pub(crate) struct RawVariableDeclaration {
     pub(crate) name: (String, usize),
     pub(crate) expr: Option<AnyExpression>
 }
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 pub(crate) struct RawVariableInvocation {
     pub(crate) decl: Arc<RawVariableDeclaration>,
+}
+impl PartialEq for RawVariableInvocation {
+    fn eq(&self, other: &Self) -> bool {
+        std::ptr::eq(self.decl.as_ref(), other.decl.as_ref())
+    }
 }

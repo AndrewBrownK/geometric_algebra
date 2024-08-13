@@ -691,15 +691,19 @@ postgres-types = "0.2.7""#)?;
             }
             FloatExpr::TraitInvoke11ToFloat(t, arg) => {
                 let method = t.as_lower_snake();
-                if let Some(infix) = &self.fancy_infix {
-                    let op = infix.rust_operator();
-                    write!(w, "(")?;
-                    self.write_multi_vec(w, arg)?;
-                    write!(w, " {op}{method}")?;
-                    write!(w, ")")?;
-                } else {
-                    self.write_multi_vec(w, arg)?;
-                    write!(w, ".{method}()")?;
+                // TODO fancy infix can conflict with variable names
+                match (&self.fancy_infix, self.prefer_fancy_infix) {
+                    (Some(infix), true) => {
+                        let op = infix.rust_operator();
+                        write!(w, "(")?;
+                        self.write_multi_vec(w, arg)?;
+                        write!(w, " {op}{method}")?;
+                        write!(w, ")")?;
+                    }
+                    _ => {
+                        self.write_multi_vec(w, arg)?;
+                        write!(w, ".{method}()")?;
+                    }
                 }
             }
             FloatExpr::Product(v) => {
@@ -1149,15 +1153,19 @@ postgres-types = "0.2.7""#)?;
             }
             MultiVectorVia::TraitInvoke11ToClass(t, arg) => {
                 let method = t.as_lower_snake();
-                if let Some(infix) = &self.fancy_infix {
-                    let op = infix.rust_operator();
-                    write!(w, "(")?;
-                    self.write_multi_vec(w, arg)?;
-                    write!(w, " {op}{method}")?;
-                    write!(w, ")")?;
-                } else {
-                    self.write_multi_vec(w, arg)?;
-                    write!(w, ".{method}()")?;
+                // TODO fancy infix can conflict with variable names
+                match (&self.fancy_infix, self.prefer_fancy_infix) {
+                    (Some(infix), true) => {
+                        let op = infix.rust_operator();
+                        write!(w, "(")?;
+                        self.write_multi_vec(w, arg)?;
+                        write!(w, " {op}{method}")?;
+                        write!(w, ")")?;
+                    }
+                    _ => {
+                        self.write_multi_vec(w, arg)?;
+                        write!(w, ".{method}()")?;
+                    }
                 }
             }
             MultiVectorVia::TraitInvoke21ToClass(t, arg, mv) => {
@@ -1168,20 +1176,24 @@ postgres-types = "0.2.7""#)?;
             }
             MultiVectorVia::TraitInvoke22ToClass(t, a, b) => {
                 let method = t.as_lower_snake();
-                if let Some(infix) = &self.fancy_infix {
-                    let op = infix.rust_operator();
-                    write!(w, "(")?;
-                    self.write_multi_vec(w, a)?;
-                    write!(w, " {op}")?;
-                    write!(w, "{method}")?;
-                    write!(w, "{op} ")?;
-                    self.write_multi_vec(w, b)?;
-                    write!(w, ")")?;
-                } else {
-                    self.write_multi_vec(w, a)?;
-                    write!(w, ".{method}(")?;
-                    self.write_multi_vec(w, b)?;
-                    write!(w, ")")?;
+                // TODO fancy infix can conflict with variable names
+                match (&self.fancy_infix, self.prefer_fancy_infix) {
+                    (Some(infix), true) => {
+                        let op = infix.rust_operator();
+                        write!(w, "(")?;
+                        self.write_multi_vec(w, a)?;
+                        write!(w, " {op}")?;
+                        write!(w, "{method}")?;
+                        write!(w, "{op} ")?;
+                        self.write_multi_vec(w, b)?;
+                        write!(w, ")")?;
+                    }
+                    _ => {
+                        self.write_multi_vec(w, a)?;
+                        write!(w, ".{method}(")?;
+                        self.write_multi_vec(w, b)?;
+                        write!(w, ")")?;
+                    }
                 }
             }
         }

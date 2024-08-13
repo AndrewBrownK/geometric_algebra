@@ -116,6 +116,7 @@
 ./../cga3d_new/src/traits/anti_grade.rs
 ./../cga3d_new/src/traits/anti_one.rs
 ./../cga3d_new/src/traits/anti_reverse.rs
+./../cga3d_new/src/traits/anti_sandwich.rs
 ./../cga3d_new/src/traits/anti_wedge.rs
 ./../cga3d_new/src/traits/bulk_expansion.rs
 ./../cga3d_new/src/traits/dual.rs
@@ -126,6 +127,7 @@
 ./../cga3d_new/src/traits/impls/anti_grade.rs
 ./../cga3d_new/src/traits/impls/anti_one.rs
 ./../cga3d_new/src/traits/impls/anti_reverse.rs
+./../cga3d_new/src/traits/impls/anti_sandwich.rs
 ./../cga3d_new/src/traits/impls/anti_wedge.rs
 ./../cga3d_new/src/traits/impls/bulk_expansion.rs
 ./../cga3d_new/src/traits/impls/dual.rs
@@ -134,11 +136,13 @@
 ./../cga3d_new/src/traits/impls/grade.rs
 ./../cga3d_new/src/traits/impls/one.rs
 ./../cga3d_new/src/traits/impls/reverse.rs
+./../cga3d_new/src/traits/impls/sandwich.rs
 ./../cga3d_new/src/traits/impls/unit.rs
 ./../cga3d_new/src/traits/impls/wedge.rs
 ./../cga3d_new/src/traits/impls/zero.rs
 ./../cga3d_new/src/traits/one.rs
 ./../cga3d_new/src/traits/reverse.rs
+./../cga3d_new/src/traits/sandwich.rs
 ./../cga3d_new/src/traits/unit.rs
 ./../cga3d_new/src/traits/wedge.rs
 ./../cga3d_new/src/traits/zero.rs

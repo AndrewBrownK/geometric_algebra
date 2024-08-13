@@ -17,6 +17,9 @@ pub mod arity_1 {
     pub use crate::traits::reverse::Reverse;
 }
 pub mod arity_2 {
+    pub use crate::traits::anti_sandwich::anti_sandwich;
+    pub use crate::traits::anti_sandwich::anti_sandwich_partial;
+    pub use crate::traits::anti_sandwich::AntiSandwich;
     pub use crate::traits::anti_wedge::anti_wedge;
     pub use crate::traits::anti_wedge::anti_wedge_partial;
     pub use crate::traits::anti_wedge::AntiWedge;
@@ -29,6 +32,9 @@ pub mod arity_2 {
     pub use crate::traits::geometric_product::geometric_product;
     pub use crate::traits::geometric_product::geometric_product_partial;
     pub use crate::traits::geometric_product::GeometricProduct;
+    pub use crate::traits::sandwich::sandwich;
+    pub use crate::traits::sandwich::sandwich_partial;
+    pub use crate::traits::sandwich::Sandwich;
     pub use crate::traits::wedge::wedge;
     pub use crate::traits::wedge::wedge_partial;
     pub use crate::traits::wedge::Wedge;
@@ -43,6 +49,10 @@ pub use anti_one::AntiOne;
 mod anti_reverse;
 pub use crate::traits::anti_reverse::anti_reverse;
 pub use anti_reverse::AntiReverse;
+mod anti_sandwich;
+pub use crate::traits::anti_sandwich::anti_sandwich;
+pub use crate::traits::anti_sandwich::anti_sandwich_partial;
+pub use anti_sandwich::AntiSandwich;
 mod anti_wedge;
 pub use crate::traits::anti_wedge::anti_wedge;
 pub use crate::traits::anti_wedge::anti_wedge_partial;
@@ -69,6 +79,10 @@ pub use one::One;
 mod reverse;
 pub use crate::traits::reverse::reverse;
 pub use reverse::Reverse;
+mod sandwich;
+pub use crate::traits::sandwich::sandwich;
+pub use crate::traits::sandwich::sandwich_partial;
+pub use sandwich::Sandwich;
 mod unit;
 pub use unit::Unit;
 mod wedge;
