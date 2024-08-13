@@ -1949,7 +1949,6 @@ impl FloatExpr {
         self.simplify_nuanced(false);
     }
     fn simplify_nuanced(&mut self, insides_already_done: bool) {
-        // println!("Simplifying: {self}");
         match self {
             FloatExpr::Variable(_) => {}
             FloatExpr::Literal(_) => {}
@@ -3421,15 +3420,11 @@ impl MultiVectorExpr {
         self.simplify_nuanced(false);
     }
     fn simplify_nuanced(&mut self, insides_already_done: bool) {
-        // println!("Simplifying MultiVectorExpr...");
         match &mut *self.expr {
             MultiVectorVia::Variable(_) => {}
             MultiVectorVia::Construct(groups) => {
-                // let mut element_groups = self.mv_class.groups().into_iter();
                 for group in groups.iter_mut() {
                     if !insides_already_done {
-                        // let elg = element_groups.next().expect("Zipping");
-                        // println!("Simplifying {elg}...");
                         group.simplify();
                     }
                 }
