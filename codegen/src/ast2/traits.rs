@@ -2021,6 +2021,9 @@ impl<const AntiScalar: BasisElement, ExprType: TraitResultType> TraitImplBuilder
             outer_lines.push(line);
         }
 
+        // Don't deadlock in next method
+        drop(outer_lines);
+
         // If there was no return expression provided, assume the implementation "failed"
         // under normal circumstances like some combination of classes that doesn't produce a result
         let var = b.comment_variable_impl(self.return_comment, var_name, self.return_type, self.return_expr?);

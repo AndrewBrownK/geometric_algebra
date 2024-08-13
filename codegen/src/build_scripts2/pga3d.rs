@@ -5,9 +5,9 @@ use crate::algebra2::basis::elements::e0123;
 use crate::algebra2::multivector::DynamicMultiVector;
 use crate::ast2::datatype::{Float, MultiVector};
 use crate::ast2::expressions::FloatExpr;
-use crate::ast2::traits::{TraitDef_2Class_2Param, TraitImplBuilder};
+use crate::ast2::traits::{TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImplBuilder};
 use crate::ast2::Variable;
-use crate::build_scripts2::common_traits::GeometricProduct;
+use crate::build_scripts2::common_traits::{AntiReverse, AntiScalarProduct, AntiWedge, Dual, GeometricProduct, Reverse, Sandwich, ScalarProduct, Wedge};
 
 fn float_var(n: &str) -> Variable<Float> {
     Variable::quick_var(n, Float)
@@ -57,111 +57,38 @@ fn anti_product_argument() {
     println!("B = {b}");
     println!("R = {rotor}");
 
-    let mut builder = TraitImplBuilder::new_sandbox(rga3d.clone(), repo);
+    let builder = TraitImplBuilder::new_sandbox(rga3d.clone(), repo);
     let rt = tokio::runtime::Runtime::new().expect("tokio works");
     let result: Option<()> = rt.block_on(async move {
-        let mut a_dual = DynamicMultiVector::zero();
-        for (fe, el) in a.elements_flat() {
-            let (f, el) = rga3d.dual(el);
-            a_dual += (fe * f, el);
-        }
-        let a_dual = a_dual.construct(&builder)?;
+        let a_dual = Dual.deep_inline(&builder, a.clone()).await?;
         println!("A* = {a_dual}");
 
-        let mut b_dual = DynamicMultiVector::zero();
-        for (fe, el) in a.elements_flat() {
-            let (f, el) = rga3d.dual(el);
-            b_dual += (fe * f, el);
-        }
-        let b_dual = b_dual.construct(&builder)?;
+        let b_dual = Dual.deep_inline(&builder, b.clone()).await?;
         println!("B* = {b_dual}");
 
-        let mut r_reverse = DynamicMultiVector::zero();
-        for (fe, el) in rotor.elements_flat() {
-            let (f, el) = rga3d.reverse(el);
-            r_reverse += (fe * f, el);
-        }
-        let r_reverse = r_reverse.construct(&builder)?;
+        let r_reverse = Reverse.deep_inline(&builder, rotor.clone()).await?;
         println!("~R = {r_reverse}");
 
-        let mut r_anti_reverse = DynamicMultiVector::zero();
-        for (fe, el) in rotor.elements_flat() {
-            let (f, el) = rga3d.anti_reverse(el);
-            r_anti_reverse += (fe * f, el);
-        }
-        let r_anti_reverse = r_anti_reverse.construct(&builder)?;
+        let r_anti_reverse = AntiReverse.deep_inline(&builder, rotor.clone()).await?;
         println!("R~ = {r_anti_reverse}");
 
-        let a_wedge_b = a.distributive_by_groups(&b, |a, b| a * b, |a, b| a.wedge(b));
-        let a_wedge_b = a_wedge_b.construct(&builder)?;
+        let a_wedge_b = Wedge.deep_inline(&builder, a.clone(), b.clone()).await?;
         println!("A ∧ B = {a_wedge_b}");
 
-        let a_anti_wedge_b = a.distributive_by_groups(&b, |a, b| a * b, |a, b| a.anti_wedge(b, e0123));
-        let a_anti_wedge_b = a_anti_wedge_b.construct(&builder);
+        let a_anti_wedge_b = AntiWedge.deep_inline(&builder, a.clone(), b.clone()).await;
         println!("A ∨ B = {a_anti_wedge_b:?}");
 
-        let mut a_dot_b = DynamicMultiVector::zero();
-        for (a, a_el) in a.elements_flat() {
-            for (b, b_el) in b.elements_flat() {
-                let sop = rga3d.scalar_product(a_el, b_el);
-                for p in sop.sum {
-                    let a = a.clone();
-                    let b = b.clone();
-                    let c = FloatExpr::Literal(p.coefficient);
-                    a_dot_b += (a * b * c, p.element);
-                }
-            }
-        }
-        let a_dot_b = a_dot_b.construct(&builder)?;
+        let a_dot_b = ScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
         println!("A • B = {a_dot_b}");
 
-        let mut a_anti_dot_b = DynamicMultiVector::zero();
-        for (a, a_el) in a.elements_flat() {
-            for (b, b_el) in b.elements_flat() {
-                let sop = rga3d.anti_scalar_product(a_el, b_el);
-                for p in sop.sum {
-                    let a = a.clone();
-                    let b = b.clone();
-                    let c = FloatExpr::Literal(p.coefficient);
-                    a_anti_dot_b += (a * b * c, p.element);
-                }
-            }
-        }
-        let a_anti_dot_b = a_anti_dot_b.construct(&builder)?;
+        let a_anti_dot_b = AntiScalarProduct.deep_inline(&builder, a.clone(), b.clone()).await?;
         println!("A ∘ B = {a_anti_dot_b}");
 
-        let mut r_wedge_dot_a = DynamicMultiVector::zero();
-        for (af, a_el) in rotor.elements_flat() {
-            for (b, b_el) in a.elements_flat() {
-                let a = &af;
-                let sop = rga3d.product(a_el, b_el);
-                for p in sop.sum {
-                    let a = a.clone();
-                    let b = b.clone();
-                    let c = FloatExpr::Literal(p.coefficient);
-                    r_wedge_dot_a += (a * b * c, p.element);
-                }
-            }
-        }
-        let r_wedge_dot_a = r_wedge_dot_a.construct(&builder)?;
-        println!("R ⟑ A = {r_wedge_dot_a}");
-        let mut r_wedge_dot_a_wedge_dot_r = DynamicMultiVector::zero();
-        for (a, a_el) in r_wedge_dot_a.elements_flat() {
-            for (b, b_el) in r_reverse.elements_flat() {
-                let sop = rga3d.product(a_el, b_el);
-                for p in sop.sum {
-                    let a = a.clone();
-                    let b = b.clone();
-                    let c = FloatExpr::Literal(p.coefficient);
-                    r_wedge_dot_a_wedge_dot_r += (a * b * c, p.element);
-                }
-            }
-        }
-        let r_wedge_dot_a_wedge_dot_r = r_wedge_dot_a_wedge_dot_r.construct(&builder)?;
+        let r_wedge_dot_a_wedge_dot_r = Sandwich.deep_inline(&builder, rotor.clone(), a.clone()).await?;
         println!("R ⟑ A ⟑ ~R = {r_wedge_dot_a_wedge_dot_r}");
 
         let r_wedge_dot_b = GeometricProduct.deep_inline(&builder, rotor, b).await?;
-        println!("R ⟑ B = {r_wedge_dot_b}");
+        // println!("R ⟑ B = {r_wedge_dot_b}");
         let mut r_wedge_dot_b_wedge_dot_r = GeometricProduct.deep_inline(&builder, r_wedge_dot_b, r_reverse).await?;
         println!("R ⟑ B ⟑ ~R = {r_wedge_dot_b_wedge_dot_r}");
 

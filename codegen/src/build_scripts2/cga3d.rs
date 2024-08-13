@@ -58,8 +58,11 @@ pub fn cga3d_script() {
         |
         Zero One AntiOne Unit
         Grade AntiGrade Into TryInto
+        Dual AntiDual Reverse AntiReverse
         |
         Wedge AntiWedge GeometricProduct GeometricAntiProduct
+        // TODO do CGA expansion/contraction, not naive flat ones
+        // BulkExpansion BulkContraction WeightExpansion WeightContraction
     };
     operators! { traits;
         infix => Div;

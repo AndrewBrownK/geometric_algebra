@@ -34,6 +34,14 @@ pub static AntiDual: Elaborated<AntiDualImpl> = AntiDualImpl
     .new_trait_named("AntiDual")
     .blurb("TODO");
 
+pub static Reverse: Elaborated<ReverseImpl> = ReverseImpl
+    .new_trait_named("Reverse")
+    .blurb("TODO");
+
+pub static AntiReverse: Elaborated<AntiReverseImpl> = AntiReverseImpl
+    .new_trait_named("AntiReverse")
+    .blurb("TODO");
+
 pub static Wedge: Elaborated<WedgeImpl> = WedgeImpl
     .new_trait_named("Wedge")
     .blurb("TODO");
@@ -47,6 +55,22 @@ pub static GeometricProduct: Elaborated<GeometricProductImpl> = GeometricProduct
 
 pub static GeometricAntiProduct: Elaborated<GeometricAntiProductImpl> = GeometricAntiProductImpl
     .new_trait_named("GeometricAntiProduct")
+    .blurb("TODO");
+
+pub static Sandwich: Elaborated<SandwichImpl> = SandwichImpl
+    .new_trait_named("Sandwich")
+    .blurb("TODO");
+
+pub static AntiSandwich: Elaborated<AntiSandwichImpl> = AntiSandwichImpl
+    .new_trait_named("AntiSandwich")
+    .blurb("TODO");
+
+pub static ScalarProduct: Elaborated<ScalarProductImpl> = ScalarProductImpl
+    .new_trait_named("ScalarProduct")
+    .blurb("TODO");
+
+pub static AntiScalarProduct: Elaborated<AntiScalarProductImpl> = AntiScalarProductImpl
+    .new_trait_named("AntiScalarProduct")
     .blurb("TODO");
 
 pub static BulkContraction: Elaborated<BulkContractionImpl> = BulkContractionImpl
@@ -116,7 +140,7 @@ mod impls {
     use crate::ast2::expressions::{Expression, FloatExpr, IntExpr};
     use crate::ast2::traits::{HasNotReturned, TraitDef_1Class_1Param, TraitDef_2Class_2Param, TraitImpl_10, TraitImpl_11, TraitImpl_21, TraitImpl_22, TraitImplBuilder};
     use crate::ast2::Variable;
-    use crate::build_scripts2::common_traits::{AntiDual, AntiWedge, Dual, Wedge};
+    use crate::build_scripts2::common_traits::{AntiDual, AntiReverse, AntiWedge, Dual, GeometricAntiProduct, GeometricProduct, Reverse, Wedge};
 
     #[derive(Clone, Copy)]
     pub struct ZeroImpl;
@@ -265,6 +289,46 @@ mod impls {
     }
 
     #[derive(Clone, Copy)]
+    pub struct ReverseImpl;
+    #[async_trait]
+    impl TraitImpl_11 for ReverseImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements_by_groups() {
+                let (f, el) = b.ga.reverse(el);
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AntiReverseImpl;
+    #[async_trait]
+    impl TraitImpl_11 for AntiReverseImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let mut result = DynamicMultiVector::zero();
+            for (fe, el) in slf.elements_by_groups() {
+                let (f, el) = b.ga.anti_reverse(el);
+                result += (fe * f, el);
+            }
+            let result = result.construct(&b)?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
     pub struct WedgeImpl;
     #[async_trait]
     impl TraitImpl_22 for WedgeImpl {
@@ -372,6 +436,42 @@ mod impls {
     }
 
     #[derive(Clone, Copy)]
+    pub struct SandwichImpl;
+    #[async_trait]
+    impl TraitImpl_22 for SandwichImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let c = GeometricProduct.inline(&b, slf.clone(), other).await?;
+            let r = Reverse.inline(&b, slf).await?;
+            let result = GeometricProduct.inline(&b, c, r).await?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    pub struct AntiSandwichImpl;
+    #[async_trait]
+    impl TraitImpl_22 for AntiSandwichImpl {
+        type Output = MultiVector;
+        async fn general_implementation<const AntiScalar: BasisElement>(
+            self,
+            b: TraitImplBuilder<AntiScalar, HasNotReturned>,
+            slf: Variable<MultiVector>,
+            other: Variable<MultiVector>
+        ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
+            let c = GeometricAntiProduct.inline(&b, slf.clone(), other).await?;
+            let r = AntiReverse.inline(&b, slf).await?;
+            let result = GeometricAntiProduct.inline(&b, c, r).await?;
+            b.return_expr(result)
+        }
+    }
+
+    #[derive(Clone, Copy)]
     pub struct ScalarProductImpl;
     #[async_trait]
     impl TraitImpl_22 for ScalarProductImpl {
@@ -413,8 +513,21 @@ mod impls {
             slf: Variable<MultiVector>,
             other: Variable<MultiVector>
         ) -> Option<TraitImplBuilder<AntiScalar, Self::Output>> {
-            // TODO
-            None
+            let ga = &b.ga;
+            let mut dyn_mv = DynamicMultiVector::zero();
+            for (a, a_el) in slf.elements_by_groups() {
+                for (b, b_el) in other.elements_by_groups() {
+                    let sop = ga.anti_scalar_product(a_el, b_el);
+                    for p in sop.sum {
+                        let a = a.clone();
+                        let b = b.clone();
+                        let c = FloatExpr::Literal(p.coefficient);
+                        dyn_mv += (a * b * c, p.element);
+                    }
+                }
+            }
+            let mv = dyn_mv.construct(&b)?;
+            b.return_expr(mv)
         }
     }
 
