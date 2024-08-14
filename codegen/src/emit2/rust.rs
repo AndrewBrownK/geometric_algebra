@@ -10,18 +10,18 @@ use anyhow::{bail, Error};
 use indicatif::ProgressFinish;
 use tokio::task::JoinSet;
 
-use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
 use crate::algebra2::basis::BasisElement;
+use crate::algebra2::basis::grades::{plane_based_k_reflections, point_based_k_reflections};
 use crate::algebra2::multivector::{MultiVec, MultiVecRepository};
 use crate::ast2::datatype::{ExpressionType, MultiVector};
 use crate::ast2::expressions::{AnyExpression, FloatExpr, IntExpr, MultiVectorExpr, MultiVectorGroupExpr, MultiVectorVia, Vec2Expr, Vec3Expr, Vec4Expr};
-use crate::ast2::traits::{
-    progress_style, BinaryOps, CommentOrVariableDeclaration, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus,
-};
 use crate::ast2::RawVariableDeclaration;
-use crate::emit2::{sort_trait_impls, AstEmitter};
-use crate::utility::CollectResults;
+use crate::ast2::traits::{
+    BinaryOps, CommentOrVariableDeclaration, progress_style, RawTraitDefinition, RawTraitImplementation, TraitArity, TraitImplRegistry, TraitKey, TraitParam, TraitTypeConsensus,
+};
+use crate::emit2::{sort_trait_impls};
 use crate::SIMD_SRC;
+use crate::utility::CollectResults;
 
 /// Generate a Rust project.
 #[derive(Copy, Clone)]
@@ -296,7 +296,7 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_multi_vector(&mut file, multi_vec, doc)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
-                self.format_file(&file_path)?;
+                self.format_file(&file_path).await?;
                 pb2.inc(1);
                 Ok(())
             });
@@ -371,7 +371,7 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "use crate::simd::*;")?;
                 self.declare_trait_def(&mut file, td)?;
                 writeln!(&mut file, "include!(\"./impls/{lsc}.rs\");")?;
-                self.format_file(&file_path)?;
+                self.format_file(&file_path).await?;
                 pb2.inc(1);
                 Ok(())
             });
@@ -451,7 +451,7 @@ postgres-types = "0.2.7""#
                     }?;
                     pb.inc(1);
                 }
-                self.format_file(&file_path)?;
+                self.format_file(&file_path).await?;
                 pb.inc(1);
                 pb.finish();
                 Ok(())
@@ -479,7 +479,7 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "mod {lsc};")?;
                 writeln!(&mut file, "pub use {lsc}::{n};")?;
             }
-            self.format_file(&file_path)?;
+            self.format_file(&file_path).await?;
             Ok(())
         });
 
@@ -539,7 +539,7 @@ postgres-types = "0.2.7""#
                     }
                 }
             }
-            self.format_file(&file_path)?;
+            self.format_file(&file_path).await?;
             Ok(())
         });
 
@@ -560,7 +560,7 @@ postgres-types = "0.2.7""#
                 writeln!(&mut file, "    pub struct {el};")?;
             }
             writeln!(&mut file, "}}")?;
-            self.format_file(&file_path)?;
+            self.format_file(&file_path).await?;
             Ok(())
         });
 
@@ -572,7 +572,7 @@ postgres-types = "0.2.7""#
             let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let src = SIMD_SRC;
             write!(&mut file, "{src}")?;
-            self.format_file(&file_path)?;
+            self.format_file(&file_path).await?;
             Ok(())
         });
 
@@ -1284,9 +1284,7 @@ impl TryFrom<{other}> for {owner} {{
         writeln!(w, ")\n    }}\n}}")?;
         Ok(())
     }
-}
 
-impl AstEmitter for Rust {
     fn file_extension() -> &'static str {
         "rs"
     }
@@ -1877,12 +1875,22 @@ impl std::hash::Hash for {ucc} {{
         Ok(())
     }
 
-    fn format_file<P: AsRef<Path>>(&self, p: P) -> anyhow::Result<()> {
+    async fn format_file<P: AsRef<Path>>(&self, p: P) -> anyhow::Result<()> {
         let mut cmd = Command::new("rustfmt");
         cmd.arg(p.as_ref().to_string_lossy().to_string());
         match cmd.spawn() {
-            Ok(_) => Ok(()),
-            Err(e) => Err(Error::from(e)),
+            Ok(mut child) => {
+                tokio::task::spawn_blocking::<_, anyhow::Result<()>>(move || {
+                    match child.wait() {
+                        Ok(exit_status) if exit_status.success() => {}
+                        Ok(exit_status) => bail!("rustfmt failure: {exit_status:?}"),
+                        Err(e) => Err(e)?,
+                    }
+                    Ok(())
+                }).await??;
+            },
+            Err(e) => Err(Error::from(e))?,
         }
+        Ok(())
     }
 }
