@@ -16,6 +16,9 @@ impl OperationsTracker {
     pub fn zero() -> Self {
         Self { add_sub: 0, mul: 0, div: 0 }
     }
+    pub fn is_zero(&self) -> bool {
+        self.add_sub == 0 && self.mul == 0 && self.div == 0
+    }
 }
 
 impl Mul<usize> for OperationsTracker {
@@ -79,6 +82,14 @@ impl VectoredOperationsTracker {
         f += self.simd2 * 2;
         f += self.simd3 * 3;
         f += self.simd4 * 4;
+        f
+    }
+
+    pub fn with_simd(self) -> OperationsTracker {
+        let mut f = self.floats;
+        f += self.simd2;
+        f += self.simd3;
+        f += self.simd4;
         f
     }
 }

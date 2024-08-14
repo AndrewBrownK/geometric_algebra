@@ -1,3 +1,9 @@
+// Note on Operative Statistics:
+// Operative Statistics are not a precise predictor of performance or performance comparisons.
+// This is due to varying hardware capabilities and compiler optimizations.
+// As always, where performance is a concern, there is no substitute for
+// real measurements on real work-loads on real hardware.
+// Disclaimer aside, enjoy the fun information =)
 impl Unit for AntiCircleOnOrigin {
     fn unit() -> Self {
         return AntiCircleOnOrigin::from_groups(/* e41, e42, e43 */ Simd32x3::from(1.0), /* e23, e31, e12 */ Simd32x3::from(1.0));

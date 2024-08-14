@@ -459,6 +459,14 @@ postgres-types = "0.2.7""#
                 }
                 sort_trait_impls(&mut impls, deps_set)?;
                 pb.inc(1);
+
+                writeln!(&mut file,  "// Note on Operative Statistics: ")?;
+                writeln!(&mut file,  "// Operative Statistics are not a precise predictor of performance or performance comparisons. ")?;
+                writeln!(&mut file,  "// This is due to varying hardware capabilities and compiler optimizations. ")?;
+                writeln!(&mut file,  "// As always, where performance is a concern, there is no substitute for ")?;
+                writeln!(&mut file,  "// real measurements on real work-loads on real hardware.")?;
+                writeln!(&mut file, "// Disclaimer aside, enjoy the fun information =)")?;
+
                 // writeln!(&mut file, "use crate::data::*;")?;
                 // writeln!(&mut file, "use crate::simd::*;")?;
                 let mut already_granted_infix = BTreeSet::new();
@@ -1819,6 +1827,82 @@ impl std::hash::Hash for {ucc} {{
             self.write_type(w, output_ty)?;
             writeln!(w, ";")?;
         }
+
+        {
+            let stats = impls.statistics;
+            let ws = stats.with_simd();
+            let wos = stats.without_simd();
+            let mut qty_types = 0;
+            let mut has_simd = false;
+            if !stats.floats.is_zero() {
+                qty_types += 1;
+            }
+            if !stats.simd2.is_zero() {
+                qty_types += 1;
+                has_simd = true;
+            }
+            if !stats.simd3.is_zero() {
+                qty_types += 1;
+                has_simd = true;
+            }
+            if !stats.simd4.is_zero() {
+                qty_types += 1;
+                has_simd = true;
+            }
+            if !wos.is_zero() {
+                writeln!(w, "// Operative Statistics for this implementation:")?;
+                let space = if qty_types == 1 {
+                    if has_simd { "    " } else { "" }
+                } else {
+                    "     "
+                };
+                writeln!(w, "//{space}      add/sub      mul      div")?;
+            }
+            if !stats.floats.is_zero() {
+                let f_a = stats.floats.add_sub;
+                let f_m = stats.floats.mul;
+                let f_d = stats.floats.div;
+                let space = if qty_types > 1 { "     " } else { "" };
+                writeln!(w, "//{space} f32  {f_a:>7}  {f_m:>7}  {f_d:>7}")?;
+            }
+            if !stats.simd2.is_zero() {
+                let s2_a = stats.simd2.add_sub;
+                let s2_m = stats.simd2.mul;
+                let s2_d = stats.simd2.div;
+                let space = if qty_types > 1 { " " } else { "" };
+                writeln!(w, "//{space}   simd2  {s2_a:>7}  {s2_m:>7}  {s2_d:>7}")?;
+            }
+            if !stats.simd3.is_zero() {
+                let s3_a = stats.simd3.add_sub;
+                let s3_m = stats.simd3.mul;
+                let s3_d = stats.simd3.div;
+                let space = if qty_types > 1 { " " } else { "" };
+                writeln!(w, "//{space}   simd3  {s3_a:>7}  {s3_m:>7}  {s3_d:>7}")?;
+            }
+            if !stats.simd4.is_zero() {
+                let s4_a = stats.simd4.add_sub;
+                let s4_m = stats.simd4.mul;
+                let s4_d = stats.simd4.div;
+                let space = if qty_types > 1 { " " } else { "" };
+                writeln!(w, "//{space}   simd4  {s4_a:>7}  {s4_m:>7}  {s4_d:>7}")?;
+            }
+            if has_simd {
+                let y_a = ws.add_sub;
+                let y_m = ws.mul;
+                let y_d = ws.div;
+                let n_a = wos.add_sub;
+                let n_m = wos.mul;
+                let n_d = wos.div;
+                if qty_types > 1 {
+                    writeln!(w, "// Totals...")?;
+                    writeln!(w, "// yes simd  {y_a:>7}  {y_m:>7}  {y_d:>7}")?;
+                    writeln!(w, "//  no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
+                } else {
+                    writeln!(w, "// no simd  {n_a:>7}  {n_m:>7}  {n_d:>7}")?;
+                }
+            }
+        }
+
         write!(w, "    fn {lsc}(")?;
         match (def.arity, var_param) {
             (TraitArity::Zero, _) => {}

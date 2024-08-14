@@ -1,5 +1,15 @@
+// Note on Operative Statistics:
+// Operative Statistics are not a precise predictor of performance or performance comparisons.
+// This is due to varying hardware capabilities and compiler optimizations.
+// As always, where performance is a concern, there is no substitute for
+// real measurements on real work-loads on real hardware.
+// Disclaimer aside, enjoy the fun information =)
 impl AntiDual for AntiCircleOnOrigin {
     type Output = CircleOnOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn anti_dual(self) -> Self::Output {
         return CircleOnOrigin::from_groups(
             // e423, e431, e412
@@ -11,6 +21,9 @@ impl AntiDual for AntiCircleOnOrigin {
 }
 impl AntiDual for AntiDipoleOnOrigin {
     type Output = DipoleOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return DipoleOnOrigin::from_groups(
             // e41, e42, e43, e45
@@ -26,6 +39,9 @@ impl AntiDual for AntiDualNum {
 }
 impl AntiDual for AntiFlatOrigin {
     type Output = FlatOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return FlatOrigin::from_groups(/* e45 */ (self[e321] * -1.0));
@@ -33,6 +49,9 @@ impl AntiDual for AntiFlatOrigin {
 }
 impl AntiDual for AntiFlatPoint {
     type Output = FlatPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return FlatPoint::from_groups(
             // e15, e25, e35, e45
@@ -42,6 +61,9 @@ impl AntiDual for AntiFlatPoint {
 }
 impl AntiDual for AntiFlector {
     type Output = Flector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_dual(self) -> Self::Output {
         return Flector::from_groups(
             // e15, e25, e35, e45
@@ -53,6 +75,9 @@ impl AntiDual for AntiFlector {
 }
 impl AntiDual for AntiFlectorOnOrigin {
     type Output = FlectorOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return FlectorOnOrigin::from_groups(
             // e45, e4235, e4315, e4125
@@ -62,6 +87,10 @@ impl AntiDual for AntiFlectorOnOrigin {
 }
 impl AntiDual for AntiLine {
     type Output = Line;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn anti_dual(self) -> Self::Output {
         return Line::from_groups(
             // e415, e425, e435
@@ -73,12 +102,19 @@ impl AntiDual for AntiLine {
 }
 impl AntiDual for AntiLineOnOrigin {
     type Output = LineOnOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn anti_dual(self) -> Self::Output {
         return LineOnOrigin::from_groups(/* e415, e425, e435 */ (self.group0() * Simd32x3::from(-1.0)));
     }
 }
 impl AntiDual for AntiMotor {
     type Output = Motor;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn anti_dual(self) -> Self::Output {
         return Motor::from_groups(
             // e415, e425, e435, e12345
@@ -90,6 +126,9 @@ impl AntiDual for AntiMotor {
 }
 impl AntiDual for AntiMotorOnOrigin {
     type Output = MotorOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return MotorOnOrigin::from_groups(
             // e415, e425, e435, e12345
@@ -99,6 +138,9 @@ impl AntiDual for AntiMotorOnOrigin {
 }
 impl AntiDual for AntiPlane {
     type Output = Plane;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return Plane::from_groups(
             // e4235, e4315, e4125, e3215
@@ -114,6 +156,9 @@ impl AntiDual for AntiPlaneOnOrigin {
 }
 impl AntiDual for AntiScalar {
     type Output = Scalar;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return Scalar::from_groups(/* scalar */ (self[e12345] * -1.0));
@@ -121,6 +166,9 @@ impl AntiDual for AntiScalar {
 }
 impl AntiDual for AntiSphereOnOrigin {
     type Output = SphereOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return SphereOnOrigin::from_groups(
             // e4235, e4315, e4125, e1234
@@ -130,6 +178,9 @@ impl AntiDual for AntiSphereOnOrigin {
 }
 impl AntiDual for AntiVersorEvenOnOrigin {
     type Output = VersorEvenOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn anti_dual(self) -> Self::Output {
         return VersorEvenOnOrigin::from_groups(
             // e423, e431, e412, e12345
@@ -141,6 +192,9 @@ impl AntiDual for AntiVersorEvenOnOrigin {
 }
 impl AntiDual for AntiVersorOddOnOrigin {
     type Output = VersorOddOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_dual(self) -> Self::Output {
         return VersorOddOnOrigin::from_groups(
             // e41, e42, e43, e45
@@ -152,6 +206,9 @@ impl AntiDual for AntiVersorOddOnOrigin {
 }
 impl AntiDual for Circle {
     type Output = Dipole;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return Dipole::from_groups(
             // e41, e42, e43
@@ -171,6 +228,9 @@ impl AntiDual for CircleAligningOrigin {
 }
 impl AntiDual for CircleAtInfinity {
     type Output = DipoleAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return DipoleAtInfinity::from_groups(
             // e23, e31, e12, e45
@@ -194,6 +254,9 @@ impl AntiDual for CircleOnOrigin {
 }
 impl AntiDual for CircleOrthogonalOrigin {
     type Output = DipoleAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return DipoleAligningOrigin::from_groups(
             // e41, e42, e43, e45
@@ -205,6 +268,13 @@ impl AntiDual for CircleOrthogonalOrigin {
 }
 impl AntiDual for Dipole {
     type Output = Circle;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0        5        0
+    //  no simd        0        9        0
     fn anti_dual(self) -> Self::Output {
         return Circle::from_groups(
             // e423, e431, e412
@@ -218,6 +288,13 @@ impl AntiDual for Dipole {
 }
 impl AntiDual for DipoleAligningOrigin {
     type Output = CircleOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
     fn anti_dual(self) -> Self::Output {
         return CircleOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
@@ -229,6 +306,13 @@ impl AntiDual for DipoleAligningOrigin {
 }
 impl AntiDual for DipoleAtInfinity {
     type Output = CircleAtInfinity;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0        3        0
+    //    simd3        0        1        0
+    // Totals...
+    // yes simd        0        4        0
+    //  no simd        0        6        0
     fn anti_dual(self) -> Self::Output {
         return CircleAtInfinity::from_groups(
             // e415, e425, e435, e321
@@ -240,6 +324,10 @@ impl AntiDual for DipoleAtInfinity {
 }
 impl AntiDual for DipoleAtOrigin {
     type Output = CircleAtOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        2        0
+    // no simd        0        6        0
     fn anti_dual(self) -> Self::Output {
         return CircleAtOrigin::from_groups(
             // e423, e431, e412
@@ -251,6 +339,9 @@ impl AntiDual for DipoleAtOrigin {
 }
 impl AntiDual for DipoleOnOrigin {
     type Output = AntiDipoleOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return AntiDipoleOnOrigin::from_groups(
             // e423, e431, e412, e321
@@ -260,6 +351,10 @@ impl AntiDual for DipoleOnOrigin {
 }
 impl AntiDual for DipoleOrthogonalOrigin {
     type Output = CircleAligningOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        3        0
+    // no simd        0        9        0
     fn anti_dual(self) -> Self::Output {
         return CircleAligningOrigin::from_groups(
             // e423, e431, e412
@@ -273,6 +368,10 @@ impl AntiDual for DipoleOrthogonalOrigin {
 }
 impl AntiDual for DualNum {
     type Output = AntiDualNum;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn anti_dual(self) -> Self::Output {
         return AntiDualNum::from_groups(/* e3215, scalar */ (self.group0() * Simd32x2::from(-1.0)));
     }
@@ -285,6 +384,9 @@ impl AntiDual for FlatOrigin {
 }
 impl AntiDual for FlatPoint {
     type Output = AntiFlatPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return AntiFlatPoint::from_groups(
             // e235, e315, e125, e321
@@ -294,12 +396,19 @@ impl AntiDual for FlatPoint {
 }
 impl AntiDual for FlatPointAtInfinity {
     type Output = LineAtInfinity;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn anti_dual(self) -> Self::Output {
         return LineAtInfinity::from_groups(/* e235, e315, e125 */ (self.group0() * Simd32x3::from(-1.0)));
     }
 }
 impl AntiDual for Flector {
     type Output = AntiFlector;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn anti_dual(self) -> Self::Output {
         return AntiFlector::from_groups(
             // e235, e315, e125, e321
@@ -311,6 +420,9 @@ impl AntiDual for Flector {
 }
 impl AntiDual for FlectorAtInfinity {
     type Output = MotorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return MotorAtInfinity::from_groups(
             // e235, e315, e125, e5
@@ -320,6 +432,9 @@ impl AntiDual for FlectorAtInfinity {
 }
 impl AntiDual for FlectorOnOrigin {
     type Output = AntiFlectorOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return AntiFlectorOnOrigin::from_groups(
             // e321, e1, e2, e3
@@ -335,6 +450,9 @@ impl AntiDual for Horizon {
 }
 impl AntiDual for Infinity {
     type Output = Horizon;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return Horizon::from_groups(/* e3215 */ (self[e5] * -1.0));
@@ -360,6 +478,9 @@ impl AntiDual for LineOnOrigin {
 }
 impl AntiDual for Motor {
     type Output = AntiMotor;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_dual(self) -> Self::Output {
         return AntiMotor::from_groups(
             // e23, e31, e12, scalar
@@ -371,6 +492,9 @@ impl AntiDual for Motor {
 }
 impl AntiDual for MotorAtInfinity {
     type Output = FlectorAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return FlectorAtInfinity::from_groups(
             // e15, e25, e35, e3215
@@ -380,6 +504,9 @@ impl AntiDual for MotorAtInfinity {
 }
 impl AntiDual for MotorOnOrigin {
     type Output = AntiMotorOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return AntiMotorOnOrigin::from_groups(
             // e23, e31, e12, scalar
@@ -389,6 +516,13 @@ impl AntiDual for MotorOnOrigin {
 }
 impl AntiDual for MultiVector {
     type Output = MultiVector;
+    // Operative Statistics for this implementation:
+    //           add/sub      mul      div
+    //      f32        0       10        0
+    //    simd3        0        2        0
+    // Totals...
+    // yes simd        0       12        0
+    //  no simd        0       16        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return MultiVector::from_groups(
@@ -425,6 +559,10 @@ impl AntiDual for NullCircleAtOrigin {
 }
 impl AntiDual for NullDipoleAtOrigin {
     type Output = NullCircleAtOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn anti_dual(self) -> Self::Output {
         return NullCircleAtOrigin::from_groups(/* e423, e431, e412 */ (self.group0() * Simd32x3::from(-1.0)));
     }
@@ -437,6 +575,9 @@ impl AntiDual for NullSphereAtOrigin {
 }
 impl AntiDual for NullVersorEvenAtOrigin {
     type Output = NullVersorOddAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         return NullVersorOddAtOrigin::from_groups(
             // e41, e42, e43, e1234
@@ -446,6 +587,9 @@ impl AntiDual for NullVersorEvenAtOrigin {
 }
 impl AntiDual for NullVersorOddAtOrigin {
     type Output = NullVersorEvenAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return NullVersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
@@ -455,6 +599,9 @@ impl AntiDual for NullVersorOddAtOrigin {
 }
 impl AntiDual for Origin {
     type Output = NullSphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        1        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return NullSphereAtOrigin::from_groups(/* e1234 */ (self[e4] * -1.0));
@@ -462,6 +609,9 @@ impl AntiDual for Origin {
 }
 impl AntiDual for Plane {
     type Output = AntiPlane;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return AntiPlane::from_groups(
             // e1, e2, e3, e5
@@ -471,12 +621,19 @@ impl AntiDual for Plane {
 }
 impl AntiDual for PlaneOnOrigin {
     type Output = AntiPlaneOnOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd3        0        1        0
+    // no simd        0        3        0
     fn anti_dual(self) -> Self::Output {
         return AntiPlaneOnOrigin::from_groups(/* e1, e2, e3 */ (self.group0() * Simd32x3::from(-1.0)));
     }
 }
 impl AntiDual for RoundPoint {
     type Output = Sphere;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return Sphere::from_groups(
@@ -489,6 +646,10 @@ impl AntiDual for RoundPoint {
 }
 impl AntiDual for RoundPointAtOrigin {
     type Output = SphereAtOrigin;
+    // Operative Statistics for this implementation:
+    //          add/sub      mul      div
+    //   simd2        0        1        0
+    // no simd        0        2        0
     fn anti_dual(self) -> Self::Output {
         return SphereAtOrigin::from_groups(/* e3215, e1234 */ (swizzle!(self.group0(), 1, 0) * Simd32x2::from(-1.0)));
     }
@@ -501,6 +662,9 @@ impl AntiDual for Scalar {
 }
 impl AntiDual for Sphere {
     type Output = RoundPoint;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         use crate::elements::*;
         return RoundPoint::from_groups(
@@ -519,6 +683,9 @@ impl AntiDual for SphereAtOrigin {
 }
 impl AntiDual for SphereOnOrigin {
     type Output = AntiSphereOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return AntiSphereOnOrigin::from_groups(
             // e1, e2, e3, e4
@@ -528,6 +695,9 @@ impl AntiDual for SphereOnOrigin {
 }
 impl AntiDual for VersorEven {
     type Output = VersorOdd;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        4        0
     fn anti_dual(self) -> Self::Output {
         return VersorOdd::from_groups(
             // e41, e42, e43, scalar
@@ -543,6 +713,9 @@ impl AntiDual for VersorEven {
 }
 impl AntiDual for VersorEvenAligningOrigin {
     type Output = VersorOddOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return VersorOddOrthogonalOrigin::from_groups(
             // e41, e42, e43, scalar
@@ -556,6 +729,9 @@ impl AntiDual for VersorEvenAligningOrigin {
 }
 impl AntiDual for VersorEvenAtInfinity {
     type Output = VersorOddAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return VersorOddAtInfinity::from_groups(
             // scalar, e15, e25, e35
@@ -569,6 +745,9 @@ impl AntiDual for VersorEvenAtInfinity {
 }
 impl AntiDual for VersorEvenAtOrigin {
     type Output = VersorOddAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_dual(self) -> Self::Output {
         return VersorOddAtOrigin::from_groups(
             // e41, e42, e43, e3215
@@ -580,6 +759,9 @@ impl AntiDual for VersorEvenAtOrigin {
 }
 impl AntiDual for VersorEvenOnOrigin {
     type Output = AntiVersorEvenOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        2        0
     fn anti_dual(self) -> Self::Output {
         return AntiVersorEvenOnOrigin::from_groups(
             // e41, e42, e43, scalar
@@ -591,6 +773,9 @@ impl AntiDual for VersorEvenOnOrigin {
 }
 impl AntiDual for VersorEvenOrthogonalOrigin {
     type Output = VersorOddAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        3        0
     fn anti_dual(self) -> Self::Output {
         return VersorOddAligningOrigin::from_groups(
             // e41, e42, e43, e45
@@ -604,6 +789,9 @@ impl AntiDual for VersorEvenOrthogonalOrigin {
 }
 impl AntiDual for VersorOdd {
     type Output = VersorEven;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0       12        0
     fn anti_dual(self) -> Self::Output {
         return VersorEven::from_groups(
             // e423, e431, e412, e12345
@@ -619,6 +807,9 @@ impl AntiDual for VersorOdd {
 }
 impl AntiDual for VersorOddAligningOrigin {
     type Output = VersorEvenOrthogonalOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        9        0
     fn anti_dual(self) -> Self::Output {
         return VersorEvenOrthogonalOrigin::from_groups(
             // e423, e431, e412, e321
@@ -632,6 +823,9 @@ impl AntiDual for VersorOddAligningOrigin {
 }
 impl AntiDual for VersorOddAtInfinity {
     type Output = VersorEvenAtInfinity;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        9        0
     fn anti_dual(self) -> Self::Output {
         return VersorEvenAtInfinity::from_groups(
             // e12345, e1, e2, e3
@@ -645,6 +839,9 @@ impl AntiDual for VersorOddAtInfinity {
 }
 impl AntiDual for VersorOddAtOrigin {
     type Output = VersorEvenAtOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn anti_dual(self) -> Self::Output {
         return VersorEvenAtOrigin::from_groups(
             // e423, e431, e412, e4
@@ -656,6 +853,9 @@ impl AntiDual for VersorOddAtOrigin {
 }
 impl AntiDual for VersorOddOnOrigin {
     type Output = AntiVersorOddOnOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        6        0
     fn anti_dual(self) -> Self::Output {
         return AntiVersorOddOnOrigin::from_groups(
             // e423, e431, e412, e321
@@ -667,6 +867,9 @@ impl AntiDual for VersorOddOnOrigin {
 }
 impl AntiDual for VersorOddOrthogonalOrigin {
     type Output = VersorEvenAligningOrigin;
+    // Operative Statistics for this implementation:
+    //      add/sub      mul      div
+    // f32        0        9        0
     fn anti_dual(self) -> Self::Output {
         return VersorEvenAligningOrigin::from_groups(
             // e423, e431, e412, e12345
